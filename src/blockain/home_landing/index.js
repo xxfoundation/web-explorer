@@ -1,11 +1,11 @@
 import { Fragment } from "react";
 import ChainInfo from "../components/chainInfo";
-import LatestBlock from "../components/latestBlock";
+import TokenStatus from "./tokenStatus";
 
 const homelanding = () => {
     return (<Fragment>
         <ChainInfo />
-        <LatestBlock />
+        <TokenStatus />
     </Fragment>);
 };
 

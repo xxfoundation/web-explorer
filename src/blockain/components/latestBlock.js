@@ -1,7 +1,7 @@
-import { Box, Container, Divider, IconButton, Link, ListItem, ListItemAvatar, ListItemText, Stack, Typography } from '@mui/material';
-import { FixedSizeList } from 'react-window';
+import { IconButton, Link, ListItem, ListItemAvatar, ListItemText, Stack, Typography } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { useState } from 'react';
+import { Fragment } from 'react';
+import ListWithHeaders from './listWithHeaders';
 
 const blocks = {
     "items": [...Array(9).keys()].map((i) => {
@@ -13,7 +13,7 @@ const blocks = {
             "duration": "30"
         }
     })
-};
+}
 
 const statusToIconMap = {
     // TODO replace with required fonts
@@ -24,8 +24,8 @@ const statusToIconMap = {
 }
 
 const BlockStatusToIcon = (status, duration) => {
-    const [statedStatus] = useState(status);
-    const { label, icon } = statusToIconMap[statedStatus];
+    // const [statedStatus] = useState(status)
+    const { label, icon } = statusToIconMap[status]
     return (
         <Stack style={{ "alignContent": "end" }}>
             <IconButton aria-label={label}>
@@ -36,36 +36,25 @@ const BlockStatusToIcon = (status, duration) => {
     )
 }
 
-const blockInfoRenderer = ({ index, data }) => {
-    const currentData = data[index];
+const ItemHandler = ({ index, data }) => {
+    // const [currentData] = useState(data[index])
+    const currentData = data[index]
     return (
-        <ListItem alignItems='flex-start' key={currentData.id} component="div">
+        <ListItem key={currentData.id} component="div">
             <ListItemText primary={currentData.id} secondary={`${currentData.instrinsic} | ${currentData.events}`} />
             <ListItemAvatar>{BlockStatusToIcon(currentData.status, currentData.duration)}</ListItemAvatar>
         </ListItem>)
 }
 
 const blockchain = () => {
-    return (
-        <Container maxWidth={false} className="blockchain-component-latestBlocks">
-            <Stack divider={<Divider orientation='vertical' flexItem />} maxWidth="561px">
-                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                    <Typography gutterBottom>latest blocks</Typography>
-                    <Link href="#" >see all</Link>
-                </Stack>
-                <Box sx={{ width: '100%', height: 870 }}>
-                    {/* TODO aways display scrollbar */}
-                    <FixedSizeList
-                        height={300}
-                        itemSize={46}
-                        itemCount={blocks.items.length}
-                        itemData={blocks.items}>
-                        {blockInfoRenderer}
-                    </FixedSizeList>
-                </Box>
-            </Stack>
-        </Container>
-    )
-};
+    return ListWithHeaders({
+        items: blocks.items, header: (
+            <Fragment>
+                <Typography gutterBottom>latest blocks</Typography>
+                <Link href="#" >see all</Link>
+            </Fragment>
+        ), itemHandler: ItemHandler
+    })
+}
 
-export default blockchain;
+export default blockchain
