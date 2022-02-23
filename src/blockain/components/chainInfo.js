@@ -1,45 +1,58 @@
-import { Container, Grid, Typography } from '@mui/material';
-import Card from '@mui/material/Card';
-import { useState } from 'react';
+import { gql, useSubscription } from "@apollo/client"
+import { Container, Grid, Typography } from "@mui/material"
+import Card from "@mui/material/Card"
 
 
-const data = {
-    "items": [
-        { "title": "finalized blocks", "value": "8657975" },
-        { "title": "active era", "value": "568" },
-        { "title": "transfers", "value": "524609" },
-        { "title": "holders", "value": "866441" },
-        { "title": "total issuance", "value": "1006B" },
-        { "title": "nominators", "value": "53/53" },
-        { "title": "validators", "value": "874609" },
-        { "title": "infration rate", "value": "7.86" },
-    ]
+const blocksMapper = {
+    "finalizedBlocks": "finalized blocks",
+    "activeEra": "active era",
+    "transfers": "transfers",
+    "holders": "holders",
+    "totalIssuance": "total issuance",
+    "validators": "validators",
+    "nominators": "nominators",
+    "inflationRate": "infration rate",
 }
+
+const ON_CHAININFO_CHANGES = gql`
+subscription OnChaininfoChanges {
+    chaininfoChanges {
+        finalizedBlocks
+        activeEra
+        transfers
+        holders
+        totalIssuance
+        validators
+        nominators
+        inflationRate
+    }
+}
+`
 
 const ChainInfoCard = (title, value) => {
     return (
         <Grid item xs={6} sm={3} md={3} key={title}>
             <Card className="card" >
                 <Typography>{title}</Typography>
-                <Typography variant='subtitle2'>{value}</Typography>
+                <Typography variant="subtitle2">{value}</Typography>
             </Card>
         </Grid>
     );
 }
 
-const chainInfo = () => {
+const ChainInfo = () => {
+    const { data } = useSubscription(ON_CHAININFO_CHANGES) // TODO implement a handler for loading, error, 
     return (
         <Container maxWidth="lg" className="blockchain-component-chainInfo">
-            <Typography variant='subtitle1'>Chain data</Typography>
+            <Typography variant="subtitle1">Chain data</Typography>
             <Grid container spacing={{ xs: 2, md: 4 }}>
-                {(data.items.map(({ title, value }) => {
-                    const [statedTitle] = useState(title);
-                    const [statedValue] = useState(value);
-                    return ChainInfoCard(statedTitle, statedValue);
+                {(Object.entries(blocksMapper).map(([key, title]) => {
+                    const cardValue = data ? data.chaininfoChanges[key] || '??' : '...'
+                    return ChainInfoCard(title, cardValue);
                 }))}
             </Grid>
         </Container>
     )
 }
 
-export default chainInfo
+export default ChainInfo

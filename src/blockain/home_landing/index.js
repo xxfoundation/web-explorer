@@ -1,12 +1,12 @@
-import { Fragment } from "react";
-import ChainInfo from "../components/chainInfo";
-import TokenStatus from "./tokenStatus";
+import { Fragment } from "react"
+import ChainInfo from "../components/chainInfo"
+import TokenStatus from "./tokenStatus"
 
 const homelanding = () => {
     return (<Fragment>
         <ChainInfo />
         <TokenStatus />
-    </Fragment>);
-};
+    </Fragment>)
+}
 
-export default homelanding;
+export default homelanding

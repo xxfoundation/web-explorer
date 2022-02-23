@@ -1,5 +1,5 @@
-import { Fragment } from 'react';
-import HomeLanding from './home_landing';
+import { Fragment } from 'react'
+import HomeLanding from './home_landing'
 
 const blockchain = () => {
     return (
@@ -9,6 +9,6 @@ const blockchain = () => {
             <HomeLanding />
         </Fragment>
     )
-};
+}
 
-export default blockchain;
+export default blockchain

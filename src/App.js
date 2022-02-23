@@ -1,17 +1,17 @@
-import './App.css';
+import './App.css'
+import BlockChain from './blockain'
 
-import BlockChain from './blockain';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className='App'>
+      <header className='App-header'>
         <h1>header</h1>
         <BlockChain />
         <h1>footer</h1>
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
