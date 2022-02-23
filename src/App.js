@@ -1,17 +1,19 @@
 import './App.css';
+import SiteHeader from './site/header';
+import BlockChain from './blockchain';
+import SiteFooter from './site/footer';
 
-import BlockChain from './blockain';
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from "./themes/default";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>header</h1>
-        <BlockChain />
-        <h1>footer</h1>
-      </header>
-    </div>
-  );
+    return (
+        <ThemeProvider theme={theme}>
+            <SiteHeader />
+            <BlockChain />
+            <SiteFooter />
+        </ThemeProvider>
+    );
 }
 
 export default App;

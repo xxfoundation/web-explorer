@@ -2,7 +2,6 @@ import { Container, Grid, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import { useState } from 'react';
 
-
 const data = {
     "items": [
         { "title": "finalized blocks", "value": "8657975" },
