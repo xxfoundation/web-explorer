@@ -1,17 +1,34 @@
 import React from "react";
 
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import SearchBar from "../site/components/searchBar";
+import logo from '../assets/logos/xx-network-logo--white.svg';
+
+const Root = styled('div')(({ theme }) => ({
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
+    background: "linear-gradient(68.04deg, #4668BF 14.57%, #2581D6 41.33%, #019CB1 72.19%, #01ACAC 96.47%, #959595 112.54%)",
+    [theme.breakpoints.up('md')]: {
+        paddingTop: theme.spacing(5),
+        paddingBottom: theme.spacing(5),
+    },
+}));
 
 const Header = () => (
-    <Container
-        sx={{
-            background: "linear-gradient(68.04deg, #4668BF 14.57%, #2581D6 41.33%, #019CB1 72.19%, #01ACAC 96.47%, #959595 112.54%)"
-        }}
-    >
-        <Box sx={{ py: 3 }}>
-            <Typography variant="h1">header</Typography>
-        </Box>
-    </Container>
+    <Root>
+        <Container>
+            <Grid container sx={{ mb: 5, }}>
+                <Grid item>
+                    <img src={logo} alt="xx network" />
+                </Grid>
+                <Grid item>
+                    nav
+                </Grid>
+            </Grid>
+            <SearchBar />
+        </Container>
+    </Root>
     
 );
 export default Header;

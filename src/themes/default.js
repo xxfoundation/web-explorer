@@ -1,11 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
-  palette:{
-    primary: {
-      dark: '#cccccc',
-    }
-  },
   typography: {
     fontFamily: "'Mulish', sans-serif",
     h1: {

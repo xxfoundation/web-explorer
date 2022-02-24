@@ -3,7 +3,7 @@ import React from "react";
 import { Container, Typography, Box } from '@mui/material';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Button from '@mui/material/Button';
+import logo from '../assets/logos/xx-network-logo--white.svg';
 
 // use theme in case we want to use dark mode later
 const theme = createTheme({
@@ -36,13 +36,18 @@ const theme = createTheme({
 
 const Footer = () => (
     <ThemeProvider theme={theme}>
-        <Container sx={{ backgroundColor: "background.default", color: "text.primary" }}>
-            <Box sx={{ p: 3 }}>
+        <Box 
+            sx={{ 
+                p: 3,
+                backgroundColor: "background.default", 
+                color: "text.primary" 
+            }}
+        >
+            <Container>
+                <img src={logo} alt="xx network" />
                 <Typography variant="h2">Footer</Typography>
-                <Button>Primary</Button>
-                <Button color="secondary">Secondary</Button>
-            </Box>
-        </Container>
+            </Container>
+        </Box>
     </ThemeProvider>
 );
 export default Footer;

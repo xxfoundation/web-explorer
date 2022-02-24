@@ -6,7 +6,6 @@ const blockchain = () => {
     return (
         <Container>
             <Fragment>
-                <Typography variant="h3">search widget</Typography>
                 <HomeLanding />
             </Fragment>
         </Container>
