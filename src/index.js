@@ -1,6 +1,5 @@
-import { ApolloProvider } from '@apollo/client'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { WebSocketLink } from '@apollo/client/link/ws'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
@@ -10,7 +9,7 @@ import reportWebVitals from './reportWebVitals'
 const wsLink = new WebSocketLink({
   uri: 'ws://localhost:4000/graphql',
   options: {
-    reconnect: true
+    reconnect: false
   }
 })
 

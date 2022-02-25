@@ -1,6 +1,5 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import { IconButton, Link, ListItem, ListItemAvatar, ListItemText, Stack, Typography } from '@mui/material'
-import { Fragment } from 'react'
 import ListWithHeaders from './listWithHeaders'
 
 const blocks = {
@@ -49,10 +48,10 @@ const ItemHandler = ({ index, data }) => {
 const blockchain = () => {
     return ListWithHeaders({
         items: blocks.items, header: (
-            <Fragment>
+            <>
                 <Typography gutterBottom>latest blocks</Typography>
                 <Link href="#" >see all</Link>
-            </Fragment>
+            </>
         ), itemHandler: ItemHandler
     })
 }

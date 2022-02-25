@@ -24,4 +24,4 @@ yarn-error.log*
 
 .vscode/
 
-sample_server/node_modules
+sample_server/node_modules/
