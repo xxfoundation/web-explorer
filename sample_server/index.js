@@ -1,4 +1,3 @@
-// @ts-check
 const { createServer } = require("http")
 const express = require("express")
 const { execute, subscribe } = require("graphql")
@@ -8,7 +7,8 @@ const { SubscriptionServer } = require("subscriptions-transport-ws")
 const { makeExecutableSchema } = require("@graphql-tools/schema")
 
 const TRIGGERS = {
-    onChaininfoUpdate: 'ON_CHAININFO_UPDATE'
+    onChaininfoUpdate: 'ON_CHAININFO_UPDATE',
+    transactionsOccurence: 'TRANSACTION_EVENT'
 }
 
 // Schema definition
@@ -30,21 +30,33 @@ type Query {
 
 type Subscription {
     chaininfoChanges: ChainInfo!
+    transactions: [[Float]]!
 }
 `
 
-const main = async () => {
-    let chainInfo = {
-        finalizedBlocks: 123123131,
-        activeEra: 18515151231,
-        transfers: 1515515231,
-        holders: 568987123,
-        totalIssuance: 190155155616616,
-        nominators: '53/53',
-        validators: 1415567,
-        inflationRate: 7.86
-    }
 
+let chainInfo = {
+    finalizedBlocks: 123123131,
+    activeEra: 18515151231,
+    transfers: 1515515231,
+    holders: 568987123,
+    totalIssuance: 190155155616616,
+    nominators: '53/53',
+    validators: 1415567,
+    inflationRate: 7.86
+}
+
+const timeoutWrapper = (operation, ms) => {
+    operation()
+
+    function timeoutInner() {
+        operation()
+        setTimeout(timeoutInner, ms)
+    }
+    timeoutInner()
+}
+
+const main = async () => {
     const PORT = 4000
     const pubsub = new PubSub()
     const app = express()
@@ -55,6 +67,9 @@ const main = async () => {
         Subscription: {
             chaininfoChanges: {
                 subscribe: () => pubsub.asyncIterator([TRIGGERS.onChaininfoUpdate])
+            },
+            transactions: {
+                subscribe: () => pubsub.asyncIterator([TRIGGERS.transactionsOccurence])
             }
         }
     }
@@ -76,10 +91,10 @@ const main = async () => {
         )
     })
 
-    const randomNumber = () => Math.random() * 10000000
+    const randomNumber = (size = 10000000) => Math.random() * size
 
-    function randomChaininfoUpdate() {
-        const changes = {
+    timeoutWrapper(() => {
+        chainInfo = {
             finalizedBlocks: randomNumber(),
             activeEra: randomNumber(),
             transfers: randomNumber(),
@@ -89,12 +104,14 @@ const main = async () => {
             validators: randomNumber(),
             inflationRate: randomNumber(),
         }
+        pubsub.publish(TRIGGERS.onChaininfoUpdate, { chaininfoChanges: chainInfo })
+    }, 5000)
 
-        pubsub.publish(TRIGGERS.onChaininfoUpdate, { chaininfoChanges: changes })
-        chainInfo = { ...changes }
-        setTimeout(randomChaininfoUpdate, 5000)
-    }
-    randomChaininfoUpdate()
+    timeoutWrapper(() => {
+        pubsub.publish(TRIGGERS.transactionsOccurence, {
+            transactions: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1000)])
+        })
+    }, 7000)
 }
 
 main()

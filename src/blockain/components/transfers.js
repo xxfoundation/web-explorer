@@ -1,5 +1,4 @@
 import { Grid, Link, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from '@mui/material'
-import { Fragment } from 'react'
 import ListWithHeaders from './listWithHeaders'
 
 const transferences = {
@@ -62,10 +61,10 @@ const ItemHandler = ({ index, data }) => {
 const transfersList = () => {
     return ListWithHeaders({
         items: transferences.items, header: (
-            <Fragment>
+            <>
                 <Typography gutterBottom>transfers</Typography>
                 <Link href='#' >see all</Link>
-            </Fragment>
+            </>
         ), itemHandler: ItemHandler
     })
 }

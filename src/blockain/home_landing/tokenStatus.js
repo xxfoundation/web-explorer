@@ -1,21 +1,57 @@
+import { gql, useSubscription } from "@apollo/client"
 import { Grid, Typography } from '@mui/material'
-import { Fragment } from 'react'
 import LineChart from '../../charts/linecharts'
 import LatestBlock from '../components/latestBlock'
 import Transferences from '../components/transfers'
 
+const ON_TRANSACTION_EVENT = gql`
+subscription OnTrasactionEvent {
+  transactions
+}
+`
+
+const sortTransactions = ({ transactions }) => {
+    return transactions.sort((a, b) => {
+        return a[0] - b[0]
+    })
+}
+
+const TransactionsChart = () => {
+    const { data, loading } = useSubscription(ON_TRANSACTION_EVENT)
+    if (loading) return <h1>loading</h1>
+    const sortedTransactions = sortTransactions(data)
+    return <>
+        <LineChart
+            provider={'high'}
+            title='transactions high'
+            data={{
+                name: 'ERA',
+                marker: { symbol: 'circle' },
+                data: loading ? [] : sortedTransactions
+            }}
+            tooltipFormatter={function () { return `<b>${this.series.name} ${this.x}</b><br />${this.y}` }} />
+        <LineChart
+            provider={'e'}
+            title='transactions E'
+            data={sortedTransactions}
+            tooltipFormatter={function ({ data, seriesName }, ticket, callback) {
+                const [x, y] = data
+                return `<b>${seriesName} ${x}</b><br /> ${y}`
+            }} />
+    </>
+}
+
 const TokenStatus = () => {
-    const testLinechart = [[2, 150 * 100], [48, 110 * 100], [96, 89 * 100], [142, 100 * 100], [168, 50 * 100], [188, 100 * 100], [252, 120 * 100], [298, 140 * 100]]
-    return <Fragment>
+    return <>
         <Typography variant='subtitle2'>token status</Typography>
         <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-                <LineChart title='transactions' data={testLinechart} />
+                <TransactionsChart />
             </Grid>
             <Grid item xs={12} md={6}><LatestBlock /></Grid>
             <Grid item xs={12} md={6}><Transferences /></Grid>
         </Grid>
-    </Fragment>
+    </>
 }
 
 export default TokenStatus
