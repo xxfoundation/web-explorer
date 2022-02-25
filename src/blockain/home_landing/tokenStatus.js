@@ -17,8 +17,12 @@ const sortTransactions = ({ transactions }) => {
 }
 
 const TransactionsChart = () => {
-    const { data, loading } = useSubscription(ON_TRANSACTION_EVENT)
-    if (loading) return <h1>loading</h1>
+    const { data, loading, error } = useSubscription(ON_TRANSACTION_EVENT)
+    if (loading) return <Typography>loading charts</Typography>
+    if (error) {
+        console.error(error)
+        return <Typography>error loading the charts</Typography>
+    }
     const sortedTransactions = sortTransactions(data)
     return <>
         <LineChart
