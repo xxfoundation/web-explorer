@@ -1,4 +1,3 @@
-// @ts-check
 const { createServer } = require("http")
 const express = require("express")
 const { execute, subscribe } = require("graphql")
@@ -49,6 +48,7 @@ let chainInfo = {
 
 const timeoutWrapper = (operation, ms) => {
     operation()
+
     function timeoutInner() {
         operation()
         setTimeout(timeoutInner, ms)
@@ -93,7 +93,7 @@ const main = async () => {
 
     const randomNumber = (size = 10000000) => Math.random() * size
 
-    function randomChaininfoUpdate() {
+    timeoutWrapper(() => {
         chainInfo = {
             finalizedBlocks: randomNumber(),
             activeEra: randomNumber(),
@@ -105,15 +105,13 @@ const main = async () => {
             inflationRate: randomNumber(),
         }
         pubsub.publish(TRIGGERS.onChaininfoUpdate, { chaininfoChanges: chainInfo })
-    }
-    timeoutWrapper(randomChaininfoUpdate, 5000)
+    }, 5000)
 
-    const publishTransaction = () => {
+    timeoutWrapper(() => {
         pubsub.publish(TRIGGERS.transactionsOccurence, {
             transactions: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1000)])
         })
-    }
-    timeoutWrapper(publishTransaction, 7000)
+    }, 7000)
 }
 
 main()

@@ -1,3 +1,5 @@
+import { Typography } from '@mui/material'
+import ReactECharts from 'echarts-for-react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
@@ -9,12 +11,15 @@ const defineEraRanges = ({ data }) => {
     return { minAxisX: minX * .3, maxAxisX: maxX * 1.02, pixelIntervalX }
 }
 
-const options = (title, data) => {
-    const { minAxisX, maxAxisX, pixelIntervalX } = defineEraRanges(data)
+const highOptions = (title, data, tooltipFormatter) => {
+    const { minAxisX, maxAxisX } = defineEraRanges(data)
     return {
         title: {
             text: title,
-            align: 'left'
+            align: 'left',
+            style: {
+                fontWeight: 'bold'
+            }
         },
         colors: ['#00C4FF'],
         tooltip: {
@@ -27,9 +32,7 @@ const options = (title, data) => {
             style: {
                 color: '#fff'
             },
-            formatter: function () {
-                return `<b>${this.series.name} ${this.x}</b><br />${this.y}`
-            }
+            formatter: tooltipFormatter
         },
         credits: { enabled: false },
         legend: { enabled: false },
@@ -43,7 +46,7 @@ const options = (title, data) => {
             },
             labels: { y: 30 },
             tickWidth: 1,
-            tickPixelInterval: pixelIntervalX,
+            // TODO tickPixelInterval: pixelIntervalX, create a parameter to control this better
             offset: 20,
             min: minAxisX,
             max: maxAxisX,
@@ -55,12 +58,83 @@ const options = (title, data) => {
             labels: { align: 'right', x: 30 },
             min: 0
         },
+        plotOptions: {
+            series: {
+                marker: {
+                    enabled: true,
+                    radius: 6
+                }
+            }
+        },
         series: [data]
     }
 }
 
-const LineChart = ({ title, data }) => {
-    return <HighchartsReact highcharts={Highcharts} options={options(title, data)} />
+const echartOptions = (title, data, tooltipFormatter) => {
+    return {
+        title: { text: title },
+        legend: { show: false },
+        animation: false,
+        grid: {},
+        tooltip: {
+            show: true,
+            backgroundColor: '#4F4F4F',
+            borderWidth: 0,
+            textStyle: { color: '#fff' },
+            formatter: tooltipFormatter
+        },
+        xAxis: {
+            axisTick: {
+                show: true,
+                length: 10
+            },
+            axisLine: {
+                show: true,
+                onZero: false,
+            },
+            splitLine: { show: false },
+            name: 'ERA',
+            nameLocation: 'start',
+            nameTextStyle: {
+                fontWeight: 'bolder',
+                align: 'left',
+                verticalAlign: 'bottom'
+            },
+            boundaryGap: ['3%', '3%'],
+            offset: 10
+        },
+        yAxis: {
+            axisLine: {
+                show: false,
+                onZero: true
+            },
+            splitLine: { show: false },
+            axisTick: { show: false },
+            offset: -30
+        },
+        series: [{
+            type: 'line',
+            symbol: 'circle',
+            name: 'ERA',
+            symbolSize: 10,
+            labelLine: { show: false },
+            itemStyle: {
+                color: '#00C4FF'
+            },
+            data
+        }]
+    }
+}
+
+const LineChart = ({ provider, title, data, tooltipFormatter }) => {
+    switch (provider) {
+        case 'e':
+            return <ReactECharts option={echartOptions(title, data, tooltipFormatter)} />
+        case 'high':
+            return <HighchartsReact highcharts={Highcharts} options={highOptions(title, data, tooltipFormatter)} />
+        default:
+            return <Typography>{`${provider} is not a valid provider`}</Typography>
+    }
 }
 
 export default LineChart
