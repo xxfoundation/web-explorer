@@ -11,9 +11,10 @@ const defineEraRanges = ({ data }) => {
     return { minAxisX: minX * .3, maxAxisX: maxX * 1.02, pixelIntervalX }
 }
 
-const highOptions = (title, data, tooltipFormatter) => {
+const highOptions = (title, data, tooltipFormatter, labelsFormatter, maxY) => {
+    // replace parameters with single customOptions obj and use deep merge to override values
     const { minAxisX, maxAxisX } = defineEraRanges(data)
-    return {
+    const options = {
         title: {
             text: title,
             align: 'left',
@@ -32,7 +33,9 @@ const highOptions = (title, data, tooltipFormatter) => {
             style: {
                 color: '#fff'
             },
-            formatter: tooltipFormatter
+            formatter: tooltipFormatter || function () {
+                return `<b>${this.series.name} ${this.x}</b><br />${this.y}`
+            }
         },
         credits: { enabled: false },
         legend: { enabled: false },
@@ -56,7 +59,8 @@ const highOptions = (title, data, tooltipFormatter) => {
             gridLineWidth: 0,
             title: null,
             labels: { align: 'right', x: 30 },
-            min: 0
+            min: 0,
+            max: maxY
         },
         plotOptions: {
             series: {
@@ -68,9 +72,15 @@ const highOptions = (title, data, tooltipFormatter) => {
         },
         series: [data]
     }
+
+    Object.entries(labelsFormatter).forEach(([k, v]) => {
+        options[k].labels.formatter = v
+    })
+
+    return options
 }
 
-const echartOptions = (title, data, tooltipFormatter) => {
+const echartOptions = (title, data) => {
     return {
         title: { text: title },
         legend: { show: false },
@@ -81,7 +91,9 @@ const echartOptions = (title, data, tooltipFormatter) => {
             backgroundColor: '#4F4F4F',
             borderWidth: 0,
             textStyle: { color: '#fff' },
-            formatter: tooltipFormatter
+            formatter: function ({ data: [x, y], seriesName }, ticket, callback) {
+                return `<b>${seriesName} ${x}</b><br /> ${y}`
+            }
         },
         xAxis: {
             axisTick: {
@@ -126,14 +138,14 @@ const echartOptions = (title, data, tooltipFormatter) => {
     }
 }
 
-const LineChart = ({ provider, title, data, tooltipFormatter }) => {
+const LineChart = ({ provider, title, data, tooltipFormatter, labelsFormatter = [], maxY }) => {
     switch (provider) {
         case 'e':
-            return <ReactECharts option={echartOptions(title, data, tooltipFormatter)} />
+            return <ReactECharts option={echartOptions(title, data)} />
         case 'high':
-            return <HighchartsReact highcharts={Highcharts} options={highOptions(title, data, tooltipFormatter)} />
+            return <HighchartsReact highcharts={Highcharts} options={highOptions(title, data, tooltipFormatter, labelsFormatter, maxY)} />
         default:
-            return <Typography>{`${provider} is not a valid provider`}</Typography>
+            return <Typography variant='body2'>{`${provider} is not a valid provider`}</Typography>
     }
 }
 

@@ -8,7 +8,10 @@ const { makeExecutableSchema } = require("@graphql-tools/schema")
 
 const TRIGGERS = {
     onChaininfoUpdate: 'ON_CHAININFO_UPDATE',
-    transactionsOccurence: 'TRANSACTION_EVENT'
+    transactionsOccurence: 'TRANSACTION_EVENT',
+    onNewAccounts: 'ON_NEW_ACCOUNTS',
+    onStakingRatioChange: 'ON_STAKING_RATIO_CHANGE',
+    onAverageAnnualReturnUpdate: 'ON_AVERAGE_ANNUAL_RETURN_UPDATE'
 }
 
 // Schema definition
@@ -31,6 +34,9 @@ type Query {
 type Subscription {
     chaininfoChanges: ChainInfo!
     transactions: [[Float]]!
+    newAccounts: [[Float]]!
+    stakingRatio: [[Float]]!
+    averageAnnualReturn: [[Float]]!
 }
 `
 
@@ -70,7 +76,16 @@ const main = async () => {
             },
             transactions: {
                 subscribe: () => pubsub.asyncIterator([TRIGGERS.transactionsOccurence])
-            }
+            },
+            newAccounts: {
+                subscribe: () => pubsub.asyncIterator([TRIGGERS.onNewAccounts])
+            },
+            stakingRatio: {
+                subscribe: () => pubsub.asyncIterator([TRIGGERS.onStakingRatioChange])
+            },
+            averageAnnualReturn: {
+                subscribe: () => pubsub.asyncIterator([TRIGGERS.onAverageAnnualReturnUpdate])
+            },
         }
     }
 
@@ -110,6 +125,24 @@ const main = async () => {
     timeoutWrapper(() => {
         pubsub.publish(TRIGGERS.transactionsOccurence, {
             transactions: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1000)])
+        })
+    }, 7000)
+
+    timeoutWrapper(() => {
+        pubsub.publish(TRIGGERS.onNewAccounts, {
+            newAccounts: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1000)])
+        })
+    }, 7000)
+
+    timeoutWrapper(() => {
+        pubsub.publish(TRIGGERS.onStakingRatioChange, {
+            stakingRatio: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1)])
+        })
+    }, 7000)
+
+    timeoutWrapper(() => {
+        pubsub.publish(TRIGGERS.onAverageAnnualReturnUpdate, {
+            averageAnnualReturn: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1)])
         })
     }, 7000)
 }
