@@ -6,7 +6,7 @@ import NewAccounts from '../components/newAccounts'
 import StakingRatio from '../components/stakingRatio'
 import AverageAnnualReturn from '../components/averageAnnualReturn'
 import TotalIssuance from '../components/totalIssuance'
-import StackingSupply from '../components/stackingSupply'
+import StakingSupply from '../components/stakingSupply'
 
 const TokenStatus = () => {
     return <>
@@ -14,7 +14,7 @@ const TokenStatus = () => {
         <Grid container spacing={2}>
             {[
                 <TotalIssuance />,
-                <StackingSupply />,
+                <StakingSupply />,
                 <LatestBlock />,
                 <Transferences />,
                 <TransactionsChart />,
