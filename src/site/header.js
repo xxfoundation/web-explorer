@@ -2,13 +2,13 @@ import React from "react";
 
 import { Container, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SearchBar from "../site/components/searchBar";
+import SearchBar from "./components/SearchBar";
 import logo from '../assets/logos/xx-network-logo--white.svg';
 
 const Root = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    background: "linear-gradient(68.04deg, #4668BF 14.57%, #2581D6 41.33%, #019CB1 72.19%, #01ACAC 96.47%, #959595 112.54%)",
+    background: theme.gradient.primary,
     [theme.breakpoints.up('md')]: {
         paddingTop: theme.spacing(5),
         paddingBottom: theme.spacing(5),
