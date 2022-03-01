@@ -33,8 +33,6 @@ const states = {
         halo: { size: 0 }
     },
     inactive: { enabled: false },
-    normal: { enabled: false },
-    select: { enabled: false }
 }
 
 const PieChart = ({ data, crustData, name, options, chartElName, onSliceClick }) => {
@@ -46,7 +44,7 @@ const PieChart = ({ data, crustData, name, options, chartElName, onSliceClick })
                 size: '95%',
                 innerSize: '70%',
                 name,
-                data: data.filter((item) => !item.hiddenInChart),
+                data,
                 states
             }
         ],
@@ -134,6 +132,7 @@ const ChartClickModal = ({ id, open, anchorEl, handleClose, data }) => {
 }
 
 const PieChartWithLegend = ({ name, value, data, crustData }) => {
+    const [legends] = useState(crustData ? [...data, crustData] : [...data])
     const [anchorEl, setAnchorEl] = useState(false)
     const [slice, setSlice] = useState({})
 
@@ -165,7 +164,7 @@ const PieChartWithLegend = ({ name, value, data, crustData }) => {
         <Grid item xs={5}>
             <Typography variant='subtitle2'>{name}</Typography>
             <Typography variant='subtitle1'>{value}</Typography>
-            <ChartLegends data={data} />
+            <ChartLegends data={legends} />
         </Grid>
     </Grid>
 }
