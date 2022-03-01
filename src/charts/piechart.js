@@ -13,7 +13,6 @@ const defaultOptions = {
         pie: {
             allowPointSelect: false,
             cursor: 'pointer',
-            innerSize: '60%',
             dataLabels: { enabled: false },
             events: {},
             animation: false
@@ -38,16 +37,33 @@ const states = {
     select: { enabled: false }
 }
 
-const PieChart = ({ data, name, options, chartElName, onSliceClick }) => {
+const PieChart = ({ data, crustData, name, options, chartElName, onSliceClick }) => {
     const chartOptions = {
         ...options,
         ...defaultOptions,
-        series: [{
-            name,
-            data: data.filter((item) => !item.hiddenInChart),
-            states
-        }],
+        series: [
+            {
+                size: '95%',
+                innerSize: '70%',
+                name,
+                data: data.filter((item) => !item.hiddenInChart),
+                states
+            }
+        ],
         title: null,
+    }
+    if (crustData) {
+        const crustBoundaries = {
+            innerSize: '95%',
+            innerRadius: '40%'
+        }
+        chartOptions.series = [{
+            ...crustBoundaries,
+            states,
+            ...crustData.positioning,
+            data: [{ ...crustData }]
+        },
+        ...chartOptions.series]
     }
     if (onSliceClick) {
         chartOptions.plotOptions.pie.events.click = onSliceClick
@@ -67,7 +83,7 @@ const ChartLegends = ({ data }) => {
                 <ListItemIcon>
                     <SquareRoundedIcon sx={{ color }} />
                 </ListItemIcon>
-                <ListItemText primary={`${y * 100}% ${name}`} />
+                <ListItemText primary={`${y}% ${name}`} />
             </ListItem>
         })}
     </List>
@@ -117,7 +133,7 @@ const ChartClickModal = ({ id, open, anchorEl, handleClose, data }) => {
     </Popover>
 }
 
-const PieChartWithLegend = ({ name, value, data }) => {
+const PieChartWithLegend = ({ name, value, data, crustData }) => {
     const [anchorEl, setAnchorEl] = useState(false)
     const [slice, setSlice] = useState({})
 
@@ -141,8 +157,10 @@ const PieChartWithLegend = ({ name, value, data }) => {
                 data={slice} />
             <PieChart
                 data={data}
+                crustData={crustData}
                 name="total issuance"
-                onSliceClick={handleClick} />
+                onSliceClick={handleClick}
+            />
         </Grid>
         <Grid item xs={5}>
             <Typography variant='subtitle2'>{name}</Typography>
