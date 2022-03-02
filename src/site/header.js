@@ -2,7 +2,7 @@ import React from "react";
 
 import { Container, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SearchBar from "./components/SearchBar";
+import SearchBar from "./search/SearchBar";
 import logo from '../assets/logos/xx-network-logo--white.svg';
 
 const Root = styled('div')(({ theme }) => ({
