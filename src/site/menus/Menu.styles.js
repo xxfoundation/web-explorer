@@ -9,9 +9,5 @@ export const ListLink = styled(Link)(({ theme }) => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     color: theme.palette.primary.contrastText,
-    textDecoration: "none",
     fontSize: 14,
-    "&:hover": {
-        textDecoration: "underline",
-    }
 }));
