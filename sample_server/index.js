@@ -1,10 +1,14 @@
-const { createServer } = require("http")
-const express = require("express")
-const { execute, subscribe } = require("graphql")
-const { ApolloServer, gql } = require("apollo-server-express")
-const { PubSub } = require("graphql-subscriptions")
-const { SubscriptionServer } = require("subscriptions-transport-ws")
-const { makeExecutableSchema } = require("@graphql-tools/schema")
+const { createServer } = require('http')
+const express = require('express')
+const { execute, subscribe } = require('graphql')
+const { ApolloServer, gql } = require('apollo-server-express')
+const { PubSub } = require('graphql-subscriptions')
+const { SubscriptionServer } = require('subscriptions-transport-ws')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+
+const { operator, changesListener } = require('./db')
+
+const { DataTypes } = require('sequelize')
 
 const TRIGGERS = {
     onChaininfoUpdate: 'ON_CHAININFO_UPDATE',
@@ -40,36 +44,51 @@ type Subscription {
 }
 `
 
+const PORT = 4000
+const pubsub = new PubSub()
+const app = express()
+const httpServer = createServer(app)
 
-let chainInfo = {
-    finalizedBlocks: 123123131,
-    activeEra: 18515151231,
-    transfers: 1515515231,
-    holders: 568987123,
-    totalIssuance: 190155155616616,
-    nominators: '53/53',
-    validators: 1415567,
-    inflationRate: 7.86
-}
-
-const timeoutWrapper = (operation, ms) => {
-    operation()
-
-    function timeoutInner() {
-        operation()
-        setTimeout(timeoutInner, ms)
+const databaseEventCallback = (event) => {
+    const { affectedRows: [{ after }], schema, table } = event
+    if (schema === 'test' && table === 'testtables') {
+        pubsub.publish(TRIGGERS.onChaininfoUpdate, { chaininfoChanges: JSON.parse(after.data) })
     }
-    timeoutInner()
 }
 
 const main = async () => {
-    const PORT = 4000
-    const pubsub = new PubSub()
-    const app = express()
-    const httpServer = createServer(app)
+    const sequelizersInstance = await operator()
+    const TestTable = sequelizersInstance.define('TestTable', {
+        date: { type: DataTypes.DATEONLY, defaultValue: DataTypes.NOW, primaryKey: true, allowNull: false },
+        data: { type: DataTypes.JSON, allowNull: false }
+    })
+    await TestTable.sync()
+    await TestTable.upsert({
+        data: {
+            finalizedBlocks: 123123131,
+            activeEra: 18515151231,
+            transfers: 1515515231,
+            holders: 568987123,
+            totalIssuance: 190155155616616,
+            nominators: '53/53',
+            validators: 1415567,
+            inflationRate: 7.86
+        }
+    })
 
     const resolvers = {
-        Query: { chainInfo: () => chainInfo },
+        Query: {
+            chainInfo: async () => {
+                try {
+                    const { data } = await TestTable.findOne()
+                    return data
+                } catch (err) {
+                    console.error('something whent wrong with the query')
+                    console.error(err)
+                }
+            }
+        },
+        // TODO add simple mutation to populate database with data
         Subscription: {
             chaininfoChanges: {
                 subscribe: () => pubsub.asyncIterator([TRIGGERS.onChaininfoUpdate])
@@ -99,52 +118,12 @@ const main = async () => {
         { schema, execute, subscribe },
         { server: httpServer, path: server.graphqlPath }
     )
-
-    httpServer.listen(PORT, () => {
-        console.log(
-            `🚀 Subscription endpoint ready at ws://localhost:${PORT}${server.graphqlPath}`
-        )
-    })
-
-    const randomNumber = (size = 10000000) => Math.random() * size
-
-    timeoutWrapper(() => {
-        chainInfo = {
-            finalizedBlocks: randomNumber(),
-            activeEra: randomNumber(),
-            transfers: randomNumber(),
-            holders: randomNumber(),
-            totalIssuance: randomNumber(),
-            nominators: randomNumber().toString(),
-            validators: randomNumber(),
-            inflationRate: randomNumber(),
-        }
-        pubsub.publish(TRIGGERS.onChaininfoUpdate, { chaininfoChanges: chainInfo })
-    }, 5000)
-
-    timeoutWrapper(() => {
-        pubsub.publish(TRIGGERS.transactionsOccurence, {
-            transactions: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1000)])
-        })
-    }, 7000)
-
-    timeoutWrapper(() => {
-        pubsub.publish(TRIGGERS.onNewAccounts, {
-            newAccounts: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1000)])
-        })
-    }, 7000)
-
-    timeoutWrapper(() => {
-        pubsub.publish(TRIGGERS.onStakingRatioChange, {
-            stakingRatio: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1)])
-        })
-    }, 7000)
-
-    timeoutWrapper(() => {
-        pubsub.publish(TRIGGERS.onAverageAnnualReturnUpdate, {
-            averageAnnualReturn: [...Array(12).keys()].map(() => [randomNumber(100), randomNumber(1)])
-        })
-    }, 7000)
+    httpServer.listen(PORT, () => console.log(
+        `🚀 Subscription endpoint ready at ws://localhost:${PORT}${server.graphqlPath}`
+    ))
+    changesListener(databaseEventCallback)
+        .then(() => console.log('Listening for database events...'))
+        .catch(console.error)
 }
 
 main()

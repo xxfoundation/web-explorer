@@ -6,11 +6,11 @@ import App from './App'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 
+// TODO swtich to a proper protocol for production environment like 'graphql-ws'
+// will requires changes in the backend
 const wsLink = new WebSocketLink({
   uri: 'ws://localhost:4000/graphql',
-  options: {
-    reconnect: false
-  }
+  options: { reconnect: true }
 })
 
 const client = new ApolloClient({

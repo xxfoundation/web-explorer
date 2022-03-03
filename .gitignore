@@ -25,3 +25,5 @@ yarn-error.log*
 .vscode/
 
 sample_server/node_modules/
+sample_server/conf.d/
+sample_server/data/
