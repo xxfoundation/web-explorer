@@ -59,6 +59,10 @@ export const theme = createTheme({
       fontSize: 14,
       color: "#7A7A7A",
     },
+    body4: { // very small & normal
+      fontWeight: 400,
+      fontSize: 12,
+    },
     button: {
       fontWeight: 600,
     },
@@ -70,7 +74,7 @@ export const theme = createTheme({
     borderRadius: 30,
   },
   shadows: {
-    box: "0px 35px 84px 3px rgba(0, 0, 0, 0.04);",
+    box: "0px 35px 84px 3px rgba(0, 0, 0, 0.04)",
   },
   components: {
     MuiTypography: {

@@ -9,22 +9,22 @@ import { Item, Data } from './chainInfo.styles';
 
 const data = {
     "items": [
-        { "title": "finalized blocks", "value": "8,657,975" },
-        { "title": "active era", "value": "568" },
-        { "title": "transfers", "value": "524,609" },
-        { "title": "holders", "value": "866,441" },
-        { "title": "total issuance", "value": "1.006B" },
-        { "title": "nominators", "value": "53/53" },
-        { "title": "validators", "value": "874,609" },
-        { "title": "infration rate", "value": "7.86%" },
+        { "title": "FINALIZED BLOCKS", "value": "8,657,975" },
+        { "title": "ACTIVE ERA", "value": "568" },
+        { "title": "TRANSFERS", "value": "524,609" },
+        { "title": "HOLDERS", "value": "866,441" },
+        { "title": "TOTAL ISSUANCE", "value": "1.006B" },
+        { "title": "NOMINATORS", "value": "53/53" },
+        { "title": "VALIDATORS", "value": "874,609" },
+        { "title": "INFLATION RATE", "value": "7.86%" },
     ]
 }
 
 const ChainInfoCard = (title, value) => {
     return (
         <Grid item xs={6} sm={3} md={3} key={title}>
-            <Item elevation={0} >
-                <Typography variant="h4">{title}</Typography>
+            <Item>
+                <Typography variant="body4">{title}</Typography>
                 <Data>{value}</Data>
             </Item>
         </Grid>

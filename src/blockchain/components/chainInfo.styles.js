@@ -7,7 +7,10 @@ import {
 
 export const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
-    padding: theme.spacing(4),
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
+    paddingLeft: theme.spacing(6),
+    paddingRight: theme.spacing(6),
     color: theme.palette.primary.contrastText,
     boxShadow: theme.shadows.box,
     borderRadius: 13,
@@ -23,12 +26,15 @@ export const Item = styled(Paper)(({ theme }) => ({
         zIndex: "-1",
     },
     [theme.breakpoints.down('md')]: {
-        padding: theme.spacing(3),
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
+        paddingLeft: theme.spacing(3),
+        paddingRight: theme.spacing(3),
     },
 }));
 
 export const Data = styled(Typography)(({ theme }) => ({
-    fontSize: 33,
+    fontSize: 28,
     fontWeight: 900,
     [theme.breakpoints.down('md')]: {
         fontSize: 22,
