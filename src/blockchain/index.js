@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
-import { Container, Typography } from '@mui/material';
+import { Container, } from '@mui/material';
 import HomeLanding from './home_landing';
 
 const blockchain = () => {
     return (
-        <Container>
+        <Container sx={{ my: 5, }}>
             <Fragment>
                 <HomeLanding />
             </Fragment>

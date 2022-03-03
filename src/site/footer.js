@@ -9,7 +9,7 @@ import {
   Link,
 } from '@mui/material';
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { theme } from "../themes/footer";
 
 import Logo from '../assets/logos/xx-network-logo--white.svg';
