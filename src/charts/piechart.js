@@ -41,8 +41,7 @@ const PieChart = ({ data, crustData, name, options, chartElName, onSliceClick })
         ...defaultOptions,
         series: [
             {
-                innerSize: '70%',
-                innerRadius: '40%',
+                innerSize: crustData ? '70%': '54%',
                 name,
                 data,
                 states
@@ -133,7 +132,7 @@ const ChartClickModal = ({ id, open, anchorEl, handleClose, data }) => {
 }
 
 const PieChartWithLegend = ({ name, value, data, crustData }) => {
-    const [legends] = useState(crustData ? [...data, ...crustData.filter(({hiddenLegend}) => !hiddenLegend)] : [...data])
+    const [legends] = useState(crustData ? [...data, ...crustData.filter(({ hiddenLegend }) => !hiddenLegend)] : [...data])
     const [anchorEl, setAnchorEl] = useState(false)
     const [slice, setSlice] = useState({})
 
