@@ -37,6 +37,12 @@ const TotalIssuance = () => {
         color: '#FFC908',
         stakeable: { team: { value: 62145, percentage: .622 }, foundation: { value: 60156, percentage: .63 } },
         unstakeable: { team: { value: 62145, percentage: .632 }, foundation: { value: 60156, percentage: .601 } },
+        states: {
+            hover: {
+                brightness: -0.2,
+                halo: { size: 0 }
+            },
+        }
     }, {
         name: 'staking supply missing',
         y: 90,
@@ -45,6 +51,12 @@ const TotalIssuance = () => {
         unstakeable: { team: { value: 62145, percentage: .632 }, foundation: { value: 60156, percentage: .601 } },
         hiddenLegend: true,
         noClick: true,
+        states: {
+            hover: {
+                brightness: 0,
+                halo: { size: 0 }
+            },
+        }
     }]
     const value = 9999120003 // TODO will be obtained by a aggregation of the values
     return <PieChartWithLegend data={data} crustData={crustData} name='total issuance' value={value} />

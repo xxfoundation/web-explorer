@@ -57,7 +57,9 @@ const PieChart = ({ data, crustData, name, options, chartElName, onSliceClick })
         }
         chartOptions.series = [{
             ...innerCircleBoundaries,
-            states,
+            states: {
+                inactive: { enabled: false },
+            },
             data: crustData
         },
         ...chartOptions.series]
