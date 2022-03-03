@@ -34,7 +34,7 @@ const ChainInfoCard = (title, value) => {
 const chainInfo = () => {
     return (
         <Box className="blockchain-component-chainInfo">
-            <Typography variant='h3'>Chain data</Typography>
+            <Typography variant='h3' gutterBottom>Chain data</Typography>
             <Grid container spacing={{ xs: 1 }}>
                 {(data.items.map(({ title, value }) => {
                     const [statedTitle] = useState(title);

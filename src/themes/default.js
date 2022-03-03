@@ -2,9 +2,29 @@ import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
   palette:{
+    primary: {
+      main: "#00A2D6", // sets link color
+      contrastText: "#FFF",
+    },
     background: {
       default: "#E5E5E5",
       transparent: "rgba(255,255,255,0.24)",
+    },
+    // color coding used for metrics
+    veryGood: {
+      main: "#7BE03D",
+    },
+    good: {
+      main: "#08CDD7",
+    },
+    neutral: {
+      main: "#D2D2D2",
+    },
+    bad: {
+      main: "#FA7A03",
+    },
+    veryBad: {
+      main: "#FF4141",
     },
   },
   typography: {
@@ -21,7 +41,6 @@ export const theme = createTheme({
       fontSize: 16,
       fontWeight: 700,
       textTransform: "uppercase",
-      marginBottom: 24,
     },
     h4: {
       fontSize: 12,
@@ -30,6 +49,10 @@ export const theme = createTheme({
     },
     body1: {
       fontWeight: 500,
+    },
+    body3: {
+      fontWeight: 500,
+      fontSize: 14,
     },
     button: {
       fontWeight: 600,
@@ -40,9 +63,18 @@ export const theme = createTheme({
   },
   shape: {
     borderRadius: 30,
-    borderRadius: 30,
   },
   shadows: {
     box: "0px 35px 84px 3px rgba(0, 0, 0, 0.04);",
   },
+  components: {
+    MuiTypography: {
+      styleOverrides: {
+        gutterBottom: {
+          marginBottom: 24,
+        },
+      },
+    },
+  },
+
 });

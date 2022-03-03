@@ -50,7 +50,7 @@ const ItemHandler = ({ index, data }) => {
     // const [currentData] = useState(data[index])
     const currentData = data[index]
     return (
-        <ListItem key={currentData.id} component="div">
+        <ListItem key={currentData.id} component="div" disableGutters={true}>
             <ListItemText
                 primary={`INSTRINSIC INDEX NO. ${currentData.id}`}
                 secondary={listItemSecondaryText(currentData)}
@@ -61,10 +61,10 @@ const ItemHandler = ({ index, data }) => {
 
 const transfersList = () => {
     return ListWithHeaders({
-        items: transferences.items, header: (
+        items: transferences.items, height: 720, header: (
             <Fragment>
-                <Typography gutterBottom>transfers</Typography>
-                <Link href="#" >see all</Link>
+                <Typography variant="h3">transfers</Typography>
+                <Link href="#" variant="body3" underline="hover">SEE ALL</Link>
             </Fragment>
         ), itemHandler: ItemHandler
     })

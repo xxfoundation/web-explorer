@@ -1,15 +1,27 @@
-import { Container, Divider, Stack } from "@mui/material";
-import { Box } from "@mui/system";
+import { 
+    Divider, 
+    Stack, 
+    Paper, 
+    Box 
+} from "@mui/material";
+
 import { FixedSizeList } from "react-window";
 
-const VirtualizedList = ({ items, height = 870, itemSize = 46, header, itemHandler }) => {
+const VirtualizedList = ({ items, height = 570, itemSize = 46, header, itemHandler }) => {
     return (
-        <Container maxWidth={false} className="blockchain-component-transfers">
-            <Stack divider={<Divider orientation='vertical' flexItem />} maxWidth="561px">
-                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+        <Paper className="blockchain-component-transfers" sx={{ py: 6, px: 6, }}>
+            <Stack>
+                <Stack 
+                    direction="row" 
+                    justifyContent="space-between" 
+                    alignItems="center" 
+                    spacing={2}
+                    sx={{ mb: 8, }}
+                >
                     {header}
                 </Stack>
-                <Box sx={{ width: '100%', height: 870 }}>
+                <Divider />
+                <Box sx={{ mt: 2, }}>
                     <FixedSizeList
                         height={height}
                         itemSize={itemSize}
@@ -19,7 +31,7 @@ const VirtualizedList = ({ items, height = 870, itemSize = 46, header, itemHandl
                     </FixedSizeList>
                 </Box>
             </Stack>
-        </Container>
+        </Paper>
     )
 }
 
