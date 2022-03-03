@@ -1,9 +1,6 @@
 import { 
-    IconButton, 
     Link, 
-    ListItem, 
-    ListItemAvatar, 
-    ListItemText, 
+    ListItem,
     Typography,
     Box,
     Grid,
@@ -38,7 +35,9 @@ const BlockStatusToIcon = (status, duration) => {
     return (
         <Box sx={{ textAlign: "right" }}>
             <Box aria-label={label}>{icon}</Box>
-            <Box>{duration}</Box>
+            <Box>
+                <Typography variant="body3">{duration}</Typography>
+            </Box>
         </Box>
     )
 }
@@ -47,9 +46,14 @@ const ItemHandler = ({ index, data }) => {
     // const [currentData] = useState(data[index])
     const currentData = data[index]
     return (
-        <ListItem key={currentData.id} component="div" disableGutters={true}>
-            <ListItemText primary={currentData.id} secondary={`${currentData.instrinsic} | ${currentData.events}`} />
-            <ListItemAvatar>{BlockStatusToIcon(currentData.status, currentData.duration)}</ListItemAvatar>
+        <ListItem key={currentData.id} component="div" disableGutters={true} sx={{ mb: 2 }}>
+            <Grid item xs>
+                <Link href="" underline="hover" variant="body2">{currentData.id}</Link>
+                <Box>
+                    <Link href="" underline="hover" variant="body3">{currentData.instrinsic} instrinsic</Link> <Typography variant="body3">|</Typography> <Link href="" underline="hover" variant="body3">{currentData.events} event</Link>
+                </Box>
+            </Grid>
+            <Grid item xs="auto">{BlockStatusToIcon(currentData.status, currentData.duration)}</Grid>
         </ListItem>)
 }
 

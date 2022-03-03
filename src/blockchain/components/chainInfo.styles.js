@@ -22,10 +22,16 @@ export const Item = styled(Paper)(({ theme }) => ({
         background: theme.gradient.primary,
         zIndex: "-1",
     },
+    [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(3),
+    },
 }));
 
 export const Data = styled(Typography)(({ theme }) => ({
     fontSize: 33,
     fontWeight: 900,
+    [theme.breakpoints.down('md')]: {
+        fontSize: 22,
+    },
 }));
 

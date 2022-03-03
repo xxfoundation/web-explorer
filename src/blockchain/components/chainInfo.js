@@ -9,13 +9,13 @@ import { Item, Data } from './chainInfo.styles';
 
 const data = {
     "items": [
-        { "title": "finalized blocks", "value": "8657975" },
+        { "title": "finalized blocks", "value": "8,657,975" },
         { "title": "active era", "value": "568" },
-        { "title": "transfers", "value": "524609" },
-        { "title": "holders", "value": "866441" },
-        { "title": "total issuance", "value": "1006B" },
+        { "title": "transfers", "value": "524,609" },
+        { "title": "holders", "value": "866,441" },
+        { "title": "total issuance", "value": "1.006B" },
         { "title": "nominators", "value": "53/53" },
-        { "title": "validators", "value": "874609" },
+        { "title": "validators", "value": "874,609" },
         { "title": "infration rate", "value": "7.86%" },
     ]
 }

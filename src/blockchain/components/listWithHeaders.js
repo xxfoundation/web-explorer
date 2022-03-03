@@ -21,7 +21,7 @@ const VirtualizedList = ({ items, height = 570, itemSize = 46, header, itemHandl
                     {header}
                 </Stack>
                 <Divider />
-                <Box sx={{ mt: 2, }}>
+                <Box sx={{ mt: 3, }}>
                     <FixedSizeList
                         height={height}
                         itemSize={itemSize}

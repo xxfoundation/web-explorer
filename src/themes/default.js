@@ -47,12 +47,17 @@ export const theme = createTheme({
       fontWeight: 400,
       textTransform: "uppercase",
     },
-    body1: {
+    body1: { // normal text
       fontWeight: 500,
     },
-    body3: {
-      fontWeight: 500,
+    body2: { // small & bold
+      fontWeight: 700,
       fontSize: 14,
+    },
+    body3: { // small & normal
+      fontWeight: 400,
+      fontSize: 14,
+      color: "#7A7A7A",
     },
     button: {
       fontWeight: 600,
