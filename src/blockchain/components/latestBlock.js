@@ -8,6 +8,7 @@ import {
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Fragment } from 'react';
 import ListWithHeaders from './listWithHeaders';
+import PaperWithHeader from './paperWithHeader';
 
 const blocks = {
     "items": [...Array(9).keys()].map((i) => {
@@ -57,15 +58,28 @@ const ItemHandler = ({ index, data }) => {
         </ListItem>)
 }
 
+// const blockchain = () => {
+//     return ListWithHeaders({
+//         items: blocks.items, height: 720, header: (
+//             <Fragment>
+//                 <Typography variant="h3">LATEST BLOCKS</Typography>
+//                 <Link href="#" variant="body3" underline="hover">SEE ALL</Link>
+//             </Fragment>
+//         ), itemHandler: ItemHandler
+//     })
+// }
+
 const blockchain = () => {
-    return ListWithHeaders({
-        items: blocks.items, height: 720, header: (
-            <Fragment>
-                <Typography variant="h3">latest blocks</Typography>
-                <Link href="#" variant="body3" underline="hover">SEE ALL</Link>
-            </Fragment>
-        ), itemHandler: ItemHandler
-    })
+    return(
+        <PaperWithHeader
+            header="LATEST BLOCKS"
+            linkName={ "SEE ALL" }
+            linkAddress={ "##" }
+            height={500}
+        >
+            some content
+        </PaperWithHeader>
+    )
 }
 
 export default blockchain
