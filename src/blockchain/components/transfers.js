@@ -1,5 +1,4 @@
-import { Grid, Link, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from "@mui/material";
-import { Fragment } from "react";
+import { Grid, Link, ListItem, ListItemAvatar, ListItemText, Tooltip } from "@mui/material";
 import PaperWithHeader from './paperWithHeader';
 
 const transferences = {
