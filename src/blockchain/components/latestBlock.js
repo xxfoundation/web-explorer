@@ -1,6 +1,5 @@
 import { 
-    Link, 
-    ListItem,
+    Link,
     Typography,
     Box,
     Grid,
@@ -44,19 +43,17 @@ const BlockStatusToIcon = (status, duration) => {
 const ItemHandler = (currentData) => {
     // const [currentData] = useState(data[index])
     //const currentData = data[index]
-    //const currentData = {}
-    //console.log(props)
     
     return (
-        <ListItem sx={{ mb: 2 }}>
+        <Grid container sx={{ mb: 4 }}>
             <Grid item xs>
                 <Link href="" underline="hover" variant="body2">{currentData.id}</Link>
-                <Box>
+                <Box sx={{ mt: 1, }}>
                     <Link href="" underline="hover" variant="body3">{currentData.instrinsic} instrinsic</Link> <Typography variant="body3">|</Typography> <Link href="" underline="hover" variant="body3">{currentData.events} event</Link>
                 </Box>
             </Grid>
             <Grid item xs="auto">{BlockStatusToIcon(currentData.status, currentData.duration)}</Grid>
-        </ListItem>)
+        </Grid>)
 }
 
 const blockchain = () => {

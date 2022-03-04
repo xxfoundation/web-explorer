@@ -1,4 +1,9 @@
-import { Grid, Link, ListItem, ListItemAvatar, ListItemText, Tooltip } from "@mui/material";
+import { 
+    Grid, 
+    Link,
+    Tooltip,
+    Typography,
+ } from "@mui/material";
 import PaperWithHeader from './paperWithHeader';
 
 const transferences = {
@@ -16,26 +21,26 @@ const transferences = {
 const addMaskToTransactionTargets = (hash) => {
     if (hash.length > 15) {
         return <Tooltip title={hash} placement="top" arrow>
-            <Link href={"#"}>
+            <Link href={"#"} underline="hover">
                 {hash.split('').slice(0, 12).join('') + '...'}
             </Link>
         </Tooltip>
     }
 
-    return <Link href={"#"} >{hash}</Link>
+    return <Link href={"#"} underline="hover">{hash}</Link>
 }
 
 const listItemSecondaryText = (data) => {
     return (
         <Grid component={"span"} container maxWidth={200}>
             <Grid item component={"span"} xs={4}>
-                from
+                <Typography variant="body3">FROM</Typography>
             </Grid>
             <Grid item component={"span"}>
                 {addMaskToTransactionTargets(data.from)}
             </Grid>
             <Grid item component={"span"} xs={4}>
-                to
+                <Typography variant="body3">TO</Typography>
             </Grid>
             <Grid item component={"span"}>
                 {addMaskToTransactionTargets(data.to)}
@@ -44,24 +49,25 @@ const listItemSecondaryText = (data) => {
     )
 }
 
-
 const ItemHandler = (currentData) => {
-    // const [currentData] = useState(data[index])
-    //const currentData = data[index]
     return (
-        <ListItem key={currentData.id} component="div" disableGutters={true}>
-            <ListItemText
-                primary={`INSTRINSIC INDEX NO. ${currentData.id}`}
-                secondary={listItemSecondaryText(currentData)}
-            />
-            <ListItemAvatar>{currentData.duration} sec</ListItemAvatar>
-        </ListItem>)
+        <Grid container sx={{ mb: 4, }}>
+            <Grid item xs>
+                <Typography variant="body2" sx={{ mb: 1, }}>
+                    INSTRINSIC INDEX NO. <Link href={"#"} underline="hover">{currentData.id}</Link>
+                </Typography>
+                <Typography variant="body3" sx={{ lineHeight: 1.75, }}>
+                    {listItemSecondaryText(currentData)}
+                </Typography>
+            </Grid>
+            <Grid item xs="auto">{currentData.duration} sec</Grid>
+        </Grid>)
 }
 
 const transfersList = () => {
     return(
         <PaperWithHeader
-            header="LATEST BLOCKS"
+            header="TRANSFERS"
             linkName={ "SEE ALL" }
             linkAddress={ "##" }
             height={500}

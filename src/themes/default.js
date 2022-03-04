@@ -53,6 +53,7 @@ export const theme = createTheme({
     body2: { // small & bold
       fontWeight: 700,
       fontSize: 14,
+      color: "#7A7A7A",
     },
     body3: { // small & normal
       fontWeight: 400,
