@@ -18,7 +18,7 @@ import TelegramIcon from '../assets/icons/Telegram.svg';
 import DiscordIcon from '../assets/icons/Discord.svg';
 import EmailIcon from '../assets/icons/Email.svg';
 
-import FooterMenu from "./menus/FooterMenu";
+import FooterMenu from "./menus/footerMenu";
 
 const Footer = () => (
     <ThemeProvider theme={theme}>

@@ -16,7 +16,7 @@ import {
     SelectOption, 
     SearchInput, 
     SearchButton
-} from './SearchBar.styles';
+} from './searchBar.styles';
 
 const SearchBar = () => {
     

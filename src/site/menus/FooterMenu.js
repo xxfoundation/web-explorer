@@ -6,7 +6,7 @@ import {
 
 import {
     ListLink,
-} from './Menu.styles';
+} from './menu.styles';
 
 const FooterMenu = () => {
 

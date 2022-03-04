@@ -6,8 +6,6 @@ import {
     Grid,
 } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { Fragment } from 'react';
-import ListWithHeaders from './listWithHeaders';
 import PaperWithHeader from './paperWithHeader';
 
 const blocks = {
@@ -43,11 +41,14 @@ const BlockStatusToIcon = (status, duration) => {
     )
 }
 
-const ItemHandler = ({ index, data }) => {
+const ItemHandler = (currentData) => {
     // const [currentData] = useState(data[index])
-    const currentData = data[index]
+    //const currentData = data[index]
+    //const currentData = {}
+    //console.log(props)
+    
     return (
-        <ListItem key={currentData.id} component="div" disableGutters={true} sx={{ mb: 2 }}>
+        <ListItem sx={{ mb: 2 }}>
             <Grid item xs>
                 <Link href="" underline="hover" variant="body2">{currentData.id}</Link>
                 <Box>
@@ -58,17 +59,6 @@ const ItemHandler = ({ index, data }) => {
         </ListItem>)
 }
 
-// const blockchain = () => {
-//     return ListWithHeaders({
-//         items: blocks.items, height: 720, header: (
-//             <Fragment>
-//                 <Typography variant="h3">LATEST BLOCKS</Typography>
-//                 <Link href="#" variant="body3" underline="hover">SEE ALL</Link>
-//             </Fragment>
-//         ), itemHandler: ItemHandler
-//     })
-// }
-
 const blockchain = () => {
     return(
         <PaperWithHeader
@@ -77,7 +67,7 @@ const blockchain = () => {
             linkAddress={ "##" }
             height={500}
         >
-            some content
+            {blocks.items.map(ItemHandler)}
         </PaperWithHeader>
     )
 }
