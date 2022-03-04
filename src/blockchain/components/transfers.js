@@ -1,5 +1,6 @@
 import { 
     Grid, 
+    Box,
     Link,
     Tooltip,
     Typography,
@@ -51,17 +52,23 @@ const listItemSecondaryText = (data) => {
 
 const ItemHandler = (currentData) => {
     return (
-        <Grid container sx={{ mb: 4, }}>
-            <Grid item xs>
-                <Typography variant="body2" sx={{ mb: 1, }}>
-                    INSTRINSIC INDEX NO. <Link href={"#"} underline="hover">{currentData.id}</Link>
-                </Typography>
-                <Typography variant="body3" sx={{ lineHeight: 1.75, }}>
-                    {listItemSecondaryText(currentData)}
-                </Typography>
+        <Box sx={{ mb: 4, }}>
+            <Typography variant="body2" sx={{ mb: 1, }}>
+                INSTRINSIC INDEX NO. <Link href={"#"} underline="hover">{currentData.id}</Link>
+            </Typography>
+            <Grid container>
+                <Grid item xs>
+                    <Typography variant="body3" sx={{ lineHeight: 1.75, }}>
+                        {listItemSecondaryText(currentData)}
+                    </Typography>
+                </Grid>
+                <Grid item xs="auto">
+                    <Typography variant="body3" sx={{ lineHeight: 1.75, }}>
+                        {currentData.duration} sec
+                    </Typography>
+                </Grid>
             </Grid>
-            <Grid item xs="auto">{currentData.duration} sec</Grid>
-        </Grid>)
+        </Box>)
 }
 
 const transfersList = () => {
