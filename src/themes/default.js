@@ -71,10 +71,14 @@ export const theme = createTheme({
     primary: "linear-gradient(68.04deg, #4668BF 14.57%, #2581D6 41.33%, #019CB1 72.19%, #01ACAC 96.47%, #959595 112.54%)",
   },
   shape: {
-    borderRadius: 30,
+    borderRadius: 4,
+    borderRadiusLarge: 30,
   },
   shadows: {
     box: "0px 35px 84px 3px rgba(0, 0, 0, 0.04)",
+  },
+  borders: {
+    light: "1px solid #EAEAEA",
   },
   components: {
     MuiTypography: {

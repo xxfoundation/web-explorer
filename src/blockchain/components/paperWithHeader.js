@@ -12,7 +12,8 @@ import {
 import { styled } from '@mui/material/styles';
 const PaperWrap = styled(Paper)(({ theme }) => ({
     boxShadow: theme.shadows.box,
-    border: "1px solid #EAEAEA",
+    border: theme.borders.light,
+    borderRadius: theme.shape.borderRadiusLarge,
 }));
 
 const InputSet = ({ header, linkName, linkAddress, height, children }) => (

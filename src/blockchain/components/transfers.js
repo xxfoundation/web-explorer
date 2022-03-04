@@ -1,6 +1,6 @@
 import { Grid, Link, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from "@mui/material";
 import { Fragment } from "react";
-import ListWithHeaders from './listWithHeaders';
+import PaperWithHeader from './paperWithHeader';
 
 const transferences = {
     items: [...Array(6).keys()].map((i) => {
@@ -46,9 +46,9 @@ const listItemSecondaryText = (data) => {
 }
 
 
-const ItemHandler = ({ index, data }) => {
+const ItemHandler = (currentData) => {
     // const [currentData] = useState(data[index])
-    const currentData = data[index]
+    //const currentData = data[index]
     return (
         <ListItem key={currentData.id} component="div" disableGutters={true}>
             <ListItemText
@@ -60,14 +60,16 @@ const ItemHandler = ({ index, data }) => {
 }
 
 const transfersList = () => {
-    return ListWithHeaders({
-        items: transferences.items, height: 720, header: (
-            <Fragment>
-                <Typography variant="h3">transfers</Typography>
-                <Link href="#" variant="body3" underline="hover">SEE ALL</Link>
-            </Fragment>
-        ), itemHandler: ItemHandler
-    })
+    return(
+        <PaperWithHeader
+            header="LATEST BLOCKS"
+            linkName={ "SEE ALL" }
+            linkAddress={ "##" }
+            height={500}
+        >
+            {transferences.items.map(ItemHandler)}
+        </PaperWithHeader>
+    )
 }
 
 export default transfersList
