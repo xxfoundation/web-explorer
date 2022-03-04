@@ -9,6 +9,8 @@ import {
 export const Bar = styled('div')(({ theme }) => ({
     background: theme.palette.background.transparent,
     borderRadius: 48,
+    border: theme.borders.light,
+    boxShadow: "0px 35px 84px 3px rgba(0, 0, 0, 0.04)",
     padding: theme.spacing(2),
     color: theme.palette.primary.contrastText,
 }));
