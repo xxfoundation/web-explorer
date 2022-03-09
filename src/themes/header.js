@@ -3,8 +3,8 @@ import { createTheme } from '@mui/material/styles';
 // use theme in case we want to use dark mode later
 export const theme = createTheme({
     palette: {
-      mode: "light",
-      primary: {
+        type: toggleDark ? 'dark' : 'light',
+        primary: {
         main: "#111111",
         contrastText: "#ffffff",
       },

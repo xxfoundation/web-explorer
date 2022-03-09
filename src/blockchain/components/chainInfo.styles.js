@@ -7,10 +7,10 @@ import {
 
 export const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
+    paddingTop: theme.spacing(2.5),
+    paddingBottom: theme.spacing(2.5),
+    paddingLeft: theme.spacing(4.5),
+    paddingRight: theme.spacing(4.5),
     color: theme.palette.primary.contrastText,
     boxShadow: theme.shadows.box,
     borderRadius: 13,
@@ -28,8 +28,8 @@ export const Item = styled(Paper)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         paddingTop: theme.spacing(2),
         paddingBottom: theme.spacing(2),
-        paddingLeft: theme.spacing(3),
-        paddingRight: theme.spacing(3),
+        paddingLeft: theme.spacing(2.5),
+        paddingRight: theme.spacing(2.5),
     },
 }));
 
