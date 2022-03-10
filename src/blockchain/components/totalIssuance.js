@@ -1,5 +1,5 @@
 import { PieChartWithLegend } from '../../charts/piechart'
-
+import PaperWithHeader from './paperWithHeader';
 
 const TotalIssuance = () => {
     // TODO make sure the order is circulation, vesting, ...
@@ -59,7 +59,11 @@ const TotalIssuance = () => {
         }
     }]
     const value = 9999120003 // TODO will be obtained by a aggregation of the values
-    return <PieChartWithLegend data={data} crustData={crustData} name='total issuance' value={value} />
+    return <>
+            <PaperWithHeader>
+                <PieChartWithLegend data={data} crustData={crustData} name='total issuance' value={value} />
+            </PaperWithHeader>
+        </>
 }
 
 export default TotalIssuance

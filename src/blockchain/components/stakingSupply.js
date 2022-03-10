@@ -1,4 +1,5 @@
 import { PieChartWithLegend } from '../../charts/piechart'
+import PaperWithHeader from './paperWithHeader';
 
 
 const StakingSupply = () => {
@@ -24,7 +25,11 @@ const StakingSupply = () => {
             unstakeable: { team: { value: 92145, percentage: 93.2 }, foundation: { value: 90156, percentage: 90.1 } }
         }
     ]
-    return <PieChartWithLegend data={data} name='staking supply' value={value} />
+    return <>
+        <PaperWithHeader>
+            <PieChartWithLegend data={data} name='staking supply' value={value} />
+        </PaperWithHeader>
+        </>
 }
 
 export default StakingSupply
