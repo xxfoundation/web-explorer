@@ -72,7 +72,7 @@ export const theme = createTheme({
     primary: "linear-gradient(68.04deg, #4668BF 14.57%, #2581D6 41.33%, #019CB1 72.19%, #01ACAC 96.47%, #959595 112.54%)",
   },
   shape: {
-    borderRadius: 4,
+    borderRadius: 11,
     borderRadiusLarge: 30,
   },
   shadows: {
