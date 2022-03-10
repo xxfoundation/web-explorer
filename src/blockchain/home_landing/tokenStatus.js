@@ -1,4 +1,4 @@
-import { Grid, Typography, Card } from '@mui/material'
+import { Grid, Box, Typography, Card } from '@mui/material'
 import LatestBlock from '../components/latestBlock'
 import Transferences from '../components/transfers'
 import TransactionsChart from "../components/transactions"
@@ -9,8 +9,8 @@ import TotalIssuance from '../components/totalIssuance'
 import StakingSupply from '../components/stakingSupply'
 
 const TokenStatus = () => {
-    return <>
-        <Typography variant='subtitle2'>token status</Typography>
+    return <Box sx={{ mt: 3 }}>
+        <Typography variant="h3" gutterBottom>Token Status</Typography>
         <Grid container spacing={2}>
             {[
                 <TotalIssuance />,
@@ -28,7 +28,7 @@ const TokenStatus = () => {
                     </Grid>
                 })}
         </Grid>
-    </>
+    </Box>
 }
 
 export default TokenStatus
