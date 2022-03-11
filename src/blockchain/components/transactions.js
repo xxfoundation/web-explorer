@@ -18,23 +18,17 @@ const TransactionsChart = () => {
     const { data, loading, error } = useSubscription(ON_TRANSACTION_EVENT)
     if (loading) return <Typography>loading charts</Typography>
     if (error) {
-        console.error(error)
         return <Typography>error loading the charts</Typography>
     }
     const sortedTransactions = sortTransactions(data)
     return <>
         <LineChart
-            provider={'high'}
             title='transactions high'
             data={{
                 name: 'ERA',
                 marker: { symbol: 'circle' },
                 data: loading ? [] : sortedTransactions
             }} />
-        <LineChart
-            provider={'e'}
-            title='transactions E'
-            data={sortedTransactions} />
     </>
 }
 

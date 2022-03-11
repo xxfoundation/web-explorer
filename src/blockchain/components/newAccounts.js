@@ -13,13 +13,11 @@ const NewAccounts = () => {
     const { data, loading, error } = useSubscription(ON_NEW_ACCOUNTS)
     if (loading) return <Typography>loading new accounts chart</Typography>
     if (error) {
-        console.error(error)
         return <Typography>error loading new accounts</Typography>
     }
     const sortedAccounts = data.newAccounts.sort((a, b) => a[0] - b[0])
     return <>
         <LineChart
-            provider={'high'}
             title='NEW ACCOUNTS high'
             data={{
                 name: 'ERA',

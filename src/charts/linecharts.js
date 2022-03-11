@@ -1,5 +1,3 @@
-import { Typography } from '@mui/material'
-import ReactECharts from 'echarts-for-react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
@@ -80,73 +78,9 @@ const highOptions = (title, data, tooltipFormatter, labelsFormatter, maxY) => {
     return options
 }
 
-const echartOptions = (title, data) => {
-    return {
-        title: { text: title },
-        legend: { show: false },
-        animation: false,
-        grid: {},
-        tooltip: {
-            show: true,
-            backgroundColor: '#4F4F4F',
-            borderWidth: 0,
-            textStyle: { color: '#fff' },
-            formatter: function ({ data: [x, y], seriesName }, ticket, callback) {
-                return `<b>${seriesName} ${x}</b><br /> ${y}`
-            }
-        },
-        xAxis: {
-            axisTick: {
-                show: true,
-                length: 10
-            },
-            axisLine: {
-                show: true,
-                onZero: false,
-            },
-            splitLine: { show: false },
-            name: 'ERA',
-            nameLocation: 'start',
-            nameTextStyle: {
-                fontWeight: 'bolder',
-                align: 'left',
-                verticalAlign: 'bottom'
-            },
-            boundaryGap: ['3%', '3%'],
-            offset: 10
-        },
-        yAxis: {
-            axisLine: {
-                show: false,
-                onZero: true
-            },
-            splitLine: { show: false },
-            axisTick: { show: false },
-            offset: -30
-        },
-        series: [{
-            type: 'line',
-            symbol: 'circle',
-            name: 'ERA',
-            symbolSize: 10,
-            labelLine: { show: false },
-            itemStyle: {
-                color: '#00C4FF'
-            },
-            data
-        }]
-    }
-}
 
-const LineChart = ({ provider, title, data, tooltipFormatter, labelsFormatter = [], maxY }) => {
-    switch (provider) {
-        case 'e':
-            return <ReactECharts option={echartOptions(title, data)} />
-        case 'high':
-            return <HighchartsReact highcharts={Highcharts} options={highOptions(title, data, tooltipFormatter, labelsFormatter, maxY)} />
-        default:
-            return <Typography variant='body2'>{`${provider} is not a valid provider`}</Typography>
-    }
+const LineChart = ({ title, data, tooltipFormatter, labelsFormatter = [], maxY }) => {
+    <HighchartsReact highcharts={Highcharts} options={highOptions(title, data, tooltipFormatter, labelsFormatter, maxY)} />
 }
 
 export default LineChart
