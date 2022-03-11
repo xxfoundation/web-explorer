@@ -1,25 +1,15 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql, useSubscription } from '@apollo/client';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
     Box,
     Grid, Link,
     Typography
 } from '@mui/material';
-import { useEffect } from 'react';
 import PaperWithHeader from './paperWithHeader';
-
-const LATEST_BLOCKS = gql`
-query LastestBlocks {
-    Blocks(order_by: {createdAt: desc}, limit: 2) {
-        data
-        hash
-    }
-}
-`;
 
 const ON_NEW_BLOCKS = gql`
 subscription NewBlocks {
-    Blocks(order_by: {createdAt: desc}, limit: 1) {
+    Blocks(order_by: {createdAt: desc}, limit: 4) {
         hash
         data
     }
@@ -29,12 +19,10 @@ subscription NewBlocks {
 const statusToIconMap = (status) => {
     switch (status) {
         case "pending":
-
             return {
                 "label": "pending",
                 "icon": <AccessTimeIcon color="bad" />
             }
-
         default:
             return {
                 "label": "undefinded",
@@ -63,33 +51,17 @@ const ItemHandler = (block) => {
     </Grid>
 }
 
-const Blockchain = ({ data, loading, error, subscriptionUpdate }) => {
-    useEffect(() => {
-        subscriptionUpdate()
-    })
-    if (loading) return []
-    if (error) return []
-    return data.Blocks.map(ItemHandler)
-}
-
 const BlockChainRenderer = () => {
-    const { subscribeToMore, ...result } = useQuery(LATEST_BLOCKS)
+    const { data, error, loading } = useSubscription(ON_NEW_BLOCKS)
+    if (loading) return <></>
+    if (error) return <></>
     return <PaperWithHeader
         header="LATEST BLOCKS"
         linkName={"SEE ALL"}
         linkAddress={"##"}
         height={500}
     >
-        <Blockchain {...result} subscriptionUpdate={() => {
-            subscribeToMore({
-                document: ON_NEW_BLOCKS,
-                updateQuery: (prev, { subscriptionData: { data } }) => {
-                    console.log(`calling updates for ${JSON.stringify(data)}`)
-                    if (!data) return prev
-                    return { 'Blocks': data.Blocks }
-                }
-            })
-        }} />
+        {data.Blocks.map(ItemHandler)}
     </PaperWithHeader>
 }
 
