@@ -28,4 +28,20 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-# TODO delete `sample_server` folder
+### `npm run lint`
+
+Execute the lints in the source code
+
+#### vscode integration
+
+Just install the `eslint` plugin to validate the code
+
+You can this configuration to the project settings
+``` json
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+        "source.organizeImports": true
+    }
+}
+```
