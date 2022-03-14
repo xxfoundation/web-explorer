@@ -2,9 +2,10 @@ import { Typography } from "@mui/material";
 import ReactECharts from "echarts-for-react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import React from "react";
 
 const defineEraRanges = ({ data }) => {
-    const xItems = data.map(([x, _]) => x);
+    const xItems = data.map(([x]) => x);
     const maxX = Math.max(...xItems);
     const minX = Math.min(...xItems);
     const pixelIntervalX = Math.floor(xItems.reduce((partsum, i) => partsum + i, 0) / xItems.length);
@@ -91,7 +92,7 @@ const echartOptions = (title, data) => {
             backgroundColor: "#4F4F4F",
             borderWidth: 0,
             textStyle: { color: "#fff" },
-            formatter: function ({ data: [x, y], seriesName }, ticket, callback) {
+            formatter: function ({ data: [x, y], seriesName }) {
                 return `<b>${seriesName} ${x}</b><br /> ${y}`;
             }
         },

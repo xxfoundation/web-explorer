@@ -3,7 +3,7 @@ import SquareRoundedIcon from "@mui/icons-material/SquareRounded";
 import { Grid, List, ListItem, ListItemIcon, ListItemText, Popover, Typography } from "@mui/material";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { useState } from "react";
+import React from "react";
 
 
 const defaultOptions = {
@@ -132,9 +132,9 @@ const ChartClickModal = ({ id, open, anchorEl, handleClose, data }) => {
 };
 
 const PieChartWithLegend = ({ name, value, data, crustData }) => {
-    const [legends] = useState(crustData ? [...data, ...crustData.filter(({ hiddenLegend }) => !hiddenLegend)] : [...data]);
-    const [anchorEl, setAnchorEl] = useState(false);
-    const [slice, setSlice] = useState({});
+    const [legends] = React.useState(crustData ? [...data, ...crustData.filter(({ hiddenLegend }) => !hiddenLegend)] : [...data]);
+    const [anchorEl, setAnchorEl] = React.useState(false);
+    const [slice, setSlice] = React.useState({});
 
     const handleClick = (event) => {
         if (event.point.options.noClick) return;
