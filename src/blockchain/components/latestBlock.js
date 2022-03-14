@@ -1,11 +1,11 @@
-import { 
-    Link,
-    Typography,
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import {
     Box,
-    Grid,
-} from '@mui/material';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PaperWithHeader from './paperWithHeader';
+    Grid, Link,
+    Typography
+} from "@mui/material";
+import React from "react";
+import PaperWithHeader from "./paperWithHeader";
 
 const blocks = {
     "items": [...Array(9).keys()].map((i) => {
@@ -15,9 +15,9 @@ const blocks = {
             "events": 11,
             "status": "pending",
             "duration": "30 sec"
-        }
+        };
     })
-}
+};
 
 const statusToIconMap = {
     // TODO replace with required fonts
@@ -25,11 +25,11 @@ const statusToIconMap = {
         "label": "pending",
         "icon": <AccessTimeIcon color="bad" />
     }
-}
+};
 
 const BlockStatusToIcon = (status, duration) => {
     // const [statedStatus] = useState(status)
-    const { label, icon } = statusToIconMap[status]
+    const { label, icon } = statusToIconMap[status];
     return (
         <Box sx={{ textAlign: "right" }}>
             <Box aria-label={label}>{icon}</Box>
@@ -37,8 +37,8 @@ const BlockStatusToIcon = (status, duration) => {
                 <Typography variant="body3">{duration}</Typography>
             </Box>
         </Box>
-    )
-}
+    );
+};
 
 const ItemHandler = (currentData) => {
     // const [currentData] = useState(data[index])
@@ -53,8 +53,8 @@ const ItemHandler = (currentData) => {
                 </Box>
             </Grid>
             <Grid item xs="auto">{BlockStatusToIcon(currentData.status, currentData.duration)}</Grid>
-        </Grid>)
-}
+        </Grid>);
+};
 
 const blockchain = () => {
     return(
@@ -66,7 +66,7 @@ const blockchain = () => {
         >
             {blocks.items.map(ItemHandler)}
         </PaperWithHeader>
-    )
-}
+    );
+};
 
-export default blockchain
+export default blockchain;

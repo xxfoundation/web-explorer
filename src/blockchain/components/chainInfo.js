@@ -1,11 +1,11 @@
-import { 
-    Box, 
-    Grid, 
-    Typography 
-} from '@mui/material';
-import { useState } from 'react';
+import {
+    Box,
+    Grid,
+    Typography
+} from "@mui/material";
+import React from "react";
+import { Data, Item } from "./chainInfo.styles";
 
-import { Item, Data } from './chainInfo.styles';
 
 const data = {
     "items": [
@@ -18,7 +18,7 @@ const data = {
         { "title": "VALIDATORS", "value": "874,609" },
         { "title": "INFLATION RATE", "value": "7.86%" },
     ]
-}
+};
 
 const ChainInfoCard = (title, value) => {
     return (
@@ -29,7 +29,7 @@ const ChainInfoCard = (title, value) => {
             </Item>
         </Grid>
     );
-}
+};
 
 const chainInfo = () => {
     return (
@@ -37,13 +37,13 @@ const chainInfo = () => {
             <Typography variant='h3' gutterBottom>Chain data</Typography>
             <Grid container spacing={{ xs: 1 }}>
                 {(data.items.map(({ title, value }) => {
-                    const [statedTitle] = useState(title);
-                    const [statedValue] = useState(value);
+                    const [statedTitle] = React.useState(title);
+                    const [statedValue] = React.useState(value);
                     return ChainInfoCard(statedTitle, statedValue);
                 }))}
             </Grid>
         </Box>
-    )
-}
+    );
+};
 
-export default chainInfo
+export default chainInfo;
