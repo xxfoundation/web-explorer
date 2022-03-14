@@ -46,6 +46,11 @@ You can this configuration to the project settings
 }
 ```
 
-### git hooks
+## git hooks
 
-???
+The project uses them to enforce code style. But in some cases, like when pushing the code just a backup and stopping working for the day for these cases, you can call the commit and push as follows
+
+``` sh
+git commit -m "yolo!" --no-verify
+HUSKY=0 git push
+```
