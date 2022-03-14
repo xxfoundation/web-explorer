@@ -1,9 +1,9 @@
-import { styled } from '@mui/material/styles';
-
-import { 
+import {
     Paper,
-    Typography,
-} from '@mui/material';
+    Typography
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+
 
 export const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -25,7 +25,7 @@ export const Item = styled(Paper)(({ theme }) => ({
         background: theme.gradient.primary,
         zIndex: "-1",
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
         paddingTop: theme.spacing(2),
         paddingBottom: theme.spacing(2),
         paddingLeft: theme.spacing(2.5),
@@ -36,7 +36,7 @@ export const Item = styled(Paper)(({ theme }) => ({
 export const Data = styled(Typography)(({ theme }) => ({
     fontSize: 28,
     fontWeight: 900,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down("md")]: {
         fontSize: 22,
     },
 }));

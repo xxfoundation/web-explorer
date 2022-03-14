@@ -1,23 +1,14 @@
+import {
+    Box, Container, Divider, Grid, Link, Typography
+} from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import React from "react";
-
-import { 
-  Container, 
-  Box, 
-  Grid,
-  Divider,
-  Typography,
-  Link,
-} from '@mui/material';
-
-import { ThemeProvider } from '@mui/material/styles';
+import DiscordIcon from "../assets/icons/Discord.svg";
+import EmailIcon from "../assets/icons/Email.svg";
+import TelegramIcon from "../assets/icons/Telegram.svg";
+import TwitterIcon from "../assets/icons/Twitter.svg";
+import Logo from "../assets/logos/xx-network-logo--white.svg";
 import { theme } from "../themes/footer";
-
-import Logo from '../assets/logos/xx-network-logo--white.svg';
-import TwitterIcon from '../assets/icons/Twitter.svg';
-import TelegramIcon from '../assets/icons/Telegram.svg';
-import DiscordIcon from '../assets/icons/Discord.svg';
-import EmailIcon from '../assets/icons/Email.svg';
-
 import FooterMenu from "./menus/footerMenu";
 
 const Footer = () => (

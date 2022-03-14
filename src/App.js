@@ -1,9 +1,9 @@
-import './App.css';
-import SiteHeader from './site/header';
-import BlockChain from './blockchain';
-import SiteFooter from './site/footer';
-
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from "@mui/material/styles";
+import React from "react";
+import "./App.css";
+import BlockChain from "./blockchain";
+import SiteFooter from "./site/footer";
+import SiteHeader from "./site/header";
 import { theme } from "./themes/default";
 
 function App() {
@@ -16,4 +16,4 @@ function App() {
     );
 }
 
-export default App
+export default App;

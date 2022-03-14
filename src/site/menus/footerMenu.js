@@ -1,12 +1,10 @@
-import React from "react";
-
-import { 
-    Grid,
-} from '@mui/material';
-
 import {
-    ListLink,
-} from './menu.styles';
+    Grid
+} from "@mui/material";
+import React from "react";
+import {
+    ListLink
+} from "./menu.styles";
 
 const FooterMenu = () => {
 
@@ -34,8 +32,8 @@ const FooterMenu = () => {
                 <ListLink href="" underline="hover">Contact Us</ListLink>
             </Grid>
         </Grid>    
-    )
+    );
 
-}
+};
 
-export default FooterMenu
+export default FooterMenu;

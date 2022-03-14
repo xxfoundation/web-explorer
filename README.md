@@ -28,4 +28,29 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-# TODO delete `sample_server` folder
+### `npm run lint`
+
+Execute the lints in the source code
+
+#### vscode integration
+
+Just install the `eslint` plugin to validate the code
+
+You can this configuration to the project settings
+``` json
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+        "source.organizeImports": true
+    }
+}
+```
+
+## git hooks
+
+The project uses them to enforce code style. But in some cases, like when pushing the code just a backup and stopping working for the day for these cases, you can call the commit and push as follows
+
+``` sh
+git commit -m "yolo!" --no-verify
+HUSKY=0 git push
+```
