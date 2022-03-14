@@ -45,3 +45,7 @@ You can this configuration to the project settings
     }
 }
 ```
+
+### git hooks
+
+???
