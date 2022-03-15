@@ -16,7 +16,11 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [10.x, 12.x, 14.x, 16.x]
+
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
     steps:
       # Checkout repo
@@ -45,3 +49,55 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: netlify deploy --dir=public --prod
+
+      - name: actions successful
+        id: successfulMsg
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          channel-id: ${{ secrets.CHANNEL_ID }}
+          payload: |
+            {
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "GitHub Action build result: *${{ job.status }}*"
+                        }
+                    }
+                ],
+                "attachments": [
+                    {
+                        "title": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
+                        "text": "${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+                        "color": "#7CD197"
+                    }
+                ]
+            }
+        if: success()
+
+      - name: action failed
+        id: failureSlackNotification
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          channel-id: ${{ secrets.CHANNEL_ID }}
+          payload: |
+            {
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "GitHub Action build result: *${{ job.status }}*"
+                        }
+                    }
+                ],
+                "attachments": [
+                    {
+                        "title": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
+                        "text": "${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+                        "color": "#d91e1e"
+                    }
+                ]
+            }
+        if: failure()
