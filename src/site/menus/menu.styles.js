@@ -1,9 +1,9 @@
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
 import { 
     Link,
     Button,
-} from '@mui/material';
+} from "@mui/material";
 
 export const ListLink = styled(Link)(({ theme }) => ({
     display: "block",
@@ -21,7 +21,7 @@ export const MenuButton = styled(Button)(({ theme }) => ({
     "&:hover": {
         background: "none",
         "&:before": {
-            content: '""',
+            content: "''",
             display: "block",
             height: 1,
             width: 20,

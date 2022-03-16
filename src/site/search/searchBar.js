@@ -6,21 +6,21 @@ import {
     InputAdornment,
     MenuItem,
     Divider,
-} from '@mui/material';
+} from "@mui/material";
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import SearchIcon from '@mui/icons-material/Search';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import SearchIcon from "@mui/icons-material/Search";
 
 import {
     Bar, 
     SelectOption, 
     SearchInput, 
     SearchButton
-} from './searchBar.styles';
+} from "./searchBar.styles";
 
 const SearchBar = () => {
     
-    const [option, setOption] = React.useState('');
+    const [option, setOption] = React.useState("");
 
     const handleChange = (event) => {
         setOption(event.target.value);
@@ -32,11 +32,11 @@ const SearchBar = () => {
                 <Grid item xs="auto" sx={{ mr: 3, }}>
                     <FormControl variant="standard" >
                         <SelectOption
-                        value={option}
-                        onChange={handleChange}
-                        displayEmpty
-                        inputProps={{ 'aria-label': 'Without label' }}
-                        IconComponent = {KeyboardArrowDownIcon}
+                            value={option}
+                            onChange={handleChange}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            IconComponent = {KeyboardArrowDownIcon}
                         >
                             <MenuItem value="">All</MenuItem>
                             <MenuItem value={10}>Blocks</MenuItem>
@@ -65,9 +65,9 @@ const SearchBar = () => {
                             id="standard-adornment-amount"
                             placeholder="Search by Block / Extrinisic / Account"
                             startAdornment={
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
                             }
                         />
                     </FormControl>
@@ -79,7 +79,7 @@ const SearchBar = () => {
                 </Grid>
             </Grid>
         </Bar>
-    )
-}
+    );
+};
 
-export default SearchBar
+export default SearchBar;
