@@ -51,7 +51,7 @@ const listItemSecondaryText = (data) => {
 
 const ItemHandler = (currentData) => {
     return (
-        <Box sx={{ mb: 4, }}>
+        <Box sx={{ mb: 4, }} key={currentData.id}>
             <Typography variant="body2" sx={{ mb: 1, }}>
                 INSTRINSIC INDEX NO. <Link href={"#"} underline="hover">{currentData.id}</Link>
             </Typography>

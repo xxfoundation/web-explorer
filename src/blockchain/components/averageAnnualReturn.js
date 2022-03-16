@@ -14,13 +14,11 @@ const AverageAnnualReturn = () => {
     const { data, loading, error } = useSubscription(ON_AVERAGE_ANNUAL_RETURN_UPDATE);
     if (loading) return <Typography>loading average annual return chart</Typography>;
     if (error) {
-        console.error(error);
         return <Typography>error loading staking ratio</Typography>;
     }
     const sortedAnnualReturn = data.averageAnnualReturn.sort((a, b) => a[0] - b[0]);
     return <>
         <LineChart
-            provider={"high"}
             title='average annual return'
             data={{
                 name: "ERA",

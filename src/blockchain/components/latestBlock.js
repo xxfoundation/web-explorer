@@ -1,3 +1,4 @@
+import { gql, useSubscription } from "@apollo/client";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {
     Box,
@@ -7,66 +8,62 @@ import {
 import React from "react";
 import PaperWithHeader from "./paperWithHeader";
 
-const blocks = {
-    "items": [...Array(9).keys()].map((i) => {
-        return {
-            "id": 8657975 + i,
-            "instrinsic": 8,
-            "events": 11,
-            "status": "pending",
-            "duration": "30 sec"
-        };
-    })
-};
+const ON_NEW_BLOCKS = gql`
+subscription NewBlocks {
+    Blocks(order_by: {createdAt: desc}, limit: 4) {
+        hash
+        data
+    }
+}
+`;
 
-const statusToIconMap = {
-    // TODO replace with required fonts
-    "pending": {
-        "label": "pending",
-        "icon": <AccessTimeIcon color="bad" />
+const statusToIconMap = (status) => {
+    switch (status) {
+    case "pending":
+        return {
+            "label": "pending",
+            "icon": <AccessTimeIcon color="bad" />
+        };
+    default:
+        return {
+            "label": "undefinded",
+            "icon": <AccessTimeIcon color="green" />
+        };
     }
 };
 
-const BlockStatusToIcon = (status, duration) => {
-    // const [statedStatus] = useState(status)
-    const { label, icon } = statusToIconMap[status];
-    return (
-        <Box sx={{ textAlign: "right" }}>
-            <Box aria-label={label}>{icon}</Box>
-            <Box>
-                <Typography variant="body3">{duration}</Typography>
+const ItemHandler = (block) => {
+    const { label, icon } = statusToIconMap(block.status);
+    return <Grid container sx={{ mb: 4 }} key={block.hash}>
+        <Grid item xs>
+            <Link href="" underline="hover" variant="body2">{block.hash}</Link>
+            <Box sx={{ mt: 1, }}>
+                <Link href="" underline="hover" variant="body3">{block.instrinsic} instrinsic</Link> <Typography variant="body3">|</Typography> <Link href="" underline="hover" variant="body3">{block.events} event</Link>
             </Box>
-        </Box>
-    );
-};
-
-const ItemHandler = (currentData) => {
-    // const [currentData] = useState(data[index])
-    //const currentData = data[index]
-    
-    return (
-        <Grid container sx={{ mb: 4 }}>
-            <Grid item xs>
-                <Link href="" underline="hover" variant="body2">{currentData.id}</Link>
-                <Box sx={{ mt: 1, }}>
-                    <Link href="" underline="hover" variant="body3">{currentData.instrinsic} instrinsic</Link> <Typography variant="body3">|</Typography> <Link href="" underline="hover" variant="body3">{currentData.events} event</Link>
+        </Grid>
+        <Grid item xs="auto">
+            <Box sx={{ textAlign: "right" }}>
+                <Box aria-label={label}>{icon}</Box>
+                <Box>
+                    <Typography variant="body3">{block.duration}</Typography>
                 </Box>
-            </Grid>
-            <Grid item xs="auto">{BlockStatusToIcon(currentData.status, currentData.duration)}</Grid>
-        </Grid>);
+            </Box>
+        </Grid>
+    </Grid>;
 };
 
-const blockchain = () => {
-    return(
-        <PaperWithHeader
-            header="LATEST BLOCKS"
-            linkName={ "SEE ALL" }
-            linkAddress={ "##" }
-            height={500}
-        >
-            {blocks.items.map(ItemHandler)}
-        </PaperWithHeader>
-    );
+const BlockChainRenderer = () => {
+    const { data, error, loading } = useSubscription(ON_NEW_BLOCKS);
+    if (loading) return <></>;
+    if (error) return <></>;
+    return <PaperWithHeader
+        header="LATEST BLOCKS"
+        linkName={"SEE ALL"}
+        linkAddress={"##"}
+        height={500}
+    >
+        {data.Blocks.map(ItemHandler)}
+    </PaperWithHeader>;
 };
 
-export default blockchain;
+export default BlockChainRenderer;

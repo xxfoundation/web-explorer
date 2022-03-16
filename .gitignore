@@ -24,7 +24,5 @@ yarn-error.log*
 
 .vscode/
 
-sample_server/node_modules/
-
 # Local Netlify folder
 .netlify
