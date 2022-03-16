@@ -1,42 +1,44 @@
 import React from "react";
-
-import { Container, Grid } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Container, Grid } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import SearchBar from "./search/searchBar";
-import { Nav } from "./menus/mainMenu";
-import logo from '../assets/logos/xx-network-logo--white.svg';
-import logoColor from '../assets/logos/xx-network-logo--color.svg';
+import { DesktopNav, MobileNav } from "./menus/mainMenu";
+import logo from "../assets/logos/xx-network-logo--white.svg";
+import logoColor from "../assets/logos/xx-network-logo--color.svg";
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { getDesignTokens } from "../themes/header";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { getDesignTokens } from "../themes/header"; 
 
-const Root = styled('div')(({ theme }) => ({
+const Root = styled("div")(({ theme }) => ({
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
     background: theme.gradient.primary,
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up("md")]: {
         paddingTop: theme.spacing(5),
         paddingBottom: theme.spacing(5),
     },
 }));
 
 // use this as a switch later when we put this on pages that get the dark theme
-const themeMode = createTheme(getDesignTokens('light'));
+const themeMode = createTheme(getDesignTokens("light"));
 
 const Header = () => (
     <ThemeProvider theme={themeMode}>
         <Root >
             <Container>
                 <Grid container justifyContent="space-between" sx={{ mb: 5, }}>
-                    <Grid item>
-                        {themeMode === 'dark' ? 
+                    <Grid item xs="auto" sx={{ display: { md: "none", xs: "block" } }}>
+                        <MobileNav />
+                    </Grid>
+                    <Grid item xs={11} md={2}>
+                        {themeMode === "dark" ? 
                             <img src={logo} alt="xx network" /> 
-                        : 
+                            : 
                             <img src={logoColor} alt="xx network" />
                         }
                     </Grid>
-                    <Grid item>
-                        <Nav />
+                    <Grid item xs="auto" sx={{ display: { md: "block", xs: "none" } }}>
+                        <DesktopNav />
                     </Grid>
                 </Grid>
                 <SearchBar />
