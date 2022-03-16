@@ -2,7 +2,8 @@ import React from "react";
 import { Container, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchBar from "./search/searchBar";
-import { DesktopNav, MobileNav } from "./menus/mainMenu";
+import DesktopNav from "./menus/mainMenu";
+import MobileNav from "./menus/mainMenuMobile";
 import logo from "../assets/logos/xx-network-logo--white.svg";
 import logoColor from "../assets/logos/xx-network-logo--color.svg";
 
@@ -19,18 +20,26 @@ const Root = styled("div")(({ theme }) => ({
     },
 }));
 
+const GridContainer = styled(Grid)(({ theme }) => ({
+    paddingBottom: theme.spacing(5),
+    justifyContent: "none",
+    [theme.breakpoints.up("md")]: {
+        justifyContent: "space-between",
+    },
+}));
+
 // use this as a switch later when we put this on pages that get the dark theme
 const themeMode = createTheme(getDesignTokens("light"));
 
 const Header = () => (
     <ThemeProvider theme={themeMode}>
-        <Root >
+        <Root>
             <Container>
-                <Grid container justifyContent="space-between" sx={{ mb: 5, }}>
+                <GridContainer container>
                     <Grid item xs="auto" sx={{ display: { md: "none", xs: "block" } }}>
                         <MobileNav />
                     </Grid>
-                    <Grid item xs={11} md={2}>
+                    <Grid item xs>
                         {themeMode === "dark" ? 
                             <img src={logo} alt="xx network" /> 
                             : 
@@ -40,7 +49,7 @@ const Header = () => (
                     <Grid item xs="auto" sx={{ display: { md: "block", xs: "none" } }}>
                         <DesktopNav />
                     </Grid>
-                </Grid>
+                </GridContainer>
                 <SearchBar />
             </Container>
         </Root>

@@ -12,7 +12,8 @@ import {
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-export const DesktopNav = () => {
+//export const DesktopNav = () => {
+export default function DesktopNav() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -94,8 +95,4 @@ export const DesktopNav = () => {
             </Grid>
         </Box>
     );
-};
-
-export const MobileNav = () => (
-    <div>mobile</div>
-);
+}
