@@ -8,20 +8,22 @@ import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
-const httpLink = new HttpLink({
-    uri: "http://localhost:8080/v1/graphql"
-});
 
+const graphqlHost = process.env.REACT_APP_BACKEND_HOST || "localhost:8080";
+
+const httpLink = new HttpLink({
+    uri: `http://${graphqlHost}/v1/graphql`
+});
 const wsLink = new GraphQLWsLink(createClient({
-    url: "ws://localhost:8080/v1/graphql",
+    url: `ws://${graphqlHost}/v1/graphql`,
 }));
 
 const splitLink = split(
     ({ query }) => {
-        const definition = getMainDefinition(query);
+        const { kind, operation } = getMainDefinition(query);
         return (
-            definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
+            kind === "OperationDefinition" &&
+            operation === "subscription"
         );
     },
     wsLink,

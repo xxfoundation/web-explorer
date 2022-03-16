@@ -32,7 +32,11 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 Execute the lints in the source code
 
-#### vscode integration
+## IDE/editors integration
+
+Check the create-react-app for detailed instructions
+
+### vscode
 
 Just install the `eslint` plugin to validate the code
 
@@ -46,7 +50,29 @@ You can this configuration to the project settings
 }
 ```
 
-## git hooks
+#### debug execution
+
+to debug the project first run the project with `npm start` and attack the debuger
+
+The debugger configuration is as follows just add it to `launch.json` in the configuration array
+``` json
+{
+  "name": "Chrome",
+  "type": "chrome",
+  "request": "launch",
+  "url": "http://localhost:3000",
+  "webRoot": "${workspaceFolder}/src",
+  "sourceMapPathOverrides": {
+    "webpack:///src/*": "${webRoot}/*"
+  }
+}
+```
+
+---
+
+## Git
+
+### commit and push hooks
 
 The project uses them to enforce code style. But in some cases, like when pushing the code just a backup and stopping working for the day for these cases, you can call the commit and push as follows
 
