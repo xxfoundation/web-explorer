@@ -5,13 +5,12 @@ name: Deploy to Netlify on commits to staging
 
 on:
   push:
-    branches: [ ci-cd ]
+    branches: [ci-cd]
   pull_request:
-    branches: [ staging ]
+    branches: [staging]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -25,6 +24,15 @@ jobs:
     steps:
       # Checkout repo
       - uses: actions/checkout@v2
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
 
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -58,20 +66,29 @@ jobs:
           channel-id: ${{ secrets.CHANNEL_ID }}
           payload: |
             {
-                "blocks": [
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "GitHub Action build result: *${{ job.status }}*"
-                        }
-                    }
-                ],
                 "attachments": [
                     {
-                        "title": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
-                        "text": "${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-                        "color": "#7CD197"
+                        "author_name": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
+                        "author_link": "${{ github.event.pull_request.html_url || github.event.head_commit.url }} ",
+                        "title": "Author: ${{ github.event.pusher.name }} ${{ github.event.pusher.email }}",
+                        "color": "#7CD197",
+                        "fields": [
+                            {
+                                "short": false,
+                                "title": "GitHub Action build result",
+                                "value": "${{ job.status }}"
+                            },
+                            {
+                                "short": true,
+                                "title": "branch",
+                                "value": "${{ steps.extract_branch.outputs.branch }}"
+                            },
+                            {
+                                "short": true,
+                                "title": "time",
+                                "value": "${{ steps.date.outputs.date }}"
+                            }
+                        ]
                     }
                 ]
             }
@@ -84,20 +101,29 @@ jobs:
           channel-id: ${{ secrets.CHANNEL_ID }}
           payload: |
             {
-                "blocks": [
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "GitHub Action build result: *${{ job.status }}*"
-                        }
-                    }
-                ],
                 "attachments": [
-                    {
-                        "title": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
-                        "text": "${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-                        "color": "#d91e1e"
+                  {
+                        "author_name": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
+                        "author_link": "${{ github.event.pull_request.html_url || github.event.head_commit.url }} ",
+                        "title": "Author: ${{ github.event.pusher.name }} ${{ github.event.pusher.email }}",
+                        "color": "#d91e1e",
+                        "fields": [
+                            {
+                                "short": false,
+                                "title": "GitHub Action build result",
+                                "value": "${{ job.status }}"
+                            },
+                            {
+                                "short": true,
+                                "title": "branch",
+                                "value": "${{ steps.extract_branch.outputs.branch }}"
+                            },
+                            {
+                                "short": true,
+                                "title": "time",
+                                "value": "${{ steps.date.outputs.date }}"
+                            }
+                        ]
                     }
                 ]
             }
