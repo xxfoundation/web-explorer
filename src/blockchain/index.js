@@ -1,15 +1,15 @@
-import { Fragment } from 'react';
-import { Container, } from '@mui/material';
-import HomeLanding from './home_landing';
+import { Container } from "@mui/material";
+import React from "react";
+import HomeLanding from "./home_landing";
 
 const blockchain = () => {
     return (
         <Container sx={{ my: 5, }}>
-            <Fragment>
+            <React.Fragment>
                 <HomeLanding />
-            </Fragment>
+            </React.Fragment>
         </Container>
-    )
+    );
 };
 
 export default blockchain;

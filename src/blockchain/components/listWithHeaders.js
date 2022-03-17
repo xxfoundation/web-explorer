@@ -1,13 +1,11 @@
-import { 
-    Divider, 
-    Stack, 
-    Paper, 
-    Box 
+import {
+    Box, Divider, Paper, Stack
 } from "@mui/material";
-
+import { styled } from "@mui/material/styles";
+import React from "react";
 import { FixedSizeList } from "react-window";
 
-import { styled } from '@mui/material/styles';
+
 const PaperWrap = styled(Paper)(({ theme }) => ({
     boxShadow: theme.shadows.box,
     border: "1px solid #EAEAEA",
@@ -41,7 +39,7 @@ const VirtualizedList = ({ items, height = 570, itemSize = 46, header, itemHandl
                 </Box>
             </Stack>
         </PaperWrap>
-    )
-}
+    );
+};
 
 export default VirtualizedList;

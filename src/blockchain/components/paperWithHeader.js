@@ -1,15 +1,9 @@
+import {
+    Box, Divider, Link, Paper, Stack, Typography
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { 
-    Paper,
-    Box,
-    Typography,
-    Link,
-    Stack,
-    Divider,
-} from '@mui/material';
-
-import { styled } from '@mui/material/styles';
 const PaperWrap = styled(Paper)(({ theme }) => ({
     boxShadow: theme.shadows.box,
     border: theme.borders.light,

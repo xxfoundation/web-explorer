@@ -1,9 +1,9 @@
 // import ReactECharts from 'echarts-for-react'
-import SquareRoundedIcon from '@mui/icons-material/SquareRounded'
-import { Grid, List, ListItem, ListItemIcon, ListItemText, Popover, Typography } from '@mui/material'
-import Highcharts from 'highcharts'
-import HighchartsReact from 'highcharts-react-official'
-import { useState } from 'react'
+import SquareRoundedIcon from "@mui/icons-material/SquareRounded";
+import { Grid, List, ListItem, ListItemIcon, ListItemText, Popover, Typography } from "@mui/material";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import React from "react";
 
 
 const defaultOptions = {
@@ -12,7 +12,7 @@ const defaultOptions = {
     plotOptions: {
         pie: {
             allowPointSelect: false,
-            cursor: 'pointer',
+            cursor: "pointer",
             dataLabels: { enabled: false },
             events: {},
             animation: false
@@ -23,9 +23,9 @@ const defaultOptions = {
         plotBackgroundColor: null,
         plotBorderWidth: null,
         plotShadow: false,
-        type: 'pie'
+        type: "pie"
     }
-}
+};
 
 const states = {
     hover: {
@@ -33,7 +33,7 @@ const states = {
         halo: { size: 0 }
     },
     inactive: { enabled: false },
-}
+};
 
 const PieChart = ({ data, crustData, name, options, chartElName, onSliceClick }) => {
     const chartOptions = {
@@ -41,19 +41,19 @@ const PieChart = ({ data, crustData, name, options, chartElName, onSliceClick })
         ...defaultOptions,
         series: [
             {
-                innerSize: crustData ? '70%': '54%',
+                innerSize: crustData ? "70%": "54%",
                 name,
                 data,
                 states
             }
         ],
         title: null,
-    }
+    };
     if (crustData) {
         const innerCircleBoundaries = {
-            size: '67%',
-            innerSize: '63%',
-        }
+            size: "67%",
+            innerSize: "63%",
+        };
         chartOptions.series = [{
             ...innerCircleBoundaries,
             states: {
@@ -61,16 +61,16 @@ const PieChart = ({ data, crustData, name, options, chartElName, onSliceClick })
             },
             data: crustData
         },
-        ...chartOptions.series]
+        ...chartOptions.series];
     }
     if (onSliceClick) {
-        chartOptions.plotOptions.pie.events.click = onSliceClick
+        chartOptions.plotOptions.pie.events.click = onSliceClick;
     }
     return <HighchartsReact
         id={chartElName}
         highcharts={Highcharts}
-        options={chartOptions} />
-}
+        options={chartOptions} />;
+};
 
 
 
@@ -82,10 +82,10 @@ const ChartLegends = ({ data }) => {
                     <SquareRoundedIcon sx={{ color }} />
                 </ListItemIcon>
                 <ListItemText primary={`${y}% ${name}`} />
-            </ListItem>
+            </ListItem>;
         })}
-    </List>
-}
+    </List>;
+};
 
 const StakeableInfo = ({ name, values }) => {
     return <>
@@ -106,8 +106,8 @@ const StakeableInfo = ({ name, values }) => {
         <Grid item xs={4}><Typography variant='body2'>foundation</Typography></Grid>
         <Grid item xs={4}><Typography variant='body2'>{values.foundation.value}</Typography></Grid>
         <Grid item xs={4}><Typography variant='body2'>{values.foundation.percentage}</Typography></Grid>
-    </>
-}
+    </>;
+};
 
 const ChartClickModal = ({ id, open, anchorEl, handleClose, data }) => {
     return <Popover
@@ -116,36 +116,36 @@ const ChartClickModal = ({ id, open, anchorEl, handleClose, data }) => {
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-            vertical: 'center',
-            horizontal: 'center',
+            vertical: "center",
+            horizontal: "center",
         }}
         transformOrigin={{
-            vertical: 'center',
-            horizontal: 'center',
+            vertical: "center",
+            horizontal: "center",
         }}>
         <Typography variant='subtitle1'>{data.name}</Typography>
         <Grid container>
             <StakeableInfo name='stakeable' values={data.stakeable} />
             <StakeableInfo name='unstakeable' values={data.unstakeable} />
         </Grid>
-    </Popover>
-}
+    </Popover>;
+};
 
 const PieChartWithLegend = ({ name, value, data, crustData }) => {
-    const [legends] = useState(crustData ? [...data, ...crustData.filter(({ hiddenLegend }) => !hiddenLegend)] : [...data])
-    const [anchorEl, setAnchorEl] = useState(false)
-    const [slice, setSlice] = useState({})
+    const [legends] = React.useState(crustData ? [...data, ...crustData.filter(({ hiddenLegend }) => !hiddenLegend)] : [...data]);
+    const [anchorEl, setAnchorEl] = React.useState(false);
+    const [slice, setSlice] = React.useState({});
 
     const handleClick = (event) => {
-        if (event.point.options.noClick) return
-        setSlice(event.point.options)
-        setAnchorEl(event.currentTarget)
-    }
+        if (event.point.options.noClick) return;
+        setSlice(event.point.options);
+        setAnchorEl(event.currentTarget);
+    };
 
-    const handleClose = () => setAnchorEl(null)
+    const handleClose = () => setAnchorEl(null);
 
-    const open = Boolean(anchorEl)
-    const id = open ? `total-issuance-chart-slice-popover` : undefined
+    const open = Boolean(anchorEl);
+    const id = open ? "total-issuance-chart-slice-popover" : undefined;
 
     return <Grid container>
         <Grid item xs={7}>
@@ -167,9 +167,9 @@ const PieChartWithLegend = ({ name, value, data, crustData }) => {
             <Typography variant='subtitle1'>{value}</Typography>
             <ChartLegends data={legends} />
         </Grid>
-    </Grid>
-}
+    </Grid>;
+};
 
-export default PieChart
+export default PieChart;
 
-export { PieChart, PieChartWithLegend }
+export { PieChart, PieChartWithLegend };

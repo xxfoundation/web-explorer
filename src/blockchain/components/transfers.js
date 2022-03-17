@@ -1,11 +1,10 @@
-import { 
-    Grid, 
-    Box,
-    Link,
+import {
+    Box, Grid, Link,
     Tooltip,
-    Typography,
- } from "@mui/material";
-import PaperWithHeader from './paperWithHeader';
+    Typography
+} from "@mui/material";
+import React from "react";
+import PaperWithHeader from "./paperWithHeader";
 
 const transferences = {
     items: [...Array(6).keys()].map((i) => {
@@ -15,21 +14,21 @@ const transferences = {
             "from": "Oxacc15dc74899999", // TODO use just mask instead of manipulating the value
             "to": "Oxacc15dc748888",
             "duration": 30
-        }
+        };
     })
-}
+};
 
 const addMaskToTransactionTargets = (hash) => {
     if (hash.length > 15) {
         return <Tooltip title={hash} placement="top" arrow>
             <Link href={"#"} underline="hover">
-                {hash.split('').slice(0, 12).join('') + '...'}
+                {hash.split("").slice(0, 12).join("") + "..."}
             </Link>
-        </Tooltip>
+        </Tooltip>;
     }
 
-    return <Link href={"#"} underline="hover">{hash}</Link>
-}
+    return <Link href={"#"} underline="hover">{hash}</Link>;
+};
 
 const listItemSecondaryText = (data) => {
     return (
@@ -47,8 +46,8 @@ const listItemSecondaryText = (data) => {
                 {addMaskToTransactionTargets(data.to)}
             </Grid>
         </Grid>
-    )
-}
+    );
+};
 
 const ItemHandler = (currentData) => {
     return (
@@ -68,8 +67,8 @@ const ItemHandler = (currentData) => {
                     </Typography>
                 </Grid>
             </Grid>
-        </Box>)
-}
+        </Box>);
+};
 
 const transfersList = () => {
     return(
@@ -81,7 +80,7 @@ const transfersList = () => {
         >
             {transferences.items.map(ItemHandler)}
         </PaperWithHeader>
-    )
-}
+    );
+};
 
-export default transfersList
+export default transfersList;
