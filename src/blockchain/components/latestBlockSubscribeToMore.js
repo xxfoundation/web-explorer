@@ -10,7 +10,7 @@ import PaperWithHeader from "./paperWithHeader";
 
 const GET_BLOCKS = gql`
 query GetBlocks {
-    Blocks(order_by: {createdAt: desc}, limit: 4) {
+    Blocks(order_by: {updatedAt: desc}, limit: 4) {
         hash
         data
     }
@@ -19,7 +19,7 @@ query GetBlocks {
 
 const ON_NEW_BLOCKS = gql`
 subscription NewBlocks($limit: Int) {
-    Blocks(order_by: {createdAt: desc}, limit: $limit) {
+    Blocks(order_by: {updatedAt: desc}, limit: $limit) {
         hash
         data
     }
@@ -48,8 +48,8 @@ const ItemHandler = (block) => {
 const BlockChain = ({ data, loading, error, subscribeToNewBlocks }) => {
     if (loading) return [];
     if (error) return [];
+    console.log("rendering the BlockChain");
     React.useEffect(() => {
-        console.log("subscribeToNewBlocks call with data");
         subscribeToNewBlocks(4);
     });
     return data.Blocks.map(ItemHandler);
@@ -85,6 +85,7 @@ const BlockChainRenderer = () => {
         <BlockChain {...result}
             subscribeToNewBlocks={
                 (limit) => {
+                    console.log("creating an websocket connection");
                     subscribeToMore({
                         document: ON_NEW_BLOCKS,
                         variables: { limit },
