@@ -21,7 +21,6 @@ const ItemHandler = ({ block }) => {
                 </Link>
                 <Typography variant="body3">|</Typography>
                 <Link href="" underline="hover" variant="body3">{block.events} event</Link>
-                {block.newEntry ? "newBlock": "old"}
             </Box>
         </Grid>
         <Grid item xs="auto">
