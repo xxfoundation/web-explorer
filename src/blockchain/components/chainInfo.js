@@ -4,7 +4,7 @@ import {
     Typography
 } from "@mui/material";
 import React from "react";
-import { Data, Item } from "./chainInfo.styles";
+import { Wrap, Data, Item } from "./chainInfo.styles";
 
 
 const data = {
@@ -35,13 +35,13 @@ const chainInfo = () => {
     return (
         <Box className="blockchain-component-chainInfo">
             <Typography variant='h3' gutterBottom>Chain data</Typography>
-            <Grid container spacing={{ xs: 1 }}>
+            <Wrap container spacing={{ xs: 1 }}>
                 {(data.items.map(({ title, value }) => {
                     const [statedTitle] = React.useState(title);
                     const [statedValue] = React.useState(value);
                     return ChainInfoCard(statedTitle, statedValue);
                 }))}
-            </Grid>
+            </Wrap>
         </Box>
     );
 };

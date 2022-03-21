@@ -1,5 +1,6 @@
 import {
     Paper,
+    Grid,
     Typography
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -46,9 +47,13 @@ export const Item = styled(Paper)(({ theme }) => ({
 
 export const Data = styled(Typography)(({ theme }) => ({
     fontSize: 22,
-    fontWeight: 600,
+    fontWeight: 500,
     [theme.breakpoints.down("md")]: {
         fontSize: 16,
     },
+}));
+
+export const Wrap = styled(Grid)(() => ({
+    position: "relative",
 }));
 
