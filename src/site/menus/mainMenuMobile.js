@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import IconButton from "@mui/material/IconButton";
+
+import { 
+    Link,
+    IconButton,
+    Box,
+} from "@mui/material";
+
 import MenuIcon from "@mui/icons-material/Menu";
-import Box from "@mui/material/Box";
 
 //drawer elements used
 import Drawer from "@mui/material/Drawer";
 import CloseIcon from "@mui/icons-material/Close";
-import Divider from "@mui/material/Divider";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 
@@ -70,7 +74,6 @@ export default function MobileNav() {
             >
                 {/* The inside of the drawer */}
                 <Box sx={{
-                    p: 2,
                     height: 1,
                     backgroundColor: "#4F4F4F",
                     color: "#ffffff",
@@ -81,16 +84,15 @@ export default function MobileNav() {
                     when clicking the icon it calls the function toggleDrawer 
                     and closes the drawer by setting the variable open to false
                     */}
-                    <IconButton sx={{mb: 2}}>
+                    <IconButton sx={{ p: 0, m: 2, }}>
                         <CloseIcon 
                             onClick={toggleDrawer(false)} 
-                            sx={{color: "primary.contrastText"}}
+                            sx={{color: "#ffffff"}}
                         />
                     </IconButton>
 
-                    <Divider sx={{mb: 2}} />
-
-                    <Box sx={{mb: 2}}>
+                    <Box sx={{p: 2}}>
+                        <Link href="" underline="hover">Overview</Link>
                         <ListItemButton>
                             <ListItemText primary="Blockchain" />
                         </ListItemButton>
