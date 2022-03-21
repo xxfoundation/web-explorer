@@ -38,6 +38,8 @@ Check the create-react-app for detailed instructions
 
 ### vscode
 
+#### linter
+
 Just install the `eslint` plugin to validate the code
 
 You can this configuration to the project settings
