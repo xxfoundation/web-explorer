@@ -33,7 +33,7 @@ const ChainInfoCard = (title, value) => {
 
 const chainInfo = () => {
     return (
-        <Box className="blockchain-component-chainInfo">
+        <Box className="blockchain-component-chainInfo" mb={7} >
             <Typography variant='h3' gutterBottom>Chain data</Typography>
             <Wrap container spacing={{ xs: 1 }}>
                 {(data.items.map(({ title, value }) => {
