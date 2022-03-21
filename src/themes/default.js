@@ -6,6 +6,9 @@ export const theme = createTheme({
             main: "#00A2D6", // sets link color
             contrastText: "#FFF",
         },
+        text: {
+            primary: "#4f4f4f",
+        },
         background: {
             default: "#E5E5E5",
             transparent: "rgba(255,255,255,0.24)",
@@ -28,10 +31,10 @@ export const theme = createTheme({
         },
     },
     typography: {
-        fontFamily: "'Mulish', sans-serif",
+        fontFamily: "'Roboto', sans-serif",
         h1: {
             fontSize: 36,
-            fontWeight: 800,
+            fontWeight: 700,
         },
         h2: {
             fontSize: 36,
@@ -40,7 +43,9 @@ export const theme = createTheme({
         h3: {
             fontSize: 16,
             fontWeight: 700,
+            letterSpacing: 1.5,
             textTransform: "uppercase",
+            color: "#4f4f4f",
         },
         h4: {
             fontSize: 12,
@@ -65,7 +70,7 @@ export const theme = createTheme({
             fontSize: 12,
         },
         button: {
-            fontWeight: 600,
+            fontWeight: 500,
         },
     },
     gradient: {
