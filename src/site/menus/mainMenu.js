@@ -14,36 +14,35 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 //export const DesktopNav = () => {
 export default function DesktopNav() {
+    
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+
+    const handleClick = (index, event) => {
+        setAnchorEl({ [index]: event.currentTarget });
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
+
     return (
         <Box>
             <Grid container spacing={2}>
-                <Grid item xs>
+                <Grid item xs key={100}>
                     <MenuButton
-                        id="blockchain-button"
-                        aria-controls={open ? "blockchain-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        onClick={handleClick}
+                        onClick={(e) => handleClick(100, e)}
                         endIcon = {<KeyboardArrowDownIcon />}
                     >
                         Blockchain
                     </MenuButton>
                     <Menu
-                        id="blockchain-menu"
-                        anchorEl={anchorEl}
-                        open={open}
+                        anchorEl={anchorEl && anchorEl[100]}
+                        keepMounted
+                        open={anchorEl && Boolean(anchorEl[100])}
                         onClose={handleClose}
-                        MenuListProps={{
-                            "aria-labelledby": "blockchain-button",
-                        }}
+                        getContentAnchorEl={null}
+                        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                        transformOrigin={{ vertical: "top", horizontal: "center" }}
                     >
                         <MenuItem onClick={handleClose}>Blocks</MenuItem>
                         <MenuItem onClick={handleClose}>Extrinsics</MenuItem>
@@ -58,37 +57,30 @@ export default function DesktopNav() {
                     </MenuButton>
                 </Grid>
                 
-                <Grid item xs>
+                <Grid item xs key={200}>
                     <MenuButton
-                        id="governance-button"
-                        aria-controls={open ? "governance-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        onClick={handleClick}
+                        onClick={(e) => handleClick(200, e)}
                         endIcon = {<KeyboardArrowDownIcon />}
                     >
                         Governance
                     </MenuButton>
                     <Menu
-                        id="governance-menu"
-                        anchorEl={anchorEl}
-                        open={open}
+                        anchorEl={anchorEl && anchorEl[200]}
+                        keepMounted
+                        open={anchorEl && Boolean(anchorEl[200])}
                         onClose={handleClose}
-                        MenuListProps={{
-                            "aria-labelledby": "governance-button",
-                        }}
+                        getContentAnchorEl={null}
+                        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                        transformOrigin={{ vertical: "top", horizontal: "center" }}
                     >
-                        <MenuItem onClick={handleClose}>Blocks</MenuItem>
-                        <MenuItem onClick={handleClose}>Extrinsics</MenuItem>
-                        <MenuItem onClick={handleClose}>Transfers</MenuItem>
-                        <MenuItem onClick={handleClose}>Events</MenuItem>
+                        <MenuItem onClick={handleClose}>Proposal</MenuItem>
+                        <MenuItem onClick={handleClose}>Referenda</MenuItem>
+                        <MenuItem onClick={handleClose}>Motions</MenuItem>
                     </Menu>
                 </Grid>
 
                 <Grid item xs>
-                    <MenuButton
-                        id="accounts-button"
-                    >
+                    <MenuButton  id="accounts-button" >
                         Accounts
                     </MenuButton>
                 </Grid>
