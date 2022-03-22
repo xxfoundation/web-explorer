@@ -6,9 +6,7 @@ import {
     MenuItem,
 } from "@mui/material";
 
-import {
-    MenuButton,
-} from "./menu.styles"; 
+import {  MenuButton } from "./menu.styles"; 
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
@@ -73,7 +71,7 @@ export default function DesktopNav() {
                         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                         transformOrigin={{ vertical: "top", horizontal: "center" }}
                     >
-                        <MenuItem onClick={handleClose}>Proposal</MenuItem>
+                        <MenuItem onClick={handleClose}>Democracy Proposal</MenuItem>
                         <MenuItem onClick={handleClose}>Referenda</MenuItem>
                         <MenuItem onClick={handleClose}>Motions</MenuItem>
                     </Menu>

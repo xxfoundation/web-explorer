@@ -18,6 +18,10 @@ export const getDesignTokens = (mode) => ({
             default: "#E5E5E5",
             transparent: "rgba(255,255,255,0.24)",
         },
+        grey: {
+            A000: "#FFFFFF",
+            neutral: "#D2D2D2",
+        }
     },
     gradient: {
         ...(mode === "light"
