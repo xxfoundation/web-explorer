@@ -1,4 +1,4 @@
-import { gql, useSubscription } from "@apollo/client";
+import { useSubscription } from "@apollo/client";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {
     Box,
@@ -6,6 +6,7 @@ import {
     Typography
 } from "@mui/material";
 import React from "react";
+import { LIST_BLOCKS_ORDERED } from "../schemas/blocks.schema.js";
 import PaperWithHeader from "./paperWithHeader";
 
 
@@ -44,41 +45,32 @@ const BlockChain = ({ newBlocks }) => {
                 blocks: newBlocks.map((block) => {
                     return {
                         ...block,
-                        newEntry: oldHashes.length && !oldHashes.includes(block.hash) 
+                        newEntry: oldHashes.length && !oldHashes.includes(block.hash)
                     };
                 })
             };
         });
     }, [newBlocks]);
 
+    return state.blocks.map((b) => {
+        return <ItemHandler block={b} key={b.hash} />;
+    });
+};
+
+const BlockChainRenderer = () => {
+    const { data, error, loading } = useSubscription(
+        LIST_BLOCKS_ORDERED,
+        { variables: { limit: PAGE_LIMIT } });
+    if (loading) return <></>;
+    if (error) return <></>;
     return <PaperWithHeader
         header="LATEST BLOCKS"
         linkName={"SEE ALL"}
         linkAddress={"##"}
         height={500}
     >
-        {state.blocks.map((b) => {
-            return <ItemHandler block={b} key={b.hash} />;
-        })}
+        <BlockChain newBlocks={data.static_Blocks} />
     </PaperWithHeader>;
-};
-
-const NEW_BLOCKS = gql`
-subscription NewBlocks($limit: Int) {
-    # TODO order by block number
-    Blocks(order_by: {createdAt: desc}, limit: $limit) {
-        hash
-        data
-        createdAt
-        updatedAt
-    }
-}`;
-
-const BlockChainRenderer = () => {
-    const { data, error, loading } = useSubscription(NEW_BLOCKS, { variables: { limit: PAGE_LIMIT } });
-    if (loading) return <></>;
-    if (error) return <></>;
-    return <BlockChain newBlocks={data.Blocks} />;
 };
 
 export default BlockChainRenderer;

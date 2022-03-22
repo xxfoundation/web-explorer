@@ -1,0 +1,12 @@
+fragment Block on static_Blocks {
+  block_producer
+  block_time
+  extrinsics_root
+  hash
+  number
+  parent_hash
+  spec_version
+  time
+  status
+  state_root
+}

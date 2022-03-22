@@ -11,6 +11,8 @@ function apolloClient({ httpUri = `${graphqlHost}/v1/graphql`, wsUrl = `${graphq
     });
     const wsLink = new GraphQLWsLink(createClient({
         url: `ws${securitySuffix}://${wsUrl}`,
+        disablePong: true
+        // TODO on dev changes in the code are breaking the code
     }));
 
     const splitLink = split(
@@ -26,7 +28,7 @@ function apolloClient({ httpUri = `${graphqlHost}/v1/graphql`, wsUrl = `${graphq
     );
     return new ApolloClient({
         link: splitLink,
-        cache: new InMemoryCache()
+        cache: new InMemoryCache(),
     });
 }
 export { apolloClient };

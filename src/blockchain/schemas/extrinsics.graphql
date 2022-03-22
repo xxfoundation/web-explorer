@@ -1,0 +1,8 @@
+fragment Extrinsics on static_Extrinsics {
+  time
+  result
+  id
+  hash
+  data
+  actions
+}
