@@ -5,16 +5,17 @@ import {
     Box,
 } from "@mui/material";
 
-import MenuIcon from "@mui/icons-material/Menu";
-
 import {
     MobileTitle,
     MobileListLink,
-    MobileTitleLink
+    MobileTitleLink,
 } from "./menu.styles";
 
+import { theme } from "../../themes/default";
+import MenuIcon from "@mui/icons-material/Menu";
+import { CloseIcon } from "../icons/sfIcons.js";
+
 import Drawer from "@mui/material/Drawer";
-import CloseIcon from "@mui/icons-material/Close";
 
 export default function MobileNav() {
     const [open, setState] = useState(false);
@@ -57,10 +58,14 @@ export default function MobileNav() {
                     height: 1,
                     backgroundColor: "#4F4F4F",
                 }}>
-                    <IconButton sx={{ p: 0, ml: 3, mt: 3, mb: 4, }}>
-                        <CloseIcon 
-                            onClick={toggleDrawer(false)} 
-                            sx={{color: "grey.A000"}}
+                    <IconButton 
+                        onClick={toggleDrawer(false)}
+                        sx={{ p: 0, ml: 4, mt: 4, mb: 4, }} 
+                    >
+                        <CloseIcon
+                            color={theme.palette.primary.contrastText}
+                            width="14px"
+                            
                         />
                     </IconButton>
                     <Box sx={{ py: 2, px: 4, }}>

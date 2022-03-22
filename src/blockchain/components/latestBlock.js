@@ -1,11 +1,14 @@
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
+
+import React from "react";
 import {
     Box,
     Grid, Link,
     Typography
 } from "@mui/material";
-import React from "react";
+
+import { theme } from "../../themes/default";
 import PaperWithHeader from "./paperWithHeader";
+import { ClockIcon } from "../../site/icons/sfIcons.js";
 
 const blocks = {
     "items": [...Array(9).keys()].map((i) => {
@@ -23,7 +26,7 @@ const statusToIconMap = {
     // TODO replace with required fonts
     "pending": {
         "label": "pending",
-        "icon": <AccessTimeIcon color="bad" />
+        "icon": <ClockIcon color={theme.palette.bad.main} />
     }
 };
 
