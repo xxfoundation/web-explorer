@@ -31,7 +31,12 @@ const Footer = () => (
                         <FooterMenu />
                     </Grid>
                 </Grid>
-                <Divider sx={{ mt: 5, mb: 3, borderColor: "grey.600" }} />
+                <Grid sx={{ mt: 2 }}>
+                    <Typography variant="body1" sx={{ fontSize: 10 }}>
+                        xxlabs xxnetwork v0.2.0
+                    </Typography>
+                </Grid>
+                <Divider sx={{ mt: 2, mb: 3, borderColor: "grey.600" }} />
                 <Grid container justifyContent="space-between" spacing={3}>
                     <Grid item xs={12} md={8}>
                         <Typography variant="body1">
