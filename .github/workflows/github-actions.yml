@@ -35,17 +35,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm install
+      # - name: Install dependencies
+      #   run: npm install
 
-      - name: Run the tests and generate coverage report
-        run: npm test -- --coverage
+      # - name: Run the tests and generate coverage report
+      #   run: npm test -- --coverage
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v1
 
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
 
       # Deploy the site with netlify-cli
       # - name: Deploy Site
@@ -63,45 +63,46 @@ jobs:
           SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
           SLACK_ICON: https://github.com/rtCamp.png?size=48
           SLACK_MESSAGE: 'Post Content :rocket:'
-          SLACK_TITLE: Post Title
-          SLACK_USERNAME: baltasar
+          SLACK_TITLE: "Author: ${{ github.event.pusher.name }} | ${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+          SLACK_USERNAME: ${{ github.event.pull_request.title || github.event.head_commit.message }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        
         # if: success()
 
-      # - name: action failed
-      #   id: failureSlackNotification
-      #   uses: slackapi/slack-github-action@v1.18.0
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      #   with:
-      #     channel-id: ${{ secrets.CHANNEL_ID }}
-      #     payload: |
-      #       {
-      #           "attachments": [
-      #             {
-      #                   "author_name": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
-      #                   "author_link": "${{ github.event.pull_request.html_url || github.event.head_commit.url }} ",
-      #                   "title": "Author: ${{ github.event.pusher.name }} ${{ github.event.pusher.email }}",
-      #                   "color": "#d91e1e",
-      #                   "fields": [
-      #                       {
-      #                           "short": false,
-      #                           "title": "GitHub Action build result",
-      #                           "value": "${{ job.status }}"
-      #                       },
-      #                       {
-      #                           "short": true,
-      #                           "title": "branch",
-      #                           "value": "${{ steps.extract_branch.outputs.branch }}"
-      #                       },
-      #                       {
-      #                           "short": true,
-      #                           "title": "time",
-      #                           "value": "${{ steps.date.outputs.date }}"
-      #                       }
-      #                   ]
-      #               }
-      #           ]
-      #       }
+      - name: action failed
+        id: failureSlackNotification
+        uses: slackapi/slack-github-action@v1.18.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        with:
+          channel-id: ${{ secrets.CHANNEL_ID }}
+          payload: |
+            {
+                "attachments": [
+                  {
+                        "author_name": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
+                        "author_link": "${{ github.event.pull_request.html_url || github.event.head_commit.url }} ",
+                        "title": "Author: ${{ github.event.pusher.name }} ${{ github.event.pusher.email }}",
+                        "color": "#d91e1e",
+                        "fields": [
+                            {
+                                "short": false,
+                                "title": "GitHub Action build result",
+                                "value": "${{ job.status }}"
+                            },
+                            {
+                                "short": true,
+                                "title": "branch",
+                                "value": "${{ steps.extract_branch.outputs.branch }}"
+                            },
+                            {
+                                "short": true,
+                                "title": "time",
+                                "value": "${{ steps.date.outputs.date }}"
+                            }
+                        ]
+                    }
+                ]
+            }
       #   if: failure()
