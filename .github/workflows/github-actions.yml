@@ -57,52 +57,51 @@ jobs:
 
       - name: actions successful
         id: successfulMsg
-        uses: slackapi/slack-github-action@v1.16.0
+        uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-        with:
-          channel-id: ${{ secrets.CHANNEL_ID }}
-          payload: |
-            {
-              "text": "Slack Webhook setup test. Ignore."
-            }
-        if: success()
+          SLACK_CHANNEL: xxscan-app
+          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: 'Post Content :rocket:'
+          SLACK_TITLE: Post Title
+          SLACK_USERNAME: baltasar
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        # if: success()
 
-      - name: action failed
-        id: failureSlackNotification
-        uses: slackapi/slack-github-action@v1.18.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-        with:
-          channel-id: ${{ secrets.CHANNEL_ID }}
-          payload: |
-            {
-                "attachments": [
-                  {
-                        "author_name": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
-                        "author_link": "${{ github.event.pull_request.html_url || github.event.head_commit.url }} ",
-                        "title": "Author: ${{ github.event.pusher.name }} ${{ github.event.pusher.email }}",
-                        "color": "#d91e1e",
-                        "fields": [
-                            {
-                                "short": false,
-                                "title": "GitHub Action build result",
-                                "value": "${{ job.status }}"
-                            },
-                            {
-                                "short": true,
-                                "title": "branch",
-                                "value": "${{ steps.extract_branch.outputs.branch }}"
-                            },
-                            {
-                                "short": true,
-                                "title": "time",
-                                "value": "${{ steps.date.outputs.date }}"
-                            }
-                        ]
-                    }
-                ]
-            }
-        if: failure()
+      # - name: action failed
+      #   id: failureSlackNotification
+      #   uses: slackapi/slack-github-action@v1.18.0
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      #   with:
+      #     channel-id: ${{ secrets.CHANNEL_ID }}
+      #     payload: |
+      #       {
+      #           "attachments": [
+      #             {
+      #                   "author_name": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
+      #                   "author_link": "${{ github.event.pull_request.html_url || github.event.head_commit.url }} ",
+      #                   "title": "Author: ${{ github.event.pusher.name }} ${{ github.event.pusher.email }}",
+      #                   "color": "#d91e1e",
+      #                   "fields": [
+      #                       {
+      #                           "short": false,
+      #                           "title": "GitHub Action build result",
+      #                           "value": "${{ job.status }}"
+      #                       },
+      #                       {
+      #                           "short": true,
+      #                           "title": "branch",
+      #                           "value": "${{ steps.extract_branch.outputs.branch }}"
+      #                       },
+      #                       {
+      #                           "short": true,
+      #                           "title": "time",
+      #                           "value": "${{ steps.date.outputs.date }}"
+      #                       }
+      #                   ]
+      #               }
+      #           ]
+      #       }
+      #   if: failure()
