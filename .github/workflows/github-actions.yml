@@ -17,10 +17,6 @@ jobs:
       matrix:
         node-version: [16.x]
 
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
     steps:
       # Checkout repo
       - uses: actions/checkout@v2
@@ -62,6 +58,9 @@ jobs:
       - name: actions successful
         id: successfulMsg
         uses: slackapi/slack-github-action@v1.18.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
         with:
           channel-id: ${{ secrets.CHANNEL_ID }}
           payload: |
@@ -97,6 +96,9 @@ jobs:
       - name: action failed
         id: failureSlackNotification
         uses: slackapi/slack-github-action@v1.18.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
         with:
           channel-id: ${{ secrets.CHANNEL_ID }}
           payload: |
