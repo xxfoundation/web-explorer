@@ -65,7 +65,7 @@ jobs:
           SLACK_MESSAGE: 'Post Content :rocket:'
           SLACK_TITLE: Post Title
           SLACK_USERNAME: baltasar
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
         # if: success()
 
       # - name: action failed
