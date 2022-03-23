@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Deploy to Netlify on commits to staging
+name: xxscan - Github Actions
 
 on:
   push:
@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    name: Building Node Application
     runs-on: ubuntu-latest
 
     strategy:
@@ -55,54 +56,18 @@ jobs:
       #   if: contains(github.ref, "staging")
       #   run: netlify deploy --dir=public --prod
 
+  notify:
+    name: Repo Updated - Push Action
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
       - name: actions successful
         id: successfulMsg
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: xxscan-app
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Post Content :rocket:'
-          SLACK_TITLE: "Author: ${{ github.event.pusher.name }} | ${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-          SLACK_USERNAME: ${{ github.event.pull_request.title || github.event.head_commit.message }}
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_MESSAGE: '${{ github.event.pull_request.title || github.event.head_commit.message }} :rocket:'
+          SLACK_TITLE: "${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+          SLACK_USERNAME: '${{ github.event.pusher.name }}'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        
-        # if: success()
-
-      - name: action failed
-        id: failureSlackNotification
-        uses: slackapi/slack-github-action@v1.18.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-        with:
-          channel-id: ${{ secrets.CHANNEL_ID }}
-          payload: |
-            {
-                "attachments": [
-                  {
-                        "author_name": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
-                        "author_link": "${{ github.event.pull_request.html_url || github.event.head_commit.url }} ",
-                        "title": "Author: ${{ github.event.pusher.name }} ${{ github.event.pusher.email }}",
-                        "color": "#d91e1e",
-                        "fields": [
-                            {
-                                "short": false,
-                                "title": "GitHub Action build result",
-                                "value": "${{ job.status }}"
-                            },
-                            {
-                                "short": true,
-                                "title": "branch",
-                                "value": "${{ steps.extract_branch.outputs.branch }}"
-                            },
-                            {
-                                "short": true,
-                                "title": "time",
-                                "value": "${{ steps.date.outputs.date }}"
-                            }
-                        ]
-                    }
-                ]
-            }
-      #   if: failure()
