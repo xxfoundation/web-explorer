@@ -1,0 +1,7 @@
+fragment Transfers on static_Transfers {
+  number
+  from
+  to
+  time
+  createdAt
+}

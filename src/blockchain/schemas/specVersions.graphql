@@ -1,0 +1,11 @@
+fragment SpecVersions on static_SpecVersions {
+  storageFunctions
+  name
+  id
+  events
+  errorTypes
+  constants
+  callFunctions
+  createdAt
+  blockNumber
+}

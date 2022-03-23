@@ -1,0 +1,14 @@
+fragment BlockProducers on static_BlockProducers {
+    cmixId
+    commission
+    controller
+    location
+    nominator
+    reward
+    selfBonded
+    sessionKey
+    stash
+    totalBonded
+    nominators
+    eras
+}

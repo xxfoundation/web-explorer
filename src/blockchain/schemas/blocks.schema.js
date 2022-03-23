@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-const listBlocksOrdered = gql`
+const LIST_BLOCKS_ORDERED = gql`
 subscription ListBlocksOrdered($limit: Int) {
     static_Blocks(order_by: {number: desc}, limit: $limit) {
         hash
@@ -20,13 +20,21 @@ subscription ListBlocksOrdered($limit: Int) {
 }
 `;
 
-const blockByNumber = gql`
+const BLOCK_BY_NUMBER = gql`
 #import "./blocks.graphql"
-subscription BlockByNumber($number: Int_comparison_exp = {}) {
+query BlockByNumber($number: Int_comparison_exp = {}) {
   static_Blocks(where: {number: $number}) {
     ...Block
   }
 }
 `;
 
-export { listBlocksOrdered as LIST_BLOCKS_ORDERED, blockByNumber as BLOCK_BY_NUMBER };
+const ON_BLOCK_STATUS_CHANGE = gql`
+subscription OnBLockStatusChange($number: Int_comparison_exp = {}) {
+  static_Blocks(where: {number: $number}) {
+    status
+  }
+}
+`;
+
+export { LIST_BLOCKS_ORDERED, BLOCK_BY_NUMBER, ON_BLOCK_STATUS_CHANGE };
