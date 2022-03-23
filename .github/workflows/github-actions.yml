@@ -64,7 +64,7 @@ jobs:
         with:
           payload: |
             {
-              "test": "Slack Webhook setup test. Ignore."
+              "text": "Slack Webhook setup test. Ignore."
             }
         if: success()
 
