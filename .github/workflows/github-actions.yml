@@ -5,9 +5,8 @@ name: xxscan - Github Actions
 
 on:
   push:
-    branches: [ci-cd]
+    branches: [master, staging, release, dev]
   pull_request:
-    branches: [staging]
 
 jobs:
   build:
@@ -68,7 +67,7 @@ jobs:
           SLACK_CHANNEL: xxscan-app
           SLACK_COLOR: ${{ job.status }}
           SLACK_ICON_EMOJI: ':rocket:'
-          SLACK_MESSAGE: 'Commit Message:\n${{ github.event.pull_request.title || github.event.head_commit.message }}'
-          SLACK_TITLE: 'Branch: ${{ github.event.branch }}'
+          SLACK_MESSAGE: '${{ github.event.pull_request.title || github.event.head_commit.message }}'
+          SLACK_TITLE: 'Commit Message'
           SLACK_USERNAME: '${{ github.event.pusher.name }}'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
