@@ -62,6 +62,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
         with:
+          channel-id: ${{ secrets.CHANNEL_ID }}
           payload: |
             {
               "text": "Slack Webhook setup test. Ignore."
