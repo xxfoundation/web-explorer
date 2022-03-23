@@ -59,38 +59,35 @@ jobs:
         id: successfulMsg
         uses: slackapi/slack-github-action@v1.18.0
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           channel-id: ${{ secrets.CHANNEL_ID }}
-          payload: |
-            {
-                "attachments": [
-                    {
-                        "author_name": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
-                        "author_link": "${{ github.event.pull_request.html_url || github.event.head_commit.url }} ",
-                        "title": "Author: ${{ github.event.pusher.name }} ${{ github.event.pusher.email }}",
-                        "color": "#7CD197",
-                        "fields": [
-                            {
-                                "short": false,
-                                "title": "GitHub Action build result",
-                                "value": "${{ job.status }}"
-                            },
-                            {
-                                "short": true,
-                                "title": "branch",
-                                "value": "${{ steps.extract_branch.outputs.branch }}"
-                            },
-                            {
-                                "short": true,
-                                "title": "time",
-                                "value": "${{ steps.date.outputs.date }}"
-                            }
-                        ]
-                    }
-                ]
-            }
+          attachments: |
+            [
+              {
+                  "author_name": "${{ github.event.pull_request.title || github.event.head_commit.message }}",
+                  "author_link": "${{ github.event.pull_request.html_url || github.event.head_commit.url }} ",
+                  "title": "Author: ${{ github.event.pusher.name }} ${{ github.event.pusher.email }}",
+                  "color": "#7CD197",
+                  "fields": [
+                      {
+                          "short": false,
+                          "title": "GitHub Action build result",
+                          "value": "${{ job.status }}"
+                      },
+                      {
+                          "short": true,
+                          "title": "branch",
+                          "value": "${{ steps.extract_branch.outputs.branch }}"
+                      },
+                      {
+                          "short": true,
+                          "title": "time",
+                          "value": "${{ steps.date.outputs.date }}"
+                      }
+                  ]
+              }
+            ]
         if: success()
 
       - name: action failed
