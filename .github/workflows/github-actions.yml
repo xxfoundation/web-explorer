@@ -5,12 +5,12 @@ name: xxscan - Github Actions
 
 on:
   push:
-    branches: [ci-cd, master, staging, release, dev]
+    branches: [master, staging, release, dev]
   pull_request:
 
 jobs:
   build:
-    name: Building Node Application
+    name: Build Node Application
     runs-on: ubuntu-latest
 
     strategy:
@@ -35,8 +35,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # - name: Install dependencies
-      #   run: npm install
+      - name: Install dependencies
+        run: npm install
 
       # - name: Run the tests and generate coverage report
       #   run: npm test -- --coverage
@@ -44,23 +44,39 @@ jobs:
       # - name: Upload coverage to Codecov
       #   uses: codecov/codecov-action@v1
 
-      # - name: Build
-      #   run: npm run build
+      - name: Build
+        run: npm run build
 
-      # Deploy the site with netlify-cli
-      # - name: Deploy Site
-      #   env:
-      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      #   if: contains(github.ref, "staging")
-      #   run: netlify deploy --dir=public --prod
+  deploy-staging:
+    name: Deploy Application to Netlify Staging
+    needs: [build]
+    runs-on:  ubuntu-latest
+    env:
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_STAGING }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    if: contains(github.ref, "staging")
+    steps:
+      - name: Deploy to Staging
+        run: netlify deploy --prod --open
+
+  deploy-prod:
+    name: Deploy Application to Netlify Production
+    needs: [build]
+    runs-on:  ubuntu-latest
+    env:
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_PROD }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    if: contains(github.ref, "release")
+    steps:
+      - name: Deploy to Prod
+        run: netlify deploy --prod
 
   notify:
-    name: Repo Updated - Push Action
+    name: Git Notifications
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - name: actions successful
+      - name: notify slack channel
         id: successfulMsg
         uses: rtCamp/action-slack-notify@v2
         env:
@@ -70,5 +86,4 @@ jobs:
           SLACK_MESSAGE: '${{ github.event.pull_request.title || github.event.head_commit.message }}'
           SLACK_TITLE: 'Commit Message'
           SLACK_USERNAME: '${{ github.event.pusher.name }}'
-          SLACK_LINK_NAMES: 'true'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
