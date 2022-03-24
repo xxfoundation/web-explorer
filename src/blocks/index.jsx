@@ -7,7 +7,7 @@ import BlocksTable from "./components/table";
 
 const BlocksPage = () => {
     return <>
-        <Container>
+        <Container sx={{ my: 5, }}>
             <Stack justifyContent={"space-between"} direction={"row"}>
                 <Item>
                     <Typography variant="subtitle2">blochchain</Typography>
@@ -15,7 +15,6 @@ const BlocksPage = () => {
                 </Item>
                 <Item> 
                     <LoadingButton
-                        onClick={console.log("foi")}
                         loading={false}
                         startIcon={<FileDownloadIcon />}
                     >

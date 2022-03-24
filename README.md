@@ -1,4 +1,5 @@
 # xxscan
+
 xx network web app to display in chain data
 
 ## Available Scripts
@@ -37,6 +38,7 @@ Execute the lints in the source code
 Just install the `eslint` plugin to validate the code
 
 You can this configuration to the project settings
+
 ``` json
 {
     "editor.codeActionsOnSave": {
@@ -78,6 +80,7 @@ HUSKY=0 git push
     /themes
 
 Rules:
+
 - each folder can have an `index` to handle routing behavior
 - and a `components` for reusability or cleanness of code
 - if the component is reused between multiple routes move the file to the `components` folder that wraps every component that uses it
