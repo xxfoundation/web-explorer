@@ -70,4 +70,5 @@ jobs:
           SLACK_MESSAGE: '${{ github.event.pull_request.title || github.event.head_commit.message }}'
           SLACK_TITLE: 'Commit Message'
           SLACK_USERNAME: '${{ github.event.pusher.name }}'
+          SLACK_LINK_NAMES: 'true'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
