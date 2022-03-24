@@ -15,11 +15,11 @@ const data = {
   ]
 };
 
-const ChainInfoCard = (title, value) => {
+const ChainInfoCard = (title: string, value: string) => {
   return (
     <Grid item xs={6} sm={3} md={3} key={title}>
       <Item>
-        <Typography variant="body4">{title}</Typography>
+        <Typography variant='body2'>{title}</Typography>
         <Data>{value}</Data>
       </Item>
     </Grid>

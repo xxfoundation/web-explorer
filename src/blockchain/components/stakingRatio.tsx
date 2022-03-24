@@ -1,7 +1,8 @@
 import { gql, useSubscription } from '@apollo/client';
 import { Typography } from '@mui/material';
 import React from 'react';
-import LineChart from '../../charts/linecharts';
+import LineChart from '../../charts/highcharts/LineChart';
+import { formatPercent, tooltipFormatter } from './formatters';
 
 const ON_STAKING_RATIO_CHANGE = gql`
   subscription OnStakingRatioChange {
@@ -16,26 +17,16 @@ const StakingRatio = () => {
     console.error(error);
     return <Typography>error loading staking ratio</Typography>;
   }
-  const sortedAccounts = data.stakingRatio.sort((a, b) => a[0] - b[0]);
+  const sortedAccounts = data.stakingRatio.sort((a: number[], b: number[]) => a[0] - b[0]);
   return (
     <>
       <LineChart
-        provider={'high'}
-        title="staking ratio"
-        data={{
-          name: 'ERA',
-          marker: { symbol: 'circle' },
-          data: loading ? [] : sortedAccounts
+        title='staking ratio'
+        data={loading ? [] : sortedAccounts}
+        tooltipFormatter={tooltipFormatter}
+        labelFormatters={{
+          yAxis: formatPercent
         }}
-        tooltipFormatter={function () {
-          return `<b>${this.series.name} ${this.x}</b><br />${Math.floor(this.y * 100)}%`;
-        }}
-        labelsFormatter={{
-          yAxis: function () {
-            return `${this.value * 100}%`;
-          }
-        }}
-        maxY={1}
       />
     </>
   );

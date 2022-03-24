@@ -1,7 +1,7 @@
 import { gql, useSubscription } from '@apollo/client';
 import { Typography } from '@mui/material';
 import React from 'react';
-import LineChart from '../../charts/linecharts';
+import { LineChart } from '../../charts/highcharts';
 
 const ON_NEW_ACCOUNTS = gql`
   subscription OnNewAccounts {
@@ -16,17 +16,13 @@ const NewAccounts = () => {
     console.error(error);
     return <Typography>error loading new accounts</Typography>;
   }
-  const sortedAccounts = data.newAccounts.sort((a, b) => a[0] - b[0]);
+  const sortedAccounts = data.newAccounts.sort((a: number[], b: number[]) => a[0] - b[0]);
+
   return (
     <>
       <LineChart
-        provider={'high'}
         title="NEW ACCOUNTS high"
-        data={{
-          name: 'ERA',
-          marker: { symbol: 'circle' },
-          data: loading ? [] : sortedAccounts
-        }}
+        data={loading ? [] : sortedAccounts}
       />
     </>
   );

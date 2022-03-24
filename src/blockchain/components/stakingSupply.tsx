@@ -1,10 +1,12 @@
 import React from 'react';
-import { PieChartWithLegend } from '../../charts/piechart';
+import { PieChartWithLegend } from '../../charts/highcharts/PieChart';
 import PaperWithHeader from './paperWithHeader';
+
+import type { StakingSupplyData } from '../types';
 
 const StakingSupply = () => {
   const value = 9999120003;
-  const data = [
+  const data: StakingSupplyData[] = [
     {
       name: 'staked',
       y: 58,
@@ -46,11 +48,9 @@ const StakingSupply = () => {
     }
   ];
   return (
-    <>
-      <PaperWithHeader>
-        <PieChartWithLegend data={data} name="staking supply" value={value} />
-      </PaperWithHeader>
-    </>
+    <PaperWithHeader>
+      <PieChartWithLegend data={data} name="staking supply" value={value} />
+    </PaperWithHeader>
   );
 };
 
