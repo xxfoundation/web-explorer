@@ -1,31 +1,15 @@
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { Container, Stack, Typography } from "@mui/material";
 import React from "react";
-import { Item } from "../blockchain/components/chainInfo.styles";
-import BlocksTable from "./components/table";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+import Block from "./block";
+import BlocksPage from "./blocks";
 
-const BlocksPage = () => {
-    return <>
-        <Container sx={{ my: 5, }}>
-            <Stack justifyContent={"space-between"} direction={"row"}>
-                <Item>
-                    <Typography variant="subtitle2">blochchain</Typography>
-                    <Typography variant="h1">Blocks</Typography>
-                </Item>
-                <Item> 
-                    <LoadingButton
-                        loading={false}
-                        startIcon={<FileDownloadIcon />}
-                    >
-                        Download data
-                    </LoadingButton>
-                </Item>
-            </Stack>
 
-            <BlocksTable />
-        </Container>
-    </>;
+const BlockRouter = () => {
+    const { path } = useRouteMatch();
+    return <Switch>
+        <Route exact path={path}><BlocksPage /></Route>
+        <Route path={`${path}/:number`}><Block /></Route>
+    </Switch>;
 };
 
-export default BlocksPage;
+export default BlockRouter;

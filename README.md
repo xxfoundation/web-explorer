@@ -59,25 +59,24 @@ HUSKY=0 git push
 
 ## file structure
 
-    ...
+``` .txt
+index.js
+App.js
+/home
+/blocks
     index.js
-    App.js
-    /home
-    /blockchain
-        /blocks
-            index.js
-        /components
-            /charts
-        /extrinsics
-        /transfers
-        /events
-        index.jsx
-    /governance
-    /accounts
-    /staking
     /components
-        /site
-    /themes
+        /charts
+/extrinsics
+/transfers
+/events
+/governance
+/accounts
+/staking
+/components
+    /site
+/themes
+```
 
 Rules:
 

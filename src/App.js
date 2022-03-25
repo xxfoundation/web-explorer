@@ -19,8 +19,14 @@ function App() {
                         <BlockChain />
                     </Route>
                     <Route path="/blocks">
-                        <BlocksPage />
+                        <BlocksPage />{/* I can do this only here for now */}
                     </Route>
+                    <Route path="/extrinsics"><h1>extrinsics</h1></Route>
+                    <Route path="/transfers"><h1>transfers</h1></Route>
+                    <Route path="/events"><h1>events</h1></Route>
+                    <Route path="/governance"><h1>governance</h1></Route>
+                    <Route path="/accounts"><h1>accounts</h1></Route>
+                    <Route path="/staking"><h1>staking</h1></Route>
                 </Switch>
                 <SiteFooter />
             </ThemeProvider>

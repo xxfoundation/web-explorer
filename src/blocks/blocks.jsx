@@ -1,4 +1,6 @@
-import { Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { LoadingButton } from "@mui/lab";
+import { Container, Link, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 
@@ -55,4 +57,28 @@ const BlocksTable = () => {
     </Box>;
 };
 
-export default BlocksTable;
+
+const BlocksPage = () => {
+    return <>
+        <Container sx={{ my: 5, }}>
+            <Stack justifyContent={"space-between"} direction={"row"}>
+                <div>
+                    <Typography variant="subtitle2">blochchain</Typography>
+                    <Typography variant="h1">Blocks</Typography>
+                </div>
+                <div> 
+                    <LoadingButton
+                        loading={false}
+                        startIcon={<FileDownloadIcon />}
+                    >
+                        Download data
+                    </LoadingButton>
+                </div>
+            </Stack>
+
+            <BlocksTable />
+        </Container>
+    </>;
+};
+
+export default BlocksPage;
