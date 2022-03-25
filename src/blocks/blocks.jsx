@@ -34,7 +34,7 @@ const BlocksTable = () => {
                 <TableBody>
                     {data.map((item) => {
                         return <TableRow key={item.number }>
-                            <TableCell><Link href="#">{item.number}</Link></TableCell>
+                            <TableCell><Link href={`/blocks/${item.number}`}>{item.number}</Link></TableCell>
                             <TableCell>{item.status}</TableCell>
                             <TableCell>{item.era}</TableCell>
                             <TableCell>{item.time}</TableCell>
@@ -46,34 +46,20 @@ const BlocksTable = () => {
                 </TableBody>
             </Table>
         </TableContainer>
-        {/* <TablePagination
-            component="div"
-            rowsPerPage={18}
-            rowsPerPageOptions={[]}
-            page={0}
-            count={1}
-            onPageChange={console.log}
-        /> */}
     </Box>;
 };
-
 
 const BlocksPage = () => {
     return <>
         <Container sx={{ my: 5, }}>
             <Stack justifyContent={"space-between"} direction={"row"}>
-                <div>
-                    <Typography variant="subtitle2">blochchain</Typography>
-                    <Typography variant="h1">Blocks</Typography>
-                </div>
-                <div> 
-                    <LoadingButton
-                        loading={false}
-                        startIcon={<FileDownloadIcon />}
-                    >
+                <Typography variant="h1">Blocks</Typography>
+                <LoadingButton
+                    loading={false}
+                    startIcon={<FileDownloadIcon />}
+                >
                         Download data
-                    </LoadingButton>
-                </div>
+                </LoadingButton>
             </Stack>
 
             <BlocksTable />
