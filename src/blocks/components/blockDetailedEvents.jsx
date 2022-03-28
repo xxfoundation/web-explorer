@@ -1,6 +1,7 @@
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Divider, Stack, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
 import BlockEvents from "./blockEvents";
+import BlockExtrinsics from "./blockExtrinsics";
 
 const TabPanel = ({ children, value, name })  => {
     return (
@@ -16,6 +17,15 @@ const TabPanel = ({ children, value, name })  => {
     );
 };
 
+const TabText = ({message, count}) => {
+    return <Stack direction="row" divider={<Divider orientation="vertical" flexItem spacing={2} />}>
+        <Typography>{message}</Typography>
+        <Typography>{count}</Typography>
+    </Stack>;
+};
+
+const hash = "123123", number ="1231313";
+
 const BlockDetailedEvents = ({extrinsics, events}) => {
     const [value, setValue] = React.useState("extrinsics");
 
@@ -27,15 +37,15 @@ const BlockDetailedEvents = ({extrinsics, events}) => {
         <Box>
             <Box>
                 <Tabs value={value} onChange={handleChange} aria-label="block event tabs">
-                    <Tab label={`extrinsics ${extrinsics.length}`} value="extrinsics" id="simple-tab-1" aria-controls="tabpanel-extrinsics" />
-                    <Tab label={`events ${events.length}`} value="events" id="simple-tab-2" aria-controls="tabpanel-events"/>
+                    <Tab label={<TabText message="extrinsics" count={extrinsics.length} />} value="extrinsics" id="simple-tab-1" aria-controls="tabpanel-extrinsics" />
+                    <Tab label={<TabText message="events" count={events.length} />} value="events" id="simple-tab-2" aria-controls="tabpanel-events"/>
                 </Tabs>
             </Box>
             <TabPanel value={value} name="extrinsics">
-                lala
+                <BlockExtrinsics hash={hash} number={number}/>
             </TabPanel>
             <TabPanel value={value} name="events">
-                <BlockEvents hash={"123132"} number={"1231313"}  />
+                <BlockEvents hash={hash} number={number}/>
             </TabPanel>
         </Box>
     );
