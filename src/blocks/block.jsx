@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import BlockDetailedEvents from "./components/blockDetailedEvents";
+import BlockDetailedEventsTabs from "./components/blockDetailedEventsTabs";
 import BlockSummary from "./components/blockSummary";
 
 const data = {
@@ -21,7 +21,7 @@ const Block = () => {
     return <>
         <BlockSummary number={number} data={data} />
 
-        <BlockDetailedEvents events={[1,2,3]} extrinsics={[1,2]} />
+        <BlockDetailedEventsTabs events={[1,2,3]} extrinsics={[1,2]} />
     </>;
 };
 export default Block;

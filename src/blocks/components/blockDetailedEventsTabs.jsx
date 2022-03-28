@@ -1,7 +1,7 @@
 import { Box, Divider, Stack, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
-import BlockEvents from "./blockEvents";
-import BlockExtrinsics from "./blockExtrinsics";
+import BlockEventsTable from "./blockEventsTable";
+import BlockExtrinsicsTable from "./blockExtrinsicsTable";
 
 const TabPanel = ({ children, value, name })  => {
     return (
@@ -42,10 +42,10 @@ const BlockDetailedEvents = ({extrinsics, events}) => {
                 </Tabs>
             </Box>
             <TabPanel value={value} name="extrinsics">
-                <BlockExtrinsics hash={hash} number={number}/>
+                <BlockExtrinsicsTable hash={hash} number={number}/>
             </TabPanel>
             <TabPanel value={value} name="events">
-                <BlockEvents hash={hash} number={number}/>
+                <BlockEventsTable hash={hash} number={number}/>
             </TabPanel>
         </Box>
     );
