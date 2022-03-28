@@ -1,8 +1,9 @@
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { LoadingButton } from "@mui/lab";
-import { Container, Link, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Container, Link, Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
+import SimpleTable from "../components/simpleTable";
 
 const data = [
     {
@@ -16,40 +17,27 @@ const data = [
     }
 ];
 
+const header = ["block", "status", "era", "time", "extrinsics", "block producer", "block hash"];
+
+const rowParser = (item) => {
+    return <TableRow key={item.number }>
+        <TableCell><Link href={`/blocks/${item.number}`}>{item.number}</Link></TableCell>
+        <TableCell>{item.status}</TableCell>
+        <TableCell>{item.era}</TableCell>
+        <TableCell>{item.time}</TableCell>
+        <TableCell><Link href="#">{item.extrinsics}</Link></TableCell>
+        <TableCell>
+            <Link href={`/producer/${item.blockProducer.id || item.blockProducer.name}`}>
+                {item.blockProducer.name || item.blockProducer.id}
+            </Link>
+        </TableCell>
+        <TableCell><Link href={`/blocks/${item.number}`}>{item.blockHash}</Link></TableCell>
+    </TableRow>;
+};
+
 const BlocksTable = () => {
     return <Box>
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>block</TableCell>
-                        <TableCell>status</TableCell>
-                        <TableCell>era</TableCell>
-                        <TableCell>time</TableCell>
-                        <TableCell>extrinsics</TableCell>
-                        <TableCell>block producer</TableCell>
-                        <TableCell>block hash</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {data.map((item) => {
-                        return <TableRow key={item.number }>
-                            <TableCell><Link href={`/blocks/${item.number}`}>{item.number}</Link></TableCell>
-                            <TableCell>{item.status}</TableCell>
-                            <TableCell>{item.era}</TableCell>
-                            <TableCell>{item.time}</TableCell>
-                            <TableCell><Link href="#">{item.extrinsics}</Link></TableCell>
-                            <TableCell>
-                                <Link href={`/producer/${item.blockProducer.id || item.blockProducer.name}`}>
-                                    {item.blockProducer.name || item.blockProducer.id}
-                                </Link>
-                            </TableCell>
-                            <TableCell><Link href={`/blocks/${item.number}`}>{item.blockHash}</Link></TableCell>
-                        </TableRow>;
-                    })}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <SimpleTable header={header} rows={data} rowParser={rowParser} id={"blocks-list-table"}/>
     </Box>;
 };
 
