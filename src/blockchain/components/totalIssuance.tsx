@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChartWithLegend } from '../../charts/piechart';
+import { PieChartWithLegend } from '../../charts/highcharts/PieChart';
 import PaperWithHeader from './paperWithHeader';
 
 const TotalIssuance = () => {

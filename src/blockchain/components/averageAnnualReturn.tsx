@@ -1,12 +1,9 @@
 import { gql, useSubscription } from '@apollo/client';
 import { Typography } from '@mui/material';
 import React from 'react';
-
-import { formatPercent } from './formatters';
-
 import { LineChart } from '../../charts/highcharts';
-import { DataPoint } from '../../charts/types';
-
+import { DataPoint } from '../../types';
+import { formatPercent } from './formatters';
 
 const ON_AVERAGE_ANNUAL_RETURN_UPDATE = gql`
   subscription OnAverageAnnualReturnUpdate {

@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
 import { Box, Divider, Link, Paper, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import React, { FC } from 'react';
 
-const PaperWrap = styled(Paper)(({ theme }) => ({
+const PaperWrap = styled(Paper)(({ }) => ({
   // TODO fix type issues
   // boxShadow: theme.shadows.box,
   // border: theme.borders.light,

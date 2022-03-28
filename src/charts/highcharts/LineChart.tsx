@@ -1,12 +1,11 @@
-import React, { FC, useMemo } from 'react';
 import Highcharts, {
   AxisLabelsFormatterCallbackFunction as LabelFormatter,
   Options,
-  TooltipFormatterCallbackFunction as TooltipFormatter,
+  TooltipFormatterCallbackFunction as TooltipFormatter
 } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-
-import { DataPoint } from '../types';
+import React, { FC, useMemo } from 'react';
+import { DataPoint } from '../../types';
 
 const calculateMaximums = (data: DataPoint[]) => {
   const xItems = data.map(([x]) => x);
