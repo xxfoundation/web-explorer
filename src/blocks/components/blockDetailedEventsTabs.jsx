@@ -1,28 +1,8 @@
-import { Box, Divider, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
-import BlockEventsTable from "./blockEventsTable";
-import BlockExtrinsicsTable from "./blockExtrinsicsTable";
-
-const TabPanel = ({ children, value, name })  => {
-    return (
-        <div
-            role="tabpanel"
-            id={`tabpanel-${value}`}
-            aria-labelledby={`tab-${value}`}
-        >
-            {value === name && <Box sx={{ p: 3 }}>
-                {children}
-            </Box>}
-        </div>
-    );
-};
-
-const TabText = ({message, count}) => {
-    return <Stack direction="row" divider={<Divider orientation="vertical" flexItem spacing={2} />}>
-        <Typography>{message}</Typography>
-        <Typography>{count}</Typography>
-    </Stack>;
-};
+import { TabPanel, TabText } from "../../components/tabs";
+import EventsTable from "./eventsTable";
+import ExtrinsicsTable from "./extrinsicsTable";
 
 const hash = "123123", number ="1231313";
 
@@ -42,10 +22,10 @@ const BlockDetailedEvents = ({extrinsics, events}) => {
                 </Tabs>
             </Box>
             <TabPanel value={value} name="extrinsics">
-                <BlockExtrinsicsTable hash={hash} number={number}/>
+                <ExtrinsicsTable hash={hash} number={number} />
             </TabPanel>
             <TabPanel value={value} name="events">
-                <BlockEventsTable hash={hash} number={number}/>
+                <EventsTable hash={hash} number={number} />
             </TabPanel>
         </Box>
     );
