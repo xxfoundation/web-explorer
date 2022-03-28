@@ -2,7 +2,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { TableCell, TableRow } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
-import SimpleTable from "./simpleTable";
+import SimpleTable from "../../components/simpleTable";
 
 const header = [
     "event id",

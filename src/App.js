@@ -4,6 +4,7 @@ import {
     BrowserRouter as Router, Route, Switch
 } from "react-router-dom";
 import BlockChain from "./blockchain";
+import BlockProducer from "./blockProducer";
 import BlocksPage from "./blocks";
 import SiteFooter from "./site/footer";
 import SiteHeader from "./site/header";
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/blocks">
                         <BlocksPage />{/* I can do this only here for now */}
                     </Route>
+                    <Route path="/producer/:nameOrId"><BlockProducer /></Route>
                     <Route path="/extrinsics"><h1>extrinsics</h1></Route>
                     <Route path="/transfers"><h1>transfers</h1></Route>
                     <Route path="/events"><h1>events</h1></Route>

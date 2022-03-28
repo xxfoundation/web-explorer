@@ -3,7 +3,6 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import Block from "./block";
 import BlocksPage from "./blocks";
 
-
 const BlockRouter = () => {
     const { path } = useRouteMatch();
     return <Switch>

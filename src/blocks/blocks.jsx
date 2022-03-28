@@ -11,7 +11,7 @@ const data = [
         era: "2022-01-01",
         time: "2022-01-01",
         extrinsics: 13,
-        blockProducer: "name",
+        blockProducer: {"name": "Joselito", "id": 123},
         blockHash: "120983104"
     }
 ];
@@ -39,8 +39,12 @@ const BlocksTable = () => {
                             <TableCell>{item.era}</TableCell>
                             <TableCell>{item.time}</TableCell>
                             <TableCell><Link href="#">{item.extrinsics}</Link></TableCell>
-                            <TableCell><Link href="#">{item.blockProducer}</Link></TableCell>
-                            <TableCell><Link href="#">{item.blockHash}</Link></TableCell>
+                            <TableCell>
+                                <Link href={`/producer/${item.blockProducer.id || item.blockProducer.name}`}>
+                                    {item.blockProducer.name || item.blockProducer.id}
+                                </Link>
+                            </TableCell>
+                            <TableCell><Link href={`/blocks/${item.number}`}>{item.blockHash}</Link></TableCell>
                         </TableRow>;
                     })}
                 </TableBody>

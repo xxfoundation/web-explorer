@@ -3,8 +3,8 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { TableCell, TableRow } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
+import SimpleTable from "../../components/simpleTable";
 import { theme } from "../../themes/default";
-import SimpleTable from "./simpleTable";
 
 const header = [
     "extrinsic id",
