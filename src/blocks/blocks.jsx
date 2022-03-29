@@ -21,7 +21,7 @@ const header = ["block", "status", "era", "time", "extrinsics", "block producer"
 
 const rowParser = (item) => {
     return <TableRow key={item.number }>
-        <TableCell><Link href={`/blocks/${item.number}`}>{item.number}</Link></TableCell>
+        <TableCell><Link href={`/block/${item.number}`}>{item.number}</Link></TableCell>
         <TableCell>{item.status}</TableCell>
         <TableCell>{item.era}</TableCell>
         <TableCell>{item.time}</TableCell>
@@ -31,7 +31,7 @@ const rowParser = (item) => {
                 {item.blockProducer.name || item.blockProducer.id}
             </Link>
         </TableCell>
-        <TableCell><Link href={`/blocks/${item.number}`}>{item.blockHash}</Link></TableCell>
+        <TableCell><Link href={`/block/${item.number}`}>{item.blockHash}</Link></TableCell>
     </TableRow>;
 };
 
