@@ -4,10 +4,10 @@ import {
   BrowserRouter as Router, Route, Switch
 } from "react-router-dom";
 import './App.css';
-import BlockProducer from './blockProducer';
-import BlocksPage from './blocks';
 import SiteFooter from './components/Footer';
 import SiteHeader from './components/Header';
+import BlockProducer from './pages/blockProducer';
+import Blocks from './pages/blocks';
 import BlockChain from './pages/home';
 import { theme } from './themes/default';
 
@@ -21,7 +21,7 @@ function App() {
             <BlockChain />
           </Route>
           <Route path="/block">
-            <BlocksPage />
+            <Blocks />
             {/* I can do this only here for now */}
           </Route>
           <Route path="/producer/:nameOrId">

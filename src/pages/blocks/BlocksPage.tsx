@@ -1,8 +1,30 @@
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { LoadingButton } from '@mui/lab';
-import { Container, Link, Stack, TableCell, TableRow, Typography } from '@mui/material';
+import {
+  Box,
+  Container,
+  Link,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material';
 import React from 'react';
-import SimpleTable from '../components/simpleTable';
+
+type Block = {
+  number: number;
+  status: string;
+  era: string,
+  time: string,
+  extrinsics: number,
+  blockProducer: { name: string, id: number },
+  blockHash: string
+}
 
 const data = [
   {
@@ -18,7 +40,7 @@ const data = [
 
 const header = ['block', 'status', 'era', 'time', 'extrinsics', 'block producer', 'block hash'];
 
-const rowParser = (item) => {
+const rowParser = (item: Block) => {
   return (
     <TableRow key={item.number}>
       <TableCell>
@@ -28,7 +50,7 @@ const rowParser = (item) => {
       <TableCell>{item.era}</TableCell>
       <TableCell>{item.time}</TableCell>
       <TableCell>
-        <Link href="#">{item.extrinsics}</Link>
+        <Link href='#'>{item.extrinsics}</Link>
       </TableCell>
       <TableCell>
         <Link href={`/producer/${item.blockProducer.id || item.blockProducer.name}`}>
@@ -45,7 +67,18 @@ const rowParser = (item) => {
 const BlocksTable = () => {
   return (
     <Box>
-      <SimpleTable header={header} rows={data} rowParser={rowParser} id={'blocks-list-table'} />
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {header.map((h) => {
+                return <TableCell key={h}>{h}</TableCell>;
+              })}
+            </TableRow>
+          </TableHead>
+          <TableBody>{data.map(rowParser)}</TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   );
 };
@@ -55,7 +88,7 @@ const BlocksPage = () => {
     <>
       <Container sx={{ my: 5 }}>
         <Stack justifyContent={'space-between'} direction={'row'}>
-          <Typography variant="h1">Blocks</Typography>
+          <Typography variant='h1'>Blocks</Typography>
           <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>
             Download data
           </LoadingButton>

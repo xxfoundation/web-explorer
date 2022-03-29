@@ -2,11 +2,20 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { Avatar, ButtonGroup, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  ButtonGroup,
+  Divider,
+  Grid,
+  IconButton,
+  Stack,
+  Typography
+} from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import CopyButton from '../../components/copyButton';
-import { SummaryPaper, textWithCopy } from '../../components/summary';
+import CopyButton from '../../components/CopyButton';
+import { SummaryPaper, textWithCopy } from '../../components/Summary';
 import { theme } from '../../themes/default';
 
 const BackAndForwardArrows = () => {
@@ -27,7 +36,7 @@ const BlockSummaryHeader = ({ number }) => {
     <Stack direction={'row'} justifyContent={'space-between'}>
       <Typography>Block No. {number}</Typography>
       <Stack direction={'row'} justifyContent={'space-around'} spacing={2}>
-        <Link>blocks</Link>
+        <Link to="#">blocks</Link>
         <Divider orientation="vertical" flexItem />
         <BackAndForwardArrows />
       </Stack>
@@ -67,8 +76,33 @@ const backAndForwardWithLabel = (data) => {
 };
 
 const linkWrapper = (data) => {
-  return <Link href="#">{data.specVersion}</Link>;
+  return <Link to="#">{data.specVersion}</Link>;
 };
+
+const summaryData = (data) => [
+  ['time', data.time],
+  [
+    'status',
+    <>
+      <CheckCircleOutlineIcon color={theme.palette.success.main} />
+      {data.status}
+    </>
+  ],
+  ['era', data.era],
+  ['hash', textWithCopy(data.hash, <Typography>{data.hash}</Typography>)],
+  ['parent hash', backAndForwardWithLabel(data)],
+  [
+    'state root',
+    <>
+      <CheckCircleOutlineIcon color={theme.palette.success.main} />
+      {data.stateRoot}
+    </>
+  ],
+  ['extrinsics root', data.extrinsicsRoot],
+  ['block producer', producerField(data.blockProducer)],
+  ['block time', data.blockTime],
+  ['spec version', linkWrapper(data)]
+];
 
 const BlockSummary = ({ data, number }) => {
   return (
@@ -77,32 +111,7 @@ const BlockSummary = ({ data, number }) => {
         <BlockSummaryHeader number={number} />
       </Grid>
       <Grid item xs={12}>
-        <SummaryPaper
-          data={[
-            ['time', data.time],
-            [
-              'status',
-              <>
-                <CheckCircleOutlineIcon color={theme.palette.success.main} />
-                {data.status}
-              </>
-            ],
-            ['era', data.era],
-            ['hash', textWithCopy(data.hash, <Typography>{data.hash}</Typography>)],
-            ['parent hash', backAndForwardWithLabel(data)],
-            [
-              'state root',
-              <>
-                <CheckCircleOutlineIcon color={theme.palette.success.main} />
-                {data.stateRoot}
-              </>
-            ],
-            ['extrinsics root', data.extrinsicsRoot],
-            ['block producer', producerField(data.blockProducer)],
-            ['block time', data.blockTime],
-            ['spec version', linkWrapper(data)]
-          ]}
-        />
+        <SummaryPaper data={summaryData(data)} />
       </Grid>
     </Grid>
   );

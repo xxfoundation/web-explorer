@@ -1,18 +1,17 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { TableCell, TableRow } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SimpleTable from '../../components/simpleTable';
 import { theme } from '../../themes/default';
 
 const header = ['extrinsic id', 'hash', 'time', 'result', 'action', 'view all'];
 
 const rowParser = (rowData) => {
   return (
-    <TableRow>
+    <TableRow key={rowData.extrinsicId}>
       <TableCell>
-        <Link>{rowData.extrinsicId}</Link>
+        <Link to="#">{rowData.extrinsicId}</Link>
       </TableCell>
       <TableCell>{rowData.hash}</TableCell>
       <TableCell>{rowData.time}</TableCell>
@@ -20,10 +19,10 @@ const rowParser = (rowData) => {
         <CheckCircleOutlineIcon color={theme.palette.success.main} />
       </TableCell>
       <TableCell>
-        <Link>{rowData.action}</Link>
+        <Link to="#">{rowData.action}</Link>
       </TableCell>
       <TableCell>
-        <Link href={`/extrinsics/${rowData.eventId}`}>
+        <Link to={`/extrinsics/${rowData.eventId}`}>
           <ArrowForwardIosIcon />
         </Link>
       </TableCell>
@@ -31,7 +30,7 @@ const rowParser = (rowData) => {
   );
 };
 
-const BlockExtrinsics = ({ hash, number }) => {
+const BlockExtrinsics = ({ }) => {
   // TODO subscribe to events and fill data
   const data = [
     {
@@ -42,12 +41,18 @@ const BlockExtrinsics = ({ hash, number }) => {
     }
   ];
   return (
-    <SimpleTable
-      header={header}
-      rows={data}
-      rowParser={rowParser}
-      id={`extrinsics-${number}-${hash}-table`}
-    />
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            {header.map((h) => {
+              return <TableCell key={h}>{h}</TableCell>;
+            })}
+          </TableRow>
+        </TableHead>
+        <TableBody>{data.map(rowParser)}</TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

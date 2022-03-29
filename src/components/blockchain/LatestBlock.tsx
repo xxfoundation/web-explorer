@@ -54,7 +54,7 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
 
 const blockchain = () => {
   return (
-    <PaperWithHeader header="LATEST BLOCKS" linkName={'SEE ALL'} linkAddress={'##'} height={500}>
+    <PaperWithHeader header="LATEST BLOCKS" linkName={'SEE ALL'} linkAddress={'/block'} height={500}>
       {blocks.map(BlockRow)}
     </PaperWithHeader>
   );

@@ -1,21 +1,28 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { TableCell, TableRow } from '@mui/material';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SimpleTable from '../../components/simpleTable';
 
 const header = ['event id', 'hash', 'action', 'view all'];
 
 const rowParser = (rowData) => {
   return (
-    <TableRow>
+    <TableRow key={rowData.eventId}>
       <TableCell>{rowData.eventId}</TableCell>
       <TableCell>-</TableCell>
       <TableCell>
-        <Link>{rowData.action}</Link>
+        <Link to="#">{rowData.action}</Link>
       </TableCell>
       <TableCell>
-        <Link href={`/extrinsics/${rowData.eventId}`}>
+        <Link to={`/extrinsics/${rowData.eventId}`}>
           <ArrowForwardIosIcon />
         </Link>
       </TableCell>
@@ -23,7 +30,7 @@ const rowParser = (rowData) => {
   );
 };
 
-const BlockEvents = ({ hash, number }) => {
+const BlockEvents = ({}) => {
   // TODO subscribe to events and fill data
   const data = [
     {
@@ -32,12 +39,18 @@ const BlockEvents = ({ hash, number }) => {
     }
   ];
   return (
-    <SimpleTable
-      header={header}
-      rows={data}
-      rowParser={rowParser}
-      id={`events-${number}-${hash}-table`}
-    />
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            {header.map((h) => {
+              return <TableCell key={h}>{h}</TableCell>;
+            })}
+          </TableRow>
+        </TableHead>
+        <TableBody>{data.map(rowParser)}</TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

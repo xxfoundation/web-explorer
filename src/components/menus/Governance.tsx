@@ -32,10 +32,10 @@ export default function Blockchain() {
             'aria-labelledby': 'governance-button'
           }}
         >
-          <MenuItem onClick={close}>Blocks</MenuItem>
-          <MenuItem onClick={close}>Extrinsics</MenuItem>
-          <MenuItem onClick={close}>Transfers</MenuItem>
-          <MenuItem onClick={close}>Events</MenuItem>
+          <MenuItem onClick={close} href='/block'>Blocks</MenuItem>
+          <MenuItem onClick={close} href='/extrinsic'>Extrinsics</MenuItem>
+          <MenuItem onClick={close} href='/transfer'>Transfers</MenuItem>
+          <MenuItem onClick={close} href='/event'>Events</MenuItem>
         </Menu>
       )}
     </>

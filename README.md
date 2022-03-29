@@ -56,32 +56,3 @@ The project uses them to enforce code style. But in some cases, like when pushin
 git commit -m "yolo!" --no-verify
 HUSKY=0 git push
 ```
-
-
-## file structure
-
-``` .txt
-index.js
-App.js
-/home
-/blocks
-    index.js
-    /components
-        /charts
-/extrinsics
-/transfers
-/events
-/governance
-/accounts
-/staking
-/components
-    /site
-/themes
-```
-
-Rules:
-
-- each folder can have an `index` to handle routing behavior
-- and a `components` for reusability or cleanness of code
-- if the component is reused between multiple routes move the file to the `components` folder that wraps every component that uses it
-  an example is `components/site/footer`
