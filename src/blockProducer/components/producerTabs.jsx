@@ -4,7 +4,7 @@ import { TabPanel, TabText } from "../../components/tabs";
 import Eras from "./eras";
 import NominatorsTable from "./nominatorsTable";
 
-const ProducerTabs = ({nominators, eras}) => {
+const ProducerTabs = ({eras, nominators}) => {
     const [value, setValue] = React.useState("nominators");
 
     const handleChange = (_, newValue) => {

@@ -41,10 +41,10 @@ You can this configuration to the project settings
 
 ``` json
 {
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true,
-        "source.organizeImports": true
-    }
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
+  }
 }
 ```
 
@@ -52,10 +52,11 @@ You can this configuration to the project settings
 
 The project uses them to enforce code style. But in some cases, like when pushing the code just a backup and stopping working for the day for these cases, you can call the commit and push as follows
 
-``` sh
+```sh
 git commit -m "yolo!" --no-verify
 HUSKY=0 git push
 ```
+
 
 ## file structure
 
