@@ -2,7 +2,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Box, Grid, Link, Typography } from '@mui/material';
 import React from 'react';
 import PaperWithHeader from './PaperWithHeader';
-
 import { Block, BlockStatus } from './types';
 
 const blocks: Block[] = Array.from(Array(9).keys()).slice(1).map((i) => ({

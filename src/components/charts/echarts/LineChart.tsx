@@ -1,7 +1,7 @@
-import React, { FC, useMemo } from 'react';
 import ReactECharts, { EChartsOption } from 'echarts-for-react';
-
+import React, { FC, useMemo } from 'react';
 import { DataPoint } from '../../../types';
+
 
 type Props = {
   title?: string;

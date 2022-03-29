@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
 import { Box, Divider, Link, Paper, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { default as React, FC } from 'react';
 
 const PaperWrap = styled(Paper)(({ theme }) => ({
   boxShadow: theme.boxShadow,

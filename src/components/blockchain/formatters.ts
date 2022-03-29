@@ -1,4 +1,4 @@
-import { TooltipFormatterContextObject } from 'highcharts'
+import { TooltipFormatterContextObject } from 'highcharts';
 
 export function tooltipFormatter (this: TooltipFormatterContextObject) {
   return `<b>${this.series.name} ${this.x}</b><br />${Math.floor(this.y * 100)}%`;
