@@ -1,7 +1,9 @@
-import React from 'react';
+import { default as React } from 'react';
 import { DataPoint } from '../../types';
 import { LineChart } from '../charts/highcharts';
 import { formatPercent, tooltipFormatter } from './formatters';
+
+
 
 const data: DataPoint[] = [[665,0.01], [789,.30], [13, .1], [75,.23]];
 

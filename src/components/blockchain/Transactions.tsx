@@ -1,4 +1,4 @@
-import React from 'react';
+import { default as React } from 'react';
 import { DataPoint } from '../../types';
 import * as Highcharts from '../charts/highcharts';
 

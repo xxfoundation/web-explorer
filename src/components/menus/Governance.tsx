@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
-import { Menu, MenuItem } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-import { MenuButton } from './menu.styles';
+import { Menu, MenuItem } from '@mui/material';
+import React, { useRef } from 'react';
 import { useToggle } from '../../hooks';
+import { MenuButton } from './menu.styles';
+
 
 export default function Blockchain() {
   const button = useRef(null);
@@ -12,10 +12,11 @@ export default function Blockchain() {
   return (
     <>
       <MenuButton
-        id="governance-button"
         aria-controls={opened ? 'governance-menu' : undefined}
-        aria-haspopup="true"
+        aria-haspopup='true'
         aria-expanded={opened ? 'true' : undefined}
+        ref={button}
+        id='governance-button'
         onClick={toggle}
         endIcon={<KeyboardArrowDownIcon />}
       >

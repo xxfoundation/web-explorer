@@ -5,7 +5,9 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Popover, PopoverProps, Typography
+  Popover,
+  PopoverProps,
+  Typography
 } from '@mui/material';
 import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -145,7 +147,7 @@ type ChartClickModalProps = {
   data: CustomPointOptions<StakeablePopup>;
 } & PopoverProps;
 
-const ChartClickPopover: FC<ChartClickModalProps> = ({ data: {custom, name}, ...props }) => {
+const ChartClickPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
   return <Popover
       {...props}
       anchorOrigin={{
@@ -157,10 +159,10 @@ const ChartClickPopover: FC<ChartClickModalProps> = ({ data: {custom, name}, ...
         horizontal: 'center'
       }}
     >
-      <Typography variant='subtitle1'>{name}</Typography>
+      <Typography variant='subtitle1'>{data.name}</Typography>
       <Grid container>
-        <StakeableInfoRow name='stakeable' values={custom.stakeable} />
-        <StakeableInfoRow name='unstakeable' values={custom.unstakeable} />
+        <StakeableInfoRow name='stakeable' values={data.custom.stakeable} />
+        <StakeableInfoRow name='unstakeable' values={data.custom.unstakeable} />
       </Grid>
     </Popover>;
 };

@@ -3,7 +3,7 @@ import React from 'react';
 import ChainInfo from '../../components/blockchain/ChainInfo';
 import TokenStatus from './TokenStatus';
 
-const blockchain = () => {
+const Blockchain = () => {
   return (
     <Container sx={{ my: 5 }}>
       <ChainInfo />
@@ -12,4 +12,4 @@ const blockchain = () => {
   );
 };
 
-export default blockchain;
+export default Blockchain;
