@@ -1,16 +1,9 @@
-import { gql, useSubscription } from '@apollo/client';
-import { Typography } from '@mui/material';
 import React from 'react';
 import * as Highcharts from '../../charts/highcharts';
-import * as ECharts from '../../charts/echarts';
-
 import { DataPoint } from '../../types';
 
-const ON_TRANSACTION_EVENT = gql`
-  subscription OnTrasactionEvent {
-    transactions
-  }
-`;
+
+const data: {transactions: DataPoint[]} = {transactions: [[1876,6897], [8968,101], [67761,613]]}
 
 const sortTransactions = ({ transactions }: { transactions: DataPoint[] } ) => {
   return transactions.sort((a, b) => {
@@ -19,22 +12,14 @@ const sortTransactions = ({ transactions }: { transactions: DataPoint[] } ) => {
 };
 
 const TransactionsChart = () => {
-  const { data, error, loading } = useSubscription(ON_TRANSACTION_EVENT);
-  if (loading) return <Typography>loading charts</Typography>;
-  if (error) {
-    console.error(error);
-    return <Typography>error loading the charts</Typography>;
-  }
-
   const sortedTransactions = sortTransactions(data);
 
   return (
     <>
       <Highcharts.LineChart
-        title="transactions high"
-        data={loading ? [] : sortedTransactions}
+        title='transactions high'
+        data={sortedTransactions}
       />
-      <ECharts.LineChart title="transactions E" data={sortedTransactions} />
     </>
   );
 };

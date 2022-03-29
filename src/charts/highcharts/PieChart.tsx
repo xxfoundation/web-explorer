@@ -147,7 +147,7 @@ type ChartClickModalProps = {
   data: StakingSupplyData;
 } & PopoverProps;
 
-const ChartClickModal: FC<ChartClickModalProps> = ({ data, ...props }) => {
+const ChartClickPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
   return <Popover
       {...props}
       anchorOrigin={{
@@ -199,7 +199,7 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
   return (
     <Grid container>
       <Grid item xs={7}>
-        {pointOptions && <ChartClickModal
+        {pointOptions && <ChartClickPopover
           id={`${name}-chart-slice-popover`}
           onClose={onClose}
           open={open}
