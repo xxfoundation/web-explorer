@@ -12,10 +12,11 @@ export default function Blockchain() {
   return (
     <>
       <MenuButton
-        id="governance-button"
         aria-controls={opened ? 'governance-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={opened ? 'true' : undefined}
+        ref={button}
+        id="governance-button"
         onClick={toggle}
         endIcon={<KeyboardArrowDownIcon />}
       >

@@ -4,7 +4,7 @@ import AverageAnnualReturn from '../../components/blockchain/AverageAnnualReturn
 import LatestBlock from '../../components/blockchain/LatestBlock';
 import NewAccounts from '../../components/blockchain/NewAccounts';
 import StakingRatio from '../../components/blockchain/StakingRatio';
-import StakingSupply from '../../components/blockchain/StakingSupply';
+import StakingSupplyChart from '../../components/blockchain/StakingSupplyChart';
 import TotalIssuance from '../../components/blockchain/TotalIssuance';
 import TransactionsChart from '../../components/blockchain/Transactions';
 import Transferences from '../../components/blockchain/Transfers';
@@ -18,7 +18,7 @@ const TokenStatus = () => {
       <Grid container spacing={2}>
         {[
           <TotalIssuance key="totalIssuance" />,
-          <StakingSupply key="stakingSupply" />,
+          <StakingSupplyChart key="stakingSupply" />,
           <LatestBlock key="latestBlock" />,
           <Transferences key="transferences" />,
           <TransactionsChart key="transactionsChart" />,

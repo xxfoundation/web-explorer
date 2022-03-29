@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useRef } from 'react';
+import React, { FC, useRef } from 'react';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import {
   Grid,
@@ -13,6 +13,7 @@ import {
 import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction, SeriesClickEventObject, SeriesPieOptions } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { PercentageValues, StakingSupplyData } from '../../blockchain/types';
+import { useToggle } from '../../../hooks';
 
 const defaultOptions: Options = {
   credits: { enabled: false },
@@ -44,11 +45,11 @@ const states = {
 };
 
 type PieChartProps = {
+  crustData?: SeriesPieOptions['data'];
+  data: SeriesPieOptions['data'];
   id?: string;
   name?: string;
   options?: Options;
-  crustData?: SeriesPieOptions['data'];
-  data: SeriesPieOptions['data'];
   onClick?: SeriesClickCallbackFunction
 }
 
@@ -194,39 +195,29 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
   // );
 
   const chart = useRef(null);
+  const [opened, { toggle, toggleOff: close }] = useToggle();
   const [pointOptions, setPointOptions] = React.useState<PointOptionsObject>();
 
-  const handleClick = useCallback(
-    (event: SeriesClickEventObject) => {
-      setPointOptions(event.point.options);
-      if (event.currentTarget instanceof Element) {
-        setAnchorEl(event.currentTarget);
-      }
-    },
-    [setPointOptions]
-  );
-
-  const onClose = useCallback(() => setAnchorEl(undefined), []);
-
-  const open = !!anchorEl;
 
   return (
     <Grid container>
       <Grid item xs={7}>
-        {/* <ChartClickModal
-          id={'total-issuance-chart-slice-popover'}
-          onClose={onClose}
-          open={open}
-          anchorEl={anchorEl}
-          // data={pointOptions} doesnt make sense
-        /> */}
-        <PieChart
-          ref={}
+        {/* {chart.current && (
+          <ChartClickModal
+            id={'total-issuance-chart-slice-popover'}
+            onClose={close}
+            open={opened}
+            anchorEl={chart.current}
+            data={pointOptions}
+          />
+        )}  */}
+        {/* <PieChart
+          ref={chart}
           data={data}
           crustData={crustData}
           name='total issuance'
           onClick={handleClick}
-        />
+        /> */}
       </Grid>
       <Grid item xs={5}>
         <Typography variant='subtitle2'>{name}</Typography>

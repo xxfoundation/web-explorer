@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material';
-import React from 'react';
+import React, { FC } from 'react';
 import { Data, Item } from './ChainInfo.styles';
 
 const data = {
@@ -15,7 +15,7 @@ const data = {
   ]
 };
 
-const ChainInfoCard = (title: string, value: string) => {
+const ChainInfoCard: FC<{ title: string, value: string }> = ({ title, value }) => {
   return (
     <Grid item xs={6} sm={3} md={3} key={title}>
       <Item>
@@ -33,11 +33,9 @@ const chainInfo = () => {
         Chain data
       </Typography>
       <Grid container spacing={{ xs: 1 }}>
-        {data.items.map(({ title, value }) => {
-          const [statedTitle] = React.useState(title);
-          const [statedValue] = React.useState(value);
-          return ChainInfoCard(statedTitle, statedValue);
-        })}
+        {data.items.map(({ title, value }) => (
+          <ChainInfoCard title={title} value={value} />
+        ))}
       </Grid>
     </Box>
   );
