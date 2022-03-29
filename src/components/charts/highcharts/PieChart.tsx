@@ -5,14 +5,12 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Popover,
-  PopoverProps,
-  Typography
+  Popover, PopoverProps, Typography
 } from '@mui/material';
-import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction, SeriesClickEventObject } from 'highcharts';
+import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC, useCallback, useMemo } from 'react';
-import { PercentageValues, StakingSupplyData } from '../../blockchain/types';
+import { CustomPointOptions, PercentageValues, StakeablePopup } from '../../blockchain/types';
 
 const defaultOptions: Options = {
   credits: { enabled: false },
@@ -144,10 +142,10 @@ const StakeableInfoRow: FC<StakeableInfoProps> = ({ name, values }) => {
 };
 
 type ChartClickModalProps = {
-  data: StakingSupplyData;
+  data: CustomPointOptions<StakeablePopup>;
 } & PopoverProps;
 
-const ChartClickPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
+const ChartClickPopover: FC<ChartClickModalProps> = ({ data: {custom, name}, ...props }) => {
   return <Popover
       {...props}
       anchorOrigin={{
@@ -159,32 +157,32 @@ const ChartClickPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
         horizontal: 'center'
       }}
     >
-      <Typography variant='subtitle1'>{data.name}</Typography>
+      <Typography variant='subtitle1'>{name}</Typography>
       <Grid container>
-        <StakeableInfoRow name='stakeable' values={data.stakeable} />
-        <StakeableInfoRow name='unstakeable' values={data.unstakeable} />
+        <StakeableInfoRow name='stakeable' values={custom.stakeable} />
+        <StakeableInfoRow name='unstakeable' values={custom.unstakeable} />
       </Grid>
     </Popover>;
 };
 
 type PieChartWithLegendProps = {
-  crustData?: (PointOptionsObject & {hiddenLegend?: boolean})[];
-  data: PointOptionsObject[];
+  crustData?: CustomPointOptions<StakeablePopup>[];
+  data: CustomPointOptions<StakeablePopup>[];
   name: string;
   value: string | React.ReactElement | number | null;
 }
 
 const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name, value }) => {
   const legends = useMemo(() => crustData 
-    ? [...data, ...crustData.filter((item) => !item.hiddenLegend)] 
+    ? [...data, ...crustData.filter((item) => !item.custom.hiddenLegend)] 
     : [...data],
     [data, crustData]);
   const [anchorEl, setAnchorEl] = React.useState<Element>();
-  const [pointOptions, setPointOptions] = React.useState<StakingSupplyData>();
+  const [pointOptions, setPointOptions] = React.useState<CustomPointOptions<StakeablePopup>>();
 
   const handleClick = useCallback(
-    (event: SeriesClickEventObject) => {
-      setPointOptions(event.point.options as StakingSupplyData);
+    (event) => {
+      setPointOptions(event.point.options);
       if (event.currentTarget instanceof Element) {
         setAnchorEl(event.currentTarget);
       }

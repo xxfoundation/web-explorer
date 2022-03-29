@@ -1,3 +1,5 @@
+import { PointOptionsObject } from "highcharts";
+
 export enum BlockStatus {
   Pending = 'pending'
 }
@@ -21,10 +23,13 @@ export type PercentageValues = {
   }
 }
 
-export type StakingSupplyData = {
-  name: string;
-  y: number;
-  color: string;
+export type StakeablePopup = {
+  noClick?: boolean;
+  hiddenLegend?: boolean;
   stakeable: PercentageValues;
   unstakeable: PercentageValues;
+}
+
+export interface CustomPointOptions<Custom> extends PointOptionsObject {
+  custom: Custom
 }
