@@ -168,7 +168,7 @@ const ChartClickPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
 };
 
 type PieChartWithLegendProps = {
-  crustData?: (PointOptionsObject & {hiddenLegend?: boolean})[];
+  crustData?: (PointOptionsObject & { hiddenLegend?: boolean })[];
   data: PointOptionsObject[];
   name: string;
   value: string | React.ReactElement | number | null;
