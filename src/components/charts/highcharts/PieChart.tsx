@@ -1,4 +1,3 @@
-import React, { FC, useRef } from 'react';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import {
   Grid,
@@ -10,10 +9,10 @@ import {
   PopoverProps,
   Typography
 } from '@mui/material';
-import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction, SeriesClickEventObject, SeriesPieOptions } from 'highcharts';
+import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction, SeriesClickEventObject } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import React, { FC, useCallback, useMemo } from 'react';
 import { PercentageValues, StakingSupplyData } from '../../blockchain/types';
-import { useToggle } from '../../../hooks';
 
 const defaultOptions: Options = {
   credits: { enabled: false },
@@ -45,41 +44,34 @@ const states = {
 };
 
 type PieChartProps = {
-  crustData?: SeriesPieOptions['data'];
-  data: SeriesPieOptions['data'];
   id?: string;
   name?: string;
   options?: Options;
+  crustData?: PointOptionsObject[];
+  data: PointOptionsObject[];
   onClick?: SeriesClickCallbackFunction
 }
 
 const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, options }) => {
-  const pieOptions: SeriesPieOptions =  {
-    type: 'pie',
-    innerSize: crustData ? '70%' : '54%',
-    name,
-    data,
-    states
-  };
-
   const chartOptions: Options = {
-    ...defaultOptions,
     ...options,
-    series: [pieOptions],
+    ...defaultOptions,
+    series: [{
+      type: 'pie',
+      innerSize: crustData ? '70%' : '54%',
+      name,
+      data,
+      states
+    }],
+    title: undefined
   };
 
   if (crustData) {
-    const innerCircleBoundaries = {
-      size: '67%',
-      innerSize: '63%'
-    };
-
     chartOptions.series?.push({
       type: 'pie',
-      ...innerCircleBoundaries,
-      states: {
-        inactive: { enabled: false }
-      },
+      size: '67%',
+      innerSize: '63%',
+      states,
       data: crustData
     });
   }
@@ -93,14 +85,14 @@ const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, optio
   );
 };
 
-const ChartLegends = ({ data }: { data: { color: string, name: string, y: number }[] }) => {
+const ChartLegends = ({ data }: {data: PointOptionsObject[]}) => {
   return (
     <List dense={true}>
       {data.map(({ color, name, y }) => {
         return (
           <ListItem key={name}>
             <ListItemIcon>
-              <SquareRoundedIcon sx={{ color }} />
+              <SquareRoundedIcon sx={{ color: color as string }} />
             </ListItemIcon>
             <ListItemText primary={`${y}% ${name}`} />
           </ListItem>
@@ -155,9 +147,8 @@ type ChartClickModalProps = {
   data: StakingSupplyData;
 } & PopoverProps;
 
-const ChartClickModal: FC<ChartClickModalProps> = ({ data, ...props }) => {
-  return (
-    <Popover
+const ChartClickPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
+  return <Popover
       {...props}
       anchorOrigin={{
         vertical: 'center',
@@ -173,56 +164,59 @@ const ChartClickModal: FC<ChartClickModalProps> = ({ data, ...props }) => {
         <StakeableInfoRow name='stakeable' values={data.stakeable} />
         <StakeableInfoRow name='unstakeable' values={data.unstakeable} />
       </Grid>
-    </Popover>
-  );
+    </Popover>;
 };
 
 type PieChartWithLegendProps = {
-  crustData?: SeriesPieOptions['data'];
-  data?: SeriesPieOptions['data'];
-  name?: string;
-  value?: string | React.ReactElement | number | null;
+  crustData?: (PointOptionsObject & {hiddenLegend?: boolean})[];
+  data: PointOptionsObject[];
+  name: string;
+  value: string | React.ReactElement | number | null;
 }
 
 const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name, value }) => {
-  // const [legends] = useMemo(
-  //   () => crustData
-  //     ? [
-  //       ...data,
-  //       ...crustData.filter(({ hiddenLegend }: PointOptionsObject) => !hiddenLegend)
-  //   ] : [...data],
-  //   [data, crustData]
-  // );
+  const legends = useMemo(() => crustData 
+    ? [...data, ...crustData.filter((item) => !item.hiddenLegend)] 
+    : [...data],
+    [data, crustData]);
+  const [anchorEl, setAnchorEl] = React.useState<Element>();
+  const [pointOptions, setPointOptions] = React.useState<StakingSupplyData>();
 
-  const chart = useRef(null);
-  const [opened, { toggle, toggleOff: close }] = useToggle();
-  const [pointOptions, setPointOptions] = React.useState<PointOptionsObject>();
+  const handleClick = useCallback(
+    (event: SeriesClickEventObject) => {
+      setPointOptions(event.point.options as StakingSupplyData);
+      if (event.currentTarget instanceof Element) {
+        setAnchorEl(event.currentTarget);
+      }
+    },
+    [setPointOptions]
+  );
 
+  const onClose = useCallback(() => setAnchorEl(undefined), []);
+
+  const open = !!anchorEl;
 
   return (
     <Grid container>
       <Grid item xs={7}>
-        {/* {chart.current && (
-          <ChartClickModal
-            id={'total-issuance-chart-slice-popover'}
-            onClose={close}
-            open={opened}
-            anchorEl={chart.current}
-            data={pointOptions}
-          />
-        )}  */}
-        {/* <PieChart
-          ref={chart}
+        {pointOptions && <ChartClickPopover
+          id={`${name}-chart-slice-popover`}
+          onClose={onClose}
+          open={open}
+          anchorEl={anchorEl}
+          data={pointOptions}
+        />}
+        <PieChart
           data={data}
           crustData={crustData}
-          name='total issuance'
+          name={name}
           onClick={handleClick}
-        /> */}
+        />
       </Grid>
       <Grid item xs={5}>
         <Typography variant='subtitle2'>{name}</Typography>
         <Typography variant='subtitle1'>{value}</Typography>
-        {/* <ChartLegends data={legends} /> */}
+        <ChartLegends data={legends} />
       </Grid>
     </Grid>
   );
