@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback, useRef } from 'react';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import {
   Grid,
@@ -193,7 +193,7 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
   //   [data, crustData]
   // );
 
-  const [anchorEl, setAnchorEl] = React.useState<Element>();
+  const chart = useRef(null);
   const [pointOptions, setPointOptions] = React.useState<PointOptionsObject>();
 
   const handleClick = useCallback(
@@ -221,6 +221,7 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
           // data={pointOptions} doesnt make sense
         /> */}
         <PieChart
+          ref={}
           data={data}
           crustData={crustData}
           name='total issuance'
