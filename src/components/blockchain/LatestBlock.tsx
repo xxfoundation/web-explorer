@@ -1,6 +1,7 @@
+import React from 'react';
+import TimeAgo from 'react-timeago';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Box, Grid, Link, Typography } from '@mui/material';
-import React from 'react';
 import PaperWithHeader from './PaperWithHeader';
 import { Block, BlockStatus } from './types';
 
@@ -41,7 +42,9 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
         <Box sx={{ textAlign: 'right' }}>
           {statusToIconMap[status]}
           <Box>
-            <Typography variant='body2'>{timestamp}</Typography>
+            <Typography variant='body2'>
+              <TimeAgo date={timestamp} />
+            </Typography>
           </Box>
         </Box>
       </Grid>
