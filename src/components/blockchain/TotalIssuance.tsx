@@ -113,7 +113,7 @@ const TotalIssuance = () => {
       }
     }
   ];
-  const value = 9999120003; // TODO will be obtained by a aggregation of the values
+  const value = '9999120003'; // TODO will be obtained by a aggregation of the values
   return (
     <>
       <PaperWithHeader>
