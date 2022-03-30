@@ -32,10 +32,10 @@ export default function Blockchain() {
             'aria-labelledby': 'blockchain-button'
           }}
         >
-          <MenuItem onClick={close} LinkComponent={Link} href='/block'>Blocks</MenuItem>
-          <MenuItem onClick={close} href='/extrinsic'>Extrinsics</MenuItem>
-          <MenuItem onClick={close} href='/transfer'>Transfers</MenuItem>
-          <MenuItem onClick={close} href='/event'>Events</MenuItem>
+          <MenuItem onClick={close}><Link to={'/block'}>Blocks</Link></MenuItem>
+          <MenuItem onClick={close}><Link to='/extrinsic'>Extrinsics</Link></MenuItem>
+          <MenuItem onClick={close}><Link to='/transfer'>Transfers</Link></MenuItem>
+          <MenuItem onClick={close}><Link to='/event'>Events</Link></MenuItem>
         </Menu>
       )}
     </>

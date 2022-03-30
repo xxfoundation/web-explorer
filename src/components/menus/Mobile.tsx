@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import React, { useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function MobileNav() {
   const [opened, setOpened] = useState(false);
@@ -56,16 +57,16 @@ export default function MobileNav() {
           <Divider sx={{ mb: 2 }} />
           <Box sx={{ mb: 2 }}>
             <ListItemButton>
-              <ListItemText primary='Blockchain' />
+              <Link to='/'><ListItemText primary='Blockchain' /></Link>
             </ListItemButton>
             <ListItemButton>
-              <ListItemText primary='Staking' />
+              <Link to='/staking'><ListItemText primary='Staking' /></Link>
             </ListItemButton>
             <ListItemButton>
-              <ListItemText primary='Governance' />
+              <Link to='governance'><ListItemText primary='Governance' /></Link>
             </ListItemButton>
             <ListItemButton>
-              <ListItemText primary='Accounts' />
+              <Link to='/accounts'><ListItemText primary='Accounts' /></Link>
             </ListItemButton>
           </Box>
         </Box>

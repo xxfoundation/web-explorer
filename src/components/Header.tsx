@@ -1,6 +1,7 @@
 import { Container, Grid } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import logo from '../assets/logos/xx-network-logo--white.svg';
 import { getDesignTokens } from '../themes/header';
 import { GridContainer, Root } from './Header.styled';
@@ -20,7 +21,7 @@ const Header = () => (
             <MobileNav />
           </Grid>
           <Grid item xs>
-            <img src={logo} alt='xx network' />
+            <Link to='/'><img src={logo} alt='xx network' /></Link>
           </Grid>
           <Grid item xs='auto' sx={{ display: { md: 'block', xs: 'none' } }}>
             <DesktopNav />
