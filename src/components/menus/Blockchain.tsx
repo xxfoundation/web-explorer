@@ -14,9 +14,9 @@ export default function Blockchain() {
     <>
       <MenuButton
         ref={button}
-        id="blockchain-button"
+        id='blockchain-button'
         aria-controls={opened ? 'blockchain-menu' : undefined}
-        aria-haspopup="true"
+        aria-haspopup='true'
         aria-expanded={opened ? 'true' : undefined}
         onClick={toggle}
         endIcon={<KeyboardArrowDownIcon />}
@@ -25,7 +25,7 @@ export default function Blockchain() {
       </MenuButton>
       {button.current && (
         <Menu
-          id="blockchain-menu"
+          id='blockchain-menu'
           anchorEl={button.current}
           open={opened}
           onClose={close}

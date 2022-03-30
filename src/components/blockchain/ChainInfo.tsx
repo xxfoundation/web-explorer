@@ -19,7 +19,7 @@ const ChainInfoCard: FC<{ title: string; value: string }> = ({ title, value }) =
   return (
     <Grid item xs={6} sm={3} md={3} key={title}>
       <Item>
-        <Typography variant="body2">{title}</Typography>
+        <Typography variant='body2'>{title}</Typography>
         <Data>{value}</Data>
       </Item>
     </Grid>
@@ -28,8 +28,8 @@ const ChainInfoCard: FC<{ title: string; value: string }> = ({ title, value }) =
 
 const chainInfo = () => {
   return (
-    <Box className="blockchain-component-chainInfo" mb={7}>
-      <Typography variant="h3" gutterBottom>
+    <Box className='blockchain-component-chainInfo' mb={7}>
+      <Typography variant='h3' gutterBottom>
         Chain data
       </Typography>
       <Wrap container spacing={{ xs: 1 }}>

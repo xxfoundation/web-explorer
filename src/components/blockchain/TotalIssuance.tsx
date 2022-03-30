@@ -117,7 +117,7 @@ const TotalIssuance = () => {
   return (
     <>
       <PaperWithHeader>
-        <PieChartWithLegend data={data} crustData={crustData} name="total issuance" value={value} />
+        <PieChartWithLegend data={data} crustData={crustData} name='total issuance' value={value} />
       </PaperWithHeader>
     </>
   );

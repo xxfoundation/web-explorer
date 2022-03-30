@@ -6,7 +6,7 @@ const FooterMenu = () => {
   return (
     <Grid container spacing={3}>
       <Grid item xs>
-        <ListLink href="" underline="hover">
+        <ListLink href="/" underline="hover">
           Home
         </ListLink>
         <ListLink href="" underline="hover">

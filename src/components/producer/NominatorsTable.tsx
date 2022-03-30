@@ -12,7 +12,7 @@ const rowParser = (rowData: {
   return (
     <TableRow key={rowData.account}>
       <TableCell>
-        <Link to='#'>{rowData.account}</Link>
+        <Link to={`/account/${rowData.account}`}>{rowData.account}</Link>
       </TableCell>
       <TableCell>{rowData.stake}</TableCell>
       <TableCell>{rowData.share}</TableCell>

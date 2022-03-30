@@ -1,11 +1,11 @@
 import {
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
 } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -25,7 +25,7 @@ const rowParser = (rowData: {
       <TableCell><Link to={`/block/${rowData.startBlock}`}>{rowData.startBlock}</Link></TableCell>
       <TableCell><Link to={`/block/${rowData.endBlock}`}>{rowData.endBlock}</Link></TableCell>
       <TableCell>{rowData.rewardPoint}</TableCell>
-      <TableCell><Link to={'#'}>{rowData.blocksProduced}</Link></TableCell>
+      <TableCell><Link to={`/producer/${rowData.blocksProduced}`}>{rowData.blocksProduced}</Link></TableCell>
     </TableRow>
   );
 };

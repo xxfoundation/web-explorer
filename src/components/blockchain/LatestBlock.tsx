@@ -27,24 +27,24 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
   return (
     <Grid key={id} container sx={{ mb: 4 }}>
       <Grid item xs>
-        <Link href="" underline="hover" variant="body2">
+        <Link href={`/block/${id}`} underline='hover' variant='body2'>
           {id}
         </Link>
         <Box sx={{ mt: 1 }}>
-          <Link href="" underline="hover" variant="body2">
+          <Link href='' underline='hover' variant='body2'>
             {intrinsic} instrinsic
           </Link>{' '}
-          <Typography variant="body2">|</Typography>{' '}
-          <Link href="" underline="hover" variant="body2">
+          <Typography variant='body2'>|</Typography>{' '}
+          <Link href={`/event/`} underline='hover' variant='body2'>
             {events} event
           </Link>
         </Box>
       </Grid>
-      <Grid item xs="auto">
+      <Grid item xs='auto'>
         <Box sx={{ textAlign: 'right' }}>
           {statusToIconMap[status]}
           <Box>
-            <Typography variant="body2">{timestamp}</Typography>
+            <Typography variant='body2'>{timestamp}</Typography>
           </Box>
         </Box>
       </Grid>
@@ -54,7 +54,7 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
 
 const blockchain = () => {
   return (
-    <PaperWithHeader header="LATEST BLOCKS" linkName={'SEE ALL'} linkAddress={'/block'} height={500}>
+    <PaperWithHeader header='LATEST BLOCKS' linkName={'SEE ALL'} linkAddress={'/block'} height={500}>
       {blocks.map(BlockRow)}
     </PaperWithHeader>
   );
