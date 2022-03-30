@@ -7,7 +7,10 @@ import ExtrinsicsTable from './ExtrinsicsTable';
 // const hash = '123123';
 // const number = '1231313';
 
-const BlockDetailedEventsTabs: React.FC<{events: number[], extrinsics: number[]}> = ({ events, extrinsics }) => {
+const BlockDetailedEventsTabs: React.FC<{ events: number[]; extrinsics: number[] }> = ({
+  events,
+  extrinsics
+}) => {
   const [value, setValue] = React.useState('extrinsics');
 
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
@@ -17,25 +20,25 @@ const BlockDetailedEventsTabs: React.FC<{events: number[], extrinsics: number[]}
   return (
     <Box>
       <Box>
-        <Tabs value={value} onChange={handleChange} aria-label='block event tabs'>
+        <Tabs value={value} onChange={handleChange} aria-label="block event tabs">
           <Tab
-            label={<TabText message='extrinsics' count={extrinsics.length} />}
-            value='extrinsics'
-            id='simple-tab-1'
-            aria-controls='tabpanel-extrinsics'
+            label={<TabText message="extrinsics" count={extrinsics.length} />}
+            value="extrinsics"
+            id="simple-tab-1"
+            aria-controls="tabpanel-extrinsics"
           />
           <Tab
-            label={<TabText message='events' count={events.length} />}
-            value='events'
-            id='simple-tab-2'
-            aria-controls='tabpanel-events'
+            label={<TabText message="events" count={events.length} />}
+            value="events"
+            id="simple-tab-2"
+            aria-controls="tabpanel-events"
           />
         </Tabs>
       </Box>
-      <TabPanel value={value} name='extrinsics'>
+      <TabPanel value={value} name="extrinsics">
         <ExtrinsicsTable />
       </TabPanel>
-      <TabPanel value={value} name='events'>
+      <TabPanel value={value} name="events">
         <EventsTable />
       </TabPanel>
     </Box>

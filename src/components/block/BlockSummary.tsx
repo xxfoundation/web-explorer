@@ -48,14 +48,16 @@ type Producer = { dunno?: string; name?: string; hash: string; icon?: string };
 const producerField = (producer: Producer) => {
   return (
     <Box>
-      <Stack direction={'row'} spacing={3} justifyContent={'space-between'}>
-        <Stack direction={'row'} spacing={1}>
-          <RemoveCircleIcon />
-          <Typography>{producer.dunno || 'dunno'}</Typography>
-        </Stack>
-        <Stack direction={'row'} spacing={1}>
-          <Avatar alt={producer.name} src={producer.icon || '??'} />
-          <Typography>{producer.hash || 'hash'}</Typography>
+      <Stack direction={'row'} spacing={3} justifyContent={'flex-start'} alignItems={'center'}>
+        {producer.name && (
+          <Stack direction={'row'} spacing={1}>
+            <RemoveCircleIcon />
+            <Typography>{producer.name}</Typography>
+          </Stack>
+        )}
+        <Stack direction={'row'} spacing={1} alignItems='center'>
+          <Avatar alt={producer.name || producer.hash} src={producer.icon} />
+          <Link to={`/producer/${producer.hash}`}>{producer.hash}</Link>
         </Stack>
         <Stack direction={'row'} spacing={2}>
           <Divider orientation='vertical'></Divider>
@@ -70,7 +72,7 @@ const backAndForwardWithLabel = (parentHash: string) => {
   return (
     <Stack direction={'row'} spacing={1}>
       <Typography>{parentHash}</Typography>
-      <Divider orientation='vertical' flexItem />
+      <Divider orientation='vertical' flexItem />ƒ
       <BackAndForwardArrows />
     </Stack>
   );

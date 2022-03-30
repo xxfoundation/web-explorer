@@ -19,12 +19,12 @@ import React from 'react';
 type Block = {
   number: number;
   status: string;
-  era: string,
-  time: string,
-  extrinsics: number,
-  blockProducer: { name: string, id: number },
-  blockHash: string
-}
+  era: string;
+  time: string;
+  extrinsics: number;
+  blockProducer: { name: string; id: number };
+  blockHash: string;
+};
 
 const data = [
   {
