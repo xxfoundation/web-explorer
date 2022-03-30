@@ -15,14 +15,14 @@ export default function DesktopNav() {
           <BlockchainMenu />
         </Grid>
         <Grid item xs>
-          <MenuButton id="staking-button" href='/staking'>Staking</MenuButton>
+          <MenuButton id='staking-button' href='/staking'>Staking</MenuButton>
         </Grid>
 
         <Grid item xs>
           <GovernanceMenu />
         </Grid>
         <Grid item xs>
-          <MenuButton id="accounts-button" href='/account'>Accounts</MenuButton>
+          <MenuButton id='accounts-button' href='/account'>Accounts</MenuButton>
         </Grid>
       </Grid>
     </Box>

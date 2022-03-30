@@ -29,7 +29,9 @@
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "@typescript-eslint/comma-dangle": "off",
     "@typescript-eslint/indent": "off",
-    "function-paren-newline": "off"
+    "function-paren-newline": "off",
+    "quotes": ["error", "single"],
+    "jsx-quotes": ["error", "prefer-single"]
   },
   "settings": {
     "import/extensions": [".js", ".ts", ".tsx"],

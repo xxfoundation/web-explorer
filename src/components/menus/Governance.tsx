@@ -24,7 +24,7 @@ export default function Blockchain() {
       </MenuButton>
       {button.current && (
         <Menu
-          id="governance-menu"
+          id='governance-menu'
           anchorEl={button.current}
           open={opened}
           onClose={close}

@@ -12,19 +12,19 @@ import Transferences from '../../components/blockchain/Transfers';
 const TokenStatus = () => {
   return (
     <Box sx={{ mt: 3 }}>
-      <Typography variant="h3" gutterBottom>
+      <Typography variant='h3' gutterBottom>
         Token Status
       </Typography>
       <Grid container spacing={2}>
         {[
-          <TotalIssuance key="totalIssuance" />,
-          <StakingSupplyChart key="stakingSupply" />,
-          <LatestBlock key="latestBlock" />,
-          <Transferences key="transferences" />,
-          <TransactionsChart key="transactionsChart" />,
-          <NewAccounts key="newAccounts" />,
-          <StakingRatio key="stakingRatio" />,
-          <AverageAnnualReturn key="averageAnnualReturn" />
+          <TotalIssuance key='totalIssuance' />,
+          <StakingSupplyChart key='stakingSupply' />,
+          <LatestBlock key='latestBlock' />,
+          <Transferences key='transferences' />,
+          <TransactionsChart key='transactionsChart' />,
+          <NewAccounts key='newAccounts' />,
+          <StakingRatio key='stakingRatio' />,
+          <AverageAnnualReturn key='averageAnnualReturn' />
         ].map((item, i) => {
           return (
             <Grid item xs={12} md={6} key={i}>

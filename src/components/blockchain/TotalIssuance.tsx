@@ -80,7 +80,7 @@ const TotalIssuance = () => {
         unstakeable: {
           team: { value: 62145, percentage: 0.632 },
           foundation: { value: 60156, percentage: 0.601 }
-        },
+        }
       },
       states: {
         hover: {

@@ -3,11 +3,13 @@ import React from 'react';
 import CopyButton from './CopyButton';
 
 const textWithCopy = (value: string, content: JSX.Element): JSX.Element => {
-  return <Stack direction={'row'} spacing={1} alignItems={'center'}>
+  return (
+    <Stack direction={'row'} spacing={1} alignItems={'center'}>
       {content}
       <Divider orientation='vertical' flexItem />
       <CopyButton value={value} />
-    </Stack>;
+    </Stack>
+  );
 };
 
 const AvatarLabel: React.FC<{ src: string; srcAlt: string; text: string }> = ({
@@ -25,9 +27,7 @@ const AvatarLabel: React.FC<{ src: string; srcAlt: string; text: string }> = ({
 
 export type SummaryPaperData = { label: string; value: number | string | JSX.Element };
 
-const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({
-  data
-}) => {
+const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({ data }) => {
   return (
     <Paper>
       <Grid container spacing={2} rowSpacing={2}>

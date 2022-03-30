@@ -35,7 +35,7 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
             {intrinsic} instrinsic
           </Link>{' '}
           <Typography variant='body2'>|</Typography>{' '}
-          <Link href={`/event/`} underline='hover' variant='body2'>
+          <Link href={'/event'} underline='hover' variant='body2'>
             {events} event
           </Link>
         </Box>
@@ -54,7 +54,12 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
 
 const blockchain = () => {
   return (
-    <PaperWithHeader header='LATEST BLOCKS' linkName={'SEE ALL'} linkAddress={'/block'} height={500}>
+    <PaperWithHeader
+      header='LATEST BLOCKS'
+      linkName={'SEE ALL'}
+      linkAddress={'/block'}
+      height={500}
+    >
       {blocks.map(BlockRow)}
     </PaperWithHeader>
   );

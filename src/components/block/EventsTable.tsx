@@ -16,7 +16,7 @@ const header = ['event id', 'hash', 'action', 'view all'];
 type EventTyp = {
   eventId: string;
   action: string;
-}
+};
 
 const rowParser = (rowData: EventTyp) => {
   return (

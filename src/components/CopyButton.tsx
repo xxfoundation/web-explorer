@@ -8,7 +8,7 @@ function copyTextToClipboard(text: string) {
   }
 }
 
-const CopyButton: React.FC<{value: string}> = ({ value }) => {
+const CopyButton: React.FC<{ value: string }> = ({ value }) => {
   return (
     <IconButton
       arial-label='copy'

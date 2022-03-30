@@ -16,13 +16,13 @@ const Header = () => (
     <Root>
       <Container>
         <GridContainer container>
-          <Grid item xs="auto" sx={{ display: { md: 'none', xs: 'block' } }}>
+          <Grid item xs='auto' sx={{ display: { md: 'none', xs: 'block' } }}>
             <MobileNav />
           </Grid>
           <Grid item xs>
-            <img src={logo} alt="xx network" />
+            <img src={logo} alt='xx network' />
           </Grid>
-          <Grid item xs="auto" sx={{ display: { md: 'block', xs: 'none' } }}>
+          <Grid item xs='auto' sx={{ display: { md: 'block', xs: 'none' } }}>
             <DesktopNav />
           </Grid>
         </GridContainer>

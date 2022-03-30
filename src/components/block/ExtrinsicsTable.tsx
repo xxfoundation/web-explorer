@@ -1,6 +1,14 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,7 +20,7 @@ type ExtrinsicsTyp = {
   time: string;
   action: string;
   eventId: number;
-}
+};
 
 const rowParser = (rowData: ExtrinsicsTyp) => {
   return (

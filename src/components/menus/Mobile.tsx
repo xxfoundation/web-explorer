@@ -14,13 +14,12 @@ export default function MobileNav() {
   const close = useCallback(() => setOpened(false), [setOpened]);
   const open = useCallback(() => setOpened(true), [setOpened]);
 
-
   return (
     <Box>
       <IconButton
-        edge="start"
-        color="inherit"
-        aria-label="open drawer"
+        edge='start'
+        color='inherit'
+        aria-label='open drawer'
         onClick={open}
         sx={{
           m: 0,
@@ -36,10 +35,10 @@ export default function MobileNav() {
       </IconButton>
 
       <Drawer
-        anchor="left"
+        anchor='left'
         open={opened}
         onClose={close}
-        variant="temporary"
+        variant='temporary'
       >
         <Box
           sx={{
@@ -58,16 +57,16 @@ export default function MobileNav() {
           <Divider sx={{ mb: 2 }} />
           <Box sx={{ mb: 2 }}>
             <ListItemButton>
-              <ListItemText primary="Blockchain" />
+              <ListItemText primary='Blockchain' />
             </ListItemButton>
             <ListItemButton>
-              <ListItemText primary="Staking" />
+              <ListItemText primary='Staking' />
             </ListItemButton>
             <ListItemButton>
-              <ListItemText primary="Governance" />
+              <ListItemText primary='Governance' />
             </ListItemButton>
             <ListItemButton>
-              <ListItemText primary="Accounts" />
+              <ListItemText primary='Accounts' />
             </ListItemButton>
           </Box>
         </Box>

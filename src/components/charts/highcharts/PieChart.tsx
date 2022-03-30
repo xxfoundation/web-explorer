@@ -49,20 +49,22 @@ type PieChartProps = {
   options?: Options;
   crustData?: PointOptionsObject[];
   data: PointOptionsObject[];
-  onClick?: SeriesClickCallbackFunction
-}
+  onClick?: SeriesClickCallbackFunction;
+};
 
 const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, options }) => {
   const chartOptions: Options = {
     ...options,
     ...defaultOptions,
-    series: [{
-      type: 'pie',
-      innerSize: crustData ? '70%' : '54%',
-      name,
-      data,
-      states
-    }],
+    series: [
+      {
+        type: 'pie',
+        innerSize: crustData ? '70%' : '54%',
+        name,
+        data,
+        states
+      }
+    ],
     title: undefined
   };
 
@@ -80,12 +82,10 @@ const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, optio
     chartOptions.plotOptions.pie.events.click = onClick;
   }
 
-  return (
-    <HighchartsReact id={id} highcharts={Highcharts} options={chartOptions} />
-  );
+  return <HighchartsReact id={id} highcharts={Highcharts} options={chartOptions} />;
 };
 
-const ChartLegends = ({ data }: {data: PointOptionsObject[]}) => {
+const ChartLegends = ({ data }: { data: PointOptionsObject[] }) => {
   return (
     <List dense={true}>
       {data.map(({ color, name, y }) => {
@@ -105,7 +105,7 @@ const ChartLegends = ({ data }: {data: PointOptionsObject[]}) => {
 type StakeableInfoProps = {
   name: string;
   values: PercentageValues;
-}
+};
 
 const StakeableInfoRow: FC<StakeableInfoProps> = ({ name, values }) => {
   return (
@@ -148,7 +148,8 @@ type ChartClickModalProps = {
 } & PopoverProps;
 
 const ChartClickPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
-  return <Popover
+  return (
+    <Popover
       {...props}
       anchorOrigin={{
         vertical: 'center',
@@ -164,7 +165,8 @@ const ChartClickPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
         <StakeableInfoRow name='stakeable' values={data.custom.stakeable} />
         <StakeableInfoRow name='unstakeable' values={data.custom.unstakeable} />
       </Grid>
-    </Popover>;
+    </Popover>
+  );
 };
 
 type PieChartWithLegendProps = {
@@ -172,13 +174,14 @@ type PieChartWithLegendProps = {
   data: CustomPointOptions<StakeablePopup>[];
   name: string;
   value: string | React.ReactElement | number | null;
-}
+};
 
 const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name, value }) => {
-  const legends = useMemo(() => crustData 
-    ? [...data, ...crustData.filter((item) => !item.custom.hiddenLegend)] 
-    : [...data],
-    [data, crustData]);
+  const legends = useMemo(
+    () =>
+      crustData ? [...data, ...crustData.filter((item) => !item.custom.hiddenLegend)] : [...data],
+    [data, crustData]
+  );
   const [anchorEl, setAnchorEl] = React.useState<Element>();
   const [pointOptions, setPointOptions] = React.useState<CustomPointOptions<StakeablePopup>>();
 
@@ -199,19 +202,16 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
   return (
     <Grid container>
       <Grid item xs={7}>
-        {pointOptions && <ChartClickPopover
-          id={`${name}-chart-slice-popover`}
-          onClose={onClose}
-          open={open}
-          anchorEl={anchorEl}
-          data={pointOptions}
-        />}
-        <PieChart
-          data={data}
-          crustData={crustData}
-          name={name}
-          onClick={handleClick}
-        />
+        {pointOptions && (
+          <ChartClickPopover
+            id={`${name}-chart-slice-popover`}
+            onClose={onClose}
+            open={open}
+            anchorEl={anchorEl}
+            data={pointOptions}
+          />
+        )}
+        <PieChart data={data} crustData={crustData} name={name} onClick={handleClick} />
       </Grid>
       <Grid item xs={5}>
         <Typography variant='subtitle2'>{name}</Typography>

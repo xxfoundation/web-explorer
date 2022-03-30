@@ -35,7 +35,7 @@ Execute the lints in the source code
 
 #### vscode integration
 
-Just install the `eslint` plugin to validate the code
+Just install the `eslint` plugin to validate the code and the `prettier` to format the files
 
 You can this configuration to the project settings
 

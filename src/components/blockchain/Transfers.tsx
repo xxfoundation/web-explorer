@@ -8,17 +8,19 @@ type Transfer = {
   from: string;
   to: string;
   duration: number;
-}
+};
 
-const transfers: Transfer[] =  Array.from(Array(9).keys()).slice(1).map((i) => {
-  return {
-    intrinsicIndex: '314658-5', // TODO mask?
-    id: i,
-    from: 'Oxacc15dc74899999', // TODO use just mask instead of manipulating the value
-    to: 'Oxacc15dc748888',
-    duration: 30
-  };
-});
+const transfers: Transfer[] = Array.from(Array(9).keys())
+  .slice(1)
+  .map((i) => {
+    return {
+      intrinsicIndex: '314658-5', // TODO mask?
+      id: i,
+      from: 'Oxacc15dc74899999', // TODO use just mask instead of manipulating the value
+      to: 'Oxacc15dc748888',
+      duration: 30
+    };
+  });
 
 const addMaskToTransactionTargets = (hash: string) => {
   const href = `/transfer/${hash}`;

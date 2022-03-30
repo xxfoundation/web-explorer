@@ -13,7 +13,7 @@ export const Item = styled(Paper)(({ theme }) => ({
   cursor: 'pointer',
   mask: 'linear-gradient(#FFF,#FFF)',
   '&:before': {
-    content: "''",
+    content: '\'\'',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -23,7 +23,7 @@ export const Item = styled(Paper)(({ theme }) => ({
     zIndex: '-1'
   },
   '&:hover:after': {
-    content: "''",
+    content: '\'\'',
     position: 'absolute',
     top: 0,
     left: 0,

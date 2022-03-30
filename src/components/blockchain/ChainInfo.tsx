@@ -34,7 +34,7 @@ const chainInfo = () => {
       </Typography>
       <Wrap container spacing={{ xs: 1 }}>
         {data.items.map(({ title, value }) => (
-          <ChainInfoCard title={title} value={value} key={title}/>
+          <ChainInfoCard title={title} value={value} key={title} />
         ))}
       </Wrap>
     </Box>

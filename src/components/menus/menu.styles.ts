@@ -17,7 +17,7 @@ export const MenuButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     background: 'none',
     '&:before': {
-      content: "''",
+      content: '\'\'',
       display: 'block',
       height: 1,
       width: 20,
