@@ -13,16 +13,21 @@ import { Link } from 'react-router-dom';
 
 const header = ['event id', 'hash', 'action', 'view all'];
 
-const rowParser = (rowData) => {
+type EventTyp = {
+  eventId: string;
+  action: string;
+}
+
+const rowParser = (rowData: EventTyp) => {
   return (
     <TableRow key={rowData.eventId}>
       <TableCell>{rowData.eventId}</TableCell>
       <TableCell>-</TableCell>
       <TableCell>
-        <Link to="#">{rowData.action}</Link>
+        <Link to='#'>{rowData.action}</Link>
       </TableCell>
       <TableCell>
-        <Link to={`/extrinsics/${rowData.eventId}`}>
+        <Link to={`/extrinsic/${rowData.eventId}`}>
           <ArrowForwardIosIcon />
         </Link>
       </TableCell>
@@ -30,14 +35,15 @@ const rowParser = (rowData) => {
   );
 };
 
-const BlockEvents = ({}) => {
-  // TODO subscribe to events and fill data
-  const data = [
-    {
-      eventId: '312313',
-      action: 'balance (Withraw)'
-    }
-  ];
+const data = [
+  {
+    eventId: '312313',
+    action: 'balance (Withraw)'
+  }
+];
+
+const BlockEvents = () => {
+  // TODO subscribe to events and fill data with hash or number
   return (
     <TableContainer component={Paper}>
       <Table>

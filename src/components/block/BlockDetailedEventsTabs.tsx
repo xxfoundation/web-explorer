@@ -1,16 +1,16 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react';
-import { TabPanel, TabText } from '../../components/tabs';
-import EventsTable from './eventsTable';
-import ExtrinsicsTable from './extrinsicsTable';
+import { TabPanel, TabText } from '../tabs';
+import EventsTable from './EventsTable';
+import ExtrinsicsTable from './ExtrinsicsTable';
 
-const hash = '123123',
-  number = '1231313';
+// const hash = '123123';
+// const number = '1231313';
 
-const BlockDetailedEvents = ({ events, extrinsics }) => {
+const BlockDetailedEventsTabs: React.FC<{events: number[], extrinsics: number[]}> = ({ events, extrinsics }) => {
   const [value, setValue] = React.useState('extrinsics');
 
-  const handleChange = (_, newValue) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
@@ -33,13 +33,13 @@ const BlockDetailedEvents = ({ events, extrinsics }) => {
         </Tabs>
       </Box>
       <TabPanel value={value} name='extrinsics'>
-        <ExtrinsicsTable hash={hash} number={number} />
+        <ExtrinsicsTable />
       </TabPanel>
       <TabPanel value={value} name='events'>
-        <EventsTable hash={hash} number={number} />
+        <EventsTable />
       </TabPanel>
     </Box>
   );
 };
 
-export default BlockDetailedEvents;
+export default BlockDetailedEventsTabs;

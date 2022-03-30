@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import Block from "./block";
+import Block from "./Block";
 import BlocksPage from "./BlocksPage";
 
 const BlockRouter = () => {

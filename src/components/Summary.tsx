@@ -23,7 +23,9 @@ const AvatarLabel: React.FC<{ src: string; srcAlt: string; text: string }> = ({
   );
 };
 
-const SummaryPaper: React.FC<{ data: { label: string; value: number | string | JSX.Element }[] }> = ({
+export type SummaryPaperData = { label: string; value: number | string | JSX.Element };
+
+const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({
   data
 }) => {
   return (
