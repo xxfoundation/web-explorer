@@ -9,7 +9,7 @@ const data = {
     { title: 'ACTIVE ERA', value: '568' },
     { title: 'TRANSFERS', value: '524,609' },
     { title: 'HOLDERS', value: '866,441' },
-    { title: 'TOTAL ISSUANCE', value: <FormatBalance symbol='xx' value='1060000000' /> },
+    { title: 'TOTAL ISSUANCE', value: <FormatBalance value='1060000000' /> },
     { title: 'NOMINATORS', value: '53/53' },
     { title: 'VALIDATORS', value: '874,609' },
     { title: 'INFLATION RATE', value: '7.86%' }
