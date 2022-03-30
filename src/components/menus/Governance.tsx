@@ -4,7 +4,6 @@ import React, { useRef } from 'react';
 import { useToggle } from '../../hooks';
 import { MenuButton } from './menu.styles';
 
-
 export default function Blockchain() {
   const button = useRef(null);
   const [opened, { toggle, toggleOff: close }] = useToggle();

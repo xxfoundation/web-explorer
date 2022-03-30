@@ -8,7 +8,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import React, { useCallback, useState } from 'react';
 
-
 export default function MobileNav() {
   const [opened, setOpened] = useState(false);
   const close = useCallback(() => setOpened(false), [setOpened]);

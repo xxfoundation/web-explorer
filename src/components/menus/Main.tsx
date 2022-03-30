@@ -4,7 +4,6 @@ import BlockchainMenu from './Blockchain';
 import GovernanceMenu from './Governance';
 import { MenuButton } from './menu.styles';
 
-
 //export const DesktopNav = () => {
 export default function DesktopNav() {
 

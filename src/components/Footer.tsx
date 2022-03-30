@@ -9,7 +9,6 @@ import xxNetworkLogo from '../assets/logos/xx-network-logo--white.svg';
 import { theme } from '../themes/footer';
 import FooterMenu from './menus/Footer';
 
-
 const Footer = () => (
   <ThemeProvider theme={theme}>
     <Box
