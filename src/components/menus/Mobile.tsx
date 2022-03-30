@@ -1,26 +1,25 @@
-import React, { useCallback, useState } from 'react';
-import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 import Box from '@mui/material/Box';
-
-import Drawer from '@mui/material/Drawer';
-import CloseIcon from '@mui/icons-material/Close';
 import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import React, { useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function MobileNav() {
   const [opened, setOpened] = useState(false);
   const close = useCallback(() => setOpened(false), [setOpened]);
   const open = useCallback(() => setOpened(true), [setOpened]);
 
-
   return (
     <Box>
       <IconButton
-        edge="start"
-        color="inherit"
-        aria-label="open drawer"
+        edge='start'
+        color='inherit'
+        aria-label='open drawer'
         onClick={open}
         sx={{
           m: 0,
@@ -36,10 +35,10 @@ export default function MobileNav() {
       </IconButton>
 
       <Drawer
-        anchor="left"
+        anchor='left'
         open={opened}
         onClose={close}
-        variant="temporary"
+        variant='temporary'
       >
         <Box
           sx={{
@@ -50,25 +49,24 @@ export default function MobileNav() {
             width: '100%'
           }}
         >
-          <IconButton sx={{ mb: 2 }}>
+          <IconButton sx={{ mb: 2 }} onClick={close}>
             <CloseIcon
-              onClick={close}
               sx={{ color: 'primary.contrastText' }}
             />
           </IconButton>
           <Divider sx={{ mb: 2 }} />
           <Box sx={{ mb: 2 }}>
             <ListItemButton>
-              <ListItemText primary="Blockchain" />
+              <Link to='/'><ListItemText primary='Blockchain' /></Link>
             </ListItemButton>
             <ListItemButton>
-              <ListItemText primary="Staking" />
+              <Link to='/staking'><ListItemText primary='Staking' /></Link>
             </ListItemButton>
             <ListItemButton>
-              <ListItemText primary="Governance" />
+              <Link to='governance'><ListItemText primary='Governance' /></Link>
             </ListItemButton>
             <ListItemButton>
-              <ListItemText primary="Accounts" />
+              <Link to='/accounts'><ListItemText primary='Accounts' /></Link>
             </ListItemButton>
           </Box>
         </Box>
