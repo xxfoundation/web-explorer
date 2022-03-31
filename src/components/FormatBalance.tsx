@@ -50,7 +50,7 @@ function applyFormat (value: BN | string, decimals: number, symbol: string, with
 function FormatBalance ({ children, className = '', decimals = 0, isShort, label, labelPost, symbol = 'XX', value, withCurrency, withSi }: Props): React.ReactElement<Props> {
   const formatted = applyFormat(value, decimals, symbol, withCurrency, withSi, isShort, labelPost)
   return (
-    <div className={`ui--FormatBalance ${className}`}>
+    <span className={`ui--FormatBalance ${className}`}>
       {label ? <>{label}&nbsp;</> : ''}
       <span
         className='ui--FormatBalance-value'
@@ -59,7 +59,7 @@ function FormatBalance ({ children, className = '', decimals = 0, isShort, label
         {formatted}
       </span>
       {children}
-    </div>
+    </span>
   );
 }
 
