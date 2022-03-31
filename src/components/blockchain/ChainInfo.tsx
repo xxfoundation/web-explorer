@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import FormatBalance from '../FormatBalance';
-import { Data, Item } from './ChainInfo.styles';
+import { Data, Item, Wrap } from './ChainInfo.styles';
 
 const data = {
   items: [
@@ -29,15 +29,15 @@ const ChainInfoCard: FC<{ title: string, value: string | React.ReactNode }> = ({
 
 const chainInfo = () => {
   return (
-    <Box className="blockchain-component-chainInfo">
-      <Typography variant="h3" gutterBottom>
+    <Box className='blockchain-component-chainInfo' mb={7}>
+      <Typography variant='h3' gutterBottom>
         Chain data
       </Typography>
-      <Grid container spacing={{ xs: 1 }}>
+      <Wrap container spacing={{ xs: 1 }}>
         {data.items.map(({ title, value }) => (
-          <ChainInfoCard title={title} value={value} />
+          <ChainInfoCard title={title} value={value} key={title} />
         ))}
-      </Grid>
+      </Wrap>
     </Box>
   );
 };

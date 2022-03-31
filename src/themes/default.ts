@@ -6,7 +6,7 @@ export const theme = createTheme({
       styleOverrides: {
         gutterBottom: {
           marginBottom: 24
-        },
+        }
       }
     }
   },
@@ -14,6 +14,9 @@ export const theme = createTheme({
     primary: {
       main: '#00A2D6', // sets link color
       contrastText: '#FFF'
+    },
+    text: {
+      primary: '#4f4f4f'
     },
     // color coding used for metrics
     veryGood: {
@@ -33,10 +36,10 @@ export const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: "'Mulish', sans-serif",
+    fontFamily: '\'Roboto\', sans-serif',
     h1: {
       fontSize: 36,
-      fontWeight: 800
+      fontWeight: 700
     },
     h2: {
       fontSize: 36,
@@ -45,7 +48,9 @@ export const theme = createTheme({
     h3: {
       fontSize: 16,
       fontWeight: 700,
-      textTransform: 'uppercase'
+      letterSpacing: 1.5,
+      textTransform: 'uppercase',
+      color: '#4f4f4f'
     },
     h4: {
       fontSize: 12,
@@ -73,7 +78,7 @@ export const theme = createTheme({
       fontSize: 12
     },
     button: {
-      fontWeight: 600
+      fontWeight: 500
     }
   },
   gradients: {

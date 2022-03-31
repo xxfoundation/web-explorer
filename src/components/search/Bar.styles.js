@@ -1,6 +1,5 @@
+import { Button, Input, Select } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import { Input, Select, Button } from '@mui/material';
 
 export const Bar = styled('div')(({ theme }) => ({
   background: theme.palette.background.transparent,
