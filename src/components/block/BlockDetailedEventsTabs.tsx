@@ -1,8 +1,28 @@
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Divider, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React from 'react';
-import { TabPanel, TabText } from '../tabs';
 import EventsTable from './EventsTable';
 import ExtrinsicsTable from './ExtrinsicsTable';
+
+const TabText: React.FC<{ count: string | number; message: string }> = ({ count, message }) => {
+  return (
+    <Stack direction='row' divider={<Divider orientation='vertical' />}>
+      <Typography>{message}</Typography>
+      <Typography>{count}</Typography>
+    </Stack>
+  );
+};
+
+const TabPanel: React.FC<{ children: JSX.Element; name: string; value: string }> = ({
+  children,
+  name,
+  value
+}) => {
+  return (
+    <div role='tabpanel' id={`tabpanel-${value}`} aria-labelledby={`tab-${value}`}>
+      {value === name && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+};
 
 // const hash = '123123';
 // const number = '1231313';
