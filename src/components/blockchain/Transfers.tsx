@@ -1,6 +1,6 @@
 import { Box, Grid, Link, Tooltip, Typography } from '@mui/material';
 import React from 'react';
-import TimeAgo from 'react-timeago';
+import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
 
 type Transfer = {

@@ -1,5 +1,5 @@
 import React from 'react';
-import TimeAgo from 'react-timeago';
+import TimeAgo from '../TimeAgo';
 import { Box, Grid, Link, Typography } from '@mui/material';
 import { ClockIcon } from '../../site/icons/sfIcons';
 import { theme } from '../../themes/default';
