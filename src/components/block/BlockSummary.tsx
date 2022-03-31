@@ -15,7 +15,8 @@ import {
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CopyButton from '../CopyButton';
-import { SummaryPaper, textWithCopy } from '../Summary';
+import { Hash } from '../Hash';
+import { SummaryPaper } from '../Summary';
 
 const BackAndForwardArrows = () => {
   return (
@@ -105,7 +106,7 @@ const summaryData = (data: BlockSummaryTyp) => [
     )
   },
   { label: 'era', value: data.era },
-  { label: 'hash', value: textWithCopy(data.hash, <Typography>{data.hash}</Typography>) },
+  { label: 'hash', value: <Hash value={data.hash} variant='body3' copyable /> },
   { label: 'parent hash', value: backAndForwardWithLabel(data.parentHash) },
   {
     label: 'state root',
