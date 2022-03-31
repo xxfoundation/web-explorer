@@ -87,7 +87,13 @@ const ItemHandler = (currentData: Transfer) => {
 
 const transfersList = () => {
   return (
-    <PaperWithHeader header='TRANSFERS' linkName={'SEE ALL'} linkAddress={'##'} height={500}>
+    <PaperWithHeader 
+      header='TRANSFERS' 
+      hasDivider={true}
+      linkName={'SEE ALL'} 
+      linkAddress={'##'} 
+      height={500}
+    >
       {transfers.map(ItemHandler)}
     </PaperWithHeader>
   );

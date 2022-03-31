@@ -5,7 +5,7 @@ import TokenStatus from './TokenStatus';
 
 const Blockchain = () => {
   return (
-    <Container sx={{ my: 5 }}>
+    <Container sx={{ mt: 5, mb: 12 }}>
       <ChainInfo />
       <TokenStatus />
     </Container>

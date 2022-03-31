@@ -28,7 +28,7 @@ const TokenStatus = () => {
         ].map((item, i) => {
           return (
             <Grid item xs={12} md={6} key={i}>
-              <Card>{item}</Card>
+              <Box>{item}</Box>
             </Grid>
           );
         })}
