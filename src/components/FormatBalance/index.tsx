@@ -5,12 +5,13 @@ import BN from 'bn.js';
 
 import React from 'react';
 
-import { formatBalance } from '@polkadot/util';
+import { formatBalance } from './formatter';
 
 interface Props {
   children?: React.ReactNode;
   symbol?: string;
-  decimals?: number;
+  precision?: number;
+  denomination?: number;
   className?: string;
   isShort?: boolean;
   label?: React.ReactNode;
@@ -30,14 +31,15 @@ function createElement (prefix: string, postfix: string, unit: string, label: La
   return <>{`${prefix}${isShort ? '' : '.'}`}{!isShort && <span className='ui--FormatBalance-postfix'>{`0000${postfix || ''}`.slice(-4)}</span>}<span className='ui--FormatBalance-unit'> {unit}</span>{label}</>;
 }
 
-function applyFormat (value: BN | string, decimals: number, symbol: string, withCurrency = true, withSi?: boolean, _isShort?: boolean, labelPost?: LabelPost): React.ReactNode {
-  const [prefix, postfix] = formatBalance(value, { decimals, forceUnit: '-', withSi: false }).split('.');
+function applyFormat (value: BN | string, denomination: number, symbol: string, withCurrency = true, withSi?: boolean, _isShort?: boolean, labelPost?: LabelPost, precision?: number): React.ReactNode {
+  const [prefix, postfix] = formatBalance(value, { decimals: denomination, forceUnit: '-', precision, withSi: false }).split('.');
   const isShort = _isShort || (withSi && prefix.length >= K_LENGTH);
   const unitPost = withCurrency ? symbol : '';
 
-
   if (prefix.length > M_LENGTH) {
-    const [major, rest] = formatBalance(value, { decimals, withUnit: false }).split('.');
+    const [major, rest] = formatBalance(value, { decimals: denomination, precision, withUnit: false }).split('.');
+    // eslint-disable-next-line no-console
+
     const minor = rest.slice(0, 4);
     const unit = rest.slice(4);
 
@@ -47,10 +49,10 @@ function applyFormat (value: BN | string, decimals: number, symbol: string, with
   return createElement(prefix, postfix, unitPost, labelPost, isShort);
 }
 
-function FormatBalance ({ children, className = '', decimals = 0, isShort, label, labelPost, symbol = 'XX', value, withCurrency, withSi }: Props): React.ReactElement<Props> {
-  const formatted = applyFormat(value, decimals, symbol, withCurrency, withSi, isShort, labelPost)
+function FormatBalance ({ children, className = '', denomination = 0, isShort, label, labelPost, precision = 2, symbol = 'XX', value, withCurrency, withSi }: Props): React.ReactElement<Props> {
+  const formatted = applyFormat(value, denomination, symbol, withCurrency, withSi, isShort, labelPost, precision)
   return (
-    <span className={`ui--FormatBalance ${className}`}>
+    <div className={`ui--FormatBalance ${className}`}>
       {label ? <>{label}&nbsp;</> : ''}
       <span
         className='ui--FormatBalance-value'
@@ -59,7 +61,7 @@ function FormatBalance ({ children, className = '', decimals = 0, isShort, label
         {formatted}
       </span>
       {children}
-    </span>
+    </div>
   );
 }
 
