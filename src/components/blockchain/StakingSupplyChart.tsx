@@ -54,7 +54,7 @@ const data = [
 const StakingSupply = () => {
   return (
     <PaperWithHeader>
-      <PieChartWithLegend data={data} name="staking supply" value={value} />
+      <PieChartWithLegend data={data} name='staking supply' value={value} />
     </PaperWithHeader>
   );
 };

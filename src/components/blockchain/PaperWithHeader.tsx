@@ -5,15 +5,15 @@ import { default as React, FC } from 'react';
 const PaperWrap = styled(Paper)(({ theme }) => ({
   boxShadow: theme.boxShadow,
   border: theme.borders?.light,
-  borderRadius: theme.shape.borderRadius as number * 3
+  borderRadius: (theme.shape.borderRadius as number) * 3
 }));
 
 type Props = {
-  header?: string | React.ReactNode,
+  header?: string | React.ReactNode;
   height?: number;
   linkAddress?: string;
   linkName?: string;
-}
+};
 
 const InputSet: FC<Props> = ({ children, header, height, linkAddress, linkName }) => (
   <PaperWrap sx={{}}>

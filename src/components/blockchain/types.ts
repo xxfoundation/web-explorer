@@ -1,4 +1,4 @@
-import { PointOptionsObject } from "highcharts";
+import { PointOptionsObject } from 'highcharts';
 
 export enum BlockStatus {
   Pending = 'pending'

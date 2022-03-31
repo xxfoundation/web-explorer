@@ -9,7 +9,7 @@ import { DataPoint } from '../../../types';
 
 const calculateMaximums = (data: DataPoint[]) => {
   const xItems = data.map(([x]) => x);
-  const yItems = data.map(([,y]) => y);
+  const yItems = data.map(([, y]) => y);
   const maxX = Math.max(...xItems);
   const minX = Math.min(...xItems);
 
@@ -23,13 +23,13 @@ const calculateMaximums = (data: DataPoint[]) => {
 
 type Props = {
   title?: string;
-  data: DataPoint[],
+  data: DataPoint[];
   labelFormatters?: {
-    xAxis?: LabelFormatter,
-    yAxis?: LabelFormatter
-  },
-  tooltipFormatter?: TooltipFormatter,
-}
+    xAxis?: LabelFormatter;
+    yAxis?: LabelFormatter;
+  };
+  tooltipFormatter?: TooltipFormatter;
+};
 
 const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }) => {
   const options = useMemo<Options>(() => {
@@ -72,14 +72,14 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
         offset: 20,
         min: minX,
         max: maxX,
-        margin: 50,
+        margin: 50
       },
       yAxis: {
         gridLineWidth: 0,
         title: { text: '' },
         labels: { align: 'right', x: 30, formatter: labelFormatters?.yAxis },
         min: 0,
-        max: maxY,
+        max: maxY
       },
       plotOptions: {
         series: {
@@ -89,23 +89,18 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
           }
         }
       },
-      series: [{
-        type: 'line',
-        name: 'ERA',
-        marker: { symbol: 'circle' },
-        data,
-      }]
-    }
+      series: [
+        {
+          type: 'line',
+          name: 'ERA',
+          marker: { symbol: 'circle' },
+          data
+        }
+      ]
+    };
   }, [data, labelFormatters, title, tooltipFormatter]);
 
-  return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={options}
-    />
-  )
-}
+  return <HighchartsReact highcharts={Highcharts} options={options} />;
+};
 
 export default LineChart;
-
-
