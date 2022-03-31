@@ -4,7 +4,7 @@ import PaperWithHeader from './PaperWithHeader';
 import type { CustomPointOptions, StakeablePopup } from './types';
 
 const StakingSupply = () => {
-  const value = 9999120003;
+  const value = '99991200034';
   const data: CustomPointOptions<StakeablePopup>[] = [
     {
       name: 'staked',
