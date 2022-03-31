@@ -8,11 +8,10 @@ const overrides: Partial<Record<Unit, string>> = {
 
 const formatterOverride: Formatter = (value, unit, suffix) => {
   const unitOverride = overrides[unit] ?? unit;
-  const converted = value !== 1 ? unitOverride + 's' : unit;
-  return `${value} ${converted} ${suffix}`;
+  return `${value} ${unitOverride} ${suffix}`;
 }
 
-const TimeAgoComponent: React.FC<ReactTimeagoProps> = (props) => 
+const TimeAgoComponent: React.FC<ReactTimeagoProps> = (props) =>
   <TimeAgo {...props} formatter={formatterOverride} />
 
 export default TimeAgoComponent;
