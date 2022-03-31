@@ -27,6 +27,11 @@ export const theme = createTheme({
       fontSize: 14,
       color: '#D2D2D2'
     },
+    body5: {
+      // tiny & normal
+      fontWeight: 400,
+      fontSize: 10
+    },
     button: {
       fontSize: '2rem'
     }
