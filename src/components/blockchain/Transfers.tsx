@@ -1,5 +1,6 @@
 import { Box, Grid, Link, Tooltip, Typography } from '@mui/material';
 import React from 'react';
+import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
 
 type Transfer = {
@@ -7,20 +8,18 @@ type Transfer = {
   id: number;
   from: string;
   to: string;
-  duration: number;
-};
+  timestamp: number;
+}
 
-const transfers: Transfer[] = Array.from(Array(9).keys())
-  .slice(1)
-  .map((i) => {
-    return {
-      intrinsicIndex: '314658-5', // TODO mask?
-      id: i,
-      from: 'Oxacc15dc74899999', // TODO use just mask instead of manipulating the value
-      to: 'Oxacc15dc748888',
-      duration: 30
-    };
-  });
+const transfers: Transfer[] =  Array.from(Array(9).keys()).slice(1).map((i) => {
+  return {
+    intrinsicIndex: '314658-5', // TODO mask?
+    id: i,
+    from: 'Oxacc15dc74899999', // TODO use just mask instead of manipulating the value
+    to: 'Oxacc15dc748888',
+    timestamp: new Date().getTime() - (i * 1000)
+  };
+});
 
 const addMaskToTransactionTargets = (hash: string) => {
   const href = `/transfer/${hash}`;
@@ -77,7 +76,7 @@ const ItemHandler = (currentData: Transfer) => {
         </Grid>
         <Grid item xs='auto'>
           <Typography variant='body3' sx={{ lineHeight: 1.75 }}>
-            {currentData.duration} sec
+            <TimeAgo date={currentData.timestamp} />
           </Typography>
         </Grid>
       </Grid>
