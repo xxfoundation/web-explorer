@@ -38,8 +38,6 @@ function applyFormat (value: BN | string, denomination: number, symbol: string, 
 
   if (prefix.length > M_LENGTH) {
     const [major, rest] = formatBalance(value, { decimals: denomination, precision, withUnit: false }).split('.');
-    // eslint-disable-next-line no-console
-
     const minor = rest.slice(0, 4);
     const unit = rest.slice(4);
 
