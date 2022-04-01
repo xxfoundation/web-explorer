@@ -51,8 +51,8 @@ const producerField = (producer: Producer) => {
         <Stack direction={'row'} spacing={1} alignItems='center'>
           <Avatar alt={producer.hash} src={producer.icon} />
           <Address
-            value={producer.name}
-            altValue={producer.hash}
+            name={producer.name}
+            hash={producer.hash}
             alertMsg={'producer address is not valid'}
             variant='body3'
             copyable

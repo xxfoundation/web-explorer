@@ -16,18 +16,6 @@ type TruncateOpts = {
   replaceChar?: string;
 };
 
-const truncateByOptions = (hash: string, opts: TruncateOpts) => {
-  const truncatedString = hash.slice(0, opts.start) + opts.replaceChar;
-  return opts.end ? truncatedString + hash.slice(opts.end) : truncatedString;
-};
-
-const unwrapTruncateOpts = (truncated: boolean | TruncateOpts): [boolean, TruncateOpts] => {
-  if (typeof truncated === 'boolean') {
-    return [truncated, { replaceChar: '.....', start: 7, end: -5 }]; // default options for truncating a hash
-  }
-  return [!!(truncated && Object.keys(truncated).length), truncated];
-};
-
 const CopyButtonWrapper: React.FC<{ value: string; enabled: boolean }> = ({
   children,
   enabled,
@@ -63,7 +51,7 @@ function isHex(value: string, bitLength = -1) {
   );
 }
 
-type CommonHashField = {
+type CommonHashFields = {
   copyable?: boolean;
   link?: string;
   variant: TypographyTypeMap['props']['variant'];
@@ -71,7 +59,7 @@ type CommonHashField = {
 };
 
 const CommonHash: React.FC<
-  CommonHashField & { validate(value: string): boolean; value: string }
+  CommonHashFields & { validate(value: string): boolean; value: string }
 > = ({ alertMsg, children, copyable = false, link, validate, value, variant }) => {
   const [state, setState] = React.useState<{ color: string; open: boolean }>({
     open: false,
@@ -111,34 +99,45 @@ const CommonHash: React.FC<
   );
 };
 
-const Hash: React.FC<CommonHashField & { value: string; truncated?: boolean | TruncateOpts }> = ({
+const unwrapTruncateOpts = (truncated: boolean | TruncateOpts): [boolean, TruncateOpts] => {
+  if (typeof truncated === 'boolean') {
+    return [truncated, { replaceChar: '.....', start: 7, end: -5 }];
+  }
+  return [!!(truncated && Object.keys(truncated).length), truncated];
+};
+
+const truncateText = (value: string, truncated: boolean | TruncateOpts = false) => {
+  const [isTruncated, options] = unwrapTruncateOpts(truncated);
+  if (isTruncated) {
+    const truncatedString = value.slice(0, options.start) + options.replaceChar;
+    return options.end ? truncatedString + value.slice(options.end) : truncatedString;
+  }
+  return value;
+};
+
+const Hash: React.FC<CommonHashFields & { value: string; truncated?: boolean | TruncateOpts }> = ({
   truncated = false,
   ...props
 }) => {
   const validate = (value: string) => !isHex(value, HASH_LENGTH);
-  const [isTruncated, options] = unwrapTruncateOpts(truncated);
-  const renderValue = isTruncated ? truncateByOptions(props.value, options) : props.value;
   return (
     <CommonHash {...props} validate={validate}>
-      {renderValue}
+      {truncateText(props.value, truncated)}
     </CommonHash>
   );
 };
 
 const Address: React.FC<
-  CommonHashField & {
-    value?: string;
-    altValue: string;
+  CommonHashFields & {
+    name?: string;
+    hash: string;
+    truncated?: boolean | TruncateOpts;
   }
-> = ({ ...props }) => {
+> = ({ truncated = false, ...props }) => {
   const validate = (value: string) => value[0] != '6' || value.length != 48;
   return (
-    <CommonHash
-      {...props}
-      value={props.altValue}
-      validate={validate}
-    >
-      {props.value || props.altValue}
+    <CommonHash {...props} value={props.hash} validate={validate}>
+      {props.name || truncateText(props.hash, truncated)}
     </CommonHash>
   );
 };

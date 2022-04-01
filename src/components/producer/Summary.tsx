@@ -10,8 +10,8 @@ const sampleAddress = (values: { name?: string; address: string }) => {
     <Stack direction={'row'} spacing={2}>
       <Avatar src='???' alt='lala' />
       <Address
-        value={values.name}
-        altValue={values.address}
+        name={values.name}
+        hash={values.address}
         alertMsg='stash address is invalid'
         variant='body3'
         copyable
