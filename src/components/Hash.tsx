@@ -1,4 +1,12 @@
-import { Divider, Link, Stack, Typography, TypographyTypeMap } from '@mui/material';
+import {
+  Alert,
+  Divider,
+  Link,
+  Snackbar,
+  Stack,
+  Typography,
+  TypographyTypeMap
+} from '@mui/material';
 import React from 'react';
 import CopyButton from './CopyButton';
 
@@ -15,7 +23,7 @@ const truncateByOptions = (hash: string, opts: TruncateOpts) => {
 
 const unwrapTruncateOpts = (truncated: boolean | TruncateOpts): [boolean, TruncateOpts] => {
   if (typeof truncated === 'boolean') {
-    return [truncated, { replaceChar: '.....', start: 7, end: -5 }]; // default for hash
+    return [truncated, { replaceChar: '.....', start: 7, end: -5 }]; // default options for truncating a hash
   }
   return [!!(truncated && Object.keys(truncated).length), truncated];
 };
@@ -44,6 +52,17 @@ const LinkWrapper: React.FC<{ link?: string }> = ({ children, link }) => {
   return link ? <Link href={link}>{children}</Link> : <>{children}</>;
 };
 
+const REGEX_HEX_PREFIXED = /^0x[\da-fA-F]+$/;
+// const REGEX_HEX_NOPREFIX = /^[\da-fA-F]+$/;
+const HASH_LENGTH = 256;
+function isHex(value: string, bitLength = -1) {
+  return (
+    typeof value === 'string' &&
+    (value === '0x' || REGEX_HEX_PREFIXED.test(value)) &&
+    (bitLength === -1 ? value.length % 2 === 0 : value.length === 2 + Math.ceil(bitLength / 4))
+  );
+}
+
 const Hash: React.FC<{
   copyable?: boolean;
   link?: string;
@@ -51,16 +70,43 @@ const Hash: React.FC<{
   truncated?: boolean | TruncateOpts;
   variant: TypographyTypeMap['props']['variant'];
 }> = ({ copyable = false, link, truncated = false, value, variant }) => {
-  // Inside component logic for hash will be checked.
-  // Hash format: 64 chars start with '0x' - blake2_256
+  const [state, setState] = React.useState<{ color?: string; open: boolean }>({
+    open: false
+  });
+  // const [open, setOpen] = React.useState(false);
+  // const [color, setColor] = React.useState<string>();
+
+  const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setState(({ color }) => {
+      return { open: false, color };
+    });
+  };
+
+  React.useMemo(() => {
+    if (!isHex(value, HASH_LENGTH)) {
+      setState({ open: true, color: 'red' });
+    }
+  }, [value]);
+
   const [isTruncated, options] = unwrapTruncateOpts(truncated);
-  const text = isTruncated ? truncateByOptions(value, options) : value;
+  const renderValue = isTruncated ? truncateByOptions(value, options) : value;
+
   return (
-    <CopyButtonWrapper value={value} enabled={copyable}>
-      <Typography variant={variant}>
-        <LinkWrapper link={link}>{text}</LinkWrapper>
-      </Typography>
-    </CopyButtonWrapper>
+    <>
+      <Snackbar open={state.open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity='warning' sx={{ width: '100%' }}>
+          Hash is probably not a valid hex
+        </Alert>
+      </Snackbar>
+      <CopyButtonWrapper value={value} enabled={copyable}>
+        <Typography variant={variant} color={state.color}>
+          <LinkWrapper link={link}>{renderValue}</LinkWrapper>
+        </Typography>
+      </CopyButtonWrapper>
+    </>
   );
 };
 
