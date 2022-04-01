@@ -1,8 +1,8 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SearchIcon from '@mui/icons-material/Search';
-import { Divider, FormControl, Grid, InputAdornment, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Divider, FormControl, Grid, InputAdornment, SelectChangeEvent } from '@mui/material';
 import React, { useCallback } from 'react';
-import { Bar, SearchButton, SearchInput, SelectOption } from './Bar.styles';
+import { Bar, SearchButton, SearchInput, SelectOption, SelectItem } from './Bar.styles';
 
 const SearchBar = () => {
   const [option, setOption] = React.useState('');
@@ -24,11 +24,11 @@ const SearchBar = () => {
               inputProps={{ 'aria-label': 'Without label' }}
               IconComponent={KeyboardArrowDownIcon}
             >
-              <MenuItem value=''>All</MenuItem>
-              <MenuItem value={10}>Blocks</MenuItem>
-              <MenuItem value={20}>Intrinsics</MenuItem>
-              <MenuItem value={30}>Account</MenuItem>
-              <MenuItem value={30}>Event</MenuItem>
+              <SelectItem value=''>All</SelectItem>
+              <SelectItem value={10}>Blocks </SelectItem>
+              <SelectItem value={20}>Intrinsics</SelectItem>
+              <SelectItem value={30}>Account</SelectItem>
+              <SelectItem value={30}>Event</SelectItem>
             </SelectOption>
           </FormControl>
         </Grid>

@@ -1,4 +1,4 @@
-import { Button, Input, Select } from '@mui/material';
+import { Button, Input, Select, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ export const Bar = styled('div')(({ theme }) => {
 export const SelectOption = styled(Select)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   paddingLeft: theme.spacing(3),
+  background: 'none',
   [theme.breakpoints.down('sm')]: {
     display: 'none'
   },
@@ -25,6 +26,19 @@ export const SelectOption = styled(Select)(({ theme }) => ({
   },
   svg: {
     color: theme.palette.primary.contrastText
+  }
+}));
+
+export const SelectItem = styled(MenuItem)(({ theme }) => ({
+  textTransform: 'none',
+  fontWeight: 400,
+  fontSize: 14,
+  padding: 7.5,
+  paddingLeft: 20,
+  paddingRight: 20,
+  color: theme.palette.grey.A700,
+  '&:hover': {
+    color: '#00A2D6',
   }
 }));
 

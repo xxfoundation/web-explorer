@@ -1,4 +1,4 @@
-import { Box, Card, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
 import AverageAnnualReturn from '../../components/blockchain/AverageAnnualReturn';
 import LatestBlock from '../../components/blockchain/LatestBlock';

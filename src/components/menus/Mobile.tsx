@@ -85,7 +85,7 @@ export default function MobileNav() {
               <Link to='/' onClick={close}>Democracy</Link>
               <Link to='/' onClick={close}>Council</Link>
               <Link to='/' onClick={close}>Tech Committee</Link>
-              <Link to='/' onClick={close}>Treasury </Link>
+              <Link to='/' onClick={close}>Treasury</Link>
               <Link to='/' onClick={close}>Bounties</Link>
 
               <Typography variant='h3' sx={{ mt: 2 }}>
