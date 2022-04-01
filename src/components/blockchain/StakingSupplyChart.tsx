@@ -2,7 +2,7 @@ import React from 'react';
 import { PieChartWithLegend } from '../charts/highcharts/PieChart';
 import PaperWithHeader from './PaperWithHeader';
 
-const value = 9999120003;
+const value = '9999120003';
 const data = [
   {
     name: 'staked',

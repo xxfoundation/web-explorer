@@ -1,3 +1,5 @@
+import React, { FC, useCallback, useMemo } from 'react';
+import BN from 'bn.js';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import {
   Grid,
@@ -11,8 +13,8 @@ import {
 } from '@mui/material';
 import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import React, { FC, useCallback, useMemo } from 'react';
 import { CustomPointOptions, PercentageValues, StakeablePopup } from '../../blockchain/types';
+import FormatBalance from '../../FormatBalance';
 
 const defaultOptions: Options = {
   credits: { enabled: false },
@@ -173,8 +175,8 @@ type PieChartWithLegendProps = {
   crustData?: CustomPointOptions<StakeablePopup>[];
   data: CustomPointOptions<StakeablePopup>[];
   name: string;
-  value: string | React.ReactElement | number | null;
-};
+  value: string | BN;
+}
 
 const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name, value }) => {
   const legends = useMemo(
@@ -215,7 +217,9 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
       </Grid>
       <Grid item xs={5}>
         <Typography variant='subtitle2'>{name}</Typography>
-        <Typography variant='subtitle1'>{value}</Typography>
+        <Typography variant='subtitle1'>
+          <FormatBalance value={value} />
+        </Typography>
         <ChartLegends data={legends} />
       </Grid>
     </Grid>
