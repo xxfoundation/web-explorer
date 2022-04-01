@@ -19,12 +19,16 @@ export const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
       contrastText: '#FFFFFF'
     },
     background: {
+      paper: '#FFF',
       default: '#E5E5E5',
     },
     grey: {
       A100: '#FFFFFF', // A100 -> A000
-      900: '#D2D2D2' // 900 -> neutral
+      A700: '#7A7A7A',
     }
+  },
+  shape: {
+    borderRadius: 11
   },
   borders: {
     light: '1px solid #EAEAEA'
