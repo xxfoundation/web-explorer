@@ -63,51 +63,84 @@ function isHex(value: string, bitLength = -1) {
   );
 }
 
-const Hash: React.FC<{
+type CommonHashField = {
   copyable?: boolean;
   link?: string;
-  value: string;
-  truncated?: boolean | TruncateOpts;
   variant: TypographyTypeMap['props']['variant'];
-}> = ({ copyable = false, link, truncated = false, value, variant }) => {
-  const [state, setState] = React.useState<{ color?: string; open: boolean }>({
-    open: false
+  alertMsg: string;
+};
+
+const CommonHash: React.FC<
+  CommonHashField & { validate(value: string): boolean; value: string }
+> = ({ alertMsg, children, copyable = false, link, validate, value, variant }) => {
+  const [state, setState] = React.useState<{ color: string; open: boolean }>({
+    open: false,
+    color: 'normal'
   });
-  // const [open, setOpen] = React.useState(false);
-  // const [color, setColor] = React.useState<string>();
 
   const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-    setState(({ color }) => {
-      return { open: false, color };
+    setState(({}) => {
+      return { open: false, color: 'info' };
     });
   };
 
   React.useMemo(() => {
-    if (!isHex(value, HASH_LENGTH)) {
+    if (validate(value)) {
       setState({ open: true, color: 'red' });
     }
-  }, [value]);
-
-  const [isTruncated, options] = unwrapTruncateOpts(truncated);
-  const renderValue = isTruncated ? truncateByOptions(value, options) : value;
+  }, [value, validate]);
 
   return (
     <>
       <Snackbar open={state.open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity='warning' sx={{ width: '100%' }}>
-          Hash is probably not a valid hex
+          {alertMsg}
         </Alert>
       </Snackbar>
       <CopyButtonWrapper value={value} enabled={copyable}>
-        <Typography variant={variant} color={state.color}>
-          <LinkWrapper link={link}>{renderValue}</LinkWrapper>
-        </Typography>
+        <LinkWrapper link={link}>
+          <Typography variant={variant} color={state.color}>
+            {children}
+          </Typography>
+        </LinkWrapper>
       </CopyButtonWrapper>
     </>
   );
 };
 
-export { Hash };
+const Hash: React.FC<CommonHashField & { value: string; truncated?: boolean | TruncateOpts }> = ({
+  truncated = false,
+  ...props
+}) => {
+  const validate = (value: string) => !isHex(value, HASH_LENGTH);
+  const [isTruncated, options] = unwrapTruncateOpts(truncated);
+  const renderValue = isTruncated ? truncateByOptions(props.value, options) : props.value;
+  return (
+    <CommonHash {...props} validate={validate}>
+      {renderValue}
+    </CommonHash>
+  );
+};
+
+const Address: React.FC<
+  CommonHashField & {
+    value?: string;
+    altValue: string;
+  }
+> = ({ ...props }) => {
+  const validate = (value: string) => value[0] != '6' || value.length != 48;
+  return (
+    <CommonHash
+      {...props}
+      value={props.altValue}
+      validate={validate}
+    >
+      {props.value || props.altValue}
+    </CommonHash>
+  );
+};
+
+export { Hash, Address };
