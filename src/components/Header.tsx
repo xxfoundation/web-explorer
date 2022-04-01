@@ -19,7 +19,7 @@ const Header = () => {
       <Root>
         <Container>
           <GridContainer container>
-            <Grid item xs='auto' sx={{ display: { md: 'none', xs: 'block' } }}>
+            <Grid item xs='auto' sx={{ display: { sm: 'none', xs: 'block' } }}>
               <MobileNav />
             </Grid>
             <Grid item xs>
@@ -27,7 +27,7 @@ const Header = () => {
                 {pathname === '/' ? <img src={logoColor} alt='xx network' /> : <img src={logoWhite} alt='xx network' />}
               </Link>
             </Grid>
-            <Grid item xs='auto' sx={{ display: { md: 'block', xs: 'none' } }}>
+            <Grid item xs='auto' sx={{ display: { sm: 'block', xs: 'none' } }}>
               <DesktopNav />
             </Grid>
           </GridContainer>

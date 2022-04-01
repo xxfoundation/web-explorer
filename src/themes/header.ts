@@ -14,6 +14,10 @@ export const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
             contrastText: '#FFFFFF'
           })
     },
+    secondary: {
+      main: '#FFFFFF',
+      contrastText: '#FFFFFF'
+    },
     background: {
       default: '#E5E5E5',
     },
@@ -24,5 +28,12 @@ export const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
   },
   borders: {
     light: '1px solid #EAEAEA'
-  }
+  },
+  typography: {
+    h3: {
+      fontSize: 24,
+      fontWeight: 700,
+      letterSpacing: 1.5,
+    },
+  },
 });

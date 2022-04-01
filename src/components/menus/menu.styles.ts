@@ -29,34 +29,34 @@ export const MenuButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-export const MobileListLink = styled(Link)(({ theme }) => ({
-  display: 'block',
-  paddingTop: theme.spacing(1),
-  paddingBottom: theme.spacing(1),
-  color: '#D2D2D2', // theme.palette.grey.neutral TODO access the proper color palette value
-  fontSize: 16,
-  '&:hover': {
-    color: '#00C4FF'
-  }
-}));
+// export const MobileListLink = styled(Link)(({ theme }) => ({
+//   display: 'block',
+//   paddingTop: theme.spacing(1),
+//   paddingBottom: theme.spacing(1),
+//   color: '#D2D2D2', // theme.palette.grey.neutral TODO access the proper color palette value
+//   fontSize: 16,
+//   '&:hover': {
+//     color: '#00C4FF'
+//   }
+// }));
 
-export const MobileTitle = styled(Typography)(({ theme }) => ({
-  display: 'block',
-  paddingTop: theme.spacing(1),
-  paddingBottom: theme.spacing(1),
-  color: '#FFFFFF', // theme.palette.grey.A000 TODO access the proper color palette value
-  fontSize: 24,
-  fontWeight: 'bold'
-}));
+// export const MobileTitle = styled(Typography)(({ theme }) => ({
+//   display: 'block',
+//   paddingTop: theme.spacing(1),
+//   paddingBottom: theme.spacing(1),
+//   color: '#FFFFFF', // theme.palette.grey.A000 TODO access the proper color palette value
+//   fontSize: 24,
+//   fontWeight: 'bold'
+// }));
 
-export const MobileTitleLink = styled(Link)(({ theme }) => ({
-  display: 'block',
-  paddingTop: theme.spacing(1),
-  paddingBottom: theme.spacing(1),
-  color: '#FFFFFF', // theme.palette.grey.A000 TODO access the proper color palette value
-  fontSize: 24,
-  fontWeight: 'bold',
-  '&:hover': {
-    color: '#00C4FF'
-  }
-}));
+// export const MobileTitleLink = styled(Link)(({ theme }) => ({
+//   display: 'block',
+//   paddingTop: theme.spacing(1),
+//   paddingBottom: theme.spacing(1),
+//   color: '#FFFFFF', // theme.palette.grey.A000 TODO access the proper color palette value
+//   fontSize: 24,
+//   fontWeight: 'bold',
+//   '&:hover': {
+//     color: '#00C4FF'
+//   }
+// }));

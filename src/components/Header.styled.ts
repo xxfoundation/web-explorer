@@ -16,9 +16,10 @@ export const Root = styled('div')(({ theme }) => {
 });
 
 export const GridContainer = styled(Grid)(({ theme }) => ({
-  paddingBottom: theme.spacing(5),
+  paddingBottom: theme.spacing(3),
   justifyContent: 'none',
   [theme.breakpoints.up('md')]: {
+    paddingBottom: theme.spacing(5),
     justifyContent: 'space-between'
   }
 }));
