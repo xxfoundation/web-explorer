@@ -3,7 +3,6 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Container,
-  Link,
   Paper,
   Stack,
   Table,
@@ -15,6 +14,8 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
+import Breadcrumb from '../../components/Breadcrumbs';
+import Link from '../../components/Link';
 
 type Block = {
   number: number;
@@ -44,21 +45,23 @@ const rowParser = (item: Block) => {
   return (
     <TableRow key={item.number}>
       <TableCell>
-        <Link href={`/block/${item.number}`}>{item.number}</Link>
+        <Link to={`/blocks/${item.number}`}>{item.number}</Link>
       </TableCell>
       <TableCell>{item.status}</TableCell>
       <TableCell>{item.era}</TableCell>
       <TableCell>{item.time}</TableCell>
       <TableCell>
-        <Link href='#'>{item.extrinsics}</Link>
+        <Link to='#'>{item.extrinsics}</Link>
       </TableCell>
       <TableCell>
-        <Link href={`/producer/${item.blockProducer.id || item.blockProducer.name}`}>
+        <Link
+          to={`/blocks/${item.number}/producer/${item.blockProducer.id || item.blockProducer.name}`}
+        >
           {item.blockProducer.name || item.blockProducer.id}
         </Link>
       </TableCell>
       <TableCell>
-        <Link href={`/block/${item.number}`}>{item.blockHash}</Link>
+        <Link to={`/blocks/${item.number}`}>{item.blockHash}</Link>
       </TableCell>
     </TableRow>
   );
@@ -87,6 +90,7 @@ const BlocksPage = () => {
   return (
     <>
       <Container sx={{ my: 5 }}>
+        <Breadcrumb />
         <Stack justifyContent={'space-between'} direction={'row'}>
           <Typography variant='h1'>Blocks</Typography>
           <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>

@@ -1,7 +1,9 @@
+import { Grid } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
 import BlockSummary from '../../components/block/BlockSummary';
+import Breadcrumb from '../../components/Breadcrumbs';
 
 const data = {
   time: '2022-01-28 03:39:24 (+utc)',
@@ -19,11 +21,18 @@ const data = {
 const Block = () => {
   const { number } = useParams<{ number: string }>();
   return (
-    <>
-      <BlockSummary number={number} data={data} />
-
-      <BlockDetailedEventsTabs events={[1, 2, 3]} extrinsics={[1, 2]} />
-    </>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Breadcrumb />
+      </Grid>
+      <Grid item xs={12}>
+        <BlockSummary number={number} data={data} />
+      </Grid>
+      <Grid item xs={12}>
+        <BlockDetailedEventsTabs events={[1, 2, 3]} extrinsics={[1, 2]} />
+      </Grid>
+    </Grid>
   );
 };
+
 export default Block;
