@@ -32,7 +32,7 @@ const TimeAgoComponent: React.FC<ReactTimeagoProps & Props> = ({ dateFormat = de
         {(id) => (
           <>
             <TimeAgo
-              data-for={id}
+              data-for={`timeago-${id}`}
               data-tip={formattedDate}
               {...props}
               title={''}
@@ -40,7 +40,7 @@ const TimeAgoComponent: React.FC<ReactTimeagoProps & Props> = ({ dateFormat = de
             />
             <Tooltip
               text={formattedDate}
-              trigger={id}
+              trigger={`timeago-${id}`}
               place='top'
               offset={{ top: 8 }}
             />
