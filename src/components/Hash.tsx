@@ -128,7 +128,7 @@ const Hash: React.FC<CommonHashFields & { value: string; truncated?: boolean | T
 };
 
 const Address: React.FC<
-  CommonHashFields & {
+  CommonHashFields & { // TODO chain id both are this
     name?: string;
     hash: string;
     truncated?: boolean | TruncateOpts;
