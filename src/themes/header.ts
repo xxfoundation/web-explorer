@@ -6,11 +6,15 @@ export const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
     primary: {
       ...(mode === 'light'
         ? {
-            main: '#00A2D6',
-            contrastText: '##9A9A9A'
+            main: '#7A7A7A',
+            light: '#EAEAEA',
+            dark: '#3D3D3D',
+            contrastText: '#00A2D6'
           }
         : {
             main: '#FFFFFF',
+            light: '#FFFFFF',
+            dark: '#FFFFFF',
             contrastText: '#FFFFFF'
           })
     },

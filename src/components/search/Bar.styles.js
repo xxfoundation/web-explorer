@@ -10,12 +10,12 @@ export const Bar = styled('div')(({ theme }) => {
     border: pathname == '/' ? theme.borders.light : 'none',
     boxShadow: '0px 15px 34px 3px rgba(0, 0, 0, 0.04)',
     padding: theme.spacing(2),
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.main
   });
 });
 
 export const SelectOption = styled(Select)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
+  color: theme.palette.primary.main,
   paddingLeft: theme.spacing(3),
   background: 'none',
   [theme.breakpoints.down('sm')]: {
@@ -25,7 +25,7 @@ export const SelectOption = styled(Select)(({ theme }) => ({
     border: 'none !important'
   },
   svg: {
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.main
   }
 }));
 
@@ -43,12 +43,12 @@ export const SelectItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 export const SearchInput = styled(Input)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
+  color: theme.palette.primary.main,
   '&:before, &:after': {
     border: 'none !important'
   },
   svg: {
-    color: theme.palette.primary.contrastText
+    color: theme.palette.primary.main
   }
 }));
 

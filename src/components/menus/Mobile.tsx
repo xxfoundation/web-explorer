@@ -27,7 +27,7 @@ export default function MobileNav() {
             xs: 'block',
             sm: 'none'
           },
-          color: 'primary.contrastText'
+          color: 'primary.dark'
         }}
       >
         <MenuIcon />

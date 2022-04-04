@@ -15,7 +15,7 @@ const SearchBar = () => {
   return (
     <Bar>
       <Grid container alignItems='center'>
-        <Grid item xs='auto' sx={{ mr: 3 }}>
+        <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 } }}>
           <FormControl variant='standard'>
             <SelectOption
               value={option}
@@ -32,7 +32,7 @@ const SearchBar = () => {
             </SelectOption>
           </FormControl>
         </Grid>
-        <Grid item xs='auto' sx={{ mr: { xs: 0, md: 3 }, position: 'relative', height: 22 }}>
+        <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 }, position: 'relative', height: 22 }}>
           <Divider
             orientation='vertical'
             sx={{
@@ -40,8 +40,8 @@ const SearchBar = () => {
               top: 0,
               right: 0,
               height: 22,
-              borderColor: 'primary.contrastText',
-              display: { xs: 'none', md: 'flex' }
+              borderColor: 'primary.light',
+              display: { xs: 'none', sm: 'flex' }
             }}
           />
         </Grid>
@@ -58,7 +58,7 @@ const SearchBar = () => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs='auto'>
+        <Grid item xs='auto' sx={{ display: {  xs: 'none', sm: 'block' } }}>
           <SearchButton>SEARCH</SearchButton>
         </Grid>
       </Grid>

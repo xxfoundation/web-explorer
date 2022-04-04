@@ -13,7 +13,7 @@ export const MenuButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   fontWeight: 400,
   fontSize: 14,
-  color: theme.palette.text.primary,
+  color: theme.palette.primary.dark,
   '&:hover': {
     background: 'none',
     '&:before': {
@@ -21,7 +21,7 @@ export const MenuButton = styled(Button)(({ theme }) => ({
       display: 'block',
       height: 1,
       width: 20,
-      background: theme.palette.text.primary,
+      background: theme.palette.primary.dark,
       position: 'absolute',
       top: 0,
       left: 6
@@ -40,7 +40,7 @@ export const MenuLink = styled(MenuItem)(({ theme }) => ({
     color: theme.palette.grey.A700,
     textDecoration: 'none',
     '&:hover': {
-      color: '#00A2D6',
+      color: theme.palette.text.secondary,
     }
   }
 }));
