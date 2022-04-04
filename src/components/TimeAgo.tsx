@@ -22,7 +22,7 @@ type Props = {
 
 const TimeAgoComponent: React.FC<ReactTimeagoProps & Props> = ({ dateFormat = defaultFormat, ...props }) => {
   const formattedDate = useMemo(
-    () => dayjs(props.date).format(dateFormat),
+    () => dayjs.utc(props.date).format(dateFormat),
     [dateFormat, props.date]
   );
 
@@ -35,12 +35,14 @@ const TimeAgoComponent: React.FC<ReactTimeagoProps & Props> = ({ dateFormat = de
               data-for={id}
               data-tip={formattedDate}
               {...props}
+              title={''}
               formatter={formatterOverride}
             />
             <Tooltip
               text={formattedDate}
               trigger={id}
               place='top'
+              offset={{ top: 8 }}
             />
           </>
         )}
