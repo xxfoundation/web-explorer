@@ -6,34 +6,42 @@ export const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
     primary: {
       ...(mode === 'light'
         ? {
-            main: '#00A2D6',
-            contrastText: '##9A9A9A'
+            main: '#7A7A7A',
+            light: '#EAEAEA',
+            dark: '#3D3D3D',
+            contrastText: '#00A2D6'
           }
         : {
             main: '#FFFFFF',
+            light: '#FFFFFF',
+            dark: '#FFFFFF',
             contrastText: '#FFFFFF'
           })
     },
+    secondary: {
+      main: '#FFFFFF',
+      contrastText: '#FFFFFF'
+    },
     background: {
+      paper: '#FFF',
       default: '#E5E5E5',
-      // transparent: 'rgba(255,255,255,0.24)'
     },
     grey: {
       A100: '#FFFFFF', // A100 -> A000
-      900: '#D2D2D2' // 900 -> neutral
+      A700: '#7A7A7A',
     }
   },
-  // gradient: {
-  //   ...(mode === 'light'
-  //     ? {
-  //         primary: 'transparent'
-  //       }
-  //     : {
-  //         primary:
-  //           'linear-gradient(68.04deg, #4668BF 14.57%, #2581D6 41.33%, #019CB1 72.19%, #01ACAC 96.47%, #959595 112.54%)'
-  //       })
-  // },
+  shape: {
+    borderRadius: 11
+  },
   borders: {
     light: '1px solid #EAEAEA'
-  }
+  },
+  typography: {
+    h3: {
+      fontSize: 24,
+      fontWeight: 700,
+      letterSpacing: 1.5,
+    },
+  },
 });

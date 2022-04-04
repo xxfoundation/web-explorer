@@ -1,9 +1,9 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Menu, MenuItem } from '@mui/material';
+import { Menu } from '@mui/material';
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useToggle } from '../../hooks';
-import { MenuButton } from './menu.styles';
+import { MenuButton, MenuLink } from './menu.styles';
 
 export default function Blockchain() {
   const button = useRef(null);
@@ -32,10 +32,12 @@ export default function Blockchain() {
             'aria-labelledby': 'governance-button'
           }}
         >
-          <MenuItem onClick={close}><Link to='/block'>Blocks</Link></MenuItem>
-          <MenuItem onClick={close}><Link to='/extrinsic'>Extrinsics</Link></MenuItem>
-          <MenuItem onClick={close}><Link to='/transfer'>Transfers</Link></MenuItem>
-          <MenuItem onClick={close}><Link to='/event'>Events</Link></MenuItem>
+          <MenuLink onClick={close}><Link to='/'>Overview</Link></MenuLink>
+          <MenuLink onClick={close}><Link to='/'>Democracy</Link></MenuLink>
+          <MenuLink onClick={close}><Link to='/'>Council</Link></MenuLink>
+          <MenuLink onClick={close}><Link to='/'>Tech Committee</Link></MenuLink>
+          <MenuLink onClick={close}><Link to='/'>Treasury</Link></MenuLink>
+          <MenuLink onClick={close}><Link to='/'>Bounties</Link></MenuLink>
         </Menu>
       )}
     </>
