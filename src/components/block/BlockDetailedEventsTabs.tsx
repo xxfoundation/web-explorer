@@ -4,9 +4,6 @@ import { TabPanel, TabText } from '../tabs';
 import EventsTable from './EventsTable';
 import ExtrinsicsTable from './ExtrinsicsTable';
 
-// const hash = '123123';
-// const number = '1231313';
-
 const BlockDetailedEventsTabs: React.FC<{ events: number[]; extrinsics: number[] }> = ({
   events,
   extrinsics

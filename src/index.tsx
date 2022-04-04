@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import './dayjs';
 
 const wsLink = new WebSocketLink({
   uri: 'ws://localhost:4000/graphql',
