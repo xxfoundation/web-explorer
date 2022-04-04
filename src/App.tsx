@@ -6,7 +6,6 @@ import {
 import './App.css';
 import SiteFooter from './components/Footer';
 import SiteHeader from './components/Header';
-import BlockProducer from './pages/blockProducer';
 import Blocks from './pages/blocks';
 import BlockChain from './pages/home';
 import { theme } from './themes/default';
@@ -20,31 +19,28 @@ function App() {
           <Route exact path='/'>
             <BlockChain />
           </Route>
-          <Route path='/block'>
+          <Route path='/blocks'>
             <Blocks />
-            {/* I can do this only here for now */}
           </Route>
-          <Route path='/producer/:nameOrId'>
-            <BlockProducer />
-          </Route>
-          <Route path='/extrinsic'>
+          <Route path='/extrinsics'>
             <h1>extrinsics</h1>
           </Route>
-          <Route path='/transfer'>
+          <Route path='/transfers'>
             <h1>transfers</h1>
           </Route>
-          <Route path='/event'>
+          <Route path='/events'>
             <h1>events</h1>
           </Route>
           <Route path='/governance'>
             <h1>governance</h1>
           </Route>
-          <Route path='/account'>
+          <Route path='/accounts'>
             <h1>accounts</h1>
           </Route>
           <Route path='/staking'>
             <h1>staking</h1>
           </Route>
+          {/* TODO configure 404 page */}
         </Switch>
         <SiteFooter />
       </ThemeProvider>

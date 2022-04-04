@@ -1,8 +1,9 @@
+import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
-import TimeAgo from '../TimeAgo';
-import { Box, Grid, Link, Typography } from '@mui/material';
 import { ClockIcon } from '../../site/icons/sfIcons';
 import { theme } from '../../themes/default';
+import Link from '../Link';
+import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
 import { Block, BlockStatus } from './types';
 
@@ -28,15 +29,15 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
   return (
     <Grid key={id} container sx={{ mb: 4 }}>
       <Grid item xs>
-        <Link href={`/block/${id}`} underline='hover' variant='body2'>
+        <Link to={`/blocks/${id}`} underline='hover' variant='body2'>
           {id}
         </Link>
         <Box sx={{ mt: 1 }}>
-          <Link href='' underline='hover' variant='body2'>
+          <Link to='' underline='hover' variant='body2'>
             {intrinsic} instrinsic
           </Link>{' '}
           <Typography variant='body2'>|</Typography>{' '}
-          <Link href={'/event'} underline='hover' variant='body2'>
+          <Link to={'/events'} underline='hover' variant='body2'>
             {events} event
           </Link>
         </Box>
@@ -60,7 +61,7 @@ const blockchain = () => {
     <PaperWithHeader
       header='LATEST BLOCKS'
       linkName={'SEE ALL'}
-      linkAddress={'/block'}
+      linkAddress={'/blocks'}
       height={500}
     >
       {blocks.map(BlockRow)}

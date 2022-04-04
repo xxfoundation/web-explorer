@@ -8,24 +8,33 @@ import {
   TableRow
 } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from '../Link';
 
 const header = ['era', 'start block', 'end block', 'reward point', 'blocks produced'];
 
 const rowParser = (rowData: {
-    era: string,
-    startBlock: number,
-    endBlock: number,
-    rewardPoint: number,
-    blocksProduced: number
-  }) => {
+  era: string;
+  startBlock: number;
+  endBlock: number;
+  rewardPoint: number;
+  blocksProduced: number;
+  blockNumber: number;
+}) => {
   return (
     <TableRow key={rowData.era}>
       <TableCell>{rowData.era}</TableCell>
-      <TableCell><Link to={`/block/${rowData.startBlock}`}>{rowData.startBlock}</Link></TableCell>
-      <TableCell><Link to={`/block/${rowData.endBlock}`}>{rowData.endBlock}</Link></TableCell>
+      <TableCell>
+        <Link to={`/blocks/${rowData.startBlock}`}>{rowData.startBlock}</Link>
+      </TableCell>
+      <TableCell>
+        <Link to={`/blocks/${rowData.endBlock}`}>{rowData.endBlock}</Link>
+      </TableCell>
       <TableCell>{rowData.rewardPoint}</TableCell>
-      <TableCell><Link to={`/producer/${rowData.blocksProduced}`}>{rowData.blocksProduced}</Link></TableCell>
+      <TableCell>
+        <Link to={`/blocks/${rowData.blockNumber}/producer/${rowData.blocksProduced}`}>
+          {rowData.blocksProduced}
+        </Link>
+      </TableCell>
     </TableRow>
   );
 };
@@ -36,7 +45,8 @@ const data = [
     startBlock: 1245151,
     endBlock: 15666655,
     rewardPoint: 12313.31231,
-    blocksProduced: 113
+    blocksProduced: 113,
+    blockNumber: 123123
   }
 ];
 

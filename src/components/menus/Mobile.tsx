@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from '../Link';
 
 export default function MobileNav() {
   const [opened, setOpened] = useState(false);
@@ -63,7 +63,7 @@ export default function MobileNav() {
               <Link to='/staking'><ListItemText primary='Staking' /></Link>
             </ListItemButton>
             <ListItemButton>
-              <Link to='governance'><ListItemText primary='Governance' /></Link>
+              <Link to='/governance'><ListItemText primary='Governance' /></Link>
             </ListItemButton>
             <ListItemButton>
               <Link to='/accounts'><ListItemText primary='Accounts' /></Link>

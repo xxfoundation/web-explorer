@@ -1,7 +1,7 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react';
 import { TabPanel, TabText } from '../tabs';
-import Eras from './ErasTable';
+import ErasTable from './ErasTable';
 import NominatorsTable from './NominatorsTable';
 
 const ProducerTabs: React.FC<{ eras: string[]; nominators: string[] }> = ({ eras, nominators }) => {
@@ -33,7 +33,7 @@ const ProducerTabs: React.FC<{ eras: string[]; nominators: string[] }> = ({ eras
         <NominatorsTable />
       </TabPanel>
       <TabPanel value={value} name='eras'>
-        <Eras />
+        <ErasTable />
       </TabPanel>
     </Box>
   );

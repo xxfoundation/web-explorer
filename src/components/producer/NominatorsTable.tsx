@@ -1,14 +1,18 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from '../Link';
 
 const header = ['account', 'stake', 'share'];
 
-const rowParser = (rowData: {
-  account: string;
-  stake: string;
-  share: string;
-}) => {
+const rowParser = (rowData: { account: string; stake: string; share: string }) => {
   return (
     <TableRow key={rowData.account}>
       <TableCell>

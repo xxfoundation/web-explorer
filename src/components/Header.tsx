@@ -1,10 +1,10 @@
 import { Container, Grid } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import logo from '../assets/logos/xx-network-logo--white.svg';
 import { getDesignTokens } from '../themes/header';
 import { GridContainer, Root } from './Header.styled';
+import Link from './Link';
 import DesktopNav from './menus/Main';
 import MobileNav from './menus/Mobile';
 import SearchBar from './search/Bar';
