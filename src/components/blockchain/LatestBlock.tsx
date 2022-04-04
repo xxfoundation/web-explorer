@@ -24,10 +24,10 @@ const statusToIconMap: Record<BlockStatus, React.ReactElement> = {
   )
 };
 
-const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
+const BlockRow = ({ events, id, intrinsic: extrinsics, status, timestamp }: Block) => {
   return (
     <Box key={id} sx={{ mb: 4 }}>
-      <Grid container xs>
+      <Grid container>
         <Grid item xs>
           <Link href={`/block/${id}`} underline='hover' variant='body2'>
             {id}
@@ -40,7 +40,7 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
       <Grid container sx={{ mt: 1 }}>
         <Grid item xs>
           <Link href='' underline='hover' variant='body3'>
-            {intrinsic} instrinsic
+            {extrinsics} extrinsics
           </Link>{' '}
           <Typography variant='body3' component='span'>|</Typography>{' '}
           <Link href={'/event'} underline='hover' variant='body3'>
@@ -48,18 +48,10 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
           </Link>
         </Grid>
         <Grid item xs='auto'>
-            <Typography variant='body3'>{timestamp}</Typography>
+          <Typography variant='body2'>
+            <TimeAgo date={timestamp} />
+          </Typography>
         </Grid>
-      </Grid>
-      <Grid item xs='auto'>
-        <Box sx={{ textAlign: 'right' }}>
-          {statusToIconMap[status]}
-          <Box>
-            <Typography variant='body2'>
-              <TimeAgo date={timestamp} />
-            </Typography>
-          </Box>
-        </Box>
       </Grid>
     </Box>
   );
