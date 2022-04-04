@@ -1,5 +1,6 @@
-import { Box, Grid, Link, Typography } from '@mui/material';
 import React from 'react';
+import TimeAgo from '../TimeAgo';
+import { Box, Grid, Link, Typography } from '@mui/material';
 import { ClockIcon } from '../../site/icons/sfIcons';
 import { theme } from '../../themes/default';
 import PaperWithHeader from './PaperWithHeader';
@@ -49,6 +50,16 @@ const BlockRow = ({ events, id, intrinsic, status, timestamp }: Block) => {
         <Grid item xs='auto'>
             <Typography variant='body3'>{timestamp}</Typography>
         </Grid>
+      </Grid>
+      <Grid item xs='auto'>
+        <Box sx={{ textAlign: 'right' }}>
+          {statusToIconMap[status]}
+          <Box>
+            <Typography variant='body2'>
+              <TimeAgo date={timestamp} />
+            </Typography>
+          </Box>
+        </Box>
       </Grid>
     </Box>
   );
