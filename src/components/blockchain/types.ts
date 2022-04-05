@@ -6,7 +6,7 @@ export enum BlockStatus {
 
 export type Block = {
   id: number,
-  intrinsic: number,
+  extrinsic: number,
   events: number;
   status: BlockStatus,
   timestamp: number

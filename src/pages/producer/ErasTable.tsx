@@ -10,18 +10,18 @@ import {
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const header = ['era', 'start block', 'end block', 'reward point', 'blocks produced'];
+type Era = {
+  index: string,
+  startBlock: number,
+  endBlock: number,
+  rewardPoint: number,
+  blocksProduced: number
+}
 
-const rowParser = (rowData: {
-    era: string,
-    startBlock: number,
-    endBlock: number,
-    rewardPoint: number,
-    blocksProduced: number
-  }) => {
+const EraRow = (rowData: Era) => {
   return (
-    <TableRow key={rowData.era}>
-      <TableCell>{rowData.era}</TableCell>
+    <TableRow key={rowData.index}>
+      <TableCell>{rowData.index}</TableCell>
       <TableCell><Link to={`/block/${rowData.startBlock}`}>{rowData.startBlock}</Link></TableCell>
       <TableCell><Link to={`/block/${rowData.endBlock}`}>{rowData.endBlock}</Link></TableCell>
       <TableCell>{rowData.rewardPoint}</TableCell>
@@ -30,9 +30,9 @@ const rowParser = (rowData: {
   );
 };
 
-const data = [
+const eras = [
   {
-    era: '12313',
+    index: '12313',
     startBlock: 1245151,
     endBlock: 15666655,
     rewardPoint: 12313.31231,
@@ -46,12 +46,26 @@ const ErasTables = () => {
       <Table>
         <TableHead>
           <TableRow>
-            {header.map((h) => {
-              return <TableCell key={h}>{h}</TableCell>;
-            })}
+            <TableCell>
+              era
+            </TableCell>
+            <TableCell>
+              start block
+            </TableCell>
+            <TableCell>
+              end block
+            </TableCell>
+            <TableCell>
+              reward point
+            </TableCell>
+            <TableCell>
+              blocks produced
+            </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>{data.map(rowParser)}</TableBody>
+        <TableBody>
+          {eras.map(EraRow)}
+        </TableBody>
       </Table>
     </TableContainer>
   );

@@ -14,8 +14,8 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import CopyButton from '../CopyButton';
-import { SummaryPaper, textWithCopy } from '../Summary';
+import CopyButton, { withCopy } from '../CopyButton';
+import SummaryPaper from '../SummaryPaper';
 
 const BackAndForwardArrows = () => {
   return (
@@ -105,7 +105,7 @@ const summaryData = (data: BlockSummaryTyp) => [
     )
   },
   { label: 'era', value: data.era },
-  { label: 'hash', value: textWithCopy(data.hash, <Typography>{data.hash}</Typography>) },
+  { label: 'hash', value: withCopy(data.hash, <Typography>{data.hash}</Typography>) },
   { label: 'parent hash', value: backAndForwardWithLabel(data.parentHash) },
   {
     label: 'state root',

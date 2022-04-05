@@ -6,9 +6,9 @@ import {
 import './App.css';
 import SiteFooter from './components/Footer';
 import SiteHeader from './components/Header';
-import BlockProducer from './pages/blockProducer';
+import BlockProducer from './pages/producer/_nameOrId';
 import Blocks from './pages/blocks';
-import BlockChain from './pages/home';
+import BlockChain from './pages/index';
 import { theme } from './themes/default';
 
 function App() {
@@ -20,11 +20,11 @@ function App() {
           <Route exact path='/'>
             <BlockChain />
           </Route>
-          <Route path='/block'>
+          <Route path='/blocks'>
             <Blocks />
             {/* I can do this only here for now */}
           </Route>
-          <Route path='/producer/:nameOrId'>
+          <Route path='/producer/:id'>
             <BlockProducer />
           </Route>
           <Route path='/extrinsic'>
