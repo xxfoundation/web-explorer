@@ -62,7 +62,6 @@ const rowParser = (item: Block) => {
         <Link href={`/block/${item.number}`}>
           <Hash
             value={item.blockHash}
-            alertMsg={`block hash ${item.blockHash} is invalid`}
             variant='body3'
             truncated
           />

@@ -41,12 +41,7 @@ const producerField = (producer: Producer) => {
     producer.hash,
     <Stack direction={'row'} spacing={1} alignItems='center'>
       <Avatar alt={producer.hash} src={producer.icon} />
-      <Address
-        name={producer.name}
-        hash={producer.hash}
-        alertMsg={'producer address is not valid'}
-        variant='body3'
-      />
+      <Address name={producer.name} hash={producer.hash} variant='body3' />
     </Stack>
   );
 };
@@ -54,7 +49,7 @@ const producerField = (producer: Producer) => {
 const backAndForwardWithLabel = (parentHash: string) => {
   return (
     <Stack direction={'row'} spacing={1}>
-      <Hash value={parentHash} variant='body3' alertMsg='parent hash is not valid' />
+      <Hash value={parentHash} variant='body3' />
       <Divider orientation='vertical' flexItem />
       <BackAndForwardArrows />
     </Stack>
@@ -90,10 +85,7 @@ const summaryDataParser = (data: BlockSummaryTyp) => [
   { label: 'era', value: data.era },
   {
     label: 'hash',
-    value: withCopy(
-      data.hash,
-      <Hash value={data.hash} variant='body3' alertMsg='hash is not valid' />
-    )
+    value: withCopy(data.hash, <Hash value={data.hash} variant='body3' />)
   },
   { label: 'parent hash', value: backAndForwardWithLabel(data.parentHash) },
   {
@@ -101,19 +93,13 @@ const summaryDataParser = (data: BlockSummaryTyp) => [
     value: (
       <>
         <CheckCircleOutlineIcon color='success' />
-        <Hash value={data.stateRoot} variant={'body3'} alertMsg={'state root is not valid'} />
+        <Hash value={data.stateRoot} variant={'body3'} />
       </>
     )
   },
   {
     label: 'extrinsics root',
-    value: (
-      <Hash
-        value={data.extrinsicsRoot}
-        variant={'body3'}
-        alertMsg={'extrinsics root is not valid'}
-      />
-    )
+    value: <Hash value={data.extrinsicsRoot} variant={'body3'} />
   },
   { label: 'block producer', value: producerField(data.blockProducer) },
   { label: 'block time', value: data.blockTime },

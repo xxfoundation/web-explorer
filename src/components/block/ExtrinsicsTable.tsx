@@ -29,7 +29,9 @@ const rowParser = (rowData: ExtrinsicsTyp) => {
       <TableCell>
         <Link to={`/extrinsic/${rowData.extrinsicId}`}>{rowData.extrinsicId}</Link>
       </TableCell>
-      <TableCell><Hash value={rowData.hash} variant='body3' alertMsg={`extrinsic hash ${rowData.hash} is invalid`} truncated /></TableCell>
+      <TableCell>
+        <Hash value={rowData.hash} variant='body3' truncated />
+      </TableCell>
       <TableCell>{rowData.time}</TableCell>
       <TableCell>
         <CheckCircleOutlineIcon color='success' />

@@ -1,7 +1,6 @@
-import { Alert, Link, Snackbar, Typography, TypographyTypeMap } from '@mui/material';
+import { Link, Typography, TypographyTypeMap } from '@mui/material';
 import { isHex } from '@polkadot/util';
 import React from 'react';
-import { useToggle } from '../hooks';
 
 type TruncateOpts = {
   start?: number;
@@ -16,41 +15,19 @@ const LinkWrapper: React.FC<{ link?: string }> = ({ children, link }) => {
 type CommonHashFields = {
   link?: string;
   variant: TypographyTypeMap['props']['variant'];
-  alertMsg: string;
-  truncated?: boolean;
+  truncated?: boolean | TruncateOpts;
 };
 
-const CommonHash: React.FC<
-  CommonHashFields & { validate(value: string): boolean; value: string; label: string }
-> = ({ alertMsg, children, link, validate, value, variant }) => {
-  const [opened, { toggleOff, toggleOn }] = useToggle();
-
-  const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    toggleOff();
-  };
-
-  React.useEffect(() => {
-    if (validate(value)) {
-      toggleOn();
-    }
-  }, [value, validate, toggleOn]);
-
+const ChainIdText: React.FC<
+  CommonHashFields & { validate(value: string): boolean; value: string }
+> = ({ children, link, validate, value, variant }) => {
+  const invalid = validate(value);
   return (
-    <>
-      <Snackbar open={opened} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity='warning' sx={{ width: '100%' }}>
-          {alertMsg}
-        </Alert>
-      </Snackbar>
-      <LinkWrapper link={link}>
-        <Typography variant={variant} color={opened ? 'red' : 'info'}>
-          {children}
-        </Typography>
-      </LinkWrapper>
-    </>
+    <LinkWrapper link={link}>
+      <Typography variant={variant} color={invalid ? 'red' : 'info'}>
+        {children}
+      </Typography>
+    </LinkWrapper>
   );
 };
 
@@ -70,34 +47,30 @@ const truncateText = (value: string, truncated: boolean | TruncateOpts = false) 
   return value;
 };
 
-const validateHash = (value: string) => !isHex(value, 256);
-
-const Hash: React.FC<CommonHashFields & { value: string; truncated?: boolean | TruncateOpts }> = (
-  props
-) => {
+const Hash: React.FC<CommonHashFields & { value: string }> = (props) => {
   return (
-    <CommonHash {...props} label='hash' validate={validateHash}>
+    <ChainIdText {...props} validate={(value: string) => !isHex(value, 256)}>
       {truncateText(props.value, props.truncated)}
-    </CommonHash>
+    </ChainIdText>
   );
 };
 
-const addressValidation = (value: string) => value[0] != '6' || value.length != 48;
-
 const Address: React.FC<
   CommonHashFields & {
-    // TODO chain id both are this
     name?: string;
     hash: string;
-    truncated?: boolean | TruncateOpts;
   }
 > = (props) => {
   // TODO add icons of addresses??
   return (
-    <CommonHash {...props} label='address' value={props.hash} validate={addressValidation}>
+    <ChainIdText
+      {...props}
+      value={props.hash}
+      validate={(value: string) => value[0] != '6' || value.length != 48}
+    >
       {props.name || truncateText(props.hash, props.truncated)}
-    </CommonHash>
+    </ChainIdText>
   );
 };
 
-export { Hash, Address }; // replace with chainIdentifier and both accept a validator field
+export { Hash, Address };

@@ -15,7 +15,6 @@ const sampleAddress = (values: { name?: string; address: string }) => {
         <Address
           name={values.name}
           hash={values.address}
-          alertMsg='stash address is invalid'
           variant='body3'
         />
       )}
