@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs';
+import BlockProducer from '../producer/_nameOrId';
 import Block from './Block';
 import BlocksPage from './BlocksPage';
-import BlockProducer from './Producer';
 
 const VersionRouter = () => {
   const { path } = useRouteMatch();

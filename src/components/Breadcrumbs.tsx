@@ -92,7 +92,7 @@ const Breadcrumb: React.FC = () => {
       const crumbKey = defineKeyFromPath(pathPart) || defineKeyFromParams(params, Number(index));
       if (crumbKey) {
         const BreadCrumb = pathMapper[crumbKey] || paramsMapper[crumbKey];
-        root.push(<BreadCrumb params={params} />);
+        root.push(<BreadCrumb params={params} key={index} />);
       }
     });
     return root;

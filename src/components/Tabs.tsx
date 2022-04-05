@@ -1,6 +1,5 @@
-import { FC } from 'react';
 import { Box, Divider, Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { FC } from 'react';
 
 const TabPanel: FC<{ name: string, value: string }> = ({ children, name, value }) => {
   return (
@@ -12,7 +11,7 @@ const TabPanel: FC<{ name: string, value: string }> = ({ children, name, value }
 
 const TabText: FC<{ count: string | number, message: string }> = ({ count, message }) => {
   return (
-    <Stack direction='row' divider={<Divider orientation='vertical' flex-item />}>
+    <Stack direction='row' divider={<Divider orientation='vertical' flexItem />}>
       <Typography>{message}</Typography>
       <Typography>{count}</Typography>
     </Stack>
