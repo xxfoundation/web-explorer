@@ -34,7 +34,7 @@ const blockNumber = ({ params: { number } }: ParamsType) => (
   </CustomLink>
 );
 
-const pathMapper: Record<string, React.FC<ParamsType>> = {
+const crumbRoutes: Record<string, React.FC<ParamsType>> = {
   blocks: blockchainHome,
   producer: blockNumber,
   version: blockNumber,
@@ -43,7 +43,7 @@ const pathMapper: Record<string, React.FC<ParamsType>> = {
   events: blockchainHome
 };
 
-const paramsMapper: Record<string, React.FC<ParamsType>> = {
+const crumbSplats: Record<string, React.FC<ParamsType>> = {
   'number:2': () => (
     <CustomLink to='/blocks' underline='hover'>
       <Typography>Blocks</Typography>
@@ -67,7 +67,7 @@ const paramsMapper: Record<string, React.FC<ParamsType>> = {
 };
 
 const defineKeyFromPath = (pathPart?: string) => {
-  if (pathPart && Object.keys(pathMapper).includes(pathPart)) {
+  if (pathPart && Object.keys(crumbRoutes).includes(pathPart)) {
     return pathPart;
   }
 };
@@ -75,7 +75,7 @@ const defineKeyFromPath = (pathPart?: string) => {
 const defineKeyFromParams = (params: ParamsType['params'], index: number) => {
   for (const name in params) {
     const crumbKey = `${name}:${index}`;
-    if (Object.keys(paramsMapper).includes(crumbKey)) {
+    if (Object.keys(crumbSplats).includes(crumbKey)) {
       return crumbKey;
     }
   }
@@ -91,7 +91,7 @@ const Breadcrumb: React.FC = () => {
     pathParts.forEach((pathPart, index) => {
       const crumbKey = defineKeyFromPath(pathPart) || defineKeyFromParams(params, Number(index));
       if (crumbKey) {
-        const BreadCrumb = pathMapper[crumbKey] || paramsMapper[crumbKey];
+        const BreadCrumb = crumbRoutes[crumbKey] || crumbSplats[crumbKey];
         root.push(<BreadCrumb params={params} key={index} />);
       }
     });
