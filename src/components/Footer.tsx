@@ -1,11 +1,11 @@
 import { Box, Container, Divider, Grid, Link, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import discordIcon from '../assets/icons/Discord.svg';
-import emailIcon from '../assets/icons/Email.svg';
-import telegramIcon from '../assets/icons/Telegram.svg';
-import twitterIcon from '../assets/icons/Twitter.svg';
-import xxNetworkLogo from '../assets/logos/xx-network-logo--white.svg';
+import discordIcon from '../assets/images/icons/Discord.svg';
+import emailIcon from '../assets/images/icons/Email.svg';
+import telegramIcon from '../assets/images/icons/Telegram.svg';
+import twitterIcon from '../assets/images/icons/Twitter.svg';
+import xxNetworkLogo from '../assets/images/logos/xx-network-logo--white.svg';
 import { theme } from '../themes/footer';
 import FooterMenu from './menus/Footer';
 

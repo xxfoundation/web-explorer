@@ -1,8 +1,7 @@
 import React from 'react';
 import TimeAgo from '../TimeAgo';
 import { Box, Grid, Link, Typography } from '@mui/material';
-import { ClockIcon } from '../../site/icons/sfIcons';
-import { theme } from '../../themes/default';
+import ClockIcon from '@mui/icons-material/AccessTime';
 import PaperWithHeader from './PaperWithHeader';
 import { Block, BlockStatus } from './types';
 
@@ -19,7 +18,7 @@ const blocks: Block[] = Array.from(Array(9).keys())
 const statusToIconMap: Record<BlockStatus, React.ReactElement> = {
   pending: (
     <Box aria-label={'Pending'}>
-      <ClockIcon color={theme.palette.error.main} />
+      <ClockIcon color='warning' />
     </Box>
   )
 };
