@@ -20,11 +20,11 @@ function App() {
           <Route exact path='/'>
             <BlockChain />
           </Route>
-          <Route path='/block'>
+          <Route path='/blocks'>
             <Blocks />
             {/* I can do this only here for now */}
           </Route>
-          <Route path='/producer/:nameOrId'>
+          <Route path='/producer/:id'>
             <BlockProducer />
           </Route>
           <Route path='/extrinsic'>
