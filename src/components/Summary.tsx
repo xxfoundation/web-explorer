@@ -1,18 +1,5 @@
-import { Avatar, Grid, Paper, Typography } from '@mui/material';
+import { Grid, Paper } from '@mui/material';
 import React from 'react';
-
-const AvatarLabel: React.FC<{ src: string; srcAlt: string; text: string }> = ({
-  src,
-  srcAlt,
-  text
-}) => {
-  return (
-    <>
-      <Avatar alt={srcAlt} src={src} />
-      <Typography>{text}</Typography>
-    </>
-  );
-};
 
 export type SummaryPaperData = { label: string; value: number | string | JSX.Element };
 
@@ -37,4 +24,4 @@ const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({ data }) => {
   );
 };
 
-export { AvatarLabel, SummaryPaper };
+export { SummaryPaper };

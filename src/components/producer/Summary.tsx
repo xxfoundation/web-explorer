@@ -1,4 +1,4 @@
-import { Avatar, Divider, Stack, Typography } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { withCopy } from '../buttons/CopyButton';
 import { Address } from '../ChainId';
@@ -6,21 +6,8 @@ import { SummaryPaper } from '../Summary';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
 
-const sampleAddress = (values: { name?: string; address: string }) => {
-  return (
-    <Stack direction={'row'} spacing={2}>
-      <Avatar src='???' alt='lala' />
-      {withCopy(
-        values.address,
-        <Address
-          name={values.name}
-          hash={values.address}
-          variant='body3'
-        />
-      )}
-    </Stack>
-  );
-};
+const sampleAddress = (values: { name?: string; address: string }) =>
+  withCopy(values.address, <Address name={values.name} value={values.address} variant='body3' />);
 
 const Summary = () => {
   const data = React.useMemo(() => {

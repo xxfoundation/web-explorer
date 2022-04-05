@@ -1,7 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Avatar, ButtonGroup, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { ButtonGroup, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { withCopy } from '../buttons/CopyButton';
@@ -39,10 +39,7 @@ type Producer = { dunno?: string; name?: string; hash: string; icon?: string };
 const producerField = (producer: Producer) => {
   return withCopy(
     producer.hash,
-    <Stack direction={'row'} spacing={1} alignItems='center'>
-      <Avatar alt={producer.hash} src={producer.icon} />
-      <Address name={producer.name} hash={producer.hash} variant='body3' />
-    </Stack>
+    <Address name={producer.name} value={producer.hash} variant='body3' />
   );
 };
 
