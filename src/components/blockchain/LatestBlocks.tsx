@@ -1,7 +1,6 @@
+import ClockIcon from '@mui/icons-material/AccessTime';
 import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
-import { ClockIcon } from '../../site/icons/sfIcons';
-import { theme } from '../../themes/default';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
@@ -11,7 +10,7 @@ const blocks: Block[] = Array.from(Array(9).keys())
   .slice(1)
   .map((i) => ({
     id: 8657975 + i,
-    intrinsic: 8,
+    extrinsic: 8,
     events: 11,
     status: BlockStatus.Pending,
     timestamp: new Date().getTime() - i * 1000
@@ -20,12 +19,12 @@ const blocks: Block[] = Array.from(Array(9).keys())
 const statusToIconMap: Record<BlockStatus, React.ReactElement> = {
   pending: (
     <Box aria-label={'Pending'}>
-      <ClockIcon color={theme.palette.error.main} />
+      <ClockIcon color='warning' />
     </Box>
   )
 };
 
-const BlockRow = ({ events, id, intrinsic: extrinsics, status, timestamp }: Block) => {
+const BlockRow = ({ events, extrinsic: extrinsics, id, status, timestamp }: Block) => {
   return (
     <Box key={id} sx={{ mb: 4 }}>
       <Grid container>

@@ -6,7 +6,7 @@ import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
 
 type Transfer = {
-  intrinsicIndex: string;
+  extrinsicIndex: string;
   id: number;
   from: string;
   to: string;
@@ -16,7 +16,7 @@ type Transfer = {
 
 const transfers: Transfer[] = Array.from(Array(9).keys()).slice(1).map((i) => {
   return {
-    intrinsicIndex: '314658-5', // TODO mask?
+    extrinsicIndex: '314658-5', // TODO mask?
     id: i,
     from: '0xacc15dc74899999', // TODO use just mask instead of manipulating the value
     to: '0xacc15dc748888',
@@ -72,7 +72,7 @@ const ItemHandler = (currentData: Transfer) => {
     <Box key={currentData.id} sx={{ mb: 4 }}>
       <Typography variant='body2' sx={{ mb: 1 }}>
         EXTRINSIC #{' '}
-        <Link to={`/intrinsic/${currentData.id}`} underline='hover'>
+        <Link to={`/extrinsics/${currentData.id}`} underline='hover'>
           {currentData.id}
         </Link>
       </Typography>

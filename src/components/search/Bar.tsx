@@ -26,7 +26,7 @@ const SearchBar = () => {
             >
               <SelectItem value=''>All</SelectItem>
               <SelectItem value={10}>Blocks </SelectItem>
-              <SelectItem value={20}>Intrinsics</SelectItem>
+              <SelectItem value={20}>Extrinsic</SelectItem>
               <SelectItem value={30}>Account</SelectItem>
               <SelectItem value={30}>Event</SelectItem>
             </SelectOption>
@@ -58,7 +58,7 @@ const SearchBar = () => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs='auto' sx={{ display: {  xs: 'none', sm: 'block' } }}>
+        <Grid item xs='auto' sx={{ display: { xs: 'none', sm: 'block' } }}>
           <SearchButton>SEARCH</SearchButton>
         </Grid>
       </Grid>

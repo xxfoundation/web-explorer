@@ -8,18 +8,22 @@ import {
   TableRow
 } from '@mui/material';
 import React from 'react';
-import Link from '../Link';
+import Link from '../../components/Link';
 
-const header = ['account', 'stake', 'share'];
+type Stake = {
+  account: string;
+  stake: string;
+  share: string;
+};
 
-const rowParser = (rowData: { account: string; stake: string; share: string }) => {
+const EraStake = ({ account, share, stake }: Stake) => {
   return (
-    <TableRow key={rowData.account}>
+    <TableRow key={account}>
       <TableCell>
-        <Link to={`/account/${rowData.account}`}>{rowData.account}</Link>
+        <Link to={`/account/${account}`}>{account}</Link>
       </TableCell>
-      <TableCell>{rowData.stake}</TableCell>
-      <TableCell>{rowData.share}</TableCell>
+      <TableCell>{stake}</TableCell>
+      <TableCell>{share}</TableCell>
     </TableRow>
   );
 };
@@ -38,12 +42,12 @@ const NominatorsTable = () => {
       <Table>
         <TableHead>
           <TableRow>
-            {header.map((h) => {
-              return <TableCell key={h}>{h}</TableCell>;
-            })}
+            <TableCell>Account</TableCell>
+            <TableCell>Stake</TableCell>
+            <TableCell>Share</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>{data.map(rowParser)}</TableBody>
+        <TableBody>{data.map(EraStake)}</TableBody>
       </Table>
     </TableContainer>
   );
