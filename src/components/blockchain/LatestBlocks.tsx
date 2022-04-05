@@ -9,7 +9,7 @@ const blocks: Block[] = Array.from(Array(9).keys())
   .slice(1)
   .map((i) => ({
     id: 8657975 + i,
-    intrinsic: 8,
+    extrinsic: 8,
     events: 11,
     status: BlockStatus.Pending,
     timestamp: new Date().getTime() - i * 1000
@@ -23,12 +23,12 @@ const statusToIconMap: Record<BlockStatus, React.ReactElement> = {
   )
 };
 
-const BlockRow = ({ events, id, intrinsic: extrinsics, status, timestamp }: Block) => {
+const BlockRow = ({ events, extrinsic: extrinsics, id, status, timestamp }: Block) => {
   return (
     <Box key={id} sx={{ mb: 4 }}>
       <Grid container>
         <Grid item xs>
-          <Link href={`/block/${id}`} underline='hover' variant='body2'>
+          <Link href={`/blocks/${id}`} underline='hover' variant='body2'>
             {id}
           </Link>
         </Grid>
@@ -62,7 +62,7 @@ const blockchain = () => {
       header='Latest Blocks'
       hasDivider={true}
       linkName={'SEE ALL'}
-      linkAddress={'/block'}
+      linkAddress={'/blocks'}
       height={500}
     >
       {blocks.map(BlockRow)}
