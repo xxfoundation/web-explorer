@@ -1,8 +1,8 @@
 import { Divider, Stack, Typography } from '@mui/material';
 import React from 'react';
-import { withCopy } from '../buttons/CopyButton';
-import { Address } from '../ChainId';
-import { SummaryPaper } from '../Summary';
+import { withCopy } from '../../components/buttons/CopyButton';
+import { Address } from '../../components/ChainId';
+import SummaryPaper from '../../components/SummaryPaper';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
 

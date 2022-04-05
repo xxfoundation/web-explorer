@@ -1,28 +1,8 @@
-import { Box, Divider, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react';
+import { TabPanel, TabText } from '../../components/Tabs';
 import Eras from './ErasTable';
 import NominatorsTable from './NominatorsTable';
-
-const TabText: React.FC<{ count: string | number; message: string }> = ({ count, message }) => {
-  return (
-    <Stack direction='row' divider={<Divider orientation='vertical' />}>
-      <Typography>{message}</Typography>
-      <Typography>{count}</Typography>
-    </Stack>
-  );
-};
-
-const TabPanel: React.FC<{ children: JSX.Element; name: string; value: string }> = ({
-  children,
-  name,
-  value
-}) => {
-  return (
-    <div role='tabpanel' id={`tabpanel-${value}`} aria-labelledby={`tab-${value}`}>
-      {value === name && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-};
 
 const ProducerTabs: React.FC<{ eras: string[]; nominators: string[] }> = ({ eras, nominators }) => {
   const [value, setValue] = React.useState('nominators');

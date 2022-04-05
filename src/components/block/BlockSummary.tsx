@@ -6,7 +6,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { withCopy } from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
-import { SummaryPaper } from '../Summary';
+import SummaryPaper from '../SummaryPaper';
 
 const BackAndForwardArrows = () => {
   return (

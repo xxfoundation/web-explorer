@@ -24,4 +24,4 @@ const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({ data }) => {
   );
 };
 
-export { SummaryPaper };
+export default SummaryPaper;
