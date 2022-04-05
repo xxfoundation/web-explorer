@@ -1,4 +1,4 @@
-import { Box, Card, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
 import AverageAnnualReturn from '../../components/blockchain/AverageAnnualReturn';
 import LatestBlock from '../../components/blockchain/LatestBlock';
@@ -28,7 +28,7 @@ const TokenStatus = () => {
         ].map((item, i) => {
           return (
             <Grid item xs={12} md={6} key={i}>
-              <Card>{item}</Card>
+              <Box>{item}</Box>
             </Grid>
           );
         })}

@@ -9,13 +9,14 @@ const PaperWrap = styled(Paper)(({ theme }) => ({
 }));
 
 type Props = {
+  hasDivider?: boolean;
   header?: string | React.ReactNode;
   height?: number;
   linkAddress?: string;
   linkName?: string;
 };
 
-const InputSet: FC<Props> = ({ children, header, height, linkAddress, linkName }) => (
+const InputSet: FC<Props> = ({ children, hasDivider, header, height, linkAddress, linkName }) => (
   <PaperWrap sx={{}}>
     {(header || linkName) && (
       <>
@@ -24,7 +25,11 @@ const InputSet: FC<Props> = ({ children, header, height, linkAddress, linkName }
           justifyContent='space-between'
           alignItems='center'
           spacing={2}
-          sx={{ mb: 8, pt: 6, px: { xs: 3, md: 6 } }}
+          sx={{ 
+            mb: hasDivider ? 8 : 0,
+            pt: 6, 
+            px: { xs: 3, md: 6 }
+          }}
         >
           {header && <Typography variant='h3'>{header}</Typography>}
           {linkName && (
@@ -33,7 +38,7 @@ const InputSet: FC<Props> = ({ children, header, height, linkAddress, linkName }
             </Link>
           )}
         </Stack>
-        <Divider sx={{ mx: { xs: 3, md: 6 } }} />
+        {hasDivider && <Divider sx={{ mx: { xs: 3, md: 6 } }} />}
       </>
     )}
 

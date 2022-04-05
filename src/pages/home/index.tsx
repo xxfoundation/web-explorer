@@ -6,13 +6,11 @@ import TokenStatus from './TokenStatus';
 
 const Blockchain = () => {
   return (
-    <>
+    <Container sx={{ mt: 5, mb: 12 }}>
       <Breadcrumb />
-      <Container sx={{ my: 5 }}>
-        <ChainInfo />
-        <TokenStatus />
-      </Container>
-    </>
+      <ChainInfo />
+      <TokenStatus />
+    </Container>
   );
 };
 

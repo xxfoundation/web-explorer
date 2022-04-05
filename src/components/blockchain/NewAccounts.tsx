@@ -1,6 +1,7 @@
 import { default as React } from 'react';
 import { DataPoint } from '../../types';
 import { LineChart } from '../charts/highcharts';
+import PaperWithHeader from './PaperWithHeader';
 
 const data: DataPoint[] = [
   [123, 1231],
@@ -12,9 +13,9 @@ const NewAccounts = () => {
   const sortedData = data.sort((a: number[], b: number[]) => a[0] - b[0]);
 
   return (
-    <>
-      <LineChart title='NEW ACCOUNTS high' data={sortedData} />
-    </>
+    <PaperWithHeader header='New Accounts'>
+      <LineChart data={sortedData} />
+    </PaperWithHeader>
   );
 };
 

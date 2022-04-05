@@ -25,6 +25,7 @@ declare module '@mui/material/styles' {
   interface TypographyVariantsOptions {
     body3?: TypographyStyle;
     body4?: TypographyStyle;
+    body5?: TypographyStyle;
   }
 }
 
@@ -32,6 +33,7 @@ declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     body3: true;
     body4: true;
+    body5: true;
   }
 }
 
