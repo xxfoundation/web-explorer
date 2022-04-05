@@ -1,6 +1,7 @@
 import { default as React } from 'react';
 import { DataPoint } from '../../types';
 import * as Highcharts from '../charts/highcharts';
+import PaperWithHeader from './PaperWithHeader';
 
 const data: { transactions: DataPoint[] } = {
   transactions: [
@@ -20,9 +21,9 @@ const TransactionsChart = () => {
   const sortedTransactions = sortTransactions(data);
 
   return (
-    <>
-      <Highcharts.LineChart title='transactions high' data={sortedTransactions} />
-    </>
+    <PaperWithHeader header='Transactions'>
+      <Highcharts.LineChart data={sortedTransactions} />
+    </PaperWithHeader>
   );
 };
 
