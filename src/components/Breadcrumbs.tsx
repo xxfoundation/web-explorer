@@ -66,11 +66,6 @@ const paramsMapper: Record<string, React.FC<ParamsType>> = {
   )
 };
 
-const Crumb: React.FC<{ name: string } & ParamsType> = ({ name, params }) => {
-  const BreadCrumb = pathMapper[name] || paramsMapper[name];
-  return <BreadCrumb params={params} />;
-};
-
 const defineKeyFromPath = (pathPart?: string) => {
   if (pathPart && Object.keys(pathMapper).includes(pathPart)) {
     return pathPart;
@@ -96,7 +91,8 @@ const Breadcrumb: React.FC = () => {
     pathParts.forEach((pathPart, index) => {
       const crumbKey = defineKeyFromPath(pathPart) || defineKeyFromParams(params, Number(index));
       if (crumbKey) {
-        root.push(<Crumb name={crumbKey} key={index} params={params} />);
+        const BreadCrumb = pathMapper[crumbKey] || paramsMapper[crumbKey];
+        root.push(<BreadCrumb params={params} />);
       }
     });
     return root;
