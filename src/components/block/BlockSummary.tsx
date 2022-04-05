@@ -1,6 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {
   Avatar,
   Box,
@@ -9,10 +10,12 @@ import {
   Grid,
   IconButton,
   Stack,
+  Tooltip,
   Typography
 } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useCopyClipboard from '../../hooks/useCopyToClibboard';
 import { Address, Hash } from '../Hash';
 import { SummaryPaper } from '../Summary';
 
@@ -44,7 +47,7 @@ const BlockSummaryHeader: React.FC<{ number: string }> = ({ number }) => {
 
 type Producer = { dunno?: string; name?: string; hash: string; icon?: string };
 
-const producerField = (producer: Producer) => {
+const producerField = (producer: Producer, staticCopy: (toCopy: string) => void) => {
   return (
     <Box>
       <Stack direction={'row'} spacing={3} justifyContent={'flex-start'} alignItems={'center'}>
@@ -55,9 +58,19 @@ const producerField = (producer: Producer) => {
             hash={producer.hash}
             alertMsg={'producer address is not valid'}
             variant='body3'
-            copyable
           />
         </Stack>
+        <Divider orientation='vertical' flexItem />
+        <Tooltip title='copy' placement='top'>
+          <IconButton
+            arial-label='copy'
+            onClick={() => {
+              staticCopy(producer.hash);
+            }}
+          >
+            <ContentCopyIcon />
+          </IconButton>
+        </Tooltip>
       </Stack>
     </Box>
   );
@@ -88,7 +101,7 @@ type BlockSummaryTyp = {
   specVersion: number;
 };
 
-const summaryData = (data: BlockSummaryTyp) => [
+const summaryDataParser = (data: BlockSummaryTyp, staticCopy: (toCopy: string) => void) => [
   { label: 'time', value: data.time },
   {
     label: 'status',
@@ -102,7 +115,26 @@ const summaryData = (data: BlockSummaryTyp) => [
   { label: 'era', value: data.era },
   {
     label: 'hash',
-    value: <Hash value={data.hash} variant='body3' alertMsg='hash is not valid' copyable />
+    value: (
+      <Stack
+        direction={'row'}
+        alignItems={'center'}
+        spacing={2}
+        divider={<Divider orientation='vertical' flexItem />}
+      >
+        <Hash value={data.hash} variant='body3' alertMsg='hash is not valid' />
+        <Tooltip title='copy' placement='top'>
+          <IconButton
+            arial-label='copy'
+            onClick={() => {
+              staticCopy(data.hash);
+            }}
+          >
+            <ContentCopyIcon />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+    )
   },
   { label: 'parent hash', value: backAndForwardWithLabel(data.parentHash) },
   {
@@ -124,19 +156,23 @@ const summaryData = (data: BlockSummaryTyp) => [
       />
     )
   },
-  { label: 'block producer', value: producerField(data.blockProducer) },
+  { label: 'block producer', value: producerField(data.blockProducer, staticCopy) },
   { label: 'block time', value: data.blockTime },
   { label: 'spec version', value: LinkWrapper('#', data.specVersion) }
 ];
 
 const BlockSummary: React.FC<{ data: BlockSummaryTyp; number: string }> = ({ data, number }) => {
+  const staticCopy = useCopyClipboard()[1];
+  const summaryData = React.useMemo(() => {
+    return summaryDataParser(data, staticCopy);
+  }, [data, staticCopy]);
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <BlockSummaryHeader number={number} />
       </Grid>
       <Grid item xs={12}>
-        <SummaryPaper data={summaryData(data)} />
+        <SummaryPaper data={summaryData} />
       </Grid>
     </Grid>
   );
