@@ -1,62 +1,41 @@
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { Avatar, Divider, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Avatar, Divider, Stack, Typography } from '@mui/material';
 import React from 'react';
-import useCopyClipboard from '../../hooks/useCopyToClibboard';
+import { withCopy } from '../buttons/CopyButton';
 import { Address } from '../Hash';
-import { SummaryPaper, textWithCopy } from '../Summary';
+import { SummaryPaper } from '../Summary';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
 
-const sampleAddress = (
-  values: { name?: string; address: string },
-  staticCopy: (toCopy: string) => void
-) => {
+const sampleAddress = (values: { name?: string; address: string }) => {
   return (
     <Stack direction={'row'} spacing={2}>
       <Avatar src='???' alt='lala' />
-
-      <Stack
-        direction={'row'}
-        alignItems={'center'}
-        spacing={2}
-        divider={<Divider orientation='vertical' flexItem />}
-      >
+      {withCopy(
+        values.address,
         <Address
           name={values.name}
           hash={values.address}
           alertMsg='stash address is invalid'
           variant='body3'
         />
-        <Tooltip title='copy' placement='top'>
-          <IconButton
-            arial-label='copy'
-            onClick={() => {
-              staticCopy(values.address);
-            }}
-          >
-            <ContentCopyIcon />
-          </IconButton>
-        </Tooltip>
-      </Stack>
+      )}
     </Stack>
   );
 };
 
 const Summary = () => {
-  const staticCopy = useCopyClipboard()[1];
   const data = React.useMemo(() => {
     return [
-      { label: 'stash', value: sampleAddress({ address: sampleHash }, staticCopy) },
+      { label: 'stash', value: sampleAddress({ address: sampleHash }) },
       {
         label: 'controller',
-        value: sampleAddress({ address: sampleHash, name: 'test' }, staticCopy)
+        value: sampleAddress({ address: sampleHash, name: 'test' })
       },
-      { label: 'reward', value: sampleAddress({ address: sampleHash }, staticCopy) },
+      { label: 'reward', value: sampleAddress({ address: sampleHash }) },
       {
         label: 'cmix id',
-        value: textWithCopy(
+        value: withCopy(
           'kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C',
-          staticCopy,
           <Typography>kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C</Typography>
         )
       },
@@ -93,7 +72,7 @@ const Summary = () => {
         )
       }
     ];
-  }, [staticCopy]);
+  }, []);
   return <SummaryPaper data={data} />;
 };
 

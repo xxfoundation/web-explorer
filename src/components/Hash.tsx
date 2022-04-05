@@ -92,7 +92,7 @@ const Address: React.FC<
     truncated?: boolean | TruncateOpts;
   }
 > = (props) => {
-  // TODO add icons??
+  // TODO add icons of addresses??
   return (
     <CommonHash {...props} label='address' value={props.hash} validate={addressValidation}>
       {props.name || truncateText(props.hash, props.truncated)}

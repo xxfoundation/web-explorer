@@ -1,38 +1,5 @@
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import {
-  Avatar,
-  Divider,
-  Grid,
-  IconButton,
-  Paper,
-  Stack,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Avatar, Grid, Paper, Typography } from '@mui/material';
 import React from 'react';
-
-const textWithCopy = (
-  value: string,
-  staticCopy: (toCopy: string) => void,
-  content: JSX.Element
-): JSX.Element => {
-  return (
-    <Stack direction={'row'} spacing={1} alignItems={'center'}>
-      {content}
-      <Divider orientation='vertical' flexItem />
-      <Tooltip title={'copy'} placement='top'>
-        <IconButton
-          arial-label='copy'
-          onClick={() => {
-            staticCopy(value);
-          }}
-        >
-          <ContentCopyIcon />
-        </IconButton>
-      </Tooltip>
-    </Stack>
-  );
-};
 
 const AvatarLabel: React.FC<{ src: string; srcAlt: string; text: string }> = ({
   src,
@@ -70,4 +37,4 @@ const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({ data }) => {
   );
 };
 
-export { textWithCopy, AvatarLabel, SummaryPaper };
+export { AvatarLabel, SummaryPaper };
