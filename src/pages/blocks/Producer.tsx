@@ -2,8 +2,8 @@ import { Container, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs';
-import ProducerTabs from '../../components/producer/ProducerTabs';
-import Summary from '../../components/producer/Summary';
+import ProducerTabs from '../producer/ProducerTabs';
+import Summary from '../producer/Summary';
 
 const BlockProducer = () => {
   const { nameOrId } = useParams<{ nameOrId: string }>();
