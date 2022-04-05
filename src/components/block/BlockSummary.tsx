@@ -5,7 +5,7 @@ import { Avatar, ButtonGroup, Divider, Grid, IconButton, Stack, Typography } fro
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { withCopy } from '../buttons/CopyButton';
-import { Address, Hash } from '../Hash';
+import { Address, Hash } from '../ChainId';
 import { SummaryPaper } from '../Summary';
 
 const BackAndForwardArrows = () => {

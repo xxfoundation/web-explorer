@@ -15,7 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
-import { Hash } from '../../components/Hash';
+import { Hash } from '../../components/ChainId';
 
 type Block = {
   number: number;

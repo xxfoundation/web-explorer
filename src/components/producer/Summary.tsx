@@ -1,7 +1,7 @@
 import { Avatar, Divider, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { withCopy } from '../buttons/CopyButton';
-import { Address } from '../Hash';
+import { Address } from '../ChainId';
 import { SummaryPaper } from '../Summary';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';

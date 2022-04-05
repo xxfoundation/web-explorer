@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Hash } from '../Hash';
+import { Hash } from '../ChainId';
 
 const header = ['extrinsic id', 'hash', 'time', 'result', 'action', 'view all'];
 
