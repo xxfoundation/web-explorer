@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { isHex } from '@polkadot/util';
 import React from 'react';
+import { useToggle } from '../hooks';
 import useCopyClipboard from '../hooks/useCopyToClibboard';
 
 type TruncateOpts = {
@@ -20,7 +21,7 @@ type TruncateOpts = {
   replaceChar?: string;
 };
 
-const CopyButtonWrapper: React.FC<{ value: string; label: string; enabled: boolean }> = ({
+const CopyButton: React.FC<{ value: string; label: string; enabled: boolean }> = ({
   children,
   enabled,
   label,
@@ -65,39 +66,35 @@ type CommonHashFields = {
 const CommonHash: React.FC<
   CommonHashFields & { validate(value: string): boolean; value: string; label: string }
 > = ({ alertMsg, children, copyable = false, label, link, validate, value, variant }) => {
-  const [state, setState] = React.useState<{ color?: string; open: boolean }>({
-    open: false
-  });
+  const [opened, { toggleOff, toggleOn }] = useToggle();
 
   const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-    setState(({}) => {
-      return { open: false };
-    });
+    toggleOff();
   };
 
   React.useEffect(() => {
     if (validate(value)) {
-      setState({ open: true, color: 'red' });
+      toggleOn();
     }
-  }, [value, validate]);
+  }, [value, validate, toggleOn]);
 
   return (
     <>
-      <Snackbar open={state.open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={opened} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity='warning' sx={{ width: '100%' }}>
           {alertMsg}
         </Alert>
       </Snackbar>
-      <CopyButtonWrapper value={value} label={label} enabled={copyable}>
+      <CopyButton value={value} label={label} enabled={copyable}>
         <LinkWrapper link={link}>
-          <Typography variant={variant} color={state.color}>
+          <Typography variant={variant} color={opened ? 'red' : 'info'}>
             {children}
           </Typography>
         </LinkWrapper>
-      </CopyButtonWrapper>
+      </CopyButton>
     </>
   );
 };
