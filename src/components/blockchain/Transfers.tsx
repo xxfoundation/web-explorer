@@ -18,7 +18,7 @@ const transfers: Transfer[] = Array.from(Array(9).keys()).slice(1).map((i) => {
     intrinsicIndex: '314658-5', // TODO mask?
     id: i,
     from: '0xacc15dc74899999', // TODO use just mask instead of manipulating the value
-    to: '0xacc15dc748888',
+    to: '0xbcd15dc748888',
     amount: '100000000000',
     timestamp: new Date().getTime() - (i * 1000)
   };
@@ -43,25 +43,24 @@ const addMaskToTransactionTargets = (hash: string) => {
   );
 };
 
-const gridHeader = (elem: string) => {
+const gridHeader = (data: Transfer, elem: keyof Transfer) => {
   return (
-    <Grid item component={'span'} xs={4}>
-      <Typography variant='body3'>{elem.toString().toUpperCase()}</Typography>
-    </Grid>
+    <>
+      <Grid item component={'span'} xs={4}>
+        <Typography variant='body3'>{elem.toString().toUpperCase()}</Typography>
+      </Grid>
+      <Grid item component={'span'}>
+        {addMaskToTransactionTargets(data[elem].toString())}
+      </Grid>
+    </>
   )
 }
 
 const listItemSecondaryText = (data: Transfer) => {
   return (
     <Grid component={'span'} container maxWidth={200}>
-      {gridHeader('from')}
-      <Grid item component={'span'}>
-        {addMaskToTransactionTargets(data.from)}
-      </Grid>
-      {gridHeader('to')}
-      <Grid item component={'span'}>
-        {addMaskToTransactionTargets(data.to)}
-      </Grid>
+      {gridHeader(data, 'from')}
+      {gridHeader(data, 'to')}
     </Grid>
   );
 };
