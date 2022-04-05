@@ -1,6 +1,6 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react';
-import { TabPanel, TabText } from '../tabs';
+import { TabPanel, TabText } from '../../components/Tabs';
 import Eras from './ErasTable';
 import NominatorsTable from './NominatorsTable';
 

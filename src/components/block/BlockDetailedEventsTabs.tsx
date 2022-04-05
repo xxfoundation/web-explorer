@@ -1,6 +1,6 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react';
-import { TabPanel, TabText } from '../tabs';
+import { TabPanel, TabText } from '../Tabs';
 import EventsTable from './EventsTable';
 import ExtrinsicsTable from './ExtrinsicsTable';
 
