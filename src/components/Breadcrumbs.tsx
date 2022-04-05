@@ -85,7 +85,7 @@ const Breadcrumb: React.FC = () => {
   const params = useParams();
   const { pathname } = useLocation();
 
-  const crumbs = React.useCallback(() => {
+  const crumbs = React.useMemo(() => {
     const pathParts = pathname.split('/');
     const root: JSX.Element[] = [];
     pathParts.forEach((pathPart, index) => {
@@ -98,7 +98,7 @@ const Breadcrumb: React.FC = () => {
     return root;
   }, [pathname, params]);
 
-  return <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>{crumbs()}</Breadcrumbs>;
+  return <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>{crumbs}</Breadcrumbs>;
 };
 
 export default Breadcrumb;
