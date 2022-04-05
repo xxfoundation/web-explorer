@@ -1,8 +1,8 @@
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { Avatar, Link, Stack, Typography, TypographyTypeMap } from '@mui/material';
+import { Avatar, Link, Stack, Tooltip, Typography, TypographyTypeMap } from '@mui/material';
 import { decodeAddress } from '@polkadot/keyring';
 import { isHex } from '@polkadot/util';
-import React from 'react';
+import React, { FC } from 'react';
 
 type IdProperties = {
   link?: string;
@@ -11,7 +11,7 @@ type IdProperties = {
   value: string;
 };
 
-const LinkWrapper: React.FC<{ link?: string }> = ({ children, link }) => {
+const LinkWrapper: FC<{ link?: string }> = ({ children, link }) => {
   return link ? <Link href={link}>{children}</Link> : <>{children}</>;
 };
 
@@ -31,7 +31,7 @@ const isValidXXNetworkAddress = (address: string): boolean => {
   }
 };
 
-const ChainIdText: React.FC<IdProperties & { validate: (value: string) => boolean }> = ({
+const ChainIdText: FC<IdProperties & { validate: (value: string) => boolean }> = ({
   children,
   link,
   validate,
@@ -48,7 +48,7 @@ const ChainIdText: React.FC<IdProperties & { validate: (value: string) => boolea
   );
 };
 
-const Hash: React.FC<IdProperties> = (props) => {
+const Hash: FC<IdProperties> = (props) => {
   return (
     <ChainIdText {...props} validate={(value: string) => isHex(value, 256)}>
       {props.truncated ? shortString(props.value) : props.value}
@@ -56,10 +56,16 @@ const Hash: React.FC<IdProperties> = (props) => {
   );
 };
 
-const Address: React.FC<IdProperties & { name?: string; avatarUrl?: string }> = (props) => {
+const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = (props) => {
   return (
     <Stack direction={'row'} spacing={2} alignItems='center'>
-      {props.name ? <Avatar src={props.avatarUrl} alt={props.name} /> : <RemoveCircleIcon />}
+      {props.name ? (
+        <Avatar src={props.avatarUrl} alt={props.name} />
+      ) : (
+        <Tooltip title='Identity Level: No Judgement' placement='bottom' arrow>
+          <RemoveCircleIcon />
+        </Tooltip>
+      )}
       <ChainIdText {...props} validate={isValidXXNetworkAddress}>
         {props.name || (props.truncated ? shortString(props.value) : props.value)}
       </ChainIdText>
