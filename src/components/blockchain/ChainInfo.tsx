@@ -20,7 +20,7 @@ const ChainInfoCard: FC<{ title: string, value: string | React.ReactNode }> = ({
   return (
     <Grid item xs={6} sm={3} md={3} key={title}>
       <Item>
-        <Typography variant='body2'>{title}</Typography>
+        <Typography variant='body4'>{title}</Typography>
         <Data>{value}</Data>
       </Item>
     </Grid>
