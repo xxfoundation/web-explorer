@@ -9,6 +9,7 @@
     "@mui/icons-material": "^5.4.2",
     "@mui/lab": "^5.0.0-alpha.74",
     "@mui/material": "^5.4.2",
+    "@polkadot/keyring": "^8.7.1",
     "@polkadot/util": "^8.7.1",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",

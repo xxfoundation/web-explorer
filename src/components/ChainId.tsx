@@ -1,26 +1,36 @@
 import { Link, Typography, TypographyTypeMap } from '@mui/material';
 import { isHex } from '@polkadot/util';
+import { decodeAddress } from '@polkadot/keyring';
 import React from 'react';
 
-type TruncateOpts = {
-  start?: number;
-  end?: number;
-  replaceChar?: string;
+type IdProperties = {
+  link?: string;
+  variant: TypographyTypeMap['props']['variant'];
+  truncated?: boolean;
+  value: string;
+  validate: (value: string) => boolean;
 };
 
 const LinkWrapper: React.FC<{ link?: string }> = ({ children, link }) => {
   return link ? <Link href={link}>{children}</Link> : <>{children}</>;
 };
 
-type CommonHashFields = {
-  link?: string;
-  variant: TypographyTypeMap['props']['variant'];
-  truncated?: boolean | TruncateOpts;
-};
+const shortString = (addr: string, offset = 4, replaceStr = '...') => addr
+  ? addr.slice(0, offset).concat(replaceStr, addr.slice(addr.length - offset, addr.length))
+  : '';
 
-const ChainIdText: React.FC<
-  CommonHashFields & { validate(value: string): boolean; value: string }
-> = ({ children, link, validate, value, variant }) => {
+// Check if an address is a valid xx network address
+// Use ss58 format 55, which is registered for xx network
+const isValidXXNetworkAddress = (address: string): boolean => {
+  try {
+    decodeAddress(address, false, 55);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+const ChainIdText: React.FC<IdProperties> = ({ children, link, validate, value, variant }) => {
   const invalid = validate(value);
   return (
     <LinkWrapper link={link}>
@@ -31,45 +41,23 @@ const ChainIdText: React.FC<
   );
 };
 
-const unwrapTruncateOpts = (truncated: boolean | TruncateOpts): [boolean, TruncateOpts] => {
-  if (typeof truncated === 'boolean') {
-    return [truncated, { replaceChar: '.....', start: 7, end: -5 }];
-  }
-  return [!!(truncated && Object.keys(truncated).length), truncated];
-};
-
-const truncateText = (value: string, truncated: boolean | TruncateOpts = false) => {
-  const [isTruncated, options] = unwrapTruncateOpts(truncated);
-  if (isTruncated) {
-    const truncatedString = value.slice(0, options.start) + options.replaceChar;
-    return options.end ? truncatedString + value.slice(options.end) : truncatedString;
-  }
-  return value;
-};
-
-const Hash: React.FC<CommonHashFields & { value: string }> = (props) => {
+const Hash: React.FC<IdProperties> = (props) => {
   return (
     <ChainIdText {...props} validate={(value: string) => !isHex(value, 256)}>
-      {truncateText(props.value, props.truncated)}
+      {props.truncated ? shortString(props.value) : props.value}
     </ChainIdText>
   );
 };
 
-const Address: React.FC<
-  CommonHashFields & {
-    name?: string;
-    hash: string;
-  }
-> = (props) => {
-  // TODO add icons of addresses??
+const Address: React.FC<IdProperties & { name?: string }> = (props) => {
   return (
-    <ChainIdText
-      {...props}
-      value={props.hash}
-      validate={(value: string) => value[0] != '6' || value.length != 48}
-    >
-      {props.name || truncateText(props.hash, props.truncated)}
-    </ChainIdText>
+    // TODO add icons of addresses
+    // name ? IdentityJudgement : Avatar
+    <>
+      <ChainIdText {...props} validate={isValidXXNetworkAddress}>
+        {props.name || (props.truncated ? shortString(props.value) : props.value)}
+      </ChainIdText>
+    </>
   );
 };
 
