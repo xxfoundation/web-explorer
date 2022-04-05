@@ -20,6 +20,9 @@ const CustomLink = styled(Link, {
   }
 });
 
+const truncateCrumb = (text: string) =>
+  text.length > 15 ? `${text.slice(0, 4)}...${text.slice(-4)}` : text;
+
 const blockchainHome = () => (
   <CustomLink to='/' fontWeight={700}>
     <Typography fontWeight={700}>Blockchain</Typography>
@@ -27,7 +30,7 @@ const blockchainHome = () => (
 );
 const blockNumber = ({ params: { number } }: ParamsType) => (
   <CustomLink to={`/blocks/${number}`}>
-    <Typography>{number}</Typography>
+    <Typography>{truncateCrumb(number.toString())}</Typography>
   </CustomLink>
 );
 
@@ -46,9 +49,9 @@ const paramsMapper: Record<string, React.FC<ParamsType>> = {
       <Typography>Blocks</Typography>
     </CustomLink>
   ),
-  'versionModule:5': ({ params: { number, version } }) => (
+  'module:5': ({ params: { number, version } }) => (
     <CustomLink to={`/blocks/${number}/version/${version}`} underline='hover'>
-      <Typography>{`Spec ${version}`}</Typography>
+      <Typography>{`Spec ${truncateCrumb(version.toString())}`}</Typography>
     </CustomLink>
   ),
   'extrinsics:2': () => (
