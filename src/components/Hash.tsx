@@ -1,14 +1,18 @@
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {
   Alert,
   Divider,
+  IconButton,
   Link,
   Snackbar,
   Stack,
+  Tooltip,
   Typography,
   TypographyTypeMap
 } from '@mui/material';
+import { isHex } from '@polkadot/util';
 import React from 'react';
-import CopyButton from './CopyButton';
+import useCopyClipboard from '../hooks/useCopyToClibboard';
 
 type TruncateOpts = {
   start?: number;
@@ -16,11 +20,13 @@ type TruncateOpts = {
   replaceChar?: string;
 };
 
-const CopyButtonWrapper: React.FC<{ value: string; enabled: boolean }> = ({
+const CopyButtonWrapper: React.FC<{ value: string; label: string; enabled: boolean }> = ({
   children,
   enabled,
+  label,
   value
 }) => {
+  const staticCopy = useCopyClipboard()[1];
   return enabled ? (
     <Stack
       direction={'row'}
@@ -29,7 +35,16 @@ const CopyButtonWrapper: React.FC<{ value: string; enabled: boolean }> = ({
       divider={<Divider orientation='vertical' flexItem />}
     >
       {children}
-      <CopyButton value={value} label='hash' />
+      <Tooltip title={`copy ${label}`} placement='top'>
+        <IconButton
+          arial-label='copy'
+          onClick={() => {
+            staticCopy(value);
+          }}
+        >
+          <ContentCopyIcon />
+        </IconButton>
+      </Tooltip>
     </Stack>
   ) : (
     <>{children}</>
@@ -40,17 +55,6 @@ const LinkWrapper: React.FC<{ link?: string }> = ({ children, link }) => {
   return link ? <Link href={link}>{children}</Link> : <>{children}</>;
 };
 
-const REGEX_HEX_PREFIXED = /^0x[\da-fA-F]+$/;
-// const REGEX_HEX_NOPREFIX = /^[\da-fA-F]+$/;
-const HASH_LENGTH = 256;
-function isHex(value: string, bitLength = -1) {
-  return (
-    typeof value === 'string' &&
-    (value === '0x' || REGEX_HEX_PREFIXED.test(value)) &&
-    (bitLength === -1 ? value.length % 2 === 0 : value.length === 2 + Math.ceil(bitLength / 4))
-  );
-}
-
 type CommonHashFields = {
   copyable?: boolean;
   link?: string;
@@ -59,11 +63,10 @@ type CommonHashFields = {
 };
 
 const CommonHash: React.FC<
-  CommonHashFields & { validate(value: string): boolean; value: string }
-> = ({ alertMsg, children, copyable = false, link, validate, value, variant }) => {
-  const [state, setState] = React.useState<{ color: string; open: boolean }>({
-    open: false,
-    color: 'normal'
+  CommonHashFields & { validate(value: string): boolean; value: string; label: string }
+> = ({ alertMsg, children, copyable = false, label, link, validate, value, variant }) => {
+  const [state, setState] = React.useState<{ color?: string; open: boolean }>({
+    open: false
   });
 
   const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -71,11 +74,11 @@ const CommonHash: React.FC<
       return;
     }
     setState(({}) => {
-      return { open: false, color: 'info' };
+      return { open: false };
     });
   };
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     if (validate(value)) {
       setState({ open: true, color: 'red' });
     }
@@ -88,7 +91,7 @@ const CommonHash: React.FC<
           {alertMsg}
         </Alert>
       </Snackbar>
-      <CopyButtonWrapper value={value} enabled={copyable}>
+      <CopyButtonWrapper value={value} label={label} enabled={copyable}>
         <LinkWrapper link={link}>
           <Typography variant={variant} color={state.color}>
             {children}
@@ -119,16 +122,17 @@ const Hash: React.FC<CommonHashFields & { value: string; truncated?: boolean | T
   truncated = false,
   ...props
 }) => {
-  const validate = (value: string) => !isHex(value, HASH_LENGTH);
+  const validate = (value: string) => !isHex(value, 256);
   return (
-    <CommonHash {...props} validate={validate}>
+    <CommonHash {...props} label='hash' validate={validate}>
       {truncateText(props.value, truncated)}
     </CommonHash>
   );
 };
 
 const Address: React.FC<
-  CommonHashFields & { // TODO chain id both are this
+  CommonHashFields & {
+    // TODO chain id both are this
     name?: string;
     hash: string;
     truncated?: boolean | TruncateOpts;
@@ -136,7 +140,7 @@ const Address: React.FC<
 > = ({ truncated = false, ...props }) => {
   const validate = (value: string) => value[0] != '6' || value.length != 48;
   return (
-    <CommonHash {...props} value={props.hash} validate={validate}>
+    <CommonHash {...props} label='address' value={props.hash} validate={validate}>
       {props.name || truncateText(props.hash, truncated)}
     </CommonHash>
   );

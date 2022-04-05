@@ -1,13 +1,35 @@
-import { Avatar, Divider, Grid, Paper, Stack, Typography } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import {
+  Avatar,
+  Divider,
+  Grid,
+  IconButton,
+  Paper,
+  Stack,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import React from 'react';
-import CopyButton from './CopyButton';
 
-const textWithCopy = (value: string, content: JSX.Element): JSX.Element => {
+const textWithCopy = (
+  value: string,
+  staticCopy: (toCopy: string) => void,
+  content: JSX.Element
+): JSX.Element => {
   return (
     <Stack direction={'row'} spacing={1} alignItems={'center'}>
       {content}
       <Divider orientation='vertical' flexItem />
-      <CopyButton value={value} />
+      <Tooltip title={'copy'} placement='top'>
+        <IconButton
+          arial-label='copy'
+          onClick={() => {
+            staticCopy(value);
+          }}
+        >
+          <ContentCopyIcon />
+        </IconButton>
+      </Tooltip>
     </Stack>
   );
 };
