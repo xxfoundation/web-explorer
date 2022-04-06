@@ -17,6 +17,7 @@ import React from 'react';
 import Breadcrumb from '../../components/Breadcrumbs';
 import Link from '../../components/Link';
 import { Hash } from '../../components/ChainId';
+import { PaperWrap } from '../../components/Paper/PaperWrap'
 
 type Block = {
   number: number;
@@ -76,8 +77,8 @@ const rowParser = (item: Block) => {
 
 const BlocksTable = () => {
   return (
-    <Box>
-      <TableContainer component={Paper}>
+    <PaperWrap>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -89,7 +90,7 @@ const BlocksTable = () => {
           <TableBody>{data.map(rowParser)}</TableBody>
         </Table>
       </TableContainer>
-    </Box>
+    </PaperWrap>
   );
 };
 
@@ -98,7 +99,7 @@ const BlocksPage = () => {
     <>
       <Container sx={{ my: 5 }}>
         <Breadcrumb />
-        <Stack justifyContent={'space-between'} direction={'row'}>
+        <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
           <Typography variant='h1'>Blocks</Typography>
           <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>
             Download data
