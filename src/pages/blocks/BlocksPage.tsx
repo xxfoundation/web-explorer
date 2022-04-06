@@ -15,6 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
+import { Hash } from '../../components/ChainId';
 
 type Block = {
   number: number;
@@ -34,7 +35,7 @@ const data = [
     time: '2022-01-01',
     extrinsics: 13,
     blockProducer: { name: 'Joselito', id: 123 },
-    blockHash: '120983104'
+    blockHash: '0xb63e96a5fabbb2644c13348dd0723c83963270557dfc04d341b76c4c55aa3895'
   }
 ];
 
@@ -58,7 +59,13 @@ const rowParser = (item: Block) => {
         </Link>
       </TableCell>
       <TableCell>
-        <Link href={`/block/${item.number}`}>{item.blockHash}</Link>
+        <Link href={`/block/${item.number}`}>
+          <Hash
+            value={item.blockHash}
+            variant='body3'
+            truncated
+          />
+        </Link>
       </TableCell>
     </TableRow>
   );
