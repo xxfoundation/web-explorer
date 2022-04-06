@@ -61,7 +61,7 @@ const rowParser = (item: Block) => {
         </Link>
       </TableCell>
       <TableCell>
-        <Link to={`/block/${item.number}`}>
+        <Link to={`/blocks/${item.number}`}>
           <Hash
             value={item.blockHash}
             truncated
