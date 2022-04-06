@@ -1,13 +1,21 @@
 import { TablePagination as MuiTablePagination } from '@mui/material';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 
 const TablePagination: FC<{
   count: number;
+  page: number;
   rowsPerPage: number;
   rowsPerPageOptions?: number[];
-  onPageChange(): void;
-}> = ({ count, onPageChange, rowsPerPage, rowsPerPageOptions = [rowsPerPage] }) => {
-  const [page] = useState(0);
+  onRowsPerPageChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onPageChange?: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
+}> = ({
+  count,
+  page,
+  onPageChange = () => {},
+  onRowsPerPageChange = () => {},
+  rowsPerPage,
+  rowsPerPageOptions = [rowsPerPage]
+}) => {
   return count > 15 ? (
     <MuiTablePagination
       count={count}
@@ -15,7 +23,12 @@ const TablePagination: FC<{
       page={page}
       rowsPerPage={rowsPerPage}
       rowsPerPageOptions={rowsPerPageOptions}
-      onPageChange={onPageChange}
+      onRowsPerPageChange={(event) => {
+        onRowsPerPageChange(event);
+      }}
+      onPageChange={(_event, number) => {
+        onPageChange(_event, number);
+      }}
     />
   ) : (
     <></>

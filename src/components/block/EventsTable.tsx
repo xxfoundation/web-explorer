@@ -60,6 +60,7 @@ const BlockEvents = () => {
         </Table>
       </TableContainer>
       <TablePagination
+        page={0}
         count={data.length}
         rowsPerPage={20}
         rowsPerPageOptions={[20, 30, 40]}
