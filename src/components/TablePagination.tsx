@@ -16,7 +16,7 @@ const TablePagination: FC<{
   rowsPerPage = 15,
   rowsPerPageOptions = [rowsPerPage]
 }) => {
-  return count > rowsPerPage ? (
+  return (count > rowsPerPage || count > rowsPerPageOptions[0]) ? (
     <MuiTablePagination
       count={count}
       component={'div'}
