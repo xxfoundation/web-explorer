@@ -15,8 +15,9 @@ import {
 } from '@mui/material';
 import React from 'react';
 import Breadcrumb from '../../components/Breadcrumbs';
-import Link from '../../components/Link';
 import { Hash } from '../../components/ChainId';
+import Link from '../../components/Link';
+import TablePagination from '../../components/TablePagination';
 
 type Block = {
   number: number;
@@ -63,11 +64,7 @@ const rowParser = (item: Block) => {
       </TableCell>
       <TableCell>
         <Link to={`/blocks/${item.number}`}>
-          <Hash
-            value={item.blockHash}
-            variant='body3'
-            truncated
-          />
+          <Hash value={item.blockHash} variant='body3' truncated />
         </Link>
       </TableCell>
     </TableRow>
@@ -89,6 +86,12 @@ const BlocksTable = () => {
           <TableBody>{data.map(rowParser)}</TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        count={data.length}
+        rowsPerPage={20}
+        rowsPerPageOptions={[20, 30, 40]}
+        onPageChange={() => {}}
+      />
     </Box>
   );
 };

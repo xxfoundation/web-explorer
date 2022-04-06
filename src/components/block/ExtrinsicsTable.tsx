@@ -10,8 +10,9 @@ import {
   TableRow
 } from '@mui/material';
 import React from 'react';
-import Link from '../Link';
 import { Hash } from '../ChainId';
+import Link from '../Link';
+import TablePagination from '../TablePagination';
 
 const header = ['extrinsic id', 'hash', 'time', 'result', 'action', 'view all'];
 
@@ -60,18 +61,26 @@ const BlockExtrinsics = () => {
     }
   ];
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {header.map((h) => {
-              return <TableCell key={h}>{h}</TableCell>;
-            })}
-          </TableRow>
-        </TableHead>
-        <TableBody>{data.map(rowParser)}</TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {header.map((h) => {
+                return <TableCell key={h}>{h}</TableCell>;
+              })}
+            </TableRow>
+          </TableHead>
+          <TableBody>{data.map(rowParser)}</TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        count={data.length}
+        rowsPerPage={20}
+        rowsPerPageOptions={[20, 30, 40]}
+        onPageChange={() => {}}
+      />
+    </>
   );
 };
 
