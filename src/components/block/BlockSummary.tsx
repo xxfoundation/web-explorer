@@ -6,7 +6,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { withCopy } from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
-import SummaryPaper from '../SummaryPaper';
+import SummaryPaper from '../Paper/SummaryPaper';
 
 const BackAndForwardArrows = () => {
   return (
@@ -23,8 +23,8 @@ const BackAndForwardArrows = () => {
 
 const BlockSummaryHeader: React.FC<{ number: string }> = ({ number }) => {
   return (
-    <Stack direction={'row'} justifyContent={'space-between'}>
-      <Typography>Block No. {number}</Typography>
+    <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
+      <Typography variant='h1'>Block No. {number}</Typography>
       <Stack direction={'row'} justifyContent={'space-around'} spacing={2}>
         <Link to='/blocks'>blocks</Link>
         <Divider orientation='vertical' flexItem />
@@ -106,14 +106,10 @@ const BlockSummary: React.FC<{ data: BlockSummaryTyp; number: string }> = ({ dat
     return summaryDataParser(data);
   }, [data]);
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <BlockSummaryHeader number={number} />
-      </Grid>
-      <Grid item xs={12}>
-        <SummaryPaper data={summaryData} />
-      </Grid>
-    </Grid>
+    <>
+      <BlockSummaryHeader number={number} />
+      <SummaryPaper data={summaryData} />
+    </>
   );
 };
 
