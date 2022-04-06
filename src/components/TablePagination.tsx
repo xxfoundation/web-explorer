@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 const TablePagination: FC<{
   count: number;
   page: number;
-  rowsPerPage: number;
+  rowsPerPage?: number;
   rowsPerPageOptions?: number[];
   onRowsPerPageChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onPageChange?: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
@@ -13,10 +13,10 @@ const TablePagination: FC<{
   page,
   onPageChange = () => {},
   onRowsPerPageChange = () => {},
-  rowsPerPage,
+  rowsPerPage = 15,
   rowsPerPageOptions = [rowsPerPage]
 }) => {
-  return count > 15 ? (
+  return count > rowsPerPage ? (
     <MuiTablePagination
       count={count}
       component={'div'}

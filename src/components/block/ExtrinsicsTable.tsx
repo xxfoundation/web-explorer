@@ -74,13 +74,7 @@ const BlockExtrinsics = () => {
           <TableBody>{data.map(rowParser)}</TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        count={data.length}
-        page={0}
-        rowsPerPage={20}
-        rowsPerPageOptions={[20, 30, 40]}
-        onPageChange={() => {}}
-      />
+      <TablePagination count={data.length} page={0} />
     </>
   );
 };

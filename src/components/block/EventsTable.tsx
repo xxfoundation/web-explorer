@@ -59,13 +59,7 @@ const BlockEvents = () => {
           <TableBody>{data.map(rowParser)}</TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        page={0}
-        count={data.length}
-        rowsPerPage={20}
-        rowsPerPageOptions={[20, 30, 40]}
-        onPageChange={() => {}}
-      />
+      <TablePagination page={0} count={data.length} />
     </>
   );
 };

@@ -89,9 +89,6 @@ const BlocksTable = () => {
       <TablePagination
         page={0}
         count={data.length}
-        rowsPerPage={20}
-        rowsPerPageOptions={[20, 30, 40]}
-        onPageChange={() => {}}
       />
     </Box>
   );
