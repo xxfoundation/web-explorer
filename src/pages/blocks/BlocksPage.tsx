@@ -1,14 +1,11 @@
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { LoadingButton } from '@mui/lab';
 import {
-  Box,
   Container,
-  Paper,
   Stack,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   Typography
@@ -18,6 +15,7 @@ import Breadcrumb from '../../components/Breadcrumbs';
 import Link from '../../components/Link';
 import { Hash } from '../../components/ChainId';
 import { PaperWrap } from '../../components/Paper/PaperWrap'
+import { TableWrap } from '../../components/Tables/TableContainer'
 
 type Block = {
   number: number;
@@ -78,7 +76,7 @@ const rowParser = (item: Block) => {
 const BlocksTable = () => {
   return (
     <PaperWrap>
-      <TableContainer>
+      <TableWrap>
         <Table>
           <TableHead>
             <TableRow>
@@ -89,7 +87,7 @@ const BlocksTable = () => {
           </TableHead>
           <TableBody>{data.map(rowParser)}</TableBody>
         </Table>
-      </TableContainer>
+      </TableWrap>
     </PaperWrap>
   );
 };
