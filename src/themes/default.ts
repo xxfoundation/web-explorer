@@ -18,6 +18,17 @@ export const theme = createTheme({
     text: {
       primary: '#4f4f4f'
     },
+    grey: {
+      50: '#FFFFFF',
+      100: '#FCFCFC', // light backgrounds
+      200: '#EAEAEA', // line grey
+      300: '#D2D2D2', // grey
+      400: '#9A9A9A', // med grey 2
+      500: '#7A7A7A', // med grey
+      600: '#4F4F4F', // backgrounds
+      700: '#3D3D3D', // dark grey
+      800: '#27272B' // black header
+    },
     // color coding used for metrics
     veryGood: {
       main: '#7BE03D'
