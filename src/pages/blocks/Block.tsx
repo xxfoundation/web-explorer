@@ -24,7 +24,7 @@ const Block = () => {
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <BlockSummary number={number} data={data} />
-      <Box sx={{ mt: 4 }}>
+      <Box sx={{ mt: 2 }}>
         <BlockDetailedEventsTabs events={[1, 2, 3]} extrinsics={[1, 2]} />
       </Box>
     </Container>
