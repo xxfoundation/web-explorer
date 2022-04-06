@@ -13,7 +13,7 @@ const data = {
   parentHash: '0x6b836d45a934c4a008e316159450f0b01470056aae34798ed16ef7d412912dff',
   stateRoot: '0xb63e96a5fabbb2644c13348dd0723c83963270557dfc04d341b76c4c55aa3895',
   extrinsicsRoot: '0x43f58a2e0d8c392ab8261a1b89a69fa4eeb2d1ce4332bae9fc734706eda49266',
-  blockProducer: { hash: '123123131', name: 'ooooo' },
+  blockProducer: { hash: '6VSduRsfo5nnZW4aafVvE8wdSq8tpuSTLWxqT1STqRcqy2kg', name: 'ooooo' },
   blockTime: 123131,
   specVersion: 102
 };

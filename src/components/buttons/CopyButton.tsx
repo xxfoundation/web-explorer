@@ -1,24 +1,21 @@
-import { Divider, Stack } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { IconButton } from '@mui/material';
+import { Divider, IconButton, Stack, Tooltip } from '@mui/material';
 import React from 'react';
-
-function copyTextToClipboard(text: string) {
-  if ('clipboard' in navigator) {
-    return navigator.clipboard.writeText(text);
-  }
-}
+import useCopyClipboard from '../../hooks/useCopyToClibboard';
 
 const CopyButton: React.FC<{ value: string }> = ({ value }) => {
+  const staticCopy = useCopyClipboard()[1];
   return (
-    <IconButton
-      arial-label='copy'
-      onClick={() => {
-        copyTextToClipboard(value);
-      }}
-    >
-      <ContentCopyIcon />
-    </IconButton>
+    <Tooltip title={'copy'} placement='top'>
+      <IconButton
+        arial-label='copy'
+        onClick={() => {
+          staticCopy(value);
+        }}
+      >
+        <ContentCopyIcon />
+      </IconButton>
+    </Tooltip>
   );
 };
 
@@ -33,5 +30,3 @@ export const withCopy = (value: string, content: JSX.Element): JSX.Element => {
     </Stack>
   );
 };
-
-

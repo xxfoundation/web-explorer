@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import Link from '../Link';
+import { Hash } from '../ChainId';
 
 const header = ['extrinsic id', 'hash', 'time', 'result', 'action', 'view all'];
 
@@ -28,7 +29,9 @@ const rowParser = (rowData: ExtrinsicsTyp) => {
       <TableCell>
         <Link to={`/extrinsics/${rowData.extrinsicId}`}>{rowData.extrinsicId}</Link>
       </TableCell>
-      <TableCell>{rowData.hash}</TableCell>
+      <TableCell>
+        <Hash value={rowData.hash} variant='body3' truncated />
+      </TableCell>
       <TableCell>{rowData.time}</TableCell>
       <TableCell>
         <CheckCircleOutlineIcon color='success' />
@@ -52,7 +55,7 @@ const BlockExtrinsics = () => {
       extrinsicId: '312313-3',
       action: 'parachainsystem (set_validation_data)',
       time: '15h 49min',
-      hash: '0xb5913131231231231',
+      hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
       eventId: 12313
     }
   ];
