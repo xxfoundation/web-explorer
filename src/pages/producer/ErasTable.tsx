@@ -8,7 +8,7 @@ import {
   TableRow
 } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from '../../components/Link';
 
 type Era = {
   index: string,
@@ -16,6 +16,7 @@ type Era = {
   endBlock: number,
   rewardPoint: number,
   blocksProduced: number
+  blockNumber: number
 }
 
 const EraRow = (rowData: Era) => {
@@ -25,7 +26,11 @@ const EraRow = (rowData: Era) => {
       <TableCell><Link to={`/block/${rowData.startBlock}`}>{rowData.startBlock}</Link></TableCell>
       <TableCell><Link to={`/block/${rowData.endBlock}`}>{rowData.endBlock}</Link></TableCell>
       <TableCell>{rowData.rewardPoint}</TableCell>
-      <TableCell><Link to={`/producer/${rowData.blocksProduced}`}>{rowData.blocksProduced}</Link></TableCell>
+      <TableCell>
+        <Link to={`/blocks/${rowData.blockNumber}/producer/${rowData.blocksProduced}`}>
+          {rowData.blocksProduced}
+        </Link>
+      </TableCell>
     </TableRow>
   );
 };
@@ -36,7 +41,8 @@ const eras = [
     startBlock: 1245151,
     endBlock: 15666655,
     rewardPoint: 12313.31231,
-    blocksProduced: 113
+    blocksProduced: 113,
+    blockNumber: 123123
   }
 ];
 

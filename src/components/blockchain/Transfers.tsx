@@ -1,8 +1,9 @@
-import { Box, Grid, Link, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import React from 'react';
+import FormatBalance from '../FormatBalance';
+import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
-import FormatBalance from '../FormatBalance';
 
 type Transfer = {
   extrinsicIndex: string;
@@ -25,11 +26,11 @@ const transfers: Transfer[] = Array.from(Array(9).keys()).slice(1).map((i) => {
 });
 
 const addMaskToTransactionTargets = (hash: string) => {
-  const href = `/transfer/${hash}`;
+  const href = `/transfers/${hash}`;
   if (hash.length > 15) {
     return (
       <Tooltip title={hash} placement='top' arrow>
-        <Link href={href} underline='hover'>
+        <Link to={href} underline='hover'>
           {hash.split('').slice(0, 12).join('') + '...'}
         </Link>
       </Tooltip>
@@ -37,7 +38,7 @@ const addMaskToTransactionTargets = (hash: string) => {
   }
 
   return (
-    <Link href={href} underline='hover'>
+    <Link to={href} underline='hover'>
       {hash}
     </Link>
   );
@@ -71,7 +72,7 @@ const ItemHandler = (currentData: Transfer) => {
     <Box key={currentData.id} sx={{ mb: 4 }}>
       <Typography variant='body2' sx={{ mb: 1 }}>
         EXTRINSIC #{' '}
-        <Link href={`/extrinsics/${currentData.id}`} underline='hover'>
+        <Link to={`/extrinsics/${currentData.id}`} underline='hover'>
           {currentData.id}
         </Link>
       </Typography>

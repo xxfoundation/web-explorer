@@ -26,7 +26,7 @@ const BlockSummaryHeader: React.FC<{ number: string }> = ({ number }) => {
     <Stack direction={'row'} justifyContent={'space-between'}>
       <Typography>Block No. {number}</Typography>
       <Stack direction={'row'} justifyContent={'space-around'} spacing={2}>
-        <Link to='/block'>blocks</Link>
+        <Link to='/blocks'>blocks</Link>
         <Divider orientation='vertical' flexItem />
         <BackAndForwardArrows />
       </Stack>
@@ -52,8 +52,6 @@ const backAndForwardWithLabel = (parentHash: string) => {
     </Stack>
   );
 };
-
-const LinkWrapper = (link: string, text: string | number) => <Link to={link}>{text}</Link>;
 
 type BlockSummaryTyp = {
   time: string;
@@ -100,7 +98,7 @@ const summaryDataParser = (data: BlockSummaryTyp) => [
   },
   { label: 'block producer', value: producerField(data.blockProducer) },
   { label: 'block time', value: data.blockTime },
-  { label: 'spec version', value: LinkWrapper('#', data.specVersion) }
+  { label: 'spec version', value: <Link to={'#'}>{data.specVersion}</Link> }
 ];
 
 const BlockSummary: React.FC<{ data: BlockSummaryTyp; number: string }> = ({ data, number }) => {

@@ -1,12 +1,20 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from '../../components/Link';
 
 type Stake = {
   account: string;
   stake: string;
   share: string;
-}
+};
 
 const EraStake = ({ account, share, stake }: Stake) => {
   return (

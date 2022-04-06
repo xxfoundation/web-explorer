@@ -1,12 +1,9 @@
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import {
-  BrowserRouter as Router, Route, Switch
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import SiteFooter from './components/Footer';
 import SiteHeader from './components/Header';
-import BlockProducer from './pages/producer/_nameOrId';
 import Blocks from './pages/blocks';
 import BlockChain from './pages/index';
 import { theme } from './themes/default';
@@ -22,29 +19,26 @@ function App() {
           </Route>
           <Route path='/blocks'>
             <Blocks />
-            {/* I can do this only here for now */}
           </Route>
-          <Route path='/producer/:id'>
-            <BlockProducer />
-          </Route>
-          <Route path='/extrinsic'>
+          <Route path='/extrinsics'>
             <h1>extrinsics</h1>
           </Route>
-          <Route path='/transfer'>
+          <Route path='/transfers'>
             <h1>transfers</h1>
           </Route>
-          <Route path='/event'>
+          <Route path='/events'>
             <h1>events</h1>
           </Route>
           <Route path='/governance'>
             <h1>governance</h1>
           </Route>
-          <Route path='/account'>
+          <Route path='/accounts'>
             <h1>accounts</h1>
           </Route>
           <Route path='/staking'>
             <h1>staking</h1>
           </Route>
+          {/* TODO configure 404 page */}
         </Switch>
         <SiteFooter />
       </ThemeProvider>

@@ -1,8 +1,8 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Menu } from '@mui/material';
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { useToggle } from '../../hooks';
+import Link from '../Link';
 import { MenuButton, MenuLink } from './menu.styles';
 
 export default function Blockchain() {
@@ -32,12 +32,12 @@ export default function Blockchain() {
             'aria-labelledby': 'blockchain-button'
           }}
         >
-          <MenuLink onClick={close}><Link to={'/block'}>Blocks</Link></MenuLink>
-          <MenuLink onClick={close}><Link to='/extrinsic'>Extrinsics</Link></MenuLink>
-          <MenuLink onClick={close}><Link to='/transfer'>Transfers</Link></MenuLink>
-          <MenuLink onClick={close}><Link to='/event'>Events</Link></MenuLink>
+          <MenuLink onClick={close}><Link to={'/blocks'}>Blocks</Link></MenuLink>
+          <MenuLink onClick={close}><Link to='/extrinsics'>Extrinsics</Link></MenuLink>
+          <MenuLink onClick={close}><Link to='/transfers'>Transfers</Link></MenuLink>
+          <MenuLink onClick={close}><Link to='/events'>Events</Link></MenuLink>
         </Menu>
       )}
     </>
-  )
+  );
 }

@@ -10,7 +10,7 @@ import {
   TableRow
 } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from '../Link';
 import { Hash } from '../ChainId';
 
 const header = ['extrinsic id', 'hash', 'time', 'result', 'action', 'view all'];
@@ -27,7 +27,7 @@ const rowParser = (rowData: ExtrinsicsTyp) => {
   return (
     <TableRow key={rowData.extrinsicId}>
       <TableCell>
-        <Link to={`/extrinsic/${rowData.extrinsicId}`}>{rowData.extrinsicId}</Link>
+        <Link to={`/extrinsics/${rowData.extrinsicId}`}>{rowData.extrinsicId}</Link>
       </TableCell>
       <TableCell>
         <Hash value={rowData.hash} variant='body3' truncated />
@@ -40,7 +40,7 @@ const rowParser = (rowData: ExtrinsicsTyp) => {
         <Link to='#'>{rowData.action}</Link>
       </TableCell>
       <TableCell>
-        <Link to={`/event/${rowData.eventId}`}>
+        <Link to={`/events/${rowData.eventId}`}>
           <ArrowForwardIosIcon />
         </Link>
       </TableCell>

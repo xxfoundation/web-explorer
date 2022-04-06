@@ -1,7 +1,8 @@
-import React from 'react';
-import TimeAgo from '../TimeAgo';
-import { Box, Grid, Link, Typography } from '@mui/material';
 import ClockIcon from '@mui/icons-material/AccessTime';
+import { Box, Grid, Typography } from '@mui/material';
+import React from 'react';
+import Link from '../Link';
+import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
 import { Block, BlockStatus } from './types';
 
@@ -28,7 +29,7 @@ const BlockRow = ({ events, extrinsic: extrinsics, id, status, timestamp }: Bloc
     <Box key={id} sx={{ mb: 4 }}>
       <Grid container>
         <Grid item xs>
-          <Link href={`/blocks/${id}`} underline='hover' variant='body2'>
+          <Link to={`/blocks/${id}`} underline='hover' variant='body2'>
             {id}
           </Link>
         </Grid>
@@ -38,11 +39,11 @@ const BlockRow = ({ events, extrinsic: extrinsics, id, status, timestamp }: Bloc
       </Grid>
       <Grid container sx={{ mt: 1 }}>
         <Grid item xs>
-          <Link href='' underline='hover' variant='body3'>
+          <Link to='' underline='hover' variant='body3'>
             {extrinsics} extrinsics
           </Link>{' '}
           <Typography variant='body3' component='span'>|</Typography>{' '}
-          <Link href={'/event'} underline='hover' variant='body3'>
+          <Link to={'/events'} underline='hover' variant='body3'>
             {events} event
           </Link>
         </Grid>

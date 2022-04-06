@@ -1,11 +1,12 @@
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from '@mui/material';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import InternalLink from '../Link';
 
 export default function MobileNav() {
   const [opened, setOpened] = useState(false);
@@ -67,29 +68,29 @@ export default function MobileNav() {
               }}
             >
               <Typography variant='h3'>
-                <Link to='/' onClick={close}>Blockchain</Link>
+                <InternalLink to='/' onClick={close}>Blockchain</InternalLink>
               </Typography>
-              <Link to={'/block'} onClick={close}>Blocks</Link>
-              <Link to='/extrinsic' onClick={close}>Extrinsics</Link>
-              <Link to='/transfer' onClick={close}>Transfers</Link>
-              <Link to='/event' onClick={close}>Events</Link>
+              <InternalLink to={'/blocks'} onClick={close}>Blocks</InternalLink>
+              <InternalLink to='/extrinsics' onClick={close}>Extrinsics</InternalLink>
+              <InternalLink to='/transfers' onClick={close}>Transfers</InternalLink>
+              <InternalLink to='/events' onClick={close}>Events</InternalLink>
               
               <Typography variant='h3' sx={{ mt: 2 }}>
-                <Link to='/staking' onClick={close}>Staking</Link>
+                <InternalLink to='/staking' onClick={close}>Staking</InternalLink>
               </Typography>
               
               <Typography variant='h3' sx={{ mt: 2 }}>
-                <Link to='governance' onClick={close}>Governance</Link>
+                <InternalLink to='governance' onClick={close}>Governance</InternalLink>
               </Typography>
-              <Link to='/' onClick={close}>Overview</Link>
-              <Link to='/' onClick={close}>Democracy</Link>
-              <Link to='/' onClick={close}>Council</Link>
-              <Link to='/' onClick={close}>Tech Committee</Link>
-              <Link to='/' onClick={close}>Treasury</Link>
-              <Link to='/' onClick={close}>Bounties</Link>
+              <Link href='/' onClick={close}>Overview</Link>
+              <Link href='/' onClick={close}>Democracy</Link>
+              <Link href='/' onClick={close}>Council</Link>
+              <Link href='/' onClick={close}>Tech Committee</Link>
+              <Link href='/' onClick={close}>Treasury</Link>
+              <Link href='/' onClick={close}>Bounties</Link>
 
               <Typography variant='h3' sx={{ mt: 2 }}>
-                <Link to='/accounts' onClick={close}>Accounts</Link>
+                <InternalLink to='/accounts' onClick={close}>Accounts</InternalLink>
               </Typography>
               
             </Box>

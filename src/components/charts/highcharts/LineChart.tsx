@@ -66,7 +66,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
           margin: -14,
           style: { fontWeight: 'bolder' }
         },
-        labels: { y: 30, formatter: labelFormatters?.xAxis },
+        labels: { y: 20, formatter: labelFormatters?.xAxis },
         tickWidth: 1,
         // TODO tickPixelInterval: pixelIntervalX, create a parameter to control this better
         offset: 20,
@@ -77,7 +77,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
       yAxis: {
         gridLineWidth: 0,
         title: { text: '' },
-        labels: { align: 'right', x: 30, formatter: labelFormatters?.yAxis },
+        labels: { align: 'right', x: 20, formatter: labelFormatters?.yAxis },
         min: 0,
         max: maxY
       },
