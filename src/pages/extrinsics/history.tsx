@@ -1,16 +1,22 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { LoadingButton } from '@mui/lab';
 import {
+  Box,
   Container,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Typography
 } from '@mui/material';
 import React, { useMemo, useState } from 'react';
+import Breadcrumb from '../../components/Breadcrumbs';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import TablePagination from '../../components/TablePagination';
@@ -95,10 +101,10 @@ const HistoryTable = () => {
         onPageChange={(_: unknown, number: number) => {
           setPage(number);
         }}
-        rowsPerPageOptions={[20,30,40,50]}
+        rowsPerPageOptions={[20, 30, 40, 50]}
         onRowsPerPageChange={(event) => {
-          setRowsPerPage(parseInt(event.target.value, 20))
-          setPage(0)
+          setRowsPerPage(parseInt(event.target.value, 20));
+          setPage(0);
         }}
       />
     </TableContainer>
@@ -106,10 +112,22 @@ const HistoryTable = () => {
 };
 
 const HistoryPage = () => {
+  const totalOfExtrinsics = 32987;
   return (
     <Container sx={{ mt: 5, mb: 12 }}>
-      {/* chart */}
-      <HistoryTable />
+      <Breadcrumb />
+      <Stack justifyContent={'space-between'} direction={'row'}>
+        <Typography variant='h1'>Extrinsic History</Typography>
+        <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>
+          Download data
+        </LoadingButton>
+      </Stack>
+      <span>pretty chart here</span>
+      <Box>
+        <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>
+        <span hidden>filters placeholder</span>
+        <HistoryTable />
+      </Box>
     </Container>
   );
 };
