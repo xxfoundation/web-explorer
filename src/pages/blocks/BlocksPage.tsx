@@ -62,7 +62,7 @@ const rowParser = (item: Block) => {
         </Link>
       </TableCell>
       <TableCell>
-        <Link href={`/block/${item.number}`}>
+        <Link to={`/block/${item.number}`}>
           <Hash
             value={item.blockHash}
             variant='body3'

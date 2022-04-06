@@ -39,7 +39,8 @@ export const theme = createTheme({
     fontFamily: '\'Roboto\', sans-serif',
     h1: {
       fontSize: 36,
-      fontWeight: 700
+      fontWeight: 700,
+      color: '#3D3D3D'
     },
     h2: {
       fontSize: 36,
