@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
@@ -24,7 +24,9 @@ const Block = () => {
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <BlockSummary number={number} data={data} />
-      <BlockDetailedEventsTabs events={[1, 2, 3]} extrinsics={[1, 2]} />
+      <Box sx={{ mt: 4 }}>
+        <BlockDetailedEventsTabs events={[1, 2, 3]} extrinsics={[1, 2]} />
+      </Box>
     </Container>
     
   );
