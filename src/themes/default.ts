@@ -15,6 +15,12 @@ export const theme = createTheme({
       main: '#00A2D6', // sets link color
       contrastText: '#FFF'
     },
+    warning: {
+      main: '#EA5400',
+      light: '#FFF5D1',
+      dark: '#D64D00',
+      contrastText: '#FFFFFF'
+    },
     text: {
       primary: '#4f4f4f'
     },
