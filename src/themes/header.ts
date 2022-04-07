@@ -28,7 +28,10 @@ export const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
     },
     grey: {
       A100: '#FFFFFF', // A100 -> A000
-      A700: '#7A7A7A',
+    },
+    text: {
+      primary: '#7A7A7A', // menu link color
+      secondary: '#00A2D6' // menu link hover color
     }
   },
   shape: {
