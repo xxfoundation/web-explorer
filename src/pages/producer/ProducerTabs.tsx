@@ -29,10 +29,10 @@ const ProducerTabs: React.FC<{ eras: string[]; nominators: string[] }> = ({ eras
           />
         </Tabs>
       </Box>
-      <TabPanel value={value} name='nominators'>
+      <TabPanel value={value} index='nominators'>
         <NominatorsTable />
       </TabPanel>
-      <TabPanel value={value} name='eras'>
+      <TabPanel value={value} index='eras'>
         <ErasTable />
       </TabPanel>
     </Box>
