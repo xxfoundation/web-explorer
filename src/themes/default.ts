@@ -70,6 +70,7 @@ export const theme = createTheme({
     body3: {
       fontWeight: 400,
       fontSize: 14,
+      lineHeight: 1.75,
       color: '#7A7A7A'
     },
     body4: {

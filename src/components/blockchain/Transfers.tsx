@@ -1,4 +1,4 @@
-import { Box, Grid, Link, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Link, Tooltip, Typography, Stack } from '@mui/material';
 import React from 'react';
 import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
@@ -45,20 +45,20 @@ const addMaskToTransactionTargets = (hash: string) => {
 
 const gridHeader = (data: Transfer, elem: keyof Transfer) => {
   return (
-    <>
-      <Grid item component={'span'} xs={4}>
+    <Grid container>
+      <Grid item xs={4}>
         <Typography variant='body3'>{elem.toString().toUpperCase()}</Typography>
       </Grid>
-      <Grid item component={'span'}>
-        {addMaskToTransactionTargets(data[elem].toString())}
+      <Grid item>
+        <Typography variant='body3'>{addMaskToTransactionTargets(data[elem].toString())}</Typography>
       </Grid>
-    </>
+    </Grid>
   )
 }
 
 const listItemSecondaryText = (data: Transfer) => {
   return (
-    <Grid component={'span'} container maxWidth={200}>
+    <Grid container maxWidth={200}>
       {gridHeader(data, 'from')}
       {gridHeader(data, 'to')}
     </Grid>
@@ -74,25 +74,17 @@ const ItemHandler = (currentData: Transfer) => {
           {currentData.id}
         </Link>
       </Typography>
-      <Grid container>
-        <Grid item xs>
-          <Typography variant='body3' sx={{ lineHeight: 1.75 }}>
-            {listItemSecondaryText(currentData)}
+      <Stack direction='row' justifyContent={'space-between'}>
+        {listItemSecondaryText(currentData)}
+        <Stack alignItems={'flex-end'}>
+          <Typography variant='body3'>
+            <TimeAgo date={currentData.timestamp} />
           </Typography>
-        </Grid>
-        <Grid item xs='auto' textAlign='right'>
-          <Grid>
-            <Typography variant='body3' sx={{ lineHeight: 1.75 }}>
-              <TimeAgo date={currentData.timestamp} />
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography variant='body3'>
-              <FormatBalance value={currentData.amount} />
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
+          <Typography variant='body3'>
+            <FormatBalance value={currentData.amount} />
+          </Typography>
+        </Stack>
+      </Stack>
     </Box >
   );
 };
