@@ -36,7 +36,7 @@ const extrinsicToRow = (extrinsic: Extrinsic) => {
         <Link to={`/extrinsics/${extrinsic.id}`}>{extrinsic.id}</Link>
       </TableCell>
       <TableCell>
-        <Link to={`/blocks/${extrinsic.block}`}>item.block</Link>
+        <Link to={`/blocks/${extrinsic.block}`}>{extrinsic.block}</Link>
       </TableCell>
       <TableCell>
         <Link to={`/extrinsics/${extrinsic.hash}`}>
@@ -103,7 +103,7 @@ const HistoryTable = () => {
         }}
         rowsPerPageOptions={[20, 30, 40, 50]}
         onRowsPerPageChange={(event) => {
-          setRowsPerPage(parseInt(event.target.value, 20));
+          setRowsPerPage(parseInt(event.target.value));
           setPage(0);
         }}
       />
