@@ -15,7 +15,7 @@ import {
   TableRow,
   Typography
 } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
@@ -57,20 +57,22 @@ const extrinsicToRow = (extrinsic: Extrinsic) => {
   );
 };
 
+const sampleData = () => {
+  const items = [];
+  for (let step = 0; step < 21; step++) {
+    items.push({
+      id: '357706-' + step,
+      block: 357968,
+      hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
+      time: '32 min',
+      action: 'balances (transfer)'
+    });
+  }
+  return items;
+};
+
 const HistoryTable = () => {
-  const extrinsicsHistoryData = useMemo(() => {
-    const items = [];
-    for (let step = 0; step < 21; step++) {
-      items.push({
-        id: '357706-' + step,
-        block: 357968,
-        hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
-        time: '32 min',
-        action: 'balances (transfer)'
-      });
-    }
-    return items;
-  }, []);
+  const extrinsicsHistoryData = sampleData();
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
   return (

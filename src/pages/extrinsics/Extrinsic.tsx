@@ -1,7 +1,7 @@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
-import { Breadcrumbs, Button, Divider, Grid, Stack, Typography } from '@mui/material';
+import { Breadcrumbs, Button, Container, Divider, Stack, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import RouteBreadcrumb from '../../components/Breadcrumbs';
@@ -10,6 +10,7 @@ import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import SummaryPaper from '../../components/SummaryPaper';
 import Tag from '../../components/Tags/Tag';
+import ExtrinsicPageEventsTabs from './ExtrinsicTabs';
 
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
@@ -137,20 +138,12 @@ const Extrinsic = () => {
     ];
   }, []);
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <RouteBreadcrumb />
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant='h1'>Extrinsic No.{extrinsicId}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <SummaryPaper data={extrinsicsDetailData} />
-      </Grid>
-      <Grid>
-        
-      </Grid>
-    </Grid>
+    <Container sx={{ my: 5 }}>
+      <RouteBreadcrumb />
+      <Typography variant='h1'>Extrinsic No.{extrinsicId}</Typography>
+      <SummaryPaper data={extrinsicsDetailData} />
+      <ExtrinsicPageEventsTabs />
+    </Container>
   );
 };
 

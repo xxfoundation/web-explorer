@@ -1,34 +1,102 @@
-import { Box, Tab, Tabs } from '@mui/material';
-import React from 'react';
-import { TabPanel, TabText } from '../../components/Tabs';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import {
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
+import React, { useState } from 'react';
+import { Hash } from '../../components/ChainId';
+import Link from '../../components/Link';
+import TablePagination from '../../components/TablePagination';
+import TabsWithPanels, { TabText } from '../../components/Tabs';
 
-// const hash = '123123';
-// const number = '1231313';
+type EventType = {
+  id: string;
+  hash: string;
+  action: string;
+};
 
-const BlockDetailedEventsTabs: React.FC<{ events: number[] }> = ({ events }) => {
-  const [value, setValue] = React.useState('events');
+const parseEventRow = (item: EventType) => {
+  return (
+    <TableRow>
+      <TableCell colSpan={3}>{item.id}</TableCell>
+      <TableCell colSpan={3}>
+        <Hash value={item.hash} variant='body3' truncated />
+      </TableCell>
+      <TableCell colSpan={6}>{item.action}</TableCell>
+      <TableCell>
+        <Link to={`/events/${item.id}`}>
+          <ChevronRightIcon />
+        </Link>
+      </TableCell>
+    </TableRow>
+  );
+};
 
-  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+const sampleData = () => {
+  const items = [];
+  for (let step = 0; step < 9; step++) {
+    items.push({
+      id: '287845-' + step,
+      hash: '0x9b9721540932d6989b92aab8cc11469cc4c3e5a5ca88053c563b4e49d910a869',
+      action: 'Balances (Withdraw)'
+    });
+  }
+  return items;
+};
 
+const staticDataPagination = (page: number, rowsPerPage: number, data: EventType[]) => {
+  return rowsPerPage > 0 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : data;
+};
+
+const EventsTable = () => {
+  const [rowsPerPage, setRowsPerPage] = useState(4);
+  const [page, setPage] = useState(0);
+  const data = sampleData();
+  return (
+    <>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell colSpan={3}>event id</TableCell>
+              <TableCell colSpan={3}>hash</TableCell>
+              <TableCell colSpan={6}>action</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{staticDataPagination(page, rowsPerPage, data).map(parseEventRow)}</TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        page={page}
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(_: unknown, number: number) => {
+          setPage(number);
+        }}
+        rowsPerPageOptions={[2, 4, 6]}
+        onRowsPerPageChange={({ target: { value } }) => {
+          setRowsPerPage(parseInt(value));
+          setPage(0);
+        }}
+      />
+    </>
+  );
+};
+
+const ExtrinsicPageEventsTabs: React.FC = () => {
+  const panels = [{ label: <TabText message='events' count={9} />, content: <EventsTable /> }];
   return (
     <Box>
-      <Box>
-        <Tabs value={value} onChange={handleChange} aria-label='block event tabs'>
-          <Tab
-            label={<TabText message='events' count={events.length} />}
-            value='events'
-            id='simple-tab-1'
-            aria-controls='tabpanel-events'
-          />
-        </Tabs>
-      </Box>
-      <TabPanel value={value} name='events'>
-        <h1>lalala</h1>
-      </TabPanel>
+      <TabsWithPanels panels={panels} tabsLabel='extrinsic page events' />
     </Box>
   );
 };
 
-export default BlockDetailedEventsTabs;
+export default ExtrinsicPageEventsTabs;
