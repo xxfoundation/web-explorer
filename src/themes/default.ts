@@ -65,8 +65,9 @@ export const theme = createTheme({
       color: '#4f4f4f'
     },
     h4: {
-      fontSize: 12,
-      fontWeight: 400,
+      fontSize: 14,
+      fontWeight: 500,
+      letterSpacing: 0.5,
       textTransform: 'uppercase'
     },
     h5: {

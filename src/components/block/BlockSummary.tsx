@@ -7,15 +7,16 @@ import { Link } from 'react-router-dom';
 import { withCopy } from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
 import SummaryPaper from '../Paper/SummaryPaper';
+import { BlockNav } from './Block.styled';
 
 const BackAndForwardArrows = () => {
   return (
     <ButtonGroup>
-      <IconButton aria-label='back'>
-        <ArrowBackIcon />
+      <IconButton aria-label='back' size='small'>
+        <ArrowBackIcon fontSize='small' />
       </IconButton>
-      <IconButton arial-label='forward'>
-        <ArrowForwardIcon />
+      <IconButton arial-label='forward' size='small'>
+        <ArrowForwardIcon fontSize='small' />
       </IconButton>
     </ButtonGroup>
   );
@@ -25,11 +26,11 @@ const BlockSummaryHeader: React.FC<{ number: string }> = ({ number }) => {
   return (
     <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
       <Typography variant='h1'>Block No. {number}</Typography>
-      <Stack direction={'row'} justifyContent={'space-around'} spacing={2}>
-        <Link to='/blocks'>blocks</Link>
-        <Divider orientation='vertical' flexItem />
+      <BlockNav direction={'row'} alignItems={'center'} spacing={2}>
+        <Link to='/blocks'><Typography variant='h4'>blocks</Typography></Link>
+        <Divider orientation='vertical' variant='middle' flexItem />
         <BackAndForwardArrows />
-      </Stack>
+      </BlockNav>
     </Stack>
   );
 };
