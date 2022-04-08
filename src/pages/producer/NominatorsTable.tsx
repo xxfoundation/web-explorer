@@ -1,14 +1,7 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 import Link from '../../components/Link';
+import { TableContainer } from '../../components/Tables/TableContainer';
 
 type Stake = {
   account: string;
@@ -38,7 +31,7 @@ const data = [
 
 const NominatorsTable = () => {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
