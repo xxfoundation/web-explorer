@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
-import Breadcrumb from '../../components/Breadcrumbs';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import Link from '../../components/Link';
 import { Hash } from '../../components/ChainId';
 import { PaperWrap } from '../../components/Paper/PaperWrap'

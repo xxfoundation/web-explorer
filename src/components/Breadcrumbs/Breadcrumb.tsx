@@ -2,9 +2,9 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { styled, Typography } from '@mui/material';
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { theme } from '../themes/default';
-import Link from './Link';
-import {BreadcrumbStyled} from './Breadcrumbs.styled';
+import { theme } from '../../themes/default';
+import Link from '../Link';
+import {BreadcrumbStyled} from './Breadcrumb.styled';
 
 type ParamsType = { params: Record<string, string | number> };
 
