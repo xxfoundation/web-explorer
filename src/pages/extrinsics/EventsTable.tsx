@@ -14,7 +14,7 @@ type EventType = {
 
 const parseEventRow = (item: EventType) => {
   return (
-    <TableRow>
+    <TableRow key={item.id}>
       <TableCell colSpan={3}>{item.id}</TableCell>
       <TableCell colSpan={3}>
         <Hash value={item.hash} variant='body3' truncated />

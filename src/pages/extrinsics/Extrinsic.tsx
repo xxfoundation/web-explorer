@@ -59,7 +59,7 @@ const extrinsicsDetailData = [
     value: (
       <>
         {/* TODO how to display 0.297000000 XX */}
-        <FormatBalance value={'297000000'} denomination={9} />
+        <FormatBalance value={'297000000'} />
       </>
     )
   },
@@ -76,7 +76,7 @@ const extrinsicsDetailData = [
       </Stack>
     )
   },
-  { label: '', value: <Divider /> },
+  { label: <Divider />, value: <Divider /> },
   // { label: 'parameters', value: <ParametersToSummary parameters={sampleDataParameters} /> },
   {
     label: 'signature',

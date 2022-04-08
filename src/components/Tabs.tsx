@@ -48,6 +48,7 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
           {panels.map(({ label }, index) => {
             return (
               <Tab
+                key={index}
                 label={label}
                 value={index}
                 id={`simple-tab-${index}`}
@@ -60,7 +61,7 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
 
       {panels.map(({ content }, index) => {
         return (
-          <TabPanel index={index} value={value}>
+          <TabPanel index={index} value={value} key={index}>
             {content}
           </TabPanel>
         );
