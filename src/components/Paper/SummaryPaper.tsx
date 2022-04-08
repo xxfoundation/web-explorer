@@ -11,11 +11,11 @@ const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({ data }) => {
         {data.map(({ label, value }) => {
           return (
             <React.Fragment key={label}>
-              <RowStyled container>
-                <LabelStyled item xs={12} sm={12} md={3}>
+              <RowStyled container alignItems={'stretch'}>
+                <LabelStyled container xs={12} sm={12} md={3} alignItems={'center'}>
                   {label}
                 </LabelStyled>
-                <ValueStyled item xs={12} sm={12} md={9}>
+                <ValueStyled container xs={12} sm={12} md={9} alignItems={'center'}>
                   {value}
                 </ValueStyled>
               </RowStyled>
