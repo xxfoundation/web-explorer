@@ -5,7 +5,6 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Container,
-  Paper,
   Stack,
   Table,
   TableBody,
@@ -60,7 +59,7 @@ const extrinsicToRow = (extrinsic: Extrinsic) => {
 const HistoryTable = () => {
   const extrinsicsHistoryData = useMemo(() => {
     const items = [];
-    for (let step = 0; step < 21; step++) {
+    for (let step = 0; step < 31; step++) {
       items.push({
         id: '357706-' + step,
         block: 357968,
@@ -74,7 +73,7 @@ const HistoryTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
@@ -101,7 +100,6 @@ const HistoryTable = () => {
         onPageChange={(_: unknown, number: number) => {
           setPage(number);
         }}
-        rowsPerPageOptions={[20, 30, 40, 50]}
         onRowsPerPageChange={(event) => {
           setRowsPerPage(parseInt(event.target.value));
           setPage(0);

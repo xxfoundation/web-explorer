@@ -46,7 +46,7 @@ const BlockEvents = () => {
   // TODO subscribe to events and fill data with hash or number
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
