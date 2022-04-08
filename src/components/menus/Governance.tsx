@@ -31,12 +31,12 @@ export default function Blockchain() {
             'aria-labelledby': 'governance-button'
           }}
         >
-          <MenuLink onClick={close}><Link href='/'>Overview</Link></MenuLink>
-          <MenuLink onClick={close}><Link href='/'>Democracy</Link></MenuLink>
-          <MenuLink onClick={close}><Link href='/'>Council</Link></MenuLink>
-          <MenuLink onClick={close}><Link href='/'>Tech Committee</Link></MenuLink>
-          <MenuLink onClick={close}><Link href='/'>Treasury</Link></MenuLink>
-          <MenuLink onClick={close}><Link href='/'>Bounties</Link></MenuLink>
+          <MenuLink to={'/'} onClick={close}>Overview</MenuLink>
+          <MenuLink to={'/'} onClick={close}>Democracy</MenuLink>
+          <MenuLink to={'/'} onClick={close}>Council</MenuLink>
+          <MenuLink to={'/'} onClick={close}>Tech Committee</MenuLink>
+          <MenuLink to={'/'} onClick={close}>Treasury</MenuLink>
+          <MenuLink to={'/'} onClick={close}>Bounties</MenuLink>
         </Menu>
       )}
     </>
