@@ -3,9 +3,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { LoadingButton } from '@mui/lab';
 import {
-  Box,
   Container,
-  Paper,
   Stack,
   Table,
   TableBody,
@@ -19,6 +17,7 @@ import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
+import { PaperWrap } from '../../components/Paper/PaperWrap';
 import TablePagination from '../../components/TablePagination';
 
 type Extrinsic = {
@@ -30,10 +29,11 @@ type Extrinsic = {
 };
 
 const extrinsicToRow = (extrinsic: Extrinsic) => {
+  const extrinsicIdLink = `/extrinsics/${extrinsic.id}`;
   return (
     <TableRow key={extrinsic.id}>
       <TableCell>
-        <Link to={`/extrinsics/${extrinsic.id}`}>{extrinsic.id}</Link>
+        <Link to={extrinsicIdLink}>{extrinsic.id}</Link>
       </TableCell>
       <TableCell>
         <Link to={`/blocks/${extrinsic.block}`}>{extrinsic.block}</Link>
@@ -51,7 +51,9 @@ const extrinsicToRow = (extrinsic: Extrinsic) => {
         <Link to='#'>{extrinsic.action}</Link>
       </TableCell>
       <TableCell>
-        <ArrowForwardIosIcon />
+        <Link to={extrinsicIdLink}>
+          <ArrowForwardIosIcon />
+        </Link>
       </TableCell>
     </TableRow>
   );
@@ -76,7 +78,7 @@ const HistoryTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
@@ -116,20 +118,22 @@ const HistoryTable = () => {
 const HistoryPage = () => {
   const totalOfExtrinsics = 32987;
   return (
-    <Container sx={{ mt: 5, mb: 12 }}>
+    <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Stack justifyContent={'space-between'} direction={'row'}>
+      <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
         <Typography variant='h1'>Extrinsic History</Typography>
         <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>
           Download data
         </LoadingButton>
       </Stack>
-      <span>pretty chart here</span>
-      <Box>
+      <Typography variant='h3' sx={{ mb: 5 }}>
+        pretty chart here
+      </Typography>
+      <PaperWrap>
         <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>
         <span hidden>filters placeholder</span>
         <HistoryTable />
-      </Box>
+      </PaperWrap>
     </Container>
   );
 };

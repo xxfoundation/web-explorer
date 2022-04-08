@@ -1,5 +1,6 @@
 import { Box, Divider, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { FC } from 'react';
+import { PaperWrap } from './Paper/PaperWrap';
 
 const TabPanel: FC<{ index: string | number; value: string | number }> = ({
   children,
@@ -8,7 +9,7 @@ const TabPanel: FC<{ index: string | number; value: string | number }> = ({
 }) => {
   return (
     <div role='tabpanel' id={`tabpanel-${value}`} aria-labelledby={`tab-${value}`}>
-      {value === name && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === name && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
   );
 };
@@ -35,7 +36,7 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
 }) => {
   const [value, setValue] = React.useState(0);
   return (
-    <Box>
+    <PaperWrap>
       <Box>
         <Tabs
           value={value}
@@ -64,7 +65,7 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
           </TabPanel>
         );
       })}
-    </Box>
+    </PaperWrap>
   );
 };
 

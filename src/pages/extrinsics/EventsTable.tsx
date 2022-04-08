@@ -1,17 +1,10 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import React, { useState } from 'react';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import TablePagination from '../../components/TablePagination';
+import { TableContainer } from '../../components/Tables/TableContainer';
 
 type EventType = {
   id: string;
@@ -58,7 +51,7 @@ const EventsTable = () => {
   const data = sampleData();
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>

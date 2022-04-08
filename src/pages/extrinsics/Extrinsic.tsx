@@ -1,12 +1,12 @@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { Container, Divider, Stack, Typography } from '@mui/material';
+import { Box, Container, Divider, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import RouteBreadcrumb from '../../components/Breadcrumbs';
 import { withCopy } from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
-import SummaryPaper from '../../components/SummaryPaper';
+import SummaryPaper from '../../components/Paper/SummaryPaper';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
 import EventsTable from './EventsTable';
 import ModuleCalls from './ModuleCalls';
@@ -93,12 +93,16 @@ const Extrinsic = () => {
   return (
     <Container sx={{ my: 5 }}>
       <RouteBreadcrumb />
-      <Typography variant='h1'>Extrinsic #{extrinsicId}</Typography>
+      <Container sx={{ mb: 5 }}>
+        <Typography variant='h1'>Extrinsic #{extrinsicId}</Typography>
+      </Container>
       <SummaryPaper data={extrinsicsDetailData} />
-      <TabsWithPanels
-        panels={[{ label: <TabText message='events' count={9} />, content: <EventsTable /> }]}
-        tabsLabel='extrinsic page events'
-      />
+      <Box sx={{ mt: 2 }}>
+        <TabsWithPanels
+          panels={[{ label: <TabText message='events' count={9} />, content: <EventsTable /> }]}
+          tabsLabel='extrinsic page events'
+        />
+      </Box>
     </Container>
   );
 };
