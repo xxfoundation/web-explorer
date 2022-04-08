@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
@@ -8,20 +8,16 @@ import Summary from './Summary';
 const BlockProducer = () => {
   const { nameOrId } = useParams<{ nameOrId: string }>();
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Breadcrumb />
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant={'h1'}>{nameOrId}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Summary />
-      </Grid>
-      <Grid item xs={12}>
+    <Container sx={{ my: 5 }}>
+      <Breadcrumb />
+      <Typography variant={'h1'} sx={{ mb: 5 }}>
+        {nameOrId}
+      </Typography>
+      <Summary />
+      <Box sx={{ mt: 2 }}>
         <ProducerTabs eras={[]} nominators={[]} />
-      </Grid>
-    </Grid>
+      </Box>
+    </Container>
   );
 };
 
