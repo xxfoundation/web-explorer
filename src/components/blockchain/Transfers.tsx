@@ -105,7 +105,7 @@ const transfersList = () => {
       header='TRANSFERS'
       hasDivider={true}
       linkName={'SEE ALL'}
-      linkAddress={'##'}
+      linkAddress={'/extrinsics'}
       height={500}
     >
       {transfers.map(ItemHandler)}

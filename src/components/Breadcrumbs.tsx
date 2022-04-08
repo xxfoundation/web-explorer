@@ -54,7 +54,7 @@ const crumbSplats: Record<string, React.FC<ParamsType>> = {
       <Typography>{`Spec ${truncateCrumb(version.toString())}`}</Typography>
     </CustomLink>
   ),
-  'extrinsics:2': () => (
+  'extrinsicId:2': () => (
     <CustomLink to='/extrinsics' underline='hover'>
       <Typography>Extrinsics</Typography>
     </CustomLink>
