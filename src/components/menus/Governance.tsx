@@ -1,5 +1,5 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Link, Menu } from '@mui/material';
+import { Menu } from '@mui/material';
 import React, { useRef } from 'react';
 import { useToggle } from '../../hooks';
 import { MenuButton, MenuLink } from './menu.styles';

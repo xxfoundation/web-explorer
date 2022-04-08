@@ -2,7 +2,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Menu } from '@mui/material';
 import React, { useRef } from 'react';
 import { useToggle } from '../../hooks';
-import Link from '../Link';
 import { MenuButton, MenuLink } from './menu.styles';
 
 export default function Blockchain() {
