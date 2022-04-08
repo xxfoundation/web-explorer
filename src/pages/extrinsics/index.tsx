@@ -1,17 +1,17 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import Extrinsic from './Extrinsic';
-import HistoryPage from './History';
+import History from './History';
+import ExtrinsicId from './_extrinsicId';
 
 const ExtrinsicsRouter = () => {
   const { path } = useRouteMatch();
   return (
     <Switch>
       <Route exact path={path}>
-        <HistoryPage />
+        <History />
       </Route>
       <Route path={`${path}/:extrinsicId`}>
-        <Extrinsic />
+        <ExtrinsicId />
       </Route>
     </Switch>
   );
