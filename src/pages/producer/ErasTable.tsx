@@ -1,29 +1,27 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 import Link from '../../components/Link';
+import { TableContainer } from '../../components/Tables/TableContainer';
 
 type Era = {
-  index: string,
-  startBlock: number,
-  endBlock: number,
-  rewardPoint: number,
-  blocksProduced: number
-  blockNumber: number
-}
+  index: string;
+  startBlock: number;
+  endBlock: number;
+  rewardPoint: number;
+  blocksProduced: number;
+  blockNumber: number;
+};
 
 const EraRow = (rowData: Era) => {
   return (
     <TableRow key={rowData.index}>
       <TableCell>{rowData.index}</TableCell>
-      <TableCell><Link to={`/block/${rowData.startBlock}`}>{rowData.startBlock}</Link></TableCell>
-      <TableCell><Link to={`/block/${rowData.endBlock}`}>{rowData.endBlock}</Link></TableCell>
+      <TableCell>
+        <Link to={`/block/${rowData.startBlock}`}>{rowData.startBlock}</Link>
+      </TableCell>
+      <TableCell>
+        <Link to={`/block/${rowData.endBlock}`}>{rowData.endBlock}</Link>
+      </TableCell>
       <TableCell>{rowData.rewardPoint}</TableCell>
       <TableCell>
         <Link to={`/blocks/${rowData.blockNumber}/producer/${rowData.blocksProduced}`}>
@@ -51,26 +49,14 @@ const ErasTables = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>
-              era
-            </TableCell>
-            <TableCell>
-              start block
-            </TableCell>
-            <TableCell>
-              end block
-            </TableCell>
-            <TableCell>
-              reward point
-            </TableCell>
-            <TableCell>
-              blocks produced
-            </TableCell>
+            <TableCell>era</TableCell>
+            <TableCell>start block</TableCell>
+            <TableCell>end block</TableCell>
+            <TableCell>reward point</TableCell>
+            <TableCell>blocks produced</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {eras.map(EraRow)}
-        </TableBody>
+        <TableBody>{eras.map(EraRow)}</TableBody>
       </Table>
     </TableContainer>
   );

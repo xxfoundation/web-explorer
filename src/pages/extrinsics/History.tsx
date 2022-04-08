@@ -2,7 +2,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { LoadingButton } from '@mui/lab';
 import { Container, Stack, Typography } from '@mui/material';
 import React from 'react';
-import Breadcrumb from '../../components/Breadcrumbs';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
 import HistoryTable from './HistoryTable';
 

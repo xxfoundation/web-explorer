@@ -2,7 +2,7 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import RouteBreadcrumb from '../../components/Breadcrumbs';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { withCopy } from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
@@ -92,7 +92,7 @@ const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
   return (
     <Container sx={{ my: 5 }}>
-      <RouteBreadcrumb />
+      <Breadcrumb />
       <Container sx={{ mb: 5 }}>
         <Typography variant='h1'>Extrinsic #{extrinsicId}</Typography>
       </Container>

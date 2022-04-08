@@ -1,13 +1,36 @@
-import { Divider, Stack, Typography } from '@mui/material';
-import React from 'react';
+import { Divider, Grid, Typography } from '@mui/material';
+import React, { FC } from 'react';
 import { withCopy } from '../../components/buttons/CopyButton';
 import { Address } from '../../components/ChainId';
+import FormatBalance from '../../components/FormatBalance';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
 
 const sampleAddress = (values: { name?: string; address: string }) =>
   withCopy(values.address, <Address name={values.name} value={values.address} variant='body3' />);
+
+const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = ({ entries }) => {
+  return (
+    <Grid spacing={1} container>
+      {Object.entries(entries).map(([name, value]) => {
+        return (
+          <>
+            <Grid item xs={2} sm={2} md={2}>
+              {name}
+            </Grid>
+            <Grid item xs={1} sm={1} md={1}>
+              <Divider orientation='vertical' />
+            </Grid>
+            <Grid item xs={9} sm={9} md={9}>
+              {value}
+            </Grid>
+          </>
+        );
+      })}
+    </Grid>
+  );
+};
 
 const Summary = () => {
   const data = React.useMemo(() => {
@@ -27,34 +50,36 @@ const Summary = () => {
       },
       { label: 'location', value: 'Big Sur, California' },
       { label: 'own stake', value: '1.00 XX' },
-      { label: 'total stake', value: '3,038,663.57 XX' },
+      { label: 'total stake', value: <FormatBalance value={'3038663570'} /> },
       { label: 'nominators', value: 3 },
       { label: 'commission', value: '10.00%' },
       {
         label: 'session key',
         value: (
-          <Stack direction={'column'} spacing={1}>
-            <Stack direction={'row'} spacing={3}>
-              <div>babej</div>
-              <Divider orientation='vertical' />
-              <div>0xf2b63387ce5b649f9388fd1be38ee4357b48dc0146e78b91f8f6469a78dc9f58</div>
-            </Stack>
-            <Stack direction={'row'} spacing={3}>
-              <div>grandpa</div>
-              <Divider orientation='vertical' />
-              <div>0x5b379072ec1f3f70b4650979a47b24f9b080c03450f7e9587d92cb599fcf4d6b</div>
-            </Stack>
-            <Stack direction={'row'} spacing={3}>
-              <div>im_online</div>
-              <Divider orientation='vertical' />
-              <div>0x8e1015503d9573387939580a10a99754d40fcfff424f6846a9f0d943bc178812</div>
-            </Stack>
-            <Stack direction={'row'} spacing={3}>
-              <div>authority_discovery</div>
-              <Divider orientation='vertical' />
-              <div>0x8e1015503d9573387939580a10a99754d40fcfff424f6846a9f0d943bc178812</div>
-            </Stack>
-          </Stack>
+          <SessionKeyValue
+            entries={{
+              babe: (
+                <Typography>
+                  0xf2b63387ce5b649f9388fd1be38ee4357b48dc0146e78b91f8f6469a78dc9f58
+                </Typography>
+              ),
+              grandpa: (
+                <Typography>
+                  0x5b379072ec1f3f70b4650979a47b24f9b080c03450f7e9587d92cb599fcf4d6b
+                </Typography>
+              ),
+              im_online: (
+                <Typography>
+                  0x5b379072ec1f3f70b4650979a47b24f9b080c03450f7e9587d92cb599fcf4d6b
+                </Typography>
+              ),
+              authority_discovery: (
+                <Typography>
+                  0x5b379072ec1f3f70b4650979a47b24f9b080c03450f7e9587d92cb599fcf4d6b
+                </Typography>
+              )
+            }}
+          />
         )
       }
     ];

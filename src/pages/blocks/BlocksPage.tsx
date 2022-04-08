@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import React from 'react';
-import Breadcrumb from '../../components/Breadcrumbs';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
@@ -63,7 +63,7 @@ const rowParser = (item: Block) => {
       </TableCell>
       <TableCell>
         <Link to={`/blocks/${item.number}`}>
-          <Hash value={item.blockHash} variant='body3' truncated />
+          <Hash value={item.blockHash} truncated />
         </Link>
       </TableCell>
     </TableRow>

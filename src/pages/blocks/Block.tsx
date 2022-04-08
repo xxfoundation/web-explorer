@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
 import BlockSummary from '../../components/block/BlockSummary';
-import Breadcrumb from '../../components/Breadcrumbs';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 
 const data = {
   time: '2022-01-28 03:39:24 (+utc)',
