@@ -1,15 +1,28 @@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import EventsTable from '../../components/block/EventsTable';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { withCopy } from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
-import EventsTable from './EventsTable';
 import ModuleCalls from './ModuleCalls';
+
+const sampleEventsData = (extrinsicId: string) => {
+  const items = [];
+  for (let step = 0; step < 9; step++) {
+    items.push({
+      id: '287845-' + step,
+      hash: '0x9b9721540932d6989b92aab8cc11469cc4c3e5a5ca88053c563b4e49d910a869',
+      action: 'Balances (Withdraw)',
+      extrinsicId
+    });
+  }
+  return items;
+};
 
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
 
@@ -90,6 +103,9 @@ const extrinsicsDetailData = [
 
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
+  const eventsData = useMemo(() => {
+    return sampleEventsData(extrinsicId);
+  }, [extrinsicId]);
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
@@ -99,7 +115,12 @@ const Extrinsic = () => {
       <SummaryPaper data={extrinsicsDetailData} />
       <Box sx={{ mt: 2 }}>
         <TabsWithPanels
-          panels={[{ label: <TabText message='events' count={9} />, content: <EventsTable /> }]}
+          panels={[
+            {
+              label: <TabText message='events' count={9} />,
+              content: <EventsTable data={eventsData} />
+            }
+          ]}
           tabsLabel='extrinsic page events'
         />
       </Box>
