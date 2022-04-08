@@ -10,7 +10,7 @@ interface LinkRouterProps extends LinkProps {
 
 const Link: React.FC<LinkRouterProps> = ({ children, ...props }) => {
   return (
-    <MaterialLink component={RouterLink} {...props}>
+    <MaterialLink underline='hover' component={RouterLink} {...props}>
       {children}
     </MaterialLink>
   );

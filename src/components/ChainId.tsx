@@ -6,7 +6,7 @@ import React, { FC } from 'react';
 
 type IdProperties = {
   link?: string;
-  variant: TypographyTypeMap['props']['variant'];
+  variant?: TypographyTypeMap['props']['variant'];
   truncated?: boolean;
   value: string;
 };

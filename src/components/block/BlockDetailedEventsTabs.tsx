@@ -3,6 +3,7 @@ import React from 'react';
 import { TabPanel, TabText } from '../Tabs';
 import EventsTable from './EventsTable';
 import ExtrinsicsTable from './ExtrinsicsTable';
+import { PaperWrap } from '../Paper/PaperWrap';
 
 // const hash = '123123';
 // const number = '1231313';
@@ -18,7 +19,7 @@ const BlockDetailedEventsTabs: React.FC<{ events: number[]; extrinsics: number[]
   };
 
   return (
-    <Box>
+    <PaperWrap>
       <Box>
         <Tabs value={value} onChange={handleChange} aria-label='block event tabs'>
           <Tab
@@ -41,7 +42,7 @@ const BlockDetailedEventsTabs: React.FC<{ events: number[]; extrinsics: number[]
       <TabPanel value={value} name='events'>
         <EventsTable />
       </TabPanel>
-    </Box>
+    </PaperWrap>
   );
 };
 
