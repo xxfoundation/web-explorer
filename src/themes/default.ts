@@ -15,8 +15,25 @@ export const theme = createTheme({
       main: '#00A2D6', // sets link color
       contrastText: '#FFF'
     },
+    warning: {
+      main: '#EA5400',
+      light: '#FFF5D1',
+      dark: '#D64D00',
+      contrastText: '#FFFFFF'
+    },
     text: {
       primary: '#4f4f4f'
+    },
+    grey: {
+      50: '#FFFFFF',
+      100: '#FCFCFC', // light backgrounds
+      200: '#EAEAEA', // line grey
+      300: '#D2D2D2', // grey
+      400: '#9A9A9A', // med grey 2
+      500: '#7A7A7A', // med grey
+      600: '#4F4F4F', // backgrounds
+      700: '#3D3D3D', // dark grey
+      800: '#27272B' // black header
     },
     // color coding used for metrics
     veryGood: {
@@ -39,7 +56,8 @@ export const theme = createTheme({
     fontFamily: '\'Roboto\', sans-serif',
     h1: {
       fontSize: 36,
-      fontWeight: 700
+      fontWeight: 700,
+      color: '#3D3D3D'
     },
     h2: {
       fontSize: 36,

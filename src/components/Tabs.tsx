@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 const TabPanel: FC<{ name: string, value: string }> = ({ children, name, value }) => {
   return (
     <div role='tabpanel' id={`tabpanel-${value}`} aria-labelledby={`tab-${value}`}>
-      {value === name && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === name && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
   );
 };
