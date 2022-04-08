@@ -28,7 +28,8 @@ const K_LENGTH = 3 + 1;
 type LabelPost = string | React.ReactNode
 
 function createElement (prefix: string, postfix: string, unit: string, label: LabelPost = '', isShort = false): React.ReactNode {
-  return <>{`${prefix}${isShort ? '' : '.'}`}{!isShort && <span className='ui--FormatBalance-postfix'>{`0000${postfix || ''}`.slice(-4)}</span>}<span className='ui--FormatBalance-unit'> {unit}</span>{label}</>;
+  const hasDecimal = !isShort && !!postfix;
+  return <>{`${prefix}${hasDecimal ? '.' : ''}`}{!isShort && <span className='ui--FormatBalance-postfix'>{postfix ? `${postfix || ''}` : ''}</span>}<span className='ui--FormatBalance-unit'>&nbsp;{unit}</span>{label}</>;
 }
 
 function applyFormat (value: BN | string, denomination: number, symbol: string, withCurrency = true, withSi?: boolean, _isShort?: boolean, labelPost?: LabelPost, precision?: number): React.ReactNode {
@@ -37,11 +38,12 @@ function applyFormat (value: BN | string, denomination: number, symbol: string, 
   const unitPost = withCurrency ? symbol : '';
 
   if (prefix.length > M_LENGTH) {
-    const [major, rest] = formatBalance(value, { decimals: denomination, precision, withUnit: false }).split('.');
-    const minor = rest.slice(0, 4);
-    const unit = rest.slice(4);
+    const formatted = formatBalance(value, { decimals: denomination, precision, withUnit: false });
+    const divider = formatted.includes('.') ? '.' : ' ';
+    const [major, rest] = formatted.split(divider);
+    const [minor, unit] = rest.includes(' ') ? rest.split(' ') : [,rest];
 
-    return <>{major}.<span className='ui--FormatBalance-postfix'>{minor}</span><span className='ui--FormatBalance-unit'>{unit}{unit ? unitPost : ` ${unitPost}`}</span>{labelPost || ''}</>;
+    return <>{major}{minor ? '.' : ''}<span className='ui--FormatBalance-postfix'>{minor}</span><span className='ui--FormatBalance-unit'> {unit}{unit ? unitPost : ` ${unitPost}`}</span>{labelPost || ''}</>;
   }
 
   return createElement(prefix, postfix, unitPost, labelPost, isShort);

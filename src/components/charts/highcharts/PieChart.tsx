@@ -14,7 +14,7 @@ import {
 import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { CustomPointOptions, PercentageValues, StakeablePopup } from '../../blockchain/types';
-import FormatBalance from '../../FormatBalance';
+import FormatBalance from '../../FormatBalance/FormatBalance';
 
 const defaultOptions: Options = {
   credits: { enabled: false },

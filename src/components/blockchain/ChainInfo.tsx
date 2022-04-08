@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import FormatBalance from '../FormatBalance';
+import FormatBalance from '../FormatBalance/FormatBalance';
 import { Data, Item, Wrap } from './ChainInfo.styles';
 
 const data = {
@@ -33,6 +33,7 @@ const chainInfo = () => {
       <Typography variant='h3' gutterBottom>
         Chain data
       </Typography>
+      <FormatBalance value={'1000'} precision={0} />
       <Wrap container spacing={{ xs: 1 }}>
         {data.items.map(({ title, value }) => (
           <ChainInfoCard title={title} value={value} key={title} />
