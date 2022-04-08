@@ -37,10 +37,11 @@ export const MenuLink = styled(MenuItem)(({ theme }) => ({
   paddingLeft: 20,
   paddingRight: 20,
   'a': {
-    color: theme.palette.grey.A700,
+    color: theme.palette.text.primary,
     textDecoration: 'none',
     '&:hover': {
       color: theme.palette.text.secondary,
+      textDecoration: 'none'
     }
   }
 }));
