@@ -1,5 +1,6 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react';
+import { PaperWrap } from '../../components/Paper/PaperWrap';
 import { TabPanel, TabText } from '../../components/Tabs';
 import ErasTable from './ErasTable';
 import NominatorsTable from './NominatorsTable';
@@ -12,7 +13,7 @@ const ProducerTabs: React.FC<{ eras: string[]; nominators: string[] }> = ({ eras
   };
 
   return (
-    <Box>
+    <PaperWrap>
       <Box>
         <Tabs value={value} onChange={handleChange} aria-label='producers tables tabs'>
           <Tab
@@ -29,13 +30,13 @@ const ProducerTabs: React.FC<{ eras: string[]; nominators: string[] }> = ({ eras
           />
         </Tabs>
       </Box>
-      <TabPanel value={value} name='nominators'>
+      <TabPanel value={value} index='nominators'>
         <NominatorsTable />
       </TabPanel>
-      <TabPanel value={value} name='eras'>
+      <TabPanel value={value} index='eras'>
         <ErasTable />
       </TabPanel>
-    </Box>
+    </PaperWrap>
   );
 };
 export default ProducerTabs;

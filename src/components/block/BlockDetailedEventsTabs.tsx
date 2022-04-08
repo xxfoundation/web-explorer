@@ -36,10 +36,10 @@ const BlockDetailedEventsTabs: React.FC<{ events: number[]; extrinsics: number[]
           />
         </Tabs>
       </Box>
-      <TabPanel value={value} name='extrinsics'>
+      <TabPanel value={value} index='extrinsics'>
         <ExtrinsicsTable />
       </TabPanel>
-      <TabPanel value={value} name='events'>
+      <TabPanel value={value} index='events'>
         <EventsTable />
       </TabPanel>
     </PaperWrap>

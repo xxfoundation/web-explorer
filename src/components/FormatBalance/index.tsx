@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import BN from 'bn.js';
-
 import React from 'react';
-
 import { formatBalance } from './formatter';
+
+
 
 interface Props {
   children?: React.ReactNode;

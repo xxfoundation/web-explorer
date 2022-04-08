@@ -13,11 +13,14 @@ export const PaperStyled = styled(Paper)(({ theme }) => ({
 }));
 
 export const RowStyled = styled(Grid)(({  }) => ({
+  minHeight: 60,
   '&:first-child > div': {
-      paddingTop: 50
+      paddingTop: 50,
+      minHeight: 95
   },
   '&:last-child > div': {
-      paddingBottom: 50
+      paddingBottom: 50,
+      minHeight: 115
   },
 }));
 
@@ -28,8 +31,8 @@ export const LabelStyled = styled(Grid)(({ theme }) => ({
   borderRightColor: theme.palette.grey[200],
   paddingLeft: 70, 
   paddingRight: 40, 
-  paddingTop: 16, 
-  paddingBottom: 16,
+  paddingTop: 0, 
+  paddingBottom: 0,
   textTransform: 'uppercase',
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.grey[700],
@@ -42,8 +45,8 @@ export const LabelStyled = styled(Grid)(({ theme }) => ({
 export const ValueStyled = styled(Grid)(({ theme }) => ({
   paddingLeft: 50, 
   paddingRight: 40, 
-  paddingTop: 16, 
-  paddingBottom: 16,
+  paddingTop: 0, 
+  paddingBottom: 0,
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.grey[500],
   fontWeight: 500,

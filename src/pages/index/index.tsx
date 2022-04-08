@@ -1,7 +1,7 @@
 import { Container } from '@mui/material';
 import React from 'react';
 import ChainInfo from '../../components/blockchain/ChainInfo';
-import Breadcrumb from '../../components/Breadcrumbs';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import TokenStatus from './TokenStatus';
 
 const Blockchain = () => {
