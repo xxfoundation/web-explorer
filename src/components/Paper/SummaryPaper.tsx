@@ -15,10 +15,10 @@ const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({ data }) => {
           return (
             <React.Fragment key={index}>
               <RowStyled container alignItems={'stretch'}>
-                <LabelStyled container xs={12} sm={12} md={3} alignItems={'center'}>
+                <LabelStyled container item xs={12} sm={12} md={3} alignItems={'center'}>
                   {label}
                 </LabelStyled>
-                <ValueStyled container xs={12} sm={12} md={9} alignItems={'center'}>
+                <ValueStyled container item xs={12} sm={12} md={9} alignItems={'center'}>
                   {value}
                 </ValueStyled>
               </RowStyled>
