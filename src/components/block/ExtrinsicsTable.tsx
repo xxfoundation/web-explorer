@@ -61,7 +61,7 @@ const BlockExtrinsics = () => {
   ];
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
