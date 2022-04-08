@@ -1,6 +1,5 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
-  Box,
   Paper,
   Table,
   TableBody,
@@ -13,7 +12,6 @@ import React, { useState } from 'react';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import TablePagination from '../../components/TablePagination';
-import TabsWithPanels, { TabText } from '../../components/Tabs';
 
 type EventType = {
   id: string;
@@ -90,13 +88,4 @@ const EventsTable = () => {
   );
 };
 
-const ExtrinsicPageEventsTabs: React.FC = () => {
-  const panels = [{ label: <TabText message='events' count={9} />, content: <EventsTable /> }];
-  return (
-    <Box>
-      <TabsWithPanels panels={panels} tabsLabel='extrinsic page events' />
-    </Box>
-  );
-};
-
-export default ExtrinsicPageEventsTabs;
+export default EventsTable;

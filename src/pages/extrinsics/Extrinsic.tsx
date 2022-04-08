@@ -1,21 +1,21 @@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
-import { Breadcrumbs, Button, Container, Divider, Stack, Typography } from '@mui/material';
+import { Container, Divider, Stack, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import RouteBreadcrumb from '../../components/Breadcrumbs';
-import CopyButton, { withCopy } from '../../components/buttons/CopyButton';
+import { withCopy } from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import SummaryPaper from '../../components/SummaryPaper';
-import Tag from '../../components/Tags/Tag';
-import ExtrinsicPageEventsTabs from './ExtrinsicTabs';
+import TabsWithPanels, { TabText } from '../../components/Tabs';
+import EventsTable from './EventsTable';
+import ModuleCalls from './ModuleCalls';
+
+const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
 
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
   const extrinsicsDetailData = useMemo(() => {
-    const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
     return [
       { label: 'time', value: '2022-02-28 16:42:30 (+UTC)' },
       {
@@ -42,15 +42,7 @@ const Extrinsic = () => {
       },
       {
         label: 'module/call',
-        value: (
-          <Breadcrumbs separator='/'>
-            <Tag filled>balances</Tag>
-            <Stack direction={'row'} spacing={1} alignItems='center'>
-              <Tag>transfer</Tag>
-              <InfoOutlinedIcon color='primary' />
-            </Stack>
-          </Breadcrumbs>
-        )
+        value: <ModuleCalls module='balance' call='transfers' />
       },
       {
         label: 'sender',
@@ -62,20 +54,16 @@ const Extrinsic = () => {
       },
       {
         label: 'value',
-        value: (
-          <Stack direction='row' alignItems='center'>
-            <PaidOutlinedIcon />
-            <FormatBalance value={'24985'} isShort />
-          </Stack>
-        )
+        // TODO how to remove the B from the display
+        value: <FormatBalance value={'249850000000'} />
       },
       {
         label: 'fee',
         value: (
-          <Stack direction='row' alignItems='center'>
-            <PaidOutlinedIcon />
-            <Typography>0.297000000 XX</Typography>
-          </Stack>
+          <>
+            {/* TODO how to display 0.297000000 XX */}
+            <FormatBalance value={'297000000'} denomination={9} />
+          </>
         )
       },
       {
@@ -92,41 +80,7 @@ const Extrinsic = () => {
         )
       },
       { label: '', value: <Divider /> },
-      {
-        label: '',
-        value: (
-          <>
-            <Button>copy</Button>
-            <Button>view code</Button>
-          </>
-        )
-      },
-      {
-        label: 'parameters',
-        value: (
-          <Stack>
-            <Stack
-              direction={'row'}
-              spacing={1}
-              alignItems={'center'}
-              divider={<Divider orientation='vertical' flexItem />}
-            >
-              <>desk</>
-              <Address value={sampleAddress} variant='body3' link={`???/${sampleAddress}`} />
-              <CopyButton value={sampleAddress} />
-            </Stack>
-            <Stack
-              direction={'row'}
-              spacing={1}
-              alignItems={'center'}
-              divider={<Divider orientation='vertical' flexItem />}
-            >
-              <>value</>
-              <>249.85</>
-            </Stack>
-          </Stack>
-        )
-      },
+      // { label: 'parameters', value: <ParametersToSummary parameters={sampleDataParameters} /> },
       {
         label: 'signature',
         value: (
@@ -140,9 +94,12 @@ const Extrinsic = () => {
   return (
     <Container sx={{ my: 5 }}>
       <RouteBreadcrumb />
-      <Typography variant='h1'>Extrinsic No.{extrinsicId}</Typography>
+      <Typography variant='h1'>Extrinsic #{extrinsicId}</Typography>
       <SummaryPaper data={extrinsicsDetailData} />
-      <ExtrinsicPageEventsTabs />
+      <TabsWithPanels
+        panels={[{ label: <TabText message='events' count={9} />, content: <EventsTable /> }]}
+        tabsLabel='extrinsic page events'
+      />
     </Container>
   );
 };
