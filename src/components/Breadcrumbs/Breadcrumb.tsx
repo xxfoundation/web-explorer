@@ -8,15 +8,9 @@ type ParamsType = { params: Record<string, string | number> };
 const truncateCrumb = (text: string) =>
   text.length > 15 ? `${text.slice(0, 4)}...${text.slice(-4)}` : text;
 
-const blockchainHome = () => (
-  <CustomLink to='/'>
-    Blockchain
-  </CustomLink>
-);
+const blockchainHome = () => <CustomLink to='/'>Blockchain</CustomLink>;
 const blockNumber = ({ params: { number } }: ParamsType) => (
-  <CustomLink to={`/blocks/${number}`}>
-    {truncateCrumb(number.toString())}
-  </CustomLink>
+  <CustomLink to={`/blocks/${number}`}>{truncateCrumb(number.toString())}</CustomLink>
 );
 
 const crumbRoutes: Record<string, React.FC<ParamsType>> = {
@@ -39,7 +33,7 @@ const crumbSplats: Record<string, React.FC<ParamsType>> = {
       {`Spec ${truncateCrumb(version.toString())}`}
     </CustomLink>
   ),
-  'extrinsics:2': () => (
+  'extrinsicId:2': () => (
     <CustomLink to='/extrinsics' underline='hover'>
       Extrinsics
     </CustomLink>
@@ -83,7 +77,9 @@ const Breadcrumb: React.FC = () => {
     return root;
   }, [pathname, params]);
 
-  return <BreadcrumbStyled separator={<NavigateNextIcon fontSize='small' />}>{crumbs}</BreadcrumbStyled>;
+  return (
+    <BreadcrumbStyled separator={<NavigateNextIcon fontSize='small' />}>{crumbs}</BreadcrumbStyled>
+  );
 };
 
 export default Breadcrumb;

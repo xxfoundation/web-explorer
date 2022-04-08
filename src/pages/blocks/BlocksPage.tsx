@@ -12,10 +12,11 @@ import {
 } from '@mui/material';
 import React from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import Link from '../../components/Link';
 import { Hash } from '../../components/ChainId';
-import { PaperWrap } from '../../components/Paper/PaperWrap'
-import { TableContainer } from '../../components/Tables/TableContainer'
+import Link from '../../components/Link';
+import { PaperWrap } from '../../components/Paper/PaperWrap';
+import TablePagination from '../../components/TablePagination';
+import { TableContainer } from '../../components/Tables/TableContainer';
 
 type Block = {
   number: number;
@@ -62,10 +63,7 @@ const rowParser = (item: Block) => {
       </TableCell>
       <TableCell>
         <Link to={`/blocks/${item.number}`}>
-          <Hash
-            value={item.blockHash}
-            truncated
-          />
+          <Hash value={item.blockHash} truncated />
         </Link>
       </TableCell>
     </TableRow>
@@ -87,6 +85,7 @@ const BlocksTable = () => {
           <TableBody>{data.map(rowParser)}</TableBody>
         </Table>
       </TableContainer>
+      <TablePagination page={0} count={data.length} />
     </PaperWrap>
   );
 };

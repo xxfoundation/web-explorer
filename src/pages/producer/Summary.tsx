@@ -1,5 +1,5 @@
 import { Divider, Grid, Typography } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, Fragment } from 'react';
 import { withCopy } from '../../components/buttons/CopyButton';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
@@ -15,7 +15,7 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
     <Grid spacing={1} container>
       {Object.entries(entries).map(([name, value]) => {
         return (
-          <>
+          <Fragment key={name}>
             <Grid item xs={2} sm={2} md={2}>
               {name}
             </Grid>
@@ -25,7 +25,7 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
             <Grid item xs={9} sm={9} md={9}>
               {value}
             </Grid>
-          </>
+          </Fragment>
         );
       })}
     </Grid>
