@@ -69,6 +69,15 @@ export const theme = createTheme({
       fontWeight: 400,
       textTransform: 'uppercase'
     },
+    h5: {
+      fontSize: 12,
+      fontWeight: 700,
+      textTransform: 'uppercase'
+    },
+    h6: {
+      fontSize: 12,
+      fontWeight: 400,
+    },
     body1: {
       // normal text
       fontWeight: 500
@@ -80,6 +89,7 @@ export const theme = createTheme({
       color: '#7A7A7A'
     },
     body3: {
+      // normal weight text
       fontWeight: 400,
       fontSize: 14,
       color: '#7A7A7A'
