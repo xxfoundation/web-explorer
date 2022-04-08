@@ -28,22 +28,6 @@ export const theme = createTheme({
       600: '#4F4F4F', // backgrounds
       700: '#3D3D3D', // dark grey
       800: '#27272B' // black header
-    },
-    // color coding used for metrics
-    veryGood: {
-      main: '#7BE03D'
-    },
-    good: {
-      main: '#08CDD7'
-    },
-    neutral: {
-      main: '#D2D2D2'
-    },
-    bad: {
-      main: '#FA7A03'
-    },
-    veryBad: {
-      main: '#FF4141'
     }
   },
   typography: {
