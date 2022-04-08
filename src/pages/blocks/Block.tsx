@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
@@ -21,17 +21,14 @@ const data = {
 const Block = () => {
   const { number } = useParams<{ number: string }>();
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Breadcrumb />
-      </Grid>
-      <Grid item xs={12}>
-        <BlockSummary number={number} data={data} />
-      </Grid>
-      <Grid item xs={12}>
+    <Container sx={{ my: 5 }}>
+      <Breadcrumb />
+      <BlockSummary number={number} data={data} />
+      <Box sx={{ mt: 2 }}>
         <BlockDetailedEventsTabs events={[1, 2, 3]} extrinsics={[1, 2]} />
-      </Grid>
-    </Grid>
+      </Box>
+    </Container>
+    
   );
 };
 

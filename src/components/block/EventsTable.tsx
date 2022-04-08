@@ -1,15 +1,14 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import {
-  Paper,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow
 } from '@mui/material';
 import React from 'react';
 import Link from '../Link';
+import { TableContainer } from '../Tables/TableContainer';
 
 const header = ['event id', 'hash', 'action', 'view all'];
 
@@ -45,7 +44,7 @@ const data = [
 const BlockEvents = () => {
   // TODO subscribe to events and fill data with hash or number
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>

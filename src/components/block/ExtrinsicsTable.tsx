@@ -1,17 +1,16 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import {
-  Paper,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow
 } from '@mui/material';
 import React from 'react';
 import Link from '../Link';
 import { Hash } from '../ChainId';
+import { TableContainer } from '../Tables/TableContainer';
 
 const header = ['extrinsic id', 'hash', 'time', 'result', 'action', 'view all'];
 
@@ -60,7 +59,7 @@ const BlockExtrinsics = () => {
     }
   ];
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>

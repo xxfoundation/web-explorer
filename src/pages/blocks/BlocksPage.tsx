@@ -1,14 +1,11 @@
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { LoadingButton } from '@mui/lab';
 import {
-  Box,
   Container,
-  Paper,
   Stack,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   Typography
@@ -17,6 +14,8 @@ import React from 'react';
 import Breadcrumb from '../../components/Breadcrumbs';
 import Link from '../../components/Link';
 import { Hash } from '../../components/ChainId';
+import { PaperWrap } from '../../components/Paper/PaperWrap'
+import { TableContainer } from '../../components/Tables/TableContainer'
 
 type Block = {
   number: number;
@@ -65,7 +64,6 @@ const rowParser = (item: Block) => {
         <Link to={`/blocks/${item.number}`}>
           <Hash
             value={item.blockHash}
-            variant='body3'
             truncated
           />
         </Link>
@@ -76,8 +74,8 @@ const rowParser = (item: Block) => {
 
 const BlocksTable = () => {
   return (
-    <Box>
-      <TableContainer component={Paper}>
+    <PaperWrap>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -89,7 +87,7 @@ const BlocksTable = () => {
           <TableBody>{data.map(rowParser)}</TableBody>
         </Table>
       </TableContainer>
-    </Box>
+    </PaperWrap>
   );
 };
 
@@ -98,7 +96,7 @@ const BlocksPage = () => {
     <>
       <Container sx={{ my: 5 }}>
         <Breadcrumb />
-        <Stack justifyContent={'space-between'} direction={'row'}>
+        <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
           <Typography variant='h1'>Blocks</Typography>
           <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>
             Download data
