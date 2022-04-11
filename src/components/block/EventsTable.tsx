@@ -1,6 +1,15 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import React, { FC, useState } from 'react';
+import { Hash } from '../ChainId';
 import Link from '../Link';
 import TablePagination from '../TablePagination';
 import { TableContainer } from '../Tables/TableContainer';
@@ -18,7 +27,13 @@ const rowParser = (rowData: EventType) => {
   return (
     <TableRow key={rowData.id}>
       <TableCell>{rowData.id}</TableCell>
-      <TableCell>{rowData.hash || '-'}</TableCell>
+      <TableCell>
+        <Tooltip title={<Typography fontSize={'10px'} fontWeight={400}>{rowData.hash}</Typography>} placement={'top'} arrow>
+          <span>
+            <Hash value={rowData.hash} truncated />
+          </span>
+        </Tooltip>
+      </TableCell>
       <TableCell>
         <Link to='#'>{rowData.action}</Link>
       </TableCell>

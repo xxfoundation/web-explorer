@@ -26,9 +26,7 @@ const extrinsicToRow = (extrinsic: Extrinsic) => {
         <Link to={`/blocks/${extrinsic.block}`}>{extrinsic.block}</Link>
       </TableCell>
       <TableCell>
-        <Link to={`/extrinsics/${extrinsic.hash}`}>
-          <Hash value={extrinsic.hash} variant='body3' truncated />
-        </Link>
+        <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated />
       </TableCell>
       <TableCell>{extrinsic.time}</TableCell>
       <TableCell>

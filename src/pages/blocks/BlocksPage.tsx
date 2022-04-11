@@ -3,20 +3,26 @@ import { LoadingButton } from '@mui/lab';
 import {
   Container,
   Stack,
+  styled,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
+  tooltipClasses,
+  TooltipProps,
   Typography
 } from '@mui/material';
-import React from 'react';
+import React, { FC } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import CopyButton from '../../components/buttons/CopyButton';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
 import TablePagination from '../../components/TablePagination';
 import { TableContainer } from '../../components/Tables/TableContainer';
+import TimeAgoComponent from '../../components/TimeAgo';
 
 type Block = {
   number: number;
@@ -42,6 +48,33 @@ const data = [
 
 const header = ['block', 'status', 'era', 'time', 'extrinsics', 'block producer', 'block hash'];
 
+const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 500
+  }
+});
+
+const TooltipWithCopy: FC<{ blockHash: string }> = ({ blockHash, children }) => {
+  return (
+    <CustomWidthTooltip
+      title={
+        <Stack direction={'row'} spacing={1} alignItems={'center'}>
+          <Typography fontSize={'10px'} fontWeight={400}>
+            {blockHash}
+          </Typography>
+          <CopyButton value={blockHash} />
+        </Stack>
+      }
+      placement='left'
+      arrow
+    >
+      <span>{children}</span>
+    </CustomWidthTooltip>
+  );
+};
+
 const rowParser = (item: Block) => {
   return (
     <TableRow key={item.number}>
@@ -50,7 +83,9 @@ const rowParser = (item: Block) => {
       </TableCell>
       <TableCell>{item.status}</TableCell>
       <TableCell>{item.era}</TableCell>
-      <TableCell>{item.time}</TableCell>
+      <TableCell>
+        <TimeAgoComponent date={'2022-02-16 01:56:42 (+UTC)'} />
+      </TableCell>
       <TableCell>
         <Link to='#'>{item.extrinsics}</Link>
       </TableCell>
@@ -62,9 +97,9 @@ const rowParser = (item: Block) => {
         </Link>
       </TableCell>
       <TableCell>
-        <Link to={`/blocks/${item.number}`}>
-          <Hash value={item.blockHash} truncated />
-        </Link>
+        <TooltipWithCopy blockHash={item.blockHash}>
+          <Hash value={item.blockHash} link={`/blocks/${item.number}`} truncated />
+        </TooltipWithCopy>
       </TableCell>
     </TableRow>
   );
@@ -92,19 +127,17 @@ const BlocksTable = () => {
 
 const BlocksPage = () => {
   return (
-    <>
-      <Container sx={{ my: 5 }}>
-        <Breadcrumb />
-        <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
-          <Typography variant='h1'>Blocks</Typography>
-          <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>
-            Download data
-          </LoadingButton>
-        </Stack>
+    <Container sx={{ my: 5 }}>
+      <Breadcrumb />
+      <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
+        <Typography variant='h1'>Blocks</Typography>
+        <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>
+          Download data
+        </LoadingButton>
+      </Stack>
 
-        <BlocksTable />
-      </Container>
-    </>
+      <BlocksTable />
+    </Container>
   );
 };
 

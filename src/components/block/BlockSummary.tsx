@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { withCopy } from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
 import SummaryPaper from '../Paper/SummaryPaper';
+import TimeAgoComponent from '../TimeAgo';
 import { BlockNav } from './Block.styled';
 
 const BackAndForwardArrows = () => {
@@ -27,7 +28,9 @@ const BlockSummaryHeader: React.FC<{ number: string }> = ({ number }) => {
     <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
       <Typography variant='h1'>Block No. {number}</Typography>
       <BlockNav direction={'row'} alignItems={'center'} spacing={2}>
-        <Link to='/blocks'><Typography variant='h4'>blocks</Typography></Link>
+        <Link to='/blocks'>
+          <Typography variant='h4'>blocks</Typography>
+        </Link>
         <Divider orientation='vertical' variant='middle' flexItem />
         <BackAndForwardArrows />
       </BlockNav>
@@ -47,7 +50,7 @@ const producerField = (producer: Producer) => {
 const backAndForwardWithLabel = (parentHash: string) => {
   return (
     <Stack direction={'row'} spacing={1}>
-      <Hash value={parentHash} variant='body3' />
+      <Hash value={parentHash} />
       <Divider orientation='vertical' flexItem />
       <BackAndForwardArrows />
     </Stack>
@@ -72,16 +75,16 @@ const summaryDataParser = (data: BlockSummaryTyp) => [
   {
     label: 'status',
     value: (
-      <>
+      <Stack spacing={1} direction={'row'} alignItems='center'>
         <CheckCircleOutlineIcon color={'success'} />
         {data.status}
-      </>
+      </Stack>
     )
   },
   { label: 'era', value: data.era },
   {
     label: 'hash',
-    value: withCopy(data.hash, <Hash value={data.hash} variant='body3' />)
+    value: withCopy(data.hash, <Hash value={data.hash} />)
   },
   { label: 'parent hash', value: backAndForwardWithLabel(data.parentHash) },
   {
@@ -89,16 +92,16 @@ const summaryDataParser = (data: BlockSummaryTyp) => [
     value: (
       <>
         <CheckCircleOutlineIcon color='success' />
-        <Hash value={data.stateRoot} variant={'body3'} />
+        <Hash value={data.stateRoot} />
       </>
     )
   },
   {
     label: 'extrinsics root',
-    value: <Hash value={data.extrinsicsRoot} variant={'body3'} />
+    value: <Hash value={data.extrinsicsRoot} />
   },
   { label: 'block producer', value: producerField(data.blockProducer) },
-  { label: 'block time', value: data.blockTime },
+  { label: 'block time', value: <TimeAgoComponent date={data.blockTime} /> },
   { label: 'spec version', value: <Link to={'#'}>{data.specVersion}</Link> }
 ];
 
