@@ -1,5 +1,5 @@
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { Avatar, Stack, Tooltip, Typography, TypographyTypeMap } from '@mui/material';
+import { Avatar, Stack, Tooltip, Typography } from '@mui/material';
 import { decodeAddress } from '@polkadot/keyring';
 import { isHex } from '@polkadot/util';
 import React, { FC, useMemo } from 'react';
@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 
 type IdProperties = {
   link?: string;
-  variant?: TypographyTypeMap['props']['variant'];
   truncated?: boolean;
   value: string;
 };
@@ -20,19 +19,18 @@ const shortString = (addr: string, offset = 5, replaceStr = '...') =>
 const contentRenderer = (
   text: string,
   isValid: boolean,
-  variant: IdProperties['variant'],
   link?: IdProperties['link']
 ) => {
   return (
-    <Typography variant={variant} color={isValid ? 'info' : 'red'}>
+    <Typography color={isValid ? 'info' : 'red'}>
       {link ? <Link to={link}>{text}</Link> : text}
     </Typography>
   );
 };
 
-const Hash: FC<IdProperties> = ({ link, truncated, value, variant }) => {
+const Hash: FC<IdProperties> = ({ link, truncated, value }) => {
   const isValid = isHex(value, 256);
-  return contentRenderer(truncated ? shortString(value) : value, isValid, variant, link);
+  return contentRenderer(truncated ? shortString(value) : value, isValid, link);
 };
 
 // Check if an address is a valid xx network address
@@ -51,15 +49,14 @@ const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = ({
   link,
   name,
   truncated,
-  value,
-  variant
+  value
 }) => {
   const avatar = useMemo(() => {
     return name ? (
-      <Avatar src={avatarUrl} alt={name} />
+      <Avatar sx={{ width: 25, height: 25, mr: 1 }} src={avatarUrl} alt={name} />
     ) : (
       <Tooltip title='Identity Level: No Judgement' placement='bottom' arrow>
-        <RemoveCircleIcon />
+        <RemoveCircleIcon sx={{ mr: 1 }} />
       </Tooltip>
     );
   }, [name, avatarUrl]);
@@ -69,19 +66,19 @@ const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = ({
     if (name) {
       return (
         <Tooltip title={value} placement='top' arrow>
-          <span>{name}</span>
+          {contentRenderer(name, isValid, link)}
         </Tooltip>
       );
     } else {
       return truncated ? (
         <Tooltip title={value} placement='top' arrow>
-          {contentRenderer(truncated ? shortString(value) : value, isValid, variant, link)}
+          {contentRenderer(truncated ? shortString(value) : value, isValid, link)}
         </Tooltip>
       ) : (
-        value
+        contentRenderer(value, isValid, link)
       );
     }
-  }, [name, value, truncated, variant, link]);
+  }, [name, value, truncated, link]);
 
   return (
     <Stack direction={'row'} alignItems='center'>

@@ -1,5 +1,3 @@
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { LoadingButton } from '@mui/lab';
 import {
   Container,
   Stack,
@@ -17,6 +15,7 @@ import {
 import React, { FC } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CopyButton from '../../components/buttons/CopyButton';
+import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
@@ -131,11 +130,8 @@ const BlocksPage = () => {
       <Breadcrumb />
       <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
         <Typography variant='h1'>Blocks</Typography>
-        <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>
-          Download data
-        </LoadingButton>
+        <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
       </Stack>
-
       <BlocksTable />
     </Container>
   );

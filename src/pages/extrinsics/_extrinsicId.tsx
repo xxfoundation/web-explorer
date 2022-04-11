@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import EventsTable from '../../components/block/EventsTable';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import { withCopy } from '../../components/buttons/CopyButton';
+import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
@@ -39,14 +39,13 @@ const extrinsicsDetailData = [
   },
   {
     label: 'lifetime',
-    value: <>immortal</>
+    value: <Typography>immortal</Typography>
   },
   {
     label: 'extrinsic hash',
     value: (
       <Hash
         value='0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350'
-        variant='body3'
       />
     )
   },
@@ -56,29 +55,31 @@ const extrinsicsDetailData = [
   },
   {
     label: 'sender',
-    value: withCopy('', <Address name='john doe' value={sampleAddress} variant='body3' />)
+    value: <Address name='john doe' value={sampleAddress} />,
+    action: <CopyButton value={sampleAddress} />
   },
   {
     label: 'destination',
-    value: withCopy('', <Address value={sampleAddress} variant='body3' />)
+    value: <Address value={sampleAddress} />,
+    action: <CopyButton value={sampleAddress} />
   },
   {
     label: 'value',
     // TODO how to remove the B from the display
-    value: <FormatBalance value={'249850000000'} />
+    value: <Typography><FormatBalance value={'249850000000'} /></Typography>
   },
   {
     label: 'fee',
     value: (
-      <>
+      <Typography>
         {/* TODO how to display 0.297000000 XX */}
         <FormatBalance value={'297000000'} />
-      </>
+      </Typography>
     )
   },
   {
     label: 'nonce',
-    value: <>8329</>
+    value: <Typography>8329</Typography>
   },
   {
     label: 'result',
@@ -89,7 +90,10 @@ const extrinsicsDetailData = [
       </Stack>
     )
   },
-  { label: <Divider />, value: <Divider /> },
+  {
+    label: <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />,
+    value: <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
+  },
   // { label: 'parameters', value: <ParametersToSummary parameters={sampleDataParameters} /> },
   {
     label: 'signature',
@@ -109,9 +113,18 @@ const Extrinsic = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Container sx={{ mb: 5 }}>
-        <Typography variant='h1'>Extrinsic #{extrinsicId}</Typography>
-      </Container>
+      <Box sx={{ mb: 5 }}>
+        <Typography
+          variant='h1'
+          fontWeight={800}
+          fontSize={46}
+          textOverflow={'ellipsis'}
+          whiteSpace={'nowrap'}
+          overflow={'hidden'}
+        >
+          Extrinsic #{extrinsicId}
+        </Typography>
+      </Box>
       <SummaryPaper data={extrinsicsDetailData} />
       <Box sx={{ mt: 2 }}>
         <TabsWithPanels
