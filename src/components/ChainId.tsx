@@ -1,8 +1,9 @@
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { Avatar, Link, Stack, Tooltip, Typography, TypographyTypeMap } from '@mui/material';
+import { Avatar, Stack, Tooltip, Typography, TypographyTypeMap } from '@mui/material';
 import { decodeAddress } from '@polkadot/keyring';
 import { isHex } from '@polkadot/util';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 type IdProperties = {
   link?: string;
@@ -11,14 +12,28 @@ type IdProperties = {
   value: string;
 };
 
-const LinkWrapper: FC<{ link?: string }> = ({ children, link }) => {
-  return link ? <Link href={link}>{children}</Link> : <>{children}</>;
+const shortString = (addr: string, offset = 5, replaceStr = '...') =>
+  addr
+    ? addr.slice(0, offset + 2).concat(replaceStr, addr.slice(addr.length - offset, addr.length))
+    : '';
+
+const contentRenderer = (
+  text: string,
+  isValid: boolean,
+  variant: IdProperties['variant'],
+  link?: IdProperties['link']
+) => {
+  return (
+    <Typography variant={variant} color={isValid ? 'info' : 'red'}>
+      {link ? <Link to={link}>{text}</Link> : text}
+    </Typography>
+  );
 };
 
-const shortString = (addr: string, offset = 4, replaceStr = '...') =>
-  addr
-    ? addr.slice(0, offset).concat(replaceStr, addr.slice(addr.length - offset, addr.length))
-    : '';
+const Hash: FC<IdProperties> = ({ link, truncated, value, variant }) => {
+  const isValid = isHex(value, 256);
+  return contentRenderer(truncated ? shortString(value) : value, isValid, variant, link);
+};
 
 // Check if an address is a valid xx network address
 // Use ss58 format 55, which is registered for xx network
@@ -31,44 +46,47 @@ const isValidXXNetworkAddress = (address: string): boolean => {
   }
 };
 
-const ChainIdText: FC<IdProperties & { validate: (value: string) => boolean }> = ({
-  children,
+const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = ({
+  avatarUrl,
   link,
-  validate,
+  name,
+  truncated,
   value,
   variant
 }) => {
-  const isValid = validate(value);
-  return (
-    <LinkWrapper link={link}>
-      <Typography variant={variant} color={isValid ? 'info' : 'red'}>
-        {children}
-      </Typography>
-    </LinkWrapper>
-  );
-};
+  const avatar = useMemo(() => {
+    return name ? (
+      <Avatar src={avatarUrl} alt={name} />
+    ) : (
+      <Tooltip title='Identity Level: No Judgement' placement='bottom' arrow>
+        <RemoveCircleIcon />
+      </Tooltip>
+    );
+  }, [name, avatarUrl]);
 
-const Hash: FC<IdProperties> = (props) => {
-  return (
-    <ChainIdText {...props} validate={(value: string) => isHex(value, 256)}>
-      {props.truncated ? shortString(props.value) : props.value}
-    </ChainIdText>
-  );
-};
-
-const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = (props) => {
-  return (
-    <Stack direction={'row'} spacing={2} alignItems='center'>
-      {props.name ? (
-        <Avatar src={props.avatarUrl} alt={props.name} />
-      ) : (
-        <Tooltip title='Identity Level: No Judgement' placement='bottom' arrow>
-          <RemoveCircleIcon />
+  const content = useMemo(() => {
+    const isValid = isValidXXNetworkAddress(value);
+    if (name) {
+      return (
+        <Tooltip title={value} placement='top' arrow>
+          <span>{name}</span>
         </Tooltip>
-      )}
-      <ChainIdText {...props} validate={isValidXXNetworkAddress}>
-        {props.name || (props.truncated ? shortString(props.value) : props.value)}
-      </ChainIdText>
+      );
+    } else {
+      return truncated ? (
+        <Tooltip title={value} placement='top' arrow>
+          {contentRenderer(truncated ? shortString(value) : value, isValid, variant, link)}
+        </Tooltip>
+      ) : (
+        value
+      );
+    }
+  }, [name, value, truncated, variant, link]);
+
+  return (
+    <Stack direction={'row'} alignItems='center'>
+      {avatar}
+      {content}
     </Stack>
   );
 };

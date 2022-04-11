@@ -1,22 +1,25 @@
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
-import { Divider, IconButton, Stack, Tooltip } from '@mui/material';
+import { Divider, IconButton, Stack } from '@mui/material';
 import React from 'react';
 import useCopyClipboard from '../../hooks/useCopyToClibboard';
 
 const CopyButton: React.FC<{ value: string }> = ({ value }) => {
   const [isCopied, staticCopy] = useCopyClipboard();
   return (
-    <Tooltip title={'copy'} placement='top'>
-      <IconButton
-        arial-label='copy'
-        onClick={() => {
-          staticCopy(value);
-        }}
-      >
-        {isCopied ? <FileCopyIcon /> : <FileCopyOutlinedIcon />}
-      </IconButton>
-    </Tooltip>
+    <IconButton
+      size='small'
+      arial-label='copy'
+      onClick={() => {
+        staticCopy(value);
+      }}
+    >
+      {isCopied ? (
+        <FileCopyIcon fontSize={'small'} color={'primary'} />
+      ) : (
+        <FileCopyOutlinedIcon fontSize={'small'} color={'primary'} />
+      )}
+    </IconButton>
   );
 };
 

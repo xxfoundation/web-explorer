@@ -1,7 +1,7 @@
+import { Tooltip } from '@mui/material';
+import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import TimeAgo, { Formatter, ReactTimeagoProps, Unit } from 'react-timeago';
-import dayjs from 'dayjs';
-import { Tooltip } from '@mui/material';
 
 const overrides: Partial<Record<Unit, string>> = {
   'second': 'sec',
@@ -26,7 +26,7 @@ const TimeAgoComponent: React.FC<ReactTimeagoProps & Props> = ({ dateFormat = de
   );
 
   return (
-    <Tooltip title={formattedDate} placement='top' className='wtf-bbq'>
+    <Tooltip title={formattedDate} placement='top' className='wtf-bbq' arrow>
       <span>
         <TimeAgo
           data-tip={formattedDate}
