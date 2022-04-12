@@ -1,5 +1,6 @@
 import { Box, Divider, Stack, styled, Tab, Tabs, Typography } from '@mui/material';
 import React, { FC } from 'react';
+import { theme } from '../themes/default';
 import { PaperWrap } from './Paper/PaperWrap';
 
 type TabType = {
@@ -21,7 +22,7 @@ const StyledTabs = styled((props: StyledTabsProps) => (
     fontWeight: '700'
   },
   '& .MuiTab-textColorPrimary': {
-    color: '#9A9A9A'
+    color: theme.palette.grey[400]
   },
   '& .MuiTabs-indicator': {
     display: 'flex',
@@ -31,7 +32,7 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   '& .MuiTabs-indicatorSpan': {
     width: '78%',
     height: 1,
-    backgroundColor: '#00A2D6'
+    backgroundColor: theme.palette.primary.main
   }
 });
 

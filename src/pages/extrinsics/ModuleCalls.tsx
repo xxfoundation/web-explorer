@@ -1,4 +1,4 @@
-import { Info } from '@mui/icons-material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Box, Breadcrumbs, Stack, Tooltip, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import Tag from '../../components/Tags/Tag';
@@ -43,7 +43,7 @@ const ModuleCalls: FC<{ module: Modules; call: Calls }> = ({ call, module }) => 
         <Tag>{call}</Tag>
         {/* TODO replace it when is mobile */}
         <Tooltip title={BalanceCallsDescriptions[module][call]} arrow>
-          <Info color='primary' />
+          <InfoOutlinedIcon color='primary' />
         </Tooltip>
       </Stack>
     </Breadcrumbs>
