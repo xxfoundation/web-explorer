@@ -80,7 +80,7 @@ const BlockExtrinsics = () => {
   return (
     <>
       <TableContainer>
-        <Table>
+        <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '51px' } }}>
           <TableHead>
             <TableRow>
               <TableCell>extrinsic id</TableCell>

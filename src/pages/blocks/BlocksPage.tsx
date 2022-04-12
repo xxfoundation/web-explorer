@@ -46,8 +46,6 @@ const data = [
   }
 ];
 
-const header = ['block', 'status', 'era', 'time', 'extrinsics', 'block producer', 'block hash'];
-
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))({
@@ -118,12 +116,24 @@ const BlocksTable = () => {
   return (
     <PaperWrap>
       <TableContainer>
-        <Table>
+        <Table
+          sx={{
+            'th:nth-child(1), td:nth-child(1)': { maxWidth: '30px' },
+            'th:nth-child(3), td:nth-child(3)': { maxWidth: '20px' },
+            'th:nth-child(4), td:nth-child(4)': { maxWidth: '30px' },
+            'th:nth-child(6), td:nth-child(6)': { maxWidth: '70px' },
+            'th:last-child, td:last-child': { maxWidth: '55px' },
+          }}
+        >
           <TableHead>
             <TableRow>
-              {header.map((h) => {
-                return <TableCell key={h}>{h}</TableCell>;
-              })}
+              <TableCell>block</TableCell>
+              <TableCell>status</TableCell>
+              <TableCell>era</TableCell>
+              <TableCell>time</TableCell>
+              <TableCell>extrinsics</TableCell>
+              <TableCell>block producer</TableCell>
+              <TableCell>block hash</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{data.map(rowParser)}</TableBody>
