@@ -18,6 +18,9 @@ export const theme = createTheme({
     warning: {
       main: '#FFC908'
     },
+    success: {
+      main: '#59BD1C'
+    },
     text: {
       primary: '#4f4f4f'
     },
@@ -64,7 +67,7 @@ export const theme = createTheme({
     },
     h6: {
       fontSize: 12,
-      fontWeight: 400,
+      fontWeight: 400
     },
     body1: {
       // normal text

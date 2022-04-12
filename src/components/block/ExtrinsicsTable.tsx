@@ -16,8 +16,6 @@ import TablePagination from '../TablePagination';
 import { TableContainer } from '../Tables/TableContainer';
 import TimeAgoComponent from '../TimeAgo';
 
-const header = ['extrinsic id', 'hash', 'time', 'result', 'action', 'view all'];
-
 type ExtrinsicsTyp = {
   extrinsicId: string;
   hash: string;
@@ -82,9 +80,14 @@ const BlockExtrinsics = () => {
         <Table>
           <TableHead>
             <TableRow>
-              {header.map((h) => {
-                return <TableCell key={h}>{h}</TableCell>;
-              })}
+              <TableCell>extrinsic id</TableCell>
+              <TableCell>hash</TableCell>
+              <TableCell>time</TableCell>
+              <TableCell>result</TableCell>
+              <TableCell>action</TableCell>
+              <TableCell>
+                <Link to='/extrinsics'>view all</Link>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{data.map(rowParser)}</TableBody>

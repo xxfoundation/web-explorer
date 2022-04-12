@@ -14,8 +14,6 @@ import Link from '../Link';
 import TablePagination from '../TablePagination';
 import { TableContainer } from '../Tables/TableContainer';
 
-const header = ['event id', 'hash', 'action', 'view all'];
-
 type EventType = {
   id: string;
   hash: string;
@@ -28,7 +26,15 @@ const rowParser = (rowData: EventType) => {
     <TableRow key={rowData.id}>
       <TableCell>{rowData.id}</TableCell>
       <TableCell>
-        <Tooltip title={<Typography fontSize={'10px'} fontWeight={400}>{rowData.hash}</Typography>} placement={'top'} arrow>
+        <Tooltip
+          title={
+            <Typography fontSize={'10px'} fontWeight={400}>
+              {rowData.hash}
+            </Typography>
+          }
+          placement={'top'}
+          arrow
+        >
           <span>
             <Hash value={rowData.hash} truncated />
           </span>
@@ -59,9 +65,12 @@ const EventsTable: FC<{ data: EventType[] }> = ({ data }) => {
         <Table>
           <TableHead>
             <TableRow>
-              {header.map((h) => {
-                return <TableCell key={h}>{h}</TableCell>;
-              })}
+              <TableCell>event id</TableCell>
+              <TableCell>hash</TableCell>
+              <TableCell>action</TableCell>
+              <TableCell>
+                <Link to='/extrinsics'>view all</Link>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{staticDataPagination(page, rowsPerPage, data).map(rowParser)}</TableBody>

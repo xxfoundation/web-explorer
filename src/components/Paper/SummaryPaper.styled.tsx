@@ -72,8 +72,8 @@ export const ValueStyled = styled(Grid)(({ theme }) => ({
     paddingBottom: 40
   },
   p: {
-    textOverflow: 'ellipsis',
     overflow: 'hidden',
+    overflowWrap: 'break-word',
     fontSize: '14px',
     fontWeight: '400',
     letterSpacing: 0.5
