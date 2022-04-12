@@ -4,7 +4,7 @@ import Link from '../Link';
 
 export const BreadcrumbStyled = styled(Breadcrumbs)(({ theme }) => ({
   marginBottom: 14,
-  '*': {
+  'a, svg, li, ol': {
     // target all items
     textTransform: theme.typography.h5.textTransform,
     fontSize: theme.typography.h5.fontSize,

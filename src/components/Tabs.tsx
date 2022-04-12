@@ -16,12 +16,12 @@ interface StyledTabsProps {
 const StyledTabs = styled((props: StyledTabsProps) => (
   <Tabs {...props} TabIndicatorProps={{ children: <span className='MuiTabs-indicatorSpan' /> }} />
 ))({
-  'p': {
+  p: {
     fontSize: '13px',
-    fontWeight: '700',
+    fontWeight: '700'
   },
   '& .MuiTab-textColorPrimary': {
-    color: '#9A9A9A',
+    color: '#9A9A9A'
   },
   '& .MuiTabs-indicator': {
     display: 'flex',

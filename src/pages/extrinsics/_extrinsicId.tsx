@@ -43,11 +43,7 @@ const extrinsicsDetailData = [
   },
   {
     label: 'extrinsic hash',
-    value: (
-      <Hash
-        value='0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350'
-      />
-    )
+    value: <Hash value='0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350' />
   },
   {
     label: 'module/call',
@@ -66,7 +62,11 @@ const extrinsicsDetailData = [
   {
     label: 'value',
     // TODO how to remove the B from the display
-    value: <Typography><FormatBalance value={'249850000000'} /></Typography>
+    value: (
+      <Typography>
+        <FormatBalance value={'249850000000'} />
+      </Typography>
+    )
   },
   {
     label: 'fee',
@@ -110,6 +110,15 @@ const Extrinsic = () => {
   const eventsData = useMemo(() => {
     return sampleEventsData(extrinsicId);
   }, [extrinsicId]);
+
+  const panels = useMemo(() => {
+    return [
+      {
+        label: <TabText message='events' count={9} />,
+        content: <EventsTable data={eventsData} />
+      }
+    ];
+  }, [eventsData]);
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
@@ -127,15 +136,7 @@ const Extrinsic = () => {
       </Box>
       <SummaryPaper data={extrinsicsDetailData} />
       <Box sx={{ mt: 2 }}>
-        <TabsWithPanels
-          panels={[
-            {
-              label: <TabText message='events' count={9} />,
-              content: <EventsTable data={eventsData} />
-            }
-          ]}
-          tabsLabel='extrinsic page events'
-        />
+        <TabsWithPanels panels={panels} tabsLabel='extrinsic page events' />
       </Box>
     </Container>
   );

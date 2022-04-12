@@ -56,7 +56,7 @@ const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 });
 
-const TooltipWithCopy: FC<{ blockHash: string }> = ({ blockHash, children }) => {
+const HashColumnWithTooltip: FC<{ blockHash: string }> = ({ blockHash, children }) => {
   return (
     <CustomWidthTooltip
       title={
@@ -106,9 +106,9 @@ const rowParser = (item: Block) => {
         <RenderProducer number={item.number} blockProducer={item.blockProducer} />
       </TableCell>
       <TableCell>
-        <TooltipWithCopy blockHash={item.blockHash}>
+        <HashColumnWithTooltip blockHash={item.blockHash}>
           <Hash value={item.blockHash} link={`/blocks/${item.number}`} truncated />
-        </TooltipWithCopy>
+        </HashColumnWithTooltip>
       </TableCell>
     </TableRow>
   );
