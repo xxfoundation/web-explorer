@@ -15,6 +15,9 @@ export const theme = createTheme({
       main: '#00A2D6', // sets link color
       contrastText: '#FFF'
     },
+    warning: {
+      main: '#FFC908'
+    },
     text: {
       primary: '#4f4f4f'
     },
@@ -76,6 +79,7 @@ export const theme = createTheme({
     body3: {
       // normal weight text
       fontWeight: 400,
+      letterSpacing: 0.5,
       fontSize: 14,
       color: '#7A7A7A'
     },

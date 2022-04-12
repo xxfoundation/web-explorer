@@ -12,15 +12,26 @@ export const PaperStyled = styled(Paper)(({ theme }) => ({
   }
 }));
 
-export const RowStyled = styled(Grid)(({}) => ({
+export const RowStyled = styled(Grid)(({ theme }) => ({
   minHeight: 60,
+  [theme.breakpoints.down('sm')]: {
+    paddingRight: 30,
+    paddingLeft: 30,
+  },
   '&:first-child > div': {
     paddingTop: 50,
-    minHeight: 95
+    minHeight: 95,
+    [theme.breakpoints.down('sm')]: {
+      minHeight: 'auto'
+    },
   },
   '&:last-child > div': {
     paddingBottom: 50,
-    minHeight: 115
+    minHeight: 115,
+    [theme.breakpoints.down('sm')]: {
+      paddingBottom: 10,
+      minHeight: 'auto'
+    },
   }
 }));
 
@@ -38,7 +49,8 @@ export const LabelStyled = styled(Grid)(({ theme }) => ({
   color: theme.palette.grey[700],
   fontWeight: 500,
   [theme.breakpoints.down('sm')]: {
-    padding: 0
+    padding: 0,
+    background: theme.palette.background.paper
   }
 }));
 
@@ -59,11 +71,12 @@ export const ValueStyled = styled(Grid)(({ theme }) => ({
   '&::last-child': {
     paddingBottom: 40
   },
-  'p': {
+  p: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     fontSize: '14px',
-    fontWeight: '400'
+    fontWeight: '400',
+    letterSpacing: 0.5
   }
 }));
 

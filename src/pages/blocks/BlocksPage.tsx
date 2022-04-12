@@ -1,3 +1,4 @@
+import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
 import {
   Container,
   Stack,
@@ -37,10 +38,10 @@ const data = [
   {
     number: 111,
     status: 'lalal',
-    era: '2022-01-01',
+    era: '43',
     time: '2022-01-01',
     extrinsics: 13,
-    blockProducer: { name: 'Joselito', id: 123 },
+    blockProducer: { name: 'Joselitooooooooooooooooo', id: 123 },
     blockHash: '0xb63e96a5fabbb2644c13348dd0723c83963270557dfc04d341b76c4c55aa3895'
   }
 ];
@@ -74,13 +75,26 @@ const TooltipWithCopy: FC<{ blockHash: string }> = ({ blockHash, children }) => 
   );
 };
 
+const RenderProducer: FC<{ number: number; blockProducer: { id: number; name?: string } }> = ({
+  blockProducer: { id, name },
+  number
+}) => {
+  let content = id.toString();
+  if (name) {
+    content = name.length > 16 ? name.slice(0, 7) + '....' + name.slice(-5) : name;
+  }
+  return <Link to={`/blocks/${number}/producer/${id || name}`}>{content}</Link>;
+};
+
 const rowParser = (item: Block) => {
   return (
     <TableRow key={item.number}>
       <TableCell>
         <Link to={`/blocks/${item.number}`}>{item.number}</Link>
       </TableCell>
-      <TableCell>{item.status}</TableCell>
+      <TableCell>
+        <WatchLaterOutlinedIcon color={'warning'} />
+      </TableCell>
       <TableCell>{item.era}</TableCell>
       <TableCell>
         <TimeAgoComponent date={'2022-02-16 01:56:42 (+UTC)'} />
@@ -89,11 +103,7 @@ const rowParser = (item: Block) => {
         <Link to='#'>{item.extrinsics}</Link>
       </TableCell>
       <TableCell>
-        <Link
-          to={`/blocks/${item.number}/producer/${item.blockProducer.id || item.blockProducer.name}`}
-        >
-          {item.blockProducer.name || item.blockProducer.id}
-        </Link>
+        <RenderProducer number={item.number} blockProducer={item.blockProducer} />
       </TableCell>
       <TableCell>
         <TooltipWithCopy blockHash={item.blockHash}>
@@ -129,7 +139,9 @@ const BlocksPage = () => {
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
-        <Typography variant='h1'>Blocks</Typography>
+        <Typography fontWeight={800} fontSize={46}>
+          Blocks
+        </Typography>
         <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
       </Stack>
       <BlocksTable />

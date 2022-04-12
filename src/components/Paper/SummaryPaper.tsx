@@ -19,7 +19,7 @@ const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({ data }) => {
     <PaperStyled>
       <Grid container>
         {data.map(({ action, label, value }, index) => {
-          const valueSizes = action ? { xs: 10, sm: 10, md: 7 } : { xs: 12, sm: 12, md: 9 };
+          const valueSizes = action ? { xs: 8, sm: 8, md: 7 } : { xs: 12, sm: 12, md: 9 };
           return (
             <React.Fragment key={index}>
               <RowStyled container alignItems={'stretch'}>
@@ -30,7 +30,7 @@ const SummaryPaper: React.FC<{ data: SummaryPaperData[] }> = ({ data }) => {
                   {value}
                 </ValueStyled>
                 {action && (
-                  <ActionStyled container item xs={2} sm={2} md={2} alignItems={'center'}>
+                  <ActionStyled container item xs={4} sm={4} md={2} alignItems={'center'}>
                     <Divider orientation='vertical' sx={{ ml:1,  mr: 3, height: 19 }} />
                     {action}
                   </ActionStyled>

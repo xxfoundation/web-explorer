@@ -3,9 +3,9 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { ButtonGroup, Divider, IconButton, Stack, Typography } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
+import Link from '../Link';
 import SummaryPaper from '../Paper/SummaryPaper';
 import TimeAgoComponent from '../TimeAgo';
 import { BlockNav } from './Block.styled';
@@ -99,8 +99,22 @@ const summaryDataParser = (data: BlockSummaryTyp) => [
     ),
     action: <CopyButton value={data.blockProducer.hash} />
   },
-  { label: 'block time', value: <Typography><TimeAgoComponent date={data.blockTime} /></Typography> },
-  { label: 'spec version', value: <Link to={'#'}><Typography>{data.specVersion}</Typography></Link> }
+  {
+    label: 'block time',
+    value: (
+      <Typography>
+        <TimeAgoComponent date={data.blockTime} />
+      </Typography>
+    )
+  },
+  {
+    label: 'spec version',
+    value: (
+      <Link to={'#'}>
+        <Typography>{data.specVersion}</Typography>
+      </Link>
+    )
+  }
 ];
 
 const BlockSummary: React.FC<{ data: BlockSummaryTyp; number: string }> = ({ data, number }) => {
