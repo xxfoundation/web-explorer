@@ -20,8 +20,8 @@ import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
-import TablePagination from '../../components/TablePagination';
 import { TableContainer } from '../../components/Tables/TableContainer';
+import TablePagination from '../../components/Tables/TablePagination';
 import TimeAgoComponent from '../../components/TimeAgo';
 
 type Block = {

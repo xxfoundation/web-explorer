@@ -11,8 +11,9 @@ import {
 import React, { FC, useState } from 'react';
 import { Hash } from '../ChainId';
 import Link from '../Link';
-import TablePagination from '../TablePagination';
+import { TableCellLeftDivider } from '../Tables/TableCell';
 import { TableContainer } from '../Tables/TableContainer';
+import TablePagination from '../Tables/TablePagination';
 
 type EventType = {
   id: string;
@@ -24,8 +25,8 @@ type EventType = {
 const rowParser = (rowData: EventType) => {
   return (
     <TableRow key={rowData.id}>
-      <TableCell>{rowData.id}</TableCell>
-      <TableCell>
+      <TableCell align='left'>{rowData.id}</TableCell>
+      <TableCell align='left'>
         <Tooltip
           title={
             <Typography fontSize={'10px'} fontWeight={400}>
@@ -40,13 +41,15 @@ const rowParser = (rowData: EventType) => {
           </span>
         </Tooltip>
       </TableCell>
-      <TableCell>
+      <TableCell align='left'>
         <Link to='#'>{rowData.action}</Link>
       </TableCell>
-      <TableCell>
-        <Link to={`/events/${rowData.id}`}>
-          <ArrowForwardIosIcon />
-        </Link>
+      <TableCell align='center'>
+        <TableCellLeftDivider>
+          <Link to={`/events/${rowData.id}`}>
+            <ArrowForwardIosIcon />
+          </Link>
+        </TableCellLeftDivider>
       </TableCell>
     </TableRow>
   );
@@ -62,14 +65,16 @@ const EventsTable: FC<{ data: EventType[] }> = ({ data }) => {
   return (
     <>
       <TableContainer>
-        <Table>
+        <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '24px', } }}>
           <TableHead>
             <TableRow>
-              <TableCell>event id</TableCell>
-              <TableCell>hash</TableCell>
+              <TableCell align='left'>event id</TableCell>
+              <TableCell align='left'>hash</TableCell>
               <TableCell>action</TableCell>
-              <TableCell>
-                <Link to='/extrinsics'>view all</Link>
+              <TableCell align='center'>
+                <TableCellLeftDivider>
+                  <Link to='/extrinsics'>view all</Link>
+                </TableCellLeftDivider>
               </TableCell>
             </TableRow>
           </TableHead>

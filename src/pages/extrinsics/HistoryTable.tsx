@@ -4,8 +4,8 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import React, { useState } from 'react';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
-import TablePagination from '../../components/TablePagination';
 import { TableContainer } from '../../components/Tables/TableContainer';
+import TablePagination from '../../components/Tables/TablePagination';
 
 type Extrinsic = {
   id: string;

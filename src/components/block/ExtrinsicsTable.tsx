@@ -12,8 +12,9 @@ import {
 import React from 'react';
 import { Hash } from '../ChainId';
 import Link from '../Link';
-import TablePagination from '../TablePagination';
+import { TableCellLeftDivider } from '../Tables/TableCell';
 import { TableContainer } from '../Tables/TableContainer';
+import TablePagination from '../Tables/TablePagination';
 import TimeAgoComponent from '../TimeAgo';
 
 type ExtrinsicsTyp = {
@@ -55,9 +56,11 @@ const rowParser = (rowData: ExtrinsicsTyp) => {
         <Link to='#'>{rowData.action}</Link>
       </TableCell>
       <TableCell>
-        <Link to={`/events/${rowData.eventId}`}>
-          <ArrowForwardIosIcon />
-        </Link>
+        <TableCellLeftDivider>
+          <Link to={`/events/${rowData.eventId}`}>
+            <ArrowForwardIosIcon />
+          </Link>
+        </TableCellLeftDivider>
       </TableCell>
     </TableRow>
   );
@@ -86,7 +89,9 @@ const BlockExtrinsics = () => {
               <TableCell>result</TableCell>
               <TableCell>action</TableCell>
               <TableCell>
-                <Link to='/extrinsics'>view all</Link>
+                <TableCellLeftDivider>
+                  <Link to='/extrinsics'>view all</Link>
+                </TableCellLeftDivider>
               </TableCell>
             </TableRow>
           </TableHead>
