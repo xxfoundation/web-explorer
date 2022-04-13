@@ -1,11 +1,11 @@
 import { Box, Container, Divider, Grid, Link, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import discordIcon from '../assets/icons/Discord.svg';
-import emailIcon from '../assets/icons/Email.svg';
-import telegramIcon from '../assets/icons/Telegram.svg';
-import twitterIcon from '../assets/icons/Twitter.svg';
-import xxNetworkLogo from '../assets/logos/xx-network-logo--white.svg';
+import discordIcon from '../assets/images/icons/Discord.svg';
+import emailIcon from '../assets/images/icons/Email.svg';
+import telegramIcon from '../assets/images/icons/Telegram.svg';
+import twitterIcon from '../assets/images/icons/Twitter.svg';
+import xxNetworkLogo from '../assets/images/logos/xx-network-logo--white.svg';
 import { theme } from '../themes/footer';
 import FooterMenu from './menus/Footer';
 
@@ -31,7 +31,12 @@ const Footer = () => (
             <FooterMenu />
           </Grid>
         </Grid>
-        <Divider sx={{ mt: 5, mb: 3, borderColor: 'grey.600' }} />
+        <Grid sx={{ mt: 2 }}>
+            <Typography variant='body5'>
+                xxlabs xxnetwork v0.2.0
+            </Typography>
+        </Grid>
+        <Divider sx={{ mt: 2, mb: 3, borderColor: 'grey.600' }} />
         <Grid container justifyContent='space-between' spacing={3}>
           <Grid item xs={12} md={8}>
             <Typography variant='body1'>

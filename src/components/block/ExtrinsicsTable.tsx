@@ -1,16 +1,11 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Hash } from '../ChainId';
+import Link from '../Link';
+import TablePagination from '../TablePagination';
+import { TableContainer } from '../Tables/TableContainer';
 
 const header = ['extrinsic id', 'hash', 'time', 'result', 'action', 'view all'];
 
@@ -26,9 +21,11 @@ const rowParser = (rowData: ExtrinsicsTyp) => {
   return (
     <TableRow key={rowData.extrinsicId}>
       <TableCell>
-        <Link to={`/extrinsic/${rowData.extrinsicId}`}>{rowData.extrinsicId}</Link>
+        <Link to={`/extrinsics/${rowData.extrinsicId}`}>{rowData.extrinsicId}</Link>
       </TableCell>
-      <TableCell>{rowData.hash}</TableCell>
+      <TableCell>
+        <Hash value={rowData.hash} variant='body3' truncated />
+      </TableCell>
       <TableCell>{rowData.time}</TableCell>
       <TableCell>
         <CheckCircleOutlineIcon color='success' />
@@ -37,7 +34,7 @@ const rowParser = (rowData: ExtrinsicsTyp) => {
         <Link to='#'>{rowData.action}</Link>
       </TableCell>
       <TableCell>
-        <Link to={`/event/${rowData.eventId}`}>
+        <Link to={`/events/${rowData.eventId}`}>
           <ArrowForwardIosIcon />
         </Link>
       </TableCell>
@@ -52,23 +49,26 @@ const BlockExtrinsics = () => {
       extrinsicId: '312313-3',
       action: 'parachainsystem (set_validation_data)',
       time: '15h 49min',
-      hash: '0xb5913131231231231',
+      hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
       eventId: 12313
     }
   ];
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {header.map((h) => {
-              return <TableCell key={h}>{h}</TableCell>;
-            })}
-          </TableRow>
-        </TableHead>
-        <TableBody>{data.map(rowParser)}</TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {header.map((h) => {
+                return <TableCell key={h}>{h}</TableCell>;
+              })}
+            </TableRow>
+          </TableHead>
+          <TableBody>{data.map(rowParser)}</TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination count={data.length} page={0} />
+    </>
   );
 };
 

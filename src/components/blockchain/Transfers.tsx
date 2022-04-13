@@ -1,33 +1,36 @@
-import { Box, Grid, Link, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Tooltip, Typography } from '@mui/material';
 import React from 'react';
+import FormatBalance from '../FormatBalance';
+import Link from '../Link';
+import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
 
 type Transfer = {
-  intrinsicIndex: string;
+  extrinsicIndex: string;
   id: number;
   from: string;
   to: string;
-  duration: number;
-};
+  amount: string;
+  timestamp: number;
+}
 
-const transfers: Transfer[] = Array.from(Array(9).keys())
-  .slice(1)
-  .map((i) => {
-    return {
-      intrinsicIndex: '314658-5', // TODO mask?
-      id: i,
-      from: 'Oxacc15dc74899999', // TODO use just mask instead of manipulating the value
-      to: 'Oxacc15dc748888',
-      duration: 30
-    };
-  });
+const transfers: Transfer[] = Array.from(Array(9).keys()).slice(1).map((i) => {
+  return {
+    extrinsicIndex: '314658-5', // TODO mask?
+    id: i,
+    from: '0xacc15dc74899999', // TODO use just mask instead of manipulating the value
+    to: '0xacc15dc748888',
+    amount: '100000000000',
+    timestamp: new Date().getTime() - (i * 1000)
+  };
+});
 
 const addMaskToTransactionTargets = (hash: string) => {
-  const href = `/transfer/${hash}`;
+  const href = `/transfers/${hash}`;
   if (hash.length > 15) {
     return (
       <Tooltip title={hash} placement='top' arrow>
-        <Link href={href} underline='hover'>
+        <Link to={href} underline='hover'>
           {hash.split('').slice(0, 12).join('') + '...'}
         </Link>
       </Tooltip>
@@ -35,24 +38,28 @@ const addMaskToTransactionTargets = (hash: string) => {
   }
 
   return (
-    <Link href={href} underline='hover'>
+    <Link to={href} underline='hover'>
       {hash}
     </Link>
   );
 };
 
+const gridHeader = (elem: string) => {
+  return (
+    <Grid item component={'span'} xs={4}>
+      <Typography variant='body3'>{elem.toString().toUpperCase()}</Typography>
+    </Grid>
+  )
+}
+
 const listItemSecondaryText = (data: Transfer) => {
   return (
     <Grid component={'span'} container maxWidth={200}>
-      <Grid item component={'span'} xs={4}>
-        <Typography variant='body3'>FROM</Typography>
-      </Grid>
+      {gridHeader('from')}
       <Grid item component={'span'}>
         {addMaskToTransactionTargets(data.from)}
       </Grid>
-      <Grid item component={'span'} xs={4}>
-        <Typography variant='body3'>TO</Typography>
-      </Grid>
+      {gridHeader('to')}
       <Grid item component={'span'}>
         {addMaskToTransactionTargets(data.to)}
       </Grid>
@@ -64,8 +71,8 @@ const ItemHandler = (currentData: Transfer) => {
   return (
     <Box key={currentData.id} sx={{ mb: 4 }}>
       <Typography variant='body2' sx={{ mb: 1 }}>
-        INSTRINSIC INDEX NO.{' '}
-        <Link href={`/intrinsic/${currentData.id}`} underline='hover'>
+        EXTRINSIC #{' '}
+        <Link to={`/extrinsics/${currentData.id}`} underline='hover'>
           {currentData.id}
         </Link>
       </Typography>
@@ -75,19 +82,32 @@ const ItemHandler = (currentData: Transfer) => {
             {listItemSecondaryText(currentData)}
           </Typography>
         </Grid>
-        <Grid item xs='auto'>
-          <Typography variant='body3' sx={{ lineHeight: 1.75 }}>
-            {currentData.duration} sec
-          </Typography>
+        <Grid item xs='auto' textAlign='right'>
+          <Grid>
+            <Typography variant='body3' sx={{ lineHeight: 1.75 }}>
+              <TimeAgo date={currentData.timestamp} />
+            </Typography>
+          </Grid>
+          <Grid>
+            <Typography variant='body3'>
+              <FormatBalance value={currentData.amount} />
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
-    </Box>
+    </Box >
   );
 };
 
 const transfersList = () => {
   return (
-    <PaperWithHeader header='TRANSFERS' linkName={'SEE ALL'} linkAddress={'##'} height={500}>
+    <PaperWithHeader
+      header='TRANSFERS'
+      hasDivider={true}
+      linkName={'SEE ALL'}
+      linkAddress={'/extrinsics'}
+      height={500}
+    >
       {transfers.map(ItemHandler)}
     </PaperWithHeader>
   );

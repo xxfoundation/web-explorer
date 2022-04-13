@@ -54,7 +54,7 @@ jobs:
     env:
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_STAGING }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-    if: contains(github.ref, "staging")
+    if: contains('refs/heads/staging', github.ref)
     steps:
       - name: Deploy to Staging
         run: netlify deploy --prod --open
@@ -66,7 +66,7 @@ jobs:
     env:
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_PROD }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-    if: contains(github.ref, "release")
+    if: contains('refs/heads/release', github.ref)
     steps:
       - name: Deploy to Prod
         run: netlify deploy --prod

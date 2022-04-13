@@ -1,8 +1,9 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react';
-import { TabPanel, TabText } from '../tabs';
+import { TabPanel, TabText } from '../Tabs';
 import EventsTable from './EventsTable';
 import ExtrinsicsTable from './ExtrinsicsTable';
+import { PaperWrap } from '../Paper/PaperWrap';
 
 // const hash = '123123';
 // const number = '1231313';
@@ -18,7 +19,7 @@ const BlockDetailedEventsTabs: React.FC<{ events: number[]; extrinsics: number[]
   };
 
   return (
-    <Box>
+    <PaperWrap>
       <Box>
         <Tabs value={value} onChange={handleChange} aria-label='block event tabs'>
           <Tab
@@ -35,13 +36,13 @@ const BlockDetailedEventsTabs: React.FC<{ events: number[]; extrinsics: number[]
           />
         </Tabs>
       </Box>
-      <TabPanel value={value} name='extrinsics'>
+      <TabPanel value={value} index='extrinsics'>
         <ExtrinsicsTable />
       </TabPanel>
-      <TabPanel value={value} name='events'>
+      <TabPanel value={value} index='events'>
         <EventsTable />
       </TabPanel>
-    </Box>
+    </PaperWrap>
   );
 };
 

@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import FormatBalance from '../FormatBalance/FormatBalance';
+import FormatBalance from '../FormatBalance';
 import { Data, Item, Wrap } from './ChainInfo.styles';
 
 const data = {
@@ -20,7 +20,7 @@ const ChainInfoCard: FC<{ title: string, value: string | React.ReactNode }> = ({
   return (
     <Grid item xs={6} sm={3} md={3} key={title}>
       <Item>
-        <Typography variant='body2'>{title}</Typography>
+        <Typography variant='body4'>{title}</Typography>
         <Data>{value}</Data>
       </Item>
     </Grid>

@@ -1,20 +1,22 @@
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { LoadingButton } from '@mui/lab';
 import {
-  Box,
   Container,
-  Link,
-  Paper,
   Stack,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   Typography
 } from '@mui/material';
 import React from 'react';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import { Hash } from '../../components/ChainId';
+import Link from '../../components/Link';
+import { PaperWrap } from '../../components/Paper/PaperWrap';
+import TablePagination from '../../components/TablePagination';
+import { TableContainer } from '../../components/Tables/TableContainer';
 
 type Block = {
   number: number;
@@ -34,7 +36,7 @@ const data = [
     time: '2022-01-01',
     extrinsics: 13,
     blockProducer: { name: 'Joselito', id: 123 },
-    blockHash: '120983104'
+    blockHash: '0xb63e96a5fabbb2644c13348dd0723c83963270557dfc04d341b76c4c55aa3895'
   }
 ];
 
@@ -44,21 +46,25 @@ const rowParser = (item: Block) => {
   return (
     <TableRow key={item.number}>
       <TableCell>
-        <Link href={`/block/${item.number}`}>{item.number}</Link>
+        <Link to={`/blocks/${item.number}`}>{item.number}</Link>
       </TableCell>
       <TableCell>{item.status}</TableCell>
       <TableCell>{item.era}</TableCell>
       <TableCell>{item.time}</TableCell>
       <TableCell>
-        <Link href='#'>{item.extrinsics}</Link>
+        <Link to='#'>{item.extrinsics}</Link>
       </TableCell>
       <TableCell>
-        <Link href={`/producer/${item.blockProducer.id || item.blockProducer.name}`}>
+        <Link
+          to={`/blocks/${item.number}/producer/${item.blockProducer.id || item.blockProducer.name}`}
+        >
           {item.blockProducer.name || item.blockProducer.id}
         </Link>
       </TableCell>
       <TableCell>
-        <Link href={`/block/${item.number}`}>{item.blockHash}</Link>
+        <Link to={`/blocks/${item.number}`}>
+          <Hash value={item.blockHash} truncated />
+        </Link>
       </TableCell>
     </TableRow>
   );
@@ -66,8 +72,8 @@ const rowParser = (item: Block) => {
 
 const BlocksTable = () => {
   return (
-    <Box>
-      <TableContainer component={Paper}>
+    <PaperWrap>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -79,7 +85,8 @@ const BlocksTable = () => {
           <TableBody>{data.map(rowParser)}</TableBody>
         </Table>
       </TableContainer>
-    </Box>
+      <TablePagination page={0} count={data.length} />
+    </PaperWrap>
   );
 };
 
@@ -87,7 +94,8 @@ const BlocksPage = () => {
   return (
     <>
       <Container sx={{ my: 5 }}>
-        <Stack justifyContent={'space-between'} direction={'row'}>
+        <Breadcrumb />
+        <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
           <Typography variant='h1'>Blocks</Typography>
           <LoadingButton loading={false} startIcon={<FileDownloadIcon />}>
             Download data
