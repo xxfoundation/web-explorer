@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 
 export const TableStyled = styled(TableContainer)(({ theme }) => ({
   padding: 0, 
+  margin: 0,
   [theme.breakpoints.down('sm')]: {
     padding: 0, 
   },

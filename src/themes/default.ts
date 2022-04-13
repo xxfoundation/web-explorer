@@ -16,10 +16,10 @@ export const theme = createTheme({
       contrastText: '#FFF'
     },
     warning: {
-      main: '#EA5400',
-      light: '#FFF5D1',
-      dark: '#D64D00',
-      contrastText: '#FFFFFF'
+      main: '#FFC908'
+    },
+    success: {
+      main: '#59BD1C'
     },
     text: {
       primary: '#4f4f4f'
@@ -34,22 +34,6 @@ export const theme = createTheme({
       600: '#4F4F4F', // backgrounds
       700: '#3D3D3D', // dark grey
       800: '#27272B' // black header
-    },
-    // color coding used for metrics
-    veryGood: {
-      main: '#7BE03D'
-    },
-    good: {
-      main: '#08CDD7'
-    },
-    neutral: {
-      main: '#D2D2D2'
-    },
-    bad: {
-      main: '#FA7A03'
-    },
-    veryBad: {
-      main: '#FF4141'
     }
   },
   typography: {
@@ -71,9 +55,19 @@ export const theme = createTheme({
       color: '#4f4f4f'
     },
     h4: {
-      fontSize: 12,
-      fontWeight: 400,
+      fontSize: 14,
+      fontWeight: 500,
+      letterSpacing: 0.5,
       textTransform: 'uppercase'
+    },
+    h5: {
+      fontSize: 12,
+      fontWeight: 700,
+      textTransform: 'uppercase'
+    },
+    h6: {
+      fontSize: 12,
+      fontWeight: 400
     },
     body1: {
       // normal text
@@ -86,7 +80,9 @@ export const theme = createTheme({
       color: '#7A7A7A'
     },
     body3: {
+      // normal weight text
       fontWeight: 400,
+      letterSpacing: 0.5,
       fontSize: 14,
       lineHeight: 1.75,
       color: '#7A7A7A'

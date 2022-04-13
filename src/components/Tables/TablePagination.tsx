@@ -11,28 +11,28 @@ const TablePagination: FC<{
 }> = ({
   count,
   page,
-  onPageChange = () => { },
-  onRowsPerPageChange = () => { },
+  onPageChange = () => {},
+  onRowsPerPageChange = () => {},
   rowsPerPage = 15,
   rowsPerPageOptions = [rowsPerPage]
 }) => {
-    return (count > rowsPerPage || count > rowsPerPageOptions[0]) ? (
-      <MuiTablePagination
-        count={count}
-        component={'div'}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={rowsPerPageOptions}
-        onRowsPerPageChange={(event) => {
-          onRowsPerPageChange(event);
-        }}
-        onPageChange={(_event, number) => {
-          onPageChange(_event, number);
-        }}
-      />
-    ) : (
-      <></>
-    );
-  };
+  return (count > rowsPerPage || count > rowsPerPageOptions[0]) ? (
+    <MuiTablePagination
+      count={count}
+      component={'div'}
+      page={page}
+      rowsPerPage={rowsPerPage}
+      rowsPerPageOptions={rowsPerPageOptions}
+      onRowsPerPageChange={(event) => {
+        onRowsPerPageChange(event);
+      }}
+      onPageChange={(_event, number) => {
+        onPageChange(_event, number);
+      }}
+    />
+  ) : (
+    <></>
+  );
+};
 
 export default TablePagination;
