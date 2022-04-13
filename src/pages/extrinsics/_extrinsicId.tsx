@@ -7,6 +7,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
+import Link from '../../components/Link';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
 import ModuleCalls from './ModuleCalls';
@@ -31,19 +32,23 @@ const extrinsicsDetailData = [
   {
     label: 'block',
     value: (
-      <Stack direction='row' spacing={1} alignItems='center'>
-        <CheckCircleOutlineOutlinedIcon color='success' />
-        <Typography>504782</Typography>
-      </Stack>
+      <Link to={'/blocks/504782'}>
+        <Stack direction='row' spacing={1} alignItems='center'>
+          <CheckCircleOutlineOutlinedIcon color='success' />
+          <Typography>504782</Typography>
+        </Stack>
+      </Link>
     )
   },
   {
     label: 'lifetime',
-    value: <Typography>immortal</Typography>
+    value: <Typography>Immortal</Typography>
   },
   {
     label: 'extrinsic hash',
-    value: <Hash value='0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350' />
+    value: (
+      <Hash value='0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350' link={'#'} />
+    )
   },
   {
     label: 'module/call',
@@ -51,12 +56,12 @@ const extrinsicsDetailData = [
   },
   {
     label: 'sender',
-    value: <Address name='john doe' value={sampleAddress} />,
+    value: <Address name='john doe' value={sampleAddress} link={`/accounts/${sampleAddress}`} />,
     action: <CopyButton value={sampleAddress} />
   },
   {
     label: 'destination',
-    value: <Address value={sampleAddress} />,
+    value: <Address value={sampleAddress} link={`/accounts/${sampleAddress}`} />,
     action: <CopyButton value={sampleAddress} />
   },
   {
@@ -86,7 +91,7 @@ const extrinsicsDetailData = [
     value: (
       <Stack direction='row' spacing={1} alignItems='center'>
         <CheckCircleOutlineOutlinedIcon color='success' />
-        <Typography>success</Typography>
+        <Typography>Success</Typography>
       </Stack>
     )
   },
@@ -123,16 +128,7 @@ const Extrinsic = () => {
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <Box sx={{ mb: 5 }}>
-        <Typography
-          variant='h1'
-          fontWeight={800}
-          fontSize={46}
-          textOverflow={'ellipsis'}
-          whiteSpace={'nowrap'}
-          overflow={'hidden'}
-        >
-          Extrinsic #{extrinsicId}
-        </Typography>
+        <Typography variant='h1'>Extrinsic #{extrinsicId}</Typography>
       </Box>
       <SummaryPaper data={extrinsicsDetailData} />
       <Box sx={{ mt: 2 }}>

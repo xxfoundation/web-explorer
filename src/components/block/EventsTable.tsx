@@ -65,7 +65,7 @@ const EventsTable: FC<{ data: EventType[] }> = ({ data }) => {
   return (
     <>
       <TableContainer>
-        <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '24px', } }}>
+        <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '13px', } }}>
           <TableHead>
             <TableRow>
               <TableCell align='left'>event id</TableCell>

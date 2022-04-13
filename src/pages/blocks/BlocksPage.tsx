@@ -59,9 +59,7 @@ const HashColumnWithTooltip: FC<{ blockHash: string }> = ({ blockHash, children 
     <CustomWidthTooltip
       title={
         <Stack direction={'row'} spacing={1} alignItems={'center'}>
-          <Typography fontSize={'10px'} fontWeight={400}>
-            {blockHash}
-          </Typography>
+          <Typography variant='body5'>{blockHash}</Typography>
           <CopyButton value={blockHash} />
         </Stack>
       }
@@ -122,7 +120,7 @@ const BlocksTable = () => {
             'th:nth-child(3), td:nth-child(3)': { maxWidth: '20px' },
             'th:nth-child(4), td:nth-child(4)': { maxWidth: '30px' },
             'th:nth-child(6), td:nth-child(6)': { maxWidth: '70px' },
-            'th:last-child, td:last-child': { maxWidth: '55px' },
+            'th:last-child, td:last-child': { maxWidth: '55px' }
           }}
         >
           <TableHead>
@@ -148,10 +146,13 @@ const BlocksPage = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
-        <Typography fontWeight={800} fontSize={46}>
-          Blocks
-        </Typography>
+      <Stack
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        direction={'row'}
+        sx={{ mb: 5 }}
+      >
+        <Typography variant='h1'>Blocks</Typography>
         <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
       </Stack>
       <BlocksTable />

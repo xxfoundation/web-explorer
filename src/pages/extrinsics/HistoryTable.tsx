@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import React, { useState } from 'react';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
+import { TableCellLeftDivider } from '../../components/Tables/TableCell';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
 
@@ -36,9 +37,11 @@ const extrinsicToRow = (extrinsic: Extrinsic) => {
         <Link to='#'>{extrinsic.action}</Link>
       </TableCell>
       <TableCell>
-        <Link to={extrinsicIdLink}>
-          <ArrowForwardIosIcon />
-        </Link>
+        <TableCellLeftDivider>
+          <Link to={extrinsicIdLink}>
+            <ArrowForwardIosIcon />
+          </Link>
+        </TableCellLeftDivider>
       </TableCell>
     </TableRow>
   );
@@ -64,7 +67,7 @@ const HistoryTable = () => {
   const [page, setPage] = useState(0);
   return (
     <TableContainer>
-      <Table>
+      <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '6px', } }}>
         <TableHead>
           <TableRow>
             <TableCell>extrinsics id</TableCell>

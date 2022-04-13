@@ -1,4 +1,5 @@
 import React from 'react';
+import { theme } from '../../themes/default';
 import { PieChartWithLegend } from '../charts/highcharts/PieChart';
 import PaperWithHeader from './PaperWithHeader';
 import type { CustomPointOptions, StakeablePopup } from './types';
@@ -8,7 +9,7 @@ const data: CustomPointOptions<StakeablePopup>[] = [
   {
     name: 'staked',
     y: 58,
-    color: '#00A2D6',
+    color: theme.palette.primary.main,
     custom: {
       stakeable: {
         team: { value: 22145, percentage: 2.2 },
@@ -53,7 +54,6 @@ const data: CustomPointOptions<StakeablePopup>[] = [
 ];
 
 const StakingSupply = () => {
- 
   return (
     <PaperWithHeader>
       <PieChartWithLegend data={data} name='staking supply' value={value} />

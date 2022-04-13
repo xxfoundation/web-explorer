@@ -10,8 +10,15 @@ const HistoryPage = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
-        <Typography variant='h1'>Extrinsic History</Typography>
+      <Stack
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        direction={'row'}
+        sx={{ mb: 5 }}
+      >
+        <Typography variant='h1'>
+          Extrinsic History
+        </Typography>
         <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
       </Stack>
       <Typography variant='h3' sx={{ mb: 5 }}>

@@ -39,9 +39,12 @@ export const theme = createTheme({
   typography: {
     fontFamily: '\'Roboto\', sans-serif',
     h1: {
-      fontSize: 36,
-      fontWeight: 700,
-      color: '#3D3D3D'
+      fontSize: 46,
+      fontWeight: 800,
+      color: '#3D3D3D',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden'
     },
     h2: {
       fontSize: 36,

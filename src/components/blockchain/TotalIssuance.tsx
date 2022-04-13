@@ -1,4 +1,5 @@
 import React from 'react';
+import { theme } from '../../themes/default';
 import { PieChartWithLegend } from '../charts/highcharts/PieChart';
 import PaperWithHeader from './PaperWithHeader';
 
@@ -23,7 +24,7 @@ const TotalIssuance = () => {
     {
       name: 'vesting',
       y: 49,
-      color: '#00A2D6',
+      color: theme.palette.primary.main,
       custom: {
         stakeable: {
           team: { value: 22145, percentage: 22 },
@@ -71,7 +72,7 @@ const TotalIssuance = () => {
     {
       name: 'staking supply',
       y: 10,
-      color: '#FFC908',
+      color: theme.palette.warning.main,
       custom: {
         stakeable: {
           team: { value: 62145, percentage: 0.622 },
@@ -92,7 +93,7 @@ const TotalIssuance = () => {
     {
       name: 'staking supply missing',
       y: 90,
-      color: '#EAEAEA',
+      color: theme.palette.grey[200],
       states: {
         hover: {
           brightness: 0,
