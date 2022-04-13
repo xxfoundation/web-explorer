@@ -43,28 +43,26 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
   const [value, setValue] = React.useState(0);
   return (
     <PaperWrap>
-      <Box>
-        <StyledTabs
-          sx={{ mb: 3 }}
-          value={value}
-          onChange={(_, newValue) => {
-            setValue(newValue);
-          }}
-          aria-label={tabsLabel}
-        >
-          {panels.map(({ label }, index) => {
-            return (
-              <Tab
-                key={index}
-                label={label}
-                value={index}
-                id={`simple-tab-${index}`}
-                aria-controls={`tabpanel-events-${index}`}
-              />
-            );
-          })}
-        </StyledTabs>
-      </Box>
+      <StyledTabs
+        sx={{ mb: 3 }}
+        value={value}
+        onChange={(_, newValue) => {
+          setValue(newValue);
+        }}
+        aria-label={tabsLabel}
+      >
+        {panels.map(({ label }, index) => {
+          return (
+            <Tab
+              key={index}
+              label={label}
+              value={index}
+              id={`simple-tab-${index}`}
+              aria-controls={`tabpanel-events-${index}`}
+            />
+          );
+        })}
+      </StyledTabs>
 
       {panels.map(({ content }, index) => {
         return (
@@ -74,7 +72,7 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
             id={`tabpanel-${value}`}
             aria-labelledby={`tab-${value}`}
           >
-            {value === index && <Box sx={{ py: 3 }}>{content}</Box>}
+            {value === index && <Box sx={{ pt: 3 }}>{content}</Box>}
           </div>
         );
       })}

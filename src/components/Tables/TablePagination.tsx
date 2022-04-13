@@ -50,14 +50,17 @@ const TablePagination: FC<{
         onPageChange={(_event, number) => {
           onPageChange(_event, number);
         }}
+        backIconButtonProps={{ size: 'small' }}
+        nextIconButtonProps={{ size: 'small' }}
       />
     );
   }, [count, page, rowsPerPage, rowsPerPageOptions, onRowsPerPageChange, onPageChange]);
-  return (
+  return count > rowsPerPage || count > rowsPerPageOptions[0] ? (
     <>
-      <Divider />
-      {(count > rowsPerPage || count > rowsPerPageOptions[0]) && pagination}
+      <Divider /> {pagination}
     </>
+  ) : (
+    <></>
   );
 };
 

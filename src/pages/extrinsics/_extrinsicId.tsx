@@ -46,7 +46,9 @@ const extrinsicsDetailData = [
   },
   {
     label: 'extrinsic hash',
-    value: <Hash value='0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350' />
+    value: (
+      <Hash value='0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350' link={'#'} />
+    )
   },
   {
     label: 'module/call',
