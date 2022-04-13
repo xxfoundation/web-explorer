@@ -1,34 +1,39 @@
-import { Box, Divider, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Divider, Stack, styled, Tab, Tabs, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { PaperWrap } from './Paper/PaperWrap';
-
-const TabPanel: FC<{ index: string | number; value: string | number }> = ({
-  children,
-  index: name,
-  value
-}) => {
-  return (
-    <div role='tabpanel' id={`tabpanel-${value}`} aria-labelledby={`tab-${value}`}>
-      {value === name && <Box sx={{ py: 3 }}>{children}</Box>}
-    </div>
-  );
-};
-
-const TabText: FC<{ count: string | number; message: string }> = ({ count, message }) => {
-  return (
-    <Stack direction='row' divider={<Divider orientation='vertical' flexItem />}>
-      <Typography>{message}</Typography>
-      <Typography>{count}</Typography>
-    </Stack>
-  );
-};
-
-export { TabPanel, TabText };
 
 type TabType = {
   label: JSX.Element;
   content: JSX.Element;
 };
+
+interface StyledTabsProps {
+  children?: React.ReactNode;
+  value: number;
+  onChange: (event: React.SyntheticEvent, newValue: number) => void;
+}
+
+const StyledTabs = styled((props: StyledTabsProps) => (
+  <Tabs {...props} TabIndicatorProps={{ children: <span className='MuiTabs-indicatorSpan' /> }} />
+))({
+  p: {
+    fontSize: '13px',
+    fontWeight: '700'
+  },
+  '& .MuiTab-textColorPrimary': {
+    color: '#9A9A9A'
+  },
+  '& .MuiTabs-indicator': {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+  },
+  '& .MuiTabs-indicatorSpan': {
+    width: '78%',
+    height: 1,
+    backgroundColor: '#00A2D6'
+  }
+});
 
 const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
   panels,
@@ -38,7 +43,8 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
   return (
     <PaperWrap>
       <Box>
-        <Tabs
+        <StyledTabs
+          sx={{ mb: 3 }}
           value={value}
           onChange={(_, newValue) => {
             setValue(newValue);
@@ -56,18 +62,34 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
               />
             );
           })}
-        </Tabs>
+        </StyledTabs>
       </Box>
 
       {panels.map(({ content }, index) => {
         return (
-          <TabPanel index={index} value={value} key={index}>
-            {content}
-          </TabPanel>
+          <div
+            key={index}
+            role='tabpanel'
+            id={`tabpanel-${value}`}
+            aria-labelledby={`tab-${value}`}
+          >
+            {value === index && <Box sx={{ py: 3 }}>{content}</Box>}
+          </div>
         );
       })}
     </PaperWrap>
   );
 };
+
+const TabText: FC<{ count: string | number; message: string }> = ({ count, message }) => {
+  return (
+    <Stack direction='row' spacing={1} divider={<Divider orientation='vertical' flexItem />}>
+      <Typography>{message}</Typography>
+      <Typography>{count}</Typography>
+    </Stack>
+  );
+};
+
+export { TabText };
 
 export default TabsWithPanels;

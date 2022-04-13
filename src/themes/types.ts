@@ -1,4 +1,4 @@
-import { PaletteColorOptions, TypographyStyle } from '@mui/material/styles';
+import { TypographyStyle } from '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   // allow configuration using `createTheme`
@@ -12,14 +12,6 @@ declare module '@mui/material/styles' {
     borders?: { light?: string }
     boxShadow?: string;
     gradients?: { primary: string };
-  }
-
-  interface PaletteOptions {
-    veryGood?: PaletteColorOptions;
-    good?: PaletteColorOptions;
-    neutral?: PaletteColorOptions;
-    bad?: PaletteColorOptions;
-    veryBad?: PaletteColorOptions;
   }
 
   interface TypographyVariantsOptions {

@@ -1,21 +1,18 @@
 import { Divider, Grid, Typography } from '@mui/material';
-import React, { FC } from 'react';
-import { withCopy } from '../../components/buttons/CopyButton';
+import React, { FC, Fragment } from 'react';
+import CopyButton from '../../components/buttons/CopyButton';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
 
-const sampleAddress = (values: { name?: string; address: string }) =>
-  withCopy(values.address, <Address name={values.name} value={values.address} variant='body3' />);
-
 const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = ({ entries }) => {
   return (
     <Grid spacing={1} container>
       {Object.entries(entries).map(([name, value]) => {
         return (
-          <>
+          <Fragment key={name}>
             <Grid item xs={2} sm={2} md={2}>
               {name}
             </Grid>
@@ -25,7 +22,7 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
             <Grid item xs={9} sm={9} md={9}>
               {value}
             </Grid>
-          </>
+          </Fragment>
         );
       })}
     </Grid>
@@ -35,24 +32,31 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
 const Summary = () => {
   const data = React.useMemo(() => {
     return [
-      { label: 'stash', value: sampleAddress({ address: sampleHash }) },
+      {
+        label: 'stash',
+        value: <Address value={sampleHash} />,
+        action: <CopyButton value={sampleHash} />
+      },
       {
         label: 'controller',
-        value: sampleAddress({ address: sampleHash, name: 'test' })
+        value: <Address name='test' value={sampleHash} />,
+        action: <CopyButton value={sampleHash} />
       },
-      { label: 'reward', value: sampleAddress({ address: sampleHash }) },
+      {
+        label: 'reward',
+        value: <Address value={sampleHash} />,
+        action: <CopyButton value={sampleHash} />
+      },
       {
         label: 'cmix id',
-        value: withCopy(
-          'kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C',
-          <Typography>kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C</Typography>
-        )
+        value: <Typography>kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C</Typography>,
+        action: <CopyButton value={'kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C'} />
       },
-      { label: 'location', value: 'Big Sur, California' },
-      { label: 'own stake', value: '1.00 XX' },
-      { label: 'total stake', value: <FormatBalance value={'3038663570'} /> },
-      { label: 'nominators', value: 3 },
-      { label: 'commission', value: '10.00%' },
+      { label: 'location', value: <Typography>Big Sur, California</Typography> },
+      { label: 'own stake', value: <Typography>1.00 XX</Typography> },
+      { label: 'total stake', value: <Typography><FormatBalance value={'3038663570'} /></Typography> },
+      { label: 'nominators', value: <Typography>3</Typography> },
+      { label: 'commission', value: <Typography>10.00%</Typography> },
       {
         label: 'session key',
         value: (

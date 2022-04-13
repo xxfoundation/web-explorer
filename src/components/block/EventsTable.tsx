@@ -1,60 +1,101 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import React from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Typography
+} from '@mui/material';
+import React, { FC, useState } from 'react';
+import { Hash } from '../ChainId';
 import Link from '../Link';
-import TablePagination from '../TablePagination';
+import { TableCellLeftDivider } from '../Tables/TableCell';
 import { TableContainer } from '../Tables/TableContainer';
+import TablePagination from '../Tables/TablePagination';
 
-const header = ['event id', 'hash', 'action', 'view all'];
-
-type EventTyp = {
-  eventId: string;
+type EventType = {
+  id: string;
+  hash: string;
   action: string;
+  extrinsicId?: string;
 };
 
-const rowParser = (rowData: EventTyp) => {
+const rowParser = (rowData: EventType) => {
   return (
-    <TableRow key={rowData.eventId}>
-      <TableCell>{rowData.eventId}</TableCell>
-      <TableCell>-</TableCell>
-      <TableCell>
+    <TableRow key={rowData.id}>
+      <TableCell align='left'>{rowData.id}</TableCell>
+      <TableCell align='left'>
+        <Tooltip
+          title={
+            <Typography fontSize={'10px'} fontWeight={400}>
+              {rowData.hash}
+            </Typography>
+          }
+          placement={'top'}
+          arrow
+        >
+          <span>
+            <Hash value={rowData.hash} truncated />
+          </span>
+        </Tooltip>
+      </TableCell>
+      <TableCell align='left'>
         <Link to='#'>{rowData.action}</Link>
       </TableCell>
-      <TableCell>
-        <Link to={`/extrinsics/${rowData.eventId}`}>
-          <ArrowForwardIosIcon />
-        </Link>
+      <TableCell align='center'>
+        <TableCellLeftDivider>
+          <Link to={`/events/${rowData.id}`}>
+            <ArrowForwardIosIcon />
+          </Link>
+        </TableCellLeftDivider>
       </TableCell>
     </TableRow>
   );
 };
 
-const data = [
-  {
-    eventId: '312313',
-    action: 'balance (Withraw)'
-  }
-];
+const staticDataPagination = (page: number, rowsPerPage: number, data: EventType[]) => {
+  return rowsPerPage > 0 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : data;
+};
 
-const BlockEvents = () => {
-  // TODO subscribe to events and fill data with hash or number
+const EventsTable: FC<{ data: EventType[] }> = ({ data }) => {
+  const [rowsPerPage, setRowsPerPage] = useState(4);
+  const [page, setPage] = useState(0);
   return (
     <>
       <TableContainer>
-        <Table>
+        <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '24px', } }}>
           <TableHead>
             <TableRow>
-              {header.map((h) => {
-                return <TableCell key={h}>{h}</TableCell>;
-              })}
+              <TableCell align='left'>event id</TableCell>
+              <TableCell align='left'>hash</TableCell>
+              <TableCell>action</TableCell>
+              <TableCell align='center'>
+                <TableCellLeftDivider>
+                  <Link to='/extrinsics'>view all</Link>
+                </TableCellLeftDivider>
+              </TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>{data.map(rowParser)}</TableBody>
+          <TableBody>{staticDataPagination(page, rowsPerPage, data).map(rowParser)}</TableBody>
         </Table>
       </TableContainer>
-      <TablePagination page={0} count={data.length} />
+      <TablePagination
+        page={page}
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(_: unknown, number: number) => {
+          setPage(number);
+        }}
+        rowsPerPageOptions={[2, 4, 6]}
+        onRowsPerPageChange={({ target: { value } }) => {
+          setRowsPerPage(parseInt(value));
+          setPage(0);
+        }}
+      />
     </>
   );
 };
 
-export default BlockEvents;
+export default EventsTable;

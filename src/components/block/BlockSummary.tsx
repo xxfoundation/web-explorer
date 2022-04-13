@@ -3,19 +3,21 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { ButtonGroup, Divider, IconButton, Stack, Typography } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { withCopy } from '../buttons/CopyButton';
+import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
+import Link from '../Link';
 import SummaryPaper from '../Paper/SummaryPaper';
+import TimeAgoComponent from '../TimeAgo';
+import { BlockNav } from './Block.styled';
 
 const BackAndForwardArrows = () => {
   return (
     <ButtonGroup>
-      <IconButton aria-label='back'>
-        <ArrowBackIcon />
+      <IconButton aria-label='back' size='small'>
+        <ArrowBackIcon fontSize='small' />
       </IconButton>
-      <IconButton arial-label='forward'>
-        <ArrowForwardIcon />
+      <IconButton arial-label='forward' size='small'>
+        <ArrowForwardIcon fontSize='small' />
       </IconButton>
     </ButtonGroup>
   );
@@ -25,33 +27,18 @@ const BlockSummaryHeader: React.FC<{ number: string }> = ({ number }) => {
   return (
     <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
       <Typography variant='h1'>Block No. {number}</Typography>
-      <Stack direction={'row'} justifyContent={'space-around'} spacing={2}>
-        <Link to='/blocks'>blocks</Link>
-        <Divider orientation='vertical' flexItem />
+      <BlockNav direction={'row'} alignItems={'center'} spacing={2}>
+        <Link to='/blocks'>
+          <Typography variant='h4'>blocks</Typography>
+        </Link>
+        <Divider orientation='vertical' variant='middle' flexItem />
         <BackAndForwardArrows />
-      </Stack>
+      </BlockNav>
     </Stack>
   );
 };
 
 type Producer = { dunno?: string; name?: string; hash: string; icon?: string };
-
-const producerField = (producer: Producer) => {
-  return withCopy(
-    producer.hash,
-    <Address name={producer.name} value={producer.hash} variant='body3' />
-  );
-};
-
-const backAndForwardWithLabel = (parentHash: string) => {
-  return (
-    <Stack direction={'row'} spacing={1}>
-      <Hash value={parentHash} variant='body3' />
-      <Divider orientation='vertical' flexItem />
-      <BackAndForwardArrows />
-    </Stack>
-  );
-};
 
 type BlockSummaryTyp = {
   time: string;
@@ -67,38 +54,67 @@ type BlockSummaryTyp = {
 };
 
 const summaryDataParser = (data: BlockSummaryTyp) => [
-  { label: 'time', value: data.time },
+  { label: 'time', value: <Typography>{data.time}</Typography> },
   {
     label: 'status',
     value: (
-      <>
-        <CheckCircleOutlineIcon color={'success'} />
-        {data.status}
-      </>
+      <Stack direction={'row'} alignItems='center'>
+        <CheckCircleOutlineIcon color={'success'} sx={{ mr: 1 }} />
+        <Typography>{data.status}</Typography>
+      </Stack>
     )
   },
-  { label: 'era', value: data.era },
+  { label: 'era', value: <Typography>{data.era}</Typography> },
   {
     label: 'hash',
-    value: withCopy(data.hash, <Hash value={data.hash} variant='body3' />)
+    value: <Hash value={data.hash} />,
+    action: <CopyButton value={data.hash} />
   },
-  { label: 'parent hash', value: backAndForwardWithLabel(data.parentHash) },
+  {
+    label: 'parent hash',
+    value: <Hash value={data.parentHash} />,
+    action: <BackAndForwardArrows />
+  },
   {
     label: 'state root',
     value: (
-      <>
-        <CheckCircleOutlineIcon color='success' />
-        <Hash value={data.stateRoot} variant={'body3'} />
-      </>
+      <Stack direction={'row'}>
+        <CheckCircleOutlineIcon color='success' sx={{ mr: 1 }} />
+        <Hash value={data.stateRoot} />
+      </Stack>
     )
   },
   {
     label: 'extrinsics root',
-    value: <Hash value={data.extrinsicsRoot} variant={'body3'} />
+    value: <Hash value={data.extrinsicsRoot} />
   },
-  { label: 'block producer', value: producerField(data.blockProducer) },
-  { label: 'block time', value: data.blockTime },
-  { label: 'spec version', value: <Link to={'#'}>{data.specVersion}</Link> }
+  {
+    label: 'block producer',
+    value: (
+      <Address
+        name={data.blockProducer.name}
+        value={data.blockProducer.hash}
+        link={`/blocks/${data.hash}/producer/${data.blockProducer.hash}`}
+      />
+    ),
+    action: <CopyButton value={data.blockProducer.hash} />
+  },
+  {
+    label: 'block time',
+    value: (
+      <Typography>
+        <TimeAgoComponent date={data.blockTime} />
+      </Typography>
+    )
+  },
+  {
+    label: 'spec version',
+    value: (
+      <Link to={'#'}>
+        <Typography>{data.specVersion}</Typography>
+      </Link>
+    )
+  }
 ];
 
 const BlockSummary: React.FC<{ data: BlockSummaryTyp; number: string }> = ({ data, number }) => {
