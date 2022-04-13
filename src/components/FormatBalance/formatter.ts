@@ -28,9 +28,6 @@ function getUnits (si: SiDef, withSi: boolean, withSiFull: boolean, withUnit: bo
     : '';
 }
 
-function zeropad (num?: number) {
-  return new Array(num).map(() => '0').join();
-}
 
 function getPrePost (text: string, decimals: number, forceUnit?: string, precision = 4): [SiDef, string, string] {
   // NOTE We start at midpoint (8) minus 1 - this means that values display as
@@ -42,7 +39,8 @@ function getPrePost (text: string, decimals: number, forceUnit?: string, precisi
   const padding = mid < 0 ? 0 - mid : 0;
   const padded = new Array(padding + 1).join('0')
   const post = `${padded}${text}`.substring(mid < 0 ? 0 : mid);
-  const postfix = `${post}${zeropad(precision)}`.substring(0, precision);
+  const precisionpad = new Array(precision + 1).join('0')
+  const postfix = `${post}${precisionpad}`.substring(0, precision);
 
   return [si, prefix || '0', postfix];
 }
@@ -56,7 +54,7 @@ export function formatBalance <ExtToBn extends ToBn> (input?: number | string | 
   }
 
   // extract options - the boolean case is for backwards-compat
-  const { decimals = optDecimals, forceUnit = undefined, precision = 4, withSi = true, withSiFull = false, withUnit = true } = isBoolean(options)
+  const { decimals = optDecimals, forceUnit = undefined, precision = 2, withSi = true, withSiFull = false, withUnit = true } = isBoolean(options)
     ? { withSi: options }
     : options;
 
@@ -72,5 +70,5 @@ export function formatBalance <ExtToBn extends ToBn> (input?: number | string | 
   const [si, prefix, postfix] = getPrePost(text, decimals, forceUnit, precision);
   const units = getUnits(si, withSi, withSiFull, withUnit);
 
-  return `${sign}${formatDecimal(prefix)}.${postfix}${units}`;
+  return `${sign}${formatDecimal(prefix)}${postfix ? '.' : ''}${postfix}${units}`;
 }
