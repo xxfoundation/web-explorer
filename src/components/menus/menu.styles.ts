@@ -34,7 +34,7 @@ export const MenuLink = styled(Link)(({ theme }) => ({
   textTransform: 'none',
   fontWeight: 400,
   fontSize: 14,
-  padding: 6,
+  padding: 9,
   paddingLeft: 24,
   paddingRight: 24,
   display: 'block',
@@ -45,9 +45,9 @@ export const MenuLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none'
   },
   ':first-child': {
-    paddingTop: 18
+    paddingTop: 14
   },
   ':last-child': {
-    paddingBottom: 18
+    paddingBottom: 14
   }
 }));
