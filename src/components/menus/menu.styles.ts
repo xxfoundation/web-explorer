@@ -1,5 +1,6 @@
-import { Button, Link, MenuItem } from '@mui/material';
+import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Link from '../Link';
 
 export const ListLink = styled(Link)(({ theme }) => ({
   display: 'block',
@@ -29,18 +30,24 @@ export const MenuButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-export const MenuLink = styled(MenuItem)(({ theme }) => ({
+export const MenuLink = styled(Link)(({ theme }) => ({
   textTransform: 'none',
   fontWeight: 400,
   fontSize: 14,
-  padding: 7.5,
-  paddingLeft: 20,
-  paddingRight: 20,
-  'a': {
-    color: theme.palette.grey.A700,
-    textDecoration: 'none',
-    '&:hover': {
-      color: theme.palette.text.secondary,
-    }
+  padding: 6,
+  paddingLeft: 24,
+  paddingRight: 24,
+  display: 'block',
+  color: theme.palette.text.primary,
+  textDecoration: 'none',
+  '&:hover': {
+    color: theme.palette.text.secondary,
+    textDecoration: 'none'
+  },
+  ':first-child': {
+    paddingTop: 18
+  },
+  ':last-child': {
+    paddingBottom: 18
   }
 }));
