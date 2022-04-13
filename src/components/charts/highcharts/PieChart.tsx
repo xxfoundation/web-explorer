@@ -1,20 +1,11 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import { Grid } from '@mui/material';
 import BN from 'bn.js';
-import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
-import {
-  Grid,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Popover,
-  PopoverProps,
-  Typography
-} from '@mui/material';
 import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { CustomPointOptions, PercentageValues, StakeablePopup } from '../../blockchain/types';
-import FormatBalance from '../../FormatBalance';
+import React, { FC, useCallback, useMemo } from 'react';
+import { CustomPointOptions, StakeablePopup } from '../../blockchain/types';
+import ChartsLegends from '../ChartsLegends';
+import PiechartPopover from '../ChartsPopover';
 
 const defaultOptions: Options = {
   credits: { enabled: false },
@@ -87,96 +78,12 @@ const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, optio
   return <HighchartsReact id={id} highcharts={Highcharts} options={chartOptions} />;
 };
 
-const ChartLegends = ({ data }: { data: PointOptionsObject[] }) => {
-  return (
-    <List dense={true}>
-      {data.map(({ color, name, y }) => {
-        return (
-          <ListItem key={name}>
-            <ListItemIcon>
-              <SquareRoundedIcon sx={{ color: color as string }} />
-            </ListItemIcon>
-            <ListItemText primary={`${y}% ${name}`} />
-          </ListItem>
-        );
-      })}
-    </List>
-  );
-};
-
-type StakeableInfoProps = {
-  name: string;
-  values: PercentageValues;
-};
-
-const StakeableInfoRow: FC<StakeableInfoProps> = ({ name, values }) => {
-  return (
-    <>
-      <Grid item xs={4} className='stakeable-title'>
-        <Typography variant='subtitle2'>{name}</Typography>
-      </Grid>
-      <Grid item xs={4} className='stakeable-title'>
-        <Typography variant='subtitle2'>{values.team.value + values.foundation.value}</Typography>
-      </Grid>
-      <Grid item xs={4} className='stakeable-title'>
-        <Typography variant='subtitle2'>
-          {values.team.percentage + values.foundation.percentage}
-        </Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant='body2'>team</Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant='body2'>{values.team.value}</Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant='body2'>{values.team.percentage}</Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant='body2'>foundation</Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant='body2'>{values.foundation.value}</Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Typography variant='body2'>{values.foundation.percentage}</Typography>
-      </Grid>
-    </>
-  );
-};
-
-type ChartClickModalProps = {
-  data: CustomPointOptions<StakeablePopup>;
-} & PopoverProps;
-
-const ChartClickPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
-  return (
-    <Popover
-      {...props}
-      anchorOrigin={{
-        vertical: 'center',
-        horizontal: 'center'
-      }}
-      transformOrigin={{
-        vertical: 'center',
-        horizontal: 'center'
-      }}
-    >
-      <Typography variant='subtitle1'>{data.name}</Typography>
-      <Grid container>
-        <StakeableInfoRow name='stakeable' values={data.custom.stakeable} />
-        <StakeableInfoRow name='unstakeable' values={data.custom.unstakeable} />
-      </Grid>
-    </Popover>
-  );
-};
-
 type PieChartWithLegendProps = {
   crustData?: CustomPointOptions<StakeablePopup>[];
   data: CustomPointOptions<StakeablePopup>[];
   name: string;
   value: string | BN;
-}
+};
 
 const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name, value }) => {
   const legends = useMemo(
@@ -204,8 +111,12 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
   return (
     <Grid container>
       <Grid item xs={7}>
+        <PieChart data={data} crustData={crustData} name={name} onClick={handleClick} />
+      </Grid>
+      <Grid item xs={5}>
+        <ChartsLegends legends={legends} name={name} value={value} />
         {pointOptions && (
-          <ChartClickPopover
+          <PiechartPopover
             id={`${name}-chart-slice-popover`}
             onClose={onClose}
             open={open}
@@ -213,14 +124,6 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
             data={pointOptions}
           />
         )}
-        <PieChart data={data} crustData={crustData} name={name} onClick={handleClick} />
-      </Grid>
-      <Grid item xs={5}>
-        <Typography variant='subtitle2'>{name}</Typography>
-        <Typography variant='subtitle1'>
-          <FormatBalance value={value} />
-        </Typography>
-        <ChartLegends data={legends} />
       </Grid>
     </Grid>
   );
