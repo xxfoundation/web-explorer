@@ -1,10 +1,12 @@
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { LoadingButton } from '@mui/lab';
-import { Container, Stack, Typography } from '@mui/material';
+import { Box, Container, Grid, Stack, Typography } from '@mui/material';
 import React from 'react';
+import BarChart from '../../components/charts/BarChart';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
 import HistoryTable from './HistoryTable';
+import VerticalDivider from '../../components/VerticalDivider';
 
 const HistoryPage = () => {
   const totalOfExtrinsics = 32987;
@@ -17,9 +19,24 @@ const HistoryPage = () => {
           Download data
         </LoadingButton>
       </Stack>
-      <Typography variant='h3' sx={{ mb: 5 }}>
-        pretty chart here
-      </Typography>
+      <Box sx={{ mb: 5 }}>
+        <PaperWrap>
+        <Grid container>
+          <VerticalDivider>
+            2022.02.05
+          </VerticalDivider>
+          <Grid item>
+            <BarChart />
+          </Grid>
+          <VerticalDivider>
+            2022.02.05
+          </VerticalDivider>
+          <Grid item >
+            <BarChart />
+          </Grid>
+        </Grid>
+        </PaperWrap>
+      </Box>
       <PaperWrap>
         <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>
         <span hidden>filters placeholder</span>

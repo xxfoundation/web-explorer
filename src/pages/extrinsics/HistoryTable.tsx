@@ -64,6 +64,7 @@ const HistoryTable = () => {
   const extrinsicsHistoryData = sampleData();
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
+  
   return (
     <TableContainer>
       <Table>
