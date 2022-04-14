@@ -5,7 +5,8 @@ import React, { FC } from 'react';
 import { theme } from '../../themes/default';
 import { CustomPointOptions, StatePopup } from '../blockchain/types';
 import FormatBalance from '../FormatBalance';
-import { HtmlTooltip, SeriesContent } from './ChartsPopover';
+import { HtmlTooltip } from './ChartsPopover';
+import SeriesDetailedInfo from './SeriesDetailedInfo';
 
 const LegendItems: FC<{ data: CustomPointOptions<StatePopup>[] }> = ({ data }) => {
   return (
@@ -13,7 +14,7 @@ const LegendItems: FC<{ data: CustomPointOptions<StatePopup>[] }> = ({ data }) =
       {data.map(({ color, custom, name, y }) => {
         return (
           <Stack direction={'row'} spacing={1} alignItems='center' key={name}>
-            <HtmlTooltip title={<SeriesContent custom={custom} name={name} />}>
+            <HtmlTooltip title={<SeriesDetailedInfo custom={custom} name={name} />}>
               <SquareRoundedIcon
                 sx={{ color: color as string, borderRadius: 1000 }}
                 fontSize='small'

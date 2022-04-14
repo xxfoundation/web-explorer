@@ -120,6 +120,7 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
             open={open}
             anchorEl={anchorEl}
             data={pointOptions}
+            closeModal={onClose}
           />
         )}
       </Grid>
