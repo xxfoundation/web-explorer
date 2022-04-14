@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 import React, { FC, useCallback, useMemo } from 'react';
 import { CustomPointOptions, VestingStatePopup } from '../../blockchain/types';
 import ChartsLegends from '../ChartsLegends';
-import PiechartPopover from '../ChartsPopover';
+import SeriesPopover from '../ChartsPopover';
 
 const defaultOptions: Options = {
   credits: { enabled: false },
@@ -112,11 +112,8 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
     <Grid container>
       <Grid item xs={7}>
         <PieChart data={data} crustData={crustData} name={name} onClick={handleClick} />
-      </Grid>
-      <Grid item xs={5}>
-        <ChartsLegends legends={legends} name={name} value={value} />
         {pointOptions && (
-          <PiechartPopover
+          <SeriesPopover
             id={`${name}-chart-slice-popover`}
             onClose={onClose}
             open={open}
@@ -124,6 +121,9 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
             data={pointOptions}
           />
         )}
+      </Grid>
+      <Grid item xs={5}>
+        <ChartsLegends legends={legends} name={name} value={value} />
       </Grid>
     </Grid>
   );

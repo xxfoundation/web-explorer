@@ -1,15 +1,16 @@
 import {
   Grid,
-  Popover,
-  PopoverOrigin,
-  PopoverProps,
+  Popover, PopoverProps,
   Stack,
   styled,
   SxProps,
   Theme,
+  Tooltip,
+  tooltipClasses,
+  TooltipProps,
   Typography
 } from '@mui/material';
-import { default as React, FC, useMemo } from 'react';
+import { default as React, FC } from 'react';
 import { theme } from '../../themes/default';
 import { CustomPointOptions, PercentageValues, VestingStatePopup } from '../blockchain/types';
 
@@ -18,9 +19,9 @@ type StakeableInfoProps = {
   values: PercentageValues;
 };
 
-type ChartClickModalProps = {
-  data: CustomPointOptions<VestingStatePopup>;
-} & PopoverProps;
+type ChartClickModalProps<T> = {
+  data: CustomPointOptions<T>;
+};
 
 const LegendTypographyHeader = styled(Typography)(({ theme: th }) => {
   return {
@@ -98,10 +99,36 @@ const StateVesting: FC<StakeableInfoProps> = ({ name, values: { foundation, team
   );
 };
 
-const originConfig: PopoverOrigin = {
-  vertical: 'center',
-  horizontal: 'left'
+export const SeriesContent: FC<CustomPointOptions<VestingStatePopup>> = ({ custom, name }) => {
+  return (
+    <>
+      <LegendTypographyHeader marginBottom={1}>{name}</LegendTypographyHeader>
+      <Stack direction={'column'} spacing={1}>
+        <StateVesting name='stakeable' values={custom.stakeable} />
+        <StateVesting name='unstakeable' values={custom.unstakeable} />
+      </Stack>
+    </>
+  );
 };
+
+export const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme: th }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    background: th.palette.background.paper,
+    boxShadow: th.boxShadow,
+    border: th.borders?.light,
+    borderRadius: '33px',
+    padding: '40px',
+    [th.breakpoints.down('sm')]: {
+      padding: '30px'
+    },
+    maxWidth: '318px'
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: th.palette.background.paper
+  }
+}));
 
 const popooverProps: SxProps<Theme> = {
   boxShadow: theme.boxShadow,
@@ -114,28 +141,26 @@ const popooverProps: SxProps<Theme> = {
   maxWidth: '318px'
 };
 
-const PiechartPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
-  const stateData = useMemo(() => {
-    return (
-      <>
-        <StateVesting name='stakeable' values={data.custom.stakeable} />
-        <StateVesting name='unstakeable' values={data.custom.unstakeable} />
-      </>
-    );
-  }, [data.custom]);
+export const SeriesPopover: FC<ChartClickModalProps<VestingStatePopup> & PopoverProps> = ({
+  data,
+  ...props
+}) => {
   return (
     <Popover
       {...props}
-      anchorOrigin={originConfig}
-      transformOrigin={originConfig}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right'
+      }}
+      transformOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center'
+      }}
       PaperProps={{ sx: popooverProps }}
     >
-      <LegendTypographyHeader marginBottom={1}>{data.name}</LegendTypographyHeader>
-      <Stack direction={'column'} spacing={1}>
-        {stateData}
-      </Stack>
+      <SeriesContent name={data.name} custom={data.custom} />
     </Popover>
   );
 };
 
-export default PiechartPopover;
+export default SeriesPopover;
