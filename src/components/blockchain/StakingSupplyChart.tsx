@@ -2,9 +2,10 @@ import React from 'react';
 import { theme } from '../../themes/default';
 import { PieChartWithLegend } from '../charts/highcharts/PieChart';
 import PaperWithHeader from './PaperWithHeader';
+import { CustomPointOptions, VestingStatePopup } from './types';
 
 const value = '9999120003';
-const data = [
+const data: CustomPointOptions<VestingStatePopup>[] = [
   {
     name: 'staked',
     y: 58,

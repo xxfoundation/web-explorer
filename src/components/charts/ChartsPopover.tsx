@@ -5,11 +5,13 @@ import {
   PopoverProps,
   Stack,
   styled,
+  SxProps,
+  Theme,
   Typography
 } from '@mui/material';
-import { default as React, FC } from 'react';
+import { default as React, FC, useMemo } from 'react';
 import { theme } from '../../themes/default';
-import { CustomPointOptions, PercentageValues, StakeablePopup } from '../blockchain/types';
+import { CustomPointOptions, PercentageValues, VestingStatePopup } from '../blockchain/types';
 
 type StakeableInfoProps = {
   name: string;
@@ -17,7 +19,7 @@ type StakeableInfoProps = {
 };
 
 type ChartClickModalProps = {
-  data: CustomPointOptions<StakeablePopup>;
+  data: CustomPointOptions<VestingStatePopup>;
 } & PopoverProps;
 
 const LegendTypographyHeader = styled(Typography)(({ theme: th }) => {
@@ -54,7 +56,7 @@ const LegendTypographyBody = styled(Typography)(({}) => {
   };
 });
 
-const StakeableInfoRow: FC<StakeableInfoProps> = ({ name, values: { foundation, team } }) => {
+const StateVesting: FC<StakeableInfoProps> = ({ name, values: { foundation, team } }) => {
   return (
     <Grid container marginY={1}>
       <Grid container>
@@ -101,29 +103,36 @@ const originConfig: PopoverOrigin = {
   horizontal: 'left'
 };
 
+const popooverProps: SxProps<Theme> = {
+  boxShadow: theme.boxShadow,
+  border: theme.borders?.light,
+  borderRadius: '33px',
+  padding: '40px',
+  [theme.breakpoints.down('sm')]: {
+    padding: '30px'
+  },
+  maxWidth: '318px'
+};
+
 const PiechartPopover: FC<ChartClickModalProps> = ({ data, ...props }) => {
+  const stateData = useMemo(() => {
+    return (
+      <>
+        <StateVesting name='stakeable' values={data.custom.stakeable} />
+        <StateVesting name='unstakeable' values={data.custom.unstakeable} />
+      </>
+    );
+  }, [data.custom]);
   return (
     <Popover
       {...props}
       anchorOrigin={originConfig}
       transformOrigin={originConfig}
-      PaperProps={{
-        sx: {
-          boxShadow: theme.boxShadow,
-          border: theme.borders?.light,
-          borderRadius: '33px',
-          padding: '40px',
-          [theme.breakpoints.down('sm')]: {
-            padding: '30px'
-          },
-          maxWidth: '318px'
-        }
-      }}
+      PaperProps={{ sx: popooverProps }}
     >
       <LegendTypographyHeader marginBottom={1}>{data.name}</LegendTypographyHeader>
       <Stack direction={'column'} spacing={1}>
-        <StakeableInfoRow name='stakeable' values={data.custom.stakeable} />
-        <StakeableInfoRow name='unstakeable' values={data.custom.unstakeable} />
+        {stateData}
       </Stack>
     </Popover>
   );

@@ -4,7 +4,7 @@ import BN from 'bn.js';
 import { PointOptionsObject } from 'highcharts';
 import React, { FC } from 'react';
 import { theme } from '../../themes/default';
-import { CustomPointOptions, StakeablePopup } from '../blockchain/types';
+import { CustomPointOptions, OthersStatePopup, VestingStatePopup } from '../blockchain/types';
 import FormatBalance from '../FormatBalance';
 
 const LegendItems: FC<{ data: PointOptionsObject[] }> = ({ data }) => {
@@ -28,7 +28,7 @@ const LegendItems: FC<{ data: PointOptionsObject[] }> = ({ data }) => {
 };
 
 const ChartsLegends: FC<{
-  legends: CustomPointOptions<StakeablePopup>[];
+  legends: CustomPointOptions<VestingStatePopup | OthersStatePopup>[];
   name: string;
   value: string | BN;
 }> = ({ legends, name, value }) => {
