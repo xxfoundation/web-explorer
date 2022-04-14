@@ -47,8 +47,8 @@ type PieChartProps = {
 
 const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, options }) => {
   const chartOptions: Options = {
-    ...options,
     ...defaultOptions,
+    ...options,
     series: [
       {
         type: 'pie',
@@ -95,10 +95,11 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
   const [pointOptions, setPointOptions] = React.useState<CustomPointOptions<StatePopup>>();
 
   const handleClick = useCallback(
-    (event) => {
-      setPointOptions(event.point.options);
-      if (event.currentTarget instanceof Element) {
-        setAnchorEl(event.currentTarget);
+    ({ currentTarget, point: { options } }) => {
+      if ((options as CustomPointOptions<StatePopup>).custom.noClick) return;
+      setPointOptions(options);
+      if (currentTarget instanceof Element) {
+        setAnchorEl(currentTarget);
       }
     },
     [setPointOptions]
