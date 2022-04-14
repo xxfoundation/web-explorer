@@ -11,6 +11,7 @@ const TotalIssuance = () => {
       y: 6,
       color: '#13EEF9',
       custom: {
+        type: 'vesting',
         stakeable: {
           team: { value: 82145, percentage: 0.82 },
           foundation: { value: 80156, percentage: 83 }
@@ -26,6 +27,7 @@ const TotalIssuance = () => {
       y: 49,
       color: theme.palette.primary.main,
       custom: {
+        type: 'vesting',
         stakeable: {
           team: { value: 22145, percentage: 22 },
           foundation: { value: 30156, percentage: 3 }
@@ -41,6 +43,7 @@ const TotalIssuance = () => {
       y: 39,
       color: '#6F74FF',
       custom: {
+        type: 'vesting',
         stakeable: {
           team: { value: 92145, percentage: 0.92 },
           foundation: { value: 90156, percentage: 93 }
@@ -56,14 +59,10 @@ const TotalIssuance = () => {
       y: 6,
       color: '#7BE03D',
       custom: {
-        stakeable: {
-          team: { value: 72145, percentage: 0.722 },
-          foundation: { value: 70156, percentage: 0.73 }
-        },
-        unstakeable: {
-          team: { value: 72145, percentage: 0.732 },
-          foundation: { value: 70156, percentage: 0.701 }
-        }
+        type: 'others',
+        treasury: { value: 72145, percentage: 0.722 },
+        canaryNetReward: { value: 72145, percentage: 0.722 },
+        liquidityStaking: { value: 70156, percentage: 0.701 }
       }
     }
   ];
@@ -74,6 +73,7 @@ const TotalIssuance = () => {
       y: 10,
       color: theme.palette.warning.main,
       custom: {
+        type: 'vesting',
         stakeable: {
           team: { value: 62145, percentage: 0.622 },
           foundation: { value: 60156, percentage: 0.63 }
@@ -101,6 +101,7 @@ const TotalIssuance = () => {
         }
       },
       custom: {
+        type: 'vesting',
         stakeable: {
           team: { value: 62145, percentage: 0.622 },
           foundation: { value: 60156, percentage: 0.63 }

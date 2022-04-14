@@ -3,11 +3,11 @@ import { Stack, Typography } from '@mui/material';
 import BN from 'bn.js';
 import React, { FC } from 'react';
 import { theme } from '../../themes/default';
-import { CustomPointOptions, VestingStatePopup } from '../blockchain/types';
+import { CustomPointOptions, StatePopup } from '../blockchain/types';
 import FormatBalance from '../FormatBalance';
 import { HtmlTooltip, SeriesContent } from './ChartsPopover';
 
-const LegendItems: FC<{ data: CustomPointOptions<VestingStatePopup>[] }> = ({ data }) => {
+const LegendItems: FC<{ data: CustomPointOptions<StatePopup>[] }> = ({ data }) => {
   return (
     <Stack direction={'column'} marginY={2}>
       {data.map(({ color, custom, name, y }) => {
@@ -30,7 +30,7 @@ const LegendItems: FC<{ data: CustomPointOptions<VestingStatePopup>[] }> = ({ da
 };
 
 const ChartsLegends: FC<{
-  legends: CustomPointOptions<VestingStatePopup>[];
+  legends: CustomPointOptions<StatePopup>[];
   name: string;
   value: string | BN;
 }> = ({ legends, name, value }) => {

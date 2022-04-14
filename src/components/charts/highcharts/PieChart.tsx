@@ -3,7 +3,7 @@ import BN from 'bn.js';
 import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC, useCallback, useMemo } from 'react';
-import { CustomPointOptions, VestingStatePopup } from '../../blockchain/types';
+import { CustomPointOptions, StatePopup } from '../../blockchain/types';
 import ChartsLegends from '../ChartsLegends';
 import SeriesPopover from '../ChartsPopover';
 
@@ -79,8 +79,8 @@ const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, optio
 };
 
 type PieChartWithLegendProps = {
-  crustData?: CustomPointOptions<VestingStatePopup>[];
-  data: CustomPointOptions<VestingStatePopup>[];
+  crustData?: CustomPointOptions<StatePopup>[];
+  data: CustomPointOptions<StatePopup>[];
   name: string;
   value: string | BN;
 };
@@ -92,7 +92,7 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
     [data, crustData]
   );
   const [anchorEl, setAnchorEl] = React.useState<Element>();
-  const [pointOptions, setPointOptions] = React.useState<CustomPointOptions<VestingStatePopup>>();
+  const [pointOptions, setPointOptions] = React.useState<CustomPointOptions<StatePopup>>();
 
   const handleClick = useCallback(
     (event) => {

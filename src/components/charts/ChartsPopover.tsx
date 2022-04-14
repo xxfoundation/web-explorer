@@ -1,6 +1,7 @@
 import {
   Grid,
-  Popover, PopoverProps,
+  Popover,
+  PopoverProps,
   Stack,
   styled,
   SxProps,
@@ -10,9 +11,15 @@ import {
   TooltipProps,
   Typography
 } from '@mui/material';
-import { default as React, FC } from 'react';
+import { default as React, FC, useMemo } from 'react';
 import { theme } from '../../themes/default';
-import { CustomPointOptions, PercentageValues, VestingStatePopup } from '../blockchain/types';
+import {
+  CustomPointOptions,
+  OthersStatePopup,
+  PercentageValues,
+  StatePopup,
+  VestingStatePopup
+} from '../blockchain/types';
 
 type StakeableInfoProps = {
   name: string;
@@ -99,13 +106,86 @@ const StateVesting: FC<StakeableInfoProps> = ({ name, values: { foundation, team
   );
 };
 
-export const SeriesContent: FC<CustomPointOptions<VestingStatePopup>> = ({ custom, name }) => {
+const SeriesVesting: FC<VestingStatePopup> = ({ stakeable, unstakeable }) => {
+  return (
+    <>
+      <StateVesting name='stakeable' values={stakeable} />
+      <StateVesting name='unstakeable' values={unstakeable} />
+    </>
+  );
+};
+
+const SeriesOthers: FC<OthersStatePopup> = ({ canaryNetReward, liquidityStaking, treasury }) => {
+  return (
+    <Grid container marginY={1}>
+      <Grid container>
+        <Grid item xs={7}>
+          <LegendTypographySubHeaders>total</LegendTypographySubHeaders>
+        </Grid>
+        <Grid item xs={3}>
+          <LegendTypographySubHeaders>
+            {treasury.value + liquidityStaking.value + canaryNetReward.value}
+          </LegendTypographySubHeaders>
+        </Grid>
+        <Grid item xs={2}>
+          <LegendTypographySubHeaders>
+            {treasury.percentage + liquidityStaking.percentage + canaryNetReward.percentage}
+          </LegendTypographySubHeaders>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={7}>
+          <LegendTypographyBody>Treasury</LegendTypographyBody>
+        </Grid>
+        <Grid item xs={3}>
+          <LegendTypographyBody>{treasury.value}</LegendTypographyBody>
+        </Grid>
+        <Grid item xs={2}>
+          <LegendTypographyBody>{treasury.percentage}</LegendTypographyBody>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={7}>
+          <LegendTypographyBody>CanaryNet Rewards</LegendTypographyBody>
+        </Grid>
+        <Grid item xs={3}>
+          <LegendTypographyBody>{canaryNetReward.value}</LegendTypographyBody>
+        </Grid>
+        <Grid item xs={2}>
+          <LegendTypographyBody>{canaryNetReward.percentage}</LegendTypographyBody>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={7}>
+          <LegendTypographyBody>Liquidity Staking</LegendTypographyBody>
+        </Grid>
+        <Grid item xs={3}>
+          <LegendTypographyBody>{liquidityStaking.value}</LegendTypographyBody>
+        </Grid>
+        <Grid item xs={2}>
+          <LegendTypographyBody>{liquidityStaking.percentage}</LegendTypographyBody>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+};
+
+export const SeriesContent: FC<CustomPointOptions<StatePopup>> = ({ custom, name }) => {
+  const content = useMemo(() => {
+    if (custom.type === 'vesting') {
+      return <SeriesVesting {...(custom as VestingStatePopup)} />;
+    }
+    if (custom.type === 'others') {
+      return <SeriesOthers {...(custom as OthersStatePopup)} />;
+    }
+    return <></>;
+  }, [custom]);
+
   return (
     <>
       <LegendTypographyHeader marginBottom={1}>{name}</LegendTypographyHeader>
       <Stack direction={'column'} spacing={1}>
-        <StateVesting name='stakeable' values={custom.stakeable} />
-        <StateVesting name='unstakeable' values={custom.unstakeable} />
+        {content}
       </Stack>
     </>
   );
@@ -141,7 +221,7 @@ const popooverProps: SxProps<Theme> = {
   maxWidth: '318px'
 };
 
-export const SeriesPopover: FC<ChartClickModalProps<VestingStatePopup> & PopoverProps> = ({
+export const SeriesPopover: FC<ChartClickModalProps<StatePopup> & PopoverProps> = ({
   data,
   ...props
 }) => {

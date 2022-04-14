@@ -11,6 +11,7 @@ const data: CustomPointOptions<VestingStatePopup>[] = [
     y: 58,
     color: theme.palette.primary.main,
     custom: {
+      type: 'vesting',
       stakeable: {
         team: { value: 22145, percentage: 2.2 },
         foundation: { value: 30156, percentage: 3 }
@@ -26,6 +27,7 @@ const data: CustomPointOptions<VestingStatePopup>[] = [
     y: 34,
     color: '#13EEF9',
     custom: {
+      type: 'vesting',
       stakeable: {
         team: { value: 82145, percentage: 0.82 },
         foundation: { value: 80156, percentage: 83 }
@@ -41,6 +43,7 @@ const data: CustomPointOptions<VestingStatePopup>[] = [
     y: 8,
     color: '#6F74FF',
     custom: {
+      type: 'vesting',
       stakeable: {
         team: { value: 92145, percentage: 0.92 },
         foundation: { value: 90156, percentage: 93 }
