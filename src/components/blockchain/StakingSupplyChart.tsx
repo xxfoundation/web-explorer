@@ -33,8 +33,8 @@ const data: CustomPointOptions<VestingStatePopup>[] = [
         foundation: { value: 80156, percentage: 83 }
       },
       unstakeable: {
-        team: { value: 82145, percentage: 2.82 },
-        foundation: { value: 80156, percentage: 80.1 }
+        team: { value: 82145, percentage: 2 },
+        foundation: { value: 80156, percentage: 80 }
       }
     }
   },
@@ -50,7 +50,7 @@ const data: CustomPointOptions<VestingStatePopup>[] = [
       },
       unstakeable: {
         team: { value: 92145, percentage: 93.2 },
-        foundation: { value: 90156, percentage: 90.1 }
+        foundation: { value: 90156, percentage: 1 }
       }
     }
   }

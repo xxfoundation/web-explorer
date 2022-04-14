@@ -13,12 +13,12 @@ const TotalIssuance = () => {
       custom: {
         type: 'vesting',
         stakeable: {
-          team: { value: 82145, percentage: 0.82 },
+          team: { value: 82145, percentage: 1 },
           foundation: { value: 80156, percentage: 83 }
         },
         unstakeable: {
-          team: { value: 82145, percentage: 2.82 },
-          foundation: { value: 80156, percentage: 80.1 }
+          team: { value: 82145, percentage: 40 },
+          foundation: { value: 80156, percentage: 40 }
         }
       }
     },
@@ -29,12 +29,12 @@ const TotalIssuance = () => {
       custom: {
         type: 'vesting',
         stakeable: {
-          team: { value: 22145, percentage: 22 },
-          foundation: { value: 30156, percentage: 3 }
+          team: { value: 22145000, percentage: 22 },
+          foundation: { value: 30156000, percentage: 3 }
         },
         unstakeable: {
-          team: { value: 22145, percentage: 23.2 },
-          foundation: { value: 30156, percentage: 20.1 }
+          team: { value: 22145000, percentage: 23.2 },
+          foundation: { value: 30156000, percentage: 20.1 }
         }
       }
     },
@@ -50,7 +50,7 @@ const TotalIssuance = () => {
         },
         unstakeable: {
           team: { value: 92145, percentage: 93.2 },
-          foundation: { value: 90156, percentage: 90.1 }
+          foundation: { value: 90156, percentage: 1 }
         }
       }
     },

@@ -20,6 +20,7 @@ import {
   StatePopup,
   VestingStatePopup
 } from '../blockchain/types';
+import FormatBalance from '../FormatBalance';
 
 type StakeableInfoProps = {
   name: string;
@@ -58,9 +59,7 @@ const LegendTypographyBody = styled(Typography)(({}) => {
     fontWeight: 400,
     fontSize: 12,
     color: '#7A7A7A',
-    textAlign: 'left',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden'
+    textAlign: 'left'
   };
 });
 
@@ -72,12 +71,14 @@ const StateVesting: FC<StakeableInfoProps> = ({ name, values: { foundation, team
           <LegendTypographySubHeaders>{name}</LegendTypographySubHeaders>
         </Grid>
         <Grid item xs={3}>
-          <LegendTypographySubHeaders>{team.value + foundation.value}</LegendTypographySubHeaders>
+          <LegendTypographySubHeaders>
+            <FormatBalance value={`${team.value + foundation.value}`} precision={3} />
+          </LegendTypographySubHeaders>
         </Grid>
         <Grid item xs={2}>
-          <LegendTypographySubHeaders>
-            {team.percentage + foundation.percentage}
-          </LegendTypographySubHeaders>
+          <LegendTypographyBody>
+            {`${team.percentage + foundation.percentage}%`}
+          </LegendTypographyBody>
         </Grid>
       </Grid>
       <Grid container>
@@ -85,10 +86,12 @@ const StateVesting: FC<StakeableInfoProps> = ({ name, values: { foundation, team
           <LegendTypographyBody>team</LegendTypographyBody>
         </Grid>
         <Grid item xs={3}>
-          <LegendTypographyBody>{team.value}</LegendTypographyBody>
+          <LegendTypographyBody>
+            <FormatBalance value={`${team.value}`} precision={3} />
+          </LegendTypographyBody>
         </Grid>
         <Grid item xs={2}>
-          <LegendTypographyBody>{team.percentage}</LegendTypographyBody>
+          <LegendTypographyBody>{team.percentage + '%'}</LegendTypographyBody>
         </Grid>
       </Grid>
       <Grid container>
@@ -96,10 +99,12 @@ const StateVesting: FC<StakeableInfoProps> = ({ name, values: { foundation, team
           <LegendTypographyBody>foundation</LegendTypographyBody>
         </Grid>
         <Grid item xs={3}>
-          <LegendTypographyBody>{foundation.value}</LegendTypographyBody>
+          <LegendTypographyBody>
+            <FormatBalance value={`${foundation.value}`} precision={3} />
+          </LegendTypographyBody>
         </Grid>
         <Grid item xs={2}>
-          <LegendTypographyBody>{foundation.percentage}</LegendTypographyBody>
+          <LegendTypographyBody>{foundation.percentage + '%'}</LegendTypographyBody>
         </Grid>
       </Grid>
     </Grid>
@@ -124,12 +129,15 @@ const SeriesOthers: FC<OthersStatePopup> = ({ canaryNetReward, liquidityStaking,
         </Grid>
         <Grid item xs={3}>
           <LegendTypographySubHeaders>
-            {treasury.value + liquidityStaking.value + canaryNetReward.value}
+            <FormatBalance
+              value={`${treasury.value + liquidityStaking.value + canaryNetReward.value}`}
+              precision={3}
+            />
           </LegendTypographySubHeaders>
         </Grid>
         <Grid item xs={2}>
           <LegendTypographySubHeaders>
-            {treasury.percentage + liquidityStaking.percentage + canaryNetReward.percentage}
+            {`${treasury.percentage + liquidityStaking.percentage + canaryNetReward.percentage}%`}
           </LegendTypographySubHeaders>
         </Grid>
       </Grid>
@@ -138,10 +146,12 @@ const SeriesOthers: FC<OthersStatePopup> = ({ canaryNetReward, liquidityStaking,
           <LegendTypographyBody>Treasury</LegendTypographyBody>
         </Grid>
         <Grid item xs={3}>
-          <LegendTypographyBody>{treasury.value}</LegendTypographyBody>
+          <LegendTypographyBody>
+            <FormatBalance value={`${treasury.value}`} precision={3} />
+          </LegendTypographyBody>
         </Grid>
-        <Grid item xs={2}>
-          <LegendTypographyBody>{treasury.percentage}</LegendTypographyBody>
+        <Grid item xs={2} sx={{ maxWidth: '30px' }}>
+          <LegendTypographyBody>{`${treasury.percentage}%`}</LegendTypographyBody>
         </Grid>
       </Grid>
       <Grid container>
@@ -149,10 +159,12 @@ const SeriesOthers: FC<OthersStatePopup> = ({ canaryNetReward, liquidityStaking,
           <LegendTypographyBody>CanaryNet Rewards</LegendTypographyBody>
         </Grid>
         <Grid item xs={3}>
-          <LegendTypographyBody>{canaryNetReward.value}</LegendTypographyBody>
+          <LegendTypographyBody>
+            <FormatBalance value={`${canaryNetReward.value}`} precision={3} />
+          </LegendTypographyBody>
         </Grid>
-        <Grid item xs={2}>
-          <LegendTypographyBody>{canaryNetReward.percentage}</LegendTypographyBody>
+        <Grid item xs={2} sx={{ maxWidth: '30px' }}>
+          <LegendTypographyBody>{`${canaryNetReward.percentage}%`}</LegendTypographyBody>
         </Grid>
       </Grid>
       <Grid container>
@@ -160,10 +172,12 @@ const SeriesOthers: FC<OthersStatePopup> = ({ canaryNetReward, liquidityStaking,
           <LegendTypographyBody>Liquidity Staking</LegendTypographyBody>
         </Grid>
         <Grid item xs={3}>
-          <LegendTypographyBody>{liquidityStaking.value}</LegendTypographyBody>
+          <LegendTypographyBody>
+            <FormatBalance value={`${liquidityStaking.value}`} precision={3} />
+          </LegendTypographyBody>
         </Grid>
         <Grid item xs={2}>
-          <LegendTypographyBody>{liquidityStaking.percentage}</LegendTypographyBody>
+          <LegendTypographyBody>{`${liquidityStaking.percentage}%`}</LegendTypographyBody>
         </Grid>
       </Grid>
     </Grid>
@@ -199,11 +213,12 @@ export const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     boxShadow: th.boxShadow,
     border: th.borders?.light,
     borderRadius: '33px',
-    padding: '40px',
+    padding: '30px',
     [th.breakpoints.down('sm')]: {
       padding: '30px'
     },
-    maxWidth: '318px'
+    minWidth: '318px',
+    maxWidth: 'none'
   },
   [`& .${tooltipClasses.arrow}`]: {
     color: th.palette.background.paper
@@ -214,11 +229,10 @@ const popooverProps: SxProps<Theme> = {
   boxShadow: theme.boxShadow,
   border: theme.borders?.light,
   borderRadius: '33px',
-  padding: '40px',
+  padding: '30px',
   [theme.breakpoints.down('sm')]: {
-    padding: '30px'
-  },
-  maxWidth: '318px'
+    padding: '20px'
+  }
 };
 
 export const SeriesPopover: FC<ChartClickModalProps<StatePopup> & PopoverProps> = ({
