@@ -1,6 +1,6 @@
-import { styled } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 
-export default styled('span')`
+export default styled(Typography)`
   writing-mode: sideways-lr;
   vertical-align: middle;
   line-height: 1;

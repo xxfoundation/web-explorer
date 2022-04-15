@@ -1,15 +1,29 @@
+import React, { useMemo } from 'react';
+import dayjs from 'dayjs';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { LoadingButton } from '@mui/lab';
-import { Box, Container, Grid, Stack, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Container, Stack, Typography } from '@mui/material';
 import BarChart from '../../components/charts/BarChart';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
 import HistoryTable from './HistoryTable';
-import VerticalDivider from '../../components/VerticalDivider';
+import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
+
+const extrinsinctCountIn72Hours = 4320;
+const HOUR = 60 * 60 * 1000;
+
+function buildExtrinsicsTimestamps() {
+  const date = dayjs();
+  const timestamps = Array.from(Array(extrinsinctCountIn72Hours).keys())
+    .map(() => Math.floor((date.unix() * 1000) - (Math.random() * (48 * HOUR))))
+  timestamps.sort();
+  return timestamps;
+}
 
 const HistoryPage = () => {
   const totalOfExtrinsics = 32987;
+  const timestamps = useMemo(() => buildExtrinsicsTimestamps(), []);
+
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
@@ -20,22 +34,11 @@ const HistoryPage = () => {
         </LoadingButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
-        <PaperWrap>
-        <Grid container>
-          <VerticalDivider>
-            2022.02.05
-          </VerticalDivider>
-          <Grid item>
-            <BarChart />
-          </Grid>
-          <VerticalDivider>
-            2022.02.05
-          </VerticalDivider>
-          <Grid item >
-            <BarChart />
-          </Grid>
-        </Grid>
-        </PaperWrap>
+        <PaperStyled >
+          <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
+            <BarChart timestamps={timestamps} />
+          </Box>
+        </PaperStyled>
       </Box>
       <PaperWrap>
         <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>

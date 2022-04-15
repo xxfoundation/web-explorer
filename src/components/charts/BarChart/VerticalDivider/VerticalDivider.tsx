@@ -24,10 +24,10 @@ const Text = styled(VerticalText)(({ theme }) => ({
   color: theme.palette.grey[400],
 }));
 
-const VerticalDivider: FC = ({ children }) => (
-  <VerticalDividerContainer>
+const VerticalDivider: FC<JSX.IntrinsicElements['div']> = ({ children, ...props }) => (
+  <VerticalDividerContainer {...props}>
     <Divider />
-    <Box sx={{ mt: 2 }}>
+    <Box>
       <Text>
         {children}
       </Text>
