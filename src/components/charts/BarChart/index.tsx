@@ -8,7 +8,6 @@ import Controls, { intervalToMilli, TimeInterval } from './Controls';
 import Bar from './Bar';
 import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
 
-const NUMBER_OF_TICKS = 3;
 
 const ChartContainer = styled('div')({
   minHeight: '18rem',
@@ -67,7 +66,6 @@ const getCountsByTimestamp = (
 
 const byDay = ([timestamp]: [string, number]) => {
   const date = dayjs.utc(parseInt(timestamp));
-  // eslint-disable-next-line no-console
   return dayjs().utc().day() === date.day() ? 'Today' : date.format('YYYY.MM.DD');
 }
 
@@ -76,6 +74,8 @@ const byMonth = ([timestamp]: [string, number]) => {
   return dayjs().utc().month() === date.month() ? 'This month' : date.format('YYYY.MM');
 }
 
+
+const NUMBER_OF_TICKS = 3;
 const calculateTickSize = (max: number) => {
   const perTick = max / NUMBER_OF_TICKS;
   const magnitude = getMagnitude(perTick) - 1;
@@ -137,7 +137,7 @@ const BarChart: FC<Props> = ({ timestamps }) => {
   const bars = useMemo(() => renderBars(counts, interval, maxTick), [counts, interval, maxTick])
   
   return (
-    <>
+    <Box>
       <Controls selected={interval} onSelect={setInterval} />
       <ChartContainer>
         <Stack sx={{ mt:2 }} style={{ flexGrow: 1 }} direction='row'>
@@ -159,7 +159,7 @@ const BarChart: FC<Props> = ({ timestamps }) => {
         </Stack>
         <Box sx={{ pb: 10 }} />
       </ChartContainer>
-    </>
+    </Box>
   )
 };
 
