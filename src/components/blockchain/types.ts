@@ -23,25 +23,20 @@ export type PercentageValues = {
   };
 };
 
-export type StatePopup = {
-  type: string;
-  noClick?: boolean;
-  hiddenLegend?: boolean;
+export type CustomData = {
+  id: string;
+  name: string;
+  value: number;
+  percentage: number;
+  title?: boolean;
 };
 
-export interface VestingStatePopup extends StatePopup {
-  type: 'vesting';
-  stakeable: PercentageValues;
-  unstakeable: PercentageValues;
+export interface Custom {
+  noClick?: boolean;
+  hiddenLegend?: boolean;
+  data?: CustomData[];
 }
 
-export interface OthersStatePopup extends StatePopup {
-  type: 'others';
-  treasury: { value: number; percentage: number };
-  canaryNetReward: { value: number; percentage: number };
-  liquidityStaking: { value: number; percentage: number };
-}
-
-export interface CustomPointOptions<Custom> extends PointOptionsObject {
+export interface CustomPointOptions extends PointOptionsObject {
   custom: Custom;
 }

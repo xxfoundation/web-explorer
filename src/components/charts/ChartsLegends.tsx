@@ -1,37 +1,44 @@
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import { Stack, Typography } from '@mui/material';
 import BN from 'bn.js';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { theme } from '../../themes/default';
-import { CustomPointOptions, StatePopup } from '../blockchain/types';
+import { CustomPointOptions } from '../blockchain/types';
 import FormatBalance from '../FormatBalance';
+import SeriesDetailedInfo from './ChartSeriesDetailsInfo';
 import { HtmlTooltip } from './ChartsPopover';
-import SeriesDetailedInfo from './SeriesDetailedInfo';
 
-const LegendItems: FC<{ data: CustomPointOptions<StatePopup>[] }> = ({ data }) => {
+const LegendItem: FC<CustomPointOptions> = (props) => {
+  const title = useMemo(() => {
+    return <SeriesDetailedInfo custom={props.custom} name={props.name} />;
+  }, [props.custom, props.name]);
+  return (
+    <Stack direction={'row'} spacing={1} alignItems='center'>
+      <HtmlTooltip title={title}>
+        <SquareRoundedIcon
+          sx={{ color: props.color as string, borderRadius: 1000 }}
+          fontSize='small'
+        />
+      </HtmlTooltip>
+      <Typography
+        sx={{ fontSize: '12px', fontWeight: 400, color: '#7A7A7A' }}
+      >{`${props.y}% ${props.name}`}</Typography>
+    </Stack>
+  );
+};
+
+const LegendItems: FC<{ data: CustomPointOptions[] }> = ({ data }) => {
   return (
     <Stack direction={'column'} marginY={2}>
-      {data.map(({ color, custom, name, y }) => {
-        return (
-          <Stack direction={'row'} spacing={1} alignItems='center' key={name}>
-            <HtmlTooltip title={<SeriesDetailedInfo custom={custom} name={name} />}>
-              <SquareRoundedIcon
-                sx={{ color: color as string, borderRadius: 1000 }}
-                fontSize='small'
-              />
-            </HtmlTooltip>
-            <Typography
-              sx={{ fontSize: '12px', fontWeight: 400, color: '#7A7A7A' }}
-            >{`${y}% ${name}`}</Typography>
-          </Stack>
-        );
+      {data.map((props) => {
+        return <LegendItem key={props.name} {...props} />;
       })}
     </Stack>
   );
 };
 
 const ChartsLegends: FC<{
-  legends: CustomPointOptions<StatePopup>[];
+  legends: CustomPointOptions[];
   name: string;
   value: string | BN;
 }> = ({ legends, name, value }) => {

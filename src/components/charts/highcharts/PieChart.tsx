@@ -3,7 +3,7 @@ import BN from 'bn.js';
 import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC, useCallback, useMemo } from 'react';
-import { CustomPointOptions, StatePopup } from '../../blockchain/types';
+import { CustomPointOptions } from '../../blockchain/types';
 import ChartsLegends from '../ChartsLegends';
 import SeriesPopover from '../ChartsPopover';
 
@@ -79,8 +79,8 @@ const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, optio
 };
 
 type PieChartWithLegendProps = {
-  crustData?: CustomPointOptions<StatePopup>[];
-  data: CustomPointOptions<StatePopup>[];
+  crustData?: CustomPointOptions[];
+  data: CustomPointOptions[];
   name: string;
   value: string | BN;
 };
@@ -92,11 +92,11 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
     [data, crustData]
   );
   const [anchorEl, setAnchorEl] = React.useState<Element>();
-  const [pointOptions, setPointOptions] = React.useState<CustomPointOptions<StatePopup>>();
+  const [pointOptions, setPointOptions] = React.useState<CustomPointOptions>();
 
   const handleClick = useCallback(
     ({ currentTarget, point: { options } }) => {
-      if ((options as CustomPointOptions<StatePopup>).custom.noClick) return;
+      if ((options as CustomPointOptions).custom.noClick) return;
       setPointOptions(options);
       if (currentTarget instanceof Element) {
         setAnchorEl(currentTarget);

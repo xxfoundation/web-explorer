@@ -2,57 +2,35 @@ import React from 'react';
 import { theme } from '../../themes/default';
 import { PieChartWithLegend } from '../charts/highcharts/PieChart';
 import PaperWithHeader from './PaperWithHeader';
-import { CustomPointOptions, VestingStatePopup } from './types';
+
+const customDataSample = [
+  { name: 'stakeable', value: 52301, percentage: 5.2, id: 'stakeable', title: true },
+  { name: 'team', value: 22145, percentage: 2.2, id: 'stakeable-team' },
+  { name: 'foundation', value: 30156, percentage: 3, id: 'stakeable-foundation' },
+  { name: 'unstakeable', value: 52301, percentage: 43.3, id: 'unstakeable', title: true },
+  { name: 'team', value: 22145, percentage: 23.2, id: 'unstakeable-team' },
+  { name: 'foundation', value: 30156, percentage: 20.1, id: 'unstakeable-foundation' }
+];
 
 const value = '9999120003';
-const data: CustomPointOptions<VestingStatePopup>[] = [
+const data = [
   {
     name: 'staked',
     y: 58,
     color: theme.palette.primary.main,
-    custom: {
-      type: 'vesting',
-      stakeable: {
-        team: { value: 22145, percentage: 2.2 },
-        foundation: { value: 30156, percentage: 3 }
-      },
-      unstakeable: {
-        team: { value: 22145, percentage: 23.2 },
-        foundation: { value: 30156, percentage: 20.1 }
-      }
-    }
+    custom: { data: [...customDataSample] }
   },
   {
     name: 'liquid',
     y: 34,
     color: '#13EEF9',
-    custom: {
-      type: 'vesting',
-      stakeable: {
-        team: { value: 82145, percentage: 0.82 },
-        foundation: { value: 80156, percentage: 83 }
-      },
-      unstakeable: {
-        team: { value: 82145, percentage: 2 },
-        foundation: { value: 80156, percentage: 80 }
-      }
-    }
+    custom: { data: [...customDataSample] }
   },
   {
     name: 'unbonding',
     y: 8,
     color: '#6F74FF',
-    custom: {
-      type: 'vesting',
-      stakeable: {
-        team: { value: 92145, percentage: 0.92 },
-        foundation: { value: 90156, percentage: 93 }
-      },
-      unstakeable: {
-        team: { value: 92145, percentage: 93.2 },
-        foundation: { value: 90156, percentage: 1 }
-      }
-    }
+    custom: { data: [...customDataSample] }
   }
 ];
 

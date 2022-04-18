@@ -10,11 +10,11 @@ import {
 } from '@mui/material';
 import { default as React, FC } from 'react';
 import { theme } from '../../themes/default';
-import { CustomPointOptions, StatePopup } from '../blockchain/types';
-import SeriesDetailedInfo from './SeriesDetailedInfo';
+import { CustomPointOptions } from '../blockchain/types';
+import SeriesDetailedInfo from './ChartSeriesDetailsInfo';
 
 type ChartClickModalProps = {
-  data: CustomPointOptions<StatePopup>;
+  data: CustomPointOptions;
   closeModal: () => void;
 };
 

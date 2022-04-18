@@ -3,6 +3,15 @@ import { theme } from '../../themes/default';
 import { PieChartWithLegend } from '../charts/highcharts/PieChart';
 import PaperWithHeader from './PaperWithHeader';
 
+const sampleCustomData = [
+  { name: 'stakeable', value: 162301, percentage: 84, title: true, id: 'stakeable' },
+  { name: 'team', value: 82145, percentage: 1, id: 'stakeable-team' },
+  { name: 'foundation', value: 80156, percentage: 83, id: 'stakeable-foundation' },
+  { name: 'unstakeable', value: 162301, percentage: 80, title: true, id: 'unstakeable' },
+  { name: 'team', value: 82145, percentage: 40, id: 'unstakeable-team' },
+  { name: 'foundation', value: 80156, percentage: 40, id: 'unstakeable-foundation' }
+];
+
 const TotalIssuance = () => {
   // TODO make sure the order is circulation, vesting, ...
   const data = [
@@ -11,15 +20,7 @@ const TotalIssuance = () => {
       y: 6,
       color: '#13EEF9',
       custom: {
-        type: 'vesting',
-        stakeable: {
-          team: { value: 82145, percentage: 1 },
-          foundation: { value: 80156, percentage: 83 }
-        },
-        unstakeable: {
-          team: { value: 82145, percentage: 40 },
-          foundation: { value: 80156, percentage: 40 }
-        }
+        data: [...sampleCustomData]
       }
     },
     {
@@ -27,15 +28,7 @@ const TotalIssuance = () => {
       y: 49,
       color: theme.palette.primary.main,
       custom: {
-        type: 'vesting',
-        stakeable: {
-          team: { value: 22145000, percentage: 22 },
-          foundation: { value: 30156000, percentage: 3 }
-        },
-        unstakeable: {
-          team: { value: 22145000, percentage: 23.2 },
-          foundation: { value: 30156000, percentage: 20.1 }
-        }
+        data: [...sampleCustomData]
       }
     },
     {
@@ -43,15 +36,7 @@ const TotalIssuance = () => {
       y: 39,
       color: '#6F74FF',
       custom: {
-        type: 'vesting',
-        stakeable: {
-          team: { value: 92145, percentage: 0.92 },
-          foundation: { value: 90156, percentage: 93 }
-        },
-        unstakeable: {
-          team: { value: 92145, percentage: 93.2 },
-          foundation: { value: 90156, percentage: 1 }
-        }
+        data: [...sampleCustomData]
       }
     },
     {
@@ -59,10 +44,12 @@ const TotalIssuance = () => {
       y: 6,
       color: '#7BE03D',
       custom: {
-        type: 'others',
-        treasury: { value: 72145, percentage: 0.722 },
-        canaryNetReward: { value: 72145, percentage: 0.722 },
-        liquidityStaking: { value: 70156, percentage: 0.701 }
+        data: [
+          { name: 'total', value: 214446, percentage: 2.145, id: 'total' },
+          { name: 'treasury', value: 72145, percentage: 0.722, id: 'treasury' },
+          { name: 'canaryNetReward', value: 72145, percentage: 0.722, id: 'canaryNetReward' },
+          { name: 'liquidityStaking', value: 70156, percentage: 0.701, id: 'liquidityStaking' }
+        ]
       }
     }
   ];
@@ -73,15 +60,7 @@ const TotalIssuance = () => {
       y: 10,
       color: theme.palette.warning.main,
       custom: {
-        type: 'vesting',
-        stakeable: {
-          team: { value: 62145, percentage: 0.622 },
-          foundation: { value: 60156, percentage: 0.63 }
-        },
-        unstakeable: {
-          team: { value: 62145, percentage: 0.632 },
-          foundation: { value: 60156, percentage: 0.601 }
-        }
+        data: [...sampleCustomData]
       },
       states: {
         hover: {
@@ -101,15 +80,6 @@ const TotalIssuance = () => {
         }
       },
       custom: {
-        type: 'vesting',
-        stakeable: {
-          team: { value: 62145, percentage: 0.622 },
-          foundation: { value: 60156, percentage: 0.63 }
-        },
-        unstakeable: {
-          team: { value: 62145, percentage: 0.632 },
-          foundation: { value: 60156, percentage: 0.601 }
-        },
         hiddenLegend: true,
         noClick: true
       }
