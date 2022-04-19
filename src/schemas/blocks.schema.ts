@@ -1,16 +1,45 @@
 import { gql } from '@apollo/client';
 
-const LIST_BLOCKS_ORDERED = gql`
+const LISTEN_FOR_BLOCKS_ORDERED = gql`
   subscription ListBlocksOrdered($limit: Int) {
     blockchain_blocks(order_by: { block_number: desc }, limit: $limit) {
-      block_hash
-      block_number
-      block_number_finalized
-      current_era
-      num_transfers
-      total_events
+      hash: block_hash
+      number: block_number
+      numberFinalized: block_number_finalized
+      currentEra: current_era
+      numTransfers: num_transfers
+      totalEvents: total_events
     }
   }
 `;
 
-export { LIST_BLOCKS_ORDERED };
+const LIST_BLOCK = gql`
+  query ListBlocksOrdered($limit: Int, $offset: Int = 0) {
+    agg:blockchain_blocks_aggregate {
+      aggregate {
+        count
+      }
+    }
+    blocks:blockchain_blocks(order_by: { block_number: desc }, limit: $limit, offset: $offset) {
+      hash:block_hash
+      number:block_number
+      numberFinalized:block_number_finalized
+      currentEra:current_era
+      timestamp
+      numTransfers:num_transfers
+      author:block_author
+      authorName:block_author_name
+    }
+  }
+`;
+
+const GET_BLOCK_BY_PK = gql`
+  #import "./blocks.graphql"
+  query GetBlockByPK($block_number: Int) {
+    blockchain_blocks_by_pk(block_number: $block_number) {
+      ...Block
+    }
+  }
+`;
+
+export { LISTEN_FOR_BLOCKS_ORDERED, LIST_BLOCK, GET_BLOCK_BY_PK };

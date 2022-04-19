@@ -1,6 +1,8 @@
+import { useQuery } from '@apollo/client';
 import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
 import {
   Container,
+  Skeleton,
   Stack,
   styled,
   Table,
@@ -13,7 +15,7 @@ import {
   TooltipProps,
   Typography
 } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CopyButton from '../../components/buttons/CopyButton';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
@@ -23,28 +25,22 @@ import { PaperWrap } from '../../components/Paper/PaperWrap';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
 import TimeAgoComponent from '../../components/TimeAgo';
+import { LIST_BLOCK } from '../../schemas/blocks.schema';
 
 type Block = {
+  hash: string;
   number: number;
-  status: string;
-  era: string;
-  time: string;
-  extrinsics: number;
-  blockProducer: { name: string; id: number };
-  blockHash: string;
+  numberFinalized: number;
+  currentEra: number;
+  timestamp: number;
+  numTransfers: number;
+  author: string;
+  authorName: string;
+
+  // total_events: number;
 };
 
-const data = [
-  {
-    number: 111,
-    status: 'lalal',
-    era: '43',
-    time: '2022-01-01',
-    extrinsics: 13,
-    blockProducer: { name: 'Joselitooooooooooooooooo', id: 123 },
-    blockHash: '0xb63e96a5fabbb2644c13348dd0723c83963270557dfc04d341b76c4c55aa3895'
-  }
-];
+type Response = { blocks: Block[]; agg: { aggregate: { count: number } } };
 
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -71,73 +67,146 @@ const HashColumnWithTooltip: FC<{ blockHash: string }> = ({ blockHash, children 
   );
 };
 
-const RenderProducer: FC<{ number: number; blockProducer: { id: number; name?: string } }> = ({
-  blockProducer: { id, name },
-  number
-}) => {
-  let content = id.toString();
-  if (name) {
-    content = name.length > 16 ? name.slice(0, 7) + '....' + name.slice(-5) : name;
-  }
+const RenderProducer: FC<{
+  number: number;
+  blockProducer: { id: string; name?: string };
+}> = ({ blockProducer: { id, name }, number }) => {
+  const idString = id.toString();
+  const content = name
+    ? name
+    : idString.length > 16
+    ? idString.slice(0, 7) + '....' + idString.slice(-5)
+    : idString;
   return <Link to={`/blocks/${number}/producer/${id || name}`}>{content}</Link>;
 };
 
-const rowParser = (item: Block) => {
+const rowParser = (block: Block) => {
   return (
-    <TableRow key={item.number}>
+    <TableRow key={block.number}>
       <TableCell>
-        <Link to={`/blocks/${item.number}`}>{item.number}</Link>
+        <Link to={`/blocks/${block.number}`}>{block.number}</Link>
       </TableCell>
       <TableCell>
         <WatchLaterOutlinedIcon color={'warning'} />
       </TableCell>
-      <TableCell>{item.era}</TableCell>
+      <TableCell>{block.currentEra}</TableCell>
       <TableCell>
         <TimeAgoComponent date={'2022-02-16 01:56:42 (+UTC)'} />
       </TableCell>
       <TableCell>
-        <Link to='#'>{item.extrinsics}</Link>
+        <Link to='#'>{block.numTransfers}</Link>
       </TableCell>
       <TableCell>
-        <RenderProducer number={item.number} blockProducer={item.blockProducer} />
+        <RenderProducer
+          number={block.number}
+          blockProducer={{ id: block.author, name: block.authorName }}
+        />
       </TableCell>
       <TableCell>
-        <HashColumnWithTooltip blockHash={item.blockHash}>
-          <Hash value={item.blockHash} link={`/blocks/${item.number}`} truncated />
+        <HashColumnWithTooltip blockHash={block.hash}>
+          <Hash value={block.hash} link={`/blocks/${block.number}`} truncated />
         </HashColumnWithTooltip>
       </TableCell>
     </TableRow>
   );
 };
 
-const BlocksTable = () => {
+const SkeletonLoader: FC<{ lines: number }> = ({ lines }) => {
+  const rangeOfItems: number[] = [...Array(lines).keys()];
+  return (
+    <>
+      {rangeOfItems.map((i) => {
+        return (
+          <TableRow key={i}>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+            <TableCell>
+              <Skeleton />
+            </TableCell>
+          </TableRow>
+        );
+      })}
+    </>
+  );
+};
+
+const TableStrucuture: FC<{
+  blocks: Block[];
+  rowsPerPage: number;
+  loading: boolean;
+}> = ({ blocks, loading, rowsPerPage }) => {
+  return (
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>block</TableCell>
+            <TableCell>status</TableCell>
+            <TableCell>era</TableCell>
+            <TableCell>time</TableCell>
+            <TableCell>extrinsics</TableCell>
+            <TableCell>block producer</TableCell>
+            <TableCell>block hash</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {loading ? <SkeletonLoader lines={rowsPerPage} /> : blocks.map(rowParser)}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+const BlocksTable: FC = () => {
+  const [rowsPerPage, setRowsPerPage] = useState(15);
+  const [page, setPage] = useState(0);
+
+  const { data, error, fetchMore, loading } = useQuery<Response>(LIST_BLOCK, {
+    variables: { limit: rowsPerPage, offset: rowsPerPage * page }
+  });
+
+  if (error) return <h1>something when wrong</h1>;
+
   return (
     <PaperWrap>
-      <TableContainer>
-        <Table
-          sx={{
-            'th:nth-child(1), td:nth-child(1)': { maxWidth: '30px' },
-            'th:nth-child(3), td:nth-child(3)': { maxWidth: '20px' },
-            'th:nth-child(4), td:nth-child(4)': { maxWidth: '30px' },
-            'th:nth-child(6), td:nth-child(6)': { maxWidth: '70px' },
-            'th:last-child, td:last-child': { maxWidth: '55px' }
-          }}
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell>block</TableCell>
-              <TableCell>status</TableCell>
-              <TableCell>era</TableCell>
-              <TableCell>time</TableCell>
-              <TableCell>extrinsics</TableCell>
-              <TableCell>block producer</TableCell>
-              <TableCell>block hash</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{data.map(rowParser)}</TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination page={0} count={data.length} />
+      <TableStrucuture blocks={data?.blocks || []} loading={loading} rowsPerPage={rowsPerPage} />
+      <TablePagination
+        rowsPerPage={rowsPerPage}
+        page={0}
+        count={data?.agg.aggregate.count || 0}
+        onPageChange={(_: unknown, number: number) => {
+          console.warn(`new page is ${number}`);
+          setPage(number + page);
+          fetchMore({ variables: { offset: data?.blocks.length, limit: rowsPerPage } }).then(
+            (res) => {
+              if (!res.error) return;
+              // eslint-disable-next-line no-console
+              console.info(res.data);
+            }
+          );
+        }}
+        rowsPerPageOptions={[15, 20, 30, 40, 50]}
+        onRowsPerPageChange={(event) => {
+          setRowsPerPage(parseInt(event.target.value));
+          setPage(0);
+        }}
+      />
     </PaperWrap>
   );
 };
@@ -153,7 +222,9 @@ const BlocksPage = () => {
         sx={{ mb: 5 }}
       >
         <Typography variant='h1'>Blocks</Typography>
-        <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
+        <DownloadDataButton onClick={() => {}} disabled>
+          Download data
+        </DownloadDataButton>
       </Stack>
       <BlocksTable />
     </Container>

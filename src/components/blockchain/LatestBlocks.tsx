@@ -1,15 +1,23 @@
 import { useSubscription } from '@apollo/client';
 import ClockIcon from '@mui/icons-material/AccessTime';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
-import { LIST_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
+import { LISTEN_FOR_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
-import { Block } from './types';
 
 const PAGE_LIMIT = 4;
+
+type Block = {
+  hash: string;
+  number: number;
+  numberFinalized: number;
+  currentEra: number;
+  totalEvents: number;
+  numTransfers: number;
+};
 
 const statusToIconMap: Record<string, React.ReactElement> = {
   pending: (
@@ -24,34 +32,51 @@ const statusToIconMap: Record<string, React.ReactElement> = {
   )
 };
 
-const ItemHandler: FC<{ block: Block }> = ({ block }) => {
+const ItemHandlerSkeleton: FC<{ number: number }> = ({}) => {
   return (
-    <Box key={block.block_hash} sx={{ mb: 4 }}>
+    <Box sx={{ mb: 4 }}>
       <Grid container>
         <Grid item xs>
-          <Link to={`/blocks/${block.block_hash}`} underline='hover' variant='body2'>
-            {block.block_number}
+          <Skeleton />
+        </Grid>
+      </Grid>
+      <Grid container sx={{ mt: 1 }}>
+        <Grid item xs>
+          <Skeleton />
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+const ItemHandler: FC<{ block: Block }> = ({ block }) => {
+  return (
+    <Box key={block.hash} sx={{ mb: 4 }}>
+      <Grid container>
+        <Grid item xs>
+          <Link to={`/blocks/${block.hash}`} underline='hover' variant='body2'>
+            {block.number}
           </Link>
         </Grid>
         <Grid item xs='auto'>
-          {block.block_number >= block.block_number_finalized ? statusToIconMap.pending : null}
+          {block.number >= block.numberFinalized ? statusToIconMap.pending : null}
         </Grid>
       </Grid>
       <Grid container sx={{ mt: 1 }}>
         <Grid item xs>
           <Link to='' underline='hover' variant='body3'>
-            {block.num_transfers} extrinsics
+            {block.numTransfers} extrinsics
           </Link>{' '}
           <Typography variant='body3' component='span'>
             |
           </Typography>{' '}
           <Link to={'/events'} underline='hover' variant='body3'>
-            {block.total_events} event
+            {block.totalEvents} event
           </Link>
         </Grid>
         <Grid item xs='auto'>
           <Typography variant='body2'>
-            <TimeAgo date={block.current_era} />
+            <TimeAgo date={block.currentEra} />
           </Typography>
         </Grid>
       </Grid>
@@ -62,14 +87,14 @@ const ItemHandler: FC<{ block: Block }> = ({ block }) => {
 const Blockchain: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
   const [state, setState] = useState<{ blocks: Block[] }>({ blocks: [] });
   React.useEffect(() => {
-    const oldHashes = state.blocks.map((b) => b.block_hash);
+    const oldHashes = state.blocks.map((b) => b.hash);
     setState((prevState) => {
       return {
         ...prevState,
         blocks: newBlocks.map((block) => {
           return {
             ...block,
-            newEntry: oldHashes.length && !oldHashes.includes(block.block_hash)
+            newEntry: oldHashes.length && !oldHashes.includes(block.hash)
           };
         })
       };
@@ -82,7 +107,7 @@ const Blockchain: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
   return (
     <>
       {state.blocks.map((b) => {
-        return <ItemHandler block={b} key={b.block_hash} />;
+        return <ItemHandler block={b} key={b.hash} />;
       })}
     </>
   );
@@ -90,14 +115,17 @@ const Blockchain: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
 
 const BlockChainRenderer = () => {
   const { data, error, loading } = useSubscription<{ blockchain_blocks: Block[] }>(
-    LIST_BLOCKS_ORDERED,
+    LISTEN_FOR_BLOCKS_ORDERED,
     {
       variables: { limit: PAGE_LIMIT }
     }
   );
   const content = useMemo(() => {
-    if (loading || error || !data || !data.blockchain_blocks)
-      return <Typography>loading</Typography>;
+    if (loading) return <ItemHandlerSkeleton number={PAGE_LIMIT} />;
+    if (error || !data || !data.blockchain_blocks) {
+      console.warn(`${error} ${JSON.stringify(data)}`);
+      return <Typography>not ready</Typography>;
+    }
 
     return <Blockchain newBlocks={data.blockchain_blocks} />;
   }, [loading, data, error]);

@@ -16,7 +16,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "downlevelIteration": true
   },
   "include": ["src", "global.d.ts", "__mocks__"],
   "exclude": ["node_modules", "types"]
