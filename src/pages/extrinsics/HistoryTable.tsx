@@ -4,8 +4,9 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import React, { useState } from 'react';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
-import TablePagination from '../../components/TablePagination';
+import { TableCellLeftDivider } from '../../components/Tables/TableCell';
 import { TableContainer } from '../../components/Tables/TableContainer';
+import TablePagination from '../../components/Tables/TablePagination';
 
 type Extrinsic = {
   id: string;
@@ -26,9 +27,7 @@ const extrinsicToRow = (extrinsic: Extrinsic) => {
         <Link to={`/blocks/${extrinsic.block}`}>{extrinsic.block}</Link>
       </TableCell>
       <TableCell>
-        <Link to={`/extrinsics/${extrinsic.hash}`}>
-          <Hash value={extrinsic.hash} variant='body3' truncated />
-        </Link>
+        <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated />
       </TableCell>
       <TableCell>{extrinsic.time}</TableCell>
       <TableCell>
@@ -38,9 +37,11 @@ const extrinsicToRow = (extrinsic: Extrinsic) => {
         <Link to='#'>{extrinsic.action}</Link>
       </TableCell>
       <TableCell>
-        <Link to={extrinsicIdLink}>
-          <ArrowForwardIosIcon />
-        </Link>
+        <TableCellLeftDivider>
+          <Link to={extrinsicIdLink}>
+            <ArrowForwardIosIcon />
+          </Link>
+        </TableCellLeftDivider>
       </TableCell>
     </TableRow>
   );
@@ -67,7 +68,7 @@ const HistoryTable = () => {
   
   return (
     <TableContainer>
-      <Table>
+      <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '6px', } }}>
         <TableHead>
           <TableRow>
             <TableCell>extrinsics id</TableCell>

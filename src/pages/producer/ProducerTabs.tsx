@@ -1,42 +1,18 @@
-import { Box, Tab, Tabs } from '@mui/material';
-import React from 'react';
-import { PaperWrap } from '../../components/Paper/PaperWrap';
-import { TabPanel, TabText } from '../../components/Tabs';
+import React, { useMemo } from 'react';
+import TabsWithPanels, { TabText } from '../../components/Tabs';
 import ErasTable from './ErasTable';
 import NominatorsTable from './NominatorsTable';
 
 const ProducerTabs: React.FC<{ eras: string[]; nominators: string[] }> = ({ eras, nominators }) => {
-  const [value, setValue] = React.useState('nominators');
-
-  const handleChange = (_: React.SyntheticEvent<Element, Event>, newValue: string) => {
-    setValue(newValue);
-  };
-
-  return (
-    <PaperWrap>
-      <Box>
-        <Tabs value={value} onChange={handleChange} aria-label='producers tables tabs'>
-          <Tab
-            label={<TabText message='nominators' count={nominators.length} />}
-            value='nominators'
-            id='simple-tab-1'
-            aria-controls='tabpanel-nominators'
-          />
-          <Tab
-            label={<TabText message='eras' count={eras.length} />}
-            value='eras'
-            id='simple-tab-2'
-            aria-controls='tabpanel-eras'
-          />
-        </Tabs>
-      </Box>
-      <TabPanel value={value} index='nominators'>
-        <NominatorsTable />
-      </TabPanel>
-      <TabPanel value={value} index='eras'>
-        <ErasTable />
-      </TabPanel>
-    </PaperWrap>
-  );
+  const panels = useMemo(() => {
+    return [
+      {
+        label: <TabText message='nominators' count={nominators.length} />,
+        content: <NominatorsTable />
+      },
+      { label: <TabText message='eras' count={eras.length} />, content: <ErasTable /> }
+    ];
+  }, [eras, nominators]);
+  return <TabsWithPanels panels={panels} tabsLabel='producers tables tabs' />;
 };
 export default ProducerTabs;

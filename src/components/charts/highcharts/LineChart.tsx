@@ -5,6 +5,7 @@ import Highcharts, {
 } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC, useMemo } from 'react';
+import { theme } from '../../../themes/footer';
 import { DataPoint } from '../../../types';
 
 const calculateMaximums = (data: DataPoint[]) => {
@@ -45,7 +46,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
       },
       colors: ['#00C4FF'],
       tooltip: {
-        backgroundColor: '#4F4F4F',
+        backgroundColor: theme.palette.grey[600],
         borderWidth: 0,
         borderRadius: 10,
         enabled: true,

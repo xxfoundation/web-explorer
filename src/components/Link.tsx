@@ -8,12 +8,12 @@ interface LinkRouterProps extends LinkProps {
   replace?: boolean;
 }
 
-const Link: React.FC<LinkRouterProps> = ({ children, ...props }) => {
+const Link: React.FC<LinkRouterProps> = React.forwardRef(({ children, ...props }, ref) => {
   return (
-    <MaterialLink underline='hover' component={RouterLink} {...props}>
+    <MaterialLink underline='hover' component={RouterLink} {...props} ref={ref}>
       {children}
     </MaterialLink>
   );
-};
+});
 
 export default Link;

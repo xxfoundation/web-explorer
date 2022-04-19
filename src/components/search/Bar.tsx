@@ -2,15 +2,14 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SearchIcon from '@mui/icons-material/Search';
 import { Divider, FormControl, Grid, InputAdornment, SelectChangeEvent } from '@mui/material';
 import React, { useCallback } from 'react';
-import { Bar, SearchButton, SearchInput, SelectOption, SelectItem } from './Bar.styles';
+import { Bar, SearchButton, SearchInput, SelectItem, SelectOption } from './Bar.styles';
 
 const SearchBar = () => {
-  const [option, setOption] = React.useState('');
+  const [option, setOption] = React.useState<number>(0);
 
-  const handleChange = useCallback(
-    (event: SelectChangeEvent<unknown>) => setOption(event.target.value as string),
-    []
-  );
+  const handleChange = useCallback((event: SelectChangeEvent<unknown>) => {
+    return setOption(Number(event.target.value));
+  }, []);
 
   return (
     <Bar>
@@ -24,11 +23,11 @@ const SearchBar = () => {
               inputProps={{ 'aria-label': 'Without label' }}
               IconComponent={KeyboardArrowDownIcon}
             >
-              <SelectItem value=''>All</SelectItem>
-              <SelectItem value={10}>Blocks </SelectItem>
-              <SelectItem value={20}>Extrinsic</SelectItem>
-              <SelectItem value={30}>Account</SelectItem>
-              <SelectItem value={30}>Event</SelectItem>
+              <SelectItem value={0}>All</SelectItem>
+              <SelectItem value={1}>Block </SelectItem>
+              <SelectItem value={2}>Extrinsic</SelectItem>
+              <SelectItem value={3}>Event</SelectItem>
+              <SelectItem value={4}>Account</SelectItem>
             </SelectOption>
           </FormControl>
         </Grid>
@@ -49,7 +48,7 @@ const SearchBar = () => {
           <FormControl fullWidth variant='standard'>
             <SearchInput
               id='standard-adornment-amount'
-              placeholder='Search by Block / Extrinisic / Account'
+              placeholder='Search by Block / Extrinsic / Event / Account'
               startAdornment={
                 <InputAdornment position='start'>
                   <SearchIcon />

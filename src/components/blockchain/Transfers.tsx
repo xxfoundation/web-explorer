@@ -1,4 +1,4 @@
-import { Box, Grid, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Tooltip, Typography, Stack } from '@mui/material';
 import React from 'react';
 import FormatBalance from '../FormatBalance';
 import Link from '../Link';
@@ -12,18 +12,20 @@ type Transfer = {
   to: string;
   amount: string;
   timestamp: number;
-}
+};
 
-const transfers: Transfer[] = Array.from(Array(9).keys()).slice(1).map((i) => {
-  return {
-    extrinsicIndex: '314658-5', // TODO mask?
-    id: i,
-    from: '0xacc15dc74899999', // TODO use just mask instead of manipulating the value
-    to: '0xacc15dc748888',
-    amount: '100000000000',
-    timestamp: new Date().getTime() - (i * 1000)
-  };
-});
+const transfers: Transfer[] = Array.from(Array(9).keys())
+  .slice(1)
+  .map((i) => {
+    return {
+      extrinsicIndex: '314658-5', // TODO mask?
+      id: i,
+      from: '0xacc15dc74899999', // TODO use just mask instead of manipulating the value
+      to: '0xacc15dc748888',
+      amount: '100000000000',
+      timestamp: new Date().getTime() - i * 1000
+    };
+  });
 
 const addMaskToTransactionTargets = (hash: string) => {
   const href = `/transfers/${hash}`;
@@ -49,19 +51,19 @@ const gridHeader = (elem: string) => {
     <Grid item component={'span'} xs={4}>
       <Typography variant='body3'>{elem.toString().toUpperCase()}</Typography>
     </Grid>
-  )
-}
+  );
+};
 
 const listItemSecondaryText = (data: Transfer) => {
   return (
-    <Grid component={'span'} container maxWidth={200}>
+    <Grid container maxWidth={200}>
       {gridHeader('from')}
-      <Grid item component={'span'}>
-        {addMaskToTransactionTargets(data.from)}
+      <Grid item>
+        <Typography variant='body3'>{addMaskToTransactionTargets(data.from)}</Typography>
       </Grid>
       {gridHeader('to')}
-      <Grid item component={'span'}>
-        {addMaskToTransactionTargets(data.to)}
+      <Grid item>
+        <Typography variant='body3'>{addMaskToTransactionTargets(data.to)}</Typography>
       </Grid>
     </Grid>
   );
@@ -76,25 +78,17 @@ const ItemHandler = (currentData: Transfer) => {
           {currentData.id}
         </Link>
       </Typography>
-      <Grid container>
-        <Grid item xs>
-          <Typography variant='body3' sx={{ lineHeight: 1.75 }}>
-            {listItemSecondaryText(currentData)}
+      <Stack direction='row' justifyContent={'space-between'}>
+        {listItemSecondaryText(currentData)}
+        <Stack alignItems={'flex-end'}>
+          <Typography variant='body3'>
+            <TimeAgo date={currentData.timestamp} />
           </Typography>
-        </Grid>
-        <Grid item xs='auto' textAlign='right'>
-          <Grid>
-            <Typography variant='body3' sx={{ lineHeight: 1.75 }}>
-              <TimeAgo date={currentData.timestamp} />
-            </Typography>
-          </Grid>
-          <Grid>
-            <Typography variant='body3'>
-              <FormatBalance value={currentData.amount} />
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
+          <Typography variant='body3'>
+            <FormatBalance value={currentData.amount} />
+          </Typography>
+        </Stack>
+      </Stack>
     </Box >
   );
 };
