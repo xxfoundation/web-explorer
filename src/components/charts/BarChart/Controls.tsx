@@ -1,15 +1,9 @@
+import type { TimeInterval } from './types';
+
 import { Button, Stack, Typography } from '@mui/material';
 import React, { FC, useCallback }  from 'react';
 
-export type TimeInterval = '1h' | '6h' | '1d';
-
-const intervals: TimeInterval[] = ['1h', '6h', '1d'];
-
-export const intervalToMilli: Record<TimeInterval, number> = {
-  '1h': 60 * 60 * 1000,
-  '6h': 6 * 60 * 60 * 1000,
-  '1d': 24 * 60 * 60 * 1000
-}
+import { intervals } from './utils';
 
 type Props = {
   onSelect: (interval: TimeInterval) => void;

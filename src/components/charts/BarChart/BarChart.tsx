@@ -1,13 +1,15 @@
+import type { TimestampCounts, TimeInterval } from './types';
 import React, { FC, useMemo, useState } from 'react';
 import { styled, Stack, Box, BoxProps, Typography } from '@mui/material';
 import { groupBy } from 'lodash';
 import dayjs from 'dayjs';
-import Legend from './Legend';
-import VerticalDivider from './VerticalDivider';
-import Controls, { intervalToMilli, TimeInterval } from './Controls';
-import Bar from './Bar';
-import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
 
+import Bar from './Bar';
+import Controls  from './Controls';
+import Legend from './Legend';
+import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
+import VerticalDivider from './VerticalDivider';
+import { calculateTickSize, getCountsByTimestamp, byDay, byMonth } from './utils';
 
 const ChartContainer = styled('div')({
   minHeight: '18rem',
@@ -39,52 +41,10 @@ const BarInfo: FC<{ count: number, timestamp: string, timeFormat?: string }> = (
   </>
 }
 
-type TimestampCounts = Record<number, number>;
-
-const convertToNearestTimestamp = (timestamp: number, interval: TimeInterval) => {
-  const intervalMillis = intervalToMilli[interval];
-  return intervalMillis * Math.floor(timestamp / intervalMillis);
-}
-
-const toNearestCeiling = (number: number, tickSize: number) => tickSize * Math.ceil(number / tickSize);
-const getMagnitude = (x: number) => Math.floor( Math.log10(x) + 1);
-
-const getCountsByTimestamp = (
-  timestamps: Props['timestamps'],
-  interval: TimeInterval = '1h'
-) => timestamps.reduce(
-  (acc, timestamp) => {
-    const nearest = convertToNearestTimestamp(timestamp, interval);
-    
-    return {
-      ...acc,
-      [nearest]: (acc[nearest] ?? 0) + 1
-    };
-  },
-  {} as TimestampCounts
-);
-
-const byDay = ([timestamp]: [string, number]) => {
-  const date = dayjs.utc(parseInt(timestamp));
-  return dayjs().utc().day() === date.day() ? 'Today' : date.format('YYYY.MM.DD');
-}
-
-const byMonth = ([timestamp]: [string, number]) => {
-  const date = dayjs.utc(parseInt(timestamp));
-  return dayjs().utc().month() === date.month() ? 'This month' : date.format('YYYY.MM');
-}
-
-
-const NUMBER_OF_TICKS = 3;
-const calculateTickSize = (max: number) => {
-  const perTick = max / NUMBER_OF_TICKS;
-  const magnitude = getMagnitude(perTick) - 1;
-  const power = Math.pow(10, magnitude);
-  return toNearestCeiling(perTick, power);
-}
-
 const renderBars = (counts: TimestampCounts, interval: TimeInterval, max: number): React.ReactNode[] => {
-  const grouped = groupBy(Object.entries(counts), interval.includes('h') ? byDay : byMonth);
+  const entries = Object.entries(counts);
+  const intervalGroup = interval.includes('h') ? byDay : byMonth;
+  const grouped = groupBy(entries, intervalGroup);
   const barLabelFormat = interval.includes('h')
     ? 'HH'
     : 'DD'
@@ -123,6 +83,8 @@ const renderBars = (counts: TimestampCounts, interval: TimeInterval, max: number
   );
 }
 
+const NUMBER_OF_TICKS = 3;
+
 type Props = {
   timestamps: number[];
 }
@@ -131,7 +93,7 @@ const BarChart: FC<Props> = ({ timestamps }) => {
   const [interval, setInterval] = useState<TimeInterval>('1h');
   const counts = useMemo(() => getCountsByTimestamp(timestamps, interval), [interval, timestamps]);
   const maxY = useMemo(() => Math.max(...Object.values(counts)), [counts]);
-  const tickSize = useMemo(() => calculateTickSize(maxY), [maxY]);
+  const tickSize = useMemo(() => calculateTickSize(maxY, NUMBER_OF_TICKS), [maxY]);
   const ticks = useMemo(() => Array.from(Array(NUMBER_OF_TICKS).keys()).map((i) => (i + 1) * tickSize), [tickSize]);
   const maxTick = Math.max(...ticks);
   const bars = useMemo(() => renderBars(counts, interval, maxTick), [counts, interval, maxTick])

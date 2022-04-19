@@ -48,7 +48,7 @@ const BarInformation = styled('div')(({ theme }) => ({
 }))
 
 
-type Props = {
+export type Props = {
   active?: boolean;
   percent?: number;
   index?: number;
