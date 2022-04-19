@@ -1,8 +1,8 @@
-import * as utils from './utils';
 
 const toMilli = (x: number) => x * 1000;
+
 // 12 total, every 10 minutes
-const tenMinCounts = [
+export const tenMinCounts = [
   // hour 1
   1577836800, // 2020-01-01 00:00:00 
   1577837400, // 2020-01-01 00:10:00
@@ -19,18 +19,8 @@ const tenMinCounts = [
   1577843400  // 2020-01-01 01:50:00
 ].map(toMilli)
 
-
-describe(`${utils.getCountsByTimestamp.name} at 1h intervals`, () => {
-  it('Should count 1h intervals correctly', () => {
-    const counts = utils.getCountsByTimestamp(tenMinCounts, '1h');
-    expect(counts[tenMinCounts[0]]).toBe(6);
-    expect(counts[tenMinCounts[6]]).toBe(6);
-    expect(Object.values(counts).length).toBe(2);
-  });
-});
-
 // 16 total, every hour
-const hourCounts = [
+export const hourCounts = [
   1577836800, // 2020-01-01 00:00:00 
   1577840400, // 2020-01-01 01:00:00 
   1577844000, // 2020-01-01 02:00:00 
@@ -49,19 +39,8 @@ const hourCounts = [
   1577890800  // 2020-01-01 15:00:00 
 ].map(toMilli);
 
-
-describe(`${utils.getCountsByTimestamp.name} at 6h intervals`, () => {
-  it('Should count 6h intervals correctly', () => {
-    const counts = utils.getCountsByTimestamp(hourCounts, '6h');
-    expect(counts[hourCounts[0]]).toBe(6);
-    expect(counts[hourCounts[6]]).toBe(6);
-    expect(counts[hourCounts[12]]).toBe(4);
-    expect(Object.values(counts).length).toBe(3);
-  });
-});
-
 // 20 total, every 4 hours
-const fourHourCounts = [
+export const fourHourCounts = [
   // day 1
   1577836800, // 2020-01-01 00:00:00
   1577851200, // 2020-01-01 04:00:00
@@ -87,42 +66,3 @@ const fourHourCounts = [
   1578096000, // 2020-01-04 00:00:00
   1578110400  // 2020-01-04 00:00:00
 ].map(toMilli);
-
-describe(`${utils.getCountsByTimestamp.name} at 1d intervals`, () => {
-  it('Should count 1d intervals correctly', () => {
-    const counts = utils.getCountsByTimestamp(fourHourCounts, '1d');
-    expect(counts[fourHourCounts[0]]).toBe(6);
-    expect(counts[fourHourCounts[6]]).toBe(6);
-    expect(counts[fourHourCounts[12]]).toBe(6);
-    expect(counts[fourHourCounts[18]]).toBe(2);
-    expect(Object.values(counts).length).toBe(4);
-  });
-});
-
-
-describe(`${utils.calculateTickSize.name} works correctly`, () => {
-  it('split 60 in 20s', () => {
-    const tickSize = utils.calculateTickSize(60, 3);
-    expect(tickSize).toEqual(20);
-  });
-
-  it('split 45 in 20s', () => {
-    const tickSize = utils.calculateTickSize(45, 3);
-    expect(tickSize).toEqual(20);
-  });
-
-  it('split 30 in 10s', () => {
-    const tickSize = utils.calculateTickSize(30, 3);
-    expect(tickSize).toEqual(10);
-  });
-
-  it('split 100 in 40s', () => {
-    const tickSize = utils.calculateTickSize(100, 3);
-    expect(tickSize).toEqual(40);
-  });
-
-  it('split 500 in 200s', () => {
-    const tickSize = utils.calculateTickSize(500, 3);
-    expect(tickSize).toEqual(200);
-  })
-});

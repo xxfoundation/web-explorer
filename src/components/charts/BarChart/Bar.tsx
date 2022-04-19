@@ -58,7 +58,7 @@ export type Props = {
 
 const BarComponent: FC<Props> = ({ active, children, index = 1, infoLabel, of = 1, percent = 0 }) => {
   return (
-    <BarContainer className={active ? 'active' : ''}>
+    <BarContainer className={`bar ${active ? 'active' : ''}`}>
       <Bar>
         <Progress className='bar-progress' index={index} of={of} percent={percent} />
       </Bar>

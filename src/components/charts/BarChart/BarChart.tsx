@@ -1,45 +1,17 @@
 import type { TimestampCounts, TimeInterval } from './types';
 import React, { FC, useMemo, useState } from 'react';
-import { styled, Stack, Box, BoxProps, Typography } from '@mui/material';
+import { Stack, Box, Typography } from '@mui/material';
 import { groupBy } from 'lodash';
 import dayjs from 'dayjs';
 
 import Bar from './Bar';
+import ChartContainer from './BarChartContainer.styled';
 import Controls  from './Controls';
 import Legend from './Legend';
+import BarDivider from './BarDivider';
+import BarInfo from './BarInfo';
 import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
-import VerticalDivider from './VerticalDivider';
 import { calculateTickSize, getCountsByTimestamp, byDay, byMonth } from './utils';
-
-const ChartContainer = styled('div')({
-  minHeight: '18rem',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'stretch',
-  alignItems: 'stretch'
-});
-
-const DividerBox: FC<BoxProps> = ({ children, ...rest }) => (
-  <Box {...rest} style={{ display: 'flex', flexDirection: 'column' }}>
-    <VerticalDivider style={{ flexGrow: 1, paddingLeft: '0.3rem', paddingRight: '0.3rem' }}>{children}</VerticalDivider>
-    <Box sx={{ mt: 1 }} style={{ height: '1rem' }}/>
-  </Box>
-)
-
-const BarInfo: FC<{ count: number, timestamp: string, timeFormat?: string }> = ({ count, timeFormat = 'YYYY.MM.DD', timestamp }) => {
-  const formatted = useMemo(() => dayjs.utc(parseInt(timestamp, 10)).format(timeFormat), [timestamp, timeFormat])
-
-  return <>
-    <Typography variant='body4' style={{ whiteSpace: 'nowrap' }}>
-      {formatted}
-    </Typography>
-    <br />
-    <Typography
-      sx={{ color: 'primary.dark' }}
-      variant='body4'
-      style={{ textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{count} extrinsic{count > 1 ? 's' : ''}</Typography>
-  </>
-}
 
 const renderBars = (counts: TimestampCounts, interval: TimeInterval, max: number): React.ReactNode[] => {
   const entries = Object.entries(counts);
@@ -54,7 +26,11 @@ const renderBars = (counts: TimestampCounts, interval: TimeInterval, max: number
 
   return Object.entries(grouped).reduce(
     (acc, [divider, bars], index) => {
-      acc.push(<DividerBox key={divider} sx={{ ml: index === 0 ? 0 : 2 }}>{divider}</DividerBox>);
+      acc.push(
+      <BarDivider key={divider} sx={{ ml: index === 0 ? 0 : 2 }}>
+        {divider}
+      </BarDivider>
+    );
 
       bars.forEach(([timestamp, value], valueIndex) => {
         const date = dayjs.utc(parseInt(timestamp));
