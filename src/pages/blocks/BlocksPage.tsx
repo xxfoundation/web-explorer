@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { ApolloError, useQuery } from '@apollo/client';
 import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
 import {
   Container,
@@ -113,32 +113,19 @@ const rowParser = (block: Block) => {
 
 const SkeletonLoader: FC<{ lines: number }> = ({ lines }) => {
   const rangeOfItems: number[] = [...Array(lines).keys()];
+  const columnsSkeletons: number[] = [...Array(7).keys()];
   return (
     <>
       {rangeOfItems.map((i) => {
         return (
           <TableRow key={i}>
-            <TableCell>
-              <Skeleton />
-            </TableCell>
-            <TableCell>
-              <Skeleton />
-            </TableCell>
-            <TableCell>
-              <Skeleton />
-            </TableCell>
-            <TableCell>
-              <Skeleton />
-            </TableCell>
-            <TableCell>
-              <Skeleton />
-            </TableCell>
-            <TableCell>
-              <Skeleton />
-            </TableCell>
-            <TableCell>
-              <Skeleton />
-            </TableCell>
+            {columnsSkeletons.map((innerI) => {
+              return (
+                <TableCell key={innerI}>
+                  <Skeleton />
+                </TableCell>
+              );
+            })}
           </TableRow>
         );
       })}
@@ -173,13 +160,14 @@ const TableStrucuture: FC<{
   );
 };
 
-const BlocksTable: FC = () => {
+const BlocksTable: FC<{
+  data?: Response;
+  error?: ApolloError;
+  loading: boolean;
+  onLoadMore: (offset: number, limit: number) => void;
+}> = ({ data, error, loading, onLoadMore }) => {
   const [rowsPerPage, setRowsPerPage] = useState(15);
   const [page, setPage] = useState(0);
-
-  const { data, error, fetchMore, loading } = useQuery<Response>(LIST_BLOCK, {
-    variables: { limit: rowsPerPage, offset: rowsPerPage * page }
-  });
 
   if (error) return <h1>something when wrong</h1>;
 
@@ -188,18 +176,12 @@ const BlocksTable: FC = () => {
       <TableStrucuture blocks={data?.blocks || []} loading={loading} rowsPerPage={rowsPerPage} />
       <TablePagination
         rowsPerPage={rowsPerPage}
-        page={0}
+        page={page}
         count={data?.agg.aggregate.count || 0}
         onPageChange={(_: unknown, number: number) => {
-          console.warn(`new page is ${number}`);
-          setPage(number + page);
-          fetchMore({ variables: { offset: data?.blocks.length, limit: rowsPerPage } }).then(
-            (res) => {
-              if (!res.error) return;
-              // eslint-disable-next-line no-console
-              console.info(res.data);
-            }
-          );
+          console.warn(`number: ${number}`);
+          setPage(number);
+          onLoadMore(number * rowsPerPage, rowsPerPage);
         }}
         rowsPerPageOptions={[15, 20, 30, 40, 50]}
         onRowsPerPageChange={(event) => {
@@ -211,7 +193,12 @@ const BlocksTable: FC = () => {
   );
 };
 
-const BlocksPage = () => {
+const BlocksRenderer = () => {
+  // TODO need to store the first block in data for the pagination to work,
+  //  or switch to cursor based pagination
+  const variables = { limit: 15, offset: 0 };
+  const { data, error, fetchMore, loading } = useQuery<Response>(LIST_BLOCK, { variables });
+  console.warn('rendering the blocks');
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
@@ -226,9 +213,28 @@ const BlocksPage = () => {
           Download data
         </DownloadDataButton>
       </Stack>
-      <BlocksTable />
+      <BlocksTable
+        data={data}
+        error={error}
+        onLoadMore={(offset: number, limit: number) => {
+          const number = data?.blocks.at(0)?.number;
+          console.warn(`using ${number} as the first number`);
+          fetchMore({
+            variables: {
+              limit,
+              offset,
+              where: {
+                block_number: {
+                  _gte: number
+                }
+              }
+            }
+          });
+        }}
+        loading={loading}
+      />
     </Container>
   );
 };
 
-export default BlocksPage;
+export default BlocksRenderer;

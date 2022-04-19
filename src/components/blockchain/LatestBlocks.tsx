@@ -8,7 +8,7 @@ import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
 
-const PAGE_LIMIT = 4;
+const PAGE_LIMIT = 8;
 
 type Block = {
   hash: string;

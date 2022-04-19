@@ -14,21 +14,26 @@ const LISTEN_FOR_BLOCKS_ORDERED = gql`
 `;
 
 const LIST_BLOCK = gql`
-  query ListBlocksOrdered($limit: Int, $offset: Int = 0) {
-    agg:blockchain_blocks_aggregate {
+  query ListBlocksOrdered($limit: Int, $offset: Int = 0, $where: blockchain_blocks_bool_exp) {
+    agg: blockchain_blocks_aggregate(where: $where) {
       aggregate {
         count
       }
     }
-    blocks:blockchain_blocks(order_by: { block_number: desc }, limit: $limit, offset: $offset) {
-      hash:block_hash
-      number:block_number
-      numberFinalized:block_number_finalized
-      currentEra:current_era
+    blocks: blockchain_blocks(
+      order_by: { block_number: desc }
+      where: $where
+      limit: $limit
+      offset: $offset
+    ) {
+      hash: block_hash
+      number: block_number
+      numberFinalized: block_number_finalized
+      currentEra: current_era
       timestamp
-      numTransfers:num_transfers
-      author:block_author
-      authorName:block_author_name
+      numTransfers: num_transfers
+      author: block_author
+      authorName: block_author_name
     }
   }
 `;
