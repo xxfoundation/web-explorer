@@ -18,20 +18,23 @@ type ChartClickModalProps = {
   closeModal: () => void;
 };
 
+const cardStyling = {
+  background: theme.palette.background.paper,
+  boxShadow: theme.boxShadow,
+  border: theme.borders?.light,
+  borderRadius: '33px',
+  padding: '30px',
+  maxWidth: '360px'
+};
+
 export const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} arrow />
 ))(({ theme: th }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    background: th.palette.background.paper,
-    boxShadow: th.boxShadow,
-    border: th.borders?.light,
-    borderRadius: '33px',
-    padding: '30px',
+    ...cardStyling,
     [th.breakpoints.down('sm')]: {
-      padding: '30px'
-    },
-    minWidth: '318px',
-    maxWidth: 'none'
+      padding: '20px'
+    }
   },
   [`& .${tooltipClasses.arrow}`]: {
     color: th.palette.background.paper
@@ -39,10 +42,7 @@ export const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const popooverProps: SxProps<Theme> = {
-  boxShadow: theme.boxShadow,
-  border: theme.borders?.light,
-  borderRadius: '33px',
-  padding: '30px',
+  ...cardStyling,
   [theme.breakpoints.down('sm')]: {
     padding: '20px'
   }

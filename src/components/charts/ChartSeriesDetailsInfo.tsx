@@ -14,7 +14,7 @@ const LegendTypographyHeader = styled(Typography)(({ theme: th }) => {
   };
 });
 
-const LegendTypographySubHeaders = styled(Typography)(({ theme: th }) => {
+export const LegendTypographySubHeaders = styled(Typography)(({ theme: th }) => {
   return {
     fontSize: 12,
     fontWeight: 500,
@@ -41,20 +41,26 @@ const SeriesInfoLine: FC<CustomData> = (props) => {
     () => (props.title ? LegendTypographySubHeaders : LegendTypographyBody),
     [props.title]
   );
+  const margin = useMemo(() => {
+    return {
+      top: props.title ? 2 : 0.1,
+      bottom: props.title ? 0.5 : 0.1
+    };
+  }, [props.title]);
   return (
-    <>
-      <Grid item xs={7}>
+    <Grid item container xs={12}>
+      <Grid item xs={5} marginTop={margin.top} marginBottom={margin.bottom}>
         <LegendEl>{props.name}</LegendEl>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={5} marginTop={margin.top}>
         <LegendEl>
           <FormatBalance value={`${props.value}`} precision={3} />
         </LegendEl>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={2} marginTop={margin.top}>
         <LegendEl>{`${props.percentage}%`}</LegendEl>
       </Grid>
-    </>
+    </Grid>
   );
 };
 
@@ -77,17 +83,15 @@ const SeriesDetailedInfo: FC<
         alignItems={'center'}
         justifyContent={'space-between'}
       >
-        <LegendTypographyHeader marginBottom={1}>{name}</LegendTypographyHeader>
+        <LegendTypographyHeader>{name}</LegendTypographyHeader>
         {onClose && (
-          <IconButton aria-label='close-popup' sx={{ mt: '-35px', mr: '-20px' }} onClick={onClose}>
+          <IconButton aria-label='close-popup' sx={{ mt: '-35px', mr: '-22px' }} onClick={onClose}>
             <CloseIcon fontSize='small' />
           </IconButton>
         )}
       </Stack>
-      <Stack direction={'column'} spacing={1}>
-        <Grid container marginY={1}>
-          {content}
-        </Grid>
+      <Stack direction={'column'}>
+        <Grid container>{content}</Grid>
       </Stack>
     </>
   );

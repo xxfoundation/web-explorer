@@ -5,7 +5,7 @@ import React, { FC, useMemo } from 'react';
 import { theme } from '../../themes/default';
 import { CustomPointOptions } from '../blockchain/types';
 import FormatBalance from '../FormatBalance';
-import SeriesDetailedInfo from './ChartSeriesDetailsInfo';
+import SeriesDetailedInfo, { LegendTypographySubHeaders } from './ChartSeriesDetailsInfo';
 import { HtmlTooltip } from './ChartsPopover';
 
 const LegendItem: FC<CustomPointOptions> = (props) => {
@@ -44,14 +44,9 @@ const ChartsLegends: FC<{
 }> = ({ legends, name, value }) => {
   return (
     <>
-      <Typography
-        fontSize={12}
-        fontWeight={500}
-        textTransform={'uppercase'}
-        color={theme.palette.grey[400]}
-      >
+      <LegendTypographySubHeaders>
         {name}
-      </Typography>
+      </LegendTypographySubHeaders>
       <Typography fontSize={20} fontWeight={400} color={theme.palette.grey[800]}>
         <FormatBalance value={value} />
       </Typography>

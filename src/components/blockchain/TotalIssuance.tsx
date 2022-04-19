@@ -45,7 +45,7 @@ const TotalIssuance = () => {
       color: '#7BE03D',
       custom: {
         data: [
-          { name: 'total', value: 214446, percentage: 2.145, id: 'total' },
+          { name: 'total', value: 214446, percentage: 2.145, id: 'total', title: true },
           { name: 'treasury', value: 72145, percentage: 0.722, id: 'treasury' },
           { name: 'canaryNetReward', value: 72145, percentage: 0.722, id: 'canaryNetReward' },
           { name: 'liquidityStaking', value: 70156, percentage: 0.701, id: 'liquidityStaking' }
