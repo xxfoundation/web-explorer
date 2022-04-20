@@ -56,13 +56,13 @@ const TablePagination: FC<{
       />
     );
   }, [count, page, rowsPerPage, rowsPerPageOptions, onRowsPerPageChange, onPageChange]);
-  return count > rowsPerPage || count > rowsPerPageOptions[0] ? (
-    <>
-      <Divider /> {pagination}
-    </>
-  ) : (
-    <></>
-  );
+  if (count > rowsPerPage || count > rowsPerPageOptions[0])
+    return (
+      <>
+        <Divider /> {pagination}
+      </>
+    );
+  return <></>;
 };
 
 export default TablePagination;

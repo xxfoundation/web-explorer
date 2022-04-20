@@ -27,6 +27,8 @@ import TablePagination from '../../components/Tables/TablePagination';
 import TimeAgoComponent from '../../components/TimeAgo';
 import { LIST_BLOCK } from '../../schemas/blocks.schema';
 
+const ROWS_PER_PAGE = 25;
+
 type Block = {
   hash: string;
   number: number;
@@ -78,38 +80,7 @@ const RenderProducer: FC<{
   return <Link to={`/blocks/${number}/producer/${id || name}`}>{content}</Link>;
 };
 
-const rowParser = (block: Block) => {
-  return (
-    <TableRow key={block.number}>
-      <TableCell>
-        <Link to={`/blocks/${block.number}`}>{block.number}</Link>
-      </TableCell>
-      <TableCell>
-        <WatchLaterOutlinedIcon color={'warning'} />
-      </TableCell>
-      <TableCell>{block.currentEra}</TableCell>
-      <TableCell>
-        <TimeAgoComponent date={'2022-02-16 01:56:42 (+UTC)'} />
-      </TableCell>
-      <TableCell>
-        <Link to='#'>{block.numTransfers}</Link>
-      </TableCell>
-      <TableCell>
-        <RenderProducer
-          number={block.number}
-          blockProducer={{ id: block.author, name: block.authorName }}
-        />
-      </TableCell>
-      <TableCell>
-        <HashColumnWithTooltip blockHash={block.hash}>
-          <Hash value={block.hash} link={`/blocks/${block.number}`} truncated />
-        </HashColumnWithTooltip>
-      </TableCell>
-    </TableRow>
-  );
-};
-
-const SkeletonLoader: FC<{ lines: number }> = ({ lines }) => {
+const SkeletonTableRows: FC<{ lines: number }> = ({ lines }) => {
   const rangeOfItems: number[] = [...Array(lines).keys()];
   const columnsSkeletons: number[] = [...Array(7).keys()];
   return (
@@ -152,7 +123,36 @@ const TableStrucuture: FC = ({ children }) => {
   );
 };
 
-const ROWS_PER_PAGE = 4;
+const rowParser = (block: Block) => {
+  return (
+    <TableRow key={block.number}>
+      <TableCell>
+        <Link to={`/blocks/${block.number}`}>{block.number}</Link>
+      </TableCell>
+      <TableCell>
+        <WatchLaterOutlinedIcon color={'warning'} />
+      </TableCell>
+      <TableCell>{block.currentEra}</TableCell>
+      <TableCell>
+        <TimeAgoComponent date={'2022-02-16 01:56:42 (+UTC)'} />
+      </TableCell>
+      <TableCell>
+        <Link to='#'>{block.numTransfers}</Link>
+      </TableCell>
+      <TableCell>
+        <RenderProducer
+          number={block.number}
+          blockProducer={{ id: block.author, name: block.authorName }}
+        />
+      </TableCell>
+      <TableCell>
+        <HashColumnWithTooltip blockHash={block.hash}>
+          <Hash value={block.hash} link={`/blocks/${block.number}`} truncated />
+        </HashColumnWithTooltip>
+      </TableCell>
+    </TableRow>
+  );
+};
 
 const BlocksTable: FC<{
   data?: Response;
@@ -160,32 +160,28 @@ const BlocksTable: FC<{
   loading: boolean;
   rowsPerPage: number;
 }> = ({ data, error, loading, rowsPerPage }) => {
-  if (error) return <h1>something when wrong</h1>;
+  if (error) return <h1>something when wrong</h1>; // TODO add proper error handling
   if (loading) {
-    return (
-      <TableStrucuture>
-        <SkeletonLoader lines={rowsPerPage} />
-      </TableStrucuture>
-    );
+    return <SkeletonTableRows lines={rowsPerPage} />;
   }
-
-  return <TableStrucuture>{(data?.blocks || []).map(rowParser)}</TableStrucuture>;
+  return <>{(data?.blocks || []).map(rowParser)}</>;
 };
 
 const BlocksRenderer = () => {
+  const [blockNumber, setBlockNumber] = useState<number>();
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
-  // const [blockNumber, setBlockNumber] = useState<number>(); // LATEST NUMBER don't work
-  const variables = {
-    limit: rowsPerPage,
-    offset: page * rowsPerPage,
-    // where: {
-    //   block_number: {
-    //     _lte: blockNumber
-    //   }
-    // }
-  };
-  const { data, error, loading } = useQuery<Response>(LIST_BLOCK, { variables });
+  const { data, error, loading } = useQuery<Response>(LIST_BLOCK, {
+    variables: {
+      limit: rowsPerPage,
+      offset: page * rowsPerPage,
+      where: {
+        block_number: {
+          _lte: blockNumber
+        }
+      }
+    }
+  });
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
@@ -201,23 +197,29 @@ const BlocksRenderer = () => {
         </DownloadDataButton>
       </Stack>
       <PaperWrap>
-        <BlocksTable data={data} error={error} loading={loading} rowsPerPage={rowsPerPage} />
+        <TableStrucuture>
+          <BlocksTable data={data} error={error} loading={loading} rowsPerPage={rowsPerPage} />
+        </TableStrucuture>
         {loading ? (
           <Skeleton />
         ) : (
           <TablePagination
+            count={data?.agg.aggregate.count || 0}
             rowsPerPage={rowsPerPage}
             page={page}
-            count={data?.agg.aggregate.count || 0}
             onPageChange={(_: unknown, number: number) => {
-              // setBlockNumber(data?.blocks.at(0)?.number);
+              if (!blockNumber) {
+                setBlockNumber(data?.blocks.at(0)?.number);
+              }
               setPage(number);
             }}
-            rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
+            rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
             onRowsPerPageChange={(event) => {
+              setBlockNumber(undefined);
               setRowsPerPage(parseInt(event.target.value));
               setPage(0);
             }}
+            loading={loading}
           />
         )}
       </PaperWrap>
