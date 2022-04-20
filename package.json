@@ -57,7 +57,7 @@
   },
   "jest": {
     "transformIgnorePatterns": [
-      "node_modules/(?!@polkadot/util|dayjs)"
+      "node_modules/(?!@polkadot/util)"
     ]
   },
   "devDependencies": {
