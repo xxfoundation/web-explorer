@@ -16,12 +16,12 @@ fragment Block on blockchain_blocks {
   newAccounts:new_accounts
   parentHash:parent_hash
   sessionLength:session_length
-  session_per_era
-  session_progress
-  spec_name
-  spec_version
-  state_root
+  sessionPerEra:session_per_era
+  sessionProgress:session_progress
+  specName:spec_name
+  specVersion:spec_version
+  stateRoot:state_root
   timestamp
-  total_issuance
-  validator_count
+  totalIssuance:total_issuance
+  validatorCount:validator_count
 }
