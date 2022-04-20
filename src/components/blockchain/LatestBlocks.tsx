@@ -86,7 +86,6 @@ const LatestBlocks: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
       };
     });
 
-    // we really cannot listen to the newBlocks here, I think
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newBlocks]);
 
@@ -106,7 +105,6 @@ const LatestBlocksRenderer = () => {
   const content = useMemo(() => {
     if (loading) return <ItemHandlerSkeleton number={PAGE_LIMIT} />;
     if (error || !data || !data.blocks) {
-      console.warn(`${error} ${JSON.stringify(data)}`);
       return <Typography>not ready</Typography>;
     }
 
