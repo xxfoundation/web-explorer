@@ -9,6 +9,7 @@ const TablePagination: FC<{
   rowsPerPageOptions?: number[];
   onRowsPerPageChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onPageChange?: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
+  loading?: boolean;
 }> = ({
   count,
   page,

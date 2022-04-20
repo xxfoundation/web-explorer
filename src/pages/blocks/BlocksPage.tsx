@@ -36,8 +36,6 @@ type Block = {
   numTransfers: number;
   author: string;
   authorName: string;
-
-  // total_events: number;
 };
 
 type Response = { blocks: Block[]; agg: { aggregate: { count: number } } };
@@ -133,11 +131,7 @@ const SkeletonLoader: FC<{ lines: number }> = ({ lines }) => {
   );
 };
 
-const TableStrucuture: FC<{
-  blocks: Block[];
-  rowsPerPage: number;
-  loading: boolean;
-}> = ({ blocks, loading, rowsPerPage }) => {
+const TableStrucuture: FC = ({ children }) => {
   return (
     <TableContainer>
       <Table>
@@ -152,53 +146,46 @@ const TableStrucuture: FC<{
             <TableCell>block hash</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {loading ? <SkeletonLoader lines={rowsPerPage} /> : blocks.map(rowParser)}
-        </TableBody>
+        <TableBody>{children}</TableBody>
       </Table>
     </TableContainer>
   );
 };
 
+const ROWS_PER_PAGE = 4;
+
 const BlocksTable: FC<{
   data?: Response;
   error?: ApolloError;
   loading: boolean;
-  onLoadMore: (offset: number, limit: number) => void;
-}> = ({ data, error, loading, onLoadMore }) => {
-  const [rowsPerPage, setRowsPerPage] = useState(15);
-  const [page, setPage] = useState(0);
-
+  rowsPerPage: number;
+}> = ({ data, error, loading, rowsPerPage }) => {
   if (error) return <h1>something when wrong</h1>;
+  if (loading) {
+    return (
+      <TableStrucuture>
+        <SkeletonLoader lines={rowsPerPage} />
+      </TableStrucuture>
+    );
+  }
 
-  return (
-    <PaperWrap>
-      <TableStrucuture blocks={data?.blocks || []} loading={loading} rowsPerPage={rowsPerPage} />
-      <TablePagination
-        rowsPerPage={rowsPerPage}
-        page={page}
-        count={data?.agg.aggregate.count || 0}
-        onPageChange={(_: unknown, number: number) => {
-          console.warn(`number: ${number}`);
-          setPage(number);
-          onLoadMore(number * rowsPerPage, rowsPerPage);
-        }}
-        rowsPerPageOptions={[15, 20, 30, 40, 50]}
-        onRowsPerPageChange={(event) => {
-          setRowsPerPage(parseInt(event.target.value));
-          setPage(0);
-        }}
-      />
-    </PaperWrap>
-  );
+  return <TableStrucuture>{(data?.blocks || []).map(rowParser)}</TableStrucuture>;
 };
 
 const BlocksRenderer = () => {
-  // TODO need to store the first block in data for the pagination to work,
-  //  or switch to cursor based pagination
-  const variables = { limit: 15, offset: 0 };
-  const { data, error, fetchMore, loading } = useQuery<Response>(LIST_BLOCK, { variables });
-  console.warn('rendering the blocks');
+  const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
+  const [page, setPage] = useState(0);
+  // const [blockNumber, setBlockNumber] = useState<number>(); // LATEST NUMBER don't work
+  const variables = {
+    limit: rowsPerPage,
+    offset: page * rowsPerPage,
+    // where: {
+    //   block_number: {
+    //     _lte: blockNumber
+    //   }
+    // }
+  };
+  const { data, error, loading } = useQuery<Response>(LIST_BLOCK, { variables });
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
@@ -213,26 +200,27 @@ const BlocksRenderer = () => {
           Download data
         </DownloadDataButton>
       </Stack>
-      <BlocksTable
-        data={data}
-        error={error}
-        onLoadMore={(offset: number, limit: number) => {
-          const number = data?.blocks.at(0)?.number;
-          console.warn(`using ${number} as the first number`);
-          fetchMore({
-            variables: {
-              limit,
-              offset,
-              where: {
-                block_number: {
-                  _gte: number
-                }
-              }
-            }
-          });
-        }}
-        loading={loading}
-      />
+      <PaperWrap>
+        <BlocksTable data={data} error={error} loading={loading} rowsPerPage={rowsPerPage} />
+        {loading ? (
+          <Skeleton />
+        ) : (
+          <TablePagination
+            rowsPerPage={rowsPerPage}
+            page={page}
+            count={data?.agg.aggregate.count || 0}
+            onPageChange={(_: unknown, number: number) => {
+              // setBlockNumber(data?.blocks.at(0)?.number);
+              setPage(number);
+            }}
+            rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(parseInt(event.target.value));
+              setPage(0);
+            }}
+          />
+        )}
+      </PaperWrap>
     </Container>
   );
 };
