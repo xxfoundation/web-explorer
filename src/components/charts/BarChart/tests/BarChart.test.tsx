@@ -3,7 +3,7 @@ import MockDate from 'mockdate'
 import { mount } from 'enzyme';
 import BarChart from '../BarChart';
 import Bar from '../Bar';
-import BarDivider from '../BarDivider';
+import BarDivider from '../BarDividerBox';
 import Controls from '../Controls';
 import Legend from '../Legend';
 import { hourCounts, tenMinCounts } from './timestamps';

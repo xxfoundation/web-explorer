@@ -37,6 +37,11 @@ describe(`${utils.calculateTickSize.name} works correctly`, () => {
     expect(tickSize).toEqual(20);
   });
 
+  it('split 80 in 30s', () => {
+    const tickSize = utils.calculateTickSize(80, 3);
+    expect(tickSize).toEqual(30);
+  })
+
   it('split 45 in 20s', () => {
     const tickSize = utils.calculateTickSize(45, 3);
     expect(tickSize).toEqual(20);

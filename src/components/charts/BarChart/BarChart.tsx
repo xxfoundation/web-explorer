@@ -8,12 +8,12 @@ import Bar from './Bar';
 import ChartContainer from './BarChartContainer.styled';
 import Controls  from './Controls';
 import Legend from './Legend';
-import BarDivider from './BarDivider';
+import BarDivider from './BarDividerBox';
 import BarInfo from './BarInfo';
 import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
 import { calculateTickSize, getCountsByTimestamp, byDay, byMonth } from './utils';
 
-const renderBars = (counts: TimestampCounts, interval: TimeInterval, max: number): React.ReactNode[] => {
+export const renderBars = (counts: TimestampCounts, interval: TimeInterval, max: number): React.ReactNode[] => {
   const entries = Object.entries(counts);
   const intervalGroup = interval.includes('h') ? byDay : byMonth;
   const grouped = groupBy(entries, intervalGroup);
@@ -80,7 +80,7 @@ const BarChart: FC<Props> = ({ timestamps }) => {
       <ChartContainer>
         <Stack sx={{ mt:2 }} style={{ flexGrow: 1 }} direction='row'>
           <Box sx={{ p: 1.5 }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <VerticalTextStyled variant='body3' style={{ textTransform: 'uppercase' }}>
+            <VerticalTextStyled variant='subheader4'>
               Extrinsincs
             </VerticalTextStyled>
             <Box sx={{ mt: 1, height: '1rem' }} />
@@ -88,8 +88,8 @@ const BarChart: FC<Props> = ({ timestamps }) => {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Legend style={{ flexGrow: 1 }} ticks={ticks} />
             <Box sx={{ mt: 1, height: '1rem' }}>
-              <Typography variant='body3' sx={{ color: 'grey.400' }}>
-                {interval.includes('h') ? 'HRS' : 'DAYS'}
+              <Typography variant='subheader4' sx={{ fontWeight: 500 }}>
+                {interval.includes('h') ? 'HR' : 'DAY'}
               </Typography>
             </Box>
           </div>

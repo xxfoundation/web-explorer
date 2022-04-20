@@ -66,7 +66,7 @@ const BarComponent: FC<Props> = ({ active, children, index = 1, infoLabel, of = 
         {
           index % 2 === 1
             ? (
-            <Typography variant='body3'>
+            <Typography variant='subheader4'>
               {children}
             </Typography>)
             : null

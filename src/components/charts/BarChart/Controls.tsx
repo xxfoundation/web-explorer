@@ -22,7 +22,7 @@ const Controls: FC<Props> = ({ onSelect, selected }) => {
           color={selected === option ? 'primary' : 'inherit'}
           onClick={select(option)}
         >
-          <Typography style={{ letterSpacing: 5 }} variant={'body3'} color={selected === option ? 'primary' : 'inherit'}>
+          <Typography style={{ letterSpacing: 5 }} variant={'subheader4'} color={selected === option ? 'primary' : 'inherit'}>
             {option}
           </Typography>
         </Button>

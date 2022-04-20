@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { Box, Container, Stack, Typography } from '@mui/material';
-import BarChart from '../../components/charts/BarChart';
+import BarChart from '../../components/charts/BarChart/BarChart';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import { PaperWrap } from '../../components/Paper/PaperWrap';

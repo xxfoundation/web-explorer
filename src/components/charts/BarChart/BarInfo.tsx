@@ -13,8 +13,8 @@ const BarInfo: FC<{ count: number, timestamp: string, timeFormat?: string }> = (
       <br />
       <Typography
         sx={{ color: 'primary.dark' }}
-        variant='body4'
-        style={{ textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{count} extrinsic{count > 1 ? 's' : ''}</Typography>
+        variant='subheader4'
+        style={{ whiteSpace: 'nowrap' }}>{count} extrinsic{count > 1 ? 's' : ''}</Typography>
     </>
   )
 }
