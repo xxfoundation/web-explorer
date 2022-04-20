@@ -1,70 +1,40 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { ButtonGroup, Divider, IconButton, Stack, Typography } from '@mui/material';
-import React from 'react';
+import { useQuery } from '@apollo/client';
+import { Stack, Typography } from '@mui/material';
+import { default as React } from 'react';
+import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
+import BlockStatus from '../blockchain/BlockStatus';
+import BackAndForwardArrows from '../buttons/BackAndForwardArrows';
 import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
 import Link from '../Link';
 import SummaryPaper from '../Paper/SummaryPaper';
 import TimeAgoComponent from '../TimeAgo';
-import { BlockNav } from './Block.styled';
 
-const BackAndForwardArrows = () => {
-  return (
-    <ButtonGroup>
-      <IconButton aria-label='back' size='small'>
-        <ArrowBackIcon fontSize='small' />
-      </IconButton>
-      <IconButton arial-label='forward' size='small'>
-        <ArrowForwardIcon fontSize='small' />
-      </IconButton>
-    </ButtonGroup>
-  );
-};
-
-const BlockSummaryHeader: React.FC<{ number: string }> = ({ number }) => {
-  return (
-    <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
-      <Typography variant='h1'>Block No. {number}</Typography>
-      <BlockNav direction={'row'} alignItems={'center'} spacing={2}>
-        <Link to='/blocks'>
-          <Typography variant='h4'>blocks</Typography>
-        </Link>
-        <Divider orientation='vertical' variant='middle' flexItem />
-        <BackAndForwardArrows />
-      </BlockNav>
-    </Stack>
-  );
-};
-
-type Producer = { dunno?: string; name?: string; hash: string; icon?: string };
-
-type BlockSummaryTyp = {
-  time: string;
-  status: string;
-  era: number;
+export type BlockType = {
+  numberFinalized: number;
+  number: number;
+  currentEra: string;
   hash: string;
   parentHash: string;
   stateRoot: string;
   extrinsicsRoot: string;
-  blockProducer: Producer;
-  blockTime: number;
+  author: string;
+  authorName: string;
+  timestamp: number;
   specVersion: number;
 };
 
-const summaryDataParser = (data: BlockSummaryTyp) => [
-  { label: 'time', value: <Typography>{data.time}</Typography> },
+const summaryDataParser = (data: BlockType) => [
+  { label: 'time', value: <Typography>{data.timestamp}</Typography> },
   {
     label: 'status',
     value: (
       <Stack direction={'row'} alignItems='center'>
-        <CheckCircleOutlineIcon color={'success'} sx={{ mr: 1 }} />
-        <Typography>{data.status}</Typography>
+        <BlockStatus number={data.number} numberFinalized={data.numberFinalized} />
       </Stack>
     )
   },
-  { label: 'era', value: <Typography>{data.era}</Typography> },
+  { label: 'era', value: <Typography>{data.currentEra}</Typography> },
   {
     label: 'hash',
     value: <Hash value={data.hash} />,
@@ -73,16 +43,11 @@ const summaryDataParser = (data: BlockSummaryTyp) => [
   {
     label: 'parent hash',
     value: <Hash value={data.parentHash} />,
-    action: <BackAndForwardArrows />
+    action: <BackAndForwardArrows back={{ disabled: true }} forward={{ disabled: true }} />
   },
   {
     label: 'state root',
-    value: (
-      <Stack direction={'row'}>
-        <CheckCircleOutlineIcon color='success' sx={{ mr: 1 }} />
-        <Hash value={data.stateRoot} />
-      </Stack>
-    )
+    value: <Hash value={data.stateRoot} />
   },
   {
     label: 'extrinsics root',
@@ -92,18 +57,18 @@ const summaryDataParser = (data: BlockSummaryTyp) => [
     label: 'block producer',
     value: (
       <Address
-        name={data.blockProducer.name}
-        value={data.blockProducer.hash}
-        link={`/blocks/${data.hash}/producer/${data.blockProducer.hash}`}
+        name={data.authorName}
+        value={data.author}
+        link={`/blocks/${data.hash}/producer/${data.author}`}
       />
     ),
-    action: <CopyButton value={data.blockProducer.hash} />
+    action: <CopyButton value={data.author} />
   },
   {
     label: 'block time',
     value: (
       <Typography>
-        <TimeAgoComponent date={data.blockTime} />
+        <TimeAgoComponent date={data.timestamp} />
       </Typography>
     )
   },
@@ -117,15 +82,19 @@ const summaryDataParser = (data: BlockSummaryTyp) => [
   }
 ];
 
-const BlockSummary: React.FC<{ data: BlockSummaryTyp; number: string }> = ({ data, number }) => {
-  const summaryData = React.useMemo(() => {
-    return summaryDataParser(data);
-  }, [data]);
+const BlockSummary: React.FC<{
+  number: number;
+}> = ({ number }) => {
+  const { data, error, loading } = useQuery<{ block: BlockType }>(GET_BLOCK_BY_PK, {
+    variables: { blockNumber: number }
+  });
+  if (error) return <h1>falou</h1>;
   return (
-    <>
-      <BlockSummaryHeader number={number} />
-      <SummaryPaper data={summaryData} />
-    </>
+    <SummaryPaper
+      data={data ? summaryDataParser(data.block) : []}
+      loading={loading}
+      skeletonLines={9}
+    />
   );
 };
 
