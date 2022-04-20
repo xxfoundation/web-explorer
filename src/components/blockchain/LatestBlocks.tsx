@@ -1,11 +1,10 @@
 import { useSubscription } from '@apollo/client';
-import ClockIcon from '@mui/icons-material/AccessTime';
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import { LISTEN_FOR_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
+import BlockStatusIcon from './BlockStatus';
 import PaperWithHeader from './PaperWithHeader';
 
 const PAGE_LIMIT = 8;
@@ -17,19 +16,6 @@ type Block = {
   currentEra: number;
   totalEvents: number;
   numTransfers: number;
-};
-
-const statusToIconMap: Record<string, React.ReactElement> = {
-  pending: (
-    <Box aria-label={'Pending'}>
-      <ClockIcon color='warning' />
-    </Box>
-  ),
-  completed: (
-    <Box aria-label={'Completed'}>
-      <CheckCircleOutlinedIcon color='success' />
-    </Box>
-  )
 };
 
 const ItemHandlerSkeleton: FC<{ number: number }> = ({}) => {
@@ -59,7 +45,7 @@ const ItemHandler: FC<{ block: Block }> = ({ block }) => {
           </Link>
         </Grid>
         <Grid item xs='auto'>
-          {block.number >= block.numberFinalized ? statusToIconMap.pending : null}
+          <BlockStatusIcon number={block.number} numberFinalized={block.numberFinalized} />
         </Grid>
       </Grid>
       <Grid container sx={{ mt: 1 }}>
@@ -84,7 +70,7 @@ const ItemHandler: FC<{ block: Block }> = ({ block }) => {
   );
 };
 
-const Blockchain: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
+const LatestBlocks: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
   const [state, setState] = useState<{ blocks: Block[] }>({ blocks: [] });
   React.useEffect(() => {
     const oldHashes = state.blocks.map((b) => b.hash);
@@ -113,21 +99,18 @@ const Blockchain: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
   );
 };
 
-const BlockChainRenderer = () => {
-  const { data, error, loading } = useSubscription<{ blockchain_blocks: Block[] }>(
-    LISTEN_FOR_BLOCKS_ORDERED,
-    {
-      variables: { limit: PAGE_LIMIT }
-    }
-  );
+const LatestBlocksRenderer = () => {
+  const { data, error, loading } = useSubscription<{ blocks: Block[] }>(LISTEN_FOR_BLOCKS_ORDERED, {
+    variables: { limit: PAGE_LIMIT }
+  });
   const content = useMemo(() => {
     if (loading) return <ItemHandlerSkeleton number={PAGE_LIMIT} />;
-    if (error || !data || !data.blockchain_blocks) {
+    if (error || !data || !data.blocks) {
       console.warn(`${error} ${JSON.stringify(data)}`);
       return <Typography>not ready</Typography>;
     }
 
-    return <Blockchain newBlocks={data.blockchain_blocks} />;
+    return <LatestBlocks newBlocks={data.blocks} />;
   }, [loading, data, error]);
   return (
     <PaperWithHeader
@@ -142,4 +125,4 @@ const BlockChainRenderer = () => {
   );
 };
 
-export default BlockChainRenderer;
+export default LatestBlocksRenderer;

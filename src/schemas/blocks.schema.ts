@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 const LISTEN_FOR_BLOCKS_ORDERED = gql`
   subscription ListBlocksOrdered($limit: Int) {
-    blockchain_blocks(order_by: { block_number: desc }, limit: $limit) {
+    blocks: blockchain_blocks(order_by: { block_number: desc }, limit: $limit) {
       hash: block_hash
       number: block_number
       numberFinalized: block_number_finalized

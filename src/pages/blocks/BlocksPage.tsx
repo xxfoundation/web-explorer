@@ -1,5 +1,4 @@
 import { ApolloError, useQuery } from '@apollo/client';
-import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined';
 import {
   Container,
   Skeleton,
@@ -16,6 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import React, { FC, useState } from 'react';
+import BlockStatusIcon from '../../components/blockchain/BlockStatus';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CopyButton from '../../components/buttons/CopyButton';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
@@ -130,7 +130,7 @@ const rowParser = (block: Block) => {
         <Link to={`/blocks/${block.number}`}>{block.number}</Link>
       </TableCell>
       <TableCell>
-        <WatchLaterOutlinedIcon color={'warning'} />
+        <BlockStatusIcon number={block.number} numberFinalized={block.numberFinalized} />
       </TableCell>
       <TableCell>{block.currentEra}</TableCell>
       <TableCell>
