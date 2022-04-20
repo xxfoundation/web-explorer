@@ -200,28 +200,24 @@ const BlocksRenderer = () => {
         <TableStrucuture>
           <BlocksTable data={data} error={error} loading={loading} rowsPerPage={rowsPerPage} />
         </TableStrucuture>
-        {loading ? (
-          <Skeleton />
-        ) : (
-          <TablePagination
-            count={data?.agg.aggregate.count || 0}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(_: unknown, number: number) => {
-              if (!blockNumber) {
-                setBlockNumber(data?.blocks.at(0)?.number);
-              }
-              setPage(number);
-            }}
-            rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
-            onRowsPerPageChange={(event) => {
-              setBlockNumber(undefined);
-              setRowsPerPage(parseInt(event.target.value));
-              setPage(0);
-            }}
-            loading={loading}
-          />
-        )}
+        <TablePagination
+          count={data?.agg.aggregate.count || 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(_: unknown, number: number) => {
+            if (!blockNumber) {
+              setBlockNumber(data?.blocks.at(0)?.number);
+            }
+            setPage(number);
+          }}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
+          onRowsPerPageChange={(event) => {
+            setBlockNumber(undefined);
+            setRowsPerPage(parseInt(event.target.value));
+            setPage(0);
+          }}
+          loading={loading}
+        />
       </PaperWrap>
     </Container>
   );
