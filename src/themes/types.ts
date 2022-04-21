@@ -18,6 +18,7 @@ declare module '@mui/material/styles' {
     body3?: TypographyStyle;
     body4?: TypographyStyle;
     body5?: TypographyStyle;
+    subheader4?: TypographyStyle;
   }
 }
 
@@ -26,6 +27,7 @@ declare module '@mui/material/Typography' {
     body3: true;
     body4: true;
     body5: true;
+    subheader4: true;
   }
 }
 
