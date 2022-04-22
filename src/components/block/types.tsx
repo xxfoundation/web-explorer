@@ -1,4 +1,3 @@
-
 export type BlockType = {
   numberFinalized: number;
   number: number;
@@ -11,6 +10,8 @@ export type BlockType = {
   authorName: string;
   timestamp: number;
   specVersion: number;
+  totalEvents: number;
+  numTransfers: number;
 };
 
 export type BlockSummaryType = {

@@ -2,7 +2,6 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import EventsTable from '../../components/block/EventsTable';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
@@ -112,18 +111,18 @@ const extrinsicsDetailData = [
 
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
-  const eventsData = useMemo(() => {
-    return sampleEventsData(extrinsicId);
-  }, [extrinsicId]);
+  // const eventsData = useMemo(() => {
+  //   return sampleEventsData(extrinsicId);
+  // }, [extrinsicId]);
 
   const panels = useMemo(() => {
     return [
       {
         label: <TabText message='events' count={9} />,
-        content: <EventsTable data={eventsData} />
+        content: <Typography>placeholder</Typography>
       }
     ];
-  }, [eventsData]);
+  }, []);
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />

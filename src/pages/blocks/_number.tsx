@@ -12,7 +12,7 @@ import Link from '../../components/Link';
 import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 
 const BlockSummaryHeader: React.FC<{
-  blockNumber: string;
+  blockNumber: number;
   nextNumber?: number;
   prevNumber?: number;
 }> = ({ blockNumber, nextNumber, prevNumber }) => {
@@ -61,13 +61,18 @@ const Block = () => {
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <BlockSummaryHeader
-        blockNumber={number}
+        blockNumber={variables.blockNumber}
         nextNumber={data?.next.number}
         prevNumber={data?.prev.number}
       />
       <BlockSummary data={data} loading={loading} />
       <Box sx={{ mt: 2 }}>
-        <BlockDetailedEventsTabs events={[1, 2, 3]} extrinsics={[1, 2]} />
+        <BlockDetailedEventsTabs
+          blockNumber={variables.blockNumber}
+          loading={loading}
+          events={data?.block.totalEvents}
+          extrinsics={data?.block.numTransfers}
+        />
       </Box>
     </Container>
   );

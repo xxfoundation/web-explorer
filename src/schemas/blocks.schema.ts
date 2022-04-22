@@ -55,6 +55,8 @@ const GET_BLOCK_BY_PK = gql`
       authorName: block_author_name
       timestamp
       specVersion: spec_version
+      totalEvents: total_events
+      numTransfers: num_transfers
     }
     next: blockchain_blocks_by_pk(block_number: $nextBlockNumber) {
       number: block_number

@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, styled, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Divider, Skeleton, Stack, styled, Tab, Tabs, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../themes/default';
 import { PaperWrap } from './Paper/PaperWrap';
@@ -80,7 +80,11 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
   );
 };
 
-const TabText: FC<{ count: string | number; message: string }> = ({ count, message }) => {
+const TabText: FC<{ count?: string | number | JSX.Element; message: string | JSX.Element }> = ({
+  count,
+  message
+}) => {
+  if (count === undefined) return <Typography>undefined</Typography>;
   return (
     <Stack direction='row' spacing={1} divider={<Divider orientation='vertical' flexItem />}>
       <Typography>{message}</Typography>
@@ -89,6 +93,10 @@ const TabText: FC<{ count: string | number; message: string }> = ({ count, messa
   );
 };
 
-export { TabText };
+const TabSkeleton: FC = () => {
+  return <TabText count={<Skeleton />} message={<Skeleton />} />;
+};
+
+export { TabText, TabSkeleton };
 
 export default TabsWithPanels;
