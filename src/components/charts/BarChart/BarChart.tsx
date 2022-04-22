@@ -63,9 +63,13 @@ const NUMBER_OF_TICKS = 3;
 
 type Props = {
   timestamps: number[];
+  yAxis?: {
+    title?: string,
+  },
+
 }
 
-const BarChart: FC<Props> = ({ timestamps }) => {
+const BarChart: FC<Props> = ({ timestamps, yAxis }) => {
   const [interval, setInterval] = useState<TimeInterval>('1h');
   const counts = useMemo(() => getCountsByTimestamp(timestamps, interval), [interval, timestamps]);
   const maxY = useMemo(() => Math.max(...Object.values(counts)), [counts]);
@@ -79,12 +83,14 @@ const BarChart: FC<Props> = ({ timestamps }) => {
       <Controls selected={interval} onSelect={setInterval} />
       <ChartContainer>
         <Stack sx={{ mt:2 }} style={{ flexGrow: 1 }} direction='row'>
-          <Box sx={{ p: 1.5 }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <VerticalTextStyled variant='subheader4'>
-              Extrinsincs
-            </VerticalTextStyled>
-            <Box sx={{ mt: 1, height: '1rem' }} />
-          </Box>
+          {yAxis?.title && (
+            <Box sx={{ p: 1.5 }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <VerticalTextStyled variant='subheader4'>
+                {yAxis.title}
+              </VerticalTextStyled>
+              <Box sx={{ mt: 1, height: '1rem' }} />
+            </Box>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Legend style={{ flexGrow: 1 }} ticks={ticks} />
             <Box sx={{ mt: 1, height: '1rem' }}>

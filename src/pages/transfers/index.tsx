@@ -5,7 +5,7 @@ import BarChart from '../../components/charts/BarChart/BarChart';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
-import HistoryTable from './HistoryTable';
+import HistoryTable from './TransfersTable';
 import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 
 const extrinsinctCountIn72Hours = 4320;
@@ -19,7 +19,7 @@ function buildExtrinsicsTimestamps() {
   return timestamps;
 }
 
-const HistoryPage = () => {
+const TransfersPage = () => {
   const totalOfExtrinsics = 32987;
   const timestamps = useMemo(() => buildExtrinsicsTimestamps(), []);
 
@@ -33,14 +33,14 @@ const HistoryPage = () => {
         sx={{ mb: 5 }}
       >
         <Typography variant='h1'>
-          Extrinsic History
+          Transfers
         </Typography>
         <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled >
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-            <BarChart timestamps={timestamps} yAxis={{ title: 'Extrinsics'}} />
+            <BarChart timestamps={timestamps} yAxis={{ title: 'XX' }} />
           </Box>
         </PaperStyled>
       </Box>
@@ -53,4 +53,4 @@ const HistoryPage = () => {
   );
 };
 
-export default HistoryPage;
+export default TransfersPage;
