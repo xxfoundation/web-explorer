@@ -1,7 +1,7 @@
 import ClockIcon from '@mui/icons-material/AccessTime';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import { Box } from '@mui/material';
-import { default as React, FC } from 'react';
+import React, { FC } from 'react';
 
 const statusToIconMap: Record<string, React.ReactElement> = {
   pending: (

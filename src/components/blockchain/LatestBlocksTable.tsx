@@ -98,7 +98,7 @@ const LatestBlocks: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
   );
 };
 
-const LatestBlocksRenderer = () => {
+const LatestBlocksTable = () => {
   const { data, error, loading } = useSubscription<{ blocks: Block[] }>(LISTEN_FOR_BLOCKS_ORDERED, {
     variables: { limit: PAGE_LIMIT }
   });
@@ -123,4 +123,4 @@ const LatestBlocksRenderer = () => {
   );
 };
 
-export default LatestBlocksRenderer;
+export default LatestBlocksTable;
