@@ -8,12 +8,12 @@ import { PaperWrap } from '../../components/Paper/PaperWrap';
 import HistoryTable from './TransfersTable';
 import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 
-const extrinsinctCountIn72Hours = 4320;
+const extrinsincCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
 
 function buildExtrinsicsTimestamps() {
   const date = dayjs();
-  const timestamps = Array.from(Array(extrinsinctCountIn72Hours).keys())
+  const timestamps = Array.from(Array(extrinsincCountIn72Hours).keys())
     .map(() => Math.floor((date.unix() * 1000) - (Math.random() * (48 * HOUR))))
   timestamps.sort();
   return timestamps;
