@@ -81,8 +81,8 @@ const RenderProducer: FC<{
 };
 
 const SkeletonTableRows: FC<{ lines: number }> = ({ lines }) => {
-  const rangeOfItems: number[] = [...Array(lines).keys()];
-  const columnsSkeletons: number[] = [...Array(7).keys()];
+  const rangeOfItems: number[] = Array.from(Array(lines).keys());
+  const columnsSkeletons: number[] = Array.from(Array(7).keys());
   return (
     <>
       {rangeOfItems.map((i) => {

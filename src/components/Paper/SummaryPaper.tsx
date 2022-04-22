@@ -47,7 +47,7 @@ const SummaryPaper: React.FC<{
     <PaperStyled>
       <Grid container>
         {loading
-          ? [...Array(skeletonLines).keys()].map((index) => (
+          ? Array.from(Array(skeletonLines).keys()).map((index) => (
               <SummaryRow item={summarySkeleton()} key={index} />
             ))
           : data.map((item, index) => <SummaryRow item={item} key={index} />)}
