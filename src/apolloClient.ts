@@ -6,6 +6,21 @@ import { createClient } from 'graphql-ws';
 
 const graphqlHost = process.env.REACT_APP_BACKEND_HOST || 'localhost:8080';
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        blockchain_blocks_by_pk: {
+          keyArgs: ['block_number'],
+          merge: (existing = {}, incoming = {}) => {
+            return { ...existing, ...incoming };
+          }
+        }
+      }
+    }
+  }
+});
+
 function ApolloCli({
   httpUri = `${graphqlHost}/v1/graphql`,
   wsUrl = `${graphqlHost}/v1/graphql`,
@@ -33,7 +48,7 @@ function ApolloCli({
   );
   return new ApolloClient({
     link: splitLink,
-    cache: new InMemoryCache()
+    cache
   });
 }
 
