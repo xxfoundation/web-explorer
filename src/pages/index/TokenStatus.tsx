@@ -1,13 +1,13 @@
 import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
-import AverageAnnualReturn from '../../components/blockchain/AverageAnnualReturn';
-import LatestBlocks from '../../components/blockchain/LatestBlocks';
-import NewAccounts from '../../components/blockchain/NewAccounts';
-import StakingRatio from '../../components/blockchain/StakingRatio';
-import StakingSupplyChart from '../../components/blockchain/StakingSupplyChart';
-import TotalIssuance from '../../components/blockchain/TotalIssuance';
-import TransactionsChart from '../../components/blockchain/Transactions';
-import Transfers from '../../components/blockchain/Transfers';
+import AverageAnnualReturn from '../../components/blockchain/charts/AverageAnnualReturnLineChart';
+import LatestBlocks from '../../components/blockchain/LatestBlocksTable';
+import NewAccounts from '../../components/blockchain/charts/NewAccountsLineChart';
+import StakingRatio from '../../components/blockchain/charts/StakingRatioLineChart';
+import StakingSupplyChart from '../../components/blockchain/charts/StakingSupplyPieChart';
+import TotalIssuance from '../../components/blockchain/charts/TotalIssuanceLineChart';
+import TransactionsChart from '../../components/blockchain/charts/TransactionsLineChart';
+import Transfers from '../../components/blockchain/TransfersTable';
 
 const TokenStatus = () => {
   return (

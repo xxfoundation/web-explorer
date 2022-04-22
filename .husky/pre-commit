@@ -3,3 +3,4 @@
 
 yarn
 yarn lint
+CI=true yarn test
