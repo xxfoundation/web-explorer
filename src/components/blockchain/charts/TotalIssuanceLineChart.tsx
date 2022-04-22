@@ -1,7 +1,7 @@
 import React from 'react';
-import { theme } from '../../themes/default';
-import { PieChartWithLegend } from '../charts/highcharts/PieChart';
-import PaperWithHeader from './PaperWithHeader';
+import { theme } from '../../../themes/default';
+import { PieChartWithLegend } from '../../charts/highcharts/PieChart';
+import PaperWithHeader from '../PaperWithHeader';
 
 const TotalIssuance = () => {
   // TODO make sure the order is circulation, vesting, ...
