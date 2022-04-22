@@ -1,8 +1,8 @@
-import { default as React } from 'react';
-import { DataPoint } from '../../types';
-import LineChart from '../charts/highcharts/LineChart';
-import { formatPercent, tooltipFormatter } from './formatters';
-import PaperWithHeader from './PaperWithHeader';
+import React from 'react';
+import { DataPoint } from '../../../types';
+import LineChart from '../../charts/highcharts/LineChart';
+import PaperWithHeader from '../PaperWithHeader';
+import { formatPercent, percentTooltipFormatter } from './formatters';
 
 const data: DataPoint[] = [
   [90, 0.01],
@@ -16,7 +16,7 @@ const StakingRatio = () => {
     <PaperWithHeader header='Staking Ratio'>
       <LineChart
         data={sortedAccounts}
-        tooltipFormatter={tooltipFormatter}
+        tooltipFormatter={percentTooltipFormatter}
         labelFormatters={{
           yAxis: formatPercent
         }}

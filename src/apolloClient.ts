@@ -21,23 +21,9 @@ const cache = new InMemoryCache({
   }
 });
 
-function ApolloCli({
-  httpUri = `${graphqlHost}/v1/graphql`,
-  wsUrl = `${graphqlHost}/v1/graphql`,
-  secureConn = false
-} = {}) {
-  const securitySuffix = secureConn ? 's' : '';
-  const httpLink = new HttpLink({
-    uri: `http${securitySuffix}://${httpUri}`
-  });
-  const wsLink = new GraphQLWsLink(
-    createClient({
-      url: `ws${securitySuffix}://${wsUrl}`,
-      disablePong: true
-      // TODO on dev changes in the code are breaking the code
-    })
-  );
-
+function ApolloCli({ URI = `${graphqlHost}/v1/graphql` } = {}) {
+  const httpLink = new HttpLink({ uri: `https://${URI}` });
+  const wsLink = new GraphQLWsLink(createClient({ url: `wss://${URI}`, disablePong: true }));
   const splitLink = split(
     ({ query }) => {
       const { kind, operation } = getMainDefinition(query) as OperationDefinitionNode;
