@@ -11,7 +11,7 @@ import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 const extrinsinctCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
 
-function buildExtrinsicsTimestamps() {
+function buildExtrinsicsTimestamps () {
   const date = dayjs();
   const timestamps = Array.from(Array(extrinsinctCountIn72Hours).keys())
     .map(() => Math.floor((date.unix() * 1000) - (Math.random() * (48 * HOUR))))
@@ -35,12 +35,12 @@ const TransfersPage = () => {
         <Typography variant='h1'>
           Transfers
         </Typography>
-        <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
+        <DownloadDataButton onClick={() => { }}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled >
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-            <BarChart timestamps={timestamps} yAxis={{ title: 'XX' }} />
+            <BarChart hoverLabel={'transfer'} timestamps={timestamps} yAxis={{ title: 'Transfers' }} />
           </Box>
         </PaperStyled>
       </Box>
