@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const LIST_EVENTS = gql`
+const EVENTS_OF_BLOCK = gql`
   query ListEventsOfBlock(
     $orderBy: [blockchain_event_order_by!]
     $limit: Int
@@ -11,10 +11,8 @@ const LIST_EVENTS = gql`
       id: event_index
       section
       method
-      phase
-      data
     }
   }
 `;
 
-export { LIST_EVENTS };
+export { EVENTS_OF_BLOCK };

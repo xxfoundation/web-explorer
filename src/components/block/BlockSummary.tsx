@@ -1,12 +1,12 @@
 import { Stack, Typography } from '@mui/material';
 import { default as React } from 'react';
-import BlockStatus from '../blockchain/BlockStatus';
 import BackAndForwardArrows from '../buttons/BackAndForwardArrows';
 import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
 import Link from '../Link';
 import SummaryPaper from '../Paper/SummaryPaper';
 import TimeAgoComponent from '../TimeAgo';
+import BlockStatusIcon from './BlockStatusIcon';
 import { BlockType } from './types';
 
 const summaryDataParser = (data: BlockType) => {
@@ -17,7 +17,7 @@ const summaryDataParser = (data: BlockType) => {
       label: 'status',
       value: (
         <Stack direction={'row'} alignItems='center'>
-          <BlockStatus number={data.number} numberFinalized={data.numberFinalized} />
+          <BlockStatusIcon status={data.number > data.numberFinalized ? 'pending' : 'successful'} />
         </Stack>
       )
     },

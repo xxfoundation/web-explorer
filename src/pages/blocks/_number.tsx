@@ -62,8 +62,8 @@ const Block = () => {
       <Breadcrumb />
       <BlockSummaryHeader
         blockNumber={variables.blockNumber}
-        nextNumber={data?.next.number}
-        prevNumber={data?.prev.number}
+        nextNumber={data?.next?.number}
+        prevNumber={data?.prev?.number}
       />
       <BlockSummary data={data} loading={loading} />
       <Box sx={{ mt: 2 }}>

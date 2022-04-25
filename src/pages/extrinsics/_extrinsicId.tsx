@@ -11,19 +11,6 @@ import SummaryPaper from '../../components/Paper/SummaryPaper';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
 import ModuleCalls from './ModuleCalls';
 
-const sampleEventsData = (extrinsicId: string) => {
-  const items = [];
-  for (let step = 0; step < 9; step++) {
-    items.push({
-      id: '287845-' + step,
-      hash: '0x9b9721540932d6989b92aab8cc11469cc4c3e5a5ca88053c563b4e49d910a869',
-      action: 'Balances (Withdraw)',
-      extrinsicId
-    });
-  }
-  return items;
-};
-
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
 
 const extrinsicsDetailData = [

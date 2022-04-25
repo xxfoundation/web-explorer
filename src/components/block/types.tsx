@@ -16,6 +16,6 @@ export type BlockType = {
 
 export type BlockSummaryType = {
   block: BlockType;
-  next: { number: number };
-  prev: { number: number };
+  next?: { number: number };
+  prev?: { number: number };
 };
