@@ -15,7 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import React, { FC, useState } from 'react';
-import BlockStatusIcon from '../../components/blockchain/BlockStatus';
+import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CopyButton from '../../components/buttons/CopyButton';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
@@ -130,7 +130,7 @@ const rowParser = (block: Block) => {
         <Link to={`/blocks/${block.number}`}>{block.number}</Link>
       </TableCell>
       <TableCell>
-        <BlockStatusIcon number={block.number} numberFinalized={block.numberFinalized} />
+        <BlockStatusIcon status={block.number > block.numberFinalized ? 'pending' : 'successful'} />
       </TableCell>
       <TableCell>{block.currentEra}</TableCell>
       <TableCell>
