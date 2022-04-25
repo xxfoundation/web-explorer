@@ -2,9 +2,9 @@ import { useSubscription } from '@apollo/client';
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import { LISTEN_FOR_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
+import BlockStatusIcon from '../block/BlockStatusIcon';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
-import BlockStatusIcon from './BlockStatus';
 import PaperWithHeader from './PaperWithHeader';
 
 const PAGE_LIMIT = 8;
@@ -45,7 +45,9 @@ const ItemHandler: FC<{ block: Block }> = ({ block }) => {
           </Link>
         </Grid>
         <Grid item xs='auto'>
-          <BlockStatusIcon number={block.number} numberFinalized={block.numberFinalized} />
+          <BlockStatusIcon
+            status={block.number > block.numberFinalized ? 'pending' : 'successful'}
+          />
         </Grid>
       </Grid>
       <Grid container sx={{ mt: 1 }}>
