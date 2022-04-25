@@ -1,20 +1,12 @@
 import { useQuery } from '@apollo/client';
-import {
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { TableCellProps, Tooltip, Typography } from '@mui/material';
 import React, { FC, useState } from 'react';
 import { EVENTS_OF_BLOCK } from '../../schemas/events.schema';
 import { Hash } from '../ChainId';
 import Link from '../Link';
-import { TableContainer } from '../Tables/TableContainer';
+import { BaselineCell, BaselineTable } from '../Tables';
 import TablePagination from '../Tables/TablePagination';
+import Skeleton from './EventsTable.skeleton';
 
 type EventType = {
   id: string;
@@ -23,56 +15,35 @@ type EventType = {
   method: string;
 };
 
-const rowParser = (rowData: EventType) => {
+const HashCell: FC<{ value?: string }> = ({ value }) => {
+  if (!value) {
+    return <Typography>-</Typography>;
+  }
   return (
-    <TableRow key={rowData.id}>
-      <TableCell align='left'>{rowData.id}</TableCell>
-      <TableCell align='left'>
-        {rowData.hash ? (
-          <Tooltip
-            title={
-              <Typography fontSize={'10px'} fontWeight={400}>
-                {rowData.hash}
-              </Typography>
-            }
-            placement={'top'}
-            arrow
-          >
-            <span>
-              <Hash value={rowData.hash} truncated />
-            </span>
-          </Tooltip>
-        ) : (
-          <Typography>-</Typography>
-        )}
-      </TableCell>
-      <TableCell>
-        <Link to='#' textTransform={'capitalize'}>{`${rowData.section} (${rowData.method})`}</Link>
-      </TableCell>
-    </TableRow>
+    <Tooltip
+      title={
+        <Typography fontSize={'10px'} fontWeight={400}>
+          {value}
+        </Typography>
+      }
+      placement={'top'}
+      arrow
+    >
+      <span>
+        <Hash value={value} truncated />
+      </span>
+    </Tooltip>
   );
 };
 
-const TableHeader: FC<{ loading: boolean }> = ({ loading }) => {
-  return (
-    <TableHead>
-      <TableRow>
-        {loading ? (
-          <>
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-          </>
-        ) : (
-          <>
-            <TableCell align='left'>event id</TableCell>
-            <TableCell align='left'>hash</TableCell>
-            <TableCell>action</TableCell>
-          </>
-        )}
-      </TableRow>
-    </TableHead>
-  );
+const props: TableCellProps = { align: 'left' };
+
+const rowsParser = ({ hash, id, method, section }: EventType): BaselineCell[] => {
+  return [
+    { value: id, props },
+    { value: <HashCell value={hash} />, props },
+    { value: <Link to='#' textTransform={'capitalize'}>{`${section} (${method})`}</Link> }
+  ];
 };
 
 const EventsTable: FC<{ where: unknown }> = ({ where }) => {
@@ -90,17 +61,15 @@ const EventsTable: FC<{ where: unknown }> = ({ where }) => {
       where
     }
   });
+  if (loading) return <Skeleton />;
   return (
     <>
-      <TableContainer>
-        <Table>
-          <TableHeader loading={loading} />
-          <TableBody>{data?.events.map(rowParser)}</TableBody>
-        </Table>
-      </TableContainer>
+      <BaselineTable
+        headers={[{ value: 'event id', props }, { value: 'hash', props }, { value: 'action' }]}
+        rows={(data?.events || []).map(rowsParser)}
+      />
       <TablePagination
         page={page}
-        loading={loading}
         count={data?.events.length || 0}
         rowsPerPage={rowsPerPage}
         onPageChange={(_: unknown, number: number) => {
