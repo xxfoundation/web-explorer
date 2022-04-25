@@ -1,24 +1,11 @@
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 import Link from '../../components/Link';
-import { TableContainer } from '../../components/Tables/TableContainer';
+import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 
 type Stake = {
   account: string;
   stake: string;
   share: string;
-};
-
-const EraStake = ({ account, share, stake }: Stake) => {
-  return (
-    <TableRow key={account}>
-      <TableCell>
-        <Link to={`/account/${account}`}>{account}</Link>
-      </TableCell>
-      <TableCell>{stake}</TableCell>
-      <TableCell>{share}</TableCell>
-    </TableRow>
-  );
 };
 
 const data = [
@@ -29,20 +16,16 @@ const data = [
   }
 ];
 
+const EraStake = ({ account, share, stake }: Stake) => {
+  return BaseLineCellsWrapper([<Link to={`/account/${account}`}>{account}</Link>, stake, share]);
+};
+
 const NominatorsTable = () => {
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Account</TableCell>
-            <TableCell>Stake</TableCell>
-            <TableCell>Share</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>{data.map(EraStake)}</TableBody>
-      </Table>
-    </TableContainer>
+    <BaselineTable
+      headers={BaseLineCellsWrapper(['Account', 'Stake', 'Share'])}
+      rows={data.map(EraStake)}
+    />
   );
 };
 
