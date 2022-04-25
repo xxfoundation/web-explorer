@@ -85,7 +85,6 @@ const extrinsicsDetailData = [
     label: <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />,
     value: <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
   },
-  // { label: 'parameters', value: <ParametersToSummary parameters={sampleDataParameters} /> },
   {
     label: 'signature',
     value: (
@@ -98,9 +97,6 @@ const extrinsicsDetailData = [
 
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
-  // const eventsData = useMemo(() => {
-  //   return sampleEventsData(extrinsicId);
-  // }, [extrinsicId]);
 
   const panels = useMemo(() => {
     return [

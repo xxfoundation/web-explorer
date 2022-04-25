@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import {
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -52,7 +53,29 @@ const rowParser = (rowData: EventType) => {
   );
 };
 
-const EventsTable: FC<{ blockNumber?: number }> = ({ blockNumber }) => {
+const TableHeader: FC<{ loading: boolean }> = ({ loading }) => {
+  return (
+    <TableHead>
+      <TableRow>
+        {loading ? (
+          <>
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+          </>
+        ) : (
+          <>
+            <TableCell align='left'>event id</TableCell>
+            <TableCell align='left'>hash</TableCell>
+            <TableCell>action</TableCell>
+          </>
+        )}
+      </TableRow>
+    </TableHead>
+  );
+};
+
+const EventsTable: FC<{ where: unknown }> = ({ where }) => {
   const [rowsPerPage, setRowsPerPage] = useState(4);
   const [page, setPage] = useState(0);
   const { data, loading } = useQuery<{ events: EventType[] }>(EVENTS_OF_BLOCK, {
@@ -64,24 +87,14 @@ const EventsTable: FC<{ blockNumber?: number }> = ({ blockNumber }) => {
       ],
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      where: {
-        block_number: {
-          _eq: blockNumber
-        }
-      }
+      where
     }
   });
   return (
     <>
       <TableContainer>
         <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell align='left'>event id</TableCell>
-              <TableCell align='left'>hash</TableCell>
-              <TableCell>action</TableCell>
-            </TableRow>
-          </TableHead>
+          <TableHeader loading={loading} />
           <TableBody>{data?.events.map(rowParser)}</TableBody>
         </Table>
       </TableContainer>

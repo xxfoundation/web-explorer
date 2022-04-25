@@ -36,11 +36,26 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   }
 });
 
-const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
+const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string; loading?: boolean }> = ({
+  loading = false,
   panels,
   tabsLabel
 }) => {
   const [value, setValue] = React.useState(0);
+  if (loading)
+    return (
+      <PaperWrap>
+        <Box sx={{ mb: '24px', minHeight: '48px', py: '12px' }}>
+          <Skeleton />
+        </Box>
+        <Box>
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+        </Box>
+      </PaperWrap>
+    );
   return (
     <PaperWrap>
       <StyledTabs
@@ -93,10 +108,6 @@ const TabText: FC<{ count?: string | number | JSX.Element; message: string | JSX
   );
 };
 
-const TabSkeleton: FC = () => {
-  return <TabText count={<Skeleton />} message={<Skeleton />} />;
-};
-
-export { TabText, TabSkeleton };
+export { TabText };
 
 export default TabsWithPanels;

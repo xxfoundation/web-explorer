@@ -101,16 +101,17 @@ const TableStructure: FC<{ skeleton?: boolean }> = ({ children, skeleton }) => {
   );
 };
 
+const data = [
+  {
+    extrinsicId: '312313-3',
+    action: 'parachainsystem (set_validation_data)',
+    time: '2022-02-16 01:56:42 (+UTC)',
+    hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
+    eventId: 12313
+  }
+];
+
 const BlockExtrinsics: FC<{ blockNumber?: number }> = ({ blockNumber }) => {
-  const data = [
-    {
-      extrinsicId: '312313-3',
-      action: 'parachainsystem (set_validation_data)',
-      time: '2022-02-16 01:56:42 (+UTC)',
-      hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
-      eventId: 12313
-    }
-  ];
   if (!blockNumber) return <Skeleton />;
   return (
     <>
