@@ -7,10 +7,10 @@ import Link from '../Link';
 import SummaryPaper from '../Paper/SummaryPaper';
 import TimeAgoComponent from '../TimeAgo';
 import BlockStatusIcon from './BlockStatusIcon';
+import Skeleton from './BlockSummary.skeleton';
 import { BlockType } from './types';
 
 const summaryDataParser = (data: BlockType) => {
-  if (!data) return [];
   return [
     { label: 'time', value: <Typography>{data.timestamp}</Typography> },
     {
@@ -71,16 +71,11 @@ const summaryDataParser = (data: BlockType) => {
 };
 
 const BlockSummary: React.FC<{
-  data?: { block: BlockType };
+  data?: BlockType;
   loading: boolean;
 }> = ({ data, loading }) => {
-  return (
-    <SummaryPaper
-      data={data ? summaryDataParser(data.block) : []}
-      loading={loading}
-      skeletonLines={9}
-    />
-  );
+  if (loading) return <Skeleton />;
+  return <SummaryPaper data={data ? summaryDataParser(data) : []} />;
 };
 
 export default BlockSummary;

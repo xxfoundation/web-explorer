@@ -56,7 +56,15 @@ const Block = () => {
   }, [number]);
   const { data, loading } = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, { variables });
 
-  if (!loading && !data?.block) return <Typography>Not found</Typography>;
+  if (!loading && !data?.block)
+    return (
+      <>
+        <Container sx={{ my: 5 }}>
+          <Breadcrumb />
+          <Typography>Not found</Typography>
+        </Container>
+      </>
+    );
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
@@ -65,7 +73,7 @@ const Block = () => {
         nextNumber={data?.next?.number}
         prevNumber={data?.prev?.number}
       />
-      <BlockSummary data={data} loading={loading} />
+      <BlockSummary data={data?.block} loading={loading} />
       <Box sx={{ mt: 2 }}>
         <BlockDetailedEventsTabs
           blockNumber={variables.blockNumber}

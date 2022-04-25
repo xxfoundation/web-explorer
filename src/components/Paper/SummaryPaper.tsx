@@ -1,4 +1,4 @@
-import { Divider, Grid, Skeleton } from '@mui/material';
+import { Divider, Grid } from '@mui/material';
 import React, { FC } from 'react';
 import {
   ActionStyled,
@@ -34,23 +34,15 @@ const SummaryRow: FC<{ item: SummaryPaperData }> = ({ item: { action, label, val
   );
 };
 
-const summarySkeleton = () => {
-  return { label: <Skeleton width={'90%'} />, value: <Skeleton width={'90%'} /> };
-};
-
 const SummaryPaper: React.FC<{
   data: SummaryPaperData[];
-  loading?: boolean;
-  skeletonLines?: number;
-}> = ({ data, loading, skeletonLines = 4 }) => {
+}> = ({ data }) => {
   return (
     <PaperStyled>
       <Grid container>
-        {loading
-          ? Array.from(Array(skeletonLines).keys()).map((index) => (
-              <SummaryRow item={summarySkeleton()} key={index} />
-            ))
-          : data.map((item, index) => <SummaryRow item={item} key={index} />)}
+        {data.map((item, index) => (
+          <SummaryRow item={item} key={index} />
+        ))}
       </Grid>
     </PaperStyled>
   );
