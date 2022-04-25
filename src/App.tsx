@@ -7,6 +7,7 @@ import SiteHeader from './components/Header';
 import Blocks from './pages/blocks';
 import ExtrinsicsRouter from './pages/extrinsics';
 import BlockChain from './pages/index';
+import Transfers from './pages/transfers';
 import { theme } from './themes/default';
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
             <ExtrinsicsRouter />
           </Route>
           <Route path='/transfers'>
-            <h1>transfers</h1>
+            <Transfers />
           </Route>
           <Route path='/events'>
             <h1>events</h1>

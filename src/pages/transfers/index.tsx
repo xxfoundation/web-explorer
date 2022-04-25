@@ -5,21 +5,21 @@ import BarChart from '../../components/charts/BarChart/BarChart';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
-import HistoryTable from './HistoryTable';
+import HistoryTable from './TransfersTable';
 import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 
-const extrinsinctCountIn72Hours = 4320;
+const extrinsincCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
 
 function buildExtrinsicsTimestamps () {
   const date = dayjs();
-  const timestamps = Array.from(Array(extrinsinctCountIn72Hours).keys())
+  const timestamps = Array.from(Array(extrinsincCountIn72Hours).keys())
     .map(() => Math.floor((date.unix() * 1000) - (Math.random() * (48 * HOUR))))
   timestamps.sort();
   return timestamps;
 }
 
-const HistoryPage = () => {
+const TransfersPage = () => {
   const totalOfExtrinsics = 32987;
   const timestamps = useMemo(() => buildExtrinsicsTimestamps(), []);
 
@@ -33,14 +33,14 @@ const HistoryPage = () => {
         sx={{ mb: 5 }}
       >
         <Typography variant='h1'>
-          Extrinsic History
+          Transfers
         </Typography>
         <DownloadDataButton onClick={() => { }}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled >
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-            <BarChart hoverLabel={'extrinsic'} timestamps={timestamps} yAxis={{ title: 'Extrinsics' }} />
+            <BarChart hoverLabel={'transfer'} timestamps={timestamps} yAxis={{ title: 'Transfers' }} />
           </Box>
         </PaperStyled>
       </Box>
@@ -53,4 +53,4 @@ const HistoryPage = () => {
   );
 };
 
-export default HistoryPage;
+export default TransfersPage;
