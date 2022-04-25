@@ -1,5 +1,6 @@
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useQuery } from '@apollo/client';
 import {
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -9,17 +10,17 @@ import {
   Typography
 } from '@mui/material';
 import React, { FC, useState } from 'react';
+import { EVENTS_OF_BLOCK } from '../../schemas/events.schema';
 import { Hash } from '../ChainId';
 import Link from '../Link';
-import { TableCellLeftDivider } from '../Tables/TableCell';
 import { TableContainer } from '../Tables/TableContainer';
 import TablePagination from '../Tables/TablePagination';
 
 type EventType = {
   id: string;
-  hash: string;
-  action: string;
-  extrinsicId?: string;
+  hash?: string;
+  section: string;
+  method: string;
 };
 
 const rowParser = (rowData: EventType) => {
@@ -27,63 +28,80 @@ const rowParser = (rowData: EventType) => {
     <TableRow key={rowData.id}>
       <TableCell align='left'>{rowData.id}</TableCell>
       <TableCell align='left'>
-        <Tooltip
-          title={
-            <Typography fontSize={'10px'} fontWeight={400}>
-              {rowData.hash}
-            </Typography>
-          }
-          placement={'top'}
-          arrow
-        >
-          <span>
-            <Hash value={rowData.hash} truncated />
-          </span>
-        </Tooltip>
+        {rowData.hash ? (
+          <Tooltip
+            title={
+              <Typography fontSize={'10px'} fontWeight={400}>
+                {rowData.hash}
+              </Typography>
+            }
+            placement={'top'}
+            arrow
+          >
+            <span>
+              <Hash value={rowData.hash} truncated />
+            </span>
+          </Tooltip>
+        ) : (
+          <Typography>-</Typography>
+        )}
       </TableCell>
-      <TableCell align='left'>
-        <Link to='#'>{rowData.action}</Link>
-      </TableCell>
-      <TableCell align='center'>
-        <TableCellLeftDivider>
-          <Link to={`/events/${rowData.id}`}>
-            <ArrowForwardIosIcon />
-          </Link>
-        </TableCellLeftDivider>
+      <TableCell>
+        <Link to='#' textTransform={'capitalize'}>{`${rowData.section} (${rowData.method})`}</Link>
       </TableCell>
     </TableRow>
   );
 };
 
-const staticDataPagination = (page: number, rowsPerPage: number, data: EventType[]) => {
-  return rowsPerPage > 0 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : data;
+const TableHeader: FC<{ loading: boolean }> = ({ loading }) => {
+  return (
+    <TableHead>
+      <TableRow>
+        {loading ? (
+          <>
+            <Skeleton />
+            <Skeleton />
+            <Skeleton />
+          </>
+        ) : (
+          <>
+            <TableCell align='left'>event id</TableCell>
+            <TableCell align='left'>hash</TableCell>
+            <TableCell>action</TableCell>
+          </>
+        )}
+      </TableRow>
+    </TableHead>
+  );
 };
 
-const EventsTable: FC<{ data: EventType[] }> = ({ data }) => {
+const EventsTable: FC<{ where: unknown }> = ({ where }) => {
   const [rowsPerPage, setRowsPerPage] = useState(4);
   const [page, setPage] = useState(0);
+  const { data, loading } = useQuery<{ events: EventType[] }>(EVENTS_OF_BLOCK, {
+    variables: {
+      orderBy: [
+        {
+          event_index: 'desc'
+        }
+      ],
+      limit: rowsPerPage,
+      offset: page * rowsPerPage,
+      where
+    }
+  });
   return (
     <>
       <TableContainer>
-        <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '13px', } }}>
-          <TableHead>
-            <TableRow>
-              <TableCell align='left'>event id</TableCell>
-              <TableCell align='left'>hash</TableCell>
-              <TableCell>action</TableCell>
-              <TableCell align='center'>
-                <TableCellLeftDivider>
-                  <Link to='/extrinsics'>view all</Link>
-                </TableCellLeftDivider>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{staticDataPagination(page, rowsPerPage, data).map(rowParser)}</TableBody>
+        <Table>
+          <TableHeader loading={loading} />
+          <TableBody>{data?.events.map(rowParser)}</TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         page={page}
-        count={data.length}
+        loading={loading}
+        count={data?.events.length || 0}
         rowsPerPage={rowsPerPage}
         onPageChange={(_: unknown, number: number) => {
           setPage(number);

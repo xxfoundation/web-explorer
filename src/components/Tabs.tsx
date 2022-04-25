@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, styled, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Divider, Skeleton, Stack, styled, Tab, Tabs, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../themes/default';
 import { PaperWrap } from './Paper/PaperWrap';
@@ -36,11 +36,26 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   }
 });
 
-const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
+const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string; loading?: boolean }> = ({
+  loading = false,
   panels,
   tabsLabel
 }) => {
   const [value, setValue] = React.useState(0);
+  if (loading)
+    return (
+      <PaperWrap>
+        <Box sx={{ mb: '24px', minHeight: '48px', py: '12px' }}>
+          <Skeleton />
+        </Box>
+        <Box>
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+        </Box>
+      </PaperWrap>
+    );
   return (
     <PaperWrap>
       <StyledTabs
@@ -80,7 +95,11 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
   );
 };
 
-const TabText: FC<{ count: string | number; message: string }> = ({ count, message }) => {
+const TabText: FC<{ count?: string | number | JSX.Element; message: string | JSX.Element }> = ({
+  count,
+  message
+}) => {
+  if (count === undefined) return <Typography>undefined</Typography>;
   return (
     <Stack direction='row' spacing={1} divider={<Divider orientation='vertical' flexItem />}>
       <Typography>{message}</Typography>

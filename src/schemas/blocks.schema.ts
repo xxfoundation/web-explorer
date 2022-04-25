@@ -39,10 +39,27 @@ const LIST_BLOCK = gql`
 `;
 
 const GET_BLOCK_BY_PK = gql`
-  #import "./blocks.graphql"
-  query GetBlockByPK($block_number: Int) {
-    blockchain_blocks_by_pk(block_number: $block_number) {
-      ...Block
+  query GetBlockByPK($blockNumber: bigint!, $prevBlockNumber: bigint!, $nextBlockNumber: bigint!) {
+    prev: blockchain_blocks_by_pk(block_number: $prevBlockNumber) {
+      number: block_number
+    }
+    block: blockchain_blocks_by_pk(block_number: $blockNumber) {
+      numberFinalized: block_number_finalized
+      number: block_number
+      currentEra: current_era
+      hash: block_hash
+      parentHash: parent_hash
+      stateRoot: state_root
+      extrinsicsRoot: extrinsics_root
+      author: block_author
+      authorName: block_author_name
+      timestamp
+      specVersion: spec_version
+      totalEvents: total_events
+      numTransfers: num_transfers
+    }
+    next: blockchain_blocks_by_pk(block_number: $nextBlockNumber) {
+      number: block_number
     }
   }
 `;

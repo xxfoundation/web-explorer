@@ -1,6 +1,7 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import {
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -9,7 +10,7 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import React from 'react';
+import React, { FC } from 'react';
 import { Hash } from '../ChainId';
 import Link from '../Link';
 import { TableCellLeftDivider } from '../Tables/TableCell';
@@ -66,39 +67,56 @@ const rowParser = (rowData: ExtrinsicsTyp) => {
   );
 };
 
-const BlockExtrinsics = () => {
-  // TODO subscribe to events and fill data with hash or number
-  const data = [
-    {
-      extrinsicId: '312313-3',
-      action: 'parachainsystem (set_validation_data)',
-      time: '2022-02-16 01:56:42 (+UTC)',
-      hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
-      eventId: 12313
-    }
-  ];
+const TableStructure: FC<{ skeleton?: boolean }> = ({ children, skeleton }) => {
+  return (
+    <TableContainer>
+      <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '51px' } }}>
+        <TableHead>
+          <TableRow>
+            {skeleton ? (
+              Array.from(Array(6).keys()).map((index) => (
+                <TableCell key={index}>
+                  <Skeleton />
+                </TableCell>
+              ))
+            ) : (
+              <>
+                <TableCell>extrinsic id</TableCell>
+                <TableCell>hash</TableCell>
+                <TableCell>time</TableCell>
+                <TableCell>result</TableCell>
+                <TableCell>action</TableCell>
+                <TableCell>
+                  <TableCellLeftDivider>
+                    <Link to='/extrinsics'>view all</Link>
+                  </TableCellLeftDivider>
+                </TableCell>
+              </>
+            )}
+          </TableRow>
+        </TableHead>
+        <TableBody>{children}</TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+const data = [
+  {
+    extrinsicId: '312313-3',
+    action: 'parachainsystem (set_validation_data)',
+    time: '2022-02-16 01:56:42 (+UTC)',
+    hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
+    eventId: 12313
+  }
+];
+
+const BlockExtrinsics: FC<{ blockNumber?: number }> = ({ blockNumber }) => {
+  if (!blockNumber) return <Skeleton />;
   return (
     <>
-      <TableContainer>
-        <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '51px' } }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>extrinsic id</TableCell>
-              <TableCell>hash</TableCell>
-              <TableCell>time</TableCell>
-              <TableCell>result</TableCell>
-              <TableCell>action</TableCell>
-              <TableCell>
-                <TableCellLeftDivider>
-                  <Link to='/extrinsics'>view all</Link>
-                </TableCellLeftDivider>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{data.map(rowParser)}</TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination count={data.length} page={0} />
+      <TableStructure skeleton={!blockNumber}>{data.map(rowParser)}</TableStructure>
+      <TablePagination loading={!blockNumber} count={data.length} page={0} />
     </>
   );
 };
