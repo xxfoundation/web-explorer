@@ -1,7 +1,8 @@
 import { default as React } from 'react';
-import { DataPoint } from '../../types';
-import { LineChart } from '../charts/highcharts';
-import PaperWithHeader from './PaperWithHeader';
+import { DataPoint } from '../../../types';
+import { LineChart } from '../../charts/highcharts';
+import PaperWithHeader from '../PaperWithHeader';
+import { amountByEraTooltip } from './formatters';
 
 const data: DataPoint[] = [
   [123, 1231],
@@ -14,7 +15,7 @@ const NewAccounts = () => {
 
   return (
     <PaperWithHeader header='New Accounts'>
-      <LineChart data={sortedData} />
+      <LineChart data={sortedData} tooltipFormatter={amountByEraTooltip} />
     </PaperWithHeader>
   );
 };

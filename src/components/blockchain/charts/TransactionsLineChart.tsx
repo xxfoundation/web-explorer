@@ -1,13 +1,14 @@
-import { default as React } from 'react';
-import { DataPoint } from '../../types';
-import * as Highcharts from '../charts/highcharts';
-import PaperWithHeader from './PaperWithHeader';
+import React from 'react';
+import { amountByEraTooltip } from './formatters';
+import { DataPoint } from '../../../types';
+import * as Highcharts from '../../charts/highcharts';
+import PaperWithHeader from '../PaperWithHeader';
 
 const data: { transactions: DataPoint[] } = {
   transactions: [
-    [1876, 6897],
-    [8968, 101],
-    [67761, 613]
+    [100, 3123],
+    [150, 2133],
+    [200, 6132]
   ]
 };
 
@@ -22,7 +23,7 @@ const TransactionsChart = () => {
 
   return (
     <PaperWithHeader header='Transactions'>
-      <Highcharts.LineChart data={sortedTransactions} />
+      <Highcharts.LineChart data={sortedTransactions} tooltipFormatter={amountByEraTooltip} />
     </PaperWithHeader>
   );
 };

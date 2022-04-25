@@ -27,7 +27,7 @@ const ChainInfoCard: FC<{ title: string, value: string | React.ReactNode }> = ({
   );
 };
 
-const chainInfo = () => {
+const ChainInfo = () => {
   return (
     <Box className='blockchain-component-chainInfo' mb={7}>
       <Typography variant='h3' gutterBottom>
@@ -42,4 +42,4 @@ const chainInfo = () => {
   );
 };
 
-export default chainInfo;
+export default ChainInfo;

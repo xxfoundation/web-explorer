@@ -1,5 +1,32 @@
 import { createTheme } from '@mui/material/styles';
 
+const palette =  {
+  primary: {
+    main: '#00A2D6', // sets link color
+    contrastText: '#FFF'
+  },
+  warning: {
+    main: '#FFC908'
+  },
+  success: {
+    main: '#59BD1C'
+  },
+  text: {
+    primary: '#4f4f4f'
+  },
+  grey: {
+    50: '#FFFFFF',
+    100: '#FCFCFC', // light backgrounds
+    200: '#EAEAEA', // line grey
+    300: '#D2D2D2', // grey
+    400: '#9A9A9A', // med grey 2
+    500: '#7A7A7A', // med grey
+    600: '#4F4F4F', // backgrounds
+    700: '#3D3D3D', // dark grey
+    800: '#27272B' // black header
+  }
+};
+
 export const theme = createTheme({
   components: {
     MuiTypography: {
@@ -10,38 +37,13 @@ export const theme = createTheme({
       }
     }
   },
-  palette: {
-    primary: {
-      main: '#00A2D6', // sets link color
-      contrastText: '#FFF'
-    },
-    warning: {
-      main: '#FFC908'
-    },
-    success: {
-      main: '#59BD1C'
-    },
-    text: {
-      primary: '#4f4f4f'
-    },
-    grey: {
-      50: '#FFFFFF',
-      100: '#FCFCFC', // light backgrounds
-      200: '#EAEAEA', // line grey
-      300: '#D2D2D2', // grey
-      400: '#9A9A9A', // med grey 2
-      500: '#7A7A7A', // med grey
-      600: '#4F4F4F', // backgrounds
-      700: '#3D3D3D', // dark grey
-      800: '#27272B' // black header
-    }
-  },
+  palette,
   typography: {
     fontFamily: '\'Roboto\', sans-serif',
     h1: {
       fontSize: 46,
       fontWeight: 800,
-      color: '#3D3D3D',
+      color: palette.grey[700],
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       overflow: 'hidden'
@@ -55,13 +57,20 @@ export const theme = createTheme({
       fontWeight: 700,
       letterSpacing: 1.5,
       textTransform: 'uppercase',
-      color: '#4f4f4f'
+      color: palette.grey[600]
     },
     h4: {
       fontSize: 14,
       fontWeight: 500,
       letterSpacing: 0.5,
       textTransform: 'uppercase'
+    },
+    subheader4: {
+      fontSize: 14,
+      fontWeight: 400,
+      letterSpacing: 0.5,
+      textTransform: 'uppercase',
+      color: palette.grey[400]
     },
     h5: {
       fontSize: 12,
@@ -73,30 +82,25 @@ export const theme = createTheme({
       fontWeight: 400
     },
     body1: {
-      // normal text
       fontWeight: 500
     },
     body2: {
-      // small & bold
       fontWeight: 700,
       fontSize: 14,
-      color: '#7A7A7A'
+      color: palette.grey[500]
     },
     body3: {
-      // normal weight text
       fontWeight: 400,
       letterSpacing: 0.5,
       fontSize: 14,
       lineHeight: 1.75,
-      color: '#7A7A7A'
+      color: palette.grey[600]
     },
     body4: {
-      // very small & normal
       fontWeight: 400,
       fontSize: 12
     },
     body5: {
-      // tiny & normal
       fontWeight: 400,
       fontSize: 10
     },

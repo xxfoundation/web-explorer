@@ -1,7 +1,7 @@
 import React from 'react';
-import { theme } from '../../themes/default';
-import { PieChartWithLegend } from '../charts/highcharts/PieChart';
-import PaperWithHeader from './PaperWithHeader';
+import { theme } from '../../../themes/default';
+import { PieChartWithLegend } from '../../charts/highcharts/PieChart';
+import PaperWithHeader from '../PaperWithHeader';
 
 const sampleCustomData = [
   { name: 'stakeable', value: 162301, percentage: 84, title: true, id: 'stakeable' },
