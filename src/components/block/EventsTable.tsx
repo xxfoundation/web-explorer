@@ -63,25 +63,25 @@ const EventsTable: FC<{ where: unknown }> = ({ where }) => {
   });
   if (loading) return <Skeleton />;
   return (
-    <>
-      <BaselineTable
-        headers={[{ value: 'event id', props }, { value: 'hash', props }, { value: 'action' }]}
-        rows={(data?.events || []).map(rowsParser)}
-      />
-      <TablePagination
-        page={page}
-        count={data?.events.length || 0}
-        rowsPerPage={rowsPerPage}
-        onPageChange={(_: unknown, number: number) => {
-          setPage(number);
-        }}
-        rowsPerPageOptions={[2, 4, 6]}
-        onRowsPerPageChange={({ target: { value } }) => {
-          setRowsPerPage(parseInt(value));
-          setPage(0);
-        }}
-      />
-    </>
+    <BaselineTable
+      headers={[{ value: 'event id', props }, { value: 'hash', props }, { value: 'action' }]}
+      rows={(data?.events || []).map(rowsParser)}
+      footer={
+        <TablePagination
+          page={page}
+          count={data?.events.length || 0}
+          rowsPerPage={rowsPerPage}
+          onPageChange={(_: unknown, number: number) => {
+            setPage(number);
+          }}
+          rowsPerPageOptions={[2, 4, 6]}
+          onRowsPerPageChange={({ target: { value } }) => {
+            setRowsPerPage(parseInt(value));
+            setPage(0);
+          }}
+        />
+      }
+    />
   );
 };
 

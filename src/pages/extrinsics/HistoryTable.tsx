@@ -1,11 +1,10 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import React, { useState } from 'react';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
+import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import { TableCellLeftDivider } from '../../components/Tables/TableCell';
-import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
 
 type Extrinsic = {
@@ -16,35 +15,21 @@ type Extrinsic = {
   action: string;
 };
 
-const extrinsicToRow = (extrinsic: Extrinsic) => {
+const extrinsicToRow = (extrinsic: Extrinsic): BaselineCell[] => {
   const extrinsicIdLink = `/extrinsics/${extrinsic.id}`;
-  return (
-    <TableRow key={extrinsic.id}>
-      <TableCell>
-        <Link to={extrinsicIdLink}>{extrinsic.id}</Link>
-      </TableCell>
-      <TableCell>
-        <Link to={`/blocks/${extrinsic.block}`}>{extrinsic.block}</Link>
-      </TableCell>
-      <TableCell>
-        <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated />
-      </TableCell>
-      <TableCell>{extrinsic.time}</TableCell>
-      <TableCell>
-        <AccessTimeIcon color='warning' />
-      </TableCell>
-      <TableCell>
-        <Link to='#'>{extrinsic.action}</Link>
-      </TableCell>
-      <TableCell>
-        <TableCellLeftDivider>
-          <Link to={extrinsicIdLink}>
-            <ArrowForwardIosIcon />
-          </Link>
-        </TableCellLeftDivider>
-      </TableCell>
-    </TableRow>
-  );
+  return BaseLineCellsWrapper([
+    <Link to={extrinsicIdLink}>{extrinsic.id}</Link>,
+    <Link to={`/blocks/${extrinsic.block}`}>{extrinsic.block}</Link>,
+    <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated />,
+    extrinsic.time,
+    <AccessTimeIcon color='warning' />,
+    <Link to='#'>{extrinsic.action}</Link>,
+    <TableCellLeftDivider>
+      <Link to={extrinsicIdLink}>
+        <ArrowForwardIosIcon />
+      </Link>
+    </TableCellLeftDivider>
+  ]);
 };
 
 const sampleData = () => {
@@ -65,42 +50,39 @@ const HistoryTable = () => {
   const extrinsicsHistoryData = sampleData();
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
-  
+
   return (
-    <TableContainer>
-      <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '6px', } }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>extrinsics id</TableCell>
-            <TableCell>block</TableCell>
-            <TableCell>extrinsics hash</TableCell>
-            <TableCell>time</TableCell>
-            <TableCell>result</TableCell>
-            <TableCell>action</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? extrinsicsHistoryData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : extrinsicsHistoryData
-          ).map(extrinsicToRow)}
-        </TableBody>
-      </Table>
-      <TablePagination
-        page={page}
-        count={extrinsicsHistoryData.length}
-        rowsPerPage={rowsPerPage}
-        onPageChange={(_: unknown, number: number) => {
-          setPage(number);
-        }}
-        rowsPerPageOptions={[20, 30, 40, 50]}
-        onRowsPerPageChange={(event) => {
-          setRowsPerPage(parseInt(event.target.value));
-          setPage(0);
-        }}
-      />
-    </TableContainer>
+    <BaselineTable
+      tableProps={{ sx: { 'th:last-child, td:last-child': { maxWidth: '6px' } } }}
+      headers={BaseLineCellsWrapper([
+        'extrinsics id',
+        'block',
+        'extrinsics hash',
+        'time',
+        'result',
+        'action',
+        ''
+      ])}
+      rows={(rowsPerPage > 0
+        ? extrinsicsHistoryData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        : extrinsicsHistoryData
+      ).map(extrinsicToRow)}
+      footer={
+        <TablePagination
+          page={page}
+          count={extrinsicsHistoryData.length}
+          rowsPerPage={rowsPerPage}
+          onPageChange={(_: unknown, number: number) => {
+            setPage(number);
+          }}
+          rowsPerPageOptions={[20, 30, 40, 50]}
+          onRowsPerPageChange={(event) => {
+            setRowsPerPage(parseInt(event.target.value));
+            setPage(0);
+          }}
+        />
+      }
+    />
   );
 };
 

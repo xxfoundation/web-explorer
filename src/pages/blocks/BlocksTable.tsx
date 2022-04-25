@@ -97,38 +97,38 @@ const BlocksTable: FC = () => {
   });
   if (loading) return <Skeleton />;
   return (
-    <>
-      <BaselineTable
-        headers={BaseLineCellsWrapper([
-          'block',
-          'status',
-          'era',
-          'time',
-          'extrinsics',
-          'block producer',
-          'block hash'
-        ])}
-        rows={(data?.blocks || []).map(rowParser)}
-      />
-      <TablePagination
-        count={data?.agg.aggregate.count || 0}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={(_: unknown, number: number) => {
-          if (!blockNumber) {
-            setBlockNumber(data?.blocks.at(0)?.number);
-          }
-          setPage(number);
-        }}
-        rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
-        onRowsPerPageChange={(event) => {
-          setBlockNumber(undefined);
-          setRowsPerPage(parseInt(event.target.value));
-          setPage(0);
-        }}
-        loading={loading}
-      />
-    </>
+    <BaselineTable
+      headers={BaseLineCellsWrapper([
+        'block',
+        'status',
+        'era',
+        'time',
+        'extrinsics',
+        'block producer',
+        'block hash'
+      ])}
+      rows={(data?.blocks || []).map(rowParser)}
+      footer={
+        <TablePagination
+          count={data?.agg.aggregate.count || 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(_: unknown, number: number) => {
+            if (!blockNumber) {
+              setBlockNumber(data?.blocks.at(0)?.number);
+            }
+            setPage(number);
+          }}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
+          onRowsPerPageChange={(event) => {
+            setBlockNumber(undefined);
+            setRowsPerPage(parseInt(event.target.value));
+            setPage(0);
+          }}
+          loading={loading}
+        />
+      }
+    />
   );
 };
 

@@ -1,4 +1,12 @@
-import { Table, TableBody, TableCell, TableCellProps, TableHead, TableRow } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableCellProps,
+  TableHead,
+  TableProps,
+  TableRow
+} from '@mui/material';
 import React, { FC } from 'react';
 import { TableContainer } from './TableContainer';
 
@@ -11,11 +19,13 @@ export type BaselineCell = {
 export const BaselineTable: FC<{
   headers: BaselineCell[];
   rows: BaselineCell[][];
-}> = ({ headers, rows }) => {
+  footer?: JSX.Element;
+  tableProps?: TableProps;
+}> = ({ headers, rows, footer, tableProps = {} }) => {
   return (
     <>
       <TableContainer>
-        <Table>
+        <Table {...tableProps}>
           <TableHead>
             <TableRow>
               {headers.map(({ key, props, value }, index) => {
@@ -43,11 +53,13 @@ export const BaselineTable: FC<{
             })}
           </TableBody>
         </Table>
+        {footer}
       </TableContainer>
     </>
   );
 };
 
+// TODO make those two obsolete
 export const BaseLineCellWrapper = (element: JSX.Element | string | number) => {
   return {
     value: element

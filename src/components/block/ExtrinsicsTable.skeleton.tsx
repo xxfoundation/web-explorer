@@ -4,20 +4,18 @@ import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
 
 const BlockExtrinsics: FC = () => {
   return (
-    <>
-      <BaselineTable
-        headers={BaseLineCellsWrapper([
-          <Skeleton />,
-          <Skeleton />,
-          <Skeleton />,
-          <Skeleton />,
-          <Skeleton />,
-          <Skeleton />
-        ])}
-        rows={[]}
-      />
-      <Skeleton />
-    </>
+    <BaselineTable
+      headers={BaseLineCellsWrapper([
+        <Skeleton />,
+        <Skeleton />,
+        <Skeleton />,
+        <Skeleton />,
+        <Skeleton />,
+        <Skeleton />
+      ])}
+      rows={[]}
+      footer={<Skeleton />}
+    />
   );
 };
 

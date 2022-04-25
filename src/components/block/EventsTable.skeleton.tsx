@@ -6,15 +6,13 @@ import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
 const EventsTable: React.FC = () => {
   const rowsCount = useRows(4).map((Cell) => <Cell />);
   return (
-    <>
-      <BaselineTable
-        headers={BaseLineCellsWrapper(rowsCount)}
-        rows={rowsCount.map(() => {
-          return BaseLineCellsWrapper(rowsCount);
-        })}
-      />
-      <Skeleton />
-    </>
+    <BaselineTable
+      headers={BaseLineCellsWrapper(rowsCount)}
+      rows={rowsCount.map(() => {
+        return BaseLineCellsWrapper(rowsCount);
+      })}
+      footer={<Skeleton />}
+    />
   );
 };
 

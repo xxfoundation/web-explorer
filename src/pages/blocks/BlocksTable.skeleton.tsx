@@ -6,12 +6,7 @@ import useRows from '../../hooks/useRows';
 const BlocksTableSkeleton = () => {
   const cells = useRows(6).map((Cell) => <Cell />);
   const row = useMemo(() => cells.map(() => BaseLineCellsWrapper(cells)), [cells]);
-  return (
-    <>
-      <BaselineTable headers={BaseLineCellsWrapper(cells)} rows={row} />
-      <Skeleton />
-    </>
-  );
+  return <BaselineTable headers={BaseLineCellsWrapper(cells)} rows={row} footer={<Skeleton />} />;
 };
 
 export default BlocksTableSkeleton;

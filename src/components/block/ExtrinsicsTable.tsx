@@ -58,22 +58,20 @@ const data = [
 const BlockExtrinsics: FC<{ loading?: boolean }> = ({ loading }) => {
   if (loading) return <Skeleton />;
   return (
-    <>
-      <BaselineTable
-        headers={BaseLineCellsWrapper([
-          'extrinsic id',
-          'hash',
-          'time',
-          'result',
-          'action',
-          <TableCellLeftDivider>
-            <Link to='/extrinsics'>view all</Link>
-          </TableCellLeftDivider>
-        ])}
-        rows={data.map(rowParser)}
-      />
-      <TablePagination count={data.length} page={0} />
-    </>
+    <BaselineTable
+      headers={BaseLineCellsWrapper([
+        'extrinsic id',
+        'hash',
+        'time',
+        'result',
+        'action',
+        <TableCellLeftDivider>
+          <Link to='/extrinsics'>view all</Link>
+        </TableCellLeftDivider>
+      ])}
+      rows={data.map(rowParser)}
+      footer={<TablePagination count={data.length} page={0} />}
+    />
   );
 };
 
