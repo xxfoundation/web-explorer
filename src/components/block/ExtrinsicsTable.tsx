@@ -7,8 +7,8 @@ import Link from '../Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
 import { TableCellLeftDivider } from '../Tables/TableCell';
 import TablePagination from '../Tables/TablePagination';
+import { TableSkeleton } from '../Tables/TableSkeleton';
 import TimeAgoComponent from '../TimeAgo';
-import Skeleton from './ExtrinsicsTable.skeleton';
 
 type ExtrinsicsTyp = {
   extrinsicId: string;
@@ -56,7 +56,7 @@ const data = [
 ];
 
 const BlockExtrinsics: FC<{ loading?: boolean }> = ({ loading }) => {
-  if (loading) return <Skeleton />;
+  if (loading) return <TableSkeleton rows={6} cells={6} footer />;
   return (
     <BaselineTable
       headers={BaseLineCellsWrapper([

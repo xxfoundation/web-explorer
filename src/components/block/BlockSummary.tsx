@@ -1,13 +1,13 @@
 import { Stack, Typography } from '@mui/material';
-import { default as React } from 'react';
+import { default as React, FC } from 'react';
 import BackAndForwardArrows from '../buttons/BackAndForwardArrows';
 import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
 import Link from '../Link';
+import makeRows from '../MakeRows';
 import SummaryPaper from '../Paper/SummaryPaper';
 import TimeAgoComponent from '../TimeAgo';
 import BlockStatusIcon from './BlockStatusIcon';
-import Skeleton from './BlockSummary.skeleton';
 import { BlockType } from './types';
 
 const summaryDataParser = (data: BlockType) => {
@@ -70,11 +70,19 @@ const summaryDataParser = (data: BlockType) => {
   ];
 };
 
-const BlockSummary: React.FC<{
+const BlockSummary: FC<{
   data?: BlockType;
   loading: boolean;
 }> = ({ data, loading }) => {
-  if (loading) return <Skeleton />;
+  if (loading) {
+    return (
+      <SummaryPaper
+        data={makeRows(9).map((Row) => {
+          return { label: <Row width={'90%'} />, value: <Row width={'90%'} /> };
+        })}
+      />
+    );
+  }
   return <SummaryPaper data={data ? summaryDataParser(data) : []} />;
 };
 

@@ -6,7 +6,7 @@ import { Hash } from '../ChainId';
 import Link from '../Link';
 import { BaselineCell, BaselineTable } from '../Tables';
 import TablePagination from '../Tables/TablePagination';
-import Skeleton from './EventsTable.skeleton';
+import { TableSkeleton } from '../Tables/TableSkeleton';
 
 type EventType = {
   id: string;
@@ -61,7 +61,7 @@ const EventsTable: FC<{ where: unknown }> = ({ where }) => {
       where
     }
   });
-  if (loading) return <Skeleton />;
+  if (loading) return <TableSkeleton rows={4} cells={4} footer />;
   return (
     <BaselineTable
       headers={[{ value: 'event id', props }, { value: 'hash', props }, { value: 'action' }]}

@@ -7,9 +7,9 @@ import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
+import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
 import { LIST_BLOCK } from '../../schemas/blocks.schema';
-import Skeleton from './BlocksTable.skeleton';
 
 const ROWS_PER_PAGE = 25;
 
@@ -95,7 +95,7 @@ const BlocksTable: FC = () => {
       }
     }
   });
-  if (loading) return <Skeleton />;
+  if (loading) return <TableSkeleton rows={6} cells={6} footer />;
   return (
     <BaselineTable
       headers={BaseLineCellsWrapper([
@@ -125,7 +125,6 @@ const BlocksTable: FC = () => {
             setRowsPerPage(parseInt(event.target.value));
             setPage(0);
           }}
-          loading={loading}
         />
       }
     />

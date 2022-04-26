@@ -1,4 +1,4 @@
-import { Divider, Skeleton, TablePagination as MuiTablePagination } from '@mui/material';
+import { Divider, TablePagination as MuiTablePagination } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../../themes/default';
 
@@ -29,17 +29,14 @@ const TablePagination: FC<{
   rowsPerPageOptions?: number[];
   onRowsPerPageChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onPageChange?: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
-  loading?: boolean;
 }> = ({
   count,
   page,
   onPageChange = () => {},
   onRowsPerPageChange = () => {},
   rowsPerPage = 15,
-  rowsPerPageOptions = [rowsPerPage],
-  loading
+  rowsPerPageOptions = [rowsPerPage]
 }) => {
-  if (loading) return <Skeleton />;
   if (count > rowsPerPage || count > rowsPerPageOptions[0])
     return (
       <>
@@ -48,7 +45,7 @@ const TablePagination: FC<{
           sx={styleConfig}
           count={count}
           component={'div'}
-          page={loading ? 0 : page}
+          page={page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={rowsPerPageOptions}
           onRowsPerPageChange={(event) => {

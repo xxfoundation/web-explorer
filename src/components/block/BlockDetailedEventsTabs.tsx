@@ -1,6 +1,7 @@
-import React from 'react';
+import { Skeleton } from '@mui/material';
+import React, { useMemo } from 'react';
+import { TableSkeleton } from '../Tables/TableSkeleton';
 import TabsWithPanels, { TabText } from '../Tabs';
-import Skeleton from './BlockDetailedEventsTabs.skeleton';
 import EventsTable from './EventsTable';
 import ExtrinsicsTable from './ExtrinsicsTable';
 
@@ -10,30 +11,38 @@ const BlockDetailedEventsTabs: React.FC<{
   blockNumber?: number;
   loading: boolean;
 }> = ({ blockNumber, events, loading }) => {
-  if (loading) return <Skeleton />;
-  return (
-    <TabsWithPanels
-      panels={[
-        {
-          label: <TabText message='extrinsics' count={1} />,
-          content: <ExtrinsicsTable />
-        },
-        {
-          label: <TabText message='events' count={events} />,
-          content: (
-            <EventsTable
-              where={{
-                block_number: {
-                  _eq: blockNumber
-                }
-              }}
-            />
-          )
-        }
-      ]}
-      tabsLabel='block event tabs'
-    />
-  );
+  const panels = useMemo(() => {
+    return loading
+      ? [
+          {
+            label: <Skeleton width={'90%'} />,
+            content: <TableSkeleton rows={2} cells={1} />
+          },
+          {
+            label: <Skeleton width={'90%'} />,
+            content: <TableSkeleton rows={2} cells={1} />
+          }
+        ]
+      : [
+          {
+            label: <TabText message='extrinsics' count={1} />,
+            content: <ExtrinsicsTable />
+          },
+          {
+            label: <TabText message='events' count={events} />,
+            content: (
+              <EventsTable
+                where={{
+                  block_number: {
+                    _eq: blockNumber
+                  }
+                }}
+              />
+            )
+          }
+        ];
+  }, [blockNumber, events, loading]);
+  return <TabsWithPanels panels={panels} tabsLabel='block event tabs' />;
 };
 
 export default BlockDetailedEventsTabs;
