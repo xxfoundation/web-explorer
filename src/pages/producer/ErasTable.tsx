@@ -1,7 +1,6 @@
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 import Link from '../../components/Link';
-import { TableContainer } from '../../components/Tables/TableContainer';
+import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 
 type Era = {
   index: string;
@@ -10,26 +9,6 @@ type Era = {
   rewardPoint: number;
   blocksProduced: number;
   blockNumber: number;
-};
-
-const EraRow = (rowData: Era) => {
-  return (
-    <TableRow key={rowData.index}>
-      <TableCell>{rowData.index}</TableCell>
-      <TableCell>
-        <Link to={`/block/${rowData.startBlock}`}>{rowData.startBlock}</Link>
-      </TableCell>
-      <TableCell>
-        <Link to={`/block/${rowData.endBlock}`}>{rowData.endBlock}</Link>
-      </TableCell>
-      <TableCell>{rowData.rewardPoint}</TableCell>
-      <TableCell>
-        <Link to={`/blocks/${rowData.blockNumber}/producer/${rowData.blocksProduced}`}>
-          {rowData.blocksProduced}
-        </Link>
-      </TableCell>
-    </TableRow>
-  );
 };
 
 const eras = [
@@ -43,22 +22,32 @@ const eras = [
   }
 ];
 
+const EraRow = (rowData: Era) => {
+  return BaseLineCellsWrapper([
+    rowData.index,
+    <Link to={`/block/${rowData.startBlock}`}>{rowData.startBlock}</Link>,
+    <Link to={`/block/${rowData.endBlock}`}>{rowData.endBlock}</Link>,
+    rowData.rewardPoint,
+    <Link to={`/blocks/${rowData.blockNumber}/producer/${rowData.blocksProduced}`}>
+      {rowData.blocksProduced}
+    </Link>
+  ]);
+};
+
 const ErasTables = () => {
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>era</TableCell>
-            <TableCell>start block</TableCell>
-            <TableCell>end block</TableCell>
-            <TableCell>reward point</TableCell>
-            <TableCell>blocks produced</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>{eras.map(EraRow)}</TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <BaselineTable
+        headers={BaseLineCellsWrapper([
+          'era',
+          'start block',
+          'end block',
+          'reward point',
+          'blocks producer'
+        ])}
+        rows={eras.map(EraRow)}
+      />
+    </>
   );
 };
 
