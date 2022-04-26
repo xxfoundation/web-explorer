@@ -34,21 +34,14 @@ const EraRow = (rowData: Era) => {
   ]);
 };
 
-const ErasTables = () => {
-  return (
-    <>
-      <BaselineTable
-        headers={BaseLineCellsWrapper([
-          'era',
-          'start block',
-          'end block',
-          'reward point',
-          'blocks producer'
-        ])}
-        rows={eras.map(EraRow)}
-      />
-    </>
-  );
-};
+const headers = BaseLineCellsWrapper([
+  'era',
+  'start block',
+  'end block',
+  'reward point',
+  'blocks producer'
+]);
+
+const ErasTables = () => <BaselineTable headers={headers} rows={eras.map(EraRow)} />;
 
 export default ErasTables;

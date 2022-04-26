@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Stack, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@mui/material';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import CopyButton from '../../components/buttons/CopyButton';
 import { Hash } from '../../components/ChainId';
@@ -80,10 +80,25 @@ const rowParser = (block: Block): BaselineCell[] => {
   ]);
 };
 
+const headers = BaseLineCellsWrapper([
+  'block',
+  'status',
+  'era',
+  'time',
+  'extrinsics',
+  'block producer',
+  'block hash'
+]);
+
 const BlocksTable: FC = () => {
   const [blockNumber, setBlockNumber] = useState<number>();
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
+  const onRowsPerPageChange = useCallback((event) => {
+    setBlockNumber(undefined);
+    setRowsPerPage(parseInt(event.target.value));
+    setPage(0);
+  }, []);
   const { data, loading } = useQuery<Response>(LIST_BLOCK, {
     variables: {
       limit: rowsPerPage,
@@ -95,36 +110,30 @@ const BlocksTable: FC = () => {
       }
     }
   });
+  const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
+  const onPageChange = useCallback(
+    (_: unknown, number: number) => {
+      if (!blockNumber) {
+        setBlockNumber(data?.blocks.at(0)?.number);
+      }
+      setPage(number);
+    },
+    [blockNumber, data?.blocks]
+  );
+
   if (loading) return <TableSkeleton rows={6} cells={6} footer />;
   return (
     <BaselineTable
-      headers={BaseLineCellsWrapper([
-        'block',
-        'status',
-        'era',
-        'time',
-        'extrinsics',
-        'block producer',
-        'block hash'
-      ])}
-      rows={(data?.blocks || []).map(rowParser)}
+      headers={headers}
+      rows={rows}
       footer={
         <TablePagination
           count={data?.agg.aggregate.count || 0}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={(_: unknown, number: number) => {
-            if (!blockNumber) {
-              setBlockNumber(data?.blocks.at(0)?.number);
-            }
-            setPage(number);
-          }}
+          onPageChange={onPageChange}
           rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
-          onRowsPerPageChange={(event) => {
-            setBlockNumber(undefined);
-            setRowsPerPage(parseInt(event.target.value));
-            setPage(0);
-          }}
+          onRowsPerPageChange={onRowsPerPageChange}
         />
       }
     />

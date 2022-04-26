@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Link from '../../components/Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 
@@ -21,12 +21,13 @@ const EraStake = ({ account, share, stake }: Stake) => {
 };
 
 const NominatorsTable = () => {
-  return (
-    <BaselineTable
-      headers={BaseLineCellsWrapper(['Account', 'Stake', 'Share'])}
-      rows={data.map(EraStake)}
-    />
-  );
+  const headers = useMemo(() => {
+    return BaseLineCellsWrapper(['Account', 'Stake', 'Share']);
+  }, []);
+  const rows = useMemo(() => {
+    return data.map(EraStake);
+  }, []);
+  return <BaselineTable headers={headers} rows={rows} />;
 };
 
 export default NominatorsTable;

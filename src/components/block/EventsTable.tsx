@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { TableCellProps, Tooltip, Typography } from '@mui/material';
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { EVENTS_OF_BLOCK } from '../../schemas/events.schema';
 import { Hash } from '../ChainId';
 import Link from '../Link';
@@ -14,6 +14,8 @@ type EventType = {
   section: string;
   method: string;
 };
+
+type Response = { events: EventType[] };
 
 const HashCell: FC<{ value?: string }> = ({ value }) => {
   if (!value) {
@@ -46,11 +48,20 @@ const rowsParser = ({ hash, id, method, section }: EventType): BaselineCell[] =>
   ];
 };
 
+const headers = [{ value: 'event id', props }, { value: 'hash', props }, { value: 'action' }];
+
 const EventsTable: FC<{ where: unknown }> = ({ where }) => {
   const [rowsPerPage, setRowsPerPage] = useState(4);
   const [page, setPage] = useState(0);
-  const { data, loading } = useQuery<{ events: EventType[] }>(EVENTS_OF_BLOCK, {
-    variables: {
+  const onRowsPerPageChange = useCallback(({ target: { value } }) => {
+    setRowsPerPage(parseInt(value));
+    setPage(0);
+  }, []);
+  const onPageChange = useCallback((_: unknown, number: number) => {
+    setPage(number);
+  }, []);
+  const variables = useMemo(() => {
+    return {
       orderBy: [
         {
           event_index: 'desc'
@@ -59,26 +70,26 @@ const EventsTable: FC<{ where: unknown }> = ({ where }) => {
       limit: rowsPerPage,
       offset: page * rowsPerPage,
       where
-    }
+    };
+  }, [page, rowsPerPage, where]);
+  const { data, loading } = useQuery<Response>(EVENTS_OF_BLOCK, {
+    variables
   });
+  const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
+
   if (loading) return <TableSkeleton rows={4} cells={4} footer />;
   return (
     <BaselineTable
-      headers={[{ value: 'event id', props }, { value: 'hash', props }, { value: 'action' }]}
-      rows={(data?.events || []).map(rowsParser)}
+      headers={headers}
+      rows={rows}
       footer={
         <TablePagination
           page={page}
           count={data?.events.length || 0}
           rowsPerPage={rowsPerPage}
-          onPageChange={(_: unknown, number: number) => {
-            setPage(number);
-          }}
+          onPageChange={onPageChange}
           rowsPerPageOptions={[2, 4, 6]}
-          onRowsPerPageChange={({ target: { value } }) => {
-            setRowsPerPage(parseInt(value));
-            setPage(0);
-          }}
+          onRowsPerPageChange={onRowsPerPageChange}
         />
       }
     />

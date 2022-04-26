@@ -16,11 +16,7 @@ export const TableSkeleton: FC<{ rows: number; cells: number; footer?: boolean }
     );
   }, [cells]);
   const loadingRows = useMemo(() => makeRows(rows).map(() => loadingCells), [loadingCells, rows]);
-  return (
-    <BaselineTable
-      headers={loadingCells}
-      rows={loadingRows}
-      footer={footer ? <Skeleton /> : undefined}
-    />
-  );
+  const footerEl = useMemo(() => (footer ? <Skeleton /> : undefined), [footer]);
+
+  return <BaselineTable headers={loadingCells} rows={loadingRows} footer={footerEl} />;
 };

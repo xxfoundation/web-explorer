@@ -1,6 +1,6 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Stack } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import BlockStatusIcon, { BlockStatus } from '../../components/block/BlockStatusIcon';
 import { Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
@@ -55,46 +55,53 @@ const TransferRow = ({ amount, block, extrinsicId, from, hash, status, time, to 
   ];
 };
 
-const HistoryTable = () => {
+const headers = BaseLineCellsWrapper([
+  'Extrinsics id',
+  'Block',
+  'Time',
+  'From',
+  'To',
+  'Amount',
+  'Result',
+  'Hash'
+]);
+
+const TransferTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
+  const rows = useMemo(() => {
+    return (
+      rowsPerPage > 0
+        ? transfers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        : transfers
+    ).map(TransferRow);
+  }, [page, rowsPerPage]);
+  const onRowsPerPageChange = useCallback((event) => {
+    setRowsPerPage(parseInt(event.target.value));
+    setPage(0);
+  }, []);
+
+  const onPageChange = useCallback((_: unknown, number: number) => {
+    setPage(number);
+  }, []);
 
   return (
-    <>
-      <BaselineTable
-        tableProps={{ sx: { 'th:last-child, td:last-child': { maxWidth: '6px' } } }}
-        headers={BaseLineCellsWrapper([
-          'Extrinsics id',
-          'Block',
-          'Time',
-          'From',
-          'To',
-          'Amount',
-          'Result',
-          'Hash'
-        ])}
-        rows={(rowsPerPage > 0
-          ? transfers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-          : transfers
-        ).map(TransferRow)}
-        footer={
-          <TablePagination
-            page={page}
-            count={transfers.length}
-            rowsPerPage={rowsPerPage}
-            onPageChange={(_: unknown, number: number) => {
-              setPage(number);
-            }}
-            rowsPerPageOptions={[20, 30, 40, 50]}
-            onRowsPerPageChange={(event) => {
-              setRowsPerPage(parseInt(event.target.value));
-              setPage(0);
-            }}
-          />
-        }
-      />
-    </>
+    <BaselineTable
+      tableProps={{ sx: { 'th:last-child, td:last-child': { maxWidth: '6px' } } }}
+      headers={headers}
+      rows={rows}
+      footer={
+        <TablePagination
+          page={page}
+          count={transfers.length}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onPageChange}
+          rowsPerPageOptions={[20, 30, 40, 50]}
+          onRowsPerPageChange={onRowsPerPageChange}
+        />
+      }
+    />
   );
 };
 
-export default HistoryTable;
+export default TransferTable;

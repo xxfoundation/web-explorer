@@ -1,6 +1,6 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
@@ -46,40 +46,48 @@ const sampleData = () => {
   return items;
 };
 
+const headers = BaseLineCellsWrapper([
+  'extrinsics id',
+  'block',
+  'extrinsics hash',
+  'time',
+  'result',
+  'action',
+  ''
+]);
+
 const HistoryTable = () => {
   const extrinsicsHistoryData = sampleData();
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
+  const onRowsPerPageChange = useCallback((event) => {
+    setRowsPerPage(parseInt(event.target.value));
+    setPage(0);
+  }, []);
+  const onChangePage = useCallback((_: unknown, number: number) => {
+    setPage(number);
+  }, []);
+  const rows = useMemo(() => {
+    return (
+      rowsPerPage > 0
+        ? extrinsicsHistoryData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        : extrinsicsHistoryData
+    ).map(extrinsicToRow);
+  }, [extrinsicsHistoryData, page, rowsPerPage]);
 
   return (
     <BaselineTable
       tableProps={{ sx: { 'th:last-child, td:last-child': { maxWidth: '6px' } } }}
-      headers={BaseLineCellsWrapper([
-        'extrinsics id',
-        'block',
-        'extrinsics hash',
-        'time',
-        'result',
-        'action',
-        ''
-      ])}
-      rows={(rowsPerPage > 0
-        ? extrinsicsHistoryData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        : extrinsicsHistoryData
-      ).map(extrinsicToRow)}
+      headers={headers}
+      rows={rows}
       footer={
         <TablePagination
           page={page}
           count={extrinsicsHistoryData.length}
           rowsPerPage={rowsPerPage}
-          onPageChange={(_: unknown, number: number) => {
-            setPage(number);
-          }}
+          onPageChange={onChangePage}
           rowsPerPageOptions={[20, 30, 40, 50]}
-          onRowsPerPageChange={(event) => {
-            setRowsPerPage(parseInt(event.target.value));
-            setPage(0);
-          }}
+          onRowsPerPageChange={onRowsPerPageChange}
         />
       }
     />

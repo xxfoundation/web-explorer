@@ -1,7 +1,7 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Tooltip, Typography } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Hash } from '../ChainId';
 import Link from '../Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
@@ -55,21 +55,24 @@ const data = [
   }
 ];
 
+const headers = BaseLineCellsWrapper([
+  'extrinsic id',
+  'hash',
+  'time',
+  'result',
+  'action',
+  <TableCellLeftDivider>
+    <Link to='/extrinsics'>view all</Link>
+  </TableCellLeftDivider>
+]);
+
 const BlockExtrinsics: FC<{ loading?: boolean }> = ({ loading }) => {
+  const rows = useMemo(() => data.map(rowParser), []);
   if (loading) return <TableSkeleton rows={6} cells={6} footer />;
   return (
     <BaselineTable
-      headers={BaseLineCellsWrapper([
-        'extrinsic id',
-        'hash',
-        'time',
-        'result',
-        'action',
-        <TableCellLeftDivider>
-          <Link to='/extrinsics'>view all</Link>
-        </TableCellLeftDivider>
-      ])}
-      rows={data.map(rowParser)}
+      headers={headers}
+      rows={rows}
       footer={<TablePagination count={data.length} page={0} />}
     />
   );
