@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-const palette =  {
+const palette = {
   primary: {
     main: '#00A2D6', // sets link color
     contrastText: '#FFF'
@@ -106,6 +106,11 @@ export const theme = createTheme({
     },
     button: {
       fontWeight: 500
+    },
+    subtitle2: {
+      fontSize: '20px',
+      fontWeight: 400,
+      color: palette.grey[500]
     }
   },
   gradients: {
