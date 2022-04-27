@@ -81,11 +81,19 @@ const ModuleCalls: FC<{ module: Modules; call: Calls }> = ({ call, module }) => 
   return (
     <>
       <Breadcrumbs separator='/'>
-        <Tag filled>{module}</Tag>
-        <Tag>{call}</Tag>
+        <Tag filled>
+          <Typography fontSize={'12px'} fontWeight={400}>
+            {module}
+          </Typography>
+        </Tag>
+        <Tag>
+          <Typography fontSize={'12px'} fontWeight={400}>
+            {call}
+          </Typography>
+        </Tag>
       </Breadcrumbs>
       <CustomTooltip title={BalanceCallsDescriptions[module][call]}>
-        <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} />
+        <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
       </CustomTooltip>
     </>
   );
