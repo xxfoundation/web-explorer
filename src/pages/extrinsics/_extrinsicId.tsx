@@ -2,6 +2,7 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import { Box, Button, Container, Divider, Stack, styled, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import EventsTable from '../../components/block/EventsTable';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
@@ -119,6 +120,8 @@ const extrinsicsDetailData = [
   }
 ];
 
+const sampleStaticBlockNumber = 2121013;
+
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
 
@@ -126,7 +129,15 @@ const Extrinsic = () => {
     return [
       {
         label: <TabText message='events' count={9} />,
-        content: <Typography>placeholder</Typography>
+        content: (
+          <EventsTable
+            where={{
+              block_number: {
+                _eq: sampleStaticBlockNumber
+              }
+            }}
+          />
+        )
       }
     ];
   }, []);
