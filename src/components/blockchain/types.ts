@@ -1,17 +1,5 @@
 import { PointOptionsObject } from 'highcharts';
 
-export enum BlockStatus {
-  Pending = 'pending'
-}
-
-export type Block = {
-  id: number;
-  extrinsic: number;
-  events: number;
-  status: BlockStatus;
-  timestamp: number;
-};
-
 export type PercentageValues = {
   team: {
     value: number;

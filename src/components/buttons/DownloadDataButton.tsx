@@ -8,12 +8,12 @@ const LoadingButtonStyle = styled(LoadingButton)<LoadingButtonProps>(({}) => ({
   fontWeight: 500
 }));
 
-const DownloadDataButton: FC<{ onClick: () => void }> = ({ children }) => {
+const DownloadDataButton: FC<LoadingButtonProps & { onClick: () => void }> = ({
+  children,
+  ...props
+}) => {
   return (
-    <LoadingButtonStyle
-      loading={false}
-      startIcon={<FileDownloadIcon />}
-    >
+    <LoadingButtonStyle {...props} loading={false} startIcon={<FileDownloadIcon />}>
       {children}
     </LoadingButtonStyle>
   );
