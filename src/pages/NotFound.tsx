@@ -11,7 +11,7 @@ import SlashStroke from '../assets/images/icons/SlashStroke.svg';
 import Link from '../components/Link';
 import { PaperStyled } from '../components/Paper/PaperWrap.styled';
 
-const TypoTitle = styled(Typography)(({ theme: th }) => {
+const InfoTitle = styled(Typography)(({ theme: th }) => {
   return {
     fontSize: '49px',
     fontWeight: 500,
@@ -56,7 +56,7 @@ const NotFound = () => {
     <Container sx={{ my: 6, textAlign: 'center' }} maxWidth='sm'>
       <PaperStyled sx={{ paddingY: '60px' }}>
         <Typography variant='subtitle2'>Hmmm...</Typography>
-        <TypoTitle>Page Not Found</TypoTitle>
+        <InfoTitle>Page Not Found</InfoTitle>
         <RoundedButton variant='contained'>
           <Link to={'/'}>home</Link>
         </RoundedButton>
