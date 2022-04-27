@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import { isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { BlockNav } from '../../components/block/Block.styled';
@@ -58,7 +57,7 @@ const Block = () => {
   }, [number]);
   const { data, loading } = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, { variables });
 
-  if (!loading && isEmpty(data?.block)) {
+  if (!loading && !data?.block?.number) {
     return <NotFound />;
   }
   return (

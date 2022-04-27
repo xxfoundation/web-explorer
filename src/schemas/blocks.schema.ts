@@ -39,14 +39,17 @@ const LIST_BLOCK = gql`
 `;
 
 const GET_BLOCK_BY_PK = gql`
+  fragment blocks on blockchain_blocks {
+    number: block_number
+    hash: block_hash
+  }
+
   query GetBlockByPK($blockNumber: bigint!, $prevBlockNumber: bigint!, $nextBlockNumber: bigint!) {
     prev: blockchain_blocks_by_pk(block_number: $prevBlockNumber) {
-      hash: block_hash
-      number: block_number
+      ...blocks
     }
     block: blockchain_blocks_by_pk(block_number: $blockNumber) {
-      hash: block_hash
-      number: block_number
+      ...blocks
       numberFinalized: block_number_finalized
       currentEra: current_era
       parentHash: parent_hash
@@ -60,8 +63,7 @@ const GET_BLOCK_BY_PK = gql`
       numTransfers: num_transfers
     }
     next: blockchain_blocks_by_pk(block_number: $nextBlockNumber) {
-      hash: block_hash
-      number: block_number
+      ...blocks
     }
   }
 `;
