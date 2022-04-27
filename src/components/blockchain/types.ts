@@ -1,35 +1,30 @@
 import { PointOptionsObject } from 'highcharts';
 
-export enum BlockStatus {
-  Pending = 'pending'
-}
-
-export type Block = {
-  id: number,
-  extrinsic: number,
-  events: number;
-  status: BlockStatus,
-  timestamp: number
-}
-
 export type PercentageValues = {
   team: {
     value: number;
     percentage: number;
-  },
+  };
   foundation: {
     value: number;
     percentage: number;
-  }
-}
+  };
+};
 
-export type StakeablePopup = {
+export type CustomData = {
+  id: string;
+  name: string;
+  value: number;
+  percentage: number;
+  title?: boolean;
+};
+
+export interface Custom {
   noClick?: boolean;
   hiddenLegend?: boolean;
-  stakeable: PercentageValues;
-  unstakeable: PercentageValues;
+  data?: CustomData[];
 }
 
-export interface CustomPointOptions<Custom> extends PointOptionsObject {
-  custom: Custom
+export interface CustomPointOptions extends PointOptionsObject {
+  custom: Custom;
 }

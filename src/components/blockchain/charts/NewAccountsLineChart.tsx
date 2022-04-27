@@ -1,4 +1,4 @@
-import { default as React } from 'react';
+import React from 'react';
 import { DataPoint } from '../../../types';
 import { LineChart } from '../../charts/highcharts';
 import PaperWithHeader from '../PaperWithHeader';

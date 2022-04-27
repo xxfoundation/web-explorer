@@ -1,20 +1,20 @@
-import {  TagStyle } from './Tag.styled';
+import { BoxProps } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
+import React, { FC } from 'react';
 import { theme } from '../../themes/tags';
-import { default as React, FC } from 'react';
+import { TagStyle } from './Tag.styled';
 
 type Props = {
   filled?: boolean;
-};
+} & BoxProps;
 
-const Tag: FC<Props> = ({ children, filled }) => {
+const Tag: FC<Props> = ({ children, filled, ...props }) => {
   const TagWrap = TagStyle(filled);
   return (
     <ThemeProvider theme={theme}>
-      <TagWrap>
-          {children}
-      </TagWrap>
+      <TagWrap {...props}>{children}</TagWrap>
     </ThemeProvider>
-)};
+  );
+};
 
 export default Tag;

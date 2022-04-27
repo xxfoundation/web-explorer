@@ -1,6 +1,6 @@
 import { Box, Divider, Link, Paper, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { default as React, FC } from 'react';
+import React, { FC } from 'react';
 
 const PaperWrap = styled(Paper)(({ theme }) => ({
   boxShadow: theme.boxShadow,
@@ -25,9 +25,9 @@ const InputSet: FC<Props> = ({ children, hasDivider, header, height, linkAddress
           justifyContent='space-between'
           alignItems='center'
           spacing={2}
-          sx={{ 
+          sx={{
             mb: hasDivider ? 8 : 0,
-            pt: 6, 
+            pt: 6,
             px: { xs: 3, md: 6 }
           }}
         >

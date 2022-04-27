@@ -1,32 +1,36 @@
 import ClockIcon from '@mui/icons-material/AccessTime';
-import ErrorIcon from '@mui/icons-material/ErrorOutline';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
-import { Box } from '@mui/material';
+import ErrorIcon from '@mui/icons-material/ErrorOutline';
+import { Box, Tooltip } from '@mui/material';
 import React, { FC } from 'react';
 
-export type BlockStatus = 'failed' | 'successful' | 'pending'
+export type BlockStatus = 'failed' | 'successful' | 'pending';
 
 const statusToIconMap: Record<BlockStatus, React.ReactElement> = {
   failed: (
     <Box aria-label={'Failed'}>
-      <ErrorIcon color='error' />
+      <Tooltip title='Failed' arrow>
+        <ErrorIcon color='error' />
+      </Tooltip>
     </Box>
   ),
   pending: (
     <Box aria-label={'Pending'}>
-      <ClockIcon color='warning' />
+      <Tooltip title='Pending' arrow>
+        <ClockIcon color='warning' />
+      </Tooltip>
     </Box>
   ),
   successful: (
     <Box aria-label={'Successful'}>
-      <CheckCircleOutlinedIcon color='success' />
+      <Tooltip title='Successful' arrow>
+        <CheckCircleOutlinedIcon color='success' />
+      </Tooltip>
     </Box>
   )
 };
 
-const BlockStatusIcon: FC<{ status: BlockStatus }> = ({
-  status,
-}) => {
+const BlockStatusIcon: FC<{ status: BlockStatus }> = ({ status }) => {
   return statusToIconMap[status] || null;
 };
 

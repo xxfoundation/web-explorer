@@ -1,55 +1,70 @@
-import ClockIcon from '@mui/icons-material/AccessTime';
-import { Box, Grid, Typography } from '@mui/material';
-import React from 'react';
+import { useSubscription } from '@apollo/client';
+import { Box, Grid, Skeleton, Typography } from '@mui/material';
+import React, { FC, useMemo, useState } from 'react';
+import { LISTEN_FOR_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
+import BlockStatusIcon from '../block/BlockStatusIcon';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
-import { Block, BlockStatus } from './types';
 
-const blocks: Block[] = Array.from(Array(9).keys())
-  .slice(1)
-  .map((i) => ({
-    id: 8657975 + i,
-    extrinsic: 8,
-    events: 11,
-    status: BlockStatus.Pending,
-    timestamp: new Date().getTime() - i * 1000
-  }));
+const PAGE_LIMIT = 8;
 
-const statusToIconMap: Record<BlockStatus, React.ReactElement> = {
-  pending: (
-    <Box aria-label={'Pending'}>
-      <ClockIcon color='warning' />
-    </Box>
-  )
+type Block = {
+  hash: string;
+  number: number;
+  numberFinalized: number;
+  currentEra: number;
+  totalEvents: number;
+  numTransfers: number;
 };
 
-const BlockRow = ({ events, extrinsic: extrinsics, id, status, timestamp }: Block) => {
+const ItemHandlerSkeleton: FC<{ number: number }> = ({}) => {
   return (
-    <Box key={id} sx={{ mb: 4 }}>
+    <Box sx={{ mb: 4 }}>
       <Grid container>
         <Grid item xs>
-          <Link to={`/blocks/${id}`} underline='hover' variant='body2'>
-            {id}
+          <Skeleton />
+        </Grid>
+      </Grid>
+      <Grid container sx={{ mt: 1 }}>
+        <Grid item xs>
+          <Skeleton />
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+const ItemHandler: FC<{ block: Block }> = ({ block }) => {
+  return (
+    <Box key={block.hash} sx={{ mb: 4 }}>
+      <Grid container>
+        <Grid item xs>
+          <Link to={`/blocks/${block.hash}`} underline='hover' variant='body2'>
+            {block.number}
           </Link>
         </Grid>
         <Grid item xs='auto'>
-          {statusToIconMap[status]}
+          <BlockStatusIcon
+            status={block.number > block.numberFinalized ? 'pending' : 'successful'}
+          />
         </Grid>
       </Grid>
       <Grid container sx={{ mt: 1 }}>
         <Grid item xs>
           <Link to='' underline='hover' variant='body3'>
-            {extrinsics} extrinsics
+            {block.numTransfers} extrinsics
           </Link>{' '}
-          <Typography variant='body3' component='span'>|</Typography>{' '}
+          <Typography variant='body3' component='span'>
+            |
+          </Typography>{' '}
           <Link to={'/events'} underline='hover' variant='body3'>
-            {events} event
+            {block.totalEvents} event
           </Link>
         </Grid>
         <Grid item xs='auto'>
           <Typography variant='body2'>
-            <TimeAgo date={timestamp} />
+            <TimeAgo date={block.currentEra} />
           </Typography>
         </Grid>
       </Grid>
@@ -57,7 +72,46 @@ const BlockRow = ({ events, extrinsic: extrinsics, id, status, timestamp }: Bloc
   );
 };
 
-const blockchain = () => {
+const LatestBlocks: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
+  const [state, setState] = useState<{ blocks: Block[] }>({ blocks: [] });
+  React.useEffect(() => {
+    const oldHashes = state.blocks.map((b) => b.hash);
+    setState((prevState) => {
+      return {
+        ...prevState,
+        blocks: newBlocks.map((block) => {
+          return {
+            ...block,
+            newEntry: oldHashes.length && !oldHashes.includes(block.hash)
+          };
+        })
+      };
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newBlocks]);
+
+  return (
+    <>
+      {state.blocks.map((b) => {
+        return <ItemHandler block={b} key={b.hash} />;
+      })}
+    </>
+  );
+};
+
+const LatestBlocksTable = () => {
+  const { data, error, loading } = useSubscription<{ blocks: Block[] }>(LISTEN_FOR_BLOCKS_ORDERED, {
+    variables: { limit: PAGE_LIMIT }
+  });
+  const content = useMemo(() => {
+    if (loading) return <ItemHandlerSkeleton number={PAGE_LIMIT} />;
+    if (error || !data || !data.blocks) {
+      return <Typography>not ready</Typography>;
+    }
+
+    return <LatestBlocks newBlocks={data.blocks} />;
+  }, [loading, data, error]);
   return (
     <PaperWithHeader
       header='Latest Blocks'
@@ -66,9 +120,9 @@ const blockchain = () => {
       linkAddress={'/blocks'}
       height={500}
     >
-      {blocks.map(BlockRow)}
+      {content}
     </PaperWithHeader>
   );
 };
 
-export default blockchain;
+export default LatestBlocksTable;

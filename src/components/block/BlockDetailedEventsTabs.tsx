@@ -1,35 +1,47 @@
+import { Skeleton } from '@mui/material';
 import React, { useMemo } from 'react';
+import { TableSkeleton } from '../Tables/TableSkeleton';
 import TabsWithPanels, { TabText } from '../Tabs';
 import EventsTable from './EventsTable';
 import ExtrinsicsTable from './ExtrinsicsTable';
 
-const BlockDetailedEventsTabs: React.FC<{ events: number[]; extrinsics: number[] }> = ({
-  events,
-  extrinsics
-}) => {
+const BlockDetailedEventsTabs: React.FC<{
+  events?: number;
+  extrinsics?: number;
+  blockNumber?: number;
+  loading: boolean;
+}> = ({ blockNumber, events, loading }) => {
   const panels = useMemo(() => {
-    return [
-      {
-        label: <TabText message='extrinsics' count={extrinsics.length} />,
-        content: <ExtrinsicsTable />
-      },
-      {
-        label: <TabText message='events' count={events.length} />,
-        content: (
-          <EventsTable
-            data={[
-              {
-                extrinsicId: '312313',
-                action: 'balance (Withraw)',
-                hash: '0x9b9721540932d6989b92aab8cc11469cc4c3e5a5ca88053c563b4e49d910a869',
-                id: '312313'
-              }
-            ]}
-          />
-        )
-      }
-    ];
-  }, [events, extrinsics]);
+    return loading
+      ? [
+          {
+            label: <Skeleton width={'90%'} />,
+            content: <TableSkeleton rows={2} cells={1} />
+          },
+          {
+            label: <Skeleton width={'90%'} />,
+            content: <TableSkeleton rows={2} cells={1} />
+          }
+        ]
+      : [
+          {
+            label: <TabText message='extrinsics' count={1} />,
+            content: <ExtrinsicsTable />
+          },
+          {
+            label: <TabText message='events' count={events} />,
+            content: (
+              <EventsTable
+                where={{
+                  block_number: {
+                    _eq: blockNumber
+                  }
+                }}
+              />
+            )
+          }
+        ];
+  }, [blockNumber, events, loading]);
   return <TabsWithPanels panels={panels} tabsLabel='block event tabs' />;
 };
 
