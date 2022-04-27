@@ -11,13 +11,20 @@ export type PercentageValues = {
   };
 };
 
-export type StakeablePopup = {
-  noClick?: boolean;
-  hiddenLegend?: boolean;
-  stakeable: PercentageValues;
-  unstakeable: PercentageValues;
+export type CustomData = {
+  id: string;
+  name: string;
+  value: number;
+  percentage: number;
+  title?: boolean;
 };
 
-export interface CustomPointOptions<Custom> extends PointOptionsObject {
+export interface Custom {
+  noClick?: boolean;
+  hiddenLegend?: boolean;
+  data?: CustomData[];
+}
+
+export interface CustomPointOptions extends PointOptionsObject {
   custom: Custom;
 }
