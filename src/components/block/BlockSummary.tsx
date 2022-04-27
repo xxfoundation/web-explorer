@@ -3,8 +3,8 @@ import { default as React, FC } from 'react';
 import BackAndForwardArrows from '../buttons/BackAndForwardArrows';
 import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
+import genSkeletons from '../genSkeletons';
 import Link from '../Link';
-import makeRows from '../MakeRows';
 import SummaryPaper from '../Paper/SummaryPaper';
 import TimeAgoComponent from '../TimeAgo';
 import BlockStatusIcon from './BlockStatusIcon';
@@ -77,7 +77,7 @@ const BlockSummary: FC<{
   if (loading) {
     return (
       <SummaryPaper
-        data={makeRows(9).map((Row) => {
+        data={genSkeletons(9).map((Row) => {
           return { label: <Row width={'90%'} />, value: <Row width={'90%'} /> };
         })}
       />

@@ -1,9 +1,9 @@
 import { Skeleton } from '@mui/material';
 
-const makeRows = (count: number) => {
+const genSkeletons = (count: number) => {
   return Array.from(Array(count).keys()).map(() => {
     return Skeleton;
   });
 };
 
-export default makeRows;
+export default genSkeletons;
