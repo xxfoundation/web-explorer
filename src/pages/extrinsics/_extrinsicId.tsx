@@ -1,5 +1,5 @@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { Box, Container, Divider, Stack, Typography } from '@mui/material';
+import { Box, Button, Container, Divider, Stack, styled, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
@@ -11,7 +11,23 @@ import SummaryPaper from '../../components/Paper/SummaryPaper';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
 import ModuleCalls from './ModuleCalls';
 
+const RoundedButton = styled(Button)(({}) => {
+  return {
+    borderRadius: '30px',
+    fontSize: '12px',
+    fontWeight: 500,
+    letterSpacing: 1,
+    color: 'white'
+  };
+});
+
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
+
+const sampleExtrinsicHash = '0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350';
+
+const elementDivider = (
+  <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
+);
 
 const extrinsicsDetailData = [
   { label: 'time', value: '2022-02-28 16:42:30 (+UTC)' },
@@ -32,9 +48,8 @@ const extrinsicsDetailData = [
   },
   {
     label: 'extrinsic hash',
-    value: (
-      <Hash value='0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350' link={'#'} />
-    )
+    value: <Hash value={sampleExtrinsicHash} link={'#'} />,
+    action: <CopyButton value={sampleExtrinsicHash} />
   },
   {
     label: 'module/call',
@@ -82,8 +97,17 @@ const extrinsicsDetailData = [
     )
   },
   {
-    label: <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />,
-    value: <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
+    label: elementDivider,
+    value: elementDivider
+  },
+  {
+    label: <></>,
+    value: (
+      <Stack spacing={3} direction='row'>
+        <RoundedButton variant='contained'>copy</RoundedButton>
+        <RoundedButton variant='contained'>view code</RoundedButton>
+      </Stack>
+    )
   },
   {
     label: 'signature',
