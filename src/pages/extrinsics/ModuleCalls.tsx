@@ -1,5 +1,5 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Breadcrumbs, Stack, styled, Typography } from '@mui/material';
+import { Breadcrumbs, styled, Typography } from '@mui/material';
 import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
 import React, { FC } from 'react';
 import Tag from '../../components/Tags/Tag';
@@ -79,16 +79,23 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const ModuleCalls: FC<{ module: Modules; call: Calls }> = ({ call, module }) => {
   return (
-    <Breadcrumbs separator='/'>
-      <Stack direction={'row'} spacing={1} alignItems='center'>
-        <Tag filled>{module}</Tag>
-        <Tag>{call}</Tag>
-        {/* TODO replace it when is mobile */}
-        <CustomTooltip title={BalanceCallsDescriptions[module][call]}>
-          <InfoOutlinedIcon color='primary' />
-        </CustomTooltip>
-      </Stack>
-    </Breadcrumbs>
+    <>
+      <Breadcrumbs separator='/'>
+        <Tag filled>
+          <Typography fontSize={'12px'} fontWeight={400}>
+            {module}
+          </Typography>
+        </Tag>
+        <Tag>
+          <Typography fontSize={'12px'} fontWeight={400}>
+            {call}
+          </Typography>
+        </Tag>
+      </Breadcrumbs>
+      <CustomTooltip title={BalanceCallsDescriptions[module][call]}>
+        <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
+      </CustomTooltip>
+    </>
   );
 };
 

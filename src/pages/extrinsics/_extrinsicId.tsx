@@ -1,7 +1,8 @@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import React, { useMemo } from 'react';
+import { Box, Button, Container, Divider, Stack, styled, Typography } from '@mui/material';
+import React, { FC, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import EventsTable from '../../components/block/EventsTable';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
@@ -9,9 +10,43 @@ import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
+import useCopyClipboard from '../../hooks/useCopyToClibboard';
 import ModuleCalls from './ModuleCalls';
 
+const RoundedButton = styled(Button)(({}) => {
+  return {
+    borderRadius: '30px',
+    fontSize: '12px',
+    fontWeight: 500,
+    letterSpacing: 1,
+    color: 'white'
+  };
+});
+
+const ParametersActions: FC<{ data: unknown }> = ({ data }) => {
+  const staticCopy = useCopyClipboard()[1];
+  return (
+    <>
+      <RoundedButton variant='contained' onClick={() => staticCopy(JSON.stringify(data))}>
+        copy
+      </RoundedButton>
+      <RoundedButton variant='contained' disabled sx={{ marginLeft: '24px' }}>
+        view code
+      </RoundedButton>
+    </>
+  );
+};
+const elementDivider = (
+  <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
+);
+
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
+
+const sampleExtrinsicHash = '0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350';
+
+const sampleParameters = {
+  this: 'isn\'t real yet'
+};
 
 const extrinsicsDetailData = [
   { label: 'time', value: '2022-02-28 16:42:30 (+UTC)' },
@@ -32,9 +67,8 @@ const extrinsicsDetailData = [
   },
   {
     label: 'extrinsic hash',
-    value: (
-      <Hash value='0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350' link={'#'} />
-    )
+    value: <Hash value={sampleExtrinsicHash} link={'#'} />,
+    action: <CopyButton value={sampleExtrinsicHash} />
   },
   {
     label: 'module/call',
@@ -82,8 +116,12 @@ const extrinsicsDetailData = [
     )
   },
   {
-    label: <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />,
-    value: <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
+    label: elementDivider,
+    value: elementDivider
+  },
+  {
+    label: 'parameters',
+    value: <ParametersActions data={sampleParameters} />
   },
   {
     label: 'signature',
@@ -95,6 +133,8 @@ const extrinsicsDetailData = [
   }
 ];
 
+const sampleStaticBlockNumber = 2121013;
+
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
 
@@ -102,7 +142,15 @@ const Extrinsic = () => {
     return [
       {
         label: <TabText message='events' count={9} />,
-        content: <Typography>placeholder</Typography>
+        content: (
+          <EventsTable
+            where={{
+              block_number: {
+                _eq: sampleStaticBlockNumber
+              }
+            }}
+          />
+        )
       }
     ];
   }, []);
