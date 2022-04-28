@@ -5,13 +5,13 @@ declare module '@mui/material/styles' {
   interface Theme {
     borders?: { light?: string };
     boxShadow?: string;
-    gradients?: { primary: string };
+    gradients?: { primary: string, secondary: string };
   }
 
   interface ThemeOptions {
     borders?: { light?: string }
     boxShadow?: string;
-    gradients?: { primary: string };
+    gradients?: { primary: string, secondary: string };
   }
 
   interface TypographyVariantsOptions {

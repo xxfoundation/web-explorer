@@ -19,7 +19,7 @@ import CopyButton from '../../components/buttons/CopyButton';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
-import { PaperWrap } from '../../components/Paper/PaperWrap';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
 import TimeAgoComponent from '../../components/TimeAgo';

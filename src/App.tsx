@@ -8,6 +8,7 @@ import Blocks from './pages/blocks';
 import ExtrinsicsRouter from './pages/extrinsics';
 import BlockChain from './pages/index';
 import Transfers from './pages/transfers';
+import Staking from './pages/staking';
 import { theme } from './themes/default';
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
             <h1>accounts</h1>
           </Route>
           <Route path='/staking'>
-            <h1>staking</h1>
+            <Staking />
           </Route>
           {/* TODO configure 404 page */}
         </Switch>

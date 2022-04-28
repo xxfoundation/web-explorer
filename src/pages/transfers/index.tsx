@@ -4,9 +4,8 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import BarChart from '../../components/charts/BarChart/BarChart';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
-import { PaperWrap } from '../../components/Paper/PaperWrap';
 import HistoryTable from './TransfersTable';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
+import PaperWrapped from '../../components/Paper/PaperWrap.styled';
 
 const extrinsincCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
@@ -38,17 +37,17 @@ const TransfersPage = () => {
         <DownloadDataButton onClick={() => { }}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
-        <PaperStyled >
+        <PaperWrapped>
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
             <BarChart hoverLabel={'transfer'} timestamps={timestamps} yAxis={{ title: 'Transfers' }} />
           </Box>
-        </PaperStyled>
+        </PaperWrapped>
       </Box>
-      <PaperWrap>
+      <PaperWrapped>
         <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>
         <span hidden>filters placeholder</span>
         <HistoryTable />
-      </PaperWrap>
+      </PaperWrapped>
     </Container>
   );
 };
