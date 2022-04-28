@@ -24,10 +24,7 @@ const CmixAddress: React.FC<{ nodeId?: string, shorten?: boolean, className?: st
         </p>
       </code>
     ) : (
-      <code
-        className={className}
-        style={{ fontSize: '0.9rem' }}
-      >
+      <code>
         <a
           href={toDashboardNodeUrl(nodeId)}
           rel='noreferrer noopener'

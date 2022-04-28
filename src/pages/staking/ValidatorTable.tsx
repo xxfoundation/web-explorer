@@ -1,11 +1,13 @@
 import React, { FC, useMemo, useState } from 'react';
-import { Box, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Theme } from '../../themes/types';
+import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import ValidatorTableControls, { ValidatorFilter, ValidatorFilterLabels } from './ValidatorTableControls';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
 import CmixAddress from '../../components/CmixAddress';
+import { makeid } from '../../utils';
 
 type Validator = {
   addressId: string;
@@ -43,7 +45,9 @@ const ValidatorRow: FC<WithRank<Validator>> = ({ addressId, cmixId, location, na
         <FormatBalance denomination={2} value={totalStake} />
       </TableCell>
       <TableCell>
-        <CmixAddress shorten nodeId={cmixId} />
+        <Typography variant='code'>
+          <CmixAddress shorten nodeId={cmixId} />
+        </Typography>
       </TableCell>
       <TableCell>
         {nominatorCount}
@@ -51,16 +55,6 @@ const ValidatorRow: FC<WithRank<Validator>> = ({ addressId, cmixId, location, na
     </TableRow>
   );
 };
-
-function makeid (length: number) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for ( let i = 0; i < length; i++ ) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
 
 const current: WithRank<Validator>[] = Array.from(Array(360).keys()).map((i) => ({
   key: makeid(32),
@@ -75,8 +69,6 @@ const current: WithRank<Validator>[] = Array.from(Array(360).keys()).map((i) => 
   commissionPercent: Math.ceil(Math.random() * 10),
 }));
 
-
-
 const waiting: WithRank<Validator>[] = Array.from(Array(737).keys()).map((i) => ({
   key: makeid(32),
   rank: i + 1,
@@ -90,12 +82,10 @@ const waiting: WithRank<Validator>[] = Array.from(Array(737).keys()).map((i) => 
   commissionPercent: Math.ceil(Math.random() * 10),
 }));
 
-
 const labels: ValidatorFilterLabels = {
   current: <><strong>Current</strong> | 352/360</>,
   waiting: <><strong>Waiting</strong> | 737</>
 };
-
 
 const ValidatorsTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);

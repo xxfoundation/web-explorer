@@ -40,6 +40,10 @@ export const theme = createTheme({
   palette,
   typography: {
     fontFamily: '\'Roboto\', sans-serif',
+    code: {
+      fontSize: 14,
+      whiteSpace: 'nowrap'
+    },
     h1: {
       fontSize: 46,
       fontWeight: 800,

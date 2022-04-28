@@ -1,7 +1,6 @@
 import { TypographyStyle } from '@mui/material/styles';
 
 declare module '@mui/material/styles' {
-  // allow configuration using `createTheme`
   interface Theme {
     borders?: { light?: string };
     boxShadow?: string;
@@ -15,6 +14,7 @@ declare module '@mui/material/styles' {
   }
 
   interface TypographyVariantsOptions {
+    code?: TypographyStyle;
     body3?: TypographyStyle;
     body4?: TypographyStyle;
     body5?: TypographyStyle;
@@ -24,6 +24,7 @@ declare module '@mui/material/styles' {
 
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
+    code: true;
     body3: true;
     body4: true;
     body5: true;
