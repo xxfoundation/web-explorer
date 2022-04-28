@@ -1,34 +1,20 @@
-import { useLazyQuery } from '@apollo/client';
+import { OperationVariables, TypedDocumentNode, useLazyQuery } from '@apollo/client';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SearchIcon from '@mui/icons-material/Search';
 import { Divider, FormControl, Grid, InputAdornment } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import React, { useCallback, useState } from 'react';
-import { SEARCH_BLOCKS } from '../../schemas/search.schema';
-import { BlockType } from '../block/types';
+import { SEARCH_ALL, SEARCH_BLOCKS } from '../../schemas/search.schema';
 import HashValidator from '../HashValidator';
 import isValidXXNetworkAddress from '../IsValidXXNetworkAddress';
 import { Bar, SearchButton, SearchInput, SelectItem, SelectOption } from './Bar.styles';
 
-type SearchType = 'all' | 'block' | 'extrinsic' | 'event' | 'account';
-
-interface SearchTypeBase<Variables, Response> {
-  variables: Variables;
-  response: Response;
-}
-
-type SearchTypeProps = {
-  all: SearchTypeBase<unknown, unknown>;
-  block: SearchTypeBase<{ blockNumber: number }, { blocks: BlockType }>;
-  event: SearchTypeBase<unknown, unknown>;
-  extrinsic: SearchTypeBase<unknown, unknown>;
-  account: SearchTypeBase<unknown, unknown>;
-};
+type SearchType = 'all' | 'blocks' | 'extrinsics' | 'event' | 'account';
 
 const SearchOptions: Record<SearchType, string> = {
   all: 'Block / Extrinsic / Event / Account',
-  block: 'Block',
-  extrinsic: 'Extrinsic',
+  blocks: 'Block',
+  extrinsics: 'Extrinsic',
   event: 'Event',
   account: 'Account'
 };
@@ -40,11 +26,26 @@ const validStringWithHifen = (value: string) => !!value.match(extrinsicPattern)?
 
 const validators: Record<SearchType, (v: string) => boolean> = {
   all: (value: string) => !!value,
-  block: (value: string) => validNumber(value),
-  extrinsic: (value: string) =>
+  blocks: (value: string) => validNumber(value),
+  extrinsics: (value: string) =>
     validNumber(value) || validStringWithHifen(value) || HashValidator(value),
   event: (value: string) => validNumber(value) || validStringWithHifen(value),
   account: (value: string) => isValidXXNetworkAddress(value)
+};
+
+const defineVars = (option: SearchType, searchInput: unknown): OperationVariables => {
+  if (option === 'blocks') {
+    return { blockNumber: Number(searchInput) };
+  }
+  return {};
+};
+
+const defineQuery = (option: SearchType): TypedDocumentNode => {
+  if (option === 'blocks') {
+    return SEARCH_BLOCKS;
+  }
+
+  return SEARCH_ALL;
 };
 
 const SearchBar = () => {
@@ -52,10 +53,13 @@ const SearchBar = () => {
   const [searchInput, setSearchInput] = useState<string>('');
   const [searchInputError, setSearchInputError] = useState<boolean>();
 
-  const [executeSearch, { loading }] = useLazyQuery<
-    SearchTypeProps[typeof option]['response'],
-    SearchTypeProps[typeof option]['variables']
-  >(SEARCH_BLOCKS);
+  const [executeSearch, { data, loading }] = useLazyQuery<{ entity: { id: string } }>(
+    defineQuery(option)
+  );
+  if (data?.entity.id) {
+    // TODO push to new route
+    console.warn(`redirecting to ${option}/${data.entity.id}`);
+  }
 
   const executeValidation = useCallback(
     (value: unknown) => {
@@ -75,21 +79,21 @@ const SearchBar = () => {
     },
     [setOption]
   );
+
   const searchInputOnChange = useCallback(
     ({ target: { value } }) => {
-      // TODO check option value and run validations from the value
       setSearchInput(value);
       executeValidation(value);
     },
     [setSearchInput, executeValidation]
   );
 
-  const submitSearch = useCallback(() => {
-    if (searchInputError || !searchInput) {
-      return;
+  const submitSearch = useCallback(async () => {
+    executeValidation(searchInput);
+    if (!searchInputError && searchInput) {
+      executeSearch({ variables: defineVars(option, searchInput) });
     }
-    executeSearch({ variables: { blockNumber: Number(searchInput) } });
-  }, [searchInputError, searchInput, executeSearch]);
+  }, [executeValidation, searchInput, searchInputError, executeSearch, option]);
 
   return (
     <Bar component='form'>
@@ -104,8 +108,8 @@ const SearchBar = () => {
               IconComponent={KeyboardArrowDownIcon}
             >
               <SelectItem value={'all'}>All</SelectItem>
-              <SelectItem value={'block'}>Block </SelectItem>
-              <SelectItem value={'extrinsic'}>Extrinsic</SelectItem>
+              <SelectItem value={'blocks'}>Block </SelectItem>
+              <SelectItem value={'extrinsics'}>Extrinsic</SelectItem>
               <SelectItem value={'event'}>Event</SelectItem>
               <SelectItem value={'account'}>Account</SelectItem>
             </SelectOption>
