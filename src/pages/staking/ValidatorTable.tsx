@@ -1,5 +1,4 @@
 import React, { FC, useMemo, useState } from 'react';
-import { Theme } from '../../themes/types';
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
