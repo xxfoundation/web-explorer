@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import SlashStroke from '../assets/images/icons/SlashStroke.svg';
 import Link from '../components/Link';
-import { PaperStyled } from '../components/Paper/PaperWrap.styled';
+import PaperStyled from '../components/Paper/PaperWrap.styled';
 
 const InfoTitle = styled(Typography)(({ theme: th }) => {
   return {
