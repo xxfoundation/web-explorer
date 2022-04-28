@@ -7,6 +7,7 @@ import SiteHeader from './components/Header';
 import Blocks from './pages/blocks';
 import ExtrinsicsRouter from './pages/extrinsics';
 import BlockChain from './pages/index';
+import NotFound from './pages/NotFound';
 import Transfers from './pages/transfers';
 import Staking from './pages/staking';
 import { theme } from './themes/default';
@@ -41,7 +42,9 @@ function App() {
           <Route path='/staking'>
             <Staking />
           </Route>
-          {/* TODO configure 404 page */}
+          <Route path='*'>
+            <NotFound />
+          </Route>
         </Switch>
         <SiteFooter />
       </ThemeProvider>

@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
-import dayjs from 'dayjs';
 import { Box, Container, Stack, Typography } from '@mui/material';
-import BarChart from '../../components/charts/BarChart/BarChart';
+import dayjs from 'dayjs';
+import React, { useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
-import HistoryTable from './TransfersTable';
-import PaperWrapped from '../../components/Paper/PaperWrap.styled';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
+import BarChart from '../../components/charts/BarChart/BarChart';
+import TransferTable from './TransfersTable';
 
 const extrinsincCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
@@ -31,23 +31,21 @@ const TransfersPage = () => {
         direction={'row'}
         sx={{ mb: 5 }}
       >
-        <Typography variant='h1'>
-          Transfers
-        </Typography>
-        <DownloadDataButton onClick={() => { }}>Download data</DownloadDataButton>
+        <Typography variant='h1'>Transfers</Typography>
+        <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
-        <PaperWrapped>
+        <PaperWrap>
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
             <BarChart hoverLabel={'transfer'} timestamps={timestamps} yAxis={{ title: 'Transfers' }} />
           </Box>
-        </PaperWrapped>
+        </PaperWrap>
       </Box>
-      <PaperWrapped>
+      <PaperWrap>
         <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>
         <span hidden>filters placeholder</span>
-        <HistoryTable />
-      </PaperWrapped>
+        <TransferTable />
+      </PaperWrap>
     </Container>
   );
 };

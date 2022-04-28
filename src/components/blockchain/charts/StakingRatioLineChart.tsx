@@ -1,8 +1,8 @@
-import { default as React } from 'react';
+import React from 'react';
 import { DataPoint } from '../../../types';
 import LineChart from '../../charts/highcharts/LineChart';
-import { formatPercent, percentTooltipFormatter } from './formatters';
 import PaperWithHeader from '../PaperWithHeader';
+import { formatPercent, percentTooltipFormatter } from './formatters';
 
 const data: DataPoint[] = [
   [90, 0.01],

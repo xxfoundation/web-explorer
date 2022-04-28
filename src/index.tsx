@@ -1,29 +1,17 @@
-// import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-// import { WebSocketLink } from '@apollo/client/link/ws';
+import { ApolloProvider } from '@apollo/client';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ApolloClient from './apolloClient';
 import App from './App';
+import './dayjs';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import './dayjs';
-
-// const wsLink = new WebSocketLink({
-//   uri: 'ws://localhost:4000/graphql',
-//   options: {
-//     reconnect: false
-//   }
-// });
-
-// const client = new ApolloClient({
-//   link: wsLink,
-//   cache: new InMemoryCache()
-// });
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <ApolloProvider client={client}> */}
-    <App />
-    {/* </ApolloProvider> */}
+    <ApolloProvider client={ApolloClient()}>
+      <App />
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

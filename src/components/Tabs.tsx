@@ -80,7 +80,11 @@ const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
   );
 };
 
-const TabText: FC<{ count: string | number; message: string }> = ({ count, message }) => {
+const TabText: FC<{ count?: string | number | JSX.Element; message: string | JSX.Element }> = ({
+  count,
+  message
+}) => {
+  if (count === undefined) return <Typography>undefined</Typography>;
   return (
     <Stack direction='row' spacing={1} divider={<Divider orientation='vertical' flexItem />}>
       <Typography>{message}</Typography>
