@@ -1,8 +1,9 @@
 import { useSubscription } from '@apollo/client';
-import { Box, Grid, Skeleton, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import { LISTEN_FOR_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
 import BlockStatusIcon from '../block/BlockStatusIcon';
+import genSkeletons from '../genSkeletons';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import PaperWithHeader from './PaperWithHeader';
@@ -18,20 +19,26 @@ type Block = {
   numTransfers: number;
 };
 
-const ItemHandlerSkeleton: FC<{ number: number }> = ({}) => {
+const ItemHandlerSkeleton: FC<{ number: number }> = ({ number }) => {
   return (
-    <Box sx={{ mb: 4 }}>
-      <Grid container>
-        <Grid item xs>
-          <Skeleton />
-        </Grid>
-      </Grid>
-      <Grid container sx={{ mt: 1 }}>
-        <Grid item xs>
-          <Skeleton />
-        </Grid>
-      </Grid>
-    </Box>
+    <>
+      {genSkeletons(number).map((Skeleton, index) => {
+        return (
+          <Box sx={{ mb: 4 }} key={index}>
+            <Grid container>
+              <Grid item xs>
+                <Skeleton />
+              </Grid>
+            </Grid>
+            <Grid container sx={{ mt: 1 }}>
+              <Grid item xs>
+                <Skeleton />
+              </Grid>
+            </Grid>
+          </Box>
+        );
+      })}
+    </>
   );
 };
 
@@ -40,7 +47,7 @@ const ItemHandler: FC<{ block: Block }> = ({ block }) => {
     <Box key={block.hash} sx={{ mb: 4 }}>
       <Grid container>
         <Grid item xs>
-          <Link to={`/blocks/${block.hash}`} underline='hover' variant='body2'>
+          <Link to={`/blocks/${block.number}`} underline='hover' variant='body2'>
             {block.number}
           </Link>
         </Grid>
