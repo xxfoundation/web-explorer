@@ -1,6 +1,6 @@
 import { gql, OperationVariables, TypedDocumentNode } from '@apollo/client';
 
-export type SearchTypes = 'all' | 'blocks' | 'event'; //| 'extrinsics' | 'account';
+export type SearchTypes = 'all' | 'blocks' | 'events'; //| 'extrinsics' | 'account';
 
 const SEARCH_BLOCKS = gql`
   query GetBlockByPK($blockNumber: bigint!) {
@@ -37,11 +37,12 @@ export const getSearchQuery = (
     ];
   }
 
-  if (option === 'event') {
+  if (option === 'events') {
     return [
       SEARCH_EVENTS,
       (searchInput: string) => {
         const [blockNumber, eventId] = searchInput.split('-');
+        console.warn(`fukking events ${[blockNumber, eventId]}`);
         return { variables: { blockNumber: Number(blockNumber), eventId: Number(eventId) } };
       }
     ];
