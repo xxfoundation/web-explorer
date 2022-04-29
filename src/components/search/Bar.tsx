@@ -1,17 +1,24 @@
-import { OperationVariables, TypedDocumentNode, useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SearchIcon from '@mui/icons-material/Search';
-import { Divider, FormControl, Grid, InputAdornment } from '@mui/material';
+import { Divider, FormControl, Grid, InputAdornment, SxProps } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import React, { useCallback, useState } from 'react';
-import { SEARCH_ALL, SEARCH_BLOCKS } from '../../schemas/search.schema';
-import HashValidator from '../HashValidator';
-import isValidXXNetworkAddress from '../IsValidXXNetworkAddress';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { getSearchQuery, SearchTypes } from '../../schemas/search.schema';
 import { Bar, SearchButton, SearchInput, SelectItem, SelectOption } from './Bar.styles';
+import validators from './validations';
 
-type SearchType = 'all' | 'blocks' | 'extrinsics' | 'event' | 'account';
+const dividerSxProps: SxProps = {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  height: 22,
+  borderColor: 'primary.light',
+  display: { xs: 'none', sm: 'flex' }
+};
 
-const SearchOptions: Record<SearchType, string> = {
+const SearchOptionsPlaceholders: Record<SearchTypes, string> = {
   all: 'Block / Extrinsic / Event / Account',
   blocks: 'Block',
   extrinsics: 'Extrinsic',
@@ -19,56 +26,29 @@ const SearchOptions: Record<SearchType, string> = {
   account: 'Account'
 };
 
-const extrinsicPattern = /^([a-z\-])+$/;
-
-const validNumber = (value: string) => !isNaN(Number(value));
-const validStringWithHifen = (value: string) => !!value.match(extrinsicPattern)?.length;
-
-const validators: Record<SearchType, (v: string) => boolean> = {
-  all: (value: string) => !!value,
-  blocks: (value: string) => validNumber(value),
-  extrinsics: (value: string) =>
-    validNumber(value) || validStringWithHifen(value) || HashValidator(value),
-  event: (value: string) => validNumber(value) || validStringWithHifen(value),
-  account: (value: string) => isValidXXNetworkAddress(value)
-};
-
-const defineVars = (option: SearchType, searchInput: unknown): OperationVariables => {
-  if (option === 'blocks') {
-    return { blockNumber: Number(searchInput) };
-  }
-  return {};
-};
-
-const defineQuery = (option: SearchType): TypedDocumentNode => {
-  if (option === 'blocks') {
-    return SEARCH_BLOCKS;
-  }
-
-  return SEARCH_ALL;
-};
-
 const SearchBar = () => {
-  const [option, setOption] = useState<SearchType>('all');
+  const history = useHistory();
+  const [option, setOption] = useState<SearchTypes>('all');
   const [searchInput, setSearchInput] = useState<string>('');
   const [searchInputError, setSearchInputError] = useState<boolean>();
 
-  const [executeSearch, { data, loading }] = useLazyQuery<{ entity: { id: string } }>(
-    defineQuery(option)
-  );
-  if (data?.entity.id) {
-    // TODO push to new route
-    console.warn(`redirecting to ${option}/${data.entity.id}`);
-  }
+  const [query, queryVariables] = useMemo(() => {
+    return getSearchQuery(option);
+  }, [option]);
+  const [executeQuery, { data, loading }] = useLazyQuery<{ entity: { id: string } }>(query);
+
+  useEffect(() => {
+    if (data?.entity?.id) {
+      history.push(`/${option}/${data.entity.id}`);
+      setSearchInput('');
+    }
+    // TODO when not found redirect to not found and keep the search bar as it is?
+  }, [data, history, option, setSearchInput]);
 
   const executeValidation = useCallback(
     (value: unknown) => {
       const optionValidator = validators[option];
-      if (!optionValidator || !optionValidator(String(value))) {
-        setSearchInputError(true);
-      } else {
-        setSearchInputError(false);
-      }
+      setSearchInputError(!optionValidator || !optionValidator(String(value)));
     },
     [option, setSearchInputError]
   );
@@ -91,9 +71,9 @@ const SearchBar = () => {
   const submitSearch = useCallback(async () => {
     executeValidation(searchInput);
     if (!searchInputError && searchInput) {
-      executeSearch({ variables: defineVars(option, searchInput) });
+      executeQuery(queryVariables(searchInput));
     }
-  }, [executeValidation, searchInput, searchInputError, executeSearch, option]);
+  }, [executeValidation, searchInput, searchInputError, executeQuery, queryVariables]);
 
   return (
     <Bar component='form'>
@@ -109,29 +89,19 @@ const SearchBar = () => {
             >
               <SelectItem value={'all'}>All</SelectItem>
               <SelectItem value={'blocks'}>Block </SelectItem>
-              <SelectItem value={'extrinsics'}>Extrinsic</SelectItem>
+              {/* <SelectItem value={'extrinsics'}>Extrinsic</SelectItem>
               <SelectItem value={'event'}>Event</SelectItem>
-              <SelectItem value={'account'}>Account</SelectItem>
+              <SelectItem value={'account'}>Account</SelectItem> */}
             </SelectOption>
           </FormControl>
         </Grid>
         <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 }, position: 'relative', height: 22 }}>
-          <Divider
-            orientation='vertical'
-            sx={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              height: 22,
-              borderColor: 'primary.light',
-              display: { xs: 'none', sm: 'flex' }
-            }}
-          />
+          <Divider orientation='vertical' sx={dividerSxProps} />
         </Grid>
         <Grid item xs>
           <FormControl fullWidth variant='standard'>
             <SearchInput
-              placeholder={`Search by ${SearchOptions[option]}`}
+              placeholder={`Search by ${SearchOptionsPlaceholders[option]}`}
               onChange={searchInputOnChange}
               value={searchInput}
               disableUnderline
@@ -144,7 +114,9 @@ const SearchBar = () => {
           </FormControl>
         </Grid>
         <Grid item xs='auto' sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <SearchButton onClick={submitSearch}>SEARCH</SearchButton>
+          <SearchButton disabled={loading} onClick={submitSearch}>
+            SEARCH
+          </SearchButton>
         </Grid>
       </Grid>
     </Bar>

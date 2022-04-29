@@ -46,7 +46,7 @@ export const SearchInput = styled(Input)(({ theme }) => ({
   '&:before, &:after': {
     border: 'none !important'
   },
-  color: theme.palette.primary.contrastText,
+  color: theme.palette.primary.main,
   svg: {
     color: theme.palette.primary.main
   }
