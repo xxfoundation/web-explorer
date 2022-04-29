@@ -3,7 +3,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SearchIcon from '@mui/icons-material/Search';
 import { Divider, FormControl, Grid, InputAdornment, SxProps } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { getSearchQuery, SearchTypes } from '../../schemas/search.schema';
 import { Bar, SearchButton, SearchInput, SelectItem, SelectOption } from './Bar.styles';
@@ -28,21 +28,13 @@ const SearchOptionsPlaceholders: Record<SearchTypes, string> = {
 
 const SearchBar = () => {
   const history = useHistory();
+
   const [option, setOption] = useState<SearchTypes>('all');
   const [searchInput, setSearchInput] = useState<string>('');
   const [searchInputError, setSearchInputError] = useState<boolean>();
 
-  const [query, queryVariables] = useMemo(() => {
-    return getSearchQuery(option);
-  }, [option]);
-  const [executeQuery, { data, loading }] = useLazyQuery<{ entity: { id: string } }>(query);
-
-  useEffect(() => {
-    if (data?.entity?.id) {
-      history.push(`/${option}/${data.entity.id}`);
-      setSearchInput('');
-    }
-  }, [data, history, option, setSearchInput]);
+  const [query, queryVariables] = useMemo(() => getSearchQuery(option), [option]);
+  const [executeQuery, { loading }] = useLazyQuery<{ entity: { id: string } }>(query);
 
   const executeValidation = useCallback(
     (value: unknown) => {
@@ -70,9 +62,21 @@ const SearchBar = () => {
   const submitSearch = useCallback(async () => {
     executeValidation(searchInput);
     if (!searchInputError && searchInput) {
-      executeQuery(queryVariables(searchInput));
+      const { data } = await executeQuery(queryVariables(searchInput));
+      if (data?.entity?.id) {
+        history.push(`/${option}/${data.entity.id}`);
+      }
+      setSearchInput('');
     }
-  }, [executeValidation, searchInput, searchInputError, executeQuery, queryVariables]);
+  }, [
+    executeValidation,
+    searchInput,
+    searchInputError,
+    executeQuery,
+    queryVariables,
+    history,
+    option
+  ]);
 
   if (loading) {
     return (
