@@ -19,11 +19,11 @@ const dividerSxProps: SxProps = {
 };
 
 const SearchOptionsPlaceholders: Record<SearchTypes, string> = {
-  all: 'Block / Extrinsic / Event / Account',
+  all: 'Block / Event', // 'Block / Extrinsic / Event / Account',
   blocks: 'Block',
-  extrinsics: 'Extrinsic',
-  event: 'Event',
-  account: 'Account'
+  // extrinsics: 'Extrinsic',
+  event: 'Event'
+  // account: 'Account'
 };
 
 const SearchBar = () => {
@@ -42,7 +42,6 @@ const SearchBar = () => {
       history.push(`/${option}/${data.entity.id}`);
       setSearchInput('');
     }
-    // TODO when not found redirect to not found and keep the search bar as it is?
   }, [data, history, option, setSearchInput]);
 
   const executeValidation = useCallback(
@@ -75,6 +74,24 @@ const SearchBar = () => {
     }
   }, [executeValidation, searchInput, searchInputError, executeQuery, queryVariables]);
 
+  if (loading) {
+    return (
+      <Bar component='form'>
+        <SearchInput
+          placeholder={`Searching for ${SearchOptionsPlaceholders[option]} ${searchInput}`}
+          disabled
+          fullWidth
+          disableUnderline
+          startAdornment={
+            <InputAdornment position='start'>
+              <CircularProgress size={20} color='inherit' />
+            </InputAdornment>
+          }
+        />
+      </Bar>
+    );
+  }
+
   return (
     <Bar component='form'>
       <Grid container alignItems='center'>
@@ -89,8 +106,8 @@ const SearchBar = () => {
             >
               <SelectItem value={'all'}>All</SelectItem>
               <SelectItem value={'blocks'}>Block </SelectItem>
-              {/* <SelectItem value={'extrinsics'}>Extrinsic</SelectItem>
               <SelectItem value={'event'}>Event</SelectItem>
+              {/* <SelectItem value={'extrinsics'}>Extrinsic</SelectItem>
               <SelectItem value={'account'}>Account</SelectItem> */}
             </SelectOption>
           </FormControl>
@@ -107,7 +124,7 @@ const SearchBar = () => {
               disableUnderline
               startAdornment={
                 <InputAdornment position='start'>
-                  {loading ? <CircularProgress size={20} color='inherit' /> : <SearchIcon />}
+                  <SearchIcon />
                 </InputAdornment>
               }
             />

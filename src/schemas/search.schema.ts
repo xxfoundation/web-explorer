@@ -1,6 +1,6 @@
 import { gql, OperationVariables, TypedDocumentNode } from '@apollo/client';
 
-export type SearchTypes = 'all' | 'blocks' | 'extrinsics' | 'event' | 'account';
+export type SearchTypes = 'all' | 'blocks' | 'event'; //| 'extrinsics' | 'account';
 
 const SEARCH_BLOCKS = gql`
   query GetBlockByPK($blockNumber: bigint!) {

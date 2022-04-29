@@ -1,19 +1,19 @@
 import { SearchTypes } from '../../schemas/search.schema';
-import HashValidator from '../HashValidator';
-import isValidXXNetworkAddress from '../IsValidXXNetworkAddress';
 
-const extrinsicPattern = /^([a-z\-])+$/;
+// const extrinsicPattern = /^([a-z\-])+$/;
+const eventComposedKeyPattern = /^[0-9]+\-[0-9]+$/;
 
 const validNumber = (value: string) => !isNaN(Number(value));
-const validStringWithHifen = (value: string) => !!value.match(extrinsicPattern)?.length;
+const patternVerification = (pattern: RegExp, value: string) => !!value.match(pattern)?.length;
 
 const validators: Record<SearchTypes, (v: string) => boolean> = {
   all: (value: string) => !!value,
   blocks: (value: string) => validNumber(value),
-  extrinsics: (value: string) =>
-    validNumber(value) || validStringWithHifen(value) || HashValidator(value),
-  event: (value: string) => validNumber(value) || validStringWithHifen(value),
-  account: (value: string) => isValidXXNetworkAddress(value)
+  event: (value: string) =>
+    validNumber(value) || patternVerification(eventComposedKeyPattern, value)
+  // extrinsics: (value: string) =>
+  //   validNumber(value) || patternVerification(extrinsicPattern, value) || HashValidator(value),
+  // account: (value: string) => isValidXXNetworkAddress(value)
 };
 
 export default validators;
