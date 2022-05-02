@@ -34,16 +34,15 @@ const dividerSxProps: SxProps = {
 };
 
 const DefineSearchPlaceholders: Record<SearchTypes, [string, (v: string) => string]> = {
-  all: ['Block / Event', (value: string) => `Querying ${value} among all categories`], // 'Block / Extrinsic / Event / Account',
   blocks: ['Block', (value: string) => `Querying Block ID ${value}`],
-  events: ['Event', (value: string) => `Querying Event ID ${value}`]
-  // extrinsics: 'Extrinsic',
-  // account: 'Account'
+  events: ['Event', (value: string) => `Querying Event ID ${value}`],
+  extrinsics: ['Extrinsics', (value: string) => `Querying Extrinsic ID ${value}`],
+  account: ['Account', (value: string) => `Querying Account ID ${value}`]
 };
 
 const SearchBar = () => {
   const history = useHistory();
-  const [option, setOption] = useState<SearchTypes>('all');
+  const [option, setOption] = useState<SearchTypes>('blocks');
   const [searchInput, setSearchInput] = useState<string>('');
   const [searchInputError, setSearchInputError] = useState<string>('');
 
@@ -86,23 +85,20 @@ const SearchBar = () => {
     [setSearchInput]
   );
 
-  const submitSearch = useCallback(() => {
+  const submitSearch = useCallback(async () => {
     const isValid = executeValidation(searchInput);
-
     if (isValid && searchInput) {
-      const queryOptions = queryVariables(searchInput);
-      executeQuery(queryOptions).then(({ data }) => {
-        if (data?.entity?.id) {
-          if (option === 'all') {
-            console.warn(`WIP: we found the ${data?.entity?.id}`);
-          } else {
-            history.push(`/${option}/${data.entity.id}`);
-          }
+      const { data } = await executeQuery(queryVariables(searchInput));
+      if (data?.entity?.id) {
+        if (option === 'blocks') {
+          history.push(`/${option}/${data.entity.id}`);
+        } else {
+          console.warn('something should happen');
         }
-        setSearchInput('');
-      });
+      }
+      setSearchInput('');
     }
-  }, [executeValidation, searchInput, queryVariables, executeQuery, option, history]);
+  }, [executeQuery, executeValidation, history, option, queryVariables, searchInput]);
 
   if (loading) {
     return (
@@ -153,11 +149,10 @@ const SearchBar = () => {
               inputProps={{ 'aria-label': 'Without label' }}
               IconComponent={KeyboardArrowDownIcon}
             >
-              <SelectItem value={'all'}>All</SelectItem>
               <SelectItem value={'blocks'}>Block </SelectItem>
               <SelectItem value={'events'}>Event</SelectItem>
-              {/* <SelectItem value={'extrinsics'}>Extrinsic</SelectItem>
-              <SelectItem value={'account'}>Account</SelectItem> */}
+              <SelectItem value={'extrinsics'}>Extrinsic</SelectItem>
+              <SelectItem value={'account'}>Account</SelectItem>
             </SelectOption>
           </FormControl>
         </Grid>

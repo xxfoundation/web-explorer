@@ -1,8 +1,16 @@
 import { gql, OperationVariables, TypedDocumentNode } from '@apollo/client';
 
-export type SearchTypes = 'all' | 'blocks' | 'events'; //| 'extrinsics' | 'account';
+export type SearchTypes = 'blocks' | 'events' | 'extrinsics' | 'account';
 
 const SEARCH_BLOCKS = gql`
+  query GetBlockByPK($blockNumber: bigint!) {
+    entity: blockchain_blocks_by_pk(block_number: $blockNumber) {
+      id: block_number
+    }
+  }
+`;
+
+const SEARCH_ACCOUNTS = gql`
   query GetBlockByPK($blockNumber: bigint!) {
     entity: blockchain_blocks_by_pk(block_number: $blockNumber) {
       id: block_number
@@ -15,14 +23,6 @@ const SEARCH_EVENTS = gql`
     blockchain_event_by_pk(block_number: $blockNumber, event_index: $eventIndex) {
       block_number
       event_index
-    }
-  }
-`;
-
-const SEARCH_ALL = gql`
-  query AllByPK($blockNumber: bigint!) {
-    entity: blockchain_blocks_by_pk(block_number: $blockNumber) {
-      id: block_number
     }
   }
 `;
@@ -49,11 +49,9 @@ export const getSearchQuery = (
   }
 
   return [
-    SEARCH_ALL,
-    (searchInput: string) => ({
-      variables: {
-        blockNumber: Number(searchInput)
-      }
-    })
+    SEARCH_ACCOUNTS,
+    (searchInput: string) => {
+      throw new Error(`not implemented search ${searchInput}`);
+    }
   ];
 };
