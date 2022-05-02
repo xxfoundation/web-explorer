@@ -5,10 +5,12 @@ import { Alert, Divider, FormControl, Grid, IconButton, Snackbar, SxProps } from
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useToggle } from '../../hooks';
-import { getSearchQuery, SearchTypes } from '../../schemas/search.schema';
+import { SEARCH_BLOCKS } from '../../schemas/blocks.schema';
+import { SEARCH_EVENTS } from '../../schemas/events.schema';
 import { theme } from '../../themes/tags';
 import { Bar, SelectItem, SelectOption } from './Bar.styles';
-import SearchInputGroup from './SearchInputGroup';
+import { GenericSearchInput } from './SearchInputGroup';
+import { SearchTypes } from './types';
 import validators from './validations';
 
 const dividerSxProps: SxProps = {
@@ -20,11 +22,53 @@ const dividerSxProps: SxProps = {
   display: { xs: 'none', sm: 'flex' }
 };
 
-const DefineSearchPlaceholders: Record<SearchTypes, [string, (v: string) => string]> = {
-  blocks: ['Block', (value: string) => `Querying Block ID ${value}`],
-  events: ['Event', (value: string) => `Querying Event ID ${value}`],
-  extrinsics: ['Extrinsics', (value: string) => `Querying Extrinsic ID ${value}`],
-  account: ['Account', (value: string) => `Querying Account ID ${value}`]
+type SearchGroupType = {
+  validator: (value: string, optionValidator: (v: string) => boolean) => boolean;
+};
+
+export const SearchBlock: FC<SearchGroupType> = () => {
+  const history = useHistory();
+  return (
+    <GenericSearchInput
+      placeholder='Search by Block'
+      messageLoader={(value: string) => `Querying Block ID ${value}`}
+      document={SEARCH_BLOCKS}
+      variables={(v: string) => ({ variables: { blockNumber: Number(v) } })}
+      validator={validators.blocks}
+      successSearchCallback={(data: { block: { number: number; hash: string } }) => {
+        history.push(`/blocks/${data.block.number}`);
+      }}
+    />
+  );
+};
+
+export const SearchEvent: FC<SearchGroupType> = () => {
+  const history = useHistory();
+  return (
+    <GenericSearchInput
+      messageLoader={(value: string) => `Querying Event ID ${value}`}
+      placeholder='Search by Event'
+      document={SEARCH_EVENTS}
+      variables={(v: string) => {
+        const [blockNumber, eventId] = v.split('-');
+        return { variables: { blockNumber: Number(blockNumber), eventId: Number(eventId) } };
+      }}
+      validator={validators.events}
+      successSearchCallback={(data: {event: { blockNumber: number; index: number }}) => {
+        history.push(`/events/${data.event.blockNumber}-${data.event.index}`);
+      }}
+    />
+  );
+};
+
+const searchInputGroupFactory = (option: SearchTypes, validator: SearchGroupType['validator']) => {
+  if (option === 'blocks') {
+    return <SearchBlock validator={validator} />;
+  }
+  if (option === 'events') {
+    return <SearchEvent validator={validator} />;
+  }
+  return <></>;
 };
 
 const AlertEl: FC<{ opened: boolean; content: string; handleClose: () => void }> = ({
@@ -56,13 +100,8 @@ const AlertEl: FC<{ opened: boolean; content: string; handleClose: () => void }>
 };
 
 const SearchBar = () => {
-  const history = useHistory();
   const [option, setOption] = useState<SearchTypes>('blocks');
-  const inputPlaceholder = useMemo<{ empty: string; loading: string }>(() => {
-    const [emptyPlaceholder, loadingPlaceholder] = DefineSearchPlaceholders[option];
-    return { empty: `Search by ${emptyPlaceholder}`, loading: loadingPlaceholder(option) };
-  }, [option]);
-  const [query, queryVariables] = useMemo(() => getSearchQuery(option), [option]);
+  const handleChange = useCallback(({ target: { value } }) => setOption(value), [setOption]);
 
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [opened, { toggleOff, toggleOn }] = useToggle();
@@ -71,10 +110,9 @@ const SearchBar = () => {
     setAlertMessage('');
   }, [toggleOff]);
 
-  const validator = useCallback(
-    (value: string) => {
-      const optionValidator = validators[option];
-      if (optionValidator && optionValidator(String(value))) {
+  const input = useMemo(() => {
+    const validator = (value: string, optionValidator: (v: string) => boolean) => {
+      if (optionValidator(String(value))) {
         toggleOff();
         setAlertMessage('');
         return true;
@@ -83,18 +121,9 @@ const SearchBar = () => {
       setAlertMessage(msg);
       toggleOn();
       return false;
-    },
-    [option, toggleOff, toggleOn]
-  );
-
-  const handleChange = useCallback(({ target: { value } }) => setOption(value), [setOption]);
-
-  const navigateToPage = useCallback(
-    (searchResultId: string) => {
-      history.push(`/${option}/${searchResultId}`);
-    },
-    [history, option]
-  );
+    };
+    return searchInputGroupFactory(option, validator);
+  }, [option, toggleOff, toggleOn]);
 
   return (
     <Bar component='form'>
@@ -119,13 +148,7 @@ const SearchBar = () => {
         <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 }, position: 'relative', height: 22 }}>
           <Divider orientation='vertical' sx={dividerSxProps} />
         </Grid>
-        <SearchInputGroup
-          document={query}
-          variables={queryVariables}
-          inputPlaceholder={inputPlaceholder}
-          successSearchCallback={navigateToPage}
-          validator={validator}
-        />
+        {input}
       </Grid>
     </Bar>
   );

@@ -1,1 +1,1 @@
-export type SearchResponse = { entity: { id: string } };
+export type SearchTypes = 'blocks' | 'events' | 'extrinsics' | 'account';

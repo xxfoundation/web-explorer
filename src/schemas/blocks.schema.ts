@@ -1,10 +1,17 @@
 import { gql } from '@apollo/client';
 
+export const BLOCK_KEYS_FRAGMENT = gql`
+  fragment blocks on blockchain_blocks {
+    number: block_number
+    hash: block_hash
+  }
+`;
+
 const LISTEN_FOR_BLOCKS_ORDERED = gql`
+  ${BLOCK_KEYS_FRAGMENT}
   subscription ListBlocksOrdered($limit: Int) {
     blocks: blockchain_blocks(order_by: { block_number: desc }, limit: $limit) {
-      hash: block_hash
-      number: block_number
+      ...blocks
       numberFinalized: block_number_finalized
       currentEra: current_era
       numTransfers: num_transfers
@@ -14,6 +21,7 @@ const LISTEN_FOR_BLOCKS_ORDERED = gql`
 `;
 
 const LIST_BLOCK = gql`
+  ${BLOCK_KEYS_FRAGMENT}
   query ListBlocksOrdered($limit: Int, $offset: Int = 0, $where: blockchain_blocks_bool_exp) {
     agg: blockchain_blocks_aggregate(where: $where) {
       aggregate {
@@ -26,8 +34,7 @@ const LIST_BLOCK = gql`
       limit: $limit
       offset: $offset
     ) {
-      hash: block_hash
-      number: block_number
+      ...blocks
       numberFinalized: block_number_finalized
       currentEra: current_era
       timestamp
@@ -39,12 +46,12 @@ const LIST_BLOCK = gql`
 `;
 
 const GET_BLOCK_BY_PK = gql`
-  fragment blocks on blockchain_blocks {
-    number: block_number
-    hash: block_hash
-  }
-
-  query GetBlockByPK($blockNumber: bigint!, $prevBlockNumber: bigint!, $nextBlockNumber: bigint!) {
+  ${BLOCK_KEYS_FRAGMENT}
+  query GetBlockByPKAndAdjacents(
+    $blockNumber: bigint!
+    $prevBlockNumber: bigint!
+    $nextBlockNumber: bigint!
+  ) {
     prev: blockchain_blocks_by_pk(block_number: $prevBlockNumber) {
       ...blocks
     }
@@ -68,4 +75,13 @@ const GET_BLOCK_BY_PK = gql`
   }
 `;
 
-export { LISTEN_FOR_BLOCKS_ORDERED, LIST_BLOCK, GET_BLOCK_BY_PK };
+const SEARCH_BLOCKS = gql`
+  ${BLOCK_KEYS_FRAGMENT}
+  query GetBlockByPK($blockNumber: bigint!) {
+    block: blockchain_blocks_by_pk(block_number: $blockNumber) {
+      ...blocks
+    }
+  }
+`;
+
+export { LISTEN_FOR_BLOCKS_ORDERED, LIST_BLOCK, GET_BLOCK_BY_PK, SEARCH_BLOCKS };

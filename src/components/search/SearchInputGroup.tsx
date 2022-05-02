@@ -2,44 +2,55 @@ import { OperationVariables, TypedDocumentNode, useLazyQuery } from '@apollo/cli
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, Grid, InputAdornment } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import React, { FC, useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { SearchButton, SearchInput } from './Bar.styles';
-import { SearchResponse } from './types';
 
-const SearchInputGroup: FC<{
+interface IProps<T> {
   document: TypedDocumentNode;
+  placeholder: string;
+  messageLoader: (v: string) => string;
   variables: (v: string) => OperationVariables;
-  successSearchCallback: (res: string) => void;
+  successSearchCallback: (res: T) => void;
   // errorSearchCallback: () => void;
   validator: (v: string) => boolean;
-  inputPlaceholder: { empty: string; loading: string };
-}> = ({ document, inputPlaceholder, successSearchCallback, validator, variables }) => {
-  const [executeQuery, { loading }] = useLazyQuery<SearchResponse>(document);
+}
+
+export const GenericSearchInput = <T extends object>({
+  document,
+  messageLoader: messageLoader,
+  placeholder,
+  successSearchCallback,
+  validator,
+  variables
+}: IProps<T>) => {
+  const [executeQuery, { loading }] = useLazyQuery<T>(document);
   const [searchInput, setSearchInput] = useState('');
 
-  const searchInputOnChange = useCallback(
-    ({ target: { value } }) => setSearchInput(value),
-    [setSearchInput]
-  );
   const submitSearch = useCallback(() => {
     if (validator(searchInput)) {
       executeQuery(variables(searchInput))
         .then(({ data, error }) => {
           // TODO what to do when error?
-          if (!error && data && data?.entity?.id) {
-            successSearchCallback(data.entity.id);
+          if (!error && data) {
+            successSearchCallback(data);
+            setSearchInput('');
           }
         })
-        .finally(() => {
-          setSearchInput('');
-        });
+        .finally(() => {});
     }
   }, [successSearchCallback, executeQuery, searchInput, validator, variables]);
+
+  const searchInputOnChange = useCallback(
+    ({ target: { value } }) => setSearchInput(value),
+    [setSearchInput]
+  );
+
+  const loadingMsg = useMemo(() => messageLoader(searchInput), [messageLoader, searchInput]);
 
   if (loading) {
     return (
       <SearchInput
-        placeholder={inputPlaceholder.loading}
+        placeholder={loadingMsg}
         disabled
         disableUnderline
         startAdornment={
@@ -56,7 +67,7 @@ const SearchInputGroup: FC<{
       <Grid item xs>
         <FormControl fullWidth variant='standard'>
           <SearchInput
-            placeholder={inputPlaceholder.empty}
+            placeholder={placeholder}
             onChange={searchInputOnChange}
             value={searchInput}
             disableUnderline
@@ -76,5 +87,3 @@ const SearchInputGroup: FC<{
     </>
   );
 };
-
-export default SearchInputGroup;

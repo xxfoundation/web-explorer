@@ -1,6 +1,6 @@
-import { SearchTypes } from '../../schemas/search.schema';
 import HashValidator from '../HashValidator';
 import isValidXXNetworkAddress from '../IsValidXXNetworkAddress';
+import { SearchTypes } from './types';
 
 const eventkeyPattern = /^[0-9]+(\-[0-9]+)?$/;
 
