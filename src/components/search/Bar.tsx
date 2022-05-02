@@ -1,28 +1,15 @@
-import { useLazyQuery } from '@apollo/client';
 import CloseIcon from '@mui/icons-material/Close';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import SearchIcon from '@mui/icons-material/Search';
-import {
-  Alert,
-  Divider,
-  FormControl,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Snackbar,
-  SxProps
-} from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
-import React, { useCallback, useMemo, useState } from 'react';
+import { Alert, Divider, FormControl, Grid, IconButton, Snackbar, SxProps } from '@mui/material';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useToggle } from '../../hooks';
 import { getSearchQuery, SearchTypes } from '../../schemas/search.schema';
 import { theme } from '../../themes/tags';
-import { Bar, SearchButton, SearchInput, SelectItem, SelectOption } from './Bar.styles';
+import { Bar, SelectItem, SelectOption } from './Bar.styles';
+import SearchInputGroup from './SearchInputGroup';
 import validators from './validations';
-
-type SearchResponse = { entity: { id: string } };
 
 const dividerSxProps: SxProps = {
   position: 'absolute',
@@ -40,105 +27,78 @@ const DefineSearchPlaceholders: Record<SearchTypes, [string, (v: string) => stri
   account: ['Account', (value: string) => `Querying Account ID ${value}`]
 };
 
+const AlertEl: FC<{ opened: boolean; content: string; handleClose: () => void }> = ({
+  content,
+  handleClose,
+  opened
+}) => {
+  return (
+    <Snackbar
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={opened}
+      onClose={handleClose}
+      key='search notification'
+    >
+      <Alert
+        icon={<ErrorOutlineIcon sx={{ color: theme.palette.primary.contrastText }} />}
+        severity='error'
+        sx={{ background: theme.palette.error.main, color: theme.palette.primary.contrastText }}
+        action={
+          <IconButton size='small' aria-label='close' color='inherit' onClick={handleClose}>
+            <CloseIcon fontSize='small' />
+          </IconButton>
+        }
+      >
+        {content}
+      </Alert>
+    </Snackbar>
+  );
+};
+
 const SearchBar = () => {
   const history = useHistory();
   const [option, setOption] = useState<SearchTypes>('blocks');
-  const [searchInput, setSearchInput] = useState<string>('');
-  const [searchInputError, setSearchInputError] = useState<string>('');
-
-  const [inputPlaceholder, loadingInputPlaceholder] = useMemo<[string, string]>(() => {
-    const [placeholder, loadingPlaceholder] = DefineSearchPlaceholders[option];
-    return [`Search by ${placeholder}`, loadingPlaceholder(searchInput)];
-  }, [option, searchInput]);
-
-  const [opened, { toggleOff, toggleOn }] = useToggle();
-
-  // FIXME this operation is missbehaving in some cases, making additional requests
+  const inputPlaceholder = useMemo<{ empty: string; loading: string }>(() => {
+    const [emptyPlaceholder, loadingPlaceholder] = DefineSearchPlaceholders[option];
+    return { empty: `Search by ${emptyPlaceholder}`, loading: loadingPlaceholder(option) };
+  }, [option]);
   const [query, queryVariables] = useMemo(() => getSearchQuery(option), [option]);
-  const [executeQuery, { loading }] = useLazyQuery<SearchResponse>(query);
 
+  const [alertMessage, setAlertMessage] = useState<string>('');
+  const [opened, { toggleOff, toggleOn }] = useToggle();
   const handleClose = useCallback(() => {
     toggleOff();
-    setSearchInputError('');
+    setAlertMessage('');
   }, [toggleOff]);
 
-  const executeValidation = useCallback(
-    (value: unknown) => {
+  const validator = useCallback(
+    (value: string) => {
       const optionValidator = validators[option];
       if (optionValidator && optionValidator(String(value))) {
         toggleOff();
-        setSearchInputError('');
+        setAlertMessage('');
         return true;
       }
-      const msg = searchInput ? `${option} is not valid` : 'the search is empty';
-      setSearchInputError(msg);
+      const msg = value ? `${option} is not valid` : 'the search is empty';
+      setAlertMessage(msg);
       toggleOn();
       return false;
     },
-    [option, searchInput, toggleOff, toggleOn]
+    [option, toggleOff, toggleOn]
   );
 
   const handleChange = useCallback(({ target: { value } }) => setOption(value), [setOption]);
 
-  const searchInputOnChange = useCallback(
-    ({ target: { value } }) => setSearchInput(value),
-    [setSearchInput]
+  const navigateToPage = useCallback(
+    (searchResultId: string) => {
+      history.push(`/${option}/${searchResultId}`);
+    },
+    [history, option]
   );
-
-  const submitSearch = useCallback(async () => {
-    const isValid = executeValidation(searchInput);
-    if (isValid && searchInput) {
-      const { data } = await executeQuery(queryVariables(searchInput));
-      if (data?.entity?.id) {
-        if (option === 'blocks') {
-          history.push(`/${option}/${data.entity.id}`);
-        } else {
-          console.warn('something should happen');
-        }
-      }
-      setSearchInput('');
-    }
-  }, [executeQuery, executeValidation, history, option, queryVariables, searchInput]);
-
-  if (loading) {
-    return (
-      <Bar component='form'>
-        <SearchInput
-          placeholder={loadingInputPlaceholder}
-          disabled
-          fullWidth
-          disableUnderline
-          startAdornment={
-            <InputAdornment position='start'>
-              <CircularProgress size={20} color='inherit' />
-            </InputAdornment>
-          }
-        />
-      </Bar>
-    );
-  }
 
   return (
     <Bar component='form'>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={opened}
-        onClose={handleClose}
-        key='search notification'
-      >
-        <Alert
-          icon={<ErrorOutlineIcon sx={{ color: theme.palette.primary.contrastText }} />}
-          severity='error'
-          sx={{ background: theme.palette.error.main, color: theme.palette.primary.contrastText }}
-          action={
-            <IconButton size='small' aria-label='close' color='inherit' onClick={handleClose}>
-              <CloseIcon fontSize='small' />
-            </IconButton>
-          }
-        >
-          {searchInputError}
-        </Alert>
-      </Snackbar>
+      <AlertEl opened={opened} content={alertMessage} handleClose={handleClose} />
       <Grid container alignItems='center'>
         <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 } }}>
           <FormControl variant='standard'>
@@ -159,26 +119,13 @@ const SearchBar = () => {
         <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 }, position: 'relative', height: 22 }}>
           <Divider orientation='vertical' sx={dividerSxProps} />
         </Grid>
-        <Grid item xs>
-          <FormControl fullWidth variant='standard'>
-            <SearchInput
-              placeholder={inputPlaceholder}
-              onChange={searchInputOnChange}
-              value={searchInput}
-              disableUnderline
-              startAdornment={
-                <InputAdornment position='start'>
-                  <SearchIcon />
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-        </Grid>
-        <Grid item xs='auto' sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <SearchButton disabled={loading} onClick={submitSearch}>
-            SEARCH
-          </SearchButton>
-        </Grid>
+        <SearchInputGroup
+          document={query}
+          variables={queryVariables}
+          inputPlaceholder={inputPlaceholder}
+          successSearchCallback={navigateToPage}
+          validator={validator}
+        />
       </Grid>
     </Bar>
   );
