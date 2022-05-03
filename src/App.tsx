@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import SiteFooter from './components/Footer';
 import SiteHeader from './components/Header';
+import Accounts from './pages/accounts';
 import Blocks from './pages/blocks';
 import ExtrinsicsRouter from './pages/extrinsics';
 import BlockChain from './pages/index';
@@ -36,7 +37,7 @@ function App() {
             <h1>governance</h1>
           </Route>
           <Route path='/accounts'>
-            <h1>accounts</h1>
+            <Accounts />
           </Route>
           <Route path='/staking'>
             <h1>staking</h1>
