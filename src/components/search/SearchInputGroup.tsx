@@ -66,7 +66,7 @@ export const GenericSearchInput = <T extends object>({
   if (loading) {
     return (
       <SearchInput
-        placeholder={loadingMsg}
+        value={loadingMsg}
         disabled
         disableUnderline
         startAdornment={
