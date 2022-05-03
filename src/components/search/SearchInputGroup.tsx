@@ -10,13 +10,14 @@ interface IProps<T> {
   placeholder: string;
   messageLoader: (v: string) => string;
   variables: (v: string) => OperationVariables;
-  successSearchCallback: (res: T) => void;
-  // errorSearchCallback: () => void;
+  successSearchCallback: (v: string, res: T) => void;
+  errorSearchCallback: (v: string, err: unknown) => void;
   validator: (v: string) => boolean;
 }
 
 export const GenericSearchInput = <T extends object>({
   document,
+  errorSearchCallback,
   messageLoader: messageLoader,
   placeholder,
   successSearchCallback,
@@ -30,15 +31,21 @@ export const GenericSearchInput = <T extends object>({
     if (validator(searchInput)) {
       executeQuery(variables(searchInput))
         .then(({ data, error }) => {
-          // TODO what to do when error?
-          if (!error && data) {
-            successSearchCallback(data);
+          if (error) {
+            errorSearchCallback(searchInput, error);
+          } else if (data) {
+            successSearchCallback(searchInput, data);
             setSearchInput('');
           }
         })
-        .finally(() => {});
+        .catch((err) => {
+          errorSearchCallback(searchInput, err);
+        })
+        .finally(() => {
+          setSearchInput('');
+        });
     }
-  }, [successSearchCallback, executeQuery, searchInput, validator, variables]);
+  }, [validator, searchInput, executeQuery, variables, errorSearchCallback, successSearchCallback]);
 
   const searchInputOnChange = useCallback(
     ({ target: { value } }) => setSearchInput(value),

@@ -24,9 +24,10 @@ const dividerSxProps: SxProps = {
 
 type SearchGroupType = {
   validator: (value: string, optionValidator: (v: string) => boolean) => boolean;
+  toggleAlert: (value: string) => void;
 };
 
-export const SearchBlock: FC<SearchGroupType> = () => {
+export const SearchBlock: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   const history = useHistory();
   return (
     <GenericSearchInput
@@ -34,15 +35,25 @@ export const SearchBlock: FC<SearchGroupType> = () => {
       messageLoader={(value: string) => `Querying Block ID ${value}`}
       document={SEARCH_BLOCKS}
       variables={(v: string) => ({ variables: { blockNumber: Number(v) } })}
-      validator={validators.blocks}
-      successSearchCallback={(data: { block: { number: number; hash: string } }) => {
-        history.push(`/blocks/${data.block.number}`);
+      validator={(v) => {
+        return validator(v, validators.blocks);
+      }}
+      errorSearchCallback={(v: string, err: unknown) => {
+        toggleAlert(`problem searching block with ${v}`);
+        console.error(err);
+      }}
+      successSearchCallback={(v: string, data: { block?: { number: number; hash: string } }) => {
+        if (data.block?.number) {
+          history.push(`/blocks/${data.block.number}`);
+        } else {
+          toggleAlert(`no block found with number ${v}`);
+        }
       }}
     />
   );
 };
 
-export const SearchEvent: FC<SearchGroupType> = () => {
+export const SearchEvent: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   const history = useHistory();
   return (
     <GenericSearchInput
@@ -53,20 +64,37 @@ export const SearchEvent: FC<SearchGroupType> = () => {
         const [blockNumber, eventId] = v.split('-');
         return { variables: { blockNumber: Number(blockNumber), eventId: Number(eventId) } };
       }}
-      validator={validators.events}
-      successSearchCallback={(data: {event: { blockNumber: number; index: number }}) => {
-        history.push(`/events/${data.event.blockNumber}-${data.event.index}`);
+      validator={(v) => {
+        return validator(v, validators.events);
+      }}
+      successSearchCallback={(
+        v: string,
+        data: { event?: { blockNumber: number; index: number } }
+      ) => {
+        if (data.event?.blockNumber && data.event.index) {
+          history.push(`/events/${data.event.blockNumber}-${data.event.index}`);
+        } else {
+          toggleAlert(`no event found with key ${v}`);
+        }
+      }}
+      errorSearchCallback={(v: string, err: unknown) => {
+        toggleAlert(`problem searchging event with key ${v}`);
+        console.error(err);
       }}
     />
   );
 };
 
-const searchInputGroupFactory = (option: SearchTypes, validator: SearchGroupType['validator']) => {
+const searchInputGroupFactory = (
+  option: SearchTypes,
+  validator: SearchGroupType['validator'],
+  callAlert: (value: string) => void
+) => {
   if (option === 'blocks') {
-    return <SearchBlock validator={validator} />;
+    return <SearchBlock validator={validator} toggleAlert={callAlert} />;
   }
   if (option === 'events') {
-    return <SearchEvent validator={validator} />;
+    return <SearchEvent validator={validator} toggleAlert={callAlert} />;
   }
   return <></>;
 };
@@ -104,30 +132,44 @@ const SearchBar = () => {
   const handleChange = useCallback(({ target: { value } }) => setOption(value), [setOption]);
 
   const [alertMessage, setAlertMessage] = useState<string>('');
-  const [opened, { toggleOff, toggleOn }] = useToggle();
+  const [openedAlert, { set: toggleAlert }] = useToggle();
   const handleClose = useCallback(() => {
-    toggleOff();
+    toggleAlert(false);
     setAlertMessage('');
-  }, [toggleOff]);
+  }, [toggleAlert]);
 
-  const input = useMemo(() => {
-    const validator = (value: string, optionValidator: (v: string) => boolean) => {
+  const validator = useCallback(
+    (value: string, optionValidator: (v: string) => boolean) => {
       if (optionValidator(String(value))) {
-        toggleOff();
+        toggleAlert(false);
         setAlertMessage('');
         return true;
       }
       const msg = value ? `${option} is not valid` : 'the search is empty';
       setAlertMessage(msg);
-      toggleOn();
+      toggleAlert(true);
       return false;
-    };
-    return searchInputGroupFactory(option, validator);
-  }, [option, toggleOff, toggleOn]);
+    },
+    [option, toggleAlert]
+  );
+
+  const callAlert = useCallback(
+    (message?: string) => {
+      if (message) {
+        setAlertMessage(message);
+        toggleAlert(true);
+      }
+    },
+    [toggleAlert]
+  );
+
+  const input = useMemo(() => {
+    return searchInputGroupFactory(option, validator, callAlert);
+  }, [callAlert, option, validator]);
 
   return (
     <Bar component='form'>
-      <AlertEl opened={opened} content={alertMessage} handleClose={handleClose} />
+      <AlertEl opened={openedAlert} content={alertMessage} handleClose={handleClose} />
       <Grid container alignItems='center'>
         <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 } }}>
           <FormControl variant='standard'>
