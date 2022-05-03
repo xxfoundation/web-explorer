@@ -52,6 +52,15 @@ export const GenericSearchInput = <T extends object>({
     [setSearchInput]
   );
 
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        submitSearch();
+      }
+    },
+    [submitSearch]
+  );
+
   const loadingMsg = useMemo(() => messageLoader(searchInput), [messageLoader, searchInput]);
 
   if (loading) {
@@ -78,6 +87,7 @@ export const GenericSearchInput = <T extends object>({
             onChange={searchInputOnChange}
             value={searchInput}
             disableUnderline
+            onKeyDown={handleKeyDown}
             startAdornment={
               <InputAdornment position='start'>
                 <SearchIcon />
