@@ -1,5 +1,5 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import { Divider, Stack, Tooltip, Typography } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
 import BN from 'bn.js';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Address } from '../../components/ChainId';
@@ -8,6 +8,7 @@ import genSkeletons from '../../components/genSkeletons';
 import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
+import CustomTooltip from '../../components/Tooltip';
 
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
 
@@ -37,12 +38,10 @@ const headers: BaselineCell[] = [
   { value: 'rank' },
   { value: 'account' },
   { value: 'transactions' },
-  { value: 'role' },
+  { value: 'role', props: { colSpan: 2 } },
   { value: 'locked xx coin' },
   { value: 'balance xx' }
 ];
-
-// council, nominators, validators, technical committee, treasuries
 
 const RolesTooltipContent: FC<{ roles: RolesType[] }> = ({ roles }) => {
   const labels = useMemo(
@@ -59,16 +58,17 @@ const RolesTooltipContent: FC<{ roles: RolesType[] }> = ({ roles }) => {
 
 const rolesToCell = (roles: RolesType[]) => {
   return (
-    <Tooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right-start'>
+    <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
       <Stack
         direction={'row'}
         spacing={1}
         divider={<Divider flexItem variant='middle' orientation='vertical' />}
       >
         <span>{roles[0]}</span>
-        <AccountBoxIcon fontSize='small' />
+        {/* <AccountBoxOutlinedIcon /> */}
+        <AccountBoxIcon />
       </Stack>
-    </Tooltip>
+    </CustomTooltip>
   );
 };
 
@@ -78,7 +78,7 @@ const accountToRow = (item: AccountType): BaselineCell[] => {
     { value: item.rank, props: rankProps },
     { value: <Address value={item.account} link={`/accounts/${item.account}`} truncated /> },
     { value: item.transactions },
-    { value: rolesToCell(item.roles) },
+    { value: rolesToCell(item.roles), props: { colSpan: 2 } },
     { value: <FormatBalance value={item.lockedCoin} /> },
     { value: <FormatBalance value={item.balance} /> }
   ];
