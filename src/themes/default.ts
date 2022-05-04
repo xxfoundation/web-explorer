@@ -65,13 +65,6 @@ export const theme = createTheme({
       letterSpacing: 0.5,
       textTransform: 'uppercase'
     },
-    subheader4: {
-      fontSize: 14,
-      fontWeight: 400,
-      letterSpacing: 0.5,
-      textTransform: 'uppercase',
-      color: palette.grey[400]
-    },
     h5: {
       fontSize: 12,
       fontWeight: 700,
@@ -80,6 +73,13 @@ export const theme = createTheme({
     h6: {
       fontSize: 12,
       fontWeight: 400
+    },
+    subheader4: {
+      fontSize: 14,
+      fontWeight: 400,
+      letterSpacing: 0.5,
+      textTransform: 'uppercase',
+      color: palette.grey[400]
     },
     body1: {
       fontWeight: 500
