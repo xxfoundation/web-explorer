@@ -1,8 +1,8 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Breadcrumbs, styled, Typography } from '@mui/material';
-import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
-import React, { FC } from 'react';
+import { Breadcrumbs, Typography } from '@mui/material';
+import React, { FC, useMemo } from 'react';
 import Tag from '../../components/Tags/Tag';
+import CustomTooltip from '../../components/Tooltip';
 
 type Modules = 'balance';
 type Calls = 'transfers';
@@ -60,24 +60,8 @@ const BalanceCallsDescriptions: Record<Modules, Record<Calls, JSX.Element>> = {
   }
 };
 
-const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
-))({
-  [`& .${tooltipClasses.tooltip}`]: {
-    maxWidth: 360,
-    padding: 30,
-    paddingBottom: '3em',
-    h5: {
-      paddingBottom: '3em',
-      letterSpacing: '1px'
-    },
-    p: {
-      letterSpacing: '1px'
-    }
-  }
-});
-
 const ModuleCalls: FC<{ module: Modules; call: Calls }> = ({ call, module }) => {
+  const title = useMemo(() => BalanceCallsDescriptions[module][call], [call, module]);
   return (
     <>
       <Breadcrumbs separator='/'>
@@ -92,7 +76,7 @@ const ModuleCalls: FC<{ module: Modules; call: Calls }> = ({ call, module }) => 
           </Typography>
         </Tag>
       </Breadcrumbs>
-      <CustomTooltip title={BalanceCallsDescriptions[module][call]}>
+      <CustomTooltip title={title}>
         <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
       </CustomTooltip>
     </>
