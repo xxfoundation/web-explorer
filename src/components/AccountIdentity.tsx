@@ -149,14 +149,14 @@ const AccountIdentityMobile: FC<{ identity: AccountIdentityType }> = ({ identity
 
 const AccountIdentityDesktop: FC<{ identity: AccountIdentityType }> = ({ identity }) => {
   return (
-    <Grid container rowGap={3} sx={{ display: { sx: 'none', sm: 'none', md: 'flex' } }}>
+    <Grid container rowGap={3} sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
       <Grid item md={2}>
         <Avatar src='' alt='avatar placeholder' sx={{ width: 125, height: 125 }} />
       </Grid>
       <Grid item container md={10}>
         <Grid item container md={12} minHeight={'50px'} alignItems={'end'}>
           <Grid item md={8}>
-            {identity.name && (
+            {identity.name ? (
               <>
                 <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
                   {identity.name}
@@ -164,9 +164,21 @@ const AccountIdentityDesktop: FC<{ identity: AccountIdentityType }> = ({ identit
                 <Typography fontSize={'16px'} fontWeight={'400'} component={'p'} marginY={'13px'}>
                   {identity.personalIntroduction}
                 </Typography>
-                <Divider />
               </>
+            ) : (
+              <Typography
+                fontSize={24}
+                fontWeight={700}
+                fontStyle={'italic'}
+                letterSpacing={0.5}
+                width={'100%'}
+                marginY={'13px'}
+                sx={{ opacity: 0.7 }}
+              >
+                no identify
+              </Typography>
             )}
+            <Divider />
           </Grid>
           <Grid item md={1} />
           <Grid item md={3}>
