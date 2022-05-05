@@ -71,7 +71,7 @@ const ContactInfo = () => {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Typography>XX</Typography>
+        <Typography>xxNetwork (XX)</Typography>
       </Grid>
       <Grid item xs={12}>
         <Link target={'_blank'} href='https://xx.network'>
@@ -90,7 +90,7 @@ const ContactInfo = () => {
   );
 };
 
-const NetworkInformation: FC = () => {
+const Summary: FC = () => {
   return (
     <PaperStyled>
       <Grid container>
@@ -108,4 +108,4 @@ const NetworkInformation: FC = () => {
   );
 };
 
-export default NetworkInformation;
+export default Summary;

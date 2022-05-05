@@ -65,7 +65,6 @@ const rolesToCell = (roles: RolesType[]) => {
         divider={<Divider flexItem variant='middle' orientation='vertical' />}
       >
         <span>{roles[0]}</span>
-        {/* <AccountBoxOutlinedIcon /> */}
         <AccountBoxIcon />
       </Stack>
     </CustomTooltip>
@@ -84,7 +83,7 @@ const accountToRow = (item: AccountType): BaselineCell[] => {
   ];
 };
 
-const AccountHolderTable: FC = () => {
+const AccountHolders: FC = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
   const onRowsPerPageChange = useCallback((event) => {
@@ -125,4 +124,4 @@ const AccountHolderTable: FC = () => {
   );
 };
 
-export default AccountHolderTable;
+export default AccountHolders;

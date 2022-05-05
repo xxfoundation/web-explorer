@@ -1,8 +1,8 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import HoldersTable from './HolderTable';
-import NetworkInformation from './NetworkInformation';
+import HoldersTable from './AccountHolders';
 import StakingSupply from './StakingSupply';
+import Summary from './Summary';
 import TotalIssuance from './TotalIssuance';
 
 const LandingPage: FC = () => {
@@ -11,7 +11,7 @@ const LandingPage: FC = () => {
       <Typography variant='h1'>Accounts</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={12}>
-          <NetworkInformation />
+          <Summary />
         </Grid>
         <Grid item xs={12} md={6}>
           <TotalIssuance />
