@@ -29,7 +29,7 @@ export const GenericSearchInput = <T extends object>({
 
   const submitSearch = useCallback(() => {
     if (validator(searchInput)) {
-      executeQuery(variables(searchInput))
+      executeQuery({ variables: variables(searchInput) })
         .then(({ data, error }) => {
           if (error) {
             errorSearchCallback(searchInput, error);

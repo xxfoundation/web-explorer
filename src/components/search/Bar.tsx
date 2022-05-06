@@ -5,8 +5,8 @@ import { Alert, Divider, FormControl, Grid, IconButton, Snackbar, SxProps } from
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useToggle } from '../../hooks';
+import { FindAccountByAddressType, FIND_ACCOUNT_BY_ADDRESS } from '../../schemas/accounts.schema';
 import { SEARCH_BLOCKS } from '../../schemas/blocks.schema';
-import { SEARCH_EVENTS } from '../../schemas/events.schema';
 import { FindExtrinsicByHashType, FIND_EXTRINSIC_BY_HASH } from '../../schemas/extrinsics.schema';
 import { theme } from '../../themes/tags';
 import { Bar, SelectItem, SelectOption } from './Bar.styles';
@@ -35,7 +35,7 @@ const SearchBlocks: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
       placeholder='Search by Block'
       messageLoader={(value: string) => `Querying Block ID ${value}`}
       document={SEARCH_BLOCKS}
-      variables={(v: string) => ({ variables: { blockNumber: Number(v) } })}
+      variables={(v: string) => ({ blockNumber: Number(v) })}
       validator={(v) => validator(v, validators.blocks)}
       errorSearchCallback={(v: string, err: unknown) => {
         toggleAlert(`problem searching block with ${v}`);
@@ -52,36 +52,6 @@ const SearchBlocks: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   );
 };
 
-const SearchEvents: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
-  const history = useHistory();
-  return (
-    <GenericSearchInput
-      messageLoader={(value: string) => `Querying Event ID ${value}`}
-      placeholder='Search by Event'
-      document={SEARCH_EVENTS}
-      variables={(v: string) => {
-        const [blockNumber, eventId] = v.split('-');
-        return { variables: { blockNumber: Number(blockNumber), eventId: Number(eventId) } };
-      }}
-      validator={(v) => validator(v, validators.events)}
-      successSearchCallback={(
-        v: string,
-        data: { event?: { blockNumber: number; index: number } }
-      ) => {
-        if (data.event?.blockNumber && data.event.index) {
-          history.push(`/events/${data.event.blockNumber}-${data.event.index}`);
-        } else {
-          toggleAlert(`no event found with key ${v}`);
-        }
-      }}
-      errorSearchCallback={(v: string, err: unknown) => {
-        toggleAlert(`problem searching event with key ${v}`);
-        console.error(err);
-      }}
-    />
-  );
-};
-
 const SearchExtrinsics: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   const history = useHistory();
   return (
@@ -90,18 +60,16 @@ const SearchExtrinsics: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
       placeholder='Search by extrinsics'
       document={FIND_EXTRINSIC_BY_HASH}
       variables={(v: string) => ({
-        variables: {
-          where: {
-            extrinsic_hash: {
-              _eq: v
-            }
+        where: {
+          extrinsic_hash: {
+            _eq: v
           }
         }
       })}
-      validator={(v) => validator(v, validators.events)}
+      validator={(v) => validator(v, validators.extrinsics)}
       successSearchCallback={(v: string, data: FindExtrinsicByHashType) => {
-        if (data.extrinsic?.hash) {
-          history.push(`/extrinsics/${data.extrinsic.hash}`);
+        if (data.extrinsic?.at(0)?.hash) {
+          history.push(`/extrinsics/${data.extrinsic[0].hash}`);
         } else {
           toggleAlert(`no extrinsic found for hash ${v}`);
         }
@@ -114,19 +82,46 @@ const SearchExtrinsics: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   );
 };
 
-const searchInputGroupFactory = (
-  option: SearchTypes,
-  validator: SearchGroupType['validator'],
-  toggleAlert: SearchGroupType['toggleAlert']
-) => {
+const SearchAccount: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
+  const history = useHistory();
+  return (
+    <GenericSearchInput
+      messageLoader={(value: string) => `Querying address ${value}`}
+      placeholder='Search by accounts'
+      document={FIND_ACCOUNT_BY_ADDRESS}
+      variables={(v: string) => ({
+        where: {
+          address: {
+            _eq: v
+          }
+        }
+      })}
+      validator={(v) => validator(v, validators.accounts)}
+      successSearchCallback={(v: string, data: FindAccountByAddressType) => {
+        if (data.accounts?.at(0)?.address) {
+          history.push(`/acccounts/${data.accounts[0].address}`);
+        } else {
+          console.warn(JSON.stringify(data.accounts));
+          toggleAlert(`no account found for the address ${v}`);
+        }
+      }}
+      errorSearchCallback={(v: string, err: unknown) => {
+        toggleAlert(`problem searching account with address ${v}`);
+        console.error(err);
+      }}
+    />
+  );
+};
+
+const searchInputGroupFactory = (option: SearchTypes, searchOptions: SearchGroupType) => {
   if (option === 'blocks') {
-    return <SearchBlocks validator={validator} toggleAlert={toggleAlert} />;
+    return <SearchBlocks {...searchOptions} />;
   }
   if (option === 'extrinsics') {
-    return <SearchExtrinsics validator={validator} toggleAlert={toggleAlert} />;
+    return <SearchExtrinsics {...searchOptions} />;
   }
-  if (option === 'events') {
-    return <SearchEvents validator={validator} toggleAlert={toggleAlert} />;
+  if (option === 'accounts') {
+    return <SearchAccount {...searchOptions} />;
   }
   return <></>;
 };
@@ -161,10 +156,11 @@ const AlertEl: FC<{ opened: boolean; content: string; handleClose: () => void }>
 
 const SearchBar = () => {
   const [option, setOption] = useState<SearchTypes>('blocks');
-  const handleChange = useCallback(({ target: { value } }) => setOption(value), [setOption]);
-
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [openedAlert, { set: toggleAlert }] = useToggle();
+
+  const handleChange = useCallback(({ target: { value } }) => setOption(value), [setOption]);
+
   const handleClose = useCallback(() => {
     toggleAlert(false);
     setAlertMessage('');
@@ -196,7 +192,7 @@ const SearchBar = () => {
   );
 
   const input = useMemo(() => {
-    return searchInputGroupFactory(option, validator, callAlert);
+    return searchInputGroupFactory(option, { validator, toggleAlert: callAlert });
   }, [callAlert, option, validator]);
 
   return (
@@ -213,9 +209,8 @@ const SearchBar = () => {
               IconComponent={KeyboardArrowDownIcon}
             >
               <SelectItem value={'blocks'}>Block </SelectItem>
-              <SelectItem value={'events'}>Event</SelectItem>
               <SelectItem value={'extrinsics'}>Extrinsic</SelectItem>
-              {/* <SelectItem value={'account'}>Account</SelectItem> TODO missing table and structure to do this*/}
+              <SelectItem value={'accounts'}>Account</SelectItem>
             </SelectOption>
           </FormControl>
         </Grid>

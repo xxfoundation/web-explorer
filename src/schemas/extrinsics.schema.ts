@@ -1,11 +1,13 @@
 import { gql } from '@apollo/client';
 
 export type FindExtrinsicByHashType = {
-  extrinsic?: {
-    blockNumber: number;
-    index: number;
-    hash: string;
-  };
+  extrinsic?: [
+    {
+      blockNumber: number;
+      index: number;
+      hash: string;
+    }
+  ];
 };
 
 export const FIND_EXTRINSIC_BY_HASH = gql`
