@@ -68,8 +68,8 @@ const SearchExtrinsics: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
       })}
       validator={(v) => validator(v, validators.extrinsics)}
       successSearchCallback={(v: string, data: FindExtrinsicByHashType) => {
-        if (data.extrinsic?.at(0)?.hash) {
-          history.push(`/extrinsics/${data.extrinsic[0].hash}`);
+        if (data.extrinsic?.at(0)?.index) {
+          history.push(`/extrinsics/${data.extrinsic[0].index}`);
         } else {
           toggleAlert(`no extrinsic found for hash ${v}`);
         }
