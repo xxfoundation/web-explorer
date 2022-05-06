@@ -72,7 +72,7 @@ const ContactIcons: FC<{ identity: AccountIdentityType }> = ({ identity }) => {
     <>
       {(identity.twitter || identity.email) && (
         <Grid item>
-          <Stack direction={'row'} spacing={2} marginY={'13px'}>
+          <Stack direction={'row'} spacing={2} marginY={'23px'}>
             {identity.twitter && (
               <CustomIconButton href={`https://twitter.com/${identity.twitter}`}>
                 <TwitterIcon fontSize='small' />
@@ -147,63 +147,72 @@ const AccountIdentityMobile: FC<{ identity: AccountIdentityType }> = ({ identity
   );
 };
 
+const PaddedGridItem: FC<{ md: number }> = ({ children, md }) => {
+  return (
+    <Grid item md={md} sx={{ padding: '0 20px' }}>
+      {children}
+    </Grid>
+  );
+};
+
 const AccountIdentityDesktop: FC<{ identity: AccountIdentityType }> = ({ identity }) => {
   return (
-    <Grid container rowGap={3} sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
-      <Grid item md={2}>
-        <Avatar src='' alt='avatar placeholder' sx={{ width: 125, height: 125 }} />
-      </Grid>
-      <Grid item container md={10}>
-        <Grid item container md={12} minHeight={'50px'} alignItems={'end'}>
-          <Grid item md={8}>
-            {identity.name ? (
-              <>
-                <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-                  {identity.name}
-                </Typography>
-                <Typography fontSize={'16px'} fontWeight={'400'} component={'p'} marginY={'13px'}>
-                  {identity.personalIntroduction}
-                </Typography>
-              </>
-            ) : (
-              <Typography
-                fontSize={24}
-                fontWeight={700}
-                fontStyle={'italic'}
-                letterSpacing={0.5}
-                width={'100%'}
-                marginY={'13px'}
-                sx={{ opacity: 0.7 }}
-              >
-                no identify
+    <Grid container md={12} sx={{ display: { xs: 'none', sm: 'none', md: 'inherit' } }}>
+      <Grid item container md={12} minHeight={'50px'} alignItems={'end'}>
+        <Grid item md={2}>
+          <Avatar
+            src=''
+            alt='avatar placeholder'
+            sx={{ width: 125, height: 125, margin: '0 auto' }}
+          />
+        </Grid>
+        <PaddedGridItem md={8}>
+          {identity.name ? (
+            <>
+              <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
+                {identity.name}
               </Typography>
-            )}
-            <Divider />
-          </Grid>
-          <Grid item md={1} />
-          <Grid item md={3}>
-            <ContactIcons identity={identity} />
-            {(identity.twitter || identity.email) && <Divider />}
-          </Grid>
-        </Grid>
-        <Grid item container md={12}>
-          <Grid item md={8}>
-            <TextWithLabel label='stash' text={identity.stash} />
-          </Grid>
-          <Grid item md={1} />
-          <Grid item md={3}>
-            {identity.riotID && <TextWithLabel label='riot' text={identity.riotID} />}
-          </Grid>
-        </Grid>
-        <Grid item container md={12}>
-          <Grid item md={8}>
-            <TextWithLabel label='controller' text={identity.controller} />
-          </Grid>
-          <Grid item md={1} />
-          <Grid item md={3}>
-            {identity.website && <TextWithLabel label='web' text={identity.website} />}
-          </Grid>
-        </Grid>
+              <Typography fontSize={'16px'} fontWeight={'400'} component={'p'} marginY={'23px'}>
+                {identity.personalIntroduction}
+              </Typography>
+            </>
+          ) : (
+            <Typography
+              fontSize={24}
+              fontWeight={700}
+              fontStyle={'italic'}
+              letterSpacing={0.5}
+              width={'100%'}
+              marginY={'23px'}
+              sx={{ opacity: 0.7 }}
+            >
+              no identify
+            </Typography>
+          )}
+          <Divider />
+        </PaddedGridItem>
+        <PaddedGridItem md={2}>
+          <ContactIcons identity={identity} />
+          {(identity.twitter || identity.email) && <Divider />}
+        </PaddedGridItem>
+      </Grid>
+      <Grid item container md={12}>
+        <PaddedGridItem md={2} />
+        <PaddedGridItem md={8}>
+          <TextWithLabel label='stash' text={identity.stash} />
+        </PaddedGridItem>
+        <PaddedGridItem md={2}>
+          {identity.riotID && <TextWithLabel label='riot' text={identity.riotID} />}
+        </PaddedGridItem>
+      </Grid>
+      <Grid item container md={12}>
+        <PaddedGridItem md={2} />
+        <PaddedGridItem md={8}>
+          <TextWithLabel label='controller' text={identity.controller} />
+        </PaddedGridItem>
+        <PaddedGridItem md={2}>
+          {identity.website && <TextWithLabel label='web' text={identity.website} />}
+        </PaddedGridItem>
       </Grid>
     </Grid>
   );
