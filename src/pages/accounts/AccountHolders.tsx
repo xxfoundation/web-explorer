@@ -1,6 +1,5 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Divider, Stack, Typography } from '@mui/material';
-import BN from 'bn.js';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
@@ -9,19 +8,10 @@ import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import CustomTooltip from '../../components/Tooltip';
+import AccountHoldersFilters from './AccountHoldersFilters';
+import { AccountType, RolesType } from './types';
 
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
-
-type RolesType = 'council' | 'nominators' | 'validators' | 'technical committe' | 'treasuries';
-
-type AccountType = {
-  rank: number;
-  transactions: number;
-  roles: RolesType[];
-  lockedCoin: string | BN;
-  balance: string | BN;
-  account: string;
-};
 
 const sampleData: AccountType[] = genSkeletons(23).map((_, index) => {
   return {
@@ -38,7 +28,7 @@ const headers: BaselineCell[] = [
   { value: 'rank' },
   { value: 'account' },
   { value: 'transactions' },
-  { value: 'role', props: { colSpan: 2 } },
+  { value: <AccountHoldersFilters text='role' />, props: { colSpan: 2 } },
   { value: 'locked xx coin' },
   { value: 'balance xx' }
 ];
