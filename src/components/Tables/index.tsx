@@ -7,7 +7,7 @@ import {
   TableProps,
   TableRow
 } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { TableContainer } from './TableContainer';
 
 export type BaselineCell = {
@@ -22,36 +22,38 @@ export const BaselineTable: FC<{
   footer?: JSX.Element;
   tableProps?: TableProps;
 }> = ({ headers, rows, footer, tableProps = {} }) => {
+  const memoistHeaders = useMemo(() => {
+    return headers.map(({ key, props, value }, index) => {
+      return (
+        <TableCell {...props} key={key || index}>
+          {value}
+        </TableCell>
+      );
+    });
+  }, [headers]);
+  const memoistRows = useMemo(() => {
+    return rows.map((row, index) => {
+      return (
+        <TableRow key={index}>
+          {row.map(({ key, props, value }, cellIndex) => {
+            return (
+              <TableCell {...props} key={key || cellIndex}>
+                {value}
+              </TableCell>
+            );
+          })}
+        </TableRow>
+      );
+    });
+  }, [rows]);
   return (
     <>
       <TableContainer>
         <Table {...tableProps}>
           <TableHead>
-            <TableRow>
-              {headers.map(({ key, props, value }, index) => {
-                return (
-                  <TableCell {...props} key={key || index}>
-                    {value}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
+            <TableRow>{memoistHeaders}</TableRow>
           </TableHead>
-          <TableBody>
-            {rows.map((row, index) => {
-              return (
-                <TableRow key={index}>
-                  {row.map(({ key, props, value }, cellIndex) => {
-                    return (
-                      <TableCell {...props} key={key || cellIndex}>
-                        {value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
+          <TableBody>{memoistRows}</TableBody>
         </Table>
         {footer}
       </TableContainer>

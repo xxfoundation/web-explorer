@@ -1,12 +1,12 @@
 import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
 import AverageAnnualReturn from '../../components/blockchain/charts/AverageAnnualReturnLineChart';
-import LatestBlocks from '../../components/blockchain/LatestBlocksTable';
 import NewAccounts from '../../components/blockchain/charts/NewAccountsLineChart';
 import StakingRatio from '../../components/blockchain/charts/StakingRatioLineChart';
 import StakingSupplyChart from '../../components/blockchain/charts/StakingSupplyPieChart';
-import TotalIssuance from '../../components/blockchain/charts/TotalIssuanceLineChart';
+import TotalIssuance from '../../components/blockchain/charts/TotalIssuancePieChart';
 import TransactionsChart from '../../components/blockchain/charts/TransactionsLineChart';
+import LatestBlocks from '../../components/blockchain/LatestBlocksTable';
 import Transfers from '../../components/blockchain/TransfersTable';
 
 const TokenStatus = () => {

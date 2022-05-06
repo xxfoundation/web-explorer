@@ -5,7 +5,6 @@ import GovernanceMenu from './Governance';
 import { MenuButton } from './menu.styles';
 
 export default function DesktopNav() {
-
   return (
     <Box sx={{ mt: -2.75 }}>
       <Grid container spacing={2}>
@@ -13,14 +12,18 @@ export default function DesktopNav() {
           <BlockchainMenu />
         </Grid>
         <Grid item xs>
-          <MenuButton id='staking-button' href='/staking'>Staking</MenuButton>
+          <MenuButton id='staking-button' href='/staking'>
+            Staking
+          </MenuButton>
         </Grid>
 
         <Grid item xs>
           <GovernanceMenu />
         </Grid>
         <Grid item xs>
-          <MenuButton id='accounts-button' href='/account'>Accounts</MenuButton>
+          <MenuButton id='accounts-button' href='/accounts'>
+            Accounts
+          </MenuButton>
         </Grid>
       </Grid>
     </Box>
