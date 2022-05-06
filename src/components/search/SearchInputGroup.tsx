@@ -69,6 +69,8 @@ export const GenericSearchInput = <T extends object>({
         value={loadingMsg}
         disabled
         disableUnderline
+        fullWidth
+        sx={{maxWidth: '80%'}}
         startAdornment={
           <InputAdornment position='start'>
             <CircularProgress size={20} color='inherit' />
