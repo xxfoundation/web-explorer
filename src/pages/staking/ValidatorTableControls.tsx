@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Stack, styled, Typography } from '@mui/material';
 import React, { FC, useCallback }  from 'react';
 
 export type ValidatorFilter = 'waiting' | 'current';
@@ -12,13 +12,22 @@ type Props= {
   selected: ValidatorFilter;
 }
 
+const StyledButton = styled(Button)(({ theme }) => ({
+  borderRadius: 0,
+  ':hover, &.active': {
+    borderColor: theme.palette.primary.main,
+    borderBottom: '1px solid'
+  }
+}));
+
 const ValidatorTableControls: FC<Props> = ({ labels, onSelect, selected }) => {
   const select = useCallback((fitler: ValidatorFilter) => () => onSelect(fitler), [onSelect]);
-  
+
   return (
     <Stack direction='row'>
       {filters.map((option) => (
-        <Button
+        <StyledButton
+          className={selected === option ? 'active' : ''}
           key={option}
           variant='text'
           color={selected === option ? 'primary' : 'inherit'}
@@ -27,7 +36,7 @@ const ValidatorTableControls: FC<Props> = ({ labels, onSelect, selected }) => {
           <Typography variant={'subheader4'} sx={{ fontSize: 14, letterSpacing: 1.5 }} color={selected === option ? 'primary' : 'inherit'}>
             {labels[option]}
           </Typography>
-        </Button>
+        </StyledButton>
       ))}
     </Stack>
   );

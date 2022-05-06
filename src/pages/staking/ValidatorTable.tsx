@@ -105,7 +105,7 @@ const ValidatorsTable = () => {
         <ValidatorTableControls labels={labels} selected={filter} onSelect={setFilter} />
       </Stack>
       <TableContainer>
-        <Table sx={{ 'th:last-child, td:last-child': { maxWidth: '6px', } }}>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>Rank</TableCell>

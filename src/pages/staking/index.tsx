@@ -1,6 +1,6 @@
 import React from 'react';
 import {  Container,  Stack, Typography } from '@mui/material';
-import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StakingMetrics from './StakingMetrics';
 import ValidatorTable from './ValidatorTable';
@@ -11,12 +11,12 @@ const Staking: React.FC = () => {
       <Breadcrumb />
       <Typography variant='h1' sx={{ pb: 5}}>Staking</Typography>
       <Stack spacing={3}>
-        <PaperWrapStyled>
+        <PaperWrap>
           <StakingMetrics />
-        </PaperWrapStyled>
-        <PaperWrapStyled>
+        </PaperWrap>
+        <PaperWrap>
           <ValidatorTable />
-        </PaperWrapStyled>
+        </PaperWrap>
       </Stack>
     </Container>
   )
