@@ -1,1 +1,1 @@
-export type SearchTypes = 'blocks' | 'extrinsics' | 'accounts';
+export type SearchTypes = 'blocks' | 'extrinsic' | 'accounts';

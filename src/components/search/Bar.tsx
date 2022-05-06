@@ -33,7 +33,7 @@ const SearchBlocks: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   return (
     <GenericSearchInput
       placeholder='Search by Block'
-      messageLoader={(value: string) => `Querying Block ID ${value}`}
+      messageLoader={(value: string) => `Querying Block Number ${value}`}
       document={GET_BLOCK_BY_PK}
       variables={(v: string) => ({ blockNumber: Number(v) })}
       validator={(v) => validator(v, validators.blocks)}
@@ -56,7 +56,7 @@ const SearchExtrinsics: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   const history = useHistory();
   return (
     <GenericSearchInput
-      messageLoader={(value: string) => `Querying Extrinsic ID ${value}`}
+      messageLoader={(value: string) => `Querying Extrinsic ${value}`}
       placeholder='Search by extrinsics'
       document={FIND_EXTRINSIC_BY_HASH}
       variables={(v: string) => ({
@@ -66,7 +66,7 @@ const SearchExtrinsics: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
           }
         }
       })}
-      validator={(v) => validator(v, validators.extrinsics)}
+      validator={(v) => validator(v, validators.extrinsic)}
       successSearchCallback={(v: string, data: FindExtrinsicByHashType) => {
         if (data.extrinsic?.at(0)?.index) {
           history.push(`/extrinsics/${data.extrinsic[0].index}`);
@@ -86,8 +86,8 @@ const SearchAccount: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   const history = useHistory();
   return (
     <GenericSearchInput
-      messageLoader={(value: string) => `Querying address ${value}`}
-      placeholder='Search by accounts'
+      messageLoader={(value: string) => `Querying address with: ${value}`}
+      placeholder='Search by account address'
       document={FIND_ACCOUNT_BY_ADDRESS}
       variables={(v: string) => ({
         where: {
@@ -117,7 +117,7 @@ const searchInputGroupFactory = (option: SearchTypes, searchOptions: SearchGroup
   if (option === 'blocks') {
     return <SearchBlocks {...searchOptions} />;
   }
-  if (option === 'extrinsics') {
+  if (option === 'extrinsic') {
     return <SearchExtrinsics {...searchOptions} />;
   }
   if (option === 'accounts') {
@@ -166,6 +166,7 @@ const SearchBar = () => {
     setAlertMessage('');
   }, [toggleAlert]);
 
+  // TODO replace this if a library for notifications
   const validator = useCallback(
     (value: string, optionValidator: (v: string) => boolean) => {
       if (optionValidator(String(value))) {
@@ -196,7 +197,7 @@ const SearchBar = () => {
   }, [callAlert, option, validator]);
 
   return (
-    <Bar component='form'>
+    <Bar component={'form'}>
       <AlertEl opened={openedAlert} content={alertMessage} handleClose={handleClose} />
       <Grid container alignItems='center'>
         <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 } }}>
@@ -209,7 +210,7 @@ const SearchBar = () => {
               IconComponent={KeyboardArrowDownIcon}
             >
               <SelectItem value={'blocks'}>Block </SelectItem>
-              <SelectItem value={'extrinsics'}>Extrinsic</SelectItem>
+              <SelectItem value={'extrinsic'}>Extrinsic</SelectItem>
               <SelectItem value={'accounts'}>Account</SelectItem>
             </SelectOption>
           </FormControl>
