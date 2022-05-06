@@ -47,14 +47,7 @@ const LIST_BLOCK = gql`
 
 const GET_BLOCK_BY_PK = gql`
   ${BLOCK_KEYS_FRAGMENT}
-  query GetBlockByPKAndAdjacents(
-    $blockNumber: bigint!
-    $prevBlockNumber: bigint!
-    $nextBlockNumber: bigint!
-  ) {
-    prev: blockchain_blocks_by_pk(block_number: $prevBlockNumber) {
-      ...blocks
-    }
+  query GetBlockByPK($blockNumber: bigint!) {
     block: blockchain_blocks_by_pk(block_number: $blockNumber) {
       ...blocks
       numberFinalized: block_number_finalized
@@ -69,19 +62,7 @@ const GET_BLOCK_BY_PK = gql`
       totalEvents: total_events
       numTransfers: num_transfers
     }
-    next: blockchain_blocks_by_pk(block_number: $nextBlockNumber) {
-      ...blocks
-    }
   }
 `;
 
-const SEARCH_BLOCKS = gql`
-  ${BLOCK_KEYS_FRAGMENT}
-  query GetBlockByPK($blockNumber: bigint!) {
-    block: blockchain_blocks_by_pk(block_number: $blockNumber) {
-      ...blocks
-    }
-  }
-`;
-
-export { LISTEN_FOR_BLOCKS_ORDERED, LIST_BLOCK, GET_BLOCK_BY_PK, SEARCH_BLOCKS };
+export { LISTEN_FOR_BLOCKS_ORDERED, LIST_BLOCK, GET_BLOCK_BY_PK };

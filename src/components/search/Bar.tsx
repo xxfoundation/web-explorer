@@ -6,7 +6,7 @@ import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useToggle } from '../../hooks';
 import { FindAccountByAddressType, FIND_ACCOUNT_BY_ADDRESS } from '../../schemas/accounts.schema';
-import { SEARCH_BLOCKS } from '../../schemas/blocks.schema';
+import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import { FindExtrinsicByHashType, FIND_EXTRINSIC_BY_HASH } from '../../schemas/extrinsics.schema';
 import { theme } from '../../themes/tags';
 import { Bar, SelectItem, SelectOption } from './Bar.styles';
@@ -34,7 +34,7 @@ const SearchBlocks: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
     <GenericSearchInput
       placeholder='Search by Block'
       messageLoader={(value: string) => `Querying Block ID ${value}`}
-      document={SEARCH_BLOCKS}
+      document={GET_BLOCK_BY_PK}
       variables={(v: string) => ({ blockNumber: Number(v) })}
       validator={(v) => validator(v, validators.blocks)}
       errorSearchCallback={(v: string, err: unknown) => {
