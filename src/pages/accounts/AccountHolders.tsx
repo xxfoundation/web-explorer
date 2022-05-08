@@ -1,6 +1,6 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Divider, Stack, Typography } from '@mui/material';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import genSkeletons from '../../components/genSkeletons';
@@ -8,7 +8,7 @@ import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import CustomTooltip from '../../components/Tooltip';
-import AccountHoldersFilters from './AccountHoldersFilters';
+import HoldersRolesFilters from './HoldersRolesFilters';
 import { AccountType, RolesType } from './types';
 
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
@@ -23,15 +23,6 @@ const sampleData: AccountType[] = genSkeletons(23).map((_, index) => {
     account: sampleAddress
   };
 });
-
-const headers: BaselineCell[] = [
-  { value: 'rank' },
-  { value: 'account' },
-  { value: 'transactions' },
-  { value: <AccountHoldersFilters text='role' />, props: { colSpan: 2 } },
-  { value: 'locked xx coin' },
-  { value: 'balance xx' }
-];
 
 const RolesTooltipContent: FC<{ roles: RolesType[] }> = ({ roles }) => {
   const labels = useMemo(
@@ -74,6 +65,17 @@ const accountToRow = (item: AccountType): BaselineCell[] => {
 };
 
 const AccountHolders: FC = () => {
+  const [sortVariables, setSortVariables] = useState({
+    council: false,
+    nominators: false,
+    validators: false,
+    'technical committe': false,
+    treasuries: false
+  });
+  useEffect(() => {
+    // TODO testing
+    console.warn(`filter variables ${JSON.stringify(sortVariables)}`);
+  }, [sortVariables]);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
   const onRowsPerPageChange = useCallback((event) => {
@@ -83,6 +85,20 @@ const AccountHolders: FC = () => {
   const onChangePage = useCallback((_: unknown, number: number) => {
     setPage(number);
   }, []);
+  const headers: BaselineCell[] = useMemo(
+    () => [
+      { value: 'rank' },
+      { value: 'account' },
+      { value: 'transactions' },
+      {
+        value: <HoldersRolesFilters callback={setSortVariables}>role</HoldersRolesFilters>,
+        props: { colSpan: 2 }
+      },
+      { value: 'locked xx coin' },
+      { value: 'balance xx' }
+    ],
+    [setSortVariables]
+  );
   const rows = useMemo(
     () =>
       (rowsPerPage > 0

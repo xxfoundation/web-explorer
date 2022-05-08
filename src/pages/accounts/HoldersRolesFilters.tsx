@@ -1,14 +1,14 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Button, Checkbox, FormControlLabel, FormGroup, Popover, Stack } from '@mui/material';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useToggle } from '../../hooks';
 import { theme } from '../../themes/default';
 import { RolesType } from './types';
 
-type FilterOptionsType = 'all' & RolesType;
+type RoleFiltersType = RolesType | 'all';
 
-const filtersDefaultState = () => ({
-  all: false,
+export const filtersDefaultState = (): Record<RolesType, boolean> => ({
   council: false,
   nominators: false,
   validators: false,
@@ -16,12 +16,14 @@ const filtersDefaultState = () => ({
   treasuries: false
 });
 
-const AccountHoldersFilters: FC<{ text: string }> = ({ text }) => {
+const AccountHoldersFilters: FC<{
+  callback: Dispatch<SetStateAction<Record<RolesType, boolean>>>;
+}> = ({ callback, children }) => {
   const [open, { set: toggle }] = useToggle();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const [filtersState, setFilters] = useState<Record<FilterOptionsType, boolean>>(
-    useCallback(() => filtersDefaultState(), [])
+  const [filtersState, setFilters] = useState<Record<RoleFiltersType, boolean>>(
+    useCallback(() => ({ all: false, ...filtersDefaultState() }), [])
   );
 
   const onClick = useCallback(
@@ -38,7 +40,7 @@ const AccountHoldersFilters: FC<{ text: string }> = ({ text }) => {
   }, [toggle, setAnchorEl]);
 
   const onCheckBoxChange = useCallback(
-    (name: FilterOptionsType, checked: boolean) => {
+    (name: string, checked: boolean) => {
       setFilters((prev) => {
         return { ...prev, [name]: checked };
       });
@@ -53,10 +55,9 @@ const AccountHoldersFilters: FC<{ text: string }> = ({ text }) => {
           key={label}
           control={
             <Checkbox
+              disabled={label === 'all' ? false : filtersState.all}
               checked={value as boolean}
-              onChange={({ target: { checked } }) =>
-                onCheckBoxChange(label as FilterOptionsType, checked)
-              }
+              onChange={({ target: { checked } }) => onCheckBoxChange(label, checked)}
             />
           }
           label={label}
@@ -66,24 +67,54 @@ const AccountHoldersFilters: FC<{ text: string }> = ({ text }) => {
   }, [filtersState, onCheckBoxChange]);
 
   const cleanFilters = useCallback(() => {
-    setFilters(filtersDefaultState());
-  }, [setFilters]);
+    setFilters(() => {
+      const defaultState = filtersDefaultState();
+      callback(defaultState);
+      return { all: false, ...defaultState };
+    });
+  }, [callback]);
+
+  const applyOnClick = useCallback(() => {
+    const { all, ...queryFilters } = filtersState;
+    callback(
+      all
+        ? {
+            'technical committe': true,
+            council: true,
+            nominators: true,
+            treasuries: true,
+            validators: true
+          }
+        : queryFilters
+    );
+    handleClose();
+  }, [callback, filtersState, handleClose]);
+
+  const endIcon = useMemo(
+    () => (open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />),
+    [open]
+  );
 
   return (
     <>
-      <Button color={'inherit'} endIcon={<KeyboardArrowDownIcon />} onClick={onClick}>
-        {text}
+      <Button color={'inherit'} endIcon={endIcon} onClick={onClick}>
+        {children}
       </Button>
       <Popover
         id='account-holders-table-filters'
         open={open}
         anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         onClose={handleClose}
       >
         <FormGroup sx={{ padding: '30px' }}>
           <Stack direction={'column'}>{filters}</Stack>
           <Stack direction={'row'} justifyContent={'space-evenly'}>
-            <Button variant='contained' sx={{ borderRadius: '45px', textTransform: 'uppercase' }}>
+            <Button
+              variant='contained'
+              sx={{ borderRadius: '45px', textTransform: 'uppercase' }}
+              onClick={applyOnClick}
+            >
               apply
             </Button>
             <Button
