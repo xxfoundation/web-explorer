@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client';
+import { OperationVariables, QueryResult, useQuery } from '@apollo/client';
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { BlockNav } from '../../components/block/Block.styled';
 import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
@@ -12,12 +12,29 @@ import Link from '../../components/Link';
 import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import NotFound from '../NotFound';
 
+const useArrowButtonsOptions = (number: number) => {
+  const history = useHistory();
+  const variables = useCallback((blockNumber: number) => {
+    return { variables: { blockNumber } };
+  }, []);
+  const buttonProps = useCallback(
+    ({ data, loading }: QueryResult<BlockSummaryType, OperationVariables>) => ({
+      disabled: loading || !data?.block?.number,
+      onClick: () => {
+        history.push(`/blocks/${data?.block?.number}`);
+      }
+    }),
+    [history]
+  );
+  const nextBlockQuery = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, variables(number + 1));
+  const previousBlockQuery = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, variables(number - 1));
+  return { next: buttonProps(nextBlockQuery), previous: buttonProps(previousBlockQuery) };
+};
+
 const BlockSummaryHeader: React.FC<{
   blockNumber: number;
-  nextNumber?: number;
-  prevNumber?: number;
-}> = ({ blockNumber, nextNumber, prevNumber }) => {
-  const history = useHistory();
+}> = ({ blockNumber }) => {
+  const arrowsOptions = useArrowButtonsOptions(blockNumber);
   return (
     <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
       <Typography variant='h1'>Block No. {blockNumber}</Typography>
@@ -26,20 +43,7 @@ const BlockSummaryHeader: React.FC<{
           <Typography variant='h4'>blocks</Typography>
         </Link>
         <Divider orientation='vertical' variant='middle' flexItem />
-        <BackAndForwardArrows
-          back={{
-            disabled: !prevNumber,
-            onClick: () => {
-              history.push(`/blocks/${prevNumber}`);
-            }
-          }}
-          forward={{
-            disabled: !nextNumber,
-            onClick: () => {
-              history.push(`/blocks/${nextNumber}`);
-            }
-          }}
-        />
+        <BackAndForwardArrows back={arrowsOptions.previous} forward={arrowsOptions.next} />
       </BlockNav>
     </Stack>
   );
@@ -47,15 +51,10 @@ const BlockSummaryHeader: React.FC<{
 
 const Block = () => {
   const { number } = useParams<{ number: string }>();
-  const variables = useMemo(() => {
-    const blockNumber = Number(number);
-    return {
-      prevBlockNumber: blockNumber - 1,
-      blockNumber,
-      nextBlockNumber: blockNumber + 1
-    };
-  }, [number]);
-  const { data, loading } = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, { variables });
+  const blockNumber = Number(number);
+  const { data, loading } = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, {
+    variables: { blockNumber }
+  });
 
   if (!loading && !data?.block?.number) {
     return <NotFound />;
@@ -63,15 +62,11 @@ const Block = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <BlockSummaryHeader
-        blockNumber={variables.blockNumber}
-        nextNumber={data?.next?.number}
-        prevNumber={data?.prev?.number}
-      />
+      <BlockSummaryHeader blockNumber={blockNumber} />
       <BlockSummary data={data?.block} loading={loading} />
       <Box sx={{ mt: 2 }}>
         <BlockDetailedEventsTabs
-          blockNumber={variables.blockNumber}
+          blockNumber={blockNumber}
           loading={loading}
           events={data?.block.totalEvents}
           extrinsics={data?.block.numTransfers}

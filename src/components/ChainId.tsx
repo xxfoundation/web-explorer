@@ -1,8 +1,8 @@
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { Avatar, Stack, Tooltip, Typography, TypographyTypeMap } from '@mui/material';
-import { encodeAddress, decodeAddress } from '@polkadot/keyring';
-import { isHex } from '@polkadot/util';
 import React, { FC, useMemo } from 'react';
+import HashValidator from './HashValidator';
+import isValidXXNetworkAddress from './IsValidXXNetworkAddress';
 import Link from './Link';
 
 type IdProperties = {
@@ -31,25 +31,9 @@ const contentRenderer = (
 };
 
 const Hash: FC<IdProperties> = ({ link, truncated, value, variant }) => {
-  const isValid = isHex(value, 256);
+  const isValid = HashValidator(value);
   return contentRenderer(truncated ? shortString(value) : value, isValid, variant, link);
 };
-
-// Check if an address is a valid xx network address
-const isValidXXNetworkAddress = (address: string): boolean => {
-  // Quit early if hex string
-  if (address.startsWith('0x')) {
-    return false
-  }
-  try {
-    // Use ss58 format 55, which is registered for xx network
-    const val = decodeAddress(address, false, 55);
-    const addr = encodeAddress(val, 55);
-    return addr.length === 48;
-  } catch (error) {
-    return false;
-  }
-}
 
 const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = ({
   avatarUrl,
