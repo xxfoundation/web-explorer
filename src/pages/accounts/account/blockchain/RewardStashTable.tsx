@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import FormatBalance from '../../../components/FormatBalance';
-import Link from '../../../components/Link';
-import { BaselineTable } from '../../../components/Tables';
-import TimeAgoComponent from '../../../components/TimeAgo';
+import FormatBalance from '../../../../components/FormatBalance';
+import Link from '../../../../components/Link';
+import { BaselineTable } from '../../../../components/Tables';
+import TimeAgoComponent from '../../../../components/TimeAgo';
 
 type RewardStashType = {
   eventID: string;

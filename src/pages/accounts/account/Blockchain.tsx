@@ -4,9 +4,9 @@ import BlockExtrinsics from '../../../components/block/ExtrinsicsTable';
 import TabsWithPanels, { TabText } from '../../../components/Tabs';
 import TransferTable from '../../transfers/TransfersTable';
 import { Roles } from '../types';
-import AuthoredBlocksTable from './AuthoredBlocksTable';
-import RewardStashTable from './RewardStashTable';
-import RolesTable from './RolesTable';
+import AuthoredBlocksTable from './blockchain/AuthoredBlocksTable';
+import RewardStashTable from './blockchain/RewardStashTable';
+import RolesTable from './blockchain/RolesTable';
 
 const extrinsicTab = {
   label: <TabText message={'Extrinsic'} count={0} />,

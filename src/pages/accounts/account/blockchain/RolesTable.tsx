@@ -2,7 +2,7 @@ import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import ErrorIcon from '@mui/icons-material/ErrorOutline';
 import { Box, Tooltip } from '@mui/material';
 import React, { FC } from 'react';
-import { BaselineTable } from '../../../components/Tables';
+import { BaselineTable } from '../../../../components/Tables';
 
 type RoleType = {
   role: string;
