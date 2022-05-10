@@ -2,6 +2,8 @@ import BN from 'bn.js';
 
 export type Roles = 'council' | 'validator' | 'nominator';
 
+export type HoldersRoles = Roles | 'technical committe' | 'treasuries';
+
 export type BalanceType = {
   transferable: string | BN;
 };

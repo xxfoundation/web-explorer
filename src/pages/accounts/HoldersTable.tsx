@@ -9,15 +9,14 @@ import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import CustomTooltip from '../../components/Tooltip';
+import { HoldersRoles } from './types';
 
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
-
-type RolesType = 'council' | 'nominators' | 'validators' | 'technical committe' | 'treasuries';
 
 type AccountType = {
   rank: number;
   transactions: number;
-  roles: RolesType[];
+  roles: HoldersRoles[];
   lockedCoin: string | BN;
   balance: string | BN;
   account: string;
@@ -27,7 +26,7 @@ const sampleData: AccountType[] = genSkeletons(23).map((_, index) => {
   return {
     rank: index + 1,
     transactions: 123,
-    roles: ['council', 'nominators'],
+    roles: ['council', 'nominator'],
     lockedCoin: '000000',
     balance: '16880000',
     account: sampleAddress
@@ -43,7 +42,7 @@ const headers: BaselineCell[] = [
   { value: 'balance xx' }
 ];
 
-const RolesTooltipContent: FC<{ roles: RolesType[] }> = ({ roles }) => {
+const RolesTooltipContent: FC<{ roles: HoldersRoles[] }> = ({ roles }) => {
   const labels = useMemo(
     () => roles.slice(1).map((role, index) => <span key={index}>{role}</span>),
     [roles]
@@ -56,7 +55,7 @@ const RolesTooltipContent: FC<{ roles: RolesType[] }> = ({ roles }) => {
   );
 };
 
-const rolesToCell = (roles: RolesType[]) => {
+const rolesToCell = (roles: HoldersRoles[]) => {
   return (
     <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
       <Stack
