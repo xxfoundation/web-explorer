@@ -1,7 +1,10 @@
-import { Typography } from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { Box, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import Tag from '../../components/Tags/Tag';
+import TimeAgoComponent from '../../components/TimeAgo';
+import { InfoCardRow, TypographyBody, TypographyHeader } from './InfoCardsTypography';
 
 const AccountExtraInfo: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
   createdDate,
@@ -19,13 +22,23 @@ const AccountExtraInfo: FC<{ createdDate: number; nonce: number; roles: string[]
   }, [roles]);
   return (
     <PaperStyled>
-      {/* <LabelValueWithDivider label={'created'} value={<TimeAgoComponent date={createdDate} />} />
-      <LabelValueWithDivider label={'nonce'} value={nonce} marginY={'14px'} />
-      <Stack direction='row' alignItems={'center'}>
-        <TypographyBodyBold>role</TypographyBodyBold>
-        {rolesTags}
-        <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
-      </Stack> */}
+      <InfoCardRow sx={{ paddingY: '4px' }}>
+        <TypographyHeader sx={{ width: '110px' }}>created</TypographyHeader>
+        <TypographyBody>
+          <TimeAgoComponent date={createdDate} />
+        </TypographyBody>
+      </InfoCardRow>
+      <InfoCardRow sx={{ paddingY: '4px' }}>
+        <TypographyHeader sx={{ width: '110px' }}>nonce</TypographyHeader>
+        <TypographyBody>{nonce}</TypographyBody>
+      </InfoCardRow>
+      <Stack sx={{ paddingY: '4px' }} direction={'row'} spacing={3} alignItems={'center'}>
+        <TypographyHeader sx={{ width: '110px' }}>role</TypographyHeader>
+        <Box display={'flex'} alignItems={'center'}>
+          {rolesTags}
+          <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
+        </Box>
+      </Stack>
     </PaperStyled>
   );
 };

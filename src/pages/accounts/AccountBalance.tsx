@@ -14,7 +14,7 @@ import React, { FC, ReactNode } from 'react';
 import FormatBalance from '../../components/FormatBalance';
 import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import { theme } from '../../themes/default';
-import { CardRow, TypographyBody, TypographyHeader } from './InfoCardsTypography';
+import { InfoCardRow, TypographyBody, TypographyHeader } from './InfoCardsTypography';
 
 type BalanceType = {
   bonded: string | BN;
@@ -141,36 +141,36 @@ const AccountBalance: FC<{
 }> = ({ balance, locked, reserved }) => {
   return (
     <PaperStyled>
-      <CardRow>
+      <InfoCardRow>
         <CustomTooltip title={<BalanceTooltipContent data={balance} />} placement='bottom-start'>
           <Box width='110px'>
-            <CardHeaderButton>
+            <CardHeaderButton size='small'>
               <TypographyHeader>balance</TypographyHeader>
             </CardHeaderButton>
           </Box>
         </CustomTooltip>
         <TypographyBody>{sumBalance(balance)}</TypographyBody>
-      </CardRow>
-      <CardRow>
+      </InfoCardRow>
+      <InfoCardRow>
         <CustomTooltip title={<BalanceTooltipContent data={balance} />} placement='bottom-start'>
           <Box width='110px'>
-            <CardHeaderButton>
+            <CardHeaderButton size='small'>
               <TypographyHeader>reserved</TypographyHeader>
             </CardHeaderButton>
           </Box>
         </CustomTooltip>
         <TypographyBody>{sumBalance(reserved)}</TypographyBody>
-      </CardRow>
-      <CardRow>
+      </InfoCardRow>
+      <InfoCardRow>
         <CustomTooltip title={<BalanceTooltipContent data={balance} />} placement='right-start'>
           <Box width='110px'>
-            <CardHeaderButton>
+            <CardHeaderButton size='small'>
               <TypographyHeader>locked</TypographyHeader>
             </CardHeaderButton>
           </Box>
         </CustomTooltip>
         <TypographyBody>{sumBalance(locked)}</TypographyBody>
-      </CardRow>
+      </InfoCardRow>
     </PaperStyled>
   );
 };

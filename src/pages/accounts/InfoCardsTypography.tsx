@@ -1,4 +1,4 @@
-import { Divider, Stack, styled, Typography } from '@mui/material';
+import { Divider, Stack, StackProps, styled, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../../themes/default';
 
@@ -24,7 +24,7 @@ export const TypographyBody: FC = ({ children }) => {
   );
 };
 
-export const CardRow: FC = ({ children }) => {
+export const InfoCardRow: FC<StackProps> = ({ children, ...props }) => {
   return (
     <Stack
       direction={'row'}
@@ -32,6 +32,7 @@ export const CardRow: FC = ({ children }) => {
       spacing={3}
       marginBottom={'6px'}
       alignItems={'center'}
+      { ...props}
     >
       {children}
     </Stack>
