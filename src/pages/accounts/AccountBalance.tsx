@@ -9,20 +9,12 @@ import {
   TooltipProps,
   Typography
 } from '@mui/material';
-import BN from 'bn.js';
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import FormatBalance from '../../components/FormatBalance';
 import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import { theme } from '../../themes/default';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './InfoCardsTypography';
-
-type BalanceType = {
-  bonded: string | BN;
-  unbonding: string | BN;
-  democracy: string | BN;
-  election: string | BN;
-  vesting: string | BN;
-};
+import { BalanceType, LockedBalanceType } from './types';
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -80,7 +72,20 @@ const TooltipLineBody = styled(Typography)(({}) => ({
   letterSpacing: '1px'
 }));
 
-const BalanceTooltipContent: FC<{ data: BalanceType; footer?: ReactNode }> = ({ data }) => {
+const BalanceTooltipContent: FC<{ data: BalanceType }> = ({ data }) => {
+  return (
+    <TooltipBody>
+      <TooltipStack>
+        <TooltipLineHeader>transferable</TooltipLineHeader>
+        <TooltipLineBody>
+          <FormatBalance value={data.transferable} />
+        </TooltipLineBody>
+      </TooltipStack>
+    </TooltipBody>
+  );
+};
+
+const LockedTooltipContent: FC<{ data: LockedBalanceType }> = ({ data }) => {
   return (
     <>
       <TooltipBody>
@@ -124,7 +129,7 @@ const BalanceTooltipContent: FC<{ data: BalanceType; footer?: ReactNode }> = ({ 
   );
 };
 
-const sumBalance = (balance: BalanceType) => {
+const sumBalance = (balance: LockedBalanceType) => {
   const resultSum =
     Number(balance.bonded) +
     Number(balance.democracy) +
@@ -136,39 +141,50 @@ const sumBalance = (balance: BalanceType) => {
 
 const AccountBalance: FC<{
   balance: BalanceType;
-  reserved: BalanceType;
-  locked: BalanceType;
+  reserved: LockedBalanceType;
+  locked: LockedBalanceType;
 }> = ({ balance, locked, reserved }) => {
   return (
     <PaperStyled>
       <InfoCardRow>
-        <CustomTooltip title={<BalanceTooltipContent data={balance} />} placement='bottom-start'>
-          <Box width='110px'>
+        <Box width='110px'>
+          <CustomTooltip title={<BalanceTooltipContent data={balance} />} placement='bottom-start'>
             <CardHeaderButton size='small'>
               <TypographyHeader>balance</TypographyHeader>
             </CardHeaderButton>
-          </Box>
-        </CustomTooltip>
-        <TypographyBody>{sumBalance(balance)}</TypographyBody>
+          </CustomTooltip>
+        </Box>
+        <TypographyBody>
+          <FormatBalance value={balance.transferable} />
+        </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
-        <CustomTooltip title={<BalanceTooltipContent data={balance} />} placement='bottom-start'>
-          <Box width='110px'>
-            <CardHeaderButton size='small'>
-              <TypographyHeader>reserved</TypographyHeader>
-            </CardHeaderButton>
-          </Box>
-        </CustomTooltip>
+        <Box width='110px'>
+          <Button
+            size='small'
+            sx={{
+              ':hover': {
+                backgroundColor: 'inherit',
+                cursor: 'default',
+              }
+            }}
+            disableRipple
+            disableTouchRipple
+            disableElevation
+          >
+            <TypographyHeader>reserved</TypographyHeader>
+          </Button>
+        </Box>
         <TypographyBody>{sumBalance(reserved)}</TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
-        <CustomTooltip title={<BalanceTooltipContent data={balance} />} placement='right-start'>
-          <Box width='110px'>
+        <Box width='110px'>
+          <CustomTooltip title={<LockedTooltipContent data={locked} />} placement='right-start'>
             <CardHeaderButton size='small'>
               <TypographyHeader>locked</TypographyHeader>
             </CardHeaderButton>
-          </Box>
-        </CustomTooltip>
+          </CustomTooltip>
+        </Box>
         <TypographyBody>{sumBalance(locked)}</TypographyBody>
       </InfoCardRow>
     </PaperStyled>

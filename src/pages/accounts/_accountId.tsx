@@ -10,12 +10,10 @@ import AccountExtraInfo from './AccountsExtraInfo';
 const sampleData = {
   name: 'Display name',
   id: '0x6d6f646c43726f77646c6f610000000000000000',
+  address: '0x87184fe3de0d79cc086165374c3b2de11c811e3e1b299218384032b67d33a643',
+  publicKey: '0x165161616161',
   balance: {
-    bonded: '1232312',
-    unbonding: '15151',
-    democracy: '12551',
-    election: '155151',
-    vesting: '151515'
+    transferable: '123231200000'
   },
   reserved: {
     bonded: '234565',
@@ -41,7 +39,11 @@ const AccountId: FC = () => {
       <Typography variant='h1'>{sampleData.name}</Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <AccountIdentity id={sampleData.id} />
+          <AccountIdentity
+            id={sampleData.id}
+            publicKey={sampleData.publicKey}
+            address={sampleData.address}
+          />
         </Grid>
         <Grid item xs={12} md={6}>
           <AccountBalance
