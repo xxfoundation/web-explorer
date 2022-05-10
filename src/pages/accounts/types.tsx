@@ -20,6 +20,7 @@ export type AccountType = {
   address: string;
   publicKey: string;
   name?: string;
+  legalName?: string;
   personalIntroduction?: string;
   stash: string;
   controller: string;

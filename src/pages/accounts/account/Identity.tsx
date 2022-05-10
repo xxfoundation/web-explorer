@@ -106,7 +106,7 @@ const AccountIdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
           sx={{ width: 125, height: 125, marginRight: '15px' }}
         />
         <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-          {account.name}
+          {account.legalName}
         </Typography>
       </Grid>
       <IdentitySummary account={account} />

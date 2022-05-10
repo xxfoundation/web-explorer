@@ -13,18 +13,6 @@ const Accounts: FC = () => {
       <Route path={`${path}/:accountId`}>
         <AccountId />
       </Route>
-      {/* <Route path={`${path}/nominator`}>
-        <h1>nominator</h1>
-      </Route>
-      <Route path={`${path}/validator`}>
-        <h1>validator</h1>
-      </Route>
-      <Route path={`${path}/council`}>
-        <h1>council</h1>
-      </Route>
-      <Route path={`${path}/tech-committee`}>
-        <h1>tech committee</h1>
-      </Route> */}
     </Switch>
   );
 };
