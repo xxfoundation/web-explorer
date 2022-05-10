@@ -2,7 +2,7 @@ import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import Balance from './account/Balance';
-import Blockchain from './account/Blockchain';
+import Blockchain from './account/blockchain';
 import Governance from './account/Governance';
 import Identity from './account/Identity';
 import Summary from './account/Summary';
@@ -66,7 +66,7 @@ const AccountId: FC = () => {
           <Blockchain role='nominator' />
         </Grid>
         <Grid item xs={12}>
-          <Governance />
+          <Governance role='nominator' />
         </Grid>
       </Grid>
     </Container>
