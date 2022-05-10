@@ -1,10 +1,7 @@
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import Tag from '../../components/Tags/Tag';
-import TimeAgoComponent from '../../components/TimeAgo';
-import { LabelValueWithDivider, TypographyBodyBold } from './Texts';
 
 const AccountExtraInfo: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
   createdDate,
@@ -22,13 +19,13 @@ const AccountExtraInfo: FC<{ createdDate: number; nonce: number; roles: string[]
   }, [roles]);
   return (
     <PaperStyled>
-      <LabelValueWithDivider label={'created'} value={<TimeAgoComponent date={createdDate} />} />
+      {/* <LabelValueWithDivider label={'created'} value={<TimeAgoComponent date={createdDate} />} />
       <LabelValueWithDivider label={'nonce'} value={nonce} marginY={'14px'} />
       <Stack direction='row' alignItems={'center'}>
         <TypographyBodyBold>role</TypographyBodyBold>
         {rolesTags}
         <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
-      </Stack>
+      </Stack> */}
     </PaperStyled>
   );
 };

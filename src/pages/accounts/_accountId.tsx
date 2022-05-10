@@ -10,9 +10,27 @@ import AccountExtraInfo from './AccountsExtraInfo';
 const sampleData = {
   name: 'Display name',
   id: '0x6d6f646c43726f77646c6f610000000000000000',
-  balance: '100193648577937192',
-  reserved: '0',
-  locked: '0'
+  balance: {
+    bonded: '1232312',
+    unbonding: '15151',
+    democracy: '12551',
+    election: '155151',
+    vesting: '151515'
+  },
+  reserved: {
+    bonded: '234565',
+    unbonding: '2144',
+    democracy: '234',
+    election: '234',
+    vesting: '2342'
+  },
+  locked: {
+    bonded: '6772',
+    unbonding: '3',
+    democracy: '5',
+    election: '76',
+    vesting: '32'
+  }
 };
 
 const AccountId: FC = () => {
@@ -36,7 +54,7 @@ const AccountId: FC = () => {
           <AccountExtraInfo createdDate={1652101618} nonce={23} roles={['council', 'validator']} />
         </Grid>
         <Grid item xs={12}>
-          <AccountBlockchain />
+          <AccountBlockchain role='nominator' />
         </Grid>
         <Grid item xs={12}>
           <AccountGovernance />
