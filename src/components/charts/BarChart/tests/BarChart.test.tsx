@@ -20,7 +20,7 @@ afterEach(() => {
 
 describe('When displaying 10 min counts', () => {
   const wrapper = mount(
-    <BarChart timestamps={tenMinCounts} />
+    <BarChart series={{ timestamps: tenMinCounts }} />
   );
 
   it('should show two bars and one divider', () => {
@@ -43,7 +43,7 @@ describe('When displaying 10 min counts', () => {
 
 describe('When displaying 1 hour counts', () => {
   const wrapper = mount(
-    <BarChart timestamps={hourCounts} />
+    <BarChart series={{ timestamps: hourCounts }} />
   );
 
   it('should show 16 bars and one divider', () => {

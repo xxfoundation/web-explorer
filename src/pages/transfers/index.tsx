@@ -38,7 +38,7 @@ const TransfersPage = () => {
       <Box sx={{ mb: 5 }}>
         <PaperStyled>
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-            <BarChart hoverLabel={'transfer'} timestamps={timestamps} yAxis={{ title: 'Transfers' }} />
+            <BarChart series={{ timestamps, label: 'Transfer' }}  />
           </Box>
         </PaperStyled>
       </Box>
