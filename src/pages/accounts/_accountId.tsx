@@ -1,11 +1,11 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import AccountBalance from './account/Balance';
-import AccountBlockchain from './account/Blockchain';
-import AccountGovernance from './account/Governance';
-import AccountIdentity from './account/Identity';
-import AccountInfo from './account/Summary';
+import Balance from './account/Balance';
+import Blockchain from './account/Blockchain';
+import Governance from './account/Governance';
+import Identity from './account/Identity';
+import Summary from './account/Summary';
 import { AccountType } from './types';
 
 const sampleData: AccountType = {
@@ -48,34 +48,25 @@ const AccountId: FC = () => {
       <Breadcrumb />
       {/*We need this name here the same info on AccountIdentity */}
       <Typography variant='h1'>{sampleData.name}</Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
-          {/* {sampleData.role ? (
-            <NominatorIdentity
-              id={sampleData.id}
-              publicKey={sampleData.publicKey}
-              address={sampleData.address}
-            />
-          ) : (
-            <AccountIdentity ID={sampleData.id} />
-          )} */}
-          <AccountIdentity account={sampleData} />
+          <Identity account={sampleData} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <AccountBalance
+          <Balance
             balance={sampleData.balance}
             reserved={sampleData.reserved}
             locked={sampleData.locked}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <AccountInfo createdDate={1652101618} nonce={23} roles={['council', 'validator']} />
+          <Summary createdDate={1652101618} nonce={23} roles={['council', 'validator']} />
         </Grid>
         <Grid item xs={12}>
-          <AccountBlockchain role='nominator' />
+          <Blockchain role='nominator' />
         </Grid>
         <Grid item xs={12}>
-          <AccountGovernance />
+          <Governance />
         </Grid>
       </Grid>
     </Container>

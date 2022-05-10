@@ -6,7 +6,7 @@ import Tag from '../../../components/Tags/Tag';
 import TimeAgoComponent from '../../../components/TimeAgo';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
-const AccountInfo: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
+const Summary: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
   createdDate,
   nonce,
   roles
@@ -43,4 +43,4 @@ const AccountInfo: FC<{ createdDate: number; nonce: number; roles: string[] }> =
   );
 };
 
-export default AccountInfo;
+export default Summary;

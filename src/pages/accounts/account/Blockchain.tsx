@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
 import { Roles } from '../types';
 
-const AccountBlockchain: FC<{ role: Roles }> = ({ role }) => {
+const Blockchain: FC<{ role: Roles }> = ({ role }) => {
   return (
     <PaperStyled>
       <Typography>blockchain card for {role}</Typography>
@@ -11,4 +11,4 @@ const AccountBlockchain: FC<{ role: Roles }> = ({ role }) => {
   );
 };
 
-export default AccountBlockchain;
+export default Blockchain;

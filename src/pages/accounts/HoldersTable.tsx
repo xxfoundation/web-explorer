@@ -83,7 +83,7 @@ const accountToRow = (item: AccountType): BaselineCell[] => {
   ];
 };
 
-const AccountHolders: FC = () => {
+const HoldersTable: FC = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
   const onRowsPerPageChange = useCallback((event) => {
@@ -124,4 +124,4 @@ const AccountHolders: FC = () => {
   );
 };
 
-export default AccountHolders;
+export default HoldersTable;

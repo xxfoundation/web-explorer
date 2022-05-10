@@ -1,13 +1,6 @@
 import EmailIcon from '@mui/icons-material/Email';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import {
-  Avatar,
-  Divider,
-  Grid,
-  IconButton,
-  Link,
-  Stack, Typography
-} from '@mui/material';
+import { Avatar, Divider, Grid, IconButton, Link, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../themes/default';
@@ -201,7 +194,7 @@ const AccountIdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
   );
 };
 
-const AccountIdentity: FC<{ account: AccountType }> = ({ account }) => {
+const Identity: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <PaperStyled sx={{ maxWidth: '1142px', height: 'fit-content' }}>
       <AccountIdentityMobile account={account} />
@@ -210,4 +203,4 @@ const AccountIdentity: FC<{ account: AccountType }> = ({ account }) => {
   );
 };
 
-export default AccountIdentity;
+export default Identity;

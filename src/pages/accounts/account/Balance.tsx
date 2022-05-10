@@ -139,7 +139,7 @@ const sumBalance = (balance: LockedBalanceType) => {
   return <FormatBalance value={resultSum.toString()} />;
 };
 
-const AccountBalance: FC<{
+const Balance: FC<{
   balance: BalanceType;
   reserved: LockedBalanceType;
   locked: LockedBalanceType;
@@ -191,4 +191,4 @@ const AccountBalance: FC<{
   );
 };
 
-export default AccountBalance;
+export default Balance;
