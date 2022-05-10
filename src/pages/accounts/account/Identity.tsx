@@ -1,34 +1,17 @@
 import EmailIcon from '@mui/icons-material/Email';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { Avatar, Divider, Grid, IconButton, Link, Stack, Typography } from '@mui/material';
+import {
+  Avatar,
+  Divider,
+  Grid,
+  IconButton,
+  Link,
+  Stack, Typography
+} from '@mui/material';
 import React, { FC } from 'react';
-import { theme } from '../themes/default';
-import { PaperStyled } from './Paper/PaperWrap.styled';
-
-type AccountIdentityType = {
-  address: string;
-  name?: string;
-  personalIntroduction?: string;
-  stash: string;
-  controller: string;
-  email?: string;
-  twitter?: string;
-  riotID?: string;
-  website?: string;
-};
-
-const fakeIdentity: AccountIdentityType = {
-  name: 'Daniel Jacobus Greeff',
-  personalIntroduction:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ultrices aliquet est ac consequat. Quisque tincidunt tellus at dapibus lacinia. Etiam gravida pulvinar vestibulum.',
-  address: '6a7YefNJArBVBBVzdMdJ5V4giafmBdfhwi7DiAcxseKA2zbt',
-  stash: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
-  controller: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
-  riotID: '@jacogr:matrix.parity.io',
-  website: 'http://github/jacobgr',
-  email: 'test@elixxir.io',
-  twitter: 'xx_network'
-};
+import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
+import { theme } from '../../../themes/default';
+import { AccountType } from '../types';
 
 const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => {
   return (
@@ -67,19 +50,19 @@ const CustomIconButton: FC<{ href: string }> = ({ children, href }) => {
   );
 };
 
-const ContactIcons: FC<{ identity: AccountIdentityType }> = ({ identity }) => {
+const ContactIcons: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <>
-      {(identity.twitter || identity.email) && (
+      {(account.twitter || account.email) && (
         <Grid item>
           <Stack direction={'row'} spacing={2} marginY={'23px'}>
-            {identity.twitter && (
-              <CustomIconButton href={`https://twitter.com/${identity.twitter}`}>
+            {account.twitter && (
+              <CustomIconButton href={`https://twitter.com/${account.twitter}`}>
                 <TwitterIcon fontSize='small' />
               </CustomIconButton>
             )}
-            {identity.email && (
-              <CustomIconButton href={`mailto:${identity.email}`}>
+            {account.email && (
+              <CustomIconButton href={`mailto:${account.email}`}>
                 <EmailIcon fontSize='small' />
               </CustomIconButton>
             )}
@@ -90,8 +73,8 @@ const ContactIcons: FC<{ identity: AccountIdentityType }> = ({ identity }) => {
   );
 };
 
-const IdentitySummary: FC<{ identity: AccountIdentityType }> = ({ identity }) => {
-  if (!identity.personalIntroduction && !identity.email && !identity.twitter) {
+const IdentitySummary: FC<{ account: AccountType }> = ({ account }) => {
+  if (!account.personalIntroduction && !account.email && !account.twitter) {
     return <></>;
   }
   return (
@@ -99,19 +82,19 @@ const IdentitySummary: FC<{ identity: AccountIdentityType }> = ({ identity }) =>
       <Grid item xs={12}>
         <Divider />
       </Grid>
-      {identity.personalIntroduction && (
+      {account.personalIntroduction && (
         <Grid item xs={12}>
           <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>
-            {identity.personalIntroduction}
+            {account.personalIntroduction}
           </Typography>
         </Grid>
       )}
-      <ContactIcons identity={identity} />
+      <ContactIcons account={account} />
     </>
   );
 };
 
-const AccountIdentityMobile: FC<{ identity: AccountIdentityType }> = ({ identity }) => {
+const AccountIdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <Grid container spacing={2} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' } }}>
       <Grid
@@ -130,18 +113,18 @@ const AccountIdentityMobile: FC<{ identity: AccountIdentityType }> = ({ identity
           sx={{ width: 125, height: 125, marginRight: '15px' }}
         />
         <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-          {identity.name}
+          {account.name}
         </Typography>
       </Grid>
-      <IdentitySummary identity={identity} />
+      <IdentitySummary account={account} />
       <Grid item xs={12}>
         <Divider />
       </Grid>
       <Grid item xs={12} margin={'10px'}>
-        <TextWithLabel label='stash' text={identity.stash} />
-        <TextWithLabel label='controller' text={identity.controller} />
-        {identity.riotID && <TextWithLabel label='riot' text={identity.riotID} />}
-        {identity.website && <TextWithLabel label='web' text={identity.website} />}
+        <TextWithLabel label='stash' text={account.stash} />
+        <TextWithLabel label='controller' text={account.controller} />
+        {account.riotID && <TextWithLabel label='riot' text={account.riotID} />}
+        {account.website && <TextWithLabel label='web' text={account.website} />}
       </Grid>
     </Grid>
   );
@@ -155,9 +138,9 @@ const PaddedGridItem: FC<{ md: number }> = ({ children, md }) => {
   );
 };
 
-const AccountIdentityDesktop: FC<{ identity: AccountIdentityType }> = ({ identity }) => {
+const AccountIdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
   return (
-    <Grid container md={12} sx={{ display: { xs: 'none', sm: 'none', md: 'inherit' } }}>
+    <Grid container sx={{ display: { xs: 'none', sm: 'none', md: 'inherit' } }}>
       <Grid item container md={12} minHeight={'50px'} alignItems={'end'}>
         <Grid item md={2}>
           <Avatar
@@ -167,13 +150,13 @@ const AccountIdentityDesktop: FC<{ identity: AccountIdentityType }> = ({ identit
           />
         </Grid>
         <PaddedGridItem md={8}>
-          {identity.name ? (
+          {account.name ? (
             <>
               <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-                {identity.name}
+                {account.name}
               </Typography>
               <Typography fontSize={'16px'} fontWeight={'400'} component={'p'} marginY={'23px'}>
-                {identity.personalIntroduction}
+                {account.personalIntroduction}
               </Typography>
             </>
           ) : (
@@ -192,37 +175,37 @@ const AccountIdentityDesktop: FC<{ identity: AccountIdentityType }> = ({ identit
           <Divider />
         </PaddedGridItem>
         <PaddedGridItem md={2}>
-          <ContactIcons identity={identity} />
-          {(identity.twitter || identity.email) && <Divider />}
+          <ContactIcons account={account} />
+          {(account.twitter || account.email) && <Divider />}
         </PaddedGridItem>
       </Grid>
       <Grid item container md={12}>
         <PaddedGridItem md={2} />
         <PaddedGridItem md={8}>
-          <TextWithLabel label='stash' text={identity.stash} />
+          <TextWithLabel label='stash' text={account.stash} />
         </PaddedGridItem>
         <PaddedGridItem md={2}>
-          {identity.riotID && <TextWithLabel label='riot' text={identity.riotID} />}
+          {account.riotID && <TextWithLabel label='riot' text={account.riotID} />}
         </PaddedGridItem>
       </Grid>
       <Grid item container md={12}>
         <PaddedGridItem md={2} />
         <PaddedGridItem md={8}>
-          <TextWithLabel label='controller' text={identity.controller} />
+          <TextWithLabel label='controller' text={account.controller} />
         </PaddedGridItem>
         <PaddedGridItem md={2}>
-          {identity.website && <TextWithLabel label='web' text={identity.website} />}
+          {account.website && <TextWithLabel label='web' text={account.website} />}
         </PaddedGridItem>
       </Grid>
     </Grid>
   );
 };
 
-const AccountIdentity: FC<{ ID: string }> = ({}) => {
+const AccountIdentity: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <PaperStyled sx={{ maxWidth: '1142px', height: 'fit-content' }}>
-      <AccountIdentityMobile identity={fakeIdentity} />
-      <AccountIdentityDesktop identity={fakeIdentity} />
+      <AccountIdentityMobile account={account} />
+      <AccountIdentityDesktop account={account} />
     </PaperStyled>
   );
 };

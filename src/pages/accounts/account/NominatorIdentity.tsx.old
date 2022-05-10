@@ -13,11 +13,11 @@ import {
   Typography
 } from '@mui/material';
 import React, { FC } from 'react';
-import discordIcon from '../../assets/images/icons/Discord.svg';
-import telegramIcon from '../../assets/images/icons/Telegram.svg';
-import twitterIcon from '../../assets/images/icons/Twitter.svg';
-import CopyButton from '../../components/buttons/CopyButton';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
+import discordIcon from '../../../assets/images/icons/Discord.svg';
+import telegramIcon from '../../../assets/images/icons/Telegram.svg';
+import twitterIcon from '../../../assets/images/icons/Twitter.svg';
+import CopyButton from '../../../components/buttons/CopyButton';
+import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
 
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -27,7 +27,7 @@ const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 });
 
-const AccountId: FC<{ id: string; publicKey: string; address: string }> = (props) => {
+const NominatorIdentity: FC<{ id: string; publicKey: string; address: string }> = (props) => {
   return (
     <PaperStyled sx={{ marginTop: 5 }}>
       <Stack direction={'row'} justifyContent={'space-between'}>
@@ -72,4 +72,4 @@ const AccountId: FC<{ id: string; publicKey: string; address: string }> = (props
   );
 };
 
-export default AccountId;
+export default NominatorIdentity;

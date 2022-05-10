@@ -10,11 +10,11 @@ import {
   Typography
 } from '@mui/material';
 import React, { FC } from 'react';
-import FormatBalance from '../../components/FormatBalance';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
-import { theme } from '../../themes/default';
-import { InfoCardRow, TypographyBody, TypographyHeader } from './InfoCardsTypography';
-import { BalanceType, LockedBalanceType } from './types';
+import FormatBalance from '../../../components/FormatBalance';
+import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
+import { theme } from '../../../themes/default';
+import { BalanceType, LockedBalanceType } from '../types';
+import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />

@@ -1,12 +1,12 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Box, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
-import Tag from '../../components/Tags/Tag';
-import TimeAgoComponent from '../../components/TimeAgo';
-import { InfoCardRow, TypographyBody, TypographyHeader } from './InfoCardsTypography';
+import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
+import Tag from '../../../components/Tags/Tag';
+import TimeAgoComponent from '../../../components/TimeAgo';
+import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
-const AccountExtraInfo: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
+const AccountInfo: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
   createdDate,
   nonce,
   roles
@@ -43,4 +43,4 @@ const AccountExtraInfo: FC<{ createdDate: number; nonce: number; roles: string[]
   );
 };
 
-export default AccountExtraInfo;
+export default AccountInfo;

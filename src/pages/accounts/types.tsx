@@ -13,3 +13,21 @@ export type LockedBalanceType = {
   election: string | BN;
   vesting: string | BN;
 };
+
+export type AccountType = {
+  role: Roles;
+  id: string;
+  address: string;
+  publicKey: string;
+  name?: string;
+  personalIntroduction?: string;
+  stash: string;
+  controller: string;
+  email?: string;
+  twitter?: string;
+  riotID?: string;
+  website?: string;
+  balance: BalanceType;
+  reserved: LockedBalanceType;
+  locked: LockedBalanceType;
+};

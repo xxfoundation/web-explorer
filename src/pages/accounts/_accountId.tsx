@@ -1,16 +1,17 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import AccountBalance from './AccountBalance';
-import AccountBlockchain from './AccountBlockchain';
-import AccountGovernance from './AccountGovernance';
-import AccountIdentity from './AccountIdentity';
-import AccountExtraInfo from './AccountsExtraInfo';
+import AccountBalance from './account/Balance';
+import AccountBlockchain from './account/Blockchain';
+import AccountGovernance from './account/Governance';
+import AccountIdentity from './account/Identity';
+import AccountInfo from './account/Summary';
+import { AccountType } from './types';
 
-const sampleData = {
+const sampleData: AccountType = {
+  role: 'nominator',
   name: 'Display name',
   id: '0x6d6f646c43726f77646c6f610000000000000000',
-  address: '0x87184fe3de0d79cc086165374c3b2de11c811e3e1b299218384032b67d33a643',
   publicKey: '0x165161616161',
   balance: {
     transferable: '123231200000'
@@ -28,7 +29,16 @@ const sampleData = {
     democracy: '5',
     election: '76',
     vesting: '32'
-  }
+  },
+  personalIntroduction:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ultrices aliquet est ac consequat. Quisque tincidunt tellus at dapibus lacinia. Etiam gravida pulvinar vestibulum.',
+  address: '6a7YefNJArBVBBVzdMdJ5V4giafmBdfhwi7DiAcxseKA2zbt',
+  stash: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
+  controller: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
+  riotID: '@jacogr:matrix.parity.io',
+  website: 'http://github/jacobgr',
+  email: 'test@elixxir.io',
+  twitter: 'xx_network'
 };
 
 const AccountId: FC = () => {
@@ -36,14 +46,20 @@ const AccountId: FC = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
+      {/*We need this name here the same info on AccountIdentity */}
       <Typography variant='h1'>{sampleData.name}</Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <AccountIdentity
-            id={sampleData.id}
-            publicKey={sampleData.publicKey}
-            address={sampleData.address}
-          />
+          {/* {sampleData.role ? (
+            <NominatorIdentity
+              id={sampleData.id}
+              publicKey={sampleData.publicKey}
+              address={sampleData.address}
+            />
+          ) : (
+            <AccountIdentity ID={sampleData.id} />
+          )} */}
+          <AccountIdentity account={sampleData} />
         </Grid>
         <Grid item xs={12} md={6}>
           <AccountBalance
@@ -53,7 +69,7 @@ const AccountId: FC = () => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <AccountExtraInfo createdDate={1652101618} nonce={23} roles={['council', 'validator']} />
+          <AccountInfo createdDate={1652101618} nonce={23} roles={['council', 'validator']} />
         </Grid>
         <Grid item xs={12}>
           <AccountBlockchain role='nominator' />

@@ -13,7 +13,7 @@ import {
   Typography
 } from '@mui/material';
 import React, { FC } from 'react';
-import { theme } from '../../themes/default';
+import { theme } from '../themes/default';
 
 type MetricScoreProps = {
   veryGood?: string;

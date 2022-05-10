@@ -1,6 +1,6 @@
 import { Divider, Stack, StackProps, styled, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import { theme } from '../../themes/default';
+import { theme } from '../../../themes/default';
 
 export const TypographyHeader = styled(Typography)(({}) => ({
   fontWeight: 700,
