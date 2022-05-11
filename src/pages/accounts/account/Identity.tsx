@@ -1,10 +1,171 @@
 import EmailIcon from '@mui/icons-material/Email';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import KeyIcon from '@mui/icons-material/Key';
+import TelegramIcon from '@mui/icons-material/Telegram';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import { Avatar, Divider, Grid, IconButton, Link, Stack, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Divider,
+  Grid,
+  IconButton,
+  Link,
+  Stack,
+  styled,
+  SvgIcon,
+  Tooltip,
+  tooltipClasses,
+  TooltipProps,
+  Typography
+} from '@mui/material';
 import React, { FC } from 'react';
+import discordIcon from '../../../assets/images/icons/Discord.svg';
+import CopyButton from '../../../components/buttons/CopyButton';
 import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../themes/default';
 import { AccountType } from '../types';
+
+const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 500
+  }
+});
+
+const CustomIconButton: FC<{ href: string }> = ({ children, href }) => {
+  return (
+    <IconButton
+      size='small'
+      sx={{
+        margin: '0 2px',
+        background: theme.palette.primary.main,
+        color: 'white',
+        ['&:hover']: {
+          color: 'white',
+          background: theme.palette.primary.main
+        }
+      }}
+      href={href}
+      target={'_blank'}
+    >
+      {children}
+    </IconButton>
+  );
+};
+
+const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
+  return (
+    <Grid container sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
+      <Grid item md={8}>
+        <Stack direction={'row'} alignItems={'center'} spacing={2}>
+          <Avatar sx={{ marginRight: '10px' }} />
+          <Typography
+            sx={{
+              maxWidth: '100%',
+              textOverflow: 'unset',
+              overflow: 'hidden',
+              wordBreak: 'break-all'
+            }}
+          >
+            {account.id}
+          </Typography>
+          <Divider variant='middle' orientation='vertical' flexItem />
+          <CustomWidthTooltip
+            title={
+              <Stack direction={'row'} spacing={1} alignItems={'center'}>
+                <Typography variant='body5'>{account.address}</Typography>
+                <CopyButton value={account.address} />
+              </Stack>
+            }
+            placement='top'
+            arrow
+          >
+            <span>
+              <CopyButton value={account.address} />
+            </span>
+          </CustomWidthTooltip>
+          <Tooltip title={`public key: ${account.publicKey}`} arrow placement='top'>
+            <KeyIcon color='primary' sx={{ transform: 'rotate(90deg)' }} />
+          </Tooltip>
+        </Stack>
+      </Grid>
+      <Grid item md={4} sx={{ textAlign: 'end' }}>
+        <CustomIconButton href='#'>
+          <SvgIcon component={GitHubIcon} />
+        </CustomIconButton>
+        <CustomIconButton href='#'>
+          <SvgIcon component={TwitterIcon} />
+        </CustomIconButton>
+        <CustomIconButton href='#'>
+          <TelegramIcon />
+        </CustomIconButton>
+        <CustomIconButton href='#'>
+          <img src={discordIcon} />
+        </CustomIconButton>
+      </Grid>
+    </Grid>
+  );
+};
+
+const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
+  return (
+    <Stack
+      sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' } }}
+      spacing={1}
+      divider={<Divider />}
+    >
+      <Stack direction={'row'} alignItems={'center'} spacing={3}>
+        <Avatar sx={{ marginRight: '10px' }} />
+        <Stack divider={<Divider />} spacing={1}>
+          <Typography
+            sx={{
+              maxWidth: '100%',
+              textOverflow: 'unset',
+              overflow: 'hidden',
+              wordBreak: 'break-all'
+            }}
+          >
+            {account.id}
+          </Typography>
+          <Box alignItems={'center'} justifyContent={'start'} display='flex'>
+            <CustomWidthTooltip
+              title={
+                <Stack direction={'row'} spacing={1} alignItems={'center'}>
+                  <Typography variant='body5'>{account.address}</Typography>
+                  <CopyButton value={account.address} />
+                </Stack>
+              }
+              placement='top'
+              arrow
+            >
+              <span>
+                <CopyButton value={account.address} />
+              </span>
+            </CustomWidthTooltip>
+            <Tooltip title={`public key: ${account.publicKey}`} arrow placement='top'>
+              <KeyIcon color='primary' sx={{ transform: 'rotate(90deg)' }} />
+            </Tooltip>
+          </Box>
+        </Stack>
+      </Stack>
+      <Box paddingTop={'10px'}>
+        <CustomIconButton href='#'>
+          <SvgIcon component={GitHubIcon} />
+        </CustomIconButton>
+        <CustomIconButton href='#'>
+          <SvgIcon component={TwitterIcon} />
+        </CustomIconButton>
+        <CustomIconButton href='#'>
+          <TelegramIcon />
+        </CustomIconButton>
+        <CustomIconButton href='#'>
+          <img src={discordIcon} />
+        </CustomIconButton>
+      </Box>
+    </Stack>
+  );
+};
 
 const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => {
   return (
@@ -20,26 +181,6 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
         {text}
       </Link>
     </>
-  );
-};
-
-const CustomIconButton: FC<{ href: string }> = ({ children, href }) => {
-  return (
-    <IconButton
-      size='small'
-      sx={{
-        background: theme.palette.primary.main,
-        color: 'white',
-        ['&:hover']: {
-          color: 'white',
-          background: theme.palette.primary.main
-        }
-      }}
-      href={href}
-      target={'_blank'}
-    >
-      {children}
-    </IconButton>
   );
 };
 
@@ -87,7 +228,7 @@ const IdentitySummary: FC<{ account: AccountType }> = ({ account }) => {
   );
 };
 
-const AccountIdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
+const ValidatorIdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <Grid container spacing={2} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' } }}>
       <Grid
@@ -131,7 +272,7 @@ const PaddedGridItem: FC<{ md: number }> = ({ children, md }) => {
   );
 };
 
-const AccountIdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
+const ValidatorIdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <Grid container sx={{ display: { xs: 'none', sm: 'none', md: 'inherit' } }}>
       <Grid item container md={12} minHeight={'50px'} alignItems={'end'}>
@@ -197,8 +338,17 @@ const AccountIdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
 const Identity: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <PaperStyled sx={{ maxWidth: '1142px', height: 'fit-content' }}>
-      <AccountIdentityMobile account={account} />
-      <AccountIdentityDesktop account={account} />
+      {account.roles.includes('validator') ? (
+        <>
+          <ValidatorIdentityMobile account={account} />
+          <ValidatorIdentityDesktop account={account} />
+        </>
+      ) : (
+        <>
+          <IdentityMobile account={account} />
+          <IdentityDesktop account={account} />
+        </>
+      )}
     </PaperStyled>
   );
 };

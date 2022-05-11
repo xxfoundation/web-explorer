@@ -1,8 +1,13 @@
 import BN from 'bn.js';
 
-export type Roles = 'council' | 'validator' | 'nominator';
+export type Roles = 'council' | 'validator' | 'nominator' | 'tech committee';
 
-export type HoldersRoles = Roles | 'technical committe' | 'treasuries';
+export type HoldersRoles =
+  | 'council'
+  | 'validator'
+  | 'nominator'
+  | 'technical committe'
+  | 'treasuries';
 
 export type BalanceType = {
   transferable: string | BN;
@@ -17,7 +22,7 @@ export type LockedBalanceType = {
 };
 
 export type AccountType = {
-  role: Roles;
+  roles: Roles[];
   id: string;
   address: string;
   publicKey: string;

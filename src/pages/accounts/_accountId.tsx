@@ -1,15 +1,18 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import Balance from './account/Balance';
-import Blockchain from './account/blockchain';
-import Governance from './account/Governance';
-import Identity from './account/Identity';
-import Summary from './account/Summary';
+import BalanceCard from './account/Balance';
+import BlockchainCard from './account/blockchain';
+import CouncilCard from './account/council';
+import GovernanceCard from './account/governance';
+import IdentityCard from './account/Identity';
+import PerformanceCard from './account/performance';
+import StakingCard from './account/staking';
+import SummaryCard from './account/Summary';
 import { AccountType } from './types';
 
 const sampleData: AccountType = {
-  role: 'nominator',
+  roles: ['nominator'],
   name: 'Display name',
   id: '0x6d6f646c43726f77646c6f610000000000000000',
   publicKey: '0x165161616161',
@@ -50,23 +53,32 @@ const AccountId: FC = () => {
       <Typography variant='h1'>{sampleData.name}</Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
-          <Identity account={sampleData} />
+          <IdentityCard account={sampleData} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <Balance
+          <BalanceCard
             balance={sampleData.balance}
             reserved={sampleData.reserved}
             locked={sampleData.locked}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <Summary createdDate={1652101618} nonce={23} roles={['council', 'validator']} />
+          <SummaryCard createdDate={1652101618} nonce={23} roles={sampleData.roles} />
         </Grid>
         <Grid item xs={12}>
-          <Blockchain role='nominator' />
+          <BlockchainCard roles={sampleData.roles} />
         </Grid>
         <Grid item xs={12}>
-          <Governance role='nominator' />
+          <GovernanceCard roles={sampleData.roles} />
+        </Grid>
+        <Grid item xs={12}>
+          <StakingCard roles={sampleData.roles} />
+        </Grid>
+        <Grid item xs={12}>
+          <CouncilCard roles={sampleData.roles} />
+        </Grid>
+        <Grid item xs={12}>
+          <PerformanceCard roles={sampleData.roles} />
         </Grid>
       </Grid>
     </Container>

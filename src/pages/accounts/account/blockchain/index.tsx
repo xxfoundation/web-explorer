@@ -38,19 +38,17 @@ const authoredBlocksTab = {
   content: <AuthoredBlocksTable />
 };
 
-const Blockchain: FC<{ role: Roles }> = ({ role }) => {
-  const panels = useMemo(() => {
-    if (role === 'nominator') {
-      return [extrinsicTab, transfersTab, rewardsAndStashTab, rolesTab, balanceTab];
+const BlockchainCard: FC<{ roles: Roles[] }> = ({ roles }) => {
+  const memoistPanels = useMemo(() => {
+    const panels = [extrinsicTab, transfersTab, rolesTab, balanceTab];
+    if (roles.includes('nominator')) {
+      panels.push(rewardsAndStashTab);
     }
-    if (role === 'validator') {
-      return [extrinsicTab, transfersTab, rolesTab, balanceTab, authoredBlocksTab];
+    if (roles.includes('validator')) {
+      panels.push(authoredBlocksTab);
     }
-    if (role === 'council') {
-      return [extrinsicTab, transfersTab, rolesTab, balanceTab];
-    }
-    return [];
-  }, [role]);
+    return panels;
+  }, [roles]);
   return (
     <TabsWithPanels
       header={
@@ -58,10 +56,10 @@ const Blockchain: FC<{ role: Roles }> = ({ role }) => {
           Blockchain
         </Typography>
       }
-      panels={panels}
+      panels={memoistPanels}
       tabsLabel='account blockchain card'
     />
   );
 };
 
-export default Blockchain;
+export default BlockchainCard;
