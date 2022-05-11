@@ -34,14 +34,11 @@ type ProgressProps = {
   inverse?: boolean 
 }
 
-const Progress = styled('div')<ProgressProps>(({ index, of, percent, theme }) => ({
+const Progress = styled('div')<ProgressProps>(({ index, of, percent }) => ({
   '&.inversed': {
     borderRadius: '5px 5px 15px 15px',
     backgroundImage: 'none',
     backgroundColor: '#C4C4C4',
-    '&.active': {
-      backgroundColor: theme.palette.grey[400]
-    }
   },
   height: `${percent}%`,
   borderRadius: '15px 15px 5px 5px',
@@ -62,7 +59,7 @@ const BarComponent: FC<Props & JSX.IntrinsicElements['div']> = ({ active, index 
   return (
     <Bar {...rest} className={`bar ${active ? 'active' : ''} ${inverse ? 'inversed' : ''}`}>
       <Progress
-        className={`${inverse ? 'inversed' : ''} bar-progress`}
+        className={`${inverse ? 'inversed' : ''}  bar-progress`}
         index={index}
         of={of}
         percent={percent} />
