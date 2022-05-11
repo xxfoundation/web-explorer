@@ -5,12 +5,11 @@ import StakingSupplyChart from './StakingSupplyChart';
 
 const dividerMargins = { ml: 3, mr: 3, mt: 0, mb: 0 };
 
-const rowHeight = '5rem';
-
 export default () => (
-  <Stack direction={{ xs: 'column', md: 'row'}}>
-    <Stack direction={{ xs: 'row', md: 'column' }}>
-      <Box style={{ minHeight: rowHeight }}>
+  <Stack
+    direction={{ xs: 'column', md: 'row' }}>
+    <Stack direction={{ xs: 'row', md: 'column' }} sx={{ justifyContent: 'space-between' }}>
+      <Box>
         <Typography variant='h6'>
           Average Return
         </Typography>
@@ -18,7 +17,7 @@ export default () => (
           40.90%
         </Typography>
       </Box>
-      <Box style={{ minHeight: rowHeight }}>
+      <Box>
         <Typography variant='h6'>
           Inflation Rate
         </Typography>
@@ -28,8 +27,8 @@ export default () => (
       </Box>
     </Stack>
     <Divider sx={dividerMargins} orientation='vertical' variant='middle' flexItem />
-    <Stack style={{ flexGrow: 1 }}>
-      <Box sx={{ minHeight: rowHeight }}>
+    <Stack sx={{ flexGrow: 1, justifyContent: 'space-between' }}>
+      <Box>
         <Stack direction='row' sx={{ mb: 1 }} style={{ justifyContent: 'space-between'}}>
           <Typography variant='h6'>
             ERA #627
@@ -40,7 +39,7 @@ export default () => (
         </Stack>
         <ProgressBar value={90} variant='determinate' />
       </Box>
-      <Box sx={{ minHeight: rowHeight }}>
+      <Box>
         <Stack direction='row' sx={{ mb: 1 }} style={{ justifyContent: 'space-between'}}>
           <Typography variant='h6'>
             EPOCH #627-3

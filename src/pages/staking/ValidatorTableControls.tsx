@@ -1,4 +1,4 @@
-import { Button, Stack, styled, Typography } from '@mui/material';
+import { Tabs, Tab, Typography } from '@mui/material';
 import React, { FC, useCallback }  from 'react';
 
 export type ValidatorFilter = 'waiting' | 'current';
@@ -12,33 +12,25 @@ type Props= {
   selected: ValidatorFilter;
 }
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  borderRadius: 0,
-  ':hover, &.active': {
-    borderColor: theme.palette.primary.main,
-    borderBottom: '1px solid'
-  }
-}));
-
 const ValidatorTableControls: FC<Props> = ({ labels, onSelect, selected }) => {
   const select = useCallback((fitler: ValidatorFilter) => () => onSelect(fitler), [onSelect]);
 
   return (
-    <Stack direction='row'>
+    <Tabs value={selected}>
       {filters.map((option) => (
-        <StyledButton
-          className={selected === option ? 'active' : ''}
+        <Tab
+          label={
+            <Typography variant={'subheader4'} sx={{ fontSize: 14, letterSpacing: 1.5 }} color={selected === option ? 'primary' : 'inherit'}>
+              {labels[option]}
+            </Typography>
+          }
+          value={option}
           key={option}
-          variant='text'
           color={selected === option ? 'primary' : 'inherit'}
           onClick={select(option)}
-        >
-          <Typography variant={'subheader4'} sx={{ fontSize: 14, letterSpacing: 1.5 }} color={selected === option ? 'primary' : 'inherit'}>
-            {labels[option]}
-          </Typography>
-        </StyledButton>
+        />
       ))}
-    </Stack>
+    </Tabs>
   );
 }
 

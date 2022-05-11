@@ -7,7 +7,7 @@ const options: Options = {
   chart: {
     plotShadow: false,
     type: 'pie',
-    height: '180',
+    height: '150',
     width: '250'
   },
   title: {
