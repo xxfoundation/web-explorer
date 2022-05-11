@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { styled } from '@mui/material';
+import { BAR_PADDING, BAR_WIDTH } from './config';
 
 
 const Bar = styled('div')(({ theme }) => ({
@@ -7,8 +8,8 @@ const Bar = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-end',
-  paddingLeft: '0.15rem',
-  paddingRight: '0.15rem',
+  paddingLeft: BAR_PADDING,
+  paddingRight: BAR_PADDING,
   '&:hover .bar-information, &.active .bar-information': {
     visibility: 'visible',
   },
@@ -18,7 +19,7 @@ const Bar = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.primary.dark,
   },
   flexGrow: 1,
-  width: '1rem',
+  flex: `0 0 ${BAR_WIDTH}`
 }));
 
 const Progress = styled('div')(({ index, of, percent }: { percent: number, index: number, of: number }) => ({
@@ -39,7 +40,11 @@ export type Props = {
 const BarComponent: FC<Props & JSX.IntrinsicElements['div']> = ({ active, index = 1, of = 1, percent = 0, ...rest }) => {
   return (
     <Bar {...rest} className={`bar ${active ? 'active' : ''}`}>
-      <Progress className='bar-progress' index={index} of={of} percent={percent} />
+      <Progress
+        className='bar-progress'
+        index={index}
+        of={of}
+        percent={percent} />
     </Bar>
   );
 }

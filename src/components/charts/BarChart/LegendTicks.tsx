@@ -5,9 +5,10 @@ const Container = styled('div')(() => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
+  flexGrow: 1
 }))
 
-const Legend: FC<{ ticks: number[] } & JSX.IntrinsicElements['div']> = ({ ticks, ...rest }) => (
+const LegendTicks: FC<{ ticks: number[] } & JSX.IntrinsicElements['div']> = ({ ticks, ...rest }) => (
   <Container {...rest}>
     {ticks.slice(0).reverse().map((tick) => (
       <Typography variant='h4' key={tick}>{tick}</Typography>
@@ -16,4 +17,4 @@ const Legend: FC<{ ticks: number[] } & JSX.IntrinsicElements['div']> = ({ ticks,
   </Container>
 )
 
-export default Legend;
+export default LegendTicks;
