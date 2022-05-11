@@ -52,7 +52,7 @@ const BlockchainCard: FC<{ roles: Roles[] }> = ({ roles }) => {
   }, [roles]);
   return (
     <PaperStyled>
-      <Typography fontSize={26} fontWeight={500} letterSpacing={'3%'} marginBottom={'10px'}>
+      <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
         Blockchain
       </Typography>
       <TabsWithPanels panels={memoistPanels} tabsLabel='account blockchain card' />

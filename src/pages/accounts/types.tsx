@@ -39,3 +39,25 @@ export type AccountType = {
   reserved: LockedBalanceType;
   locked: LockedBalanceType;
 };
+
+export type MetricScores = 'very good' | 'good' | 'neutral' | 'bad' | 'very bad';
+
+export type Metrics = {
+  name: string;
+  score?: MetricScores;
+  description: string;
+};
+
+export type MetricScorePopupProps = {
+  veryGood?: string;
+  good: string;
+  neutral: string;
+  bad: string;
+  veryBad?: string;
+};
+
+export type MetricPopupProps = {
+  name: string;
+  description: string;
+  scores: MetricScorePopupProps;
+};

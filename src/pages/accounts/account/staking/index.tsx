@@ -20,7 +20,7 @@ const StakingCard: FC<{ roles: Roles[] }> = ({ roles }) => {
   }
   return (
     <PaperStyled>
-      <Typography fontSize={26} fontWeight={500} letterSpacing={'3%'} marginBottom={'10px'}>
+      <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
         Staking
       </Typography>
       <TabsWithPanels panels={panels} tabsLabel='account staking card' />

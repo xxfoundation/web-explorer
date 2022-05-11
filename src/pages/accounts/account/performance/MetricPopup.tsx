@@ -1,11 +1,6 @@
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
-import StarsOutlinedIcon from '@mui/icons-material/StarsOutlined';
 import {
   Box,
   Divider,
-  Stack,
   styled,
   Tooltip,
   tooltipClasses,
@@ -13,21 +8,9 @@ import {
   Typography
 } from '@mui/material';
 import React, { FC } from 'react';
-import { theme } from '../themes/default';
-
-type MetricScoreProps = {
-  veryGood?: string;
-  good: string;
-  neutral: string;
-  bad: string;
-  veryBad?: string;
-};
-
-type MetricProps = {
-  title: string;
-  description: string;
-  scores: MetricScoreProps;
-};
+import { theme } from '../../../../themes/default';
+import { MetricPopupProps as MetricTooltipProps } from '../../types';
+import { BadScore, GoodScore, NeutralScore, VeryBadScore, VeryGoodScore } from './ScoreIcons';
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -39,23 +22,12 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
     h5: {
       letterSpacing: '1px'
     },
-    p: {
-      letterSpacing: '8%'
-    },
     ['> h5, > p']: {
       color: theme.palette.grey[200],
       paddingBottom: '15px'
     }
   }
 });
-
-const HeaderStack: FC<{ color?: string }> = ({ children, color }) => {
-  return (
-    <Stack direction={'row'} alignItems='center' color={color} spacing={1}>
-      {children}
-    </Stack>
-  );
-};
 
 const ScoreDivider: FC = () => {
   return (
@@ -75,7 +47,6 @@ const ScoreTypography: FC = ({ children }) => {
       component={'p'}
       sx={{ marginLeft: '33px', marginTop: '3px' }}
       color={theme.palette.grey[300]}
-      letterSpacing={'8%'}
     >
       {children}
     </Typography>
@@ -90,10 +61,10 @@ const ScoreBox: FC = ({ children }) => {
   );
 };
 
-const ToolttipTitle: FC<MetricProps> = (props) => {
+const ToolttipTitle: FC<MetricTooltipProps> = (props) => {
   return (
     <>
-      <Typography variant='h5'>{props.title}</Typography>
+      <Typography variant='h5'>{props.name}</Typography>
       <Typography variant='h6' component={'p'}>
         {props.description}
       </Typography>
@@ -101,46 +72,31 @@ const ToolttipTitle: FC<MetricProps> = (props) => {
         <>
           <ScoreDivider />
           <ScoreBox>
-            <HeaderStack color={theme.palette.success.main}>
-              <StarsOutlinedIcon />
-              <Typography variant='h5'>very good</Typography>
-            </HeaderStack>
+            <VeryGoodScore />
             <ScoreTypography>{props.scores.veryGood}</ScoreTypography>
           </ScoreBox>
         </>
       )}
       <ScoreDivider />
       <ScoreBox>
-        <HeaderStack color={theme.palette.primary.main}>
-          <CheckCircleOutlineIcon />
-          <Typography variant='h5'>good</Typography>
-        </HeaderStack>
+        <GoodScore />
         <ScoreTypography>{props.scores.good}</ScoreTypography>
       </ScoreBox>
       <ScoreDivider />
       <ScoreBox>
-        <HeaderStack>
-          <RemoveCircleOutlineOutlinedIcon />
-          <Typography variant='h5'>neutral</Typography>
-        </HeaderStack>
+        <NeutralScore />
         <ScoreTypography>{props.scores.neutral}</ScoreTypography>
       </ScoreBox>
       <ScoreDivider />
       <ScoreBox>
-        <HeaderStack color={theme.palette.warning.main}>
-          <RemoveCircleOutlineOutlinedIcon sx={{ transform: 'rotate(135deg)' }} />
-          <Typography variant='h5'>bad</Typography>
-        </HeaderStack>
+        <BadScore />
         <ScoreTypography>{props.scores.bad}</ScoreTypography>
       </ScoreBox>
       {props.scores.veryBad && (
         <>
           <ScoreDivider />
           <ScoreBox>
-            <HeaderStack color={theme.palette.error.main}>
-              <CancelOutlinedIcon />
-              <Typography variant='h5'>very bad</Typography>
-            </HeaderStack>
+            <VeryBadScore />
             <ScoreTypography>{props.scores.veryBad}</ScoreTypography>
           </ScoreBox>
         </>
@@ -149,22 +105,27 @@ const ToolttipTitle: FC<MetricProps> = (props) => {
   );
 };
 
-const MetricTooltips: FC<TooltipProps & MetricProps> = ({
+const MetricTooltip: FC<Omit<TooltipProps, 'title'> & { metrics: MetricTooltipProps }> = ({
   children,
-  description,
-  scores,
-  title,
+  metrics,
   ...props
 }) => {
   return (
     <CustomTooltip
-      title={<ToolttipTitle title={title} description={description} scores={scores} />}
-      arrow
       {...props}
+      arrow
+      placement='left'
+      title={
+        <ToolttipTitle
+          name={metrics.name}
+          description={metrics.description}
+          scores={metrics.scores}
+        />
+      }
     >
       {children}
     </CustomTooltip>
   );
 };
 
-export default MetricTooltips;
+export default MetricTooltip;

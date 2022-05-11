@@ -1,5 +1,5 @@
 import { Box, Divider, Stack, styled, Tab, Tabs, Typography } from '@mui/material';
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { theme } from '../themes/default';
 
 type TabType = {
@@ -23,6 +23,9 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   '& .MuiTab-textColorPrimary': {
     color: theme.palette.grey[400]
   },
+  '& .MuiTab-textColorPrimary.Mui-selected': {
+    color: theme.palette.primary.main
+  },
   '& .MuiTabs-indicator': {
     display: 'flex',
     justifyContent: 'center',
@@ -35,15 +38,16 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   }
 });
 
-const TabsWithPanels: React.FC<{ header?: ReactNode, panels: TabType[]; tabsLabel: string }> = ({
-  panels,
-  tabsLabel
-}) => {
+const TabsWithPanels: React.FC<{
+  panels: TabType[];
+  tabsLabel: string;
+  tabMarginBottom?: number | string;
+}> = ({ panels, tabMarginBottom, tabsLabel }) => {
   const [value, setValue] = React.useState(0);
   return (
     <>
       <StyledTabs
-        sx={{ mb: 3 }}
+        sx={{ mb: tabMarginBottom || 3 }}
         value={value}
         onChange={(_, newValue) => {
           setValue(newValue);
