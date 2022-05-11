@@ -1,5 +1,6 @@
 import { Container, Grid, Typography } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
@@ -44,8 +45,20 @@ const sampleData: AccountType = {
   twitter: 'xx_network'
 };
 
+function useQuery() {
+  const { search } = useLocation();
+
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
+
 const AccountId: FC = () => {
-  // const { accountId } = useParams<{ accountId: string }>();
+  // TODO remove code in development tests
+  const query = useQuery();
+  const rolesquery = query.get('roles');
+  if (rolesquery) {
+    sampleData.roles = rolesquery.split(',') as AccountType['roles'];
+  }
+
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
