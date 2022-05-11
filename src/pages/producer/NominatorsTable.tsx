@@ -17,7 +17,7 @@ const data = [
 ];
 
 const EraStake = ({ account, share, stake }: Stake) => {
-  return BaseLineCellsWrapper([<Link to={`/account/${account}`}>{account}</Link>, stake, share]);
+  return BaseLineCellsWrapper([<Link to={`/accounts/${account}`}>{account}</Link>, stake, share]);
 };
 
 const NominatorsTable = () => {
