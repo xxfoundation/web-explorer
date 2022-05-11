@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import BlockExtrinsics from '../../../../components/block/ExtrinsicsTable';
+import { PaperStyled } from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../../components/Tabs';
 import TransferTable from '../../../transfers/TransfersTable';
 import { Roles } from '../../types';
@@ -50,15 +51,12 @@ const BlockchainCard: FC<{ roles: Roles[] }> = ({ roles }) => {
     return panels;
   }, [roles]);
   return (
-    <TabsWithPanels
-      header={
-        <Typography fontSize={26} fontWeight={500} letterSpacing={'3%'} marginBottom={'10px'}>
-          Blockchain
-        </Typography>
-      }
-      panels={memoistPanels}
-      tabsLabel='account blockchain card'
-    />
+    <PaperStyled>
+      <Typography fontSize={26} fontWeight={500} letterSpacing={'3%'} marginBottom={'10px'}>
+        Blockchain
+      </Typography>
+      <TabsWithPanels panels={memoistPanels} tabsLabel='account blockchain card' />
+    </PaperStyled>
   );
 };
 

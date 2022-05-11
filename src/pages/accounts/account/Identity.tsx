@@ -283,7 +283,7 @@ const ValidatorIdentityDesktop: FC<{ account: AccountType }> = ({ account }) => 
             sx={{ width: 125, height: 125, margin: '0 auto' }}
           />
         </Grid>
-        <PaddedGridItem md={8}>
+        <PaddedGridItem md={7}>
           {account.name ? (
             <>
               <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
@@ -308,26 +308,26 @@ const ValidatorIdentityDesktop: FC<{ account: AccountType }> = ({ account }) => 
           )}
           <Divider />
         </PaddedGridItem>
-        <PaddedGridItem md={2}>
+        <PaddedGridItem md={3}>
           <ContactIcons account={account} />
           {(account.twitter || account.email) && <Divider />}
         </PaddedGridItem>
       </Grid>
       <Grid item container md={12}>
         <PaddedGridItem md={2} />
-        <PaddedGridItem md={8}>
+        <PaddedGridItem md={7}>
           <TextWithLabel label='stash' text={account.stash} />
         </PaddedGridItem>
-        <PaddedGridItem md={2}>
+        <PaddedGridItem md={3}>
           {account.riotID && <TextWithLabel label='riot' text={account.riotID} />}
         </PaddedGridItem>
       </Grid>
       <Grid item container md={12}>
         <PaddedGridItem md={2} />
-        <PaddedGridItem md={8}>
+        <PaddedGridItem md={7}>
           <TextWithLabel label='controller' text={account.controller} />
         </PaddedGridItem>
-        <PaddedGridItem md={2}>
+        <PaddedGridItem md={3}>
           {account.website && <TextWithLabel label='web' text={account.website} />}
         </PaddedGridItem>
       </Grid>

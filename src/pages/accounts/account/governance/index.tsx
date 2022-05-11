@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
+import { PaperStyled } from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Roles } from '../../types';
 import IdentityActivityTable from './IdentityActivityTable';
@@ -63,15 +64,12 @@ const GovernanceCard: FC<{ roles: Roles[] }> = ({ roles }) => {
     return panels;
   }, [roles]);
   return (
-    <TabsWithPanels
-      header={
-        <Typography fontSize={26} fontWeight={500} letterSpacing={'3%'} marginBottom={'10px'}>
-          Governance
-        </Typography>
-      }
-      panels={memoistPanels}
-      tabsLabel='account governance card'
-    />
+    <PaperStyled>
+      <Typography fontSize={26} fontWeight={500} letterSpacing={'3%'} marginBottom={'10px'}>
+        Governance
+      </Typography>
+      <TabsWithPanels panels={memoistPanels} tabsLabel='account governance card' />
+    </PaperStyled>
   );
 };
 

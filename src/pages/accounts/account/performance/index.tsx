@@ -1,13 +1,15 @@
 import { Typography } from '@mui/material';
 import React, { FC } from 'react';
+import { PaperStyled } from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Roles } from '../../types';
 import { TypographyBody } from '../utils';
+import MetricsTiles from './Metrics';
 
 const panels = [
   {
     label: <Typography>metrics</Typography>,
-    content: <Typography>metrics placeholder</Typography>
+    content: <MetricsTiles />
   },
   {
     label: <Typography>charts</Typography>,
@@ -20,15 +22,12 @@ const PerformanceCard: FC<{ roles: Roles[] }> = ({ roles }) => {
     return <></>;
   }
   return (
-    <TabsWithPanels
-      header={
-        <Typography fontSize={26} fontWeight={500} letterSpacing={'3%'} marginBottom={'10px'}>
-          Validator
-        </Typography>
-      }
-      panels={panels}
-      tabsLabel='account performance card'
-    />
+    <PaperStyled>
+      <Typography fontSize={26} fontWeight={500} letterSpacing={'3%'} marginBottom={'10px'}>
+        Validator
+      </Typography>
+      <TabsWithPanels panels={panels} tabsLabel='account performance card' />
+    </PaperStyled>
   );
 };
 

@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 import React, { FC } from 'react';
+import { PaperStyled } from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Roles } from '../../types';
 import { TypographyBody } from '../utils';
@@ -23,7 +24,11 @@ const CouncilCard: FC<{ roles: Roles[] }> = ({ roles }) => {
   if (!roles.includes('council')) {
     return <></>;
   }
-  return <TabsWithPanels panels={panels} tabsLabel='account council card' />;
+  return (
+    <PaperStyled>
+      <TabsWithPanels panels={panels} tabsLabel='account council card' />
+    </PaperStyled>
+  );
 };
 
 export default CouncilCard;
