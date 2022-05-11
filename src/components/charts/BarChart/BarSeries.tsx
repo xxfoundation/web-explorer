@@ -24,7 +24,7 @@ const LegendTicksContainer = styled(Box)({
 
 type BarSeriesProps = { series: SeriesData, interval: TimeInterval, inverse?: boolean };
 
-const BarSeries: FC<BarSeriesProps> = ({ interval, series }) => {
+const BarSeries: FC<BarSeriesProps> = ({ interval, inverse, series }) => {
   const { label } = series;
   
   const info = useMemo(
@@ -33,7 +33,7 @@ const BarSeries: FC<BarSeriesProps> = ({ interval, series }) => {
   );
 
   return (
-    <Stack sx={{ mt: 2 }} style={{ flexGrow: 1 }} direction='row'>
+    <Stack sx={{ mt: inverse ? 0 : 2 }} style={{ flexGrow: 1 }} direction='row'>
       <LegendLabelContainer>
         {label && (
           <VerticalTextStyled variant='subheader4'>
@@ -42,9 +42,9 @@ const BarSeries: FC<BarSeriesProps> = ({ interval, series }) => {
         )}
       </LegendLabelContainer>
       <LegendTicksContainer>
-        <LegendTicks ticks={info.ticks} />
+        <LegendTicks ticks={info.ticks} inverse={inverse}/>
       </LegendTicksContainer>
-      <Bars {...info} />
+      <Bars {...info} inverse={inverse} />
     </Stack>
   )
 }

@@ -35,7 +35,7 @@ const BarChartContainer: FC<BarChartContainerProps> = ({ series }) => {
           <BarSeries
             interval={interval}
             series={seriesB}
-            inverse
+            inverse={true}
           />
         ) : (
           <Box sx={{ pb: 10 }} />

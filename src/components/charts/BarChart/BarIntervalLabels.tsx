@@ -1,4 +1,6 @@
 import type { TimeInterval } from './types';
+import type { Theme } from '../../../themes/types'
+
 import React, { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
 import { Box, Stack, styled } from '@mui/material';
@@ -6,28 +8,36 @@ import { Box, Stack, styled } from '@mui/material';
 import { extractInfo, groupCountByInterval } from './utils';
 import { BAR_PADDING, BAR_WIDTH, DIVIDER_WIDTH, LABEL_WIDTH, LEGEND_WIDTH } from './config';
 
+const typography = (theme: Theme) => ({
+  fontSize: 12,
+  fontWeight: 400,
+  color: theme.palette.grey[400],
+})
+
 const LabelSpacer = styled(Box)({
   flex: `0 0 ${LABEL_WIDTH}`
 });
 
-const UnitLabel = styled(Box)({
+const UnitLabel = styled(Box)(({ theme }) => ({
+  ...typography(theme),
   flex: `0 0 ${LEGEND_WIDTH}`
-})
+}))
 
 const DividerSpacer = styled(Box)({
   flex: `0 0 ${DIVIDER_WIDTH}`,
   height: '1.rem'
 });
 
-const IntervalLabel = styled(Box)({
+const IntervalLabel = styled(Box)(({ theme }) => ({
+  ...typography(theme),
   textAlign: 'center',
   flex: `0 0 ${BAR_WIDTH}`,
   paddingLeft: BAR_PADDING,
   paddingRight: BAR_PADDING
-});
+}));
 
 const BarIntervalLabels = ({ interval, timestamps }: { timestamps: number[], interval: TimeInterval }) => {
-  const unitLabel = interval.includes('h') ? 'HR' : 'DAY';
+  const unitLabel = interval.includes('h') ? 'HRS' : 'DAY';
   
   const info = useMemo(
     () => extractInfo({ timestamps }, interval),
@@ -46,7 +56,7 @@ const BarIntervalLabels = ({ interval, timestamps }: { timestamps: number[], int
   );
 
   return (
-    <Stack direction='row'>
+    <Stack direction='row' sx={{ mt: 1, mb: 1 }}>
       <LabelSpacer />
       <UnitLabel>
         {unitLabel}
@@ -56,7 +66,7 @@ const BarIntervalLabels = ({ interval, timestamps }: { timestamps: number[], int
           <DividerSpacer />
           {
             counts.map(([t], index) => (
-              <IntervalLabel>
+              <IntervalLabel key={t}>
                 {index % 2 === 1 ? formatter(t) : null}
               </IntervalLabel>
             ))
