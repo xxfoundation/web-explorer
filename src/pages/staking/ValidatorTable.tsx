@@ -111,9 +111,9 @@ const ValidatorsTable = () => {
               <TableCell>Rank</TableCell>
               <TableCell>Validator</TableCell>
               <TableCell>Location</TableCell>
-              <TableCell>OwnStake</TableCell>
+              <TableCell>Own Stake</TableCell>
               <TableCell>Total Stake</TableCell>
-              <TableCell>CmixID</TableCell>
+              <TableCell>Cmix ID</TableCell>
               <TableCell>Nominators</TableCell>
             </TableRow>
           </TableHead>
