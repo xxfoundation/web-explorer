@@ -4,7 +4,7 @@ import React, { FC, useMemo } from 'react';
 import { PaperStyled } from '../../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../../themes/default';
 import { MetricPopupProps, Metrics } from '../../types';
-import MetricTooltip from './MetricPopup';
+import MetricTooltip from './MetricTooltip';
 import ScoreIcon from './ScoreIcons';
 
 const metrics: (Metrics & { tooltip?: MetricPopupProps })[] = [
@@ -76,6 +76,7 @@ const metrics: (Metrics & { tooltip?: MetricPopupProps })[] = [
 ];
 
 const ScoreTile: FC<Metrics & { tooltip?: MetricPopupProps }> = (props) => {
+  // TODO fetch score for each metric
   return (
     <PaperStyled>
       <Grid container sx={{ height: '80px' }} height={'100%'}>

@@ -16,7 +16,7 @@ type Props = {
   linkName?: string;
 };
 
-const InputSet: FC<Props> = ({ children, hasDivider, header, height, linkAddress, linkName }) => (
+const PaperWithHeader: FC<Props> = ({ children, hasDivider, header, height, linkAddress, linkName }) => (
   <PaperWrap sx={{}}>
     {(header || linkName) && (
       <>
@@ -55,4 +55,4 @@ const InputSet: FC<Props> = ({ children, hasDivider, header, height, linkAddress
   </PaperWrap>
 );
 
-export default InputSet;
+export default PaperWithHeader;

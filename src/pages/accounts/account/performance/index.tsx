@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Roles } from '../../types';
-import { TypographyBody } from '../utils';
+import Charts from './Charts';
 import MetricCard from './MetricsCard';
 
 const panels = [
@@ -12,7 +12,7 @@ const panels = [
   },
   {
     label: <Typography>charts</Typography>,
-    content: <TypographyBody>charts placeholder</TypographyBody>
+    content: <Charts />
   }
 ];
 
