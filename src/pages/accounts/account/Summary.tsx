@@ -1,7 +1,7 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Box, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../../components/Paper/PaperWrap.styled';
 import Tag from '../../../components/Tags/Tag';
 import TimeAgoComponent from '../../../components/TimeAgo';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';

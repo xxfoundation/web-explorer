@@ -3,9 +3,8 @@ import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
 import BarChart from '../../components/charts/BarChart/BarChart';
-import { PaperWrap } from '../../components/Paper/PaperWrap';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import TransferTable from './TransfersTable';
 
 const extrinsincCountIn72Hours = 4320;
@@ -36,11 +35,11 @@ const TransfersPage = () => {
         <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
-        <PaperStyled>
+        <PaperWrap>
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
             <BarChart hoverLabel={'transfer'} timestamps={timestamps} yAxis={{ title: 'Transfers' }} />
           </Box>
-        </PaperStyled>
+        </PaperWrap>
       </Box>
       <PaperWrap>
         <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>

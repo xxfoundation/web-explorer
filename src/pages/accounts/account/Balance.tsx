@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React, { FC } from 'react';
 import FormatBalance from '../../../components/FormatBalance';
-import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../themes/default';
 import { BalanceType, LockedBalanceType } from '../types';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';

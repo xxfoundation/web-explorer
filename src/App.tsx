@@ -10,6 +10,7 @@ import ExtrinsicsRouter from './pages/extrinsics';
 import BlockChain from './pages/index';
 import NotFound from './pages/NotFound';
 import Transfers from './pages/transfers';
+import Staking from './pages/staking';
 import { theme } from './themes/default';
 
 function App() {
@@ -40,7 +41,7 @@ function App() {
             <Accounts />
           </Route>
           <Route path='/staking'>
-            <h1>staking</h1>
+            <Staking />
           </Route>
           <Route path='*'>
             <NotFound />
