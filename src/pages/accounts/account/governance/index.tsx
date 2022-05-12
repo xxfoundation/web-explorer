@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import { PaperStyled } from '../../../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Roles } from '../../types';
 import IdentityActivityTable from './IdentityActivityTable';
@@ -58,7 +58,7 @@ const GovernanceCard: FC<{ roles: Roles[] }> = ({ roles }) => {
       panels.push(councilMotionsTab);
       panels.push(electionActivityTab);
     }
-    if (roles.includes('tech committee')) {
+    if (roles.includes('technical committe')) {
       panels.push(techCommitteActivityTab);
     }
     return panels;

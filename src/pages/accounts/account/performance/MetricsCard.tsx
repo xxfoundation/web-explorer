@@ -1,7 +1,7 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import { PaperStyled } from '../../../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../../themes/default';
 import MetricTooltip from './MetricTooltip';
 import ScoreIcon from './ScoreIcons';

@@ -13,6 +13,10 @@ import StakingCard from './account/staking';
 import { AccountType } from './types';
 
 const sampleData: AccountType = {
+  rank: 1,
+  transactions: 123,
+  lockedCoin: '000000',
+  account: '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062',
   roles: ['nominator'],
   name: 'Display name',
   id: '0x6d6f646c43726f77646c6f610000000000000000',

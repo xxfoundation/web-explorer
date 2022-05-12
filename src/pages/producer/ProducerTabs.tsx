@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
 import ErasTable from './ErasTable';
 import NominatorsTable from './NominatorsTable';

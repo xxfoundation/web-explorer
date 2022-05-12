@@ -1,6 +1,6 @@
 import { Skeleton } from '@mui/material';
 import React, { useMemo } from 'react';
-import { PaperWrap } from '../Paper/PaperWrap';
+import PaperStyled from '../Paper/PaperWrap.styled';
 import { TableSkeleton } from '../Tables/TableSkeleton';
 import TabsWithPanels, { TabText } from '../Tabs';
 import EventsTable from './EventsTable';
@@ -44,9 +44,9 @@ const BlockDetailedEventsTabs: React.FC<{
         ];
   }, [blockNumber, events, loading]);
   return (
-    <PaperWrap>
+    <PaperStyled>
       <TabsWithPanels panels={panels} tabsLabel='block event tabs' />
-    </PaperWrap>
+    </PaperStyled>
   );
 };
 

@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import React, { FC } from 'react';
-import { PaperStyled } from '../../../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Roles } from '../../types';
 import UnbondingTable from './UnbondingTable';

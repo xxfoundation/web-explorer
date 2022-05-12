@@ -4,7 +4,7 @@ import discordIcon from '../../assets/images/icons/Discord.svg';
 import telegramIcon from '../../assets/images/icons/Telegram.svg';
 import twitterIcon from '../../assets/images/icons/Twitter.svg';
 import xxnetworkCircleLogo from '../../assets/images/logos/xx-network-circle-logo.svg';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../components/Paper/PaperWrap.styled';
 
 const SummaryInfo = () => {
   return (
@@ -60,12 +60,6 @@ const NetworkIcon = () => {
     </Box>
   );
 };
-
-// const LinkBehavior = (link: string) => {
-//   return React.forwardRef<never, Omit<LinkProps, 'to'>>((props, ref) => (
-//     <Link ref={ref} href={link} target={'_blank'} {...props} />
-//   ));
-// };
 
 const ContactInfo = () => {
   return (

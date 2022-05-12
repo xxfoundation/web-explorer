@@ -21,7 +21,7 @@ import {
 import React, { FC } from 'react';
 import discordIcon from '../../../assets/images/icons/Discord.svg';
 import CopyButton from '../../../components/buttons/CopyButton';
-import { PaperStyled } from '../../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../themes/default';
 import { AccountType } from '../types';
 
