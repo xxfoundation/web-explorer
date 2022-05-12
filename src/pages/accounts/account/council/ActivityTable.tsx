@@ -26,8 +26,8 @@ const sampleData = [
   }
 ];
 
-const CouncilActivity: FC = () => {
+const CouncilActivityTable: FC = () => {
   return <BaselineTable headers={headers} rows={sampleData.map(activityToRows)} />;
 };
 
-export default CouncilActivity;
+export default CouncilActivityTable;

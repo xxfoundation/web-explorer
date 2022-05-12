@@ -7,9 +7,9 @@ import BlockchainCard from './account/blockchain';
 import CouncilCard from './account/council';
 import GovernanceCard from './account/governance';
 import IdentityCard from './account/Identity';
+import Info from './account/Info';
 import PerformanceCard from './account/performance';
 import StakingCard from './account/staking';
-import SummaryCard from './account/Summary';
 import { AccountType } from './types';
 
 const sampleData: AccountType = {
@@ -76,7 +76,7 @@ const AccountId: FC = () => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <SummaryCard createdDate={1652101618} nonce={23} roles={sampleData.roles} />
+          <Info createdDate={1652101618} nonce={23} roles={sampleData.roles} />
         </Grid>
         <Grid item xs={12}>
           <BlockchainCard roles={sampleData.roles} />
