@@ -1,12 +1,12 @@
-import type { TimeInterval } from './types';
 import type { Theme } from '../../../themes/types'
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import dayjs from 'dayjs';
 import { Box, Stack, styled } from '@mui/material';
 
-import { extractInfo, groupCountByInterval } from './utils';
-import { BAR_PADDING, BAR_WIDTH, DIVIDER_WIDTH, LABEL_WIDTH, LEGEND_WIDTH } from './config';
+import { BAR_PADDING, BAR_WIDTH, LEGEND_WIDTH } from './config';
+import { useBarchartContext } from './BarChartContext';
+import { DividerSpacer, LabelSpacer } from './spacers';
 
 const typography = (theme: Theme) => ({
   fontSize: 12,
@@ -14,19 +14,10 @@ const typography = (theme: Theme) => ({
   color: theme.palette.grey[400],
 })
 
-const LabelSpacer = styled(Box)({
-  flex: `0 0 ${LABEL_WIDTH}`
-});
-
 const UnitLabel = styled(Box)(({ theme }) => ({
   ...typography(theme),
   flex: `0 0 ${LEGEND_WIDTH}`
 }))
-
-const DividerSpacer = styled(Box)({
-  flex: `0 0 ${DIVIDER_WIDTH}`,
-  height: '1.rem'
-});
 
 const IntervalLabel = styled(Box)(({ theme }) => ({
   ...typography(theme),
@@ -36,17 +27,12 @@ const IntervalLabel = styled(Box)(({ theme }) => ({
   paddingRight: BAR_PADDING
 }));
 
-const BarIntervalLabels = ({ interval, timestamps }: { timestamps: number[], interval: TimeInterval }) => {
-  const unitLabel = interval.includes('h') ? 'HRS' : 'DAY';
-  
-  const info = useMemo(
-    () => extractInfo({ timestamps }, interval),
-    [timestamps, interval]
-  );
+const BarIntervalLabels = () => {
+  const context = useBarchartContext();
+  const { interval } = context;
+  const unitLabel = interval.value.toLowerCase().includes('h') ? 'HRS' : 'DAY';
 
-  const grouped = useMemo(() => groupCountByInterval(info), [info]);
-
-  const barInfoFormat = interval.includes('h')
+  const barInfoFormat = interval.value.includes('h')
     ? 'HH'
     : 'DD';
 
@@ -61,12 +47,14 @@ const BarIntervalLabels = ({ interval, timestamps }: { timestamps: number[], int
       <UnitLabel>
         {unitLabel}
       </UnitLabel>
-      {grouped.map(([label, counts]) => (
+      {context.infoA?.grouped.map(([label, counts]) => (
         <React.Fragment key={label}>
           <DividerSpacer />
           {
             counts.map(([t], index) => (
-              <IntervalLabel key={t}>
+              <IntervalLabel
+                key={t}
+                onMouseEnter={context.timestamp.makeSetter(t)}>
                 {index % 2 === 1 ? formatter(t) : null}
               </IntervalLabel>
             ))

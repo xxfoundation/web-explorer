@@ -1,11 +1,19 @@
-import type { TimeInterval, SeriesData } from './types';
-import React, { FC, useState } from 'react';
-import {  Box } from '@mui/material';
+import type { SeriesData } from './types';
+import React, { FC } from 'react';
+import { Box, styled } from '@mui/material';
 
-import ChartContainer from './BarChartContainer.styled';
+import { Provider } from './BarChartContext';
 import BarSeries from './BarSeries';
 import Controls from './Controls';
 import BarIntervalLabels from './BarIntervalLabels';
+import BarInfoContainer from './BarInfoContainer';
+
+const ChartContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'stretch',
+  alignItems: 'stretch'
+});
 
 const hasTwoSeries = (series: SeriesData | [SeriesData, SeriesData]): series is [SeriesData, SeriesData] => Array.isArray(series); 
 
@@ -14,34 +22,30 @@ type BarChartContainerProps = {
 }
   
 const BarChartContainer: FC<BarChartContainerProps> = ({ series }) => {
-  const seriesA = hasTwoSeries(series) ? series[0] : series;
-  const seriesB = hasTwoSeries(series) ? series[1] : undefined;
+  const hasTwo = hasTwoSeries(series);
+  const seriesA = hasTwo ? series[0] : series;
+  const seriesB = hasTwo ? series[1] : undefined;
   const timestamps = !seriesB?.timestamps
     || (seriesA.timestamps.length > (seriesB.timestamps.length ?? 0))
     ? seriesA.timestamps
     : seriesB?.timestamps;
-  const [interval, setInterval] = useState<TimeInterval>('1h');
 
   return (
-    <Box>
-      <Controls selected={interval} onSelect={setInterval} />
-      <ChartContainer>
-        <BarSeries
-          interval={interval}
-          series={seriesA}
-        />
-        <BarIntervalLabels interval={interval} timestamps={timestamps} />
-        {seriesB ? (
-          <BarSeries
-            interval={interval}
-            series={seriesB}
-            inverse={true}
-          />
-        ) : (
-          <Box sx={{ pb: 10 }} />
-        )}
-      </ChartContainer>
-    </Box>
+    <Provider timestamps={timestamps} seriesA={seriesA} seriesB={seriesB}>
+      <Box>
+        <Controls />
+        <ChartContainer sx={{ minHeight: hasTwo ? '22rem' : '16rem' }}>
+          <BarSeries />
+          <BarIntervalLabels />
+          {seriesB ? (
+            <BarSeries inverse={true} />
+          ) : (
+            <Box sx={{ pb: 10 }} />
+          )}
+          <BarInfoContainer />
+        </ChartContainer>
+      </Box>
+    </Provider>
   )
 };
 

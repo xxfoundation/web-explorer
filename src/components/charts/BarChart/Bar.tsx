@@ -5,6 +5,7 @@ import { BAR_PADDING, BAR_WIDTH } from './config';
 
 
 const Bar = styled('div')(({ theme }) => ({
+  zIndex: 1,
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
@@ -14,12 +15,12 @@ const Bar = styled('div')(({ theme }) => ({
   '&.inversed': {
     justifyContent: 'flex-start',
   },
-  '&:hover .bar-progress, &.active .bar-progress': {
+  '&.active .bar-progress': {
     backgroundImage: 'none',
     backgroundColor: theme.palette.primary.dark,
   },
 
-  '&.inversed:hover .bar-progress, &.active .bar-progress': {
+  '&.inversed.active .bar-progress': {
     backgroundImage: 'none',
     backgroundColor: theme.palette.grey[400],
   },
@@ -44,7 +45,8 @@ const Progress = styled('div')<ProgressProps>(({ index, of, percent }) => ({
   borderRadius: '15px 15px 5px 5px',
   backgroundImage: 'linear-gradient(45deg, #75afff, #8beef1)',
   backgroundSize: '1000%',
-  backgroundPosition: `${((index / of) * 100)}%`
+  backgroundPosition: `${((index / of) * 100)}%`,
+  boxShadow: '0 5px 0 0 white'
 }));
 
 export type Props = {

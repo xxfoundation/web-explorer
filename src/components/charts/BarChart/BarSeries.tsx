@@ -1,13 +1,11 @@
-import type { SeriesData, TimeInterval } from './types';
-
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import { Box, Stack, styled } from '@mui/material';
 
 import Bars from './Bars';
 import LegendTicks from './LegendTicks';
 import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
-import { extractInfo } from './utils';
 import { LABEL_WIDTH, LEGEND_WIDTH } from './config';
+import { useBarchartContext } from './BarChartContext';
 
 const LegendLabelContainer = styled(Box)({
   display: 'flex',
@@ -22,29 +20,27 @@ const LegendTicksContainer = styled(Box)({
   flex: `0 0 ${LEGEND_WIDTH}`
 });
 
-type BarSeriesProps = { series: SeriesData, interval: TimeInterval, inverse?: boolean };
+type BarSeriesProps = {
+  inverse?: boolean;
+};
 
-const BarSeries: FC<BarSeriesProps> = ({ interval, inverse, series }) => {
-  const { label } = series;
+const BarSeries: FC<BarSeriesProps> = ({ inverse }) => {
+  const context = useBarchartContext();
+  const info = inverse ? context.infoB : context.infoA;
   
-  const info = useMemo(
-    () => extractInfo(series, interval),
-    [series, interval]
-  );
-
   return (
     <Stack sx={{ mt: inverse ? 0 : 2 }} style={{ flexGrow: 1 }} direction='row'>
       <LegendLabelContainer>
-        {label && (
+        {info?.label && (
           <VerticalTextStyled variant='subheader4'>
-            {label}
+            {info?.label}
           </VerticalTextStyled>
         )}
       </LegendLabelContainer>
       <LegendTicksContainer>
-        <LegendTicks ticks={info.ticks} inverse={inverse}/>
+        <LegendTicks ticks={info?.ticks ?? []} inverse={inverse}/>
       </LegendTicksContainer>
-      <Bars {...info} inverse={inverse} />
+      <Bars inverse={inverse} />
     </Stack>
   )
 }
