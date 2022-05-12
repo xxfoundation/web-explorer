@@ -39,7 +39,7 @@ const HistoryPage = () => {
       <Box sx={{ mb: 5 }}>
         <PaperWrap >
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-            <BarChart hoverLabel={'extrinsic'} timestamps={timestamps} yAxis={{ title: 'Extrinsics' }} />
+            <BarChart series={{ timestamps, label: 'Extrinsic' }} />
           </Box>
         </PaperWrap>
       </Box>

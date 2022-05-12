@@ -3,9 +3,9 @@ import MockDate from 'mockdate'
 import { mount } from 'enzyme';
 import BarChart from '../BarChart';
 import Bar from '../Bar';
-import BarDivider from '../BarDividerBox';
+import BarDivider from '../BarDivider';
 import Controls from '../Controls';
-import Legend from '../Legend';
+import LegendTicks from '../LegendTicks';
 import { hourCounts, tenMinCounts } from './timestamps';
 import { act } from 'react-dom/test-utils';
 import { Button } from '@mui/material';
@@ -20,13 +20,13 @@ afterEach(() => {
 
 describe('When displaying 10 min counts', () => {
   const wrapper = mount(
-    <BarChart timestamps={tenMinCounts} />
+    <BarChart series={{ timestamps: tenMinCounts }} />
   );
 
   it('should show two bars and one divider', () => {
     expect(wrapper.find(Bar).getElements().length).toEqual(2);
     expect(wrapper.find(Controls).getElements().length).toEqual(1);
-    expect(wrapper.find(Legend).getElements().length).toEqual(1);
+    expect(wrapper.find(LegendTicks).getElements().length).toEqual(1);
     expect(wrapper.find(BarDivider).getElements().length).toEqual(1);
   });
 
@@ -43,13 +43,13 @@ describe('When displaying 10 min counts', () => {
 
 describe('When displaying 1 hour counts', () => {
   const wrapper = mount(
-    <BarChart timestamps={hourCounts} />
+    <BarChart series={{ timestamps: hourCounts }} />
   );
 
   it('should show 16 bars and one divider', () => {
     expect(wrapper.find(Bar).getElements().length).toEqual(16);
     expect(wrapper.find(Controls).getElements().length).toEqual(1);
-    expect(wrapper.find(Legend).getElements().length).toEqual(1);
+    expect(wrapper.find(LegendTicks).getElements().length).toEqual(1);
     expect(wrapper.find(BarDivider).getElements().length).toEqual(1);
   });
 

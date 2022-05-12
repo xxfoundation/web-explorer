@@ -1,6 +1,9 @@
-import type { TimestampCounts, TimeInterval } from './types';
+import type { SeriesMetadata, LabelledSeries, SeriesData, TimestampCounts, TimeInterval } from './types';
 
 import dayjs from 'dayjs';
+import { groupBy } from 'lodash';
+
+import { NUMBER_OF_TICKS } from './config';
 
 const intervalToMilli: Record<TimeInterval, number> = {
   '1h': 60 * 60 * 1000,
@@ -8,7 +11,7 @@ const intervalToMilli: Record<TimeInterval, number> = {
   '1d': 24 * 60 * 60 * 1000
 }
 
-const convertToNearestTimestamp = (timestamp: number, interval: TimeInterval) => {
+export const convertToNearestTimestamp = (timestamp: number, interval: TimeInterval) => {
   const intervalMillis = intervalToMilli[interval];
   return intervalMillis * Math.floor(timestamp / intervalMillis);
 }
@@ -50,4 +53,31 @@ export const byDay = ([timestamp]: [string, number]) => {
 export const byMonth = ([timestamp]: [string, number]) => {
   const date = dayjs.utc(parseInt(timestamp));
   return dayjs().utc().month() === date.month() ? 'This month' : date.format('YYYY.MM');
+}
+
+export const groupCountByInterval = (counts: TimestampCounts, interval: TimeInterval): LabelledSeries => {
+  const entries = Object.entries(counts);
+  const intervalGroup = interval.includes('h') ? byDay : byMonth;
+  const grouped = groupBy(entries, intervalGroup);
+  return Object.entries(grouped);
+}
+
+export const extractInfo = ({ label, timestamps }: SeriesData, interval: TimeInterval, numberOfTicks = NUMBER_OF_TICKS): SeriesMetadata => {
+  const counts = getCountsByTimestamp(timestamps, interval);
+  const maxY = Math.max(...Object.values(counts));
+  const tickSize = calculateTickSize(maxY, numberOfTicks);
+  const ticks = Array.from(Array(numberOfTicks).keys()).map((i) => (i + 1) * tickSize);
+  const maxTick = Math.max(...ticks);
+  const grouped = groupCountByInterval(counts, interval);
+
+  return {
+    counts,
+    interval,
+    label,
+    maxY,
+    tickSize,
+    ticks,
+    maxTick,
+    grouped
+  }
 }

@@ -3,6 +3,7 @@ import { styled, Box } from '@mui/material';
 import React from 'react';
 
 import VerticalText from './VerticalText.styled';
+import Divider from './Divider';
 
 const VerticalDividerContainer = styled('div')`
   display: flex;
@@ -11,13 +12,6 @@ const VerticalDividerContainer = styled('div')`
   width: 1rem;
 `;
 
-const Divider = styled('hr')(({ theme }) => ({
-  width: '1px',
-  display: 'inline-block',
-  flexGrow: 1,
-  border: 'none',
-  backgroundColor: theme.palette.grey[300]
-}));
 
 const Text = styled(VerticalText)(({ theme }) => ({
   ...theme.typography.h4,
