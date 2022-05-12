@@ -6,7 +6,11 @@ import { theme } from '../../../../themes/default';
 import { MetricPopupProps, Metrics } from '../../types';
 import MetricTooltip from './MetricTooltip';
 import ScoreIcon from './ScoreIcons';
+import TooltipsConfig from './tooltips.json';
 
+// TODO this should be I'm a json file
+// descritiopn is dinamic too
+// another different file for the tooltips
 const metrics: (Metrics & { tooltip?: MetricPopupProps })[] = [
   {
     name: 'identity',
@@ -30,22 +34,12 @@ const metrics: (Metrics & { tooltip?: MetricPopupProps })[] = [
     description: 'Detected sub-identity, the validator is part of a cluster of 6 validators'
   },
   {
-    name: 'era points',
-    score: 'very good',
+    name: 'era points', // fixed
+    score: 'very good', // from database
+    // change from processing the score
     description:
       'Above average! Validator got 0.34% of the total era points in the last 21 days while average was 0.32%',
-    tooltip: {
-      name: 'ERA POINTS',
-      description:
-        'Evaluate if the era points earned by the validator in the history are below or above average',
-      scores: {
-        veryGood: '> 90th percentile',
-        good: '<= 90th percentile',
-        neutral: '<= 90th percentile',
-        bad: '<= 30th percentile',
-        veryBad: '<=10th percentile'
-      }
-    }
+    tooltip: { ...TooltipsConfig['era points'] }
   },
   {
     name: 'commission',

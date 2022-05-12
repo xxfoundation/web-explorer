@@ -1,0 +1,13 @@
+{
+  "era points": {
+    "name": "era points",
+    "description": "Evaluate if the era points earned by the validator in the history are below or above average",
+    "scores": {
+      "veryGood": "> 90th percentile",
+      "good": "<= 90th percentile",
+      "neutral": "<= 90th percentile",
+      "bad": "<= 30th percentile",
+      "veryBad": "<=10th percentile"
+    }
+  }
+}

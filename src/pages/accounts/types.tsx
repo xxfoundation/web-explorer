@@ -45,7 +45,7 @@ export type MetricScores = 'very good' | 'good' | 'neutral' | 'bad' | 'very bad'
 export type Metrics = {
   name: string;
   score?: MetricScores;
-  description: string;
+  description?: string;
 };
 
 export type MetricScorePopupProps = {
