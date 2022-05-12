@@ -3,79 +3,25 @@ import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import { PaperStyled } from '../../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../../themes/default';
-import { MetricPopupProps, Metrics } from '../../types';
 import MetricTooltip from './MetricTooltip';
 import ScoreIcon from './ScoreIcons';
-import TooltipsConfig from './tooltips.json';
+import TooltipConfig from './tooltips.json';
 
+type MetricsType = 'identity';
+
+const metrics: [MetricsType] = ['identity'];
 // TODO this should be I'm a json file
 // descritiopn is dinamic too
 // another different file for the tooltips
-const metrics: (Metrics & { tooltip?: MetricPopupProps })[] = [
-  {
-    name: 'identity',
-    description: 'Validator has a verified identity but doesn\'t provide all possible information'
-  },
-  {
-    name: 'address creation',
-    description:
-      'Stash address was created at block #444,722 and parent identity address was created at block #0'
-  },
-  {
-    name: 'slashes',
-    description: 'No slashes detected'
-  },
-  {
-    name: 'subaccounts',
-    description: 'Detected sub-identity, the validator is part of a cluster of 6 validators'
-  },
-  {
-    name: 'subaccounts',
-    description: 'Detected sub-identity, the validator is part of a cluster of 6 validators'
-  },
-  {
-    name: 'era points', // fixed
-    score: 'very good', // from database
-    // change from processing the score
-    description:
-      'Above average! Validator got 0.34% of the total era points in the last 21 days while average was 0.32%',
-    tooltip: { ...TooltipsConfig['era points'] }
-  },
-  {
-    name: 'commission',
-    description: 'Current commission is 1.00%'
-  },
-  {
-    name: 'frequency of payouts',
-    description: 'Very good, validator has 0 unclaimed era rewards'
-  },
-  {
-    name: 'governance',
-    description: 'The validator is backing a council member'
-  },
-  {
-    name: 'validator time',
-    description: 'The validator is backing a council member',
-    tooltip: {
-      name: 'VALIDATOR TIME',
-      description:
-        'Evaluate if the address was a validator for the majority of its time in the network (since first time as a validator)',
-      scores: {
-        good: 'No. Eras as validator / (CurrentEra - FirstValidatorEra) > 0.90',
-        neutral: 'No. Eras as validator / (CurrentEra - FirstValidatorEra) < 0.90',
-        bad: 'No. Eras as validator /  (CurrentEra - FirstValidatorEra) > 0.75'
-      }
-    }
-  }
-];
 
-const ScoreTile: FC<Metrics & { tooltip?: MetricPopupProps }> = (props) => {
+const ScoreTile: FC<{ metric: MetricsType }> = ({ metric }) => {
   // TODO fetch score for each metric
+  const tooltip = { ...TooltipConfig[metric] };
   return (
     <PaperStyled>
       <Grid container sx={{ height: '80px' }} height={'100%'}>
         <Grid item xs={4}>
-          <ScoreIcon value={props.score} />
+          <ScoreIcon value={undefined} />
         </Grid>
         <Grid item xs={8}>
           <Stack direction={'row'}>
@@ -88,10 +34,10 @@ const ScoreTile: FC<Metrics & { tooltip?: MetricPopupProps }> = (props) => {
               width={'100%'}
               textTransform={'uppercase'}
             >
-              {props.name}
+              {metric}
             </Typography>
-            {props.tooltip && (
-              <MetricTooltip metrics={props.tooltip}>
+            {tooltip && (
+              <MetricTooltip metrics={tooltip}>
                 <InfoOutlinedIcon
                   fontSize='small'
                   color='primary'
@@ -106,7 +52,7 @@ const ScoreTile: FC<Metrics & { tooltip?: MetricPopupProps }> = (props) => {
             lineHeight={'18.4px'}
             color={theme.palette.grey[500]}
           >
-            {props.description}
+            {'nothing yet'}
           </Typography>
         </Grid>
       </Grid>
@@ -116,9 +62,9 @@ const ScoreTile: FC<Metrics & { tooltip?: MetricPopupProps }> = (props) => {
 
 const MetricCard: FC = ({}) => {
   const scoreTiles = useMemo(() => {
-    return metrics.map((item, index) => (
+    return metrics.map((metric, index) => (
       <Grid item xs={12} md={6} key={index}>
-        <ScoreTile {...item} />
+        <ScoreTile metric={metric} />
       </Grid>
     ));
   }, []);

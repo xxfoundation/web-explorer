@@ -77,21 +77,33 @@ const ToolttipTitle: FC<MetricTooltipProps> = (props) => {
           </ScoreBox>
         </>
       )}
-      <ScoreDivider />
-      <ScoreBox>
-        <GoodScore />
-        <ScoreTypography>{props.scores.good}</ScoreTypography>
-      </ScoreBox>
-      <ScoreDivider />
-      <ScoreBox>
-        <NeutralScore />
-        <ScoreTypography>{props.scores.neutral}</ScoreTypography>
-      </ScoreBox>
-      <ScoreDivider />
-      <ScoreBox>
-        <BadScore />
-        <ScoreTypography>{props.scores.bad}</ScoreTypography>
-      </ScoreBox>
+      {props.scores.good && (
+        <>
+          <ScoreDivider />
+          <ScoreBox>
+            <GoodScore />
+            <ScoreTypography>{props.scores.good}</ScoreTypography>
+          </ScoreBox>
+        </>
+      )}
+      {props.scores.neutral && (
+        <>
+          <ScoreDivider />
+          <ScoreBox>
+            <NeutralScore />
+            <ScoreTypography>{props.scores.neutral}</ScoreTypography>
+          </ScoreBox>
+        </>
+      )}
+      {props.scores.bad && (
+        <>
+          <ScoreDivider />
+          <ScoreBox>
+            <BadScore />
+            <ScoreTypography>{props.scores.bad}</ScoreTypography>
+          </ScoreBox>
+        </>
+      )}
       {props.scores.veryBad && (
         <>
           <ScoreDivider />

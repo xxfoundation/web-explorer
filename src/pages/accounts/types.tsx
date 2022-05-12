@@ -1,4 +1,5 @@
 import BN from 'bn.js';
+import { ReactNode } from 'react';
 
 export type Roles = 'council' | 'validator' | 'nominator' | 'tech committee';
 
@@ -49,15 +50,15 @@ export type Metrics = {
 };
 
 export type MetricScorePopupProps = {
-  veryGood?: string;
-  good: string;
-  neutral: string;
-  bad: string;
-  veryBad?: string;
+  veryGood?: ReactNode;
+  good?: ReactNode;
+  neutral?: ReactNode;
+  bad?: ReactNode;
+  veryBad?: ReactNode;
 };
 
 export type MetricPopupProps = {
   name: string;
-  description: string;
+  description: ReactNode;
   scores: MetricScorePopupProps;
 };
