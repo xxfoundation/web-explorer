@@ -6,60 +6,55 @@ import { useToggle } from '../../hooks';
 import { theme } from '../../themes/default';
 import { Roles } from './types';
 
-type RoleFiltersType =
-  | 'council'
-  | 'nominators'
-  | 'validators'
-  | 'technical committe'
-  | 'treasuries'
-  | 'all';
+type RoleFiltersType = Roles | 'all';
 
 export const filtersDefaultState = (): Record<Roles, boolean> => ({
   council: false,
   nominator: false,
   validator: false,
   'technical committe': false,
-  treasuries: false
+  treasurie: false
 });
 
-const AccountHoldersFilters: FC<{
-  callback: Dispatch<SetStateAction<Record<Roles, boolean>>>;
-}> = ({ callback, children }) => {
-  const [open, { set: toggle }] = useToggle();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+const cleanLocalStateFilters = () => {
+  const defaultState = filtersDefaultState();
+  return {
+    all: false,
+    ...defaultState
+  };
+};
 
-  const [filtersState, setFilters] = useState<Record<RoleFiltersType, boolean>>(
-    useCallback(() => {
-      const defaultValues = filtersDefaultState();
-      return {
-        all: false,
-        council: defaultValues.council,
-        nominators: defaultValues.nominator,
-        validators: defaultValues.validator,
-        'technical committe': defaultValues['technical committe'],
-        treasuries: defaultValues.treasuries
-      };
-    }, [])
-  );
+const HoldersRolesFilters: FC<{
+  callback: Dispatch<SetStateAction<Record<Roles, boolean>>>;
+  roles: Record<Roles, boolean>;
+}> = ({ callback, children, roles }) => {
+  const [open, { set: toggle }] = useToggle();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const [filtersState, setFilters] = useState<Record<RoleFiltersType, boolean>>({
+    all: false,
+    council: false,
+    nominator: false,
+    validator: false,
+    'technical committe': false,
+    treasurie: false
+  });
 
   const onClick = useCallback(
     ({ currentTarget }) => {
       setAnchorEl(currentTarget);
       toggle(true);
+      setFilters(() => ({
+        all: Object.values(roles).filter((r) => r).length === 5,
+        ...roles
+      }));
     },
-    [toggle, setAnchorEl]
+    [toggle, roles]
   );
-
-  const handleClose = useCallback(() => {
-    setAnchorEl(null);
-    toggle(false);
-  }, [toggle, setAnchorEl]);
 
   const onCheckBoxChange = useCallback(
     (name: string, checked: boolean) => {
-      setFilters((prev) => {
-        return { ...prev, [name]: checked };
-      });
+      setFilters((prev) => ({ ...prev, [name]: checked }));
     },
     [setFilters]
   );
@@ -69,6 +64,13 @@ const AccountHoldersFilters: FC<{
       return (
         <FormControlLabel
           key={label}
+          sx={{
+            span: {
+              fontSize: '14px',
+              fontWeight: 400,
+              color: theme.palette.grey[600]
+            }
+          }}
           control={
             <Checkbox
               disabled={label === 'all' ? false : filtersState.all}
@@ -83,19 +85,21 @@ const AccountHoldersFilters: FC<{
   }, [filtersState, onCheckBoxChange]);
 
   const cleanFilters = useCallback(() => {
-    setFilters(() => {
-      const defaultState = filtersDefaultState();
-      callback(defaultState);
-      return {
-        all: false,
-        council: defaultState.council,
-        nominators: defaultState.nominator,
-        validators: defaultState.validator,
-        'technical committe': defaultState['technical committe'],
-        treasuries: defaultState.treasuries
-      };
+    return setFilters(() => {
+      callback(filtersDefaultState());
+      return cleanLocalStateFilters();
     });
   }, [callback]);
+
+  const handleClose = useCallback(() => {
+    setFilters(() => {
+      toggle(false);
+      setAnchorEl(null);
+      return {
+        ...cleanLocalStateFilters()
+      };
+    });
+  }, [toggle]);
 
   const applyOnClick = useCallback(() => {
     const { all, ...queryFilters } = filtersState;
@@ -105,15 +109,15 @@ const AccountHoldersFilters: FC<{
             'technical committe': true,
             council: true,
             nominator: true,
-            treasuries: true,
+            treasurie: true,
             validator: true
           }
         : {
             council: queryFilters.council,
-            nominator: queryFilters.nominators,
-            validator: queryFilters.validators,
+            nominator: queryFilters.nominator,
+            validator: queryFilters.validator,
             'technical committe': queryFilters['technical committe'],
-            treasuries: queryFilters.treasuries
+            treasurie: queryFilters.treasurie
           }
     );
     handleClose();
@@ -138,7 +142,7 @@ const AccountHoldersFilters: FC<{
       >
         <FormGroup sx={{ padding: '30px' }}>
           <Stack direction={'column'}>{filters}</Stack>
-          <Stack direction={'row'} justifyContent={'space-evenly'}>
+          <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
             <Button
               variant='contained'
               sx={{ borderRadius: '45px', textTransform: 'uppercase' }}
@@ -170,4 +174,4 @@ const AccountHoldersFilters: FC<{
   );
 };
 
-export default AccountHoldersFilters;
+export default HoldersRolesFilters;

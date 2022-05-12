@@ -98,7 +98,7 @@ const HoldersTable: FC = () => {
     nominator: false,
     validator: false,
     'technical committe': false,
-    treasuries: false
+    treasurie: false
   });
   useEffect(() => {
     // TODO testing
@@ -119,13 +119,13 @@ const HoldersTable: FC = () => {
       { value: 'account' },
       { value: 'transactions' },
       {
-        value: <HoldersRolesFilters callback={setSortVariables}>role</HoldersRolesFilters>,
+        value: <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>role</HoldersRolesFilters>,
         props: { colSpan: 2 }
       },
       { value: 'locked xx coin' },
       { value: 'balance xx' }
     ],
-    [setSortVariables]
+    [setSortVariables, sortVariables]
   );
   const rows = useMemo(
     () =>
