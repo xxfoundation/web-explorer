@@ -40,6 +40,10 @@ export const theme = createTheme({
   palette,
   typography: {
     fontFamily: '\'Roboto\', sans-serif',
+    code: {
+      fontSize: 14,
+      whiteSpace: 'nowrap'
+    },
     h1: {
       fontSize: 46,
       fontWeight: 800,
@@ -71,8 +75,11 @@ export const theme = createTheme({
       textTransform: 'uppercase'
     },
     h6: {
-      fontSize: 12,
-      fontWeight: 400
+      fontSize: 13,
+      fontWeight: 700,
+      letterSpacing: 1.5,
+      color: palette.grey[500],
+      textTransform: 'uppercase'
     },
     subheader4: {
       fontSize: 14,
@@ -115,7 +122,8 @@ export const theme = createTheme({
   },
   gradients: {
     primary:
-      'linear-gradient(68.04deg, #4668BF 14.57%, #2581D6 41.33%, #019CB1 72.19%, #01ACAC 96.47%, #959595 112.54%)'
+      'linear-gradient(68.04deg, #4668BF 14.57%, #2581D6 41.33%, #019CB1 72.19%, #01ACAC 96.47%, #959595 112.54%)',
+    secondary: 'linear-gradient(68.04deg, #62A3FF 14.57%, #3FBAFD 41.33%, #38CCE8 72.19%, #7AEBEF 96.47%, #FFFFFF 112.54%)',
   },
   shape: {
     borderRadius: 11

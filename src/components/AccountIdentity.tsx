@@ -3,7 +3,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import { Avatar, Divider, Grid, IconButton, Link, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../themes/default';
-import { PaperStyled } from './Paper/PaperWrap.styled';
+import PaperStyled from './Paper/PaperWrap.styled';
 
 type AccountIdentityType = {
   address: string;
