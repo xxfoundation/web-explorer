@@ -1,13 +1,6 @@
 import BN from 'bn.js';
 
-export type Roles = 'council' | 'validator' | 'nominator' | 'tech committee';
-
-export type HoldersRoles =
-  | 'council'
-  | 'validator'
-  | 'nominator'
-  | 'technical committe'
-  | 'treasuries';
+export type Roles = 'council' | 'validator' | 'nominator' | 'technical committe' | 'treasuries';
 
 export type BalanceType = {
   transferable: string | BN;
@@ -22,7 +15,12 @@ export type LockedBalanceType = {
 };
 
 export type AccountType = {
+  rank: number;
+  transactions: number;
+  lockedCoin: string | BN;
+  account: string;
   roles: Roles[];
+  // roles: Roles[];
   id: string;
   address: string;
   publicKey: string;
@@ -38,4 +36,18 @@ export type AccountType = {
   balance: BalanceType;
   reserved: LockedBalanceType;
   locked: LockedBalanceType;
+};
+
+export type MetricScoreProps = {
+  veryGood?: string;
+  good: string;
+  neutral: string;
+  bad: string;
+  veryBad?: string;
+};
+
+export type MetricProps = {
+  title: string;
+  description: string;
+  scores: MetricScoreProps;
 };

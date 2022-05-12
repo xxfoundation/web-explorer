@@ -1,7 +1,6 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Divider, Stack, Typography } from '@mui/material';
-import BN from 'bn.js';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import genSkeletons from '../../components/genSkeletons';
@@ -9,18 +8,10 @@ import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import CustomTooltip from '../../components/Tooltip';
-import { HoldersRoles } from './types';
+import HoldersRolesFilters from './HoldersRolesFilters';
+import { AccountType, Roles } from './types';
 
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
-
-type AccountType = {
-  rank: number;
-  transactions: number;
-  roles: HoldersRoles[];
-  lockedCoin: string | BN;
-  balance: string | BN;
-  account: string;
-};
 
 const sampleData: AccountType[] = genSkeletons(23).map((_, index) => {
   return {
@@ -28,21 +19,40 @@ const sampleData: AccountType[] = genSkeletons(23).map((_, index) => {
     transactions: 123,
     roles: ['council', 'nominator'],
     lockedCoin: '000000',
-    balance: '16880000',
-    account: sampleAddress
+    account: sampleAddress,
+    name: 'Display name',
+    id: '0x6d6f646c43726f77646c6f610000000000000000',
+    publicKey: '0x165161616161',
+    balance: {
+      transferable: '123231200000'
+    },
+    reserved: {
+      bonded: '234565',
+      unbonding: '2144',
+      democracy: '234',
+      election: '234',
+      vesting: '2342'
+    },
+    locked: {
+      bonded: '6772',
+      unbonding: '3',
+      democracy: '5',
+      election: '76',
+      vesting: '32'
+    },
+    personalIntroduction:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ultrices aliquet est ac consequat. Quisque tincidunt tellus at dapibus lacinia. Etiam gravida pulvinar vestibulum.',
+    address: '6a7YefNJArBVBBVzdMdJ5V4giafmBdfhwi7DiAcxseKA2zbt',
+    stash: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
+    controller: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
+    riotID: '@jacogr:matrix.parity.io',
+    website: 'http://github/jacobgr',
+    email: 'test@elixxir.io',
+    twitter: 'xx_network'
   };
 });
 
-const headers: BaselineCell[] = [
-  { value: 'rank' },
-  { value: 'account' },
-  { value: 'transactions' },
-  { value: 'role', props: { colSpan: 2 } },
-  { value: 'locked xx coin' },
-  { value: 'balance xx' }
-];
-
-const RolesTooltipContent: FC<{ roles: HoldersRoles[] }> = ({ roles }) => {
+const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
   const labels = useMemo(
     () => roles.slice(1).map((role, index) => <span key={index}>{role}</span>),
     [roles]
@@ -55,7 +65,7 @@ const RolesTooltipContent: FC<{ roles: HoldersRoles[] }> = ({ roles }) => {
   );
 };
 
-const rolesToCell = (roles: HoldersRoles[]) => {
+const rolesToCell = (roles: Roles[]) => {
   return (
     <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
       <Stack
@@ -78,11 +88,22 @@ const accountToRow = (item: AccountType): BaselineCell[] => {
     { value: item.transactions },
     { value: rolesToCell(item.roles), props: { colSpan: 2 } },
     { value: <FormatBalance value={item.lockedCoin} /> },
-    { value: <FormatBalance value={item.balance} /> }
+    { value: <FormatBalance value={item.balance.transferable} /> }
   ];
 };
 
 const HoldersTable: FC = () => {
+  const [sortVariables, setSortVariables] = useState<Record<Roles, boolean>>({
+    council: false,
+    nominator: false,
+    validator: false,
+    'technical committe': false,
+    treasuries: false
+  });
+  useEffect(() => {
+    // TODO testing
+    console.warn(`filter variables ${JSON.stringify(sortVariables)}`);
+  }, [sortVariables]);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
   const onRowsPerPageChange = useCallback((event) => {
@@ -92,6 +113,20 @@ const HoldersTable: FC = () => {
   const onChangePage = useCallback((_: unknown, number: number) => {
     setPage(number);
   }, []);
+  const headers: BaselineCell[] = useMemo(
+    () => [
+      { value: 'rank' },
+      { value: 'account' },
+      { value: 'transactions' },
+      {
+        value: <HoldersRolesFilters callback={setSortVariables}>role</HoldersRolesFilters>,
+        props: { colSpan: 2 }
+      },
+      { value: 'locked xx coin' },
+      { value: 'balance xx' }
+    ],
+    [setSortVariables]
+  );
   const rows = useMemo(
     () =>
       (rowsPerPage > 0

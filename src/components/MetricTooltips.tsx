@@ -13,21 +13,8 @@ import {
   Typography
 } from '@mui/material';
 import React, { FC } from 'react';
+import { MetricProps } from '../pages/accounts/types';
 import { theme } from '../themes/default';
-
-type MetricScoreProps = {
-  veryGood?: string;
-  good: string;
-  neutral: string;
-  bad: string;
-  veryBad?: string;
-};
-
-type MetricProps = {
-  title: string;
-  description: string;
-  scores: MetricScoreProps;
-};
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
