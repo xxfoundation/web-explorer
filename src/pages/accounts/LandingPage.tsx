@@ -1,6 +1,6 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import HoldersTable from './AccountHolders';
+import HoldersTable from './HoldersTable';
 import StakingSupply from './StakingSupply';
 import Summary from './Summary';
 import TotalIssuance from './TotalIssuance';

@@ -3,8 +3,8 @@ import { styled } from '@mui/material/styles';
 
 export const TagStyle = (filled?: boolean) => styled(Box)(({ theme }) => ({
     display: 'inline-flex',
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 3,
+    paddingBottom: 3,
     paddingLeft: 9,
     paddingRight: 9,
     borderWidth: 1,
