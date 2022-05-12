@@ -40,7 +40,7 @@ const BarChartContainer: FC<BarChartContainerProps> = ({ series }) => {
           {seriesB ? (
             <BarSeries inverse={true} />
           ) : (
-            <Box sx={{ pb: 10 }} />
+            <Box sx={{ pb: hasTwo ? 10 : 0 }} />
           )}
           <BarInfoContainer />
         </ChartContainer>
