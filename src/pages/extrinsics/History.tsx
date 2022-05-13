@@ -6,7 +6,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
 import HistoryTable from './HistoryTable';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../components/Paper/PaperWrap.styled';
 
 const extrinsinctCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;

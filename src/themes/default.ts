@@ -5,6 +5,10 @@ const palette = {
     main: '#00A2D6', // sets link color
     contrastText: '#FFF'
   },
+  secondary: {
+    main: '#08CDD7',
+    contrastText: '#FFF'
+  },
   warning: {
     main: '#FFC908'
   },

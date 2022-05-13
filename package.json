@@ -71,6 +71,7 @@
     "@types/lodash": "^4.14.181",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-window": "^1.8.5",
+    "@types/webpack-env": "^1.16.4",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",

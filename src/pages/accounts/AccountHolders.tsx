@@ -5,7 +5,7 @@ import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import genSkeletons from '../../components/genSkeletons';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import CustomTooltip from '../../components/Tooltip';
@@ -50,8 +50,8 @@ const RolesTooltipContent: FC<{ roles: RolesType[] }> = ({ roles }) => {
   );
   return (
     <>
-      <Typography>additional roles</Typography>
-      <Stack spacing={2}>{labels}</Stack>
+      <h5>additional roles</h5>
+      <p>{labels}</p>
     </>
   );
 };
@@ -65,7 +65,7 @@ const rolesToCell = (roles: RolesType[]) => {
         divider={<Divider flexItem variant='middle' orientation='vertical' />}
       >
         <span>{roles[0]}</span>
-        <AccountBoxIcon />
+        <AccountBoxIcon color='primary'  />
       </Stack>
     </CustomTooltip>
   );

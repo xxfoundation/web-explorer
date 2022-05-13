@@ -5,7 +5,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import BarChart from '../../components/charts/BarChart/BarChart';
 import { PaperWrap } from '../../components/Paper/PaperWrap';
-import { PaperStyled } from '../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import TransferTable from './TransfersTable';
 
 const extrinsincCountIn72Hours = 4320;
