@@ -6,7 +6,7 @@ import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
 import CouncilCard from './account/council';
 import GovernanceCard from './account/governance';
-import IdentityCard from './account/Identity';
+import IdentityCard from './account/identity';
 import PerformanceCard from './account/performance';
 import StakingCard from './account/staking';
 import SummaryCard from './account/Summary';
