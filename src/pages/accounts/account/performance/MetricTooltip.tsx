@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../../../../themes/default';
-import { MetricPopupProps as MetricTooltipProps } from '../../types';
+import { MetricPopupProps } from '../../types';
 import { BadScore, GoodScore, NeutralScore, VeryBadScore, VeryGoodScore } from './ScoreIcons';
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -61,7 +61,7 @@ const ScoreBox: FC = ({ children }) => {
   );
 };
 
-const ToolttipTitle: FC<MetricTooltipProps> = (props) => {
+const ToolttipTitle: FC<MetricPopupProps> = (props) => {
   return (
     <>
       <Typography variant='h5'>{props.name}</Typography>
@@ -117,7 +117,7 @@ const ToolttipTitle: FC<MetricTooltipProps> = (props) => {
   );
 };
 
-const MetricTooltip: FC<Omit<TooltipProps, 'title'> & { metrics: MetricTooltipProps }> = ({
+const MetricTooltip: FC<Omit<TooltipProps, 'title'> & { metrics: MetricPopupProps }> = ({
   children,
   metrics,
   ...props

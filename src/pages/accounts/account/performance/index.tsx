@@ -1,25 +1,26 @@
 import { Box, Typography } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import TabsWithPanels from '../../../../components/Tabs';
-import { Roles } from '../../types';
+import { AccountType } from '../../types';
 import Charts from './Charts';
-import MetricCard from './MetricsCard';
+import MetricCards from './MetricsCards';
 
-const panels = [
-  {
-    label: <Typography>metrics</Typography>,
-    content: <MetricCard />
-  },
-  {
-    label: <Typography>charts</Typography>,
-    content: <Charts />
-  }
-];
-
-const PerformanceCard: FC<{ roles: Roles[] }> = ({ roles }) => {
-  if (!roles.includes('validator')) {
-    return <></>;
-  }
+const PerformanceCard: FC<{ account: AccountType }> = ({ account }) => {
+  const incompatibleRole = useMemo(() => !account.roles.includes('validator'), [account]);
+  const panels = useMemo(() => {
+    if (incompatibleRole) return [];
+    return [
+      {
+        label: <Typography>metrics</Typography>,
+        content: <MetricCards account={account} />
+      },
+      {
+        label: <Typography>charts</Typography>,
+        content: <Charts />
+      }
+    ];
+  }, [account, incompatibleRole]);
+  if (incompatibleRole) return <></>;
   return (
     <Box padding={'40px'}>
       <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>

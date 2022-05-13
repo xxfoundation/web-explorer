@@ -15,29 +15,34 @@ export type LockedBalanceType = {
   vesting: string | BN;
 };
 
+export type AccountIdentityFields = {
+  displayName?: string;
+  legalName?: string;
+  email?: string;
+  website?: string;
+  twitter?: string;
+  riotName?: string;
+  blurb?: string;
+};
+
 export type AccountType = {
-  rank: number;
-  transactions: number;
-  lockedCoin: string | BN;
-  account: string;
-  roles: Roles[];
-  // roles: Roles[];
   id: string;
   address: string;
   publicKey: string;
-  name?: string;
-  legalName?: string;
-  personalIntroduction?: string;
   stash: string;
   controller: string;
-  email?: string;
-  twitter?: string;
-  riotID?: string;
-  website?: string;
+  roles: Roles[];
+
+  rank: number;
+  transactions: number;
+  lockedCoin: string | BN;
+
   balance: BalanceType;
   reserved: LockedBalanceType;
   locked: LockedBalanceType;
-};
+} & AccountIdentityFields;
+
+export type MetricsType = 'identity';
 
 export type MetricScores = 'very good' | 'good' | 'neutral' | 'bad' | 'very bad';
 

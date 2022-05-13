@@ -3,25 +3,25 @@ import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../../themes/default';
+import { AccountType, Metrics, MetricsType } from '../../types';
+import validations from './MetricsValidations';
 import MetricTooltip from './MetricTooltip';
 import ScoreIcon from './ScoreIcons';
-import TooltipConfig from './tooltips.json';
-
-type MetricsType = 'identity';
+import getTooltipConfiguration from './tooltipConfiguration';
 
 const metrics: [MetricsType] = ['identity'];
-// TODO this should be I'm a json file
-// descritiopn is dinamic too
-// another different file for the tooltips
 
-const ScoreTile: FC<{ metric: MetricsType }> = ({ metric }) => {
-  // TODO fetch score for each metric
-  const tooltip = { ...TooltipConfig[metric] };
+const ScoreTile: FC<{ metric: MetricsType; score: Metrics['score']; description: string }> = ({
+  description,
+  metric,
+  score
+}) => {
+  const tooltipConfig = getTooltipConfiguration(metric);
   return (
     <PaperStyled>
       <Grid container sx={{ height: '80px' }} height={'100%'}>
         <Grid item xs={4}>
-          <ScoreIcon value={undefined} />
+          <ScoreIcon value={score} />
         </Grid>
         <Grid item xs={8}>
           <Stack direction={'row'}>
@@ -36,8 +36,8 @@ const ScoreTile: FC<{ metric: MetricsType }> = ({ metric }) => {
             >
               {metric}
             </Typography>
-            {tooltip && (
-              <MetricTooltip metrics={tooltip}>
+            {tooltipConfig && (
+              <MetricTooltip metrics={tooltipConfig}>
                 <InfoOutlinedIcon
                   fontSize='small'
                   color='primary'
@@ -52,7 +52,7 @@ const ScoreTile: FC<{ metric: MetricsType }> = ({ metric }) => {
             lineHeight={'18.4px'}
             color={theme.palette.grey[500]}
           >
-            {'nothing yet'}
+            {description}
           </Typography>
         </Grid>
       </Grid>
@@ -60,14 +60,18 @@ const ScoreTile: FC<{ metric: MetricsType }> = ({ metric }) => {
   );
 };
 
-const MetricCard: FC = ({}) => {
+const MetricCards: FC<{ account: AccountType }> = ({ account }) => {
   const scoreTiles = useMemo(() => {
-    return metrics.map((metric, index) => (
-      <Grid item xs={12} md={6} key={index}>
-        <ScoreTile metric={metric} />
-      </Grid>
-    ));
-  }, []);
+    const validationResult = validations(account);
+    return metrics.map((metric, index) => {
+      const [score, description] = validationResult[metric];
+      return (
+        <Grid item xs={12} md={6} key={index}>
+          <ScoreTile metric={metric} score={score} description={description} />
+        </Grid>
+      );
+    });
+  }, [account]);
   return (
     <Grid container spacing={1}>
       {scoreTiles}
@@ -75,4 +79,4 @@ const MetricCard: FC = ({}) => {
   );
 };
 
-export default MetricCard;
+export default MetricCards;

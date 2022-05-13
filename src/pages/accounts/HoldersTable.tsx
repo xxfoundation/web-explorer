@@ -84,7 +84,7 @@ const accountToRow = (item: AccountType): BaselineCell[] => {
   const rankProps = item.rank <= 10 ? { style: { fontWeight: 900 } } : {};
   return [
     { value: item.rank, props: rankProps },
-    { value: <Address value={item.account} link={`/accounts/${item.account}`} truncated /> },
+    { value: <Address value={item.address} link={`/accounts/${item.address}`} truncated /> },
     { value: item.transactions },
     { value: rolesToCell(item.roles), props: { colSpan: 2 } },
     { value: <FormatBalance value={item.lockedCoin} /> },

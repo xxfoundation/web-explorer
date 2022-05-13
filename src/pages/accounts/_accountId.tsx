@@ -12,13 +12,14 @@ import PerformanceCard from './account/performance';
 import StakingCard from './account/staking';
 import { AccountType } from './types';
 
-const sampleData: AccountType = {
+const sampleAccount: AccountType = {
+  address: '6a7YefNJArBVBBVzdMdJ5V4giafmBdfhwi7DiAcxseKA2zbt',
   rank: 1,
   transactions: 123,
   lockedCoin: '000000',
-  account: '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062',
   roles: ['nominator'],
-  name: 'Display name',
+  stash: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
+  controller: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
   id: '0x6d6f646c43726f77646c6f610000000000000000',
   publicKey: '0x165161616161',
   balance: {
@@ -38,12 +39,12 @@ const sampleData: AccountType = {
     election: '76',
     vesting: '32'
   },
-  personalIntroduction:
+
+  legalName: 'aaaaa',
+  displayName: 'Display name',
+  blurb:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ultrices aliquet est ac consequat. Quisque tincidunt tellus at dapibus lacinia. Etiam gravida pulvinar vestibulum.',
-  address: '6a7YefNJArBVBBVzdMdJ5V4giafmBdfhwi7DiAcxseKA2zbt',
-  stash: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
-  controller: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
-  riotID: '@jacogr:matrix.parity.io',
+  riotName: '@jacogr:matrix.parity.io',
   website: 'http://github/jacobgr',
   email: 'test@elixxir.io',
   twitter: 'xx_network'
@@ -60,42 +61,42 @@ const AccountId: FC = () => {
   const query = useQuery();
   const rolesquery = query.get('roles');
   if (rolesquery) {
-    sampleData.roles = rolesquery.split(',') as AccountType['roles'];
+    sampleAccount.roles = rolesquery.split(',') as AccountType['roles'];
   }
 
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       {/*We need this name here the same info on AccountIdentity */}
-      <Typography variant='h1'>{sampleData.name}</Typography>
+      <Typography variant='h1'>{sampleAccount.displayName}</Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
-          <IdentityCard account={sampleData} />
+          <IdentityCard account={sampleAccount} />
         </Grid>
         <Grid item xs={12} md={6}>
           <BalanceCard
-            balance={sampleData.balance}
-            reserved={sampleData.reserved}
-            locked={sampleData.locked}
+            balance={sampleAccount.balance}
+            reserved={sampleAccount.reserved}
+            locked={sampleAccount.locked}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <Info createdDate={1652101618} nonce={23} roles={sampleData.roles} />
+          <Info createdDate={1652101618} nonce={23} roles={sampleAccount.roles} />
         </Grid>
         <Grid item xs={12}>
-          <BlockchainCard roles={sampleData.roles} />
+          <BlockchainCard roles={sampleAccount.roles} />
         </Grid>
         <Grid item xs={12}>
-          <GovernanceCard roles={sampleData.roles} />
+          <GovernanceCard roles={sampleAccount.roles} />
         </Grid>
         <Grid item xs={12}>
-          <StakingCard roles={sampleData.roles} />
+          <StakingCard roles={sampleAccount.roles} />
         </Grid>
         <Grid item xs={12}>
-          <CouncilCard roles={sampleData.roles} />
+          <CouncilCard roles={sampleAccount.roles} />
         </Grid>
         <Grid item xs={12}>
-          <PerformanceCard roles={sampleData.roles} />
+          <PerformanceCard account={sampleAccount} />
         </Grid>
       </Grid>
     </Container>
