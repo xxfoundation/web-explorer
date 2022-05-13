@@ -65,7 +65,7 @@ const ToolttipTitle: FC<MetricPopupProps> = (props) => {
   return (
     <>
       <Typography variant='h5'>{props.name}</Typography>
-      <Typography variant='h6' component={'p'}>
+      <Typography fontSize={'12px'} fontWeight={400} component={'p'}>
         {props.description}
       </Typography>
       {props.scores.veryGood && (
