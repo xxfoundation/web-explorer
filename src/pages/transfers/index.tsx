@@ -10,7 +10,7 @@ import TransferTable from './TransfersTable';
 const extrinsincCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
 
-function buildExtrinsicsTimestamps () {
+function buildTimestamps () {
   const date = dayjs();
   const timestamps = Array.from(Array(extrinsincCountIn72Hours).keys())
     .map(() => Math.floor((date.unix() * 1000) - (Math.random() * (48 * HOUR))))
@@ -20,7 +20,8 @@ function buildExtrinsicsTimestamps () {
 
 const TransfersPage = () => {
   const totalOfExtrinsics = 32987;
-  const timestamps = useMemo(() => buildExtrinsicsTimestamps(), []);
+  const timestamps = useMemo(() => buildTimestamps(), []);
+  const timestampsB = useMemo(() => buildTimestamps(), []);
 
   return (
     <Container sx={{ my: 5 }}>
@@ -37,7 +38,7 @@ const TransfersPage = () => {
       <Box sx={{ mb: 5 }}>
         <PaperStyled>
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-            <BarChart hoverLabel={'transfer'} timestamps={timestamps} yAxis={{ title: 'Transfers' }} />
+            <BarChart series={[{ timestamps, label: 'xx' }, { timestamps: timestampsB, label: 'transfers' }]}  />
           </Box>
         </PaperStyled>
       </Box>

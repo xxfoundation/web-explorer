@@ -9,8 +9,14 @@ import UnbondingTable from './UnbondingTable';
 STAKING ACTIVITY
 UNBONDING */
 const panels = [
-  { label: <Typography>rewards & slashes</Typography>, content: <Typography>rewards & slashes placeholder</Typography> },
-  { label: <Typography>staking activity</Typography>, content: <Typography>staking activity placeholder</Typography> },
+  {
+    label: <Typography>rewards & slashes</Typography>,
+    content: <Typography>rewards & slashes placeholder</Typography>
+  },
+  {
+    label: <Typography>staking activity</Typography>,
+    content: <Typography>staking activity placeholder</Typography>
+  },
   { label: <Typography>unbonding</Typography>, content: <UnbondingTable /> }
 ];
 

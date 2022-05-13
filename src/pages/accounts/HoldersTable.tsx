@@ -1,6 +1,7 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Typography } from '@mui/material';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import genSkeletons from '../../components/genSkeletons';
@@ -59,24 +60,28 @@ const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
   );
   return (
     <>
-      <Typography>additional roles</Typography>
-      <Stack spacing={2}>{labels}</Stack>
+      <Typography fontSize={'12px'} textTransform={'uppercase'} paddingBottom={'10px'}>
+        additional roles
+      </Typography>
+      <Stack fontSize={'12px'} spacing={2}>
+        {labels}
+      </Stack>
     </>
   );
 };
 
 const rolesToCell = (roles: Roles[]) => {
   return (
-    <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
-      <Stack
-        direction={'row'}
-        spacing={1}
-        divider={<Divider flexItem variant='middle' orientation='vertical' />}
-      >
-        <span>{roles[0]}</span>
-        <AccountBoxIcon />
-      </Stack>
-    </CustomTooltip>
+    <Stack
+      direction={'row'}
+      spacing={1}
+      divider={<Divider flexItem variant='middle' orientation='vertical' />}
+    >
+      <span>{roles[0]}</span>
+      <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
+        {roles.length > 1 ? <SwitchAccountIcon /> : <AccountBoxIcon />}
+      </CustomTooltip>
+    </Stack>
   );
 };
 
@@ -94,16 +99,12 @@ const accountToRow = (item: AccountType): BaselineCell[] => {
 
 const HoldersTable: FC = () => {
   const [sortVariables, setSortVariables] = useState<Record<Roles, boolean>>({
-    council: false,
-    nominator: false,
     validator: false,
-    'technical committe': false,
-    treasurie: false
+    nominator: false,
+    council: false,
+    'technical committee': false,
+    treasury: false
   });
-  useEffect(() => {
-    // TODO testing
-    console.warn(`filter variables ${JSON.stringify(sortVariables)}`);
-  }, [sortVariables]);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [page, setPage] = useState(0);
   const onRowsPerPageChange = useCallback((event) => {
@@ -119,7 +120,11 @@ const HoldersTable: FC = () => {
       { value: 'account' },
       { value: 'transactions' },
       {
-        value: <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>role</HoldersRolesFilters>,
+        value: (
+          <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>
+            role
+          </HoldersRolesFilters>
+        ),
         props: { colSpan: 2 }
       },
       { value: 'locked xx coin' },
@@ -137,8 +142,8 @@ const HoldersTable: FC = () => {
   );
   return (
     <PaperStyled>
-      <Typography variant='h3' sx={{ mb: 7, px: '16px' }}>
-        top 1,000 holders out of 100,765
+      <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
+        Account Holders
       </Typography>
       <BaselineTable
         rows={rows}

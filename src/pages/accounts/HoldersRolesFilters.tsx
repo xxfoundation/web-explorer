@@ -9,11 +9,11 @@ import { Roles } from './types';
 type RoleFiltersType = Roles | 'all';
 
 export const filtersDefaultState = (): Record<Roles, boolean> => ({
-  council: false,
-  nominator: false,
   validator: false,
-  'technical committe': false,
-  treasurie: false
+  nominator: false,
+  council: false,
+  'technical committee': false,
+  treasury: false
 });
 
 const cleanLocalStateFilters = () => {
@@ -30,21 +30,13 @@ const HoldersRolesFilters: FC<{
 }> = ({ callback, children, roles }) => {
   const [open, { set: toggle }] = useToggle();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const [filtersState, setFilters] = useState<Record<RoleFiltersType, boolean>>({
-    all: false,
-    council: false,
-    nominator: false,
-    validator: false,
-    'technical committe': false,
-    treasurie: false
-  });
+  const [selectedRoles, setSeletedRoles] = useState<Record<RoleFiltersType, boolean>>(cleanLocalStateFilters());
 
   const onClick = useCallback(
     ({ currentTarget }) => {
       setAnchorEl(currentTarget);
       toggle(true);
-      setFilters(() => ({
+      setSeletedRoles(() => ({
         all: Object.values(roles).filter((r) => r).length === 5,
         ...roles
       }));
@@ -54,13 +46,13 @@ const HoldersRolesFilters: FC<{
 
   const onCheckBoxChange = useCallback(
     (name: string, checked: boolean) => {
-      setFilters((prev) => ({ ...prev, [name]: checked }));
+      setSeletedRoles((prev) => ({ ...prev, [name]: checked }));
     },
-    [setFilters]
+    [setSeletedRoles]
   );
 
-  const filters = useMemo(() => {
-    return Object.entries(filtersState).map(([label, value]) => {
+  const displayedCheckboxList = useMemo(() => {
+    return Object.entries(selectedRoles).map(([label, value]) => {
       return (
         <FormControlLabel
           key={label}
@@ -68,12 +60,12 @@ const HoldersRolesFilters: FC<{
             span: {
               fontSize: '14px',
               fontWeight: 400,
-              color: theme.palette.grey[600]
+              color: (value && roles[label as Roles]) ? theme.palette.primary.main : theme.palette.grey[600]
             }
           }}
           control={
             <Checkbox
-              disabled={label === 'all' ? false : filtersState.all}
+              disabled={label === 'all' ? false : selectedRoles.all}
               checked={value as boolean}
               onChange={({ target: { checked } }) => onCheckBoxChange(label, checked)}
             />
@@ -82,17 +74,17 @@ const HoldersRolesFilters: FC<{
         />
       );
     });
-  }, [filtersState, onCheckBoxChange]);
+  }, [selectedRoles, roles, onCheckBoxChange]);
 
   const cleanFilters = useCallback(() => {
-    return setFilters(() => {
+    return setSeletedRoles(() => {
       callback(filtersDefaultState());
       return cleanLocalStateFilters();
     });
   }, [callback]);
 
   const handleClose = useCallback(() => {
-    setFilters(() => {
+    setSeletedRoles(() => {
       toggle(false);
       setAnchorEl(null);
       return {
@@ -102,26 +94,26 @@ const HoldersRolesFilters: FC<{
   }, [toggle]);
 
   const applyOnClick = useCallback(() => {
-    const { all, ...queryFilters } = filtersState;
+    const { all, ...selection } = selectedRoles;
     callback(
       all
         ? {
-            'technical committe': true,
-            council: true,
-            nominator: true,
-            treasurie: true,
-            validator: true
-          }
+          validator: true,
+          nominator: true,
+          council: true,
+          'technical committee': true,
+          treasury: true
+        }
         : {
-            council: queryFilters.council,
-            nominator: queryFilters.nominator,
-            validator: queryFilters.validator,
-            'technical committe': queryFilters['technical committe'],
-            treasurie: queryFilters.treasurie
-          }
+          validator: selection.validator,
+          nominator: selection.nominator,
+          council: selection.council,
+          'technical committee': selection['technical committee'],
+          treasury: selection.treasury
+        }
     );
     handleClose();
-  }, [callback, filtersState, handleClose]);
+  }, [selectedRoles, callback, handleClose]);
 
   const endIcon = useMemo(
     () => (open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />),
@@ -141,7 +133,7 @@ const HoldersRolesFilters: FC<{
         onClose={handleClose}
       >
         <FormGroup sx={{ padding: '30px' }}>
-          <Stack direction={'column'}>{filters}</Stack>
+          <Stack direction={'column'} paddingBottom={'5px'}>{displayedCheckboxList}</Stack>
           <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
             <Button
               variant='contained'
