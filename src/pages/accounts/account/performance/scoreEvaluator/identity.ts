@@ -1,18 +1,20 @@
-import { AccountIdentityFields, AccountType, Metrics } from '../../../types';
+import { AccountIdentityFields, AccountType, MetricScores } from '../../../types';
 
 type IdentityFieldsType = keyof AccountIdentityFields;
 
-const getIdentityScore = (account: AccountType): [Metrics['score'], string] => {
-  const baseMessage = (value: string) => `Validator ${value} information on his identity`;
-  const identityFields: IdentityFieldsType[] = [
-    'displayName',
-    'legalName',
-    'email',
-    'website',
-    'twitter',
-    'riotName',
-    'blurb'
-  ];
+const identityFields: IdentityFieldsType[] = [
+  'displayName',
+  'legalName',
+  'email',
+  'website',
+  'twitter',
+  'riotName',
+  'blurb'
+];
+
+const baseMessage = (value: string) => `Validator ${value} information on his identity`;
+
+const getIdentityScore = (account: AccountType): [MetricScores, string] => {
   const result = identityFields.filter((field) => {
     const hasField = Object.keys(account).includes(field);
     return hasField ? !!account[field] : false;

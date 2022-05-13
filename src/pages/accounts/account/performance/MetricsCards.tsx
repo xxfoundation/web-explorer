@@ -3,11 +3,11 @@ import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../../themes/default';
-import { AccountType, Metrics, MetricsType } from '../../types';
+import { AccountType, MetricScores, MetricsType } from '../../types';
 import MetricTooltip from './MetricTooltip';
+import scoreEvaluator from './scoreEvaluator';
 import ScoreIcon from './ScoreIcons';
 import getTooltipConfiguration from './tooltipConfiguration';
-import validations from './validators';
 
 // const metrics: MetricsType[] = ['identity'];
 const metrics: MetricsType[] = [
@@ -23,7 +23,7 @@ const metrics: MetricsType[] = [
   'validator time'
 ];
 
-const ScoreTile: FC<{ metric: MetricsType; score: Metrics['score']; description: string }> = ({
+const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: string }> = ({
   description,
   metric,
   score
@@ -74,7 +74,7 @@ const ScoreTile: FC<{ metric: MetricsType; score: Metrics['score']; description:
 
 const MetricCards: FC<{ account: AccountType }> = ({ account }) => {
   const scoreTiles = useMemo(() => {
-    const validationResult = validations(account);
+    const validationResult = scoreEvaluator(account);
     return metrics.map((metric, index) => {
       const [score, description] = validationResult[metric];
       return (

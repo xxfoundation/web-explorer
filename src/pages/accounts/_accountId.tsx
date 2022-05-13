@@ -47,6 +47,20 @@ const sampleAccount: AccountType = {
   latestSlashes: 0,
   holderSlashes: 1,
 
+  nominators: 100,
+
+  eraPoints: 0,
+
+  averageCommission: 99.9,
+
+  democracy: {
+    councilMember: false,
+    proposalVoteForCouncil: 1,
+    proposalVotePerMonth: 0,
+    missedProposals: 13213,
+    latestNumberOfVotes: 0
+  },
+
   legalName: 'aaaaa',
   displayName: 'Display name',
   blurb:

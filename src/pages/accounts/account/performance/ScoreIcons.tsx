@@ -5,7 +5,7 @@ import StarsOutlinedIcon from '@mui/icons-material/StarsOutlined';
 import { Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../../../../themes/default';
-import { Metrics, MetricScores } from '../../types';
+import { MetricScores } from '../../types';
 
 const HeaderStack: FC<{ color?: string }> = ({ children, color }) => {
   return (
@@ -68,7 +68,7 @@ const scoreIconsMap: Record<MetricScores, FC> = {
   'very bad': VeryBadScore
 };
 
-const ScoreIcon: FC<{ value?: Metrics['score'] }> = ({ value }) => {
+const ScoreIcon: FC<{ value?: MetricScores }> = ({ value }) => {
   const ScoreIconElement = value ? scoreIconsMap[value] : scoreIconsMap.neutral;
   return <ScoreIconElement />;
 };

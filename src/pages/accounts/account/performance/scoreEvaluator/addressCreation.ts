@@ -1,10 +1,12 @@
-import { AccountType, Metrics } from '../../../types';
+import { AccountType, MetricScores } from '../../../types';
 
-const getaAddressCreationScore = (account: AccountType): [Metrics['score'], string] => {
+const baseMessage = (blockNumber: unknown, seniority: string) =>
+  `Stash address was created at block #${blockNumber} making it a ${seniority} of the network`;
+
+const presumedCurrentEra = 1000;
+
+const getaAddressCreationScore = (account: AccountType): [MetricScores, string] => {
   // fetch latest block to check blocknumber number and era
-  const baseMessage = (blockNumber: unknown, seniority: string) =>
-    `Stash address was created at block #${blockNumber} making it a ${seniority} of the network`;
-  const presumedCurrentEra = 1000;
   const eraDifference = presumedCurrentEra - account.era;
   if (eraDifference >= 365) {
     return ['very good', baseMessage('"unknown"', 'a veteran')];

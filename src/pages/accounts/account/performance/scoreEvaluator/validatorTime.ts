@@ -1,15 +1,15 @@
-import { AccountType, Metrics } from '../../../types';
+import { AccountType, MetricScores } from '../../../types';
 
-const getValidatorTimeScore = ({ firstValidatorEra }: AccountType): [Metrics['score'], string] => {
-  const presumedCurrentEra = 1000;
+const baseMsg = (duration: string) =>
+  `Validator has been active in the network for ${duration} of his lifetime`;
 
+const presumedCurrentEra = 1000;
+
+const getValidatorTimeScore = ({ firstValidatorEra }: AccountType): [MetricScores, string] => {
   if (!firstValidatorEra) {
     // TODO error validators must have first validator era
     return ['neutral', 'not a validator'];
   }
-
-  const baseMsg = (duration: string) =>
-    `Validator has been active in the network for ${duration} of his lifetime`;
 
   if (presumedCurrentEra * 0.9 < firstValidatorEra) {
     return ['good', baseMsg('more than 90%')];

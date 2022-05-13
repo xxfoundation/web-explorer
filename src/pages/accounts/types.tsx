@@ -16,7 +16,13 @@ export type LockedBalanceType = {
   vesting: string | BN;
 };
 
-type Judgements = 'Unknown' | 'Reasonable' | 'Known Good' | 'Out of Date' | 'Low Quality' | 'Erroneous'
+type Judgements =
+  | 'Unknown'
+  | 'Reasonable'
+  | 'Known Good'
+  | 'Out of Date'
+  | 'Low Quality'
+  | 'Erroneous';
 
 export type AccountIdentityFields = {
   displayName?: string;
@@ -31,7 +37,7 @@ export type AccountIdentityFields = {
   childrenIdentity?: string[];
 };
 
-export type AccountType = {
+export type AccountType = AccountIdentityFields & {
   id: string;
   address: string;
   publicKey: string;
@@ -48,10 +54,29 @@ export type AccountType = {
   locked: LockedBalanceType;
 
   era: number;
+
+  // validator fields?
   firstValidatorEra?: number;
   latestSlashes?: number;
   holderSlashes?: number;
-} & AccountIdentityFields;
+
+  nominators?: number;
+
+  eraPoints?: number;
+
+  averageCommission?: number;
+
+  frequencyOfRewards?: number;
+  unclaimedRewards?: number;
+
+  democracy?: {
+    latestNumberOfVotes: number;
+    proposalVotePerMonth: number;
+    proposalVoteForCouncil: number;
+    missedProposals: number;
+    councilMember: boolean;
+  };
+};
 
 export type MetricsType =
   | 'identity'
