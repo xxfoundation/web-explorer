@@ -32,7 +32,7 @@ const SearchBlocks: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   const history = useHistory();
   return (
     <GenericSearchInput
-      placeholder='Search by Block'
+      placeholder='Search by Block Number (insert an integer)'
       messageLoader={(value: string) => `Querying Block Number ${value}`}
       document={GET_BLOCK_BY_PK}
       variables={(v: string) => ({ blockNumber: Number(v) })}
@@ -57,7 +57,7 @@ const SearchExtrinsics: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   return (
     <GenericSearchInput
       messageLoader={(value: string) => `Querying Extrinsic ${value}`}
-      placeholder='Search by extrinsics'
+      placeholder='Search by Extrinsic Hash (insert an hexadecimal string)'
       document={FIND_EXTRINSIC_BY_HASH}
       variables={(v: string) => ({
         where: {
@@ -87,7 +87,7 @@ const SearchAccount: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
   return (
     <GenericSearchInput
       messageLoader={(value: string) => `Querying address with: ${value}`}
-      placeholder='Search by account address'
+      placeholder='Search by Account Address (insert a ss58 string)'
       document={FIND_ACCOUNT_BY_ADDRESS}
       variables={(v: string) => ({
         where: {
@@ -209,9 +209,9 @@ const SearchBar = () => {
               inputProps={{ 'aria-label': 'Without label' }}
               IconComponent={KeyboardArrowDownIcon}
             >
-              <SelectItem value={'blocks'}>Block </SelectItem>
-              <SelectItem value={'extrinsic'}>Extrinsic</SelectItem>
-              <SelectItem value={'accounts'}>Account</SelectItem>
+              <SelectItem value={'blocks'}>Block Number </SelectItem>
+              <SelectItem value={'extrinsic'}>Extrinsic Hash</SelectItem>
+              <SelectItem value={'accounts'}>Account Address</SelectItem>
             </SelectOption>
           </FormControl>
         </Grid>
