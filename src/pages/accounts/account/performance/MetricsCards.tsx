@@ -4,12 +4,24 @@ import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import { theme } from '../../../../themes/default';
 import { AccountType, Metrics, MetricsType } from '../../types';
-import validations from './MetricsValidations';
 import MetricTooltip from './MetricTooltip';
 import ScoreIcon from './ScoreIcons';
 import getTooltipConfiguration from './tooltipConfiguration';
+import validations from './validators';
 
-const metrics: [MetricsType] = ['identity'];
+// const metrics: MetricsType[] = ['identity'];
+const metrics: MetricsType[] = [
+  'identity',
+  'address creation',
+  'slashes',
+  'subaccounts',
+  'nominators',
+  'era points',
+  'commission',
+  'frequency of payouts',
+  'governance',
+  'validator time'
+];
 
 const ScoreTile: FC<{ metric: MetricsType; score: Metrics['score']; description: string }> = ({
   description,

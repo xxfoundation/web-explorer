@@ -16,6 +16,8 @@ export type LockedBalanceType = {
   vesting: string | BN;
 };
 
+type Judgements = 'Unknown' | 'Reasonable' | 'Known Good' | 'Out of Date' | 'Low Quality' | 'Erroneous'
+
 export type AccountIdentityFields = {
   displayName?: string;
   legalName?: string;
@@ -24,6 +26,9 @@ export type AccountIdentityFields = {
   twitter?: string;
   riotName?: string;
   blurb?: string;
+  judgement?: Judgements;
+  parentIdentity?: string[];
+  childrenIdentity?: string[];
 };
 
 export type AccountType = {
@@ -41,9 +46,24 @@ export type AccountType = {
   balance: BalanceType;
   reserved: LockedBalanceType;
   locked: LockedBalanceType;
+
+  era: number;
+  firstValidatorEra?: number;
+  latestSlashes?: number;
+  holderSlashes?: number;
 } & AccountIdentityFields;
 
-export type MetricsType = 'identity';
+export type MetricsType =
+  | 'identity'
+  | 'address creation'
+  | 'slashes'
+  | 'subaccounts'
+  | 'nominators'
+  | 'era points'
+  | 'commission'
+  | 'frequency of payouts'
+  | 'governance'
+  | 'validator time';
 
 export type MetricScores = 'very good' | 'good' | 'neutral' | 'bad' | 'very bad';
 

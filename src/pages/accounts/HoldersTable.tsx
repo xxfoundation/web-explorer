@@ -17,6 +17,7 @@ const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
 const sampleData: AccountType[] = genSkeletons(23).map((_, index) => {
   return {
     rank: index + 1,
+    era: 148,
     transactions: 123,
     roles: ['council', 'nominator'],
     lockedCoin: '000000',

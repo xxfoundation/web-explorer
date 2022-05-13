@@ -14,14 +14,15 @@ import { AccountType } from './types';
 
 const sampleAccount: AccountType = {
   address: '6a7YefNJArBVBBVzdMdJ5V4giafmBdfhwi7DiAcxseKA2zbt',
-  rank: 1,
-  transactions: 123,
-  lockedCoin: '000000',
   roles: ['nominator'],
   stash: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
   controller: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
   id: '0x6d6f646c43726f77646c6f610000000000000000',
   publicKey: '0x165161616161',
+
+  rank: 1,
+  transactions: 123,
+  lockedCoin: '000000',
   balance: {
     transferable: '123231200000'
   },
@@ -40,6 +41,12 @@ const sampleAccount: AccountType = {
     vesting: '32'
   },
 
+  era: 800,
+  firstValidatorEra: 800,
+
+  latestSlashes: 0,
+  holderSlashes: 1,
+
   legalName: 'aaaaa',
   displayName: 'Display name',
   blurb:
@@ -47,7 +54,8 @@ const sampleAccount: AccountType = {
   riotName: '@jacogr:matrix.parity.io',
   website: 'http://github/jacobgr',
   email: 'test@elixxir.io',
-  twitter: 'xx_network'
+  twitter: 'xx_network',
+  judgement: 'Known Good'
 };
 
 function useQuery() {

@@ -1,10 +1,9 @@
-import { AccountIdentityFields, AccountType, Metrics, MetricsType } from '../../types';
+import { AccountIdentityFields, AccountType, Metrics } from '../../../types';
 
 type IdentityFieldsType = keyof AccountIdentityFields;
 
-const identityMetric = (account: AccountType): [Metrics['score'], string] => {
+const getIdentityScore = (account: AccountType): [Metrics['score'], string] => {
   const baseMessage = (value: string) => `Validator ${value} information on his identity`;
-  // Display Name, Legal Name, Email, Web, Twitter, Riot Name, Blurb
   const identityFields: IdentityFieldsType[] = [
     'displayName',
     'legalName',
@@ -19,7 +18,7 @@ const identityMetric = (account: AccountType): [Metrics['score'], string] => {
     return hasField ? !!account[field] : false;
   });
   // TODO check judments
-  if (result.length === identityFields.length) {
+  if (result.length === identityFields.length && account.judgement === 'Known Good') {
     return ['very good', baseMessage('provides all possible')];
   }
   if (account.displayName && account.email) {
@@ -34,8 +33,4 @@ const identityMetric = (account: AccountType): [Metrics['score'], string] => {
   return ['very good', 'sdfsd'];
 };
 
-const validations = (account: AccountType): Record<MetricsType, [Metrics['score'], string]> => {
-  return { identity: identityMetric(account) };
-};
-
-export default validations;
+export default getIdentityScore;
