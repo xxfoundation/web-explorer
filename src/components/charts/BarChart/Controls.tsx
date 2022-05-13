@@ -1,28 +1,26 @@
-import type { TimeInterval } from './types';
-
 import { Button, Stack, Typography } from '@mui/material';
-import React, { FC, useCallback }  from 'react';
+import React, { FC }  from 'react';
+
+import { useBarchartContext } from './BarChartContext';
 
 import { intervals } from './utils';
 
-type Props = {
-  onSelect: (interval: TimeInterval) => void;
-  selected: TimeInterval
-}
+const Controls: FC = () => {
+  const { interval } = useBarchartContext();
 
-const Controls: FC<Props> = ({ onSelect, selected }) => {
-  const select = useCallback((interval: TimeInterval) => () => onSelect(interval), [onSelect]);
-  
   return (
     <Stack direction='row'>
       {intervals.map((option) => (
         <Button
           key={option}
           variant='text'
-          color={selected === option ? 'primary' : 'inherit'}
-          onClick={select(option)}
+          color={interval.value === option ? 'primary' : 'inherit'}
+          onClick={interval.makeSetter(option)}
         >
-          <Typography style={{ letterSpacing: 5 }} variant={'subheader4'} color={selected === option ? 'primary' : 'inherit'}>
+          <Typography
+            style={{ letterSpacing: 5 }}
+            variant={'subheader4'}
+            color={interval.value === option ? 'primary' : 'inherit'}>
             {option}
           </Typography>
         </Button>

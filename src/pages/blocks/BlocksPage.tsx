@@ -2,7 +2,7 @@ import { Container, Stack, Typography } from '@mui/material';
 import React from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
-import { PaperWrap } from '../../components/Paper/PaperWrap';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
 import BlocksTable from './BlocksTable';
 
 const PageHeader = () => {

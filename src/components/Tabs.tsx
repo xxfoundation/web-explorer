@@ -1,7 +1,7 @@
 import { Box, Divider, Stack, styled, Tab, Tabs, Typography } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { theme } from '../themes/default';
-import { PaperWrap } from './Paper/PaperWrap';
+import PaperWrap from './Paper/PaperWrap.styled';
 
 type TabType = {
   label: JSX.Element;
@@ -36,13 +36,15 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   }
 });
 
-const TabsWithPanels: React.FC<{ panels: TabType[]; tabsLabel: string }> = ({
+const TabsWithPanels: React.FC<{ header?: ReactNode, panels: TabType[]; tabsLabel: string }> = ({
+  header,
   panels,
   tabsLabel
 }) => {
   const [value, setValue] = React.useState(0);
   return (
     <PaperWrap>
+      {header}
       <StyledTabs
         sx={{ mb: 3 }}
         value={value}

@@ -1,112 +1,52 @@
-import type { TimestampCounts, TimeInterval } from './types';
-import React, { FC, useMemo, useState } from 'react';
-import { Stack, Box, Typography } from '@mui/material';
-import { groupBy } from 'lodash';
-import dayjs from 'dayjs';
+import type { SeriesData } from './types';
+import React, { FC } from 'react';
+import { Box, styled } from '@mui/material';
 
-import Bar from './Bar';
-import ChartContainer from './BarChartContainer.styled';
+import { Provider } from './BarChartContext';
+import BarSeries from './BarSeries';
 import Controls from './Controls';
-import Legend from './Legend';
-import BarDivider from './BarDividerBox';
-import BarInfo from './BarInfo';
-import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
-import { calculateTickSize, getCountsByTimestamp, byDay, byMonth } from './utils';
+import BarIntervalLabels from './BarIntervalLabels';
+import BarInfoContainer from './BarInfoContainer';
 
-export const renderBars = (counts: TimestampCounts, interval: TimeInterval, max: number, hoverLabel: string): React.ReactNode[] => {
-  const entries = Object.entries(counts);
-  const intervalGroup = interval.includes('h') ? byDay : byMonth;
-  const grouped = groupBy(entries, intervalGroup);
-  const barLabelFormat = interval.includes('h')
-    ? 'HH'
-    : 'DD'
-  const barInfoFormat = interval.includes('h')
-    ? 'YYYY.MM.DD | HH:mm (Z)'
-    : 'YYYY.MM.DD';
+const ChartContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'stretch',
+  alignItems: 'stretch'
+});
 
-  return Object.entries(grouped).reduce(
-    (acc, [divider, bars], index) => {
-      acc.push(
-        <BarDivider key={divider} sx={{ ml: index === 0 ? 0 : 2 }}>
-          {divider}
-        </BarDivider>
-      );
+const hasTwoSeries = (series: SeriesData | [SeriesData, SeriesData]): series is [SeriesData, SeriesData] => Array.isArray(series); 
 
-      bars.forEach(([timestamp, value], valueIndex) => {
-        const date = dayjs.utc(parseInt(timestamp));
-        acc.push(
-          <Bar
-            key={`${divider}-${timestamp}`}
-            percent={value / max * 100}
-            index={valueIndex}
-            of={bars.length}
-            infoLabel={
-              <BarInfo
-                count={value}
-                label={hoverLabel}
-                timeFormat={barInfoFormat}
-                timestamp={timestamp}
-              />
-            }
-          >
-            {date.format(barLabelFormat)}
-          </Bar>
-        );
-      });
-
-      return acc;
-    },
-    [] as React.ReactNode[]
-  );
+type BarChartContainerProps = {
+  series: SeriesData | [SeriesData, SeriesData];
 }
-
-const NUMBER_OF_TICKS = 3;
-
-type Props = {
-  hoverLabel?: string;
-  timestamps: number[];
-  yAxis?: {
-    title?: string,
-  },
-
-}
-
-const BarChart: FC<Props> = ({ hoverLabel = 'extrinsic', timestamps, yAxis }) => {
-  const [interval, setInterval] = useState<TimeInterval>('1h');
-  const counts = useMemo(() => getCountsByTimestamp(timestamps, interval), [interval, timestamps]);
-  const maxY = useMemo(() => Math.max(...Object.values(counts)), [counts]);
-  const tickSize = useMemo(() => calculateTickSize(maxY, NUMBER_OF_TICKS), [maxY]);
-  const ticks = useMemo(() => Array.from(Array(NUMBER_OF_TICKS).keys()).map((i) => (i + 1) * tickSize), [tickSize]);
-  const maxTick = Math.max(...ticks);
-  const bars = useMemo(() => renderBars(counts, interval, maxTick, hoverLabel), [counts, interval, maxTick, hoverLabel])
+  
+const BarChartContainer: FC<BarChartContainerProps> = ({ series }) => {
+  const hasTwo = hasTwoSeries(series);
+  const seriesA = hasTwo ? series[0] : series;
+  const seriesB = hasTwo ? series[1] : undefined;
+  const timestamps = !seriesB?.timestamps
+    || (seriesA.timestamps.length > (seriesB.timestamps.length ?? 0))
+    ? seriesA.timestamps
+    : seriesB?.timestamps;
 
   return (
-    <Box>
-      <Controls selected={interval} onSelect={setInterval} />
-      <ChartContainer>
-        <Stack sx={{ mt: 2 }} style={{ flexGrow: 1 }} direction='row'>
-          {yAxis?.title && (
-            <Box sx={{ p: 1.5 }} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <VerticalTextStyled variant='subheader4'>
-                {yAxis.title}
-              </VerticalTextStyled>
-              <Box sx={{ mt: 1, height: '1rem' }} />
-            </Box>
+    <Provider timestamps={timestamps} seriesA={seriesA} seriesB={seriesB}>
+      <Box>
+        <Controls />
+        <ChartContainer sx={{ minHeight: hasTwo ? '22rem' : '16rem' }}>
+          <BarSeries />
+          <BarIntervalLabels />
+          {seriesB ? (
+            <BarSeries inverse={true} />
+          ) : (
+            <Box sx={{ pb: hasTwo ? 10 : 0 }} />
           )}
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Legend style={{ flexGrow: 1 }} ticks={ticks} />
-            <Box sx={{ mt: 1, height: '1rem' }}>
-              <Typography variant='subheader4' sx={{ fontWeight: 500 }}>
-                {interval.includes('h') ? 'HR' : 'DAY'}
-              </Typography>
-            </Box>
-          </div>
-          {bars}
-        </Stack>
-        <Box sx={{ pb: 10 }} />
-      </ChartContainer>
-    </Box>
+          <BarInfoContainer />
+        </ChartContainer>
+      </Box>
+    </Provider>
   )
 };
 
-export default BarChart;
+export default BarChartContainer;

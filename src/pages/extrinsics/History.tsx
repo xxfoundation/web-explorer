@@ -4,9 +4,8 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import BarChart from '../../components/charts/BarChart/BarChart';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
-import { PaperWrap } from '../../components/Paper/PaperWrap';
 import HistoryTable from './HistoryTable';
-import PaperStyled from '../../components/Paper/PaperWrap.styled';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
 
 const extrinsinctCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
@@ -38,11 +37,11 @@ const HistoryPage = () => {
         <DownloadDataButton onClick={() => { }}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
-        <PaperStyled >
+        <PaperWrap >
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-            <BarChart hoverLabel={'extrinsic'} timestamps={timestamps} yAxis={{ title: 'Extrinsics' }} />
+            <BarChart series={{ timestamps, label: 'Extrinsic' }} />
           </Box>
-        </PaperStyled>
+        </PaperWrap>
       </Box>
       <PaperWrap>
         <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>

@@ -3,15 +3,14 @@ import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
 import BarChart from '../../components/charts/BarChart/BarChart';
-import { PaperWrap } from '../../components/Paper/PaperWrap';
-import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import TransferTable from './TransfersTable';
 
 const extrinsincCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
 
-function buildExtrinsicsTimestamps () {
+function buildTimestamps () {
   const date = dayjs();
   const timestamps = Array.from(Array(extrinsincCountIn72Hours).keys())
     .map(() => Math.floor((date.unix() * 1000) - (Math.random() * (48 * HOUR))))
@@ -21,7 +20,8 @@ function buildExtrinsicsTimestamps () {
 
 const TransfersPage = () => {
   const totalOfExtrinsics = 32987;
-  const timestamps = useMemo(() => buildExtrinsicsTimestamps(), []);
+  const timestamps = useMemo(() => buildTimestamps(), []);
+  const timestampsB = useMemo(() => buildTimestamps(), []);
 
   return (
     <Container sx={{ my: 5 }}>
@@ -36,11 +36,11 @@ const TransfersPage = () => {
         <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
-        <PaperStyled>
+        <PaperWrap>
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-            <BarChart hoverLabel={'transfer'} timestamps={timestamps} yAxis={{ title: 'Transfers' }} />
+            <BarChart series={[{ timestamps, label: 'xx' }, { timestamps: timestampsB, label: 'transfers' }]}  />
           </Box>
-        </PaperStyled>
+        </PaperWrap>
       </Box>
       <PaperWrap>
         <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>

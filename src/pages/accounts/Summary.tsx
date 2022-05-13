@@ -39,7 +39,6 @@ const SummaryInfo = () => {
   );
 };
 
-
 const ContactInfo = () => {
   return (
     <Grid container>
