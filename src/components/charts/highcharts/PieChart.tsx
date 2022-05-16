@@ -43,9 +43,10 @@ type PieChartProps = {
   crustData?: PointOptionsObject[];
   data: PointOptionsObject[];
   onClick?: SeriesClickCallbackFunction;
+  height: number;
 };
 
-const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, options }) => {
+const PieChart: FC<PieChartProps> = ({ crustData, data, height, id, name, onClick, options }) => {
   const chartOptions: Options = {
     ...defaultOptions,
     ...options,
@@ -58,7 +59,8 @@ const PieChart: FC<PieChartProps> = ({ crustData, data, id, name, onClick, optio
         states
       }
     ],
-    title: undefined
+    title: undefined,
+    chart: { height }
   };
 
   if (crustData) {
@@ -83,9 +85,16 @@ type PieChartWithLegendProps = {
   data: CustomPointOptions[];
   name: string;
   value: string | BN;
+  height: number;
 };
 
-const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name, value }) => {
+const PieChartWithLegend: FC<PieChartWithLegendProps> = ({
+  crustData,
+  data,
+  height,
+  name,
+  value
+}) => {
   const legends = useMemo(
     () =>
       crustData ? [...data, ...crustData.filter((item) => !item.custom.hiddenLegend)] : [...data],
@@ -110,9 +119,17 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
   const open = !!anchorEl;
 
   return (
-    <Grid container>
-      <Grid item xs={7}>
-        <PieChart data={data} crustData={crustData} name={name} onClick={handleClick} />
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <PieChart
+          data={data}
+          crustData={crustData}
+          name={name}
+          onClick={handleClick}
+          height={height}
+        />
+      </Grid>
+      <Grid item xs={6}>
         {pointOptions && (
           <SeriesPopover
             id={`${name}-chart-slice-popover`}
@@ -123,8 +140,6 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({ crustData, data, name
             closeModal={onClose}
           />
         )}
-      </Grid>
-      <Grid item xs={5}>
         <ChartsLegends legends={legends} name={name} value={value} />
       </Grid>
     </Grid>

@@ -58,10 +58,10 @@ export const SeriesPopover: FC<ChartClickModalProps & PopoverProps> = ({
       {...props}
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'right'
+        horizontal: 'center'
       }}
       transformOrigin={{
-        vertical: 'bottom',
+        vertical: 'center',
         horizontal: 'center'
       }}
       PaperProps={{ sx: popooverProps }}
