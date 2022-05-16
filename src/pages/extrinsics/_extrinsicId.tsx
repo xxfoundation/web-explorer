@@ -8,6 +8,7 @@ import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
+import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
 import useCopyClipboard from '../../hooks/useCopyToClibboard';
@@ -162,7 +163,9 @@ const Extrinsic = () => {
       </Box>
       <SummaryPaper data={extrinsicsDetailData} />
       <Box sx={{ mt: 2 }}>
-        <TabsWithPanels panels={panels} tabsLabel='extrinsic page events' />
+        <PaperStyled>
+          <TabsWithPanels panels={panels} tabsLabel='extrinsic page events' />
+        </PaperStyled>
       </Box>
     </Container>
   );
