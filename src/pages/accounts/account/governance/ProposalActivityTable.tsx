@@ -1,14 +1,15 @@
 import React, { FC } from 'react';
 import { BaselineTable } from '../../../../components/Tables';
 
-const headers = [
+const header = [
   { value: 'Extrinsic ID' },
   { value: 'Block' },
   { value: 'Timestamp' },
-  { value: 'Fields' }
+  { value: 'Proposal Hash' }
 ];
-const IdentityActivityTable: FC = () => {
-  return <BaselineTable headers={headers} rows={[]} />;
+
+const ProposalActivityTable: FC = () => {
+  return <BaselineTable headers={header} rows={[]} />;
 };
 
-export default IdentityActivityTable;
+export default ProposalActivityTable;

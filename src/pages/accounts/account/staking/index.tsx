@@ -1,37 +1,44 @@
 import { Typography } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Roles } from '../../types';
-import UnbondingTable from './UnbondingTable';
-
-/**REWARDS & SLASHES
-STAKING ACTIVITY
-UNBONDING */
-const panels = [
-  {
-    label: <Typography>rewards & slashes</Typography>,
-    content: <Typography>rewards & slashes placeholder</Typography>
-  },
-  {
-    label: <Typography>staking activity</Typography>,
-    content: <Typography>staking activity placeholder</Typography>
-  },
-  { label: <Typography>unbonding</Typography>, content: <UnbondingTable /> }
-];
+import NominatorActivityTable from './NominatorActivityTable';
+import RewardStashTable from './RewardStashTable';
+import StakingActivityTable from './StakingActivityTable';
 
 const StakingCard: FC<{ roles: Roles[] }> = ({ roles }) => {
-  if (!roles.includes('validator')) {
-    return <></>;
+  const panels = useMemo(() => {
+    const cachedPanels = [
+      {
+        label: <Typography>rewards & slashes</Typography>,
+        content: <RewardStashTable />
+      },
+      {
+        label: <Typography>staking activity</Typography>,
+        content: <StakingActivityTable />
+      }
+    ];
+    if (roles.includes('nominator')) {
+      cachedPanels.push({
+        label: <Typography>nominator activity</Typography>,
+        content: <NominatorActivityTable />
+      });
+    }
+    return cachedPanels;
+  }, [roles]);
+
+  if (roles.includes('validator') || roles.includes('nominator')) {
+    return (
+      <PaperStyled>
+        <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
+          Staking
+        </Typography>
+        <TabsWithPanels panels={panels} tabsLabel='account staking card' />
+      </PaperStyled>
+    );
   }
-  return (
-    <PaperStyled>
-      <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
-        Staking
-      </Typography>
-      <TabsWithPanels panels={panels} tabsLabel='account staking card' />
-    </PaperStyled>
-  );
+  return <></>;
 };
 
 export default StakingCard;

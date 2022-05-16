@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
-import CouncilCard from './account/council';
 import GovernanceCard from './account/governance';
 import IdentityCard from './account/Identity';
 import Info from './account/Info';
@@ -74,7 +73,6 @@ const sampleAccount: AccountType = {
 
 function useQuery() {
   const { search } = useLocation();
-
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
@@ -89,7 +87,6 @@ const AccountId: FC = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      {/*We need this name here the same info on AccountIdentity */}
       <Typography variant='h1'>{sampleAccount.displayName}</Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
@@ -113,9 +110,6 @@ const AccountId: FC = () => {
         </Grid>
         <Grid item xs={12}>
           <StakingCard roles={sampleAccount.roles} />
-        </Grid>
-        <Grid item xs={12}>
-          <CouncilCard roles={sampleAccount.roles} />
         </Grid>
         <Grid item xs={12}>
           <PerformanceCard account={sampleAccount} />
