@@ -20,38 +20,55 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
   );
 };
 
-const RowTwo: FC<{ account: AccountType }> = ({ account }) => {
-  const socialIconsDisplay = useMemo(() => {
-    const socials: Record<string, string> = {};
-    if (account.email) {
-      socials.email = account.email;
-    }
-    if (account.twitter) {
-      socials.twitter = account.twitter;
-    }
+const NameHeaderTypography: FC<{ account: AccountType }> = ({ account }) => {
+  if (!account.name) {
     return (
-      (socials.twitter || socials.email) && (
-        <Grid item>
-          <Socials socials={socials} />
-        </Grid>
-      )
+      <Typography
+        fontSize={24}
+        fontWeight={700}
+        fontStyle={'italic'}
+        letterSpacing={0.5}
+        width={'100%'}
+        sx={{ opacity: 0.7 }}
+      >
+        no identify
+      </Typography>
     );
-  }, [account.email, account.twitter]);
+  }
   return (
-    <>
-      <Grid item xs={12}>
-        <Divider />
-      </Grid>
-      {account.personalIntroduction && (
-        <Grid item xs={12}>
-          <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>
-            {account.personalIntroduction}
-          </Typography>
-        </Grid>
-      )}
-      {socialIconsDisplay}
-    </>
+    <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
+      {account.name}
+    </Typography>
   );
+};
+
+const DisplayBlurb: FC<{ account: AccountType }> = ({ account }) => {
+  if (account.roles.includes('nominator') || !account.personalIntroduction) return <></>;
+  return (
+    <Grid item xs={12}>
+      <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>
+        {account.personalIntroduction}
+      </Typography>
+    </Grid>
+  );
+};
+
+const SocialIconsGroup: FC<{ account: AccountType }> = ({ account }) => {
+  const socials: Record<string, string> = {};
+  if (account.email) {
+    socials.email = account.email;
+  }
+  if (account.twitter) {
+    socials.twitter = account.twitter;
+  }
+  if (socials.twitter || socials.email) {
+    return (
+      <Grid item>
+        <Socials socials={socials} />
+      </Grid>
+    );
+  }
+  return <></>;
 };
 
 const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
@@ -72,14 +89,20 @@ const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
           alt='something I do not know'
           sx={{ width: 125, height: 125, marginRight: '15px' }}
         />
-        <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-          {account.legalName}
-        </Typography>
+        <NameHeaderTypography account={account} />
       </Grid>
-      {!account.personalIntroduction && !account.email && !account.twitter ? (
+      {(!account.personalIntroduction || account.roles.includes('nominator')) &&
+      !account.email &&
+      !account.twitter ? (
         <></>
       ) : (
-        <RowTwo account={account} />
+        <>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+          <DisplayBlurb account={account} />
+          <SocialIconsGroup account={account} />
+        </>
       )}
       <Grid item xs={12}>
         <Divider />
@@ -102,6 +125,39 @@ const PaddedGridItem: FC<{ md: number }> = ({ children, md }) => {
   );
 };
 
+const NameAndBlurbCell: FC<{ account: AccountType }> = ({ account }) => {
+  const hasBlurb = useMemo(
+    () => !account.roles.includes('nominator') && account.personalIntroduction,
+    [account.personalIntroduction, account.roles]
+  );
+  if (!account.name) {
+    return (
+      <Typography
+        fontSize={24}
+        fontWeight={700}
+        fontStyle={'italic'}
+        letterSpacing={0.5}
+        width={'100%'}
+        sx={{ opacity: 0.7 }}
+      >
+        no identify
+      </Typography>
+    );
+  }
+  return (
+    <>
+      <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
+        {account.name}
+      </Typography>
+      {hasBlurb && (
+        <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>
+          {account.personalIntroduction}
+        </Typography>
+      )}
+    </>
+  );
+};
+
 const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <Grid container sx={{ display: { xs: 'none', sm: 'none', md: 'inherit' } }}>
@@ -114,29 +170,8 @@ const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
           />
         </Grid>
         <PaddedGridItem md={8}>
-          {account.name ? (
-            <>
-              <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-                {account.name}
-              </Typography>
-              <Typography fontSize={'16px'} fontWeight={'400'} component={'p'} marginY={'23px'}>
-                {account.personalIntroduction}
-              </Typography>
-            </>
-          ) : (
-            <Typography
-              fontSize={24}
-              fontWeight={700}
-              fontStyle={'italic'}
-              letterSpacing={0.5}
-              width={'100%'}
-              marginY={'23px'}
-              sx={{ opacity: 0.7 }}
-            >
-              no identify
-            </Typography>
-          )}
-          <Divider />
+          <NameAndBlurbCell account={account} />
+          <Divider sx={{ marginTop: '12px' }} />
         </PaddedGridItem>
         <PaddedGridItem md={2}>
           <Grid item>
