@@ -2,7 +2,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Stack } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import BlockStatusIcon, { BlockStatus } from '../../components/block/BlockStatusIcon';
-import { Hash } from '../../components/ChainId';
+import { Hash, Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import { BaseLineCellsWrapper, BaseLineCellWrapper, BaselineTable } from '../../components/Tables';
@@ -27,8 +27,8 @@ const transfers: Transfer[] = Array.from(Array(9).keys()).map((i) => ({
   block: 357968,
   status: statuses[Math.trunc(Math.random() * statuses.length)],
   amount: Math.trunc(Math.random() * 10000).toString(),
-  from: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
-  to: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
+  from: '6X2TfhL43goaEpJ3uWssySx159oFjs2TDAP6aKxmCbia1o7g',
+  to: '6WZqZqVs1Ps6b3iUUpHFzFdt3614gf62Fug5wJVR8Ur6vGSr',
   hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
   time: new Date().getTime() - i * 1000
 }));
@@ -42,9 +42,9 @@ const TransferRow = ({ amount, block, extrinsicId, from, hash, status, time, to 
     {
       value: (
         <Stack direction='row' style={{ alignItems: 'flex-end', justifyContent: 'space-between' }}>
-          <Hash value={from} truncated />
+          <Address value={from} truncated />
           <ArrowForwardIosIcon />
-          <Hash value={to} truncated />
+          <Address value={to} truncated />
         </Stack>
       ),
       props: { colSpan: 2 }

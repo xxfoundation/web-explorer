@@ -1,7 +1,7 @@
 import React from 'react';
 import { theme } from '../../../themes/default';
 import { PieChartWithLegend } from '../../charts/highcharts/PieChart';
-import PaperWithHeader from '../PaperWithHeader';
+import DefaultTile from '../../DefaultTile';
 
 const sampleCustomData = [
   { name: 'stakeable', value: 162301, percentage: 84, title: true, id: 'stakeable' },
@@ -88,9 +88,9 @@ const TotalIssuance = () => {
   const value = '9999120003'; // TODO will be obtained by a aggregation of the values
   return (
     <>
-      <PaperWithHeader>
+      <DefaultTile>
         <PieChartWithLegend data={data} crustData={crustData} name='total issuance' value={value} />
-      </PaperWithHeader>
+      </DefaultTile>
     </>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataPoint } from '../../../types';
 import LineChart from '../../charts/highcharts/LineChart';
-import PaperWithHeader from '../PaperWithHeader';
+import DefaultTile from '../../DefaultTile';
 import { formatPercent, percentTooltipFormatter } from './formatters';
 
 const data: DataPoint[] = [
@@ -13,7 +13,7 @@ const data: DataPoint[] = [
 const StakingRatio = () => {
   const sortedAccounts = data.sort((a: number[], b: number[]) => a[0] - b[0]);
   return (
-    <PaperWithHeader header='Staking Ratio'>
+    <DefaultTile header='Staking Ratio'>
       <LineChart
         data={sortedAccounts}
         tooltipFormatter={percentTooltipFormatter}
@@ -21,7 +21,7 @@ const StakingRatio = () => {
           yAxis: formatPercent
         }}
       />
-    </PaperWithHeader>
+    </DefaultTile>
   );
 };
 

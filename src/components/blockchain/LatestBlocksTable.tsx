@@ -3,45 +3,13 @@ import { Box, Grid, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import { LISTEN_FOR_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
 import BlockStatusIcon from '../block/BlockStatusIcon';
-import genSkeletons from '../genSkeletons';
+import { ItemHandlerSkeleton } from './utils'
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
-import PaperWithHeader from './PaperWithHeader';
+import DefaultTile from '../DefaultTile';
+import type { Block } from './types'
 
 const PAGE_LIMIT = 8;
-
-type Block = {
-  hash: string;
-  number: number;
-  finalized: boolean;
-  currentEra: number;
-  totalEvents: number;
-  totalExtrinsics: number;
-  timestamp: number;
-};
-
-const ItemHandlerSkeleton: FC<{ number: number }> = ({ number }) => {
-  return (
-    <>
-      {genSkeletons(number).map((Skeleton, index) => {
-        return (
-          <Box sx={{ mb: 4 }} key={index}>
-            <Grid container>
-              <Grid item xs>
-                <Skeleton />
-              </Grid>
-            </Grid>
-            <Grid container sx={{ mt: 1 }}>
-              <Grid item xs>
-                <Skeleton />
-              </Grid>
-            </Grid>
-          </Box>
-        );
-      })}
-    </>
-  );
-};
 
 const ItemHandler: FC<{ block: Block }> = ({ block }) => {
   return (
@@ -80,6 +48,7 @@ const ItemHandler: FC<{ block: Block }> = ({ block }) => {
   );
 };
 
+// TODO: remove this function
 const LatestBlocks: FC<{ newBlocks: Block[] }> = ({ newBlocks }) => {
   const [state, setState] = useState<{ blocks: Block[] }>({ blocks: [] });
   React.useEffect(() => {
@@ -119,10 +88,10 @@ const LatestBlocksTable = () => {
       return <Typography>not ready</Typography>;
     }
 
-    return <LatestBlocks newBlocks={data.blocks} />;
+    return <LatestBlocks newBlocks={data.blocks} />; // TODO: update line with utils.Renderer
   }, [loading, data, error]);
   return (
-    <PaperWithHeader
+    <DefaultTile
       header='Latest Blocks'
       hasDivider={true}
       linkName={'SEE ALL'}
@@ -130,7 +99,7 @@ const LatestBlocksTable = () => {
       height={500}
     >
       {content}
-    </PaperWithHeader>
+    </DefaultTile>
   );
 };
 

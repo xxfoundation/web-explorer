@@ -1,7 +1,7 @@
 import React from 'react';
 import { theme } from '../../../themes/default';
 import { PieChartWithLegend } from '../../charts/highcharts/PieChart';
-import PaperWithHeader from '../PaperWithHeader';
+import DefaultTile from '../../DefaultTile';
 
 const customDataSample = [
   { name: 'stakeable', value: 52301, percentage: 5.2, id: 'stakeable', title: true },
@@ -36,9 +36,9 @@ const data = [
 
 const StakingSupply = () => {
   return (
-    <PaperWithHeader>
+    <DefaultTile>
       <PieChartWithLegend data={data} name='staking supply' value={value} />
-    </PaperWithHeader>
+    </DefaultTile>
   );
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { amountByEraTooltip } from './formatters';
 import { DataPoint } from '../../../types';
 import * as Highcharts from '../../charts/highcharts';
-import PaperWithHeader from '../PaperWithHeader';
+import DefaultTile from '../../DefaultTile';
 
 const data: { transactions: DataPoint[] } = {
   transactions: [
@@ -22,9 +22,9 @@ const TransactionsChart = () => {
   const sortedTransactions = sortTransactions(data);
 
   return (
-    <PaperWithHeader header='Transactions'>
+    <DefaultTile header='Transactions'>
       <Highcharts.LineChart data={sortedTransactions} tooltipFormatter={amountByEraTooltip} />
-    </PaperWithHeader>
+    </DefaultTile>
   );
 };
 

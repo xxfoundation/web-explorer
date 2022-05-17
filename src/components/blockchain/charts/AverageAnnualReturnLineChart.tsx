@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataPoint } from '../../../types';
 import { LineChart } from '../../charts/highcharts';
-import PaperWithHeader from '../PaperWithHeader';
+import DefaultTile from '../../DefaultTile';
 import { formatPercent, percentTooltipFormatter } from './formatters';
 
 const data: DataPoint[] = [
@@ -15,7 +15,7 @@ const AverageAnnualReturn = () => {
   const sortedAnnualReturn = data.sort((a: DataPoint, b: DataPoint) => a[0] - b[0]);
 
   return (
-    <PaperWithHeader header='Average Annual Return'>
+    <DefaultTile header='Average Annual Return'>
       <LineChart
         data={sortedAnnualReturn}
         tooltipFormatter={percentTooltipFormatter}
@@ -23,7 +23,7 @@ const AverageAnnualReturn = () => {
           yAxis: formatPercent
         }}
       />
-    </PaperWithHeader>
+    </DefaultTile>
   );
 };
 

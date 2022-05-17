@@ -4,6 +4,7 @@ import React, { FC, useMemo } from 'react';
 import HashValidator from './HashValidator';
 import isValidXXNetworkAddress from './IsValidXXNetworkAddress';
 import Link from './Link';
+import { shortString } from '../utils'
 
 type IdProperties = {
   link?: string;
@@ -11,11 +12,6 @@ type IdProperties = {
   value: string;
   variant?: TypographyTypeMap['props']['variant'];
 };
-
-const shortString = (addr: string, offset = 5, replaceStr = '...') =>
-  addr
-    ? addr.slice(0, offset + 2).concat(replaceStr, addr.slice(addr.length - offset, addr.length))
-    : '';
 
 const contentRenderer = (
   text: string,

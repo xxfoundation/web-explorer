@@ -4,63 +4,15 @@ import { useSubscription } from '@apollo/client';
 import { LISTEN_FOR_TRANSFERS_ORDERED } from '../../schemas/transfers.schema';
 import React, { FC, useMemo, useState } from 'react';
 import FormatBalance from '../FormatBalance';
-import genSkeletons from '../genSkeletons';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
-import PaperWithHeader from './PaperWithHeader';
+import DefaultTile from '../DefaultTile';
+import { ItemHandlerSkeleton } from './utils'
+// import { ItemHandlerSkeleton, Renderer } from './utils' // TODO
+import type { Transfer } from './types'
+import { shortString } from '../../utils'
 
 const PAGE_LIMIT = 8;
-
-type Transfer = {
-  hash: string;
-  blockNumber: number;
-  extrinsicIndex: number;
-  source: string;
-  destination: string;
-  amount: number;
-  fee_amount: number;
-  section: string;
-  method: string;
-  success: boolean;
-  timestamp: number;
-};
-
-
-// const transfers: Transfer[] = Array.from(Array(9).keys())
-//   .slice(1)
-//   .map((i) => {
-//     return {
-//       extrinsicIndex: '314658-5', // TODO mask?
-//       id: i,
-//       from: '0xacc15dc74899999', // TODO use just mask instead of manipulating the value
-//       to: '0xacc15dc748888',
-//       amount: '100000000000',
-//       timestamp: new Date().getTime() - i * 1000
-//     };
-//   });
-
-const ItemHandlerSkeleton: FC<{ number: number }> = ({ number }) => {
-  return (
-    <>
-      {genSkeletons(number).map((Skeleton, index) => {
-        return (
-          <Box sx={{ mb: 4 }} key={index}>
-            <Grid container>
-              <Grid item xs>
-                <Skeleton />
-              </Grid>
-            </Grid>
-            <Grid container sx={{ mt: 1 }}>
-              <Grid item xs>
-                <Skeleton />
-              </Grid>
-            </Grid>
-          </Box>
-        );
-      })}
-    </>
-  );
-};
 
 const addMaskToTransactionTargets = (hash: string) => {
   const href = `/transfers/${hash}`;
@@ -68,7 +20,7 @@ const addMaskToTransactionTargets = (hash: string) => {
     return (
       <Tooltip title={hash} placement='top' arrow>
         <Link to={href} underline='hover'>
-          {hash.split('').slice(0, 12).join('') + '...'}
+          {shortString(hash)}
         </Link>
       </Tooltip>
     );
@@ -128,49 +80,21 @@ const ItemHandler: FC<{ transfer: Transfer }> = ({ transfer }) => {
   );
 };
 
-const LatestTransfers: FC<{ newTransfers: Transfer[] }> = ({ newTransfers }) => {
-  const [state, setState] = useState<{ transfers: Transfer[] }>({ transfers: [] });
-  React.useEffect(() => {
-    const oldHashes = state.transfers.map((b) => b.hash);
-    setState((prevState) => {
-      return {
-        ...prevState,
-        transfers: newTransfers.map((transfer) => {
-          return {
-            ...transfer,
-            newEntry: oldHashes.length && !oldHashes.includes(transfer.hash)
-          };
-        })
-      };
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newTransfers]);
-
-  return (
-    <>
-      {state.transfers.map((b) => {
-        return <ItemHandler transfer={b} key={b.hash} />;
-      })}
-    </>
-  );
-};
 
 const LatestTransfersTable = () => {
   const { data, error, loading } = useSubscription<{ transfers: Transfer[] }>(LISTEN_FOR_TRANSFERS_ORDERED, {
     variables: { limit: PAGE_LIMIT }
   });
-  console.warn(error);
   const content = useMemo(() => {
     if (loading) return <ItemHandlerSkeleton number={PAGE_LIMIT} />;
     if (error || !data || !data.transfers) {
       return <Typography>not ready</Typography>;
     }
-
-    return <LatestTransfers newTransfers={data.transfers} />;
+    return <></>;
+    // return <Renderer newTransfers={data.transfers} ItemHandler />; // TODO
   }, [loading, data, error]);
   return (
-    <PaperWithHeader
+    <DefaultTile
       header='TRANSFERS'
       hasDivider={true}
       linkName={'SEE ALL'}
@@ -178,7 +102,7 @@ const LatestTransfersTable = () => {
       height={500}
     >
       {content}
-    </PaperWithHeader>
+    </DefaultTile>
   );
 };
 

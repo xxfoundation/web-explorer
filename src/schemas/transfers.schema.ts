@@ -49,5 +49,4 @@ export const TRANSFERS_OF_BLOCK = gql`
   }
 `;
 
-
 export { LISTEN_FOR_TRANSFERS_ORDERED };
