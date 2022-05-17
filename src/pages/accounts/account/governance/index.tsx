@@ -53,7 +53,7 @@ const GovernanceCard: FC<{ roles: Roles[] }> = ({ roles }) => {
     return panels;
   }, [roles]);
   return (
-    <PaperStyled sx={{ display: 'none' }}>
+    <PaperStyled>
       <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
         Governance
       </Typography>

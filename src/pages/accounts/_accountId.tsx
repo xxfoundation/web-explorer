@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
-import GovernanceCard from './account/governance';
 import IdentityCard from './account/Identity';
 import Info from './account/Info';
 import PerformanceCard from './account/performance';
@@ -105,9 +104,9 @@ const AccountId: FC = () => {
         <Grid item xs={12}>
           <BlockchainCard roles={sampleAccount.roles} />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <GovernanceCard roles={sampleAccount.roles} />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <StakingCard roles={sampleAccount.roles} />
         </Grid>

@@ -17,7 +17,6 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
 ))({
   [`& .${tooltipClasses.tooltip}`]: {
     maxWidth: '282px',
-    width: '100%',
     padding: '30px',
     h5: {
       letterSpacing: '1px'
