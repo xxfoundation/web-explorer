@@ -1,24 +1,49 @@
-import Highcharts, { Options } from 'highcharts';
+import Highcharts, {
+  AxisLabelsFormatterCallbackFunction,
+  Options,
+  TooltipFormatterCallbackFunction
+} from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC } from 'react';
+import { theme } from '../../../themes/default';
 import { DataPoint } from '../../../types';
-import { thousandsFormatter } from '../../blockchain/charts/formatters';
 
 type Props = {
   title?: string;
   data: DataPoint[];
+  seriesName: string;
+  xName: string;
+  yName: string;
+  labelFormatters?: {
+    xAxis?: AxisLabelsFormatterCallbackFunction;
+    yAxis?: AxisLabelsFormatterCallbackFunction;
+  };
+  tooltipFormatter?: TooltipFormatterCallbackFunction;
 };
 
-const StepChart: FC<Props> = ({ data }) => {
+const StepChart: FC<Props> = ({ data, labelFormatters, seriesName, title, tooltipFormatter }) => {
   const options: Options = {
+    colors: ['#00C4FF'],
+    chart: { zoomType: 'x' },
     credits: { enabled: false },
     legend: { enabled: false },
+    tooltip: {
+      backgroundColor: theme.palette.grey[600],
+      borderWidth: 0,
+      enabled: true,
+      useHTML: true,
+      padding: 10,
+      style: {
+        color: theme.palette.grey[200]
+      },
+      formatter: tooltipFormatter
+    },
     series: [
       {
         data: data,
         step: 'left',
         type: 'line',
-        name: 'TOTAL BALANCE',
+        name: seriesName,
         marker: { symbol: 'circle' }
       }
     ],
@@ -33,7 +58,7 @@ const StepChart: FC<Props> = ({ data }) => {
     yAxis: {
       gridLineWidth: 0,
       title: { text: 'XX COIN', rotation: 0, align: 'low', y: 45 },
-      labels: { formatter: thousandsFormatter }
+      labels: { formatter: labelFormatters?.yAxis }
     },
     xAxis: {
       title: {
@@ -42,11 +67,11 @@ const StepChart: FC<Props> = ({ data }) => {
         x: -64,
         y: -20
       },
-      labels: { formatter: thousandsFormatter },
+      labels: { formatter: labelFormatters?.xAxis },
       tickWidth: 1,
       offset: 75
     },
-    title: { text: '' }
+    title: { text: title }
   };
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 };
