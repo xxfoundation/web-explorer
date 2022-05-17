@@ -66,28 +66,29 @@ const StepChart: FC<Props> = ({
     yAxis: {
       gridLineWidth: 0,
       title: {
-        style: { color: theme.palette.grey[600] },
+        style: { fontWeight: 'bold', color: theme.palette.grey[600] },
         text: yName,
         rotation: 0,
-        align: 'low',
-        y: 45,
-        x: -40
+        align: 'high',
+        y: 0,
+        x: 10
       },
       labels: {
         style: { color: theme.palette.grey[600] },
         align: 'left',
+        y: 30,
         x: -40,
         formatter: labelFormatters?.yAxis
       },
-      offset: 25
+      offset: 5
     },
     xAxis: {
       title: {
-        style: { color: theme.palette.grey[400] },
+        style: { fontWeight: 'bold', color: theme.palette.grey[400] },
         text: xName,
         align: 'low',
-        x: -74,
-        y: -18
+        x: -70,
+        y: -20
       },
       labels: {
         formatter: labelFormatters?.xAxis,
@@ -95,7 +96,7 @@ const StepChart: FC<Props> = ({
         y: 30
       },
       crosshair: { dashStyle: 'Solid' },
-      offset: 75
+      offset: 45
     },
     title: { text: title }
   };
