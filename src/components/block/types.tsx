@@ -11,7 +11,7 @@ export type BlockType = {
   timestamp: number;
   specVersion: number;
   totalEvents: number;
-  numTransfers: number;
+  totalExtrinsics: number;
 };
 
 export type BlockSummaryType = {

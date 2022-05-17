@@ -19,7 +19,7 @@ type Block = {
   numberFinalized: number;
   currentEra: number;
   timestamp: number;
-  numTransfers: number;
+  totalExtrinsics: number;
   author: string;
   authorName: string;
 };
@@ -58,8 +58,8 @@ const RenderProducer: FC<{
   const content = name
     ? name
     : idString.length > 16
-    ? idString.slice(0, 7) + '....' + idString.slice(-5)
-    : idString;
+      ? idString.slice(0, 7) + '....' + idString.slice(-5)
+      : idString;
   return <Link to={`/blocks/${number}/producer/${id || name}`}>{content}</Link>;
 };
 
@@ -69,7 +69,7 @@ const rowParser = (block: Block): BaselineCell[] => {
     <BlockStatusIcon status={block.number > block.numberFinalized ? 'pending' : 'successful'} />,
     block.currentEra,
     <TimeAgoComponent date={'2022-02-16 01:56:42 (+UTC)'} />,
-    <Link to='#'>{block.numTransfers}</Link>,
+    <Link to='#'>{block.totalExtrinsics}</Link>,
     <RenderProducer
       number={block.number}
       blockProducer={{ id: block.author, name: block.authorName }}

@@ -13,10 +13,11 @@ const PAGE_LIMIT = 8;
 type Block = {
   hash: string;
   number: number;
-  numberFinalized: number;
+  finalized: boolean;
   currentEra: number;
   totalEvents: number;
-  numTransfers: number;
+  totalExtrinsics: number;
+  timestamp: number;
 };
 
 const ItemHandlerSkeleton: FC<{ number: number }> = ({ number }) => {
@@ -53,14 +54,14 @@ const ItemHandler: FC<{ block: Block }> = ({ block }) => {
         </Grid>
         <Grid item xs='auto'>
           <BlockStatusIcon
-            status={block.number > block.numberFinalized ? 'pending' : 'successful'}
+            status={block.finalized ? 'successful' : 'pending'}
           />
         </Grid>
       </Grid>
       <Grid container sx={{ mt: 1 }}>
         <Grid item xs>
           <Link to='' underline='hover' variant='body3'>
-            {block.numTransfers} extrinsics
+            {block.totalExtrinsics} extrinsics
           </Link>{' '}
           <Typography variant='body3' component='span'>
             |
@@ -71,7 +72,7 @@ const ItemHandler: FC<{ block: Block }> = ({ block }) => {
         </Grid>
         <Grid item xs='auto'>
           <Typography variant='body2'>
-            <TimeAgo date={block.currentEra} />
+            <TimeAgo date={block.timestamp} />
           </Typography>
         </Grid>
       </Grid>
@@ -111,6 +112,7 @@ const LatestBlocksTable = () => {
   const { data, error, loading } = useSubscription<{ blocks: Block[] }>(LISTEN_FOR_BLOCKS_ORDERED, {
     variables: { limit: PAGE_LIMIT }
   });
+  console.warn(error);
   const content = useMemo(() => {
     if (loading) return <ItemHandlerSkeleton number={PAGE_LIMIT} />;
     if (error || !data || !data.blocks) {

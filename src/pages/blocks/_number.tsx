@@ -69,7 +69,7 @@ const Block = () => {
           blockNumber={blockNumber}
           loading={loading}
           events={data?.block.totalEvents}
-          extrinsics={data?.block.numTransfers}
+          extrinsics={data?.block.totalExtrinsics}
         />
       </Box>
     </Container>

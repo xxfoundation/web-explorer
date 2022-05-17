@@ -14,7 +14,7 @@ const extrinsicTab = {
 };
 
 const transfersTab = {
-  label: <TabText message='Tranfers' count={0} />,
+  label: <TabText message='Transfers' count={0} />,
   content: <TransferTable />
 };
 
