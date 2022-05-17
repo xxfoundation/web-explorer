@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import { Doughnut, ChartProps }  from 'react-chartjs-2';
-import { Box, Stack, StackProps } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import Legend from './Legend';
 import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typographies';
 import FormatBalance from '../FormatBalance';
