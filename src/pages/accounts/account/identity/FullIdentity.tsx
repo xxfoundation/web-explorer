@@ -11,6 +11,7 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
       </Typography>
       <Link
         href={'#'}
+        fontSize={'13px'}
         underline='none'
         sx={{ overflowX: 'hidden', wordBreak: 'break-all', width: '100%' }}
       >
@@ -169,11 +170,11 @@ const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
             sx={{ width: 125, height: 125, margin: '0 auto' }}
           />
         </Grid>
-        <PaddedGridItem md={8}>
+        <PaddedGridItem md={7}>
           <NameAndBlurbCell account={account} />
           <Divider sx={{ marginTop: '12px' }} />
         </PaddedGridItem>
-        <PaddedGridItem md={2}>
+        <PaddedGridItem md={3}>
           <Grid item>
             <Socials
               socials={{
@@ -187,19 +188,19 @@ const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
       </Grid>
       <Grid item container md={12}>
         <PaddedGridItem md={2} />
-        <PaddedGridItem md={8}>
+        <PaddedGridItem md={7}>
           <TextWithLabel label='stash' text={account.stash} />
         </PaddedGridItem>
-        <PaddedGridItem md={2}>
+        <PaddedGridItem md={3}>
           {account.riotID && <TextWithLabel label='riot' text={account.riotID} />}
         </PaddedGridItem>
       </Grid>
       <Grid item container md={12}>
         <PaddedGridItem md={2} />
-        <PaddedGridItem md={8}>
+        <PaddedGridItem md={7}>
           <TextWithLabel label='controller' text={account.controller} />
         </PaddedGridItem>
-        <PaddedGridItem md={2}>
+        <PaddedGridItem md={3}>
           {account.website && <TextWithLabel label='web' text={account.website} />}
         </PaddedGridItem>
       </Grid>
