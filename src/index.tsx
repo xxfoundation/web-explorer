@@ -1,4 +1,5 @@
 import { ApolloProvider } from '@apollo/client';
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ApolloClient from './apolloClient';
@@ -9,9 +10,18 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={ApolloClient()}>
-      <App />
-    </ApolloProvider>
+    <SnackbarProvider
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right'
+      }}
+      autoHideDuration={4000}
+      style={{ borderRadius: 14 }}
+    >
+      <ApolloProvider client={ApolloClient()}>
+        <App />
+      </ApolloProvider>
+    </SnackbarProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

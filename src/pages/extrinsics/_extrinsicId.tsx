@@ -4,7 +4,7 @@ import React, { FC, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import EventsTable from '../../components/block/EventsTable';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import CopyButton from '../../components/buttons/CopyButton';
+import CopyButton, { callbackCopyMessage } from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
@@ -28,7 +28,10 @@ const ParametersActions: FC<{ data: unknown }> = ({ data }) => {
   const staticCopy = useCopyClipboard()[1];
   return (
     <>
-      <RoundedButton variant='contained' onClick={() => staticCopy(JSON.stringify(data))}>
+      <RoundedButton
+        variant='contained'
+        onClick={() => staticCopy(JSON.stringify(data), callbackCopyMessage)}
+      >
         copy
       </RoundedButton>
       <RoundedButton variant='contained' disabled sx={{ marginLeft: '24px' }}>

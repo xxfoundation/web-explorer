@@ -2,6 +2,7 @@ import { OperationVariables, TypedDocumentNode, useLazyQuery } from '@apollo/cli
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, Grid, InputAdornment } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useSnackbar } from 'notistack';
 import React, { useCallback, useMemo, useState } from 'react';
 import { SearchButton, SearchInput } from './Bar.styles';
 
@@ -12,20 +13,35 @@ interface IProps<T> {
   variables: (v: string) => OperationVariables;
   successSearchCallback: (v: string, res: T) => void;
   errorSearchCallback: (v: string, err: unknown) => void;
-  validator: (v: string) => boolean;
+  optionValidator: (v: string) => boolean;
+  option: string;
 }
 
 export const GenericSearchInput = <T extends object>({
   document,
   errorSearchCallback,
   messageLoader: messageLoader,
+  option,
+  optionValidator,
   placeholder,
   successSearchCallback,
-  validator,
   variables
 }: IProps<T>) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [executeQuery, { loading }] = useLazyQuery<T>(document);
   const [searchInput, setSearchInput] = useState('');
+
+  const validator = useCallback(
+    (value: string) => {
+      if (optionValidator(String(value))) {
+        return true;
+      }
+      const msg = value ? `${option} is not valid` : 'the search is empty';
+      enqueueSnackbar(msg, { variant: 'error' });
+      return false;
+    },
+    [enqueueSnackbar, option, optionValidator]
+  );
 
   const submitSearch = useCallback(() => {
     if (validator(searchInput)) {
@@ -70,7 +86,7 @@ export const GenericSearchInput = <T extends object>({
         disabled
         disableUnderline
         fullWidth
-        sx={{maxWidth: '80%'}}
+        sx={{ maxWidth: '80%' }}
         startAdornment={
           <InputAdornment position='start'>
             <CircularProgress size={20} color='inherit' />
