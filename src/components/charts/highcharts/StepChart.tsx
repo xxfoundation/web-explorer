@@ -21,7 +21,15 @@ type Props = {
   tooltipFormatter?: TooltipFormatterCallbackFunction;
 };
 
-const StepChart: FC<Props> = ({ data, labelFormatters, seriesName, title, tooltipFormatter }) => {
+const StepChart: FC<Props> = ({
+  data,
+  labelFormatters,
+  seriesName,
+  title,
+  tooltipFormatter,
+  xName,
+  yName
+}) => {
   const options: Options = {
     colors: ['#00C4FF'],
     chart: { zoomType: 'x' },
@@ -51,24 +59,42 @@ const StepChart: FC<Props> = ({ data, labelFormatters, seriesName, title, toolti
       series: {
         marker: {
           enabled: false,
-          radius: 2
+          radius: 3
         }
       }
     },
     yAxis: {
       gridLineWidth: 0,
-      title: { text: 'XX COIN', rotation: 0, align: 'low', y: 45 },
-      labels: { formatter: labelFormatters?.yAxis }
+      title: {
+        style: { color: theme.palette.grey[600] },
+        text: yName,
+        rotation: 0,
+        align: 'low',
+        y: 45,
+        x: -40
+      },
+      labels: {
+        style: { color: theme.palette.grey[600] },
+        align: 'left',
+        x: -40,
+        formatter: labelFormatters?.yAxis
+      },
+      offset: 25
     },
     xAxis: {
       title: {
-        text: 'BLOCK NO',
+        style: { color: theme.palette.grey[400] },
+        text: xName,
         align: 'low',
-        x: -64,
-        y: -20
+        x: -74,
+        y: -18
       },
-      labels: { formatter: labelFormatters?.xAxis },
-      tickWidth: 1,
+      labels: {
+        formatter: labelFormatters?.xAxis,
+        style: { color: theme.palette.grey[400] },
+        y: 30
+      },
+      crosshair: { dashStyle: 'Solid' },
       offset: 75
     },
     title: { text: title }
