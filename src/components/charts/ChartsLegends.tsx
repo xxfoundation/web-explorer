@@ -13,7 +13,7 @@ const LegendItem: FC<CustomPointOptions> = (props) => {
     return <SeriesDetailedInfo custom={props.custom} name={props.name} />;
   }, [props.custom, props.name]);
   return (
-    <Stack direction={'row'} spacing={1} alignItems='center'>
+    <Stack direction={'row'} spacing={1} alignItems='center' sx={{ marginY: '4px' }}>
       <HtmlTooltip title={title}>
         <SquareRoundedIcon
           sx={{ color: props.color as string, borderRadius: 1000 }}
@@ -29,7 +29,7 @@ const LegendItem: FC<CustomPointOptions> = (props) => {
 
 const LegendItems: FC<{ data: CustomPointOptions[] }> = ({ data }) => {
   return (
-    <Stack direction={'column'} marginY={2}>
+    <Stack direction={'column'} marginY={3}>
       {data.map((props) => {
         return <LegendItem key={props.name} {...props} />;
       })}
@@ -44,9 +44,7 @@ const ChartsLegends: FC<{
 }> = ({ legends, name, value }) => {
   return (
     <>
-      <LegendTypographySubHeaders>
-        {name}
-      </LegendTypographySubHeaders>
+      <LegendTypographySubHeaders>{name}</LegendTypographySubHeaders>
       <Typography fontSize={20} fontWeight={400} color={theme.palette.grey[800]}>
         <FormatBalance value={value} />
       </Typography>

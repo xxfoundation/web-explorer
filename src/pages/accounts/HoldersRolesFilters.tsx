@@ -30,7 +30,9 @@ const HoldersRolesFilters: FC<{
 }> = ({ callback, children, roles }) => {
   const [open, { set: toggle }] = useToggle();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedRoles, setSeletedRoles] = useState<Record<RoleFiltersType, boolean>>(cleanLocalStateFilters());
+  const [selectedRoles, setSeletedRoles] = useState<Record<RoleFiltersType, boolean>>(
+    cleanLocalStateFilters()
+  );
 
   const onClick = useCallback(
     ({ currentTarget }) => {
@@ -60,7 +62,10 @@ const HoldersRolesFilters: FC<{
             span: {
               fontSize: '14px',
               fontWeight: 400,
-              color: (value && roles[label as Roles]) ? theme.palette.primary.main : theme.palette.grey[600]
+              color:
+                value && roles[label as Roles]
+                  ? theme.palette.primary.main
+                  : theme.palette.grey[600]
             }
           }}
           control={
@@ -98,19 +103,19 @@ const HoldersRolesFilters: FC<{
     callback(
       all
         ? {
-          validator: true,
-          nominator: true,
-          council: true,
-          'technical committee': true,
-          treasury: true
-        }
+            validator: true,
+            nominator: true,
+            council: true,
+            'technical committee': true,
+            treasury: true
+          }
         : {
-          validator: selection.validator,
-          nominator: selection.nominator,
-          council: selection.council,
-          'technical committee': selection['technical committee'],
-          treasury: selection.treasury
-        }
+            validator: selection.validator,
+            nominator: selection.nominator,
+            council: selection.council,
+            'technical committee': selection['technical committee'],
+            treasury: selection.treasury
+          }
     );
     handleClose();
   }, [selectedRoles, callback, handleClose]);
@@ -133,7 +138,9 @@ const HoldersRolesFilters: FC<{
         onClose={handleClose}
       >
         <FormGroup sx={{ padding: '30px' }}>
-          <Stack direction={'column'} paddingBottom={'5px'}>{displayedCheckboxList}</Stack>
+          <Stack direction={'column'} paddingBottom={'5px'}>
+            {displayedCheckboxList}
+          </Stack>
           <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
             <Button
               variant='contained'

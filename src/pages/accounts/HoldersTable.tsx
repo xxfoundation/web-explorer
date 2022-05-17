@@ -17,6 +17,7 @@ const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
 const sampleData: AccountType[] = genSkeletons(23).map((_, index) => {
   return {
     rank: index + 1,
+    era: 148,
     transactions: 123,
     roles: ['council', 'nominator'],
     lockedCoin: '000000',
@@ -60,8 +61,12 @@ const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
   );
   return (
     <>
-      <Typography fontSize={'12px'} textTransform={'uppercase'} paddingBottom={'10px'}>additional roles</Typography>
-      <Stack fontSize={'12px'} spacing={2}>{labels}</Stack>
+      <Typography fontSize={'12px'} textTransform={'uppercase'} paddingBottom={'10px'}>
+        additional roles
+      </Typography>
+      <Stack fontSize={'12px'} spacing={2}>
+        {labels}
+      </Stack>
     </>
   );
 };
@@ -85,7 +90,7 @@ const accountToRow = (item: AccountType): BaselineCell[] => {
   const rankProps = item.rank <= 10 ? { style: { fontWeight: 900 } } : {};
   return [
     { value: item.rank, props: rankProps },
-    { value: <Address value={item.account} link={`/accounts/${item.account}`} truncated /> },
+    { value: <Address value={item.address} link={`/accounts/${item.address}`} truncated /> },
     { value: item.transactions },
     { value: rolesToCell(item.roles), props: { colSpan: 2 } },
     { value: <FormatBalance value={item.lockedCoin} /> },
@@ -116,7 +121,11 @@ const HoldersTable: FC = () => {
       { value: 'account' },
       { value: 'transactions' },
       {
-        value: <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>role</HoldersRolesFilters>,
+        value: (
+          <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>
+            role
+          </HoldersRolesFilters>
+        ),
         props: { colSpan: 2 }
       },
       { value: 'locked xx coin' },
