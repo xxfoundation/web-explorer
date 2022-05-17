@@ -3,15 +3,16 @@ import { Stack, Typography } from '@mui/material';
 import BN from 'bn.js';
 import React, { FC, useMemo } from 'react';
 import { theme } from '../../themes/default';
-import { CustomPointOptions } from '../blockchain/types';
 import FormatBalance from '../FormatBalance';
-import SeriesDetailedInfo, { LegendTypographySubHeaders } from './ChartSeriesDetailsInfo';
+import SeriesDetailedInfo from './ChartSeriesDetailsInfo';
 import { HtmlTooltip } from './ChartsPopover';
+import { LegendTypographySubHeaders } from '../typographies';
 
-const LegendItem: FC<CustomPointOptions> = (props) => {
+const LegendItem: FC<any> = (props) => {
   const title = useMemo(() => {
     return <SeriesDetailedInfo custom={props.custom} name={props.name} />;
   }, [props.custom, props.name]);
+  
   return (
     <Stack direction={'row'} spacing={1} alignItems='center'>
       <HtmlTooltip title={title}>
@@ -27,7 +28,7 @@ const LegendItem: FC<CustomPointOptions> = (props) => {
   );
 };
 
-const LegendItems: FC<{ data: CustomPointOptions[] }> = ({ data }) => {
+const LegendItems: FC<{ data: any[] }> = ({ data }) => {
   return (
     <Stack direction={'column'} marginY={2}>
       {data.map((props) => {
@@ -38,7 +39,7 @@ const LegendItems: FC<{ data: CustomPointOptions[] }> = ({ data }) => {
 };
 
 const ChartsLegends: FC<{
-  legends: CustomPointOptions[];
+  legends: any[];
   name: string;
   value: string | BN;
 }> = ({ legends, name, value }) => {

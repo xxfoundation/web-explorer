@@ -1,44 +1,12 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Grid, IconButton, Stack, styled, Typography } from '@mui/material';
+import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import { default as React, FC, useMemo } from 'react';
-import { CustomData, CustomPointOptions } from '../blockchain/types';
 import FormatBalance from '../FormatBalance';
+import { LegendTypographyHeader, LegendTypographySubHeaders  } from '../typographies';
 
-const LegendTypographyHeader = styled(Typography)(({ theme: th }) => {
-  return {
-    fontWeight: 700,
-    fontSize: 14,
-    color: th.palette.grey[800],
-    textTransform: 'uppercase',
-    letterSpacing: '.5px'
-  };
-});
-
-export const LegendTypographySubHeaders = styled(Typography)(({ theme: th }) => {
-  return {
-    fontSize: 12,
-    fontWeight: 500,
-    color: th.palette.text.primary,
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-    textAlign: 'left',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden'
-  };
-});
-
-const LegendTypographyBody = styled(Typography)(({}) => {
-  return {
-    fontWeight: 400,
-    fontSize: 12,
-    color: '#7A7A7A',
-    textAlign: 'left'
-  };
-});
-
-const SeriesInfoLine: FC<CustomData> = (props) => {
+const SeriesInfoLine: FC<any> = (props) => {
   const LegendEl = useMemo(
-    () => (props.title ? LegendTypographySubHeaders : LegendTypographyBody),
+    () => (props.title ? LegendTypographySubHeaders : Typography),
     [props.title]
   );
   const margin = useMemo(() => {
@@ -65,12 +33,12 @@ const SeriesInfoLine: FC<CustomData> = (props) => {
 };
 
 const SeriesDetailedInfo: FC<
-  CustomPointOptions & {
+  any & {
     onClose?: () => void;
   }
 > = ({ custom, name, onClose }) => {
   const content = useMemo(() => {
-    return custom.data?.map((item) => {
+    return custom.data?.map((item: any) => {
       return <SeriesInfoLine {...item} key={item.id} />;
     });
   }, [custom.data]);

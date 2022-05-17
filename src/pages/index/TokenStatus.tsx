@@ -1,13 +1,21 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { styled, Box, Grid, Typography } from '@mui/material';
 import React from 'react';
-import AverageAnnualReturn from '../../components/blockchain/charts/AverageAnnualReturnLineChart';
-import NewAccounts from '../../components/blockchain/charts/NewAccountsLineChart';
-import StakingRatio from '../../components/blockchain/charts/StakingRatioLineChart';
-import StakingSupplyChart from '../../components/blockchain/charts/StakingSupplyPieChart';
-import TotalIssuance from '../../components/blockchain/charts/TotalIssuancePieChart';
-import TransactionsChart from '../../components/blockchain/charts/TransactionsLineChart';
+import AverageAnnualReturn from '../../components/charts/AverageAnnualReturnLineChart';
+import NewAccounts from '../../components/charts/NewAccountsLineChart';
+import StakingRatio from '../../components/charts/StakingRatioLineChart';
+import StakingSupplyChart from '../../components/charts/StakingSupplyDoughnutChart';
+import TotalIssuance from '../../components/charts/TotalIssuanceDoughnutChart';
+import TransactionsChart from '../../components/charts/TransactionsLineChart';
 import LatestBlocks from '../../components/blockchain/LatestBlocksTable';
 import Transfers from '../../components/blockchain/TransfersTable';
+import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
+
+const ChartWrap = styled(PaperWrapStyled)({
+  height: '16rem',
+  display: 'flex',
+  justifyContent: 'stretch',
+
+});
 
 const TokenStatus = () => {
   return (
@@ -16,22 +24,46 @@ const TokenStatus = () => {
         Token Status
       </Typography>
       <Grid container spacing={2}>
-        {[
-          <TotalIssuance key='totalIssuance' />,
-          <StakingSupplyChart key='stakingSupply' />,
-          <LatestBlocks key='latestBlock' />,
-          <Transfers key='transfers' />,
-          <TransactionsChart key='transactionsChart' />,
-          <NewAccounts key='newAccounts' />,
-          <StakingRatio key='stakingRatio' />,
-          <AverageAnnualReturn key='averageAnnualReturn' />
-        ].map((item, i) => {
-          return (
-            <Grid item xs={12} md={6} key={i}>
-              <Box>{item}</Box>
-            </Grid>
-          );
-        })}
+        <Grid item xs={12} md={6}>
+          <ChartWrap>
+            <TotalIssuance />
+          </ChartWrap>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ChartWrap>
+            <StakingSupplyChart />
+          </ChartWrap>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Box>
+            <LatestBlocks />
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Box>
+            <Transfers />
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ChartWrap>
+            <TransactionsChart />
+          </ChartWrap>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ChartWrap>
+            <NewAccounts />
+          </ChartWrap>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ChartWrap>
+            <StakingRatio />
+          </ChartWrap>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ChartWrap>
+            <AverageAnnualReturn />
+          </ChartWrap>
+        </Grid>
       </Grid>
     </Box>
   );
