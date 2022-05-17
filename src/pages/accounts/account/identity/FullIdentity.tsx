@@ -22,7 +22,7 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
 };
 
 const NameHeaderTypography: FC<{ account: AccountType }> = ({ account }) => {
-  if (!account.name) {
+  if (!account.legalName) {
     return (
       <Typography
         fontSize={24}
@@ -38,17 +38,17 @@ const NameHeaderTypography: FC<{ account: AccountType }> = ({ account }) => {
   }
   return (
     <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-      {account.name}
+      {account.legalName}
     </Typography>
   );
 };
 
 const DisplayBlurb: FC<{ account: AccountType }> = ({ account }) => {
-  if (account.roles.includes('nominator') || !account.personalIntroduction) return <></>;
+  if (account.roles.includes('nominator') || !account.blurb) return <></>;
   return (
     <Grid item xs={12}>
       <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>
-        {account.personalIntroduction}
+        {account.blurb}
       </Typography>
     </Grid>
   );
@@ -92,7 +92,7 @@ const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
         />
         <NameHeaderTypography account={account} />
       </Grid>
-      {(!account.personalIntroduction || account.roles.includes('nominator')) &&
+      {(!account.blurb || account.roles.includes('nominator')) &&
       !account.email &&
       !account.twitter ? (
         <></>
@@ -111,7 +111,7 @@ const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
       <Grid item xs={12} margin={'10px'}>
         <TextWithLabel label='stash' text={account.stash} />
         <TextWithLabel label='controller' text={account.controller} />
-        {account.riotID && <TextWithLabel label='riot' text={account.riotID} />}
+        {account.riotName && <TextWithLabel label='riot' text={account.riotName} />}
         {account.website && <TextWithLabel label='web' text={account.website} />}
       </Grid>
     </Grid>
@@ -128,10 +128,10 @@ const PaddedGridItem: FC<{ md: number }> = ({ children, md }) => {
 
 const NameAndBlurbCell: FC<{ account: AccountType }> = ({ account }) => {
   const hasBlurb = useMemo(
-    () => !account.roles.includes('nominator') && account.personalIntroduction,
-    [account.personalIntroduction, account.roles]
+    () => !account.roles.includes('nominator') && account.blurb,
+    [account.blurb, account.roles]
   );
-  if (!account.name) {
+  if (!account.legalName) {
     return (
       <Typography
         fontSize={24}
@@ -148,11 +148,11 @@ const NameAndBlurbCell: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <>
       <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-        {account.name}
+        {account.legalName}
       </Typography>
       {hasBlurb && (
         <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>
-          {account.personalIntroduction}
+          {account.blurb}
         </Typography>
       )}
     </>
@@ -192,7 +192,7 @@ const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
           <TextWithLabel label='stash' text={account.stash} />
         </PaddedGridItem>
         <PaddedGridItem md={3}>
-          {account.riotID && <TextWithLabel label='riot' text={account.riotID} />}
+          {account.riotName && <TextWithLabel label='riot' text={account.riotName} />}
         </PaddedGridItem>
       </Grid>
       <Grid item container md={12}>

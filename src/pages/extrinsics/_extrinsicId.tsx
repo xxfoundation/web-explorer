@@ -4,10 +4,11 @@ import React, { FC, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import EventsTable from '../../components/block/EventsTable';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import CopyButton from '../../components/buttons/CopyButton';
+import CopyButton, { callbackCopyMessage } from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
+import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
 import useCopyClipboard from '../../hooks/useCopyToClibboard';
@@ -27,7 +28,10 @@ const ParametersActions: FC<{ data: unknown }> = ({ data }) => {
   const staticCopy = useCopyClipboard()[1];
   return (
     <>
-      <RoundedButton variant='contained' onClick={() => staticCopy(JSON.stringify(data))}>
+      <RoundedButton
+        variant='contained'
+        onClick={() => staticCopy(JSON.stringify(data), callbackCopyMessage)}
+      >
         copy
       </RoundedButton>
       <RoundedButton variant='contained' disabled sx={{ marginLeft: '24px' }}>
@@ -162,7 +166,9 @@ const Extrinsic = () => {
       </Box>
       <SummaryPaper data={extrinsicsDetailData} />
       <Box sx={{ mt: 2 }}>
-        <TabsWithPanels panels={panels} tabsLabel='extrinsic page events' />
+        <PaperStyled>
+          <TabsWithPanels panels={panels} tabsLabel='extrinsic page events' />
+        </PaperStyled>
       </Box>
     </Container>
   );
