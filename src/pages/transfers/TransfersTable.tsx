@@ -46,7 +46,7 @@ const TransferRow = ({ amount, block, extrinsicId, from, hash, status, time, to 
           style={{ alignItems: 'flex-end', justifyContent: 'space-between' }}
           maxWidth={'260px'}
         >
-          <Hash value={from} truncated />
+          <Address value={from} truncated />
           <ArrowForwardIosIcon />
           <Address value={to} truncated />
         </Stack>

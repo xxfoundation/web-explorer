@@ -1,5 +1,5 @@
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { Avatar, Stack, Tooltip, Typography, TypographyTypeMap } from '@mui/material';
+import { Avatar, Stack, Tooltip, Typography, TypographyProps } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import { shortString } from '../utils';
 import HashValidator from './HashValidator';
@@ -10,30 +10,29 @@ type IdProperties = {
   link?: string;
   truncated?: boolean;
   value: string;
-  variant?: TypographyTypeMap['props']['variant'];
-};
+} & TypographyProps;
 
 const contentRenderer = (
   text: string,
-  isValid: boolean,
-  variant?: TypographyTypeMap['props']['variant'],
-  link?: IdProperties['link']
+  isvalid: boolean,
+  link?: IdProperties['link'],
+  props?: TypographyProps
 ) => {
   return (
-    <Typography variant={variant} color={isValid ? 'info' : 'red'}>
+    <Typography {...props} color={isvalid ? 'info' : 'red'}>
       {link ? <Link to={link}>{text}</Link> : text}
     </Typography>
   );
 };
 
-const Hash: FC<IdProperties> = ({ link, truncated, value, variant }) => {
-  const isValid = HashValidator(value);
-  return contentRenderer(truncated ? shortString(value) : value, isValid, variant, link);
+const Hash: FC<IdProperties> = ({ link, truncated, value, ...props }) => {
+  const isvalid = HashValidator(value);
+  return contentRenderer(truncated ? shortString(value) : value, isvalid, link, props);
 };
 
 const Address: FC<
   IdProperties & { name?: string; disableAvatar?: boolean; avatarUrl?: string }
-> = ({ avatarUrl, disableAvatar, link, name, truncated, value, variant }) => {
+> = ({ avatarUrl, disableAvatar, link, name, truncated, value, ...props }) => {
   const avatar = useMemo(() => {
     return name ? (
       <Avatar sx={{ width: 25, height: 25, mr: 1 }} src={avatarUrl} alt={name} />
@@ -45,23 +44,23 @@ const Address: FC<
   }, [name, avatarUrl]);
 
   const content = useMemo(() => {
-    const isValid = isValidXXNetworkAddress(value);
+    const isvalid = isValidXXNetworkAddress(value);
     if (name) {
       return (
         <Tooltip title={value} placement='top' arrow>
-          {contentRenderer(name, isValid, variant, link)}
+          {contentRenderer(name, isvalid, link, props)}
         </Tooltip>
       );
     } else {
       return truncated ? (
         <Tooltip title={value} placement='top' arrow>
-          {contentRenderer(truncated ? shortString(value) : value, isValid, variant, link)}
+          {contentRenderer(truncated ? shortString(value) : value, isvalid, link, props)}
         </Tooltip>
       ) : (
-        contentRenderer(value, isValid, variant, link)
+        contentRenderer(value, isvalid, link, props)
       );
     }
-  }, [name, value, truncated, variant, link]);
+  }, [value, name, link, props, truncated]);
 
   return disableAvatar ? (
     content
