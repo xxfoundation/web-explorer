@@ -7,7 +7,7 @@ export const BLOCK_KEYS_FRAGMENT = gql`
   }
 `;
 
-const LISTEN_FOR_BLOCKS_ORDERED = gql`
+export const LISTEN_FOR_BLOCKS_ORDERED = gql`
   ${BLOCK_KEYS_FRAGMENT}
   subscription ListBlocksOrdered($limit: Int) {
     blocks: block(order_by: { block_number: desc }, limit: $limit) {
@@ -21,7 +21,7 @@ const LISTEN_FOR_BLOCKS_ORDERED = gql`
   }
 `;
 
-const LIST_BLOCK = gql`
+export const LIST_BLOCK = gql`
   ${BLOCK_KEYS_FRAGMENT}
   query ListBlocksOrdered($limit: Int, $offset: Int = 0, $where: block_bool_exp) {
     agg: block_aggregate(where: $where) {
@@ -46,11 +46,11 @@ const LIST_BLOCK = gql`
   }
 `;
 
-const GET_BLOCK_BY_PK = gql`
+export const GET_BLOCK_BY_PK = gql`
   ${BLOCK_KEYS_FRAGMENT}
   query GetBlockByPK($blockNumber: bigint!) {
-    blocks: block_by_pk(block_number: $blockNumber) {
-      ...block
+    block: block_by_pk(block_number: $blockNumber) {
+      ...blocks
       finalized: finalized
       currentEra: active_era
       parentHash: parent_hash
@@ -65,5 +65,3 @@ const GET_BLOCK_BY_PK = gql`
     }
   }
 `;
-
-export { LISTEN_FOR_BLOCKS_ORDERED, LIST_BLOCK, GET_BLOCK_BY_PK };
