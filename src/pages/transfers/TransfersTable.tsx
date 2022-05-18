@@ -1,11 +1,11 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import BlockStatusIcon, { BlockStatus } from '../../components/block/BlockStatusIcon';
 import { Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
-import { BaseLineCellsWrapper, BaseLineCellWrapper, BaselineTable } from '../../components/Tables';
+import { BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import TimeAgo from '../../components/TimeAgo';
 
@@ -36,35 +36,44 @@ const transfers: Transfer[] = Array.from(Array(9).keys()).map((i) => ({
 const TransferRow = ({ amount, block, extrinsicId, from, hash, status, time, to }: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${extrinsicId}`;
   return [
-    BaseLineCellWrapper(<Link to={extrinsicIdLink}>{extrinsicId}</Link>),
-    BaseLineCellWrapper(<Link to={`/blocks/${block}`}>{block}</Link>),
-    BaseLineCellWrapper(<TimeAgo date={time} />),
+    { value: <Link to={extrinsicIdLink}>{extrinsicId}</Link> },
+    { value: <Link to={`/blocks/${block}`}>{block}</Link> },
+    { value: <TimeAgo date={time} /> },
     {
       value: (
-        <Stack direction='row' style={{ alignItems: 'flex-end', justifyContent: 'space-between' }}>
+        <Stack
+          direction='row'
+          style={{ alignItems: 'flex-end', justifyContent: 'space-between' }}
+          maxWidth={'260px'}
+        >
           <Hash value={from} truncated />
           <ArrowForwardIosIcon />
           <Hash value={to} truncated />
         </Stack>
-      ),
-      props: { colSpan: 2 }
+      )
     },
-    BaseLineCellWrapper(<FormatBalance value={amount} />),
-    BaseLineCellWrapper(<BlockStatusIcon status={status} />),
-    BaseLineCellWrapper(<Hash value={hash} truncated />)
+    { value: <FormatBalance value={amount} /> },
+    { value: <BlockStatusIcon status={status} /> },
+    { value: <Hash value={hash} truncated /> }
   ];
 };
 
-const headers = BaseLineCellsWrapper([
-  'Extrinsics id',
-  'Block',
-  'Time',
-  'From',
-  'To',
-  'Amount',
-  'Result',
-  'Hash'
-]);
+const headers = [
+  { value: 'Extrinsics id' },
+  { value: 'Block' },
+  { value: 'Time' },
+  {
+    value: (
+      <Stack direction={'row'} justifyContent={'space-between'} maxWidth={'260px'}>
+        <Typography>From</Typography>
+        <Typography>To</Typography>
+      </Stack>
+    )
+  },
+  { value: 'Amount' },
+  { value: 'Result' },
+  { value: 'Hash' }
+];
 
 const TransferTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -87,7 +96,6 @@ const TransferTable = () => {
 
   return (
     <BaselineTable
-      tableProps={{ sx: { 'th:last-child, td:last-child': { maxWidth: '6px' } } }}
       headers={headers}
       rows={rows}
       footer={
