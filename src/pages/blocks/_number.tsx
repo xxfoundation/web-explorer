@@ -5,13 +5,12 @@ import { useHistory, useParams } from 'react-router-dom';
 import { BlockNav } from '../../components/block/Block.styled';
 import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
 import BlockSummary from '../../components/block/BlockSummary';
-import { BlockSummaryType } from '../../components/block/types';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BackAndForwardArrows from '../../components/buttons/BackAndForwardArrows';
 import genSkeletons from '../../components/genSkeletons';
 import Link from '../../components/Link';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
-import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
+import { GetBlock, GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import NotFound from '../NotFound';
 
 const useArrowButtonsOptions = (number: number) => {
@@ -20,7 +19,7 @@ const useArrowButtonsOptions = (number: number) => {
     return { variables: { blockNumber } };
   }, []);
   const buttonProps = useCallback(
-    ({ data, loading }: QueryResult<BlockSummaryType, OperationVariables>) => ({
+    ({ data, loading }: QueryResult<GetBlock, OperationVariables>) => ({
       disabled: loading || !data?.block?.number,
       onClick: () => {
         history.push(`/blocks/${data?.block?.number}`);
@@ -28,8 +27,8 @@ const useArrowButtonsOptions = (number: number) => {
     }),
     [history]
   );
-  const nextBlockQuery = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, variables(number + 1));
-  const previousBlockQuery = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, variables(number - 1));
+  const nextBlockQuery = useQuery<GetBlock>(GET_BLOCK_BY_PK, variables(number + 1));
+  const previousBlockQuery = useQuery<GetBlock>(GET_BLOCK_BY_PK, variables(number - 1));
   return { next: buttonProps(nextBlockQuery), previous: buttonProps(previousBlockQuery) };
 };
 
@@ -64,7 +63,7 @@ const LoadingSummary: FC = ({}) => {
 const Block = () => {
   const { number } = useParams<{ number: string }>();
   const blockNumber = Number(number);
-  const { data, loading } = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, {
+  const { data, loading } = useQuery<GetBlock>(GET_BLOCK_BY_PK, {
     variables: { blockNumber }
   });
 

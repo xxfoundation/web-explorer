@@ -1,15 +1,5 @@
 import { PointOptionsObject } from 'highcharts';
 
-export type Block = {
-  hash: string;
-  number: number;
-  finalized: boolean;
-  currentEra: number;
-  totalEvents: number;
-  totalExtrinsics: number;
-  timestamp: number;
-};
-
 export type Transfer = {
   hash: string;
   blockNumber: number;

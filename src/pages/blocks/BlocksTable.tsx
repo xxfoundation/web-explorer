@@ -9,21 +9,9 @@ import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../compone
 import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
-import { LIST_BLOCK } from '../../schemas/blocks.schema';
+import { ListBlockOrdered, LIST_BLOCK } from '../../schemas/blocks.schema';
 
 const ROWS_PER_PAGE = 25;
-
-type Block = {
-  hash: string;
-  number: number;
-  numberFinalized: number;
-  currentEra: number;
-  timestamp: number;
-  totalExtrinsics: number;
-  author: string;
-  authorName: string;
-};
-type Response = { blocks: Block[]; agg: { aggregate: { count: number } } };
 
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -58,12 +46,12 @@ const RenderProducer: FC<{
   const content = name
     ? name
     : idString.length > 16
-      ? idString.slice(0, 7) + '....' + idString.slice(-5)
-      : idString;
+    ? idString.slice(0, 7) + '....' + idString.slice(-5)
+    : idString;
   return <Link to={`/blocks/${number}/producer/${id || name}`}>{content}</Link>;
 };
 
-const rowParser = (block: Block): BaselineCell[] => {
+const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
     <Link to={`/blocks/${block.number}`}>{block.number}</Link>,
     <BlockStatusIcon status={block.number > block.numberFinalized ? 'pending' : 'successful'} />,
@@ -99,7 +87,7 @@ const BlocksTable: FC = () => {
     setRowsPerPage(parseInt(event.target.value));
     setPage(0);
   }, []);
-  const { data, loading } = useQuery<Response>(LIST_BLOCK, {
+  const { data, loading } = useQuery<ListBlockOrdered>(LIST_BLOCK, {
     variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,

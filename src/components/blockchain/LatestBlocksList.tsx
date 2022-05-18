@@ -8,11 +8,22 @@ import DefaultTile from '../DefaultTile';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import { ListSkeleton } from './ListSkeleton';
-import type { Block } from './types';
+
+type ListBlocks = {
+  blocks: {
+    hash: string;
+    number: number;
+    finalized: boolean;
+    currentEra: number;
+    totalEvents: number;
+    totalExtrinsics: number;
+    timestamp: number;
+  }[];
+};
 
 const PAGE_LIMIT = 8;
 
-const ItemHandler: FC<{ block: Block }> = ({ block }) => {
+const ItemHandler: FC<{ block: ListBlocks['blocks'][0] }> = ({ block }) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Grid container>
@@ -48,7 +59,7 @@ const ItemHandler: FC<{ block: Block }> = ({ block }) => {
 };
 
 const LatestBlocksList = () => {
-  const { data, loading } = useSubscription<{ blocks: Block[] }>(LISTEN_FOR_BLOCKS_ORDERED, {
+  const { data, loading } = useSubscription<ListBlocks>(LISTEN_FOR_BLOCKS_ORDERED, {
     variables: { limit: PAGE_LIMIT }
   });
   const content = useSubscriptionUpdater({

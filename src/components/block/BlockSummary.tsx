@@ -1,15 +1,15 @@
 import { Stack, Typography } from '@mui/material';
 import { default as React, FC, useMemo } from 'react';
+import { GetBlock } from '../../schemas/blocks.schema';
 import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
 import Link from '../Link';
 import SummaryPaper from '../Paper/SummaryPaper';
 import TimeAgoComponent from '../TimeAgo';
 import BlockStatusIcon from './BlockStatusIcon';
-import { BlockType } from './types';
 
 const BlockSummary: FC<{
-  data: BlockType;
+  data: GetBlock['block'];
 }> = ({ data }) => {
   const summaryData = useMemo(
     () => [
