@@ -1,10 +1,10 @@
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { Avatar, Stack, Tooltip, Typography, TypographyTypeMap } from '@mui/material';
 import React, { FC, useMemo } from 'react';
+import { shortString } from '../utils';
 import HashValidator from './HashValidator';
 import isValidXXNetworkAddress from './IsValidXXNetworkAddress';
 import Link from './Link';
-import { shortString } from '../utils'
 
 type IdProperties = {
   link?: string;
@@ -31,14 +31,9 @@ const Hash: FC<IdProperties> = ({ link, truncated, value, variant }) => {
   return contentRenderer(truncated ? shortString(value) : value, isValid, variant, link);
 };
 
-const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = ({
-  avatarUrl,
-  link,
-  name,
-  truncated,
-  value,
-  variant
-}) => {
+const Address: FC<
+  IdProperties & { name?: string; disableAvatar?: boolean; avatarUrl?: string }
+> = ({ avatarUrl, disableAvatar, link, name, truncated, value, variant }) => {
   const avatar = useMemo(() => {
     return name ? (
       <Avatar sx={{ width: 25, height: 25, mr: 1 }} src={avatarUrl} alt={name} />
@@ -68,7 +63,9 @@ const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = ({
     }
   }, [name, value, truncated, variant, link]);
 
-  return (
+  return disableAvatar ? (
+    content
+  ) : (
     <Stack direction={'row'} alignItems='center'>
       {avatar}
       {content}
