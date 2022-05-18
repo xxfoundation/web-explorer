@@ -37,7 +37,7 @@ const data = [
 const StakingSupply = () => {
   return (
     <DefaultTile>
-      <PieChartWithLegend data={data} name='staking supply' value={value} />
+      <PieChartWithLegend data={data} name='staking supply' value={value} height={230} />
     </DefaultTile>
   );
 };

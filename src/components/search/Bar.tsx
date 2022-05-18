@@ -1,14 +1,11 @@
-import CloseIcon from '@mui/icons-material/Close';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Alert, Divider, FormControl, Grid, IconButton, Snackbar, SxProps } from '@mui/material';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import { Divider, FormControl, Grid, SxProps } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import React, { FC, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useToggle } from '../../hooks';
 import { FindAccountByAddressType, FIND_ACCOUNT_BY_ADDRESS } from '../../schemas/accounts.schema';
 import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import { FindExtrinsicByHashType, FIND_EXTRINSIC_BY_HASH } from '../../schemas/extrinsics.schema';
-import { theme } from '../../themes/tags';
 import { Bar, SelectItem, SelectOption } from './Bar.styles';
 import { GenericSearchInput } from './SearchInputGroup';
 import { SearchTypes } from './types';
@@ -23,36 +20,34 @@ const dividerSxProps: SxProps = {
   display: { xs: 'none', sm: 'flex' }
 };
 
-type SearchGroupType = {
-  validator: (value: string, optionValidator: (v: string) => boolean) => boolean;
-  toggleAlert: (value: string) => void;
-};
-
-const SearchBlocks: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
+const SearchBlocks: FC = () => {
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
   return (
     <GenericSearchInput
       placeholder='Search by Block Number (insert an integer)'
       messageLoader={(value: string) => `Querying Block Number ${value}`}
       document={GET_BLOCK_BY_PK}
       variables={(v: string) => ({ blockNumber: Number(v) })}
-      validator={(v) => validator(v, validators.blocks)}
+      option='block'
+      optionValidator={validators.blocks}
       errorSearchCallback={(v: string, err: unknown) => {
-        toggleAlert(`problem searching block with ${v}`);
         console.error(err);
+        enqueueSnackbar(`problem searching block with ${v}`, { variant: 'error' });
       }}
       successSearchCallback={(v: string, data: { block?: { number: number; hash: string } }) => {
         if (data.block?.number) {
           history.push(`/blocks/${data.block.number}`);
         } else {
-          toggleAlert(`no block found with number ${v}`);
+          enqueueSnackbar(`no block found with number ${v}`, { variant: 'warning' });
         }
       }}
     />
   );
 };
 
-const SearchExtrinsics: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
+const SearchExtrinsics: FC = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
   return (
     <GenericSearchInput
@@ -66,23 +61,25 @@ const SearchExtrinsics: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
           }
         }
       })}
-      validator={(v) => validator(v, validators.extrinsic)}
+      option='extrinsic'
+      optionValidator={validators.extrinsic}
       successSearchCallback={(v: string, data: FindExtrinsicByHashType) => {
         if (data.extrinsic?.at(0)?.index) {
           history.push(`/extrinsics/${data.extrinsic[0].index}`);
         } else {
-          toggleAlert(`no extrinsic found for hash ${v}`);
+          enqueueSnackbar(`no extrinsic found for hash ${v}`, { variant: 'error' });
         }
       }}
       errorSearchCallback={(v: string, err: unknown) => {
-        toggleAlert(`problem searching extrinsic with key ${v}`);
+        enqueueSnackbar(`problem searching extrinsic with key ${v}`, { variant: 'warning' });
         console.error(err);
       }}
     />
   );
 };
 
-const SearchAccount: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
+const SearchAccount: FC = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
   return (
     <GenericSearchInput
@@ -96,109 +93,44 @@ const SearchAccount: FC<SearchGroupType> = ({ toggleAlert, validator }) => {
           }
         }
       })}
-      validator={(v) => validator(v, validators.accounts)}
+      option='account'
+      optionValidator={validators.accounts}
       successSearchCallback={(v: string, data: FindAccountByAddressType) => {
         if (data.accounts?.at(0)?.address) {
           history.push(`/acccounts/${data.accounts[0].address}`);
         } else {
           console.warn(JSON.stringify(data.accounts));
-          toggleAlert(`no account found for the address ${v}`);
+          enqueueSnackbar(`no account found for the address ${v}`, { variant: 'error' });
         }
       }}
       errorSearchCallback={(v: string, err: unknown) => {
-        toggleAlert(`problem searching account with address ${v}`);
+        enqueueSnackbar(`problem searching account with address ${v}`, { variant: 'warning' });
         console.error(err);
       }}
     />
   );
 };
 
-const searchInputGroupFactory = (option: SearchTypes, searchOptions: SearchGroupType) => {
+const useSearchInputGroupFactory = (option: SearchTypes) => {
   if (option === 'blocks') {
-    return <SearchBlocks {...searchOptions} />;
+    return <SearchBlocks />;
   }
   if (option === 'extrinsic') {
-    return <SearchExtrinsics {...searchOptions} />;
+    return <SearchExtrinsics />;
   }
   if (option === 'accounts') {
-    return <SearchAccount {...searchOptions} />;
+    return <SearchAccount />;
   }
   return <></>;
 };
 
-const AlertEl: FC<{ opened: boolean; content: string; handleClose: () => void }> = ({
-  content,
-  handleClose,
-  opened
-}) => {
-  return (
-    <Snackbar
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={opened}
-      onClose={handleClose}
-      key='search notification'
-    >
-      <Alert
-        icon={<ErrorOutlineIcon sx={{ color: theme.palette.primary.contrastText }} />}
-        severity='error'
-        sx={{ background: theme.palette.error.main, color: theme.palette.primary.contrastText }}
-        action={
-          <IconButton size='small' aria-label='close' color='inherit' onClick={handleClose}>
-            <CloseIcon fontSize='small' />
-          </IconButton>
-        }
-      >
-        {content}
-      </Alert>
-    </Snackbar>
-  );
-};
-
 const SearchBar = () => {
   const [option, setOption] = useState<SearchTypes>('blocks');
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [openedAlert, { set: toggleAlert }] = useToggle();
-
   const handleChange = useCallback(({ target: { value } }) => setOption(value), [setOption]);
-
-  const handleClose = useCallback(() => {
-    toggleAlert(false);
-    setAlertMessage('');
-  }, [toggleAlert]);
-
-  // TODO replace this if a library for notifications
-  const validator = useCallback(
-    (value: string, optionValidator: (v: string) => boolean) => {
-      if (optionValidator(String(value))) {
-        toggleAlert(false);
-        setAlertMessage('');
-        return true;
-      }
-      const msg = value ? `${option} is not valid` : 'the search is empty';
-      setAlertMessage(msg);
-      toggleAlert(true);
-      return false;
-    },
-    [option, toggleAlert]
-  );
-
-  const callAlert = useCallback(
-    (message?: string) => {
-      if (message) {
-        setAlertMessage(message);
-        toggleAlert(true);
-      }
-    },
-    [toggleAlert]
-  );
-
-  const input = useMemo(() => {
-    return searchInputGroupFactory(option, { validator, toggleAlert: callAlert });
-  }, [callAlert, option, validator]);
+  const input = useSearchInputGroupFactory(option);
 
   return (
     <Bar component={'form'}>
-      <AlertEl opened={openedAlert} content={alertMessage} handleClose={handleClose} />
       <Grid container alignItems='center'>
         <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 } }}>
           <FormControl variant='standard'>

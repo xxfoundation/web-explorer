@@ -1,4 +1,5 @@
 import BN from 'bn.js';
+import { ReactNode } from 'react';
 
 export type Roles = 'validator' | 'nominator' | 'council' | 'technical committee' | 'treasury';
 
@@ -14,40 +15,98 @@ export type LockedBalanceType = {
   vesting: string | BN;
 };
 
-export type AccountType = {
-  rank: number;
-  transactions: number;
-  lockedCoin: string | BN;
-  account: string;
-  roles: Roles[];
-  // roles: Roles[];
+type Judgements =
+  | 'Unknown'
+  | 'Reasonable'
+  | 'Known Good'
+  | 'Out of Date'
+  | 'Low Quality'
+  | 'Erroneous';
+
+export type AccountIdentityFields = {
+  displayName?: string;
+  legalName?: string;
+  email?: string;
+  website?: string;
+  twitter?: string;
+  riotName?: string;
+  blurb?: string;
+  judgement?: Judgements;
+  parentIdentity?: string[];
+  childrenIdentity?: string[];
+};
+
+export type AccountType = AccountIdentityFields & {
   id: string;
   address: string;
   publicKey: string;
-  name?: string;
-  legalName?: string;
-  personalIntroduction?: string;
   stash: string;
   controller: string;
-  email?: string;
-  twitter?: string;
-  riotID?: string;
-  website?: string;
+  roles: Roles[];
+
+  rank: number;
+  transactions: number;
+  lockedCoin: string | BN;
+
   balance: BalanceType;
   reserved: LockedBalanceType;
   locked: LockedBalanceType;
+
+  era: number;
+
+  // validator fields?
+  firstValidatorEra?: number;
+  latestSlashes?: number;
+  holderSlashes?: number;
+
+  nominators?: number;
+
+  eraPoints?: number;
+
+  averageCommission?: number;
+
+  frequencyOfRewards?: number;
+  unclaimedRewards?: number;
+
+  democracy?: {
+    latestNumberOfVotes: number;
+    proposalVotePerMonth: number;
+    proposalVoteForCouncil: number;
+    missedProposals: number;
+    councilMember: boolean;
+  };
 };
 
-export type MetricScoreProps = {
-  veryGood?: string;
-  good: string;
-  neutral: string;
-  bad: string;
-  veryBad?: string;
+export type MetricsType =
+  | 'identity'
+  | 'address creation'
+  | 'slashes'
+  | 'subaccounts'
+  | 'nominators'
+  | 'era points'
+  | 'commission'
+  | 'frequency of payouts'
+  | 'governance'
+  | 'validator time';
+
+export type MetricScores = 'very good' | 'good' | 'neutral' | 'bad' | 'very bad';
+
+export type Metrics = {
+  name: string;
+  score?: MetricScores;
+  description?: string;
 };
 
-export type MetricProps = {
-  title: string;
-  description: string;
-  scores: MetricScoreProps;
+export type MetricScorePopupProps = {
+  veryGood?: ReactNode;
+  good?: ReactNode;
+  neutral?: ReactNode;
+  bad?: ReactNode;
+  veryBad?: ReactNode;
+};
+
+export type MetricPopupProps = {
+  name: string;
+  description: ReactNode;
+  scores: MetricScorePopupProps;
 };

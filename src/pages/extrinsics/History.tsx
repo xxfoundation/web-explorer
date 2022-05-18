@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
-import dayjs from 'dayjs';
 import { Box, Container, Stack, Typography } from '@mui/material';
-import BarChart from '../../components/charts/BarChart/BarChart';
+import dayjs from 'dayjs';
+import React, { useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import DownloadDataButton from '../../components/buttons/DownloadDataButton';
+import BarChart from '../../components/charts/BarChart/BarChart';
+import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import HistoryTable from './HistoryTable';
-import PaperWrap from '../../components/Paper/PaperWrap.styled';
 
 const extrinsinctCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
@@ -37,17 +37,17 @@ const HistoryPage = () => {
         <DownloadDataButton onClick={() => { }}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
-        <PaperWrap >
+        <PaperStyled >
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
             <BarChart series={{ timestamps, label: 'Extrinsic' }} />
           </Box>
-        </PaperWrap>
+        </PaperStyled>
       </Box>
-      <PaperWrap>
+      <PaperStyled>
         <Typography hidden>FILTER ALL | {totalOfExtrinsics}</Typography>
         <span hidden>filters placeholder</span>
         <HistoryTable />
-      </PaperWrap>
+      </PaperStyled>
     </Container>
   );
 };

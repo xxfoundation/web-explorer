@@ -38,8 +38,8 @@ const crumbSplats: Record<string, React.FC<ParamsType>> = {
       Extrinsics
     </CustomLink>
   ),
-  'accountId:2': ({ params: { accountId } }) => (
-    <CustomLink to={`/accounts/${accountId}`} underline='hover'>
+  'accountId:2': () => (
+    <CustomLink to={'/accounts/'} underline='hover'>
       Accounts
     </CustomLink>
   )

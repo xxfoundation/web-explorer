@@ -23,7 +23,7 @@ const ItemHandler: FC<{ transfer: Transfer }> = ({ transfer }) => {
           {transfer.extrinsicIndex}
         </Link>
       </Typography>
-      <Stack direction='row' justifyContent={'space-between'}>
+      <Stack direction='row' justifyContent={'space-between'} alignItems={'center'}>
         <Grid container maxWidth={200}>
           <Grid item component={'span'} xs={4}>
             <Typography variant='body3' textTransform='uppercase'>

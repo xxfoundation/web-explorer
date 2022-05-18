@@ -4,23 +4,23 @@ import { useLocation } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
-import CouncilCard from './account/council';
-import GovernanceCard from './account/governance';
 import IdentityCard from './account/Identity';
+import Info from './account/Info';
 import PerformanceCard from './account/performance';
 import StakingCard from './account/staking';
-import SummaryCard from './account/Summary';
 import { AccountType } from './types';
 
-const sampleData: AccountType = {
+const sampleAccount: AccountType = {
+  address: '6a7YefNJArBVBBVzdMdJ5V4giafmBdfhwi7DiAcxseKA2zbt',
+  roles: ['nominator'],
+  stash: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
+  controller: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
+  id: '0x6d6f646c43726f77646c6f610000000000000000',
+  publicKey: '0x165161616161',
+
   rank: 1,
   transactions: 123,
   lockedCoin: '000000',
-  account: '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062',
-  roles: ['nominator'],
-  name: 'Display name',
-  id: '0x6d6f646c43726f77646c6f610000000000000000',
-  publicKey: '0x165161616161',
   balance: {
     transferable: '123231200000'
   },
@@ -38,20 +38,40 @@ const sampleData: AccountType = {
     election: '76',
     vesting: '32'
   },
-  personalIntroduction:
+
+  era: 800,
+  firstValidatorEra: 800,
+
+  latestSlashes: 0,
+  holderSlashes: 1,
+
+  nominators: 100,
+
+  eraPoints: 0,
+
+  averageCommission: 99.9,
+
+  democracy: {
+    councilMember: false,
+    proposalVoteForCouncil: 1,
+    proposalVotePerMonth: 0,
+    missedProposals: 13213,
+    latestNumberOfVotes: 0
+  },
+
+  legalName: 'aaaaa',
+  displayName: 'Display name',
+  blurb:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ultrices aliquet est ac consequat. Quisque tincidunt tellus at dapibus lacinia. Etiam gravida pulvinar vestibulum.',
-  address: '6a7YefNJArBVBBVzdMdJ5V4giafmBdfhwi7DiAcxseKA2zbt',
-  stash: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
-  controller: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
-  riotID: '@jacogr:matrix.parity.io',
+  riotName: '@jacogr:matrix.parity.io',
   website: 'http://github/jacobgr',
   email: 'test@elixxir.io',
-  twitter: 'xx_network'
+  twitter: 'xx_network',
+  judgement: 'Known Good'
 };
 
 function useQuery() {
   const { search } = useLocation();
-
   return useMemo(() => new URLSearchParams(search), [search]);
 }
 
@@ -60,42 +80,38 @@ const AccountId: FC = () => {
   const query = useQuery();
   const rolesquery = query.get('roles');
   if (rolesquery) {
-    sampleData.roles = rolesquery.split(',') as AccountType['roles'];
+    sampleAccount.roles = rolesquery.split(',') as AccountType['roles'];
   }
 
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      {/*We need this name here the same info on AccountIdentity */}
-      <Typography variant='h1'>{sampleData.name}</Typography>
+      <Typography variant='h1'>{sampleAccount.displayName}</Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
-          <IdentityCard account={sampleData} />
+          <IdentityCard account={sampleAccount} />
         </Grid>
         <Grid item xs={12} md={6}>
           <BalanceCard
-            balance={sampleData.balance}
-            reserved={sampleData.reserved}
-            locked={sampleData.locked}
+            balance={sampleAccount.balance}
+            reserved={sampleAccount.reserved}
+            locked={sampleAccount.locked}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <SummaryCard createdDate={1652101618} nonce={23} roles={sampleData.roles} />
+          <Info createdDate={1652101618} nonce={23} roles={sampleAccount.roles} />
         </Grid>
         <Grid item xs={12}>
-          <BlockchainCard roles={sampleData.roles} />
+          <BlockchainCard roles={sampleAccount.roles} />
+        </Grid>
+        {/* <Grid item xs={12}>
+          <GovernanceCard roles={sampleAccount.roles} />
+        </Grid> */}
+        <Grid item xs={12}>
+          <StakingCard roles={sampleAccount.roles} />
         </Grid>
         <Grid item xs={12}>
-          <GovernanceCard roles={sampleData.roles} />
-        </Grid>
-        <Grid item xs={12}>
-          <StakingCard roles={sampleData.roles} />
-        </Grid>
-        <Grid item xs={12}>
-          <CouncilCard roles={sampleData.roles} />
-        </Grid>
-        <Grid item xs={12}>
-          <PerformanceCard roles={sampleData.roles} />
+          <PerformanceCard account={sampleAccount} />
         </Grid>
       </Grid>
     </Container>

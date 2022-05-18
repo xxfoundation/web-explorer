@@ -15,8 +15,8 @@ const headers = [{ value: 'Role' }, { value: 'Current' }, { value: 'Past' }];
 const sampleData = [
   { role: 'Validator', current: false, past: false },
   { role: 'Nominator', current: true, past: false },
-  { role: 'Council member', current: false, past: true },
-  { role: 'Technical Committee member', current: false, past: false },
+  { role: 'Council', current: false, past: true },
+  { role: 'Technical Committee', current: false, past: false },
   { role: 'Registrar', current: false, past: false },
   { role: 'Treasury', current: false, past: false }
 ];
