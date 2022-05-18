@@ -161,48 +161,48 @@ const NameAndBlurbCell: FC<{ account: AccountType }> = ({ account }) => {
 
 const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
   return (
-    <Grid container sx={{ display: { xs: 'none', sm: 'none', md: 'inherit' } }}>
-      <Grid item container md={12} minHeight={'50px'} alignItems={'end'}>
-        <Grid item md={2}>
-          <Avatar
-            src=''
-            alt='avatar placeholder'
-            sx={{ width: 125, height: 125, margin: '0 auto' }}
-          />
+    <Grid container sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
+      <Grid item md={2}>
+        <Avatar
+          src=''
+          alt='avatar placeholder'
+          sx={{ width: 125, height: 125, margin: '0 auto' }}
+        />
+      </Grid>
+      <Grid item md={10}>
+        <Grid item container md={12} alignItems={'end'}>
+          <PaddedGridItem md={8}>
+            <NameAndBlurbCell account={account} />
+            <Divider sx={{ marginTop: '12px' }} />
+          </PaddedGridItem>
+          <PaddedGridItem md={4}>
+            <Grid item>
+              <Socials
+                socials={{
+                  email: account.email || '#blash',
+                  twitter: account.twitter || '#blah'
+                }}
+              />
+            </Grid>
+            {(account.twitter || account.email) && <Divider />}
+          </PaddedGridItem>
         </Grid>
-        <PaddedGridItem md={7}>
-          <NameAndBlurbCell account={account} />
-          <Divider sx={{ marginTop: '12px' }} />
-        </PaddedGridItem>
-        <PaddedGridItem md={3}>
-          <Grid item>
-            <Socials
-              socials={{
-                email: account.email || '#blash',
-                twitter: account.twitter || '#blah'
-              }}
-            />
-          </Grid>
-          {(account.twitter || account.email) && <Divider />}
-        </PaddedGridItem>
-      </Grid>
-      <Grid item container md={12}>
-        <PaddedGridItem md={2} />
-        <PaddedGridItem md={7}>
-          <TextWithLabel label='stash' text={account.stash} />
-        </PaddedGridItem>
-        <PaddedGridItem md={3}>
-          {account.riotName && <TextWithLabel label='riot' text={account.riotName} />}
-        </PaddedGridItem>
-      </Grid>
-      <Grid item container md={12}>
-        <PaddedGridItem md={2} />
-        <PaddedGridItem md={7}>
-          <TextWithLabel label='controller' text={account.controller} />
-        </PaddedGridItem>
-        <PaddedGridItem md={3}>
-          {account.website && <TextWithLabel label='web' text={account.website} />}
-        </PaddedGridItem>
+        <Grid item container md={12}>
+          <PaddedGridItem md={8}>
+            <TextWithLabel label='stash' text={account.stash} />
+          </PaddedGridItem>
+          <PaddedGridItem md={4}>
+            {account.riotName && <TextWithLabel label='riot' text={account.riotName} />}
+          </PaddedGridItem>
+        </Grid>
+        <Grid item container md={12}>
+          <PaddedGridItem md={8}>
+            <TextWithLabel label='controller' text={account.controller} />
+          </PaddedGridItem>
+          <PaddedGridItem md={4}>
+            {account.website && <TextWithLabel label='web' text={account.website} />}
+          </PaddedGridItem>
+        </Grid>
       </Grid>
     </Grid>
   );
