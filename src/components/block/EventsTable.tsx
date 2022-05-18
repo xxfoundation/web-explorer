@@ -9,10 +9,12 @@ import TablePagination from '../Tables/TablePagination';
 import { TableSkeleton } from '../Tables/TableSkeleton';
 
 type EventType = {
-  id: string;
+  id: number;
   hash?: string;
   section: string;
   method: string;
+  blockNumber: number;
+  timestamp: number;
 };
 
 type Response = { events: EventType[] };
