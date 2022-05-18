@@ -6,8 +6,8 @@ import StakingRatio from '../../components/blockchain/charts/StakingRatioLineCha
 import StakingSupplyChart from '../../components/blockchain/charts/StakingSupplyPieChart';
 import TotalIssuance from '../../components/blockchain/charts/TotalIssuancePieChart';
 import TransactionsChart from '../../components/blockchain/charts/TransactionsLineChart';
-import LatestBlocks from '../../components/blockchain/LatestBlocksTable';
-import Transfers from '../../components/blockchain/TransfersTable';
+import LatestBlocks from '../../components/blockchain/LatestBlocksList';
+import Transfers from '../../components/blockchain/LatestTransfersList';
 
 const TokenStatus = () => {
   return (
