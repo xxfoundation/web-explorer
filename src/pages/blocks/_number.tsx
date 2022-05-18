@@ -1,6 +1,6 @@
 import { OperationVariables, QueryResult, useQuery } from '@apollo/client';
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import React, { useCallback } from 'react';
+import React, { FC, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { BlockNav } from '../../components/block/Block.styled';
 import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
@@ -8,7 +8,9 @@ import BlockSummary from '../../components/block/BlockSummary';
 import { BlockSummaryType } from '../../components/block/types';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BackAndForwardArrows from '../../components/buttons/BackAndForwardArrows';
+import genSkeletons from '../../components/genSkeletons';
 import Link from '../../components/Link';
+import SummaryPaper from '../../components/Paper/SummaryPaper';
 import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import NotFound from '../NotFound';
 
@@ -49,6 +51,16 @@ const BlockSummaryHeader: React.FC<{
   );
 };
 
+const LoadingSummary: FC = ({}) => {
+  return (
+    <SummaryPaper
+      data={genSkeletons(9).map((Row) => {
+        return { label: <Row width={'90%'} />, value: <Row width={'90%'} /> };
+      })}
+    />
+  );
+};
+
 const Block = () => {
   const { number } = useParams<{ number: string }>();
   const blockNumber = Number(number);
@@ -56,14 +68,14 @@ const Block = () => {
     variables: { blockNumber }
   });
 
-  if (!loading && !data?.block?.number) {
+  if (!loading && !data?.block && !data?.block?.number) {
     return <NotFound />;
   }
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <BlockSummaryHeader blockNumber={blockNumber} />
-      <BlockSummary data={data?.block} loading={loading} />
+      {loading ? <LoadingSummary /> : data?.block && <BlockSummary data={data.block} />}
       <Box sx={{ mt: 2 }}>
         <BlockDetailedEventsTabs
           blockNumber={blockNumber}

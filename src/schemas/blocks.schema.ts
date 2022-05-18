@@ -29,12 +29,7 @@ export const LIST_BLOCK = gql`
         count
       }
     }
-    blocks: block(
-      order_by: { block_number: desc }
-      where: $where
-      limit: $limit
-      offset: $offset
-    ) {
+    blocks: block(order_by: { block_number: desc }, where: $where, limit: $limit, offset: $offset) {
       ...blocks
       finalized: finalized
       currentEra: active_era
@@ -50,6 +45,26 @@ export const GET_BLOCK_BY_PK = gql`
   ${BLOCK_KEYS_FRAGMENT}
   query GetBlockByPK($blockNumber: bigint!) {
     block: block_by_pk(block_number: $blockNumber) {
+      ...blocks
+      finalized: finalized
+      currentEra: active_era
+      parentHash: parent_hash
+      stateRoot: state_root
+      extrinsicsRoot: extrinsics_root
+      author: block_author
+      authorName: block_author_name
+      timestamp
+      specVersion: spec_version
+      totalEvents: total_events
+      totalExtrinsics: total_extrinsics
+    }
+  }
+`;
+
+export const GET_BLOCK_BY_HASH = gql`
+  ${BLOCK_KEYS_FRAGMENT}
+  query GetBlockByHash($where: block_bool_exp) {
+    blocks:block(where: $where) {
       ...blocks
       finalized: finalized
       currentEra: active_era
