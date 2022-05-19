@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import { Calls, Modules } from '../types';
 
 export type FindExtrinsicByHashType = {
   extrinsic?: [
@@ -34,8 +33,8 @@ export const EXTRINSICS_OF_BLOCK = gql`
       hash
       timestamp
       success
-      method
       section
+      method
     }
   }
 `;
@@ -79,13 +78,13 @@ export const LIST_EXTRINSICS = gql`
 
 export type GetExtrinsicByPK = {
   extrinsic: {
+    lifetime?: string | number;
     timestamp: number;
     blockNumber: number;
     hash: string;
-    method: Calls;
-    section: Modules;
+    method: string;
+    section: string;
     success: boolean;
-    block: { author: string; authorName: string };
   };
 };
 
@@ -98,10 +97,6 @@ export const GET_EXTRINSIC_BY_PK = gql`
       success
       timestamp
       blockNumber: block_number
-      block {
-        author: block_author
-        authorName: block_author_name
-      }
     }
   }
 `;

@@ -3,7 +3,6 @@ import { Breadcrumbs, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import Tag from '../../components/Tags/Tag';
 import CustomTooltip from '../../components/Tooltip';
-import { Calls, Modules } from '../../types';
 
 const balancesTransfersDescription = (
   <>
@@ -52,16 +51,16 @@ const balancesTransfersDescription = (
   </>
 );
 
-const BalanceCallsDescriptions: Record<Modules, Partial<Record<Calls, JSX.Element>>> = {
-  balance: {
-    transfers: balancesTransfersDescription
+const BalanceCallsDescriptions: Record<string, Record<string, JSX.Element>> = {
+  transfers: {
+    balance: balancesTransfersDescription
   },
-  timestamp: {
-    set: balancesTransfersDescription
+  set: {
+    timestamp: balancesTransfersDescription
   }
 };
 
-const ModuleCalls: FC<{ module: Modules; call: Calls }> = ({ call, module }) => {
+const ModuleCalls: FC<{ module: string; call: string }> = ({ call, module }) => {
   const title = useMemo(() => BalanceCallsDescriptions[module][call], [call, module]);
   return (
     <>

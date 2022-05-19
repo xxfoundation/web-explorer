@@ -1,20 +1,11 @@
 import { useQuery } from '@apollo/client';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Skeleton,
-  Stack,
-  styled,
-  Typography
-} from '@mui/material';
-import React, { FC } from 'react';
+import { Box, Container, Divider, Skeleton, Stack, Typography } from '@mui/material';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import CopyButton, { callbackCopyMessage } from '../../components/buttons/CopyButton';
+import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
@@ -23,45 +14,16 @@ import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
-import useCopyClipboard from '../../hooks/useCopyToClibboard';
 import { GetExtrinsicByPK, GET_EXTRINSIC_BY_PK } from '../../schemas/extrinsics.schema';
 import NotFound from '../NotFound';
 import ExtrinsicEventsTabs from './extrinsic/ExtrinsicEventsTabs';
 import ModuleCalls from './ModuleCalls';
 
-const RoundedButton = styled(Button)(({}) => {
-  return {
-    borderRadius: '30px',
-    fontSize: '12px',
-    fontWeight: 500,
-    letterSpacing: 1,
-    color: 'white'
-  };
-});
-
-const ParametersActions: FC<{ data: unknown }> = ({ data }) => {
-  const staticCopy = useCopyClipboard()[1];
-  return (
-    <>
-      <RoundedButton
-        variant='contained'
-        onClick={() => staticCopy(JSON.stringify(data), callbackCopyMessage)}
-      >
-        copy
-      </RoundedButton>
-      <RoundedButton variant='contained' disabled sx={{ marginLeft: '24px' }}>
-        view code
-      </RoundedButton>
-    </>
-  );
-};
 const elementDivider = (
   <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
 );
 
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
-
-const sampleParameters = { this: 'isn\'t real yet' };
 
 const extrinsicsDetailData = (data: GetExtrinsicByPK['extrinsic']) => [
   { label: 'time', value: <TimeAgoComponent date={data.timestamp} /> },
@@ -78,7 +40,7 @@ const extrinsicsDetailData = (data: GetExtrinsicByPK['extrinsic']) => [
   },
   {
     label: 'lifetime',
-    value: <Typography>Immortal</Typography> // TODO get this value
+    value: <Typography>{data.lifetime || 'Immortal'}</Typography> // TODO get this value
   },
   {
     label: 'extrinsic hash',
@@ -87,15 +49,14 @@ const extrinsicsDetailData = (data: GetExtrinsicByPK['extrinsic']) => [
   },
   {
     label: 'module/call',
-    value: <ModuleCalls module={data.section} call={data.method} />
+    value: <ModuleCalls module={data.method} call={data.section} />
   },
   {
     label: 'sender',
     value: (
       <Address
-        name={data.block.authorName}
-        value={data.block.author}
-        link={`/accounts/${data.block.author}`}
+        value={'0xa86Aa530f6cCBd854236EE00ace687a29ad1c062'}
+        link={'/accounts/0xa86Aa530f6cCBd854236EE00ace687a29ad1c062'}
       />
     ),
     action: <CopyButton value={sampleAddress} />
@@ -108,7 +69,6 @@ const extrinsicsDetailData = (data: GetExtrinsicByPK['extrinsic']) => [
   },
   {
     label: 'value',
-    // TODO how to remove the B from the display
     value: (
       <Typography>
         <FormatBalance value={'249850000000'} />
@@ -119,7 +79,6 @@ const extrinsicsDetailData = (data: GetExtrinsicByPK['extrinsic']) => [
     label: 'fee',
     value: (
       <Typography>
-        {/* TODO how to display 0.297000000 XX */}
         <FormatBalance value={'297000000'} />
       </Typography>
     )
@@ -141,10 +100,10 @@ const extrinsicsDetailData = (data: GetExtrinsicByPK['extrinsic']) => [
     label: elementDivider,
     value: elementDivider
   },
-  {
-    label: 'parameters',
-    value: <ParametersActions data={sampleParameters} />
-  },
+  // {
+  //   label: 'parameters',
+  //   value: <ParametersActions data={sampleParameters} />
+  // },
   {
     label: 'signature',
     value: (

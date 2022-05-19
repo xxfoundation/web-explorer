@@ -32,7 +32,7 @@ const rowsParser = ({ hash, id, method, section }: EventType): BaselineCell[] =>
   return [
     { value: id, props },
     { value: <HashCell value={hash} />, props },
-    { value: <Link to='#' textTransform={'capitalize'}>{`${section} (${method})`}</Link> }
+    { value: <Link to='#' textTransform={'capitalize'}>{`${method} (${section})`}</Link> }
   ];
 };
 
