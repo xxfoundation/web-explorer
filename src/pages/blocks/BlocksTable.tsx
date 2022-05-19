@@ -3,7 +3,7 @@ import { Stack, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import CopyButton from '../../components/buttons/CopyButton';
-import { Hash } from '../../components/ChainId';
+import { Address, Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
@@ -38,19 +38,6 @@ const HashColumnWithTooltip: FC<{ blockHash: string }> = ({ blockHash, children 
   );
 };
 
-const RenderProducer: FC<{
-  number: number;
-  blockProducer: { id: string; name?: string };
-}> = ({ blockProducer: { id, name }, number }) => {
-  const idString = id.toString();
-  const content = name
-    ? name
-    : idString.length > 16
-    ? idString.slice(0, 7) + '....' + idString.slice(-5)
-    : idString;
-  return <Link to={`/blocks/${number}/producer/${id || name}`}>{content}</Link>;
-};
-
 const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
     <Link to={`/blocks/${block.number}`}>{block.number}</Link>,
@@ -58,9 +45,12 @@ const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
     block.currentEra,
     <TimeAgoComponent date={'2022-02-16 01:56:42 (+UTC)'} />,
     <Link to='#'>{block.totalExtrinsics}</Link>,
-    <RenderProducer
-      number={block.number}
-      blockProducer={{ id: block.author, name: block.authorName }}
+    <Address
+      value={block.author}
+      name={block.authorName}
+      link={`/blocks/${block.number}/producer/${block.author}`}
+      truncated
+      disableAvatar
     />,
     <HashColumnWithTooltip blockHash={block.hash}>
       <Hash value={block.hash} link={`/blocks/${block.number}`} truncated />

@@ -1,13 +1,10 @@
 import { useQuery } from '@apollo/client';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Tooltip, Typography } from '@mui/material';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { EXTRINSICS_OF_BLOCK } from '../../schemas/extrinsics.schema';
 import { Hash } from '../ChainId';
 import Link from '../Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
-import { TableCellLeftDivider } from '../Tables/TableCell';
 import TablePagination from '../Tables/TablePagination';
 import { TableSkeleton } from '../Tables/TableSkeleton';
 import TimeAgoComponent from '../TimeAgo';
@@ -15,6 +12,7 @@ import TimeAgoComponent from '../TimeAgo';
 type ExtrinsicsTyp = {
   id: number;
   hash: string;
+  blockNumber: string;
   timestamp: number;
   success: boolean;
   method: string;
@@ -25,41 +23,20 @@ type Response = { extrinsic: ExtrinsicsTyp[] };
 
 const rowsParser = (rowData: ExtrinsicsTyp) => {
   return BaseLineCellsWrapper([
-    <Link to={`/extrinsics/${rowData.id}`}>{rowData.id}</Link>,
-    <Tooltip
-      title={
-        <Typography fontSize={'10px'} fontWeight={400}>
-          {rowData.hash}
-        </Typography>
-      }
-      placement={'top'}
-      arrow
-    >
-      <span>
-        <Hash value={rowData.hash} truncated />
-      </span>
-    </Tooltip>,
+    <Link to={`/extrinsics/${rowData.blockNumber}-${rowData.id}`}>{rowData.id}</Link>,
+    <Hash
+      value={rowData.hash}
+      truncated
+      link={`/extrinsics/${rowData.blockNumber}-${rowData.id}`}
+      showTooltip
+    />,
     <TimeAgoComponent date={rowData.timestamp} />,
     <CheckCircleOutlineIcon color='success' />,
-    <Link to='#'>{`${rowData.section} (${rowData.method})`}</Link>,
-    <TableCellLeftDivider>
-      <Link to={`/events/${rowData.id}`}>
-        <ArrowForwardIosIcon />
-      </Link>
-    </TableCellLeftDivider>
+    <Link to='#'>{`${rowData.section} (${rowData.method})`}</Link>
   ]);
 };
 
-const headers = BaseLineCellsWrapper([
-  'extrinsic id',
-  'hash',
-  'time',
-  'result',
-  'action',
-  <TableCellLeftDivider>
-    <Link to='/extrinsics'>view all</Link>
-  </TableCellLeftDivider>
-]);
+const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
 
 const BlockExtrinsics: FC<{ where: unknown }> = ({ where }) => {
   const [rowsPerPage, setRowsPerPage] = useState(4);
@@ -86,7 +63,7 @@ const BlockExtrinsics: FC<{ where: unknown }> = ({ where }) => {
   const { data, loading } = useQuery<Response>(EXTRINSICS_OF_BLOCK, {
     variables
   });
-  const rows = useMemo(() => (data?.extrinsic || []).map(rowsParser), [data]);
+  const rows = useMemo(() => (data?.extrinsic || []).map(rowsParser), [data?.extrinsic]);
   if (loading) return <TableSkeleton rows={6} cells={6} footer />;
   return (
     <BaselineTable

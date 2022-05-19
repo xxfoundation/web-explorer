@@ -29,6 +29,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
   ) {
     extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       id: extrinsic_index
+      blockNumber:block_number
       hash
       timestamp
       success

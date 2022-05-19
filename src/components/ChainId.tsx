@@ -25,9 +25,31 @@ const contentRenderer = (
   );
 };
 
-const Hash: FC<IdProperties> = ({ link, truncated, value, ...props }) => {
+const Hash: FC<IdProperties & { showTooltip?: boolean }> = ({
+  link,
+  showTooltip,
+  truncated,
+  value,
+  ...props
+}) => {
   const isvalid = HashValidator(value);
-  return contentRenderer(truncated ? shortString(value) : value, isvalid, link, props);
+  const displayValue = truncated ? shortString(value) : value;
+  if (showTooltip && truncated) {
+    return (
+      <Tooltip
+        title={
+          <Typography fontSize={'10px'} fontWeight={400}>
+            {value}
+          </Typography>
+        }
+        placement='top'
+        arrow
+      >
+        {contentRenderer(displayValue, isvalid, link, props)}
+      </Tooltip>
+    );
+  }
+  return contentRenderer(displayValue, isvalid, link, props);
 };
 
 const Address: FC<
@@ -37,7 +59,14 @@ const Address: FC<
     return name ? (
       <Avatar sx={{ width: 25, height: 25, mr: 1 }} src={avatarUrl} alt={name} />
     ) : (
-      <Tooltip title='Identity Level: No Judgement' placement='bottom' arrow>
+      <Tooltip
+        title={
+          <Typography fontSize={'10px'} fontWeight={400}>
+            Identity Level: No Judgement
+          </Typography>
+        }
+        arrow
+      >
         <RemoveCircleIcon sx={{ mr: 1 }} />
       </Tooltip>
     );
@@ -47,13 +76,27 @@ const Address: FC<
     const isvalid = isValidXXNetworkAddress(value);
     if (name) {
       return (
-        <Tooltip title={value} placement='top' arrow>
+        <Tooltip
+          title={
+            <Typography fontSize={'10px'} fontWeight={400}>
+              {value}
+            </Typography>
+          }
+          arrow
+        >
           {contentRenderer(name, isvalid, link, props)}
         </Tooltip>
       );
     } else {
       return truncated ? (
-        <Tooltip title={value} placement='top' arrow>
+        <Tooltip
+          title={
+            <Typography fontSize={'10px'} fontWeight={400}>
+              {value}
+            </Typography>
+          }
+          arrow
+        >
           {contentRenderer(truncated ? shortString(value) : value, isvalid, link, props)}
         </Tooltip>
       ) : (

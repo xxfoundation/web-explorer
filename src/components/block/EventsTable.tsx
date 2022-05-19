@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { TableCellProps, Tooltip, Typography } from '@mui/material';
+import { TableCellProps, Typography } from '@mui/material';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { EVENTS_OF_BLOCK } from '../../schemas/events.schema';
 import { Hash } from '../ChainId';
@@ -23,21 +23,7 @@ const HashCell: FC<{ value?: string }> = ({ value }) => {
   if (!value) {
     return <Typography>-</Typography>;
   }
-  return (
-    <Tooltip
-      title={
-        <Typography fontSize={'10px'} fontWeight={400}>
-          {value}
-        </Typography>
-      }
-      placement={'top'}
-      arrow
-    >
-      <span>
-        <Hash value={value} truncated />
-      </span>
-    </Tooltip>
-  );
+  return <Hash value={value} truncated showTooltip />;
 };
 
 const props: TableCellProps = { align: 'left' };

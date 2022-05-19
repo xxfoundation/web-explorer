@@ -17,7 +17,7 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
       to={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.index}`}
     >{`${extrinsic.blockNumber}-${extrinsic.index}`}</Link>,
     <Link to={`/blocks/${extrinsic.blockNumber}`}>{extrinsic.blockNumber}</Link>,
-    <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated />,
+    <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated showTooltip />,
     <TimeAgoComponent date={extrinsic.timestamp} />,
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
     <Link to='#'>{`${extrinsic.section} (${extrinsic.method})`}</Link>

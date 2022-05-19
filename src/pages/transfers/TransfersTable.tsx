@@ -54,7 +54,7 @@ const TransferRow = ({ amount, block, extrinsicId, from, hash, status, time, to 
     },
     { value: <FormatBalance value={amount} /> },
     { value: <BlockStatusIcon status={status} /> },
-    { value: <Hash value={hash} truncated /> }
+    { value: <Hash value={hash} truncated showTooltip /> }
   ];
 };
 
