@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { Calls, Modules } from '../types';
 
 export type FindExtrinsicByHashType = {
   extrinsic?: [
@@ -29,7 +30,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
   ) {
     extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       id: extrinsic_index
-      blockNumber:block_number
+      blockNumber: block_number
       hash
       timestamp
       success
@@ -72,6 +73,35 @@ export const LIST_EXTRINSICS = gql`
       method
       section
       hash
+    }
+  }
+`;
+
+export type GetExtrinsicByPK = {
+  extrinsic: {
+    timestamp: number;
+    blockNumber: number;
+    hash: string;
+    method: Calls;
+    section: Modules;
+    success: boolean;
+    block: { author: string; authorName: string };
+  };
+};
+
+export const GET_EXTRINSIC_BY_PK = gql`
+  query EventByPk($blockNumber: bigint!, $extrinsicIndex: Int!) {
+    extrinsic: extrinsic_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
+      hash
+      method
+      section
+      success
+      timestamp
+      blockNumber: block_number
+      block {
+        author: block_author
+        authorName: block_author_name
+      }
     }
   }
 `;

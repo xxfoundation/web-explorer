@@ -3,9 +3,7 @@ import { Breadcrumbs, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import Tag from '../../components/Tags/Tag';
 import CustomTooltip from '../../components/Tooltip';
-
-type Modules = 'balance';
-type Calls = 'transfers';
+import { Calls, Modules } from '../../types';
 
 const balancesTransfersDescription = (
   <>
@@ -54,9 +52,12 @@ const balancesTransfersDescription = (
   </>
 );
 
-const BalanceCallsDescriptions: Record<Modules, Record<Calls, JSX.Element>> = {
+const BalanceCallsDescriptions: Record<Modules, Partial<Record<Calls, JSX.Element>>> = {
   balance: {
     transfers: balancesTransfersDescription
+  },
+  timestamp: {
+    set: balancesTransfersDescription
   }
 };
 
@@ -76,7 +77,7 @@ const ModuleCalls: FC<{ module: Modules; call: Calls }> = ({ call, module }) => 
           </Typography>
         </Tag>
       </Breadcrumbs>
-      <CustomTooltip title={title}>
+      <CustomTooltip title={title || 'unrecognized module calls'}>
         <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
       </CustomTooltip>
     </>

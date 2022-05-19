@@ -1,17 +1,21 @@
+import { useQuery } from '@apollo/client';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import { Box, Button, Container, Divider, Stack, styled, Typography } from '@mui/material';
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
-import EventsTable from '../../components/block/EventsTable';
+import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CopyButton, { callbackCopyMessage } from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
-import PaperStyled from '../../components/Paper/PaperWrap.styled';
+import LoadingSummary from '../../components/Paper/LoadingSummary';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
-import TabsWithPanels, { TabText } from '../../components/Tabs';
+import TimeAgoComponent from '../../components/TimeAgo';
 import useCopyClipboard from '../../hooks/useCopyToClibboard';
+import { GetExtrinsicByPK, GET_EXTRINSIC_BY_PK } from '../../schemas/extrinsics.schema';
+import NotFound from '../NotFound';
+import Tabs from './extrinsic/Tabs';
 import ModuleCalls from './ModuleCalls';
 
 const RoundedButton = styled(Button)(({}) => {
@@ -46,44 +50,47 @@ const elementDivider = (
 
 const sampleAddress = '0xa86Aa530f6cCBd854236EE00ace687a29ad1c062';
 
-const sampleExtrinsicHash = '0x91dde1fb579d6ca88a65dcba6ca737095748f7ea214437e93cf0b7133253b350';
+const sampleParameters = { this: 'isn\'t real yet' };
 
-const sampleParameters = {
-  this: 'isn\'t real yet'
-};
-
-const extrinsicsDetailData = [
-  { label: 'time', value: '2022-02-28 16:42:30 (+UTC)' },
+const extrinsicsDetailData = (data: GetExtrinsicByPK['extrinsic']) => [
+  { label: 'time', value: <TimeAgoComponent date={data.timestamp} /> },
   {
     label: 'block',
     value: (
-      <Link to={'/blocks/504782'}>
+      <Link to={`/blocks/${data.blockNumber}`}>
         <Stack direction='row' spacing={1} alignItems='center'>
           <CheckCircleOutlineOutlinedIcon color='success' />
-          <Typography>504782</Typography>
+          <Typography>{data.blockNumber}</Typography>
         </Stack>
       </Link>
     )
   },
   {
     label: 'lifetime',
-    value: <Typography>Immortal</Typography>
+    value: <Typography>Immortal</Typography> // TODO get this value
   },
   {
     label: 'extrinsic hash',
-    value: <Hash value={sampleExtrinsicHash} link={'#'} />,
-    action: <CopyButton value={sampleExtrinsicHash} />
+    value: <Hash value={data.hash} />,
+    action: <CopyButton value={data.hash} />
   },
   {
     label: 'module/call',
-    value: <ModuleCalls module='balance' call='transfers' />
+    value: <ModuleCalls module={data.section} call={data.method} />
   },
   {
     label: 'sender',
-    value: <Address name='john doe' value={sampleAddress} link={`/accounts/${sampleAddress}`} />,
+    value: (
+      <Address
+        name={data.block.authorName}
+        value={data.block.author}
+        link={`/accounts/${data.block.author}`}
+      />
+    ),
     action: <CopyButton value={sampleAddress} />
   },
   {
+    // TODO create a component to extract these informations
     label: 'destination',
     value: <Address value={sampleAddress} link={`/accounts/${sampleAddress}`} />,
     action: <CopyButton value={sampleAddress} />
@@ -114,8 +121,8 @@ const extrinsicsDetailData = [
     label: 'result',
     value: (
       <Stack direction='row' spacing={1} alignItems='center'>
-        <CheckCircleOutlineOutlinedIcon color='success' />
-        <Typography>Success</Typography>
+        <BlockStatusIcon status={data.success ? 'successful' : 'failed'} />
+        <Typography>{data.success ? 'Success' : 'Failure'}</Typography>
       </Stack>
     )
   },
@@ -141,34 +148,30 @@ const sampleStaticBlockNumber = 2121013;
 
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
+  const extrinsicIdParts = extrinsicId.split('-');
+  const blockNumber = Number(extrinsicIdParts[0]);
+  const extrinsicIndex = Number(extrinsicIdParts[1]);
+  const { data, loading } = useQuery<GetExtrinsicByPK>(GET_EXTRINSIC_BY_PK, {
+    variables: { blockNumber, extrinsicIndex }
+  });
 
-  const panels = useMemo(() => {
-    return [
-      {
-        label: <TabText message='events' count={9} />,
-        content: (
-          <EventsTable
-            where={{
-              block_number: {
-                _eq: sampleStaticBlockNumber
-              }
-            }}
-          />
-        )
-      }
-    ];
-  }, []);
+  if (!loading && !data?.extrinsic && !data?.extrinsic?.timestamp) {
+    return <NotFound />;
+  }
+
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <Box sx={{ mb: 5 }}>
         <Typography variant='h1'>Extrinsic #{extrinsicId}</Typography>
       </Box>
-      <SummaryPaper data={extrinsicsDetailData} />
+      {data?.extrinsic.timestamp ? (
+        <SummaryPaper data={extrinsicsDetailData(data.extrinsic)} />
+      ) : (
+        <LoadingSummary number={9} />
+      )}
       <Box sx={{ mt: 2 }}>
-        <PaperStyled>
-          <TabsWithPanels panels={panels} tabsLabel='extrinsic page events' />
-        </PaperStyled>
+        <Tabs blockNumber={sampleStaticBlockNumber} />
       </Box>
     </Container>
   );

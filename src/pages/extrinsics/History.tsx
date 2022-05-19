@@ -46,23 +46,25 @@ const HistoryPage = () => {
         </PaperStyled>
       </Box>
       <PaperStyled>
-        <Stack
-          direction='row'
-          alignItems='center'
-          spacing={2}
-          marginBottom='18px'
-          fontSize={'16px'}
-          fontWeight={700}
-          color={theme.palette.grey[600]}
-        >
-          <Button color='inherit' disabled>
-            Filter all
-          </Button>
-          <Typography>|</Typography>
-          <Tooltip title='the total of extrinsics' placement='top' arrow>
-            <Typography> {totalOfExtrinsics}</Typography>
-          </Tooltip>
-        </Stack>
+        {totalOfExtrinsics && (
+          <Stack
+            direction='row'
+            alignItems='center'
+            spacing={2}
+            marginBottom='18px'
+            fontSize={'16px'}
+            fontWeight={700}
+            color={theme.palette.grey[600]}
+          >
+            <Button color='inherit' disabled>
+              Filter all
+            </Button>
+            <Typography>|</Typography>
+            <Tooltip title='the total of extrinsics' placement='top' arrow>
+              <Typography> {totalOfExtrinsics}</Typography>
+            </Tooltip>
+          </Stack>
+        )}
         <span hidden>filters placeholder</span>
         <HistoryTable setTotalOfExtrinsics={setTotalOfExtrinsics} />
       </PaperStyled>
