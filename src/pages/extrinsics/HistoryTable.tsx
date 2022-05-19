@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
@@ -33,7 +33,9 @@ const headers = BaseLineCellsWrapper([
   'action'
 ]);
 
-const HistoryTable = () => {
+const HistoryTable: FC<{
+  setTotalOfExtrinsics: React.Dispatch<React.SetStateAction<number | undefined>>;
+}> = (props) => {
   const [timestamp, setTimestamp] = useState<number>();
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
@@ -62,6 +64,12 @@ const HistoryTable = () => {
     [timestamp, data?.extrinsics]
   );
   const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
+
+  useEffect(() => {
+    if (data?.agg && !timestamp) {
+      props.setTotalOfExtrinsics(data.agg.aggregate.count);
+    }
+  });
 
   if (loading) return <TableSkeleton rows={12} cells={6} footer />;
 
