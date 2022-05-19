@@ -3,7 +3,7 @@ import EventsTable from '../../../components/block/EventsTable';
 import PaperWrapStyled from '../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../components/Tabs';
 
-const Tabs: FC<{ blockNumber: number }> = ({ blockNumber }) => {
+const ExtrinsicEventsTabs: FC<{ blockNumber: number }> = ({ blockNumber }) => {
   const panels = useMemo(() => {
     return [
       {
@@ -28,4 +28,4 @@ const Tabs: FC<{ blockNumber: number }> = ({ blockNumber }) => {
   );
 };
 
-export default Tabs;
+export default ExtrinsicEventsTabs;

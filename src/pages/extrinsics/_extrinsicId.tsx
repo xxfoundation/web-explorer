@@ -1,6 +1,15 @@
 import { useQuery } from '@apollo/client';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { Box, Button, Container, Divider, Stack, styled, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Skeleton,
+  Stack,
+  styled,
+  Typography
+} from '@mui/material';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
@@ -10,12 +19,14 @@ import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import LoadingSummary from '../../components/Paper/LoadingSummary';
+import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import SummaryPaper from '../../components/Paper/SummaryPaper';
+import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
 import useCopyClipboard from '../../hooks/useCopyToClibboard';
 import { GetExtrinsicByPK, GET_EXTRINSIC_BY_PK } from '../../schemas/extrinsics.schema';
 import NotFound from '../NotFound';
-import Tabs from './extrinsic/Tabs';
+import ExtrinsicEventsTabs from './extrinsic/ExtrinsicEventsTabs';
 import ModuleCalls from './ModuleCalls';
 
 const RoundedButton = styled(Button)(({}) => {
@@ -144,8 +155,6 @@ const extrinsicsDetailData = (data: GetExtrinsicByPK['extrinsic']) => [
   }
 ];
 
-const sampleStaticBlockNumber = 2121013;
-
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
   const extrinsicIdParts = extrinsicId.split('-');
@@ -171,7 +180,16 @@ const Extrinsic = () => {
         <LoadingSummary number={9} />
       )}
       <Box sx={{ mt: 2 }}>
-        <Tabs blockNumber={sampleStaticBlockNumber} />
+        {loading ? (
+          <PaperWrapStyled>
+            <Skeleton width={'90%'} />
+            <TableSkeleton rows={2} cells={1} />
+          </PaperWrapStyled>
+        ) : (
+          data?.extrinsic.blockNumber && (
+            <ExtrinsicEventsTabs blockNumber={data.extrinsic.blockNumber} />
+          )
+        )}
       </Box>
     </Container>
   );
