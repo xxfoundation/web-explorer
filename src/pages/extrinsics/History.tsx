@@ -10,10 +10,11 @@ import HistoryTable from './HistoryTable';
 const extrinsinctCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
 
-function buildExtrinsicsTimestamps () {
+function buildExtrinsicsTimestamps() {
   const date = dayjs();
-  const timestamps = Array.from(Array(extrinsinctCountIn72Hours).keys())
-    .map(() => Math.floor((date.unix() * 1000) - (Math.random() * (48 * HOUR))))
+  const timestamps = Array.from(Array(extrinsinctCountIn72Hours).keys()).map(() =>
+    Math.floor(date.unix() * 1000 - Math.random() * (48 * HOUR))
+  );
   timestamps.sort();
   return timestamps;
 }
@@ -31,13 +32,11 @@ const HistoryPage = () => {
         direction={'row'}
         sx={{ mb: 5 }}
       >
-        <Typography variant='h1'>
-          Extrinsic History
-        </Typography>
-        <DownloadDataButton onClick={() => { }}>Download data</DownloadDataButton>
+        <Typography variant='h1'>Extrinsic History</Typography>
+        <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
       </Stack>
       <Box sx={{ mb: 5 }}>
-        <PaperStyled >
+        <PaperStyled>
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
             <BarChart series={{ timestamps, label: 'Extrinsic' }} />
           </Box>

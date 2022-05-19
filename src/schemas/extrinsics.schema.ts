@@ -37,3 +37,40 @@ export const EXTRINSICS_OF_BLOCK = gql`
     }
   }
 `;
+
+export type ListExtrinsics = {
+  extrinsics: {
+    index: number;
+    blockNumber: number;
+    timestamp: number;
+    success: boolean;
+    method: string;
+    section: string;
+    hash: string;
+  }[];
+  agg: { aggregate: { count: number } };
+};
+
+export const LIST_EXTRINSICS = gql`
+  query ListExtrinsicOrdered(
+    $limit: Int
+    $offset: Int = 0
+    $orderBy: [extrinsic_order_by!]
+    $where: extrinsic_bool_exp
+  ) {
+    agg: extrinsic_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    extrinsics: extrinsic(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+      index: extrinsic_index
+      blockNumber: block_number
+      timestamp
+      success
+      method
+      section
+      hash
+    }
+  }
+`;
