@@ -9,7 +9,7 @@ export const TRANSFER_KEYS_FRAGMENT = gql`
 
 export const LISTEN_FOR_TRANSFERS_ORDERED = gql`
   ${TRANSFER_KEYS_FRAGMENT}
-  subscription ListTransfersOrdered($limit: Int) {
+  subscription ListenForTransfersOrdered($limit: Int) {
     transfers: transfer(order_by: { block_number: desc }, limit: $limit) {
       ...transfer_key
       hash
@@ -40,7 +40,7 @@ export type Transference = {
 };
 
 export const TRANSFER_FRAGMENT = gql`
-  fragment tranfer_common_fields on transfer {
+  fragment transference_common_fields on transfer {
     blockNumber: block_number
     extrinsicIndex: extrinsic_index
     hash
@@ -66,7 +66,7 @@ export const GET_TRANSFERS_OF_BLOCK = gql`
     $where: transfer_bool_exp
   ) {
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
-      ...tranfer_common_fields
+      ...transference_common_fields
     }
   }
 `;
@@ -75,9 +75,9 @@ export type GetTransferByPK = { transfer: Transference };
 
 export const GET_TRANSFER_BY_PK = gql`
   ${TRANSFER_FRAGMENT}
-  query TransferenceByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
+  query GetTransferenceByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
     transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
-      ...tranfer_common_fields
+      ...transference_common_fields
     }
   }
 `;

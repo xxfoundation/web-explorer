@@ -36,7 +36,7 @@ export type GetAccountByAddressType = {
   };
 };
 
-export const GET_ACCOUNT_BY_ADDRESS = gql`
+export const GET_ACCOUNT_BY_PK = gql`
   query GetAccountByPK($accountId: String!) {
     account: account_by_pk(account_id: $accountId) {
       id: account_id

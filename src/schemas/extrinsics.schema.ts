@@ -11,11 +11,11 @@ export type FindExtrinsicByHashType = {
 };
 
 export const FIND_EXTRINSIC_BY_HASH = gql`
-  query Blockchain_extrinsic($where: blockchain_extrinsic_bool_exp) {
-    extrinsic: blockchain_extrinsic(where: $where) {
+  query FindExtrinsicByHash($where: extrinsic_bool_exp) {
+    extrinsic(where: $where) {
       blockNumber: block_number
       index: extrinsic_index
-      hash: extrinsic_hash
+      hash
     }
   }
 `;
@@ -28,7 +28,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
     $where: extrinsic_bool_exp
   ) {
     extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
-      id: extrinsic_index
+      index: extrinsic_index
       blockNumber: block_number
       hash
       timestamp

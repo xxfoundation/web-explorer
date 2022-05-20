@@ -10,7 +10,7 @@ import { TableSkeleton } from '../Tables/TableSkeleton';
 import TimeAgoComponent from '../TimeAgo';
 
 type ExtrinsicsTyp = {
-  id: number;
+  index: number;
   hash: string;
   blockNumber: string;
   timestamp: number;
@@ -23,11 +23,11 @@ type Response = { extrinsic: ExtrinsicsTyp[] };
 
 const rowsParser = (rowData: ExtrinsicsTyp) => {
   return BaseLineCellsWrapper([
-    <Link to={`/extrinsics/${rowData.blockNumber}-${rowData.id}`}>{rowData.id}</Link>,
+    <Link to={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}>{rowData.index}</Link>,
     <Hash
       value={rowData.hash}
       truncated
-      link={`/extrinsics/${rowData.blockNumber}-${rowData.id}`}
+      link={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}
       showTooltip
     />,
     <TimeAgoComponent date={rowData.timestamp} />,

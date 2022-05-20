@@ -9,7 +9,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BackAndForwardArrows from '../../components/buttons/BackAndForwardArrows';
 import Link from '../../components/Link';
 import LoadingSummary from '../../components/Paper/LoadingSummary';
-import { GetBlock, GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
+import { GetBlockByPK, GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import NotFound from '../NotFound';
 
 const useArrowButtonsOptions = (number: number) => {
@@ -18,7 +18,7 @@ const useArrowButtonsOptions = (number: number) => {
     return { variables: { blockNumber } };
   }, []);
   const buttonProps = useCallback(
-    ({ data, loading }: QueryResult<GetBlock, OperationVariables>) => ({
+    ({ data, loading }: QueryResult<GetBlockByPK, OperationVariables>) => ({
       disabled: loading || !data?.block?.number,
       onClick: () => {
         history.push(`/blocks/${data?.block?.number}`);
@@ -26,8 +26,8 @@ const useArrowButtonsOptions = (number: number) => {
     }),
     [history]
   );
-  const nextBlockQuery = useQuery<GetBlock>(GET_BLOCK_BY_PK, variables(number + 1));
-  const previousBlockQuery = useQuery<GetBlock>(GET_BLOCK_BY_PK, variables(number - 1));
+  const nextBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_PK, variables(number + 1));
+  const previousBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_PK, variables(number - 1));
   return { next: buttonProps(nextBlockQuery), previous: buttonProps(previousBlockQuery) };
 };
 
@@ -52,7 +52,7 @@ const BlockSummaryHeader: React.FC<{
 const Block = () => {
   const { number } = useParams<{ number: string }>();
   const blockNumber = Number(number);
-  const { data, loading } = useQuery<GetBlock>(GET_BLOCK_BY_PK, {
+  const { data, loading } = useQuery<GetBlockByPK>(GET_BLOCK_BY_PK, {
     variables: { blockNumber }
   });
 

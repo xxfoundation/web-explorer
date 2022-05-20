@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { TableCellProps, Typography } from '@mui/material';
 import React, { FC, useCallback, useMemo, useState } from 'react';
-import { EVENTS_OF_BLOCK } from '../../schemas/events.schema';
+import { LIST_EVENTS_OF_BLOCK } from '../../schemas/events.schema';
 import { Hash } from '../ChainId';
 import Link from '../Link';
 import { BaselineCell, BaselineTable } from '../Tables';
@@ -60,7 +60,7 @@ const EventsTable: FC<{ where: unknown }> = ({ where }) => {
       where
     };
   }, [page, rowsPerPage, where]);
-  const { data, loading } = useQuery<Response>(EVENTS_OF_BLOCK, {
+  const { data, loading } = useQuery<Response>(LIST_EVENTS_OF_BLOCK, {
     variables
   });
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);

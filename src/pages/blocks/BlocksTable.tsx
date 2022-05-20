@@ -9,7 +9,7 @@ import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../compone
 import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
-import { ListBlockOrdered, LIST_BLOCK } from '../../schemas/blocks.schema';
+import { ListBlockOrdered, LIST_BLOCK_ORDERED } from '../../schemas/blocks.schema';
 
 const ROWS_PER_PAGE = 25;
 
@@ -77,7 +77,7 @@ const BlocksTable: FC = () => {
     setRowsPerPage(parseInt(event.target.value));
     setPage(0);
   }, []);
-  const { data, loading } = useQuery<ListBlockOrdered>(LIST_BLOCK, {
+  const { data, loading } = useQuery<ListBlockOrdered>(LIST_BLOCK_ORDERED, {
     variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,

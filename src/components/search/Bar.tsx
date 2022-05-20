@@ -3,7 +3,7 @@ import { Divider, FormControl, Grid, SxProps } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React, { FC, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { GetAccountByAddressType, GET_ACCOUNT_BY_ADDRESS } from '../../schemas/accounts.schema';
+import { GetAccountByAddressType, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
 import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import { FindExtrinsicByHashType, FIND_EXTRINSIC_BY_HASH } from '../../schemas/extrinsics.schema';
 import { Bar, SelectItem, SelectOption } from './Bar.styles';
@@ -85,7 +85,7 @@ const SearchAccount: FC = () => {
     <GenericSearchInput
       messageLoader={(value: string) => `Querying address with: ${value}`}
       placeholder='Search by Account Address (insert a ss58 string)'
-      document={GET_ACCOUNT_BY_ADDRESS}
+      document={GET_ACCOUNT_BY_PK}
       variables={(v: string) => ({ accountId: v })}
       option='account'
       optionValidator={validators.accounts}

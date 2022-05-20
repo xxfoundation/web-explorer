@@ -9,7 +9,7 @@ export const BLOCK_KEYS_FRAGMENT = gql`
 
 export const LISTEN_FOR_BLOCKS_ORDERED = gql`
   ${BLOCK_KEYS_FRAGMENT}
-  subscription ListBlocksOrdered($limit: Int) {
+  subscription ListenForBlocksOrdered($limit: Int) {
     blocks: block(order_by: { block_number: desc }, limit: $limit) {
       ...blocks
       finalized: finalized
@@ -35,7 +35,7 @@ export type ListBlockOrdered = {
   agg: { aggregate: { count: number } };
 };
 
-export const LIST_BLOCK = gql`
+export const LIST_BLOCK_ORDERED = gql`
   ${BLOCK_KEYS_FRAGMENT}
   query ListBlocksOrdered($limit: Int, $offset: Int = 0, $where: block_bool_exp) {
     agg: block_aggregate(where: $where) {
@@ -55,7 +55,7 @@ export const LIST_BLOCK = gql`
   }
 `;
 
-export type GetBlock = {
+export type GetBlockByPK = {
   block: {
     numberFinalized: number;
     number: number;
