@@ -80,7 +80,6 @@ export type GetExtrinsicByPK = {
   extrinsic: {
     lifetime?: string | number;
     timestamp: number;
-    blockNumber: number;
     hash: string;
     method: string;
     section: string;
@@ -96,7 +95,6 @@ export const GET_EXTRINSIC_BY_PK = gql`
       section
       success
       timestamp
-      blockNumber: block_number
     }
   }
 `;
