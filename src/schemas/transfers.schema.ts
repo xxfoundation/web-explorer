@@ -7,7 +7,7 @@ export const TRANSFER_KEYS_FRAGMENT = gql`
   }
 `;
 
-const LISTEN_FOR_TRANSFERS_ORDERED = gql`
+export const LISTEN_FOR_TRANSFERS_ORDERED = gql`
   ${TRANSFER_KEYS_FRAGMENT}
   subscription ListTransfersOrdered($limit: Int) {
     transfers: transfer(order_by: { block_number: desc }, limit: $limit) {
@@ -49,4 +49,28 @@ export const TRANSFERS_OF_BLOCK = gql`
   }
 `;
 
-export { LISTEN_FOR_TRANSFERS_ORDERED };
+export type TransferenceByBlockNumber = {
+  transfer: {
+    amount: number;
+    feeAmount: number;
+    destination: string;
+    source: string;
+  };
+};
+
+export const TRANSFERENCE_BY_BLOCK_NUMBER = gql`
+  query Transfer_by_pk($blockNumber: bigint!) {
+    transfer(where: { block_number: { _eq: $blockNumber } }) {
+      amount
+      extrinsicIndex: extrinsic_index
+      feeAmount: fee_amount
+      destination
+      source
+      hash
+      method
+      section
+      success
+      timestamp
+    }
+  }
+`;
