@@ -7,7 +7,7 @@ import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../compone
 import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
-import usePagination from '../../hooks/usePagination';
+import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
 
 const ROWS_PER_PAGE = 25;
@@ -37,24 +37,26 @@ const headers = BaseLineCellsWrapper([
 const HistoryTable: FC<{
   setTotalOfExtrinsics: React.Dispatch<React.SetStateAction<number | undefined>>;
 }> = (props) => {
-  const [timestamp, rowsPerPage, page, onRowsPerPageChange, onPageChange] = usePagination<
-    ListExtrinsics['extrinsics'][0]
-  >({
+  // FIXME timestamp cannot be the cursor
+  const {
+    cursorField: timestamp,
+    onPageChange,
+    onRowsPerPageChange,
+    page,
+    rowsPerPage
+  } = usePaginatorByCursor<ListExtrinsics['extrinsics'][0]>({
     cursorField: 'timestamp',
     rowsPerPage: ROWS_PER_PAGE
   });
 
-  const variables = useMemo(
-    () => ({
+  const { data, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, {
+    variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,
       orderBy: [{ timestamp: 'desc' }],
       where: { timestamp: { _lte: timestamp } }
-    }),
-    [page, rowsPerPage, timestamp]
-  );
-
-  const { data, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, { variables });
+    }
+  });
 
   const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
 

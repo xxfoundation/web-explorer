@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Stack, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@mui/material';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
@@ -9,6 +9,7 @@ import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../compone
 import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
+import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListBlockOrdered, LIST_BLOCK_ORDERED } from '../../schemas/blocks.schema';
 
 const ROWS_PER_PAGE = 25;
@@ -69,14 +70,16 @@ const headers = BaseLineCellsWrapper([
 ]);
 
 const BlocksTable: FC = () => {
-  const [blockNumber, setBlockNumber] = useState<number>();
-  const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
-  const [page, setPage] = useState(0);
-  const onRowsPerPageChange = useCallback((event) => {
-    setBlockNumber(undefined);
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-  }, []);
+  const {
+    cursorField: blockNumber,
+    onPageChange,
+    onRowsPerPageChange,
+    page,
+    rowsPerPage
+  } = usePaginatorByCursor<ListBlockOrdered['blocks'][0]>({
+    cursorField: 'number',
+    rowsPerPage: ROWS_PER_PAGE
+  });
   const { data, loading } = useQuery<ListBlockOrdered>(LIST_BLOCK_ORDERED, {
     variables: {
       limit: rowsPerPage,
@@ -89,15 +92,6 @@ const BlocksTable: FC = () => {
     }
   });
   const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
-  const onPageChange = useCallback(
-    (_: unknown, number: number) => {
-      if (!blockNumber) {
-        setBlockNumber(data?.blocks.at(0)?.number);
-      }
-      setPage(number);
-    },
-    [blockNumber, data?.blocks]
-  );
 
   if (loading) return <TableSkeleton rows={6} cells={6} footer />;
   return (
@@ -109,7 +103,7 @@ const BlocksTable: FC = () => {
           count={data?.agg.aggregate.count || 0}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={onPageChange}
+          onPageChange={onPageChange(data?.blocks.at(0))}
           rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
           onRowsPerPageChange={onRowsPerPageChange}
         />

@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useMemo } from 'react';
+import { usePaginator } from '../../hooks/usePaginatiors';
 import { EXTRINSICS_OF_BLOCK } from '../../schemas/extrinsics.schema';
 import { Hash } from '../ChainId';
 import Link from '../Link';
@@ -39,15 +40,7 @@ const rowsParser = (rowData: ExtrinsicsTyp) => {
 const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
 
 const BlockExtrinsics: FC<{ where: unknown }> = ({ where }) => {
-  const [rowsPerPage, setRowsPerPage] = useState(4);
-  const [page, setPage] = useState(0);
-  const onRowsPerPageChange = useCallback(({ target: { value } }) => {
-    setRowsPerPage(parseInt(value));
-    setPage(0);
-  }, []);
-  const onPageChange = useCallback((_: unknown, number: number) => {
-    setPage(number);
-  }, []);
+  const { onPageChange, onRowsPerPageChange, page, rowsPerPage } = usePaginator({ rowsPerPage: 4 });
   const variables = useMemo(() => {
     return {
       orderBy: [
@@ -60,9 +53,7 @@ const BlockExtrinsics: FC<{ where: unknown }> = ({ where }) => {
       where
     };
   }, [page, rowsPerPage, where]);
-  const { data, loading } = useQuery<Response>(EXTRINSICS_OF_BLOCK, {
-    variables
-  });
+  const { data, loading } = useQuery<Response>(EXTRINSICS_OF_BLOCK, { variables });
   const rows = useMemo(() => (data?.extrinsic || []).map(rowsParser), [data?.extrinsic]);
   if (loading) return <TableSkeleton rows={6} cells={6} footer />;
   return (

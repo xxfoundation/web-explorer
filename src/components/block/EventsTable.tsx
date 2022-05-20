@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { TableCellProps, Typography } from '@mui/material';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useMemo } from 'react';
+import { usePaginator } from '../../hooks/usePaginatiors';
 import { LIST_EVENTS_OF_BLOCK } from '../../schemas/events.schema';
 import { Hash } from '../ChainId';
 import Link from '../Link';
@@ -39,29 +40,18 @@ const rowsParser = ({ hash, id, method, section }: EventType): BaselineCell[] =>
 const headers = [{ value: 'event id', props }, { value: 'hash', props }, { value: 'action' }];
 
 const EventsTable: FC<{ where: unknown }> = ({ where }) => {
-  const [rowsPerPage, setRowsPerPage] = useState(4);
-  const [page, setPage] = useState(0);
-  const onRowsPerPageChange = useCallback(({ target: { value } }) => {
-    setRowsPerPage(parseInt(value));
-    setPage(0);
-  }, []);
-  const onPageChange = useCallback((_: unknown, number: number) => {
-    setPage(number);
-  }, []);
-  const variables = useMemo(() => {
-    return {
+  const paginator = usePaginator({ rowsPerPage: 4 });
+  const { data, loading } = useQuery<Response>(LIST_EVENTS_OF_BLOCK, {
+    variables: {
       orderBy: [
         {
           event_index: 'desc'
         }
       ],
-      limit: rowsPerPage,
-      offset: page * rowsPerPage,
+      limit: paginator.rowsPerPage,
+      offset: paginator.page * paginator.rowsPerPage,
       where
-    };
-  }, [page, rowsPerPage, where]);
-  const { data, loading } = useQuery<Response>(LIST_EVENTS_OF_BLOCK, {
-    variables
+    }
   });
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
 
@@ -72,12 +62,12 @@ const EventsTable: FC<{ where: unknown }> = ({ where }) => {
       rows={rows}
       footer={
         <TablePagination
-          page={page}
+          page={paginator.page}
           count={data?.events.length || 0}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange}
+          rowsPerPage={paginator.rowsPerPage}
+          onPageChange={paginator.onPageChange}
           rowsPerPageOptions={[2, 4, 6]}
-          onRowsPerPageChange={onRowsPerPageChange}
+          onRowsPerPageChange={paginator.onRowsPerPageChange}
         />
       }
     />

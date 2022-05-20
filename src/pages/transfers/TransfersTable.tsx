@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Stack, Typography } from '@mui/material';
-import React, { useMemo } from 'react';
+import React from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
@@ -10,7 +10,7 @@ import { BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgo from '../../components/TimeAgo';
-import usePagination from '../../hooks/usePagination';
+import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import {
   GetTransferencesByBlock,
   GET_TRANSFERS_OF_BLOCK,
@@ -60,21 +60,25 @@ const headers = [
 ];
 
 const TransferTable = () => {
-  const [timestamp, rowsPerPage, page, onRowsPerPageChange, onPageChange] =
-    usePagination<Transference>({
-      cursorField: 'timestamp',
-      rowsPerPage: 20
-    });
-  const variables = useMemo(
-    () => ({
+  // FIXME timestamp cannot be the cursor
+  const {
+    cursorField: timestamp,
+    onPageChange,
+    onRowsPerPageChange,
+    page,
+    rowsPerPage
+  } = usePaginatorByCursor<Transference>({
+    cursorField: 'timestamp',
+    rowsPerPage: 20
+  });
+  const { data, loading } = useQuery<GetTransferencesByBlock>(GET_TRANSFERS_OF_BLOCK, {
+    variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,
       orderBy: [{ timestamp: 'desc' }],
       where: { timestamp: { _lte: timestamp } }
-    }),
-    [page, rowsPerPage, timestamp]
-  );
-  const { data, loading } = useQuery<GetTransferencesByBlock>(GET_TRANSFERS_OF_BLOCK, { variables });
+    }
+  });
   if (loading) return <TableSkeleton rows={12} cells={6} footer />;
   return (
     <BaselineTable
@@ -85,7 +89,7 @@ const TransferTable = () => {
           page={page}
           count={data?.transfers.length || 0}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange()}
+          onPageChange={onPageChange(data?.transfers.at(0))}
           rowsPerPageOptions={[20, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
