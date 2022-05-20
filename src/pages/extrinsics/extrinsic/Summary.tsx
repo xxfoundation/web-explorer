@@ -153,6 +153,8 @@ const Summary: FC<{
   });
 
   if (loading) return <LoadingSummary number={9} />;
+  if (!data?.transfer)
+    return <Typography>not transference bound to this extrinsic. what should be done?</Typography>;
   return (
     <SummaryPaper data={extrinsicsDetailData(extrinsic, extrinsicId.blockNumber, data?.transfer)} />
   );
