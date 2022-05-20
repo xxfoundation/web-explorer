@@ -25,7 +25,7 @@ export const LISTEN_FOR_TRANSFERS_ORDERED = gql`
   }
 `;
 
-export const TRANSFERS_OF_BLOCK = gql`
+export const GET_TRANSFERS_OF_BLOCK = gql`
   query ListTransfersOrdered(
     $orderBy: [transfer_order_by!]
     $limit: Int
@@ -49,18 +49,11 @@ export const TRANSFERS_OF_BLOCK = gql`
   }
 `;
 
-export type TransferenceByBlockNumber = {
-  transfer: {
-    amount: number;
-    feeAmount: number;
-    destination: string;
-    source: string;
-  };
-};
-
-export const TRANSFERENCE_BY_BLOCK_NUMBER = gql`
-  query Transfer_by_pk($blockNumber: bigint!) {
-    transfer(where: { block_number: { _eq: $blockNumber } }) {
+export const GET_TRANSFER_BY_PK = gql`
+  query TransferenceByPK($blockNumber: bigint!, $extrinsicIndex: bigint!) {
+    transfer(
+      where: { block_number: { _eq: $blockNumber }, extrinsic_index: { _eq: $extrinsicIndex } }
+    ) {
       amount
       extrinsicIndex: extrinsic_index
       feeAmount: fee_amount

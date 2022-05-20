@@ -10,17 +10,17 @@ import FormatBalance from '../FormatBalance';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import { ListSkeleton } from './ListSkeleton';
-import type { Transfer } from './types';
+import type { ListOfTransferences, Transference } from './types';
 
 const PAGE_LIMIT = 8;
 
-const ItemHandler: FC<{ transfer: Transfer }> = ({ transfer }) => {
+const ItemHandler: FC<Transference> = (props) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant='body2' sx={{ mb: 1 }}>
         EXTRINSIC #{' '}
-        <Link to={`/extrinsics/${transfer.extrinsicIndex}`} underline='hover'>
-          {transfer.extrinsicIndex}
+        <Link to={`/extrinsics/${props.extrinsicIndex}`} underline='hover'>
+          {props.extrinsicIndex}
         </Link>
       </Typography>
       <Stack direction='row' justifyContent={'space-between'} alignItems={'center'}>
@@ -32,8 +32,8 @@ const ItemHandler: FC<{ transfer: Transfer }> = ({ transfer }) => {
           </Grid>
           <Grid item>
             <Address
-              value={transfer.source}
-              link={`/transfers/${transfer.source}`}
+              value={props.source}
+              link={`/transfers/${props.source}`}
               truncated
               disableAvatar
             />
@@ -45,8 +45,8 @@ const ItemHandler: FC<{ transfer: Transfer }> = ({ transfer }) => {
           </Grid>
           <Grid item>
             <Address
-              value={transfer.destination}
-              link={`/transfers/${transfer.destination}`}
+              value={props.destination}
+              link={`/transfers/${props.destination}`}
               truncated
               disableAvatar
             />
@@ -54,10 +54,10 @@ const ItemHandler: FC<{ transfer: Transfer }> = ({ transfer }) => {
         </Grid>
         <Stack alignItems={'flex-end'}>
           <Typography variant='body3'>
-            <TimeAgo date={transfer.timestamp} />
+            <TimeAgo date={props.timestamp} />
           </Typography>
           <Typography variant='body3'>
-            <FormatBalance value={new BN(transfer.amount)} />
+            <FormatBalance value={new BN(props.amount)} />
           </Typography>
         </Stack>
       </Stack>
@@ -66,14 +66,13 @@ const ItemHandler: FC<{ transfer: Transfer }> = ({ transfer }) => {
 };
 
 const LatestTransfersList = () => {
-  const { data, loading } = useSubscription<{ transfers: Transfer[] }>(
-    LISTEN_FOR_TRANSFERS_ORDERED,
-    { variables: { limit: PAGE_LIMIT } }
-  );
+  const { data, loading } = useSubscription<ListOfTransferences>(LISTEN_FOR_TRANSFERS_ORDERED, {
+    variables: { limit: PAGE_LIMIT }
+  });
   const content = useSubscriptionUpdater({
     key: 'extrinsicIndex',
     newData: data?.transfers
-  }).map((transfer) => <ItemHandler transfer={transfer} key={transfer.extrinsicIndex} />);
+  }).map((transfer) => <ItemHandler {...transfer} key={transfer.extrinsicIndex} />);
 
   return (
     <DefaultTile

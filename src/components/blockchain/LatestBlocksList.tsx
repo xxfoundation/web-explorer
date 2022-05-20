@@ -8,22 +8,11 @@ import DefaultTile from '../DefaultTile';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import { ListSkeleton } from './ListSkeleton';
-
-type ListBlocks = {
-  blocks: {
-    hash: string;
-    number: number;
-    finalized: boolean;
-    currentEra: number;
-    totalEvents: number;
-    totalExtrinsics: number;
-    timestamp: number;
-  }[];
-};
+import { Block, ListBlocks } from './types';
 
 const PAGE_LIMIT = 8;
 
-const ItemHandler: FC<{ block: ListBlocks['blocks'][0] }> = ({ block }) => {
+const ItemHandler: FC<{ block: Block }> = ({ block }) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Grid container>

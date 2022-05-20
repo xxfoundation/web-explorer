@@ -1,6 +1,20 @@
 import { PointOptionsObject } from 'highcharts';
 
-export type Transfer = {
+export type Block = {
+  hash: string;
+  number: number;
+  finalized: boolean;
+  currentEra: number;
+  totalEvents: number;
+  totalExtrinsics: number;
+  timestamp: number;
+};
+
+export type ListBlocks = {
+  blocks: Block[];
+};
+
+export type Transference = {
   hash: string;
   blockNumber: number;
   extrinsicIndex: number;
@@ -12,6 +26,10 @@ export type Transfer = {
   method: string;
   success: boolean;
   timestamp: number;
+};
+
+export type ListOfTransferences = {
+  transfers: Transference[];
 };
 
 export type PercentageValues = {
