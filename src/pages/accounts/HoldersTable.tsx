@@ -1,14 +1,18 @@
+import { useQuery } from '@apollo/client';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Typography } from '@mui/material';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import genSkeletons from '../../components/genSkeletons';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
+import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import CustomTooltip from '../../components/Tooltip';
+import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
+import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
 import HoldersRolesFilters from './HoldersRolesFilters';
 import { AccountType, Roles } from './types';
 
@@ -86,19 +90,21 @@ const rolesToCell = (roles: Roles[]) => {
   );
 };
 
-const accountToRow = (item: AccountType): BaselineCell[] => {
-  const rankProps = item.rank <= 10 ? { style: { fontWeight: 900 } } : {};
+const accountToRow = (item: ListAccounts['account'][0]): BaselineCell[] => {
+  const rankProps = sampleData[0].rank <= 10 ? { style: { fontWeight: 900 } } : {};
   return [
-    { value: item.rank, props: rankProps },
-    { value: <Address value={item.address} link={`/accounts/${item.address}`} truncated /> },
-    { value: item.transactions },
-    { value: rolesToCell(item.roles), props: { colSpan: 2 } },
-    { value: <FormatBalance value={item.lockedCoin} /> },
-    { value: <FormatBalance value={item.balance.transferable} /> }
+    { value: sampleData[0].rank, props: rankProps },
+    {
+      value: <Address value={item.address} link={`/accounts/${item.address}`} truncated />
+    },
+    { value: sampleData[0].transactions },
+    { value: rolesToCell(sampleData[0].roles), props: { colSpan: 2 } },
+    { value: <FormatBalance value={sampleData[0].lockedCoin} /> },
+    { value: <FormatBalance value={sampleData[0].balance.transferable} /> }
   ];
 };
 
-const HoldersTable: FC = () => {
+const useHeaders = () => {
   const [sortVariables, setSortVariables] = useState<Record<Roles, boolean>>({
     validator: false,
     nominator: false,
@@ -106,41 +112,52 @@ const HoldersTable: FC = () => {
     'technical committee': false,
     treasury: false
   });
-  const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [page, setPage] = useState(0);
-  const onRowsPerPageChange = useCallback((event) => {
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-  }, []);
-  const onChangePage = useCallback((_: unknown, number: number) => {
-    setPage(number);
-  }, []);
-  const headers: BaselineCell[] = useMemo(
-    () => [
-      { value: 'rank' },
-      { value: 'account' },
-      { value: 'transactions' },
-      {
-        value: (
-          <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>
-            role
-          </HoldersRolesFilters>
-        ),
-        props: { colSpan: 2 }
-      },
-      { value: 'locked xx coin' },
-      { value: 'balance xx' }
-    ],
-    [setSortVariables, sortVariables]
+  return [
+    { value: 'rank' },
+    { value: 'account' },
+    { value: 'transactions' },
+    {
+      value: (
+        <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>
+          role
+        </HoldersRolesFilters>
+      ),
+      props: { colSpan: 2 }
+    },
+    { value: 'locked xx coin' },
+    { value: 'balance xx' }
+  ];
+};
+
+const HoldersTable: FC = () => {
+  const {
+    cursorField: timestamp,
+    onPageChange,
+    onRowsPerPageChange,
+    page,
+    rowsPerPage
+  } = usePaginatorByCursor<ListAccounts['account'][0]>({
+    rowsPerPage: 20,
+    cursorField: 'timestamp'
+  });
+  const headers: BaselineCell[] = useHeaders();
+  const variables = useMemo(
+    () => ({
+      limit: rowsPerPage,
+      offset: page * rowsPerPage,
+      where: {
+        timestamp: {
+          _lte: timestamp
+        }
+      }
+    }),
+    [page, rowsPerPage, timestamp]
   );
-  const rows = useMemo(
-    () =>
-      (rowsPerPage > 0
-        ? sampleData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        : sampleData
-      ).map(accountToRow),
-    [page, rowsPerPage]
-  );
+  const { data, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, {
+    variables
+  });
+  const rows = useMemo(() => (data?.account || []).map(accountToRow), [data?.account]);
+  if (loading) return <TableSkeleton cells={6} rows={rowsPerPage} />;
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
@@ -152,9 +169,9 @@ const HoldersTable: FC = () => {
         footer={
           <TablePagination
             page={page}
-            count={sampleData.length}
+            count={data?.accountAgg.aggregate.count || 0}
             rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
+            onPageChange={onPageChange(data?.account.at(0))}
             rowsPerPageOptions={[10, 20, 30, 40, 50]}
             onRowsPerPageChange={onRowsPerPageChange}
           />
