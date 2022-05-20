@@ -19,8 +19,8 @@ const ItemHandler: FC<Transference> = (props) => {
     <Box sx={{ mb: 4 }}>
       <Typography variant='body2' sx={{ mb: 1 }}>
         EXTRINSIC #{' '}
-        <Link to={`/extrinsics/${props.extrinsicIndex}`} underline='hover'>
-          {props.extrinsicIndex}
+        <Link to={`/extrinsics/${props.blockNumber}-${props.extrinsicIndex}`} underline='hover'>
+          {`${props.blockNumber}-${props.extrinsicIndex}`}
         </Link>
       </Typography>
       <Stack direction='row' justifyContent={'space-between'} alignItems={'center'}>

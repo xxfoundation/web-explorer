@@ -61,7 +61,13 @@ const BalanceCallsDescriptions: Record<string, Record<string, JSX.Element>> = {
 };
 
 const ModuleCalls: FC<{ module: string; call: string }> = ({ call, module }) => {
-  const title = useMemo(() => BalanceCallsDescriptions[module][call], [call, module]);
+  const title = useMemo(() => {
+    try {
+      return BalanceCallsDescriptions[module][call]
+    } catch (error) {
+      return 'unrecognized module calls'
+    }
+  }, [call, module]);
   return (
     <>
       <Breadcrumbs separator='/'>
@@ -76,7 +82,7 @@ const ModuleCalls: FC<{ module: string; call: string }> = ({ call, module }) => 
           </Typography>
         </Tag>
       </Breadcrumbs>
-      <CustomTooltip title={title || 'unrecognized module calls'}>
+      <CustomTooltip title={title}>
         <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
       </CustomTooltip>
     </>
