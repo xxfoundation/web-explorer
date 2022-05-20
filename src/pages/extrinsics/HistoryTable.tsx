@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
@@ -7,6 +7,7 @@ import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../compone
 import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
+import usePagination from '../../hooks/usePagination';
 import { ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
 
 const ROWS_PER_PAGE = 25;
@@ -36,33 +37,25 @@ const headers = BaseLineCellsWrapper([
 const HistoryTable: FC<{
   setTotalOfExtrinsics: React.Dispatch<React.SetStateAction<number | undefined>>;
 }> = (props) => {
-  const [timestamp, setTimestamp] = useState<number>();
-  const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
-  const [page, setPage] = useState(0);
-  const onRowsPerPageChange = useCallback((event) => {
-    setTimestamp(undefined);
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-  }, []);
+  const [timestamp, rowsPerPage, page, onRowsPerPageChange, onPageChange] = usePagination<
+    ListExtrinsics['extrinsics'][0]
+  >({
+    cursorField: 'timestamp',
+    rowsPerPage: ROWS_PER_PAGE
+  });
 
-  const { data, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, {
-    variables: {
+  const variables = useMemo(
+    () => ({
       limit: rowsPerPage,
       offset: page * rowsPerPage,
       orderBy: [{ timestamp: 'desc' }],
       where: { timestamp: { _lte: timestamp } }
-    }
-  });
-  const onPageChange = useCallback(
-    (_: unknown, number: number) => {
-      const extrinsic = data?.extrinsics.at(0);
-      if (!timestamp && extrinsic?.timestamp !== undefined) {
-        setTimestamp(extrinsic.timestamp);
-      }
-      setPage(number);
-    },
-    [timestamp, data?.extrinsics]
+    }),
+    [page, rowsPerPage, timestamp]
   );
+
+  const { data, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, { variables });
+
   const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
 
   useEffect(() => {
@@ -82,7 +75,7 @@ const HistoryTable: FC<{
           page={page}
           count={data?.agg.aggregate.count || 0}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange}
+          onPageChange={onPageChange(data?.extrinsics.at(0))}
           rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
