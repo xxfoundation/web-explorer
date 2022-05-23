@@ -1,7 +1,8 @@
 import { Button, styled } from '@mui/material';
 import React, { FC } from 'react';
-import { callbackCopyMessage } from '../../../components/buttons/CopyButton';
-import useCopyClipboard from '../../../hooks/useCopyToClibboard';
+import { callbackCopyMessage } from '../../../../components/buttons/CopyButton';
+import { SummaryRow } from '../../../../components/Paper/SummaryPaper';
+import useCopyClipboard from '../../../../hooks/useCopyToClibboard';
 
 const RoundedButton = styled(Button)(({}) => {
   return {
@@ -13,10 +14,10 @@ const RoundedButton = styled(Button)(({}) => {
   };
 });
 
-const ParametersActions: FC<{ data: unknown }> = ({ data }) => {
+const ParametersFragment: FC<{ args: unknown; def: unknown }> = ({ args: data }) => {
   const staticCopy = useCopyClipboard()[1];
   return (
-    <>
+    <SummaryRow label='parameters'>
       <RoundedButton
         variant='contained'
         onClick={() => staticCopy(JSON.stringify(data), callbackCopyMessage)}
@@ -26,8 +27,8 @@ const ParametersActions: FC<{ data: unknown }> = ({ data }) => {
       <RoundedButton variant='contained' disabled sx={{ marginLeft: '24px' }}>
         view code
       </RoundedButton>
-    </>
+    </SummaryRow>
   );
 };
 
-export default ParametersActions;
+export default ParametersFragment;

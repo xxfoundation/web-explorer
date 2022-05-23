@@ -1,5 +1,5 @@
 import { Divider, Grid } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import {
   ActionStyled,
   LabelStyled,
@@ -14,23 +14,31 @@ export type SummaryPaperData = {
   action?: JSX.Element;
 };
 
-const SummaryRow: FC<{ item: SummaryPaperData }> = ({ item: { action, label, value } }) => {
-  const valueSizes = action ? { xs: 8, sm: 8, md: 7 } : { xs: 12, sm: 12, md: 9 };
+export const SummaryRow: FC<{ label: ReactNode; action?: ReactNode }> = (props) => {
+  const valueSizes = props.action ? { xs: 8, sm: 8, md: 7 } : { xs: 12, sm: 12, md: 9 };
   return (
     <RowStyled container alignItems={'stretch'}>
       <LabelStyled container item xs={12} sm={12} md={3} alignItems={'center'}>
-        {label}
+        {props.label}
       </LabelStyled>
       <ValueStyled container item {...valueSizes} alignItems={'center'}>
-        {value}
+        {props.children}
       </ValueStyled>
-      {action && (
+      {props.action && (
         <ActionStyled container item xs={4} sm={4} md={2} alignItems={'center'}>
           <Divider orientation='vertical' sx={{ ml: 1, mr: 3, height: 19 }} />
-          {action}
+          {props.action}
         </ActionStyled>
       )}
     </RowStyled>
+  );
+};
+
+export const SummaryPaperWrapper: React.FC = ({ children }) => {
+  return (
+    <PaperStyled>
+      <Grid container>{children}</Grid>
+    </PaperStyled>
   );
 };
 
@@ -41,7 +49,9 @@ const SummaryPaper: React.FC<{
     <PaperStyled>
       <Grid container>
         {data.map((item, index) => (
-          <SummaryRow item={item} key={index} />
+          <SummaryRow label={item.label} action={item.action} key={index}>
+            {item.value}
+          </SummaryRow>
         ))}
       </Grid>
     </PaperStyled>

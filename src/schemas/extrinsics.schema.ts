@@ -84,6 +84,11 @@ export type GetExtrinsicByPK = {
     method: string;
     section: string;
     success: boolean;
+    signer?: string;
+    isSigned: boolean;
+    args: string;
+    argsDef: string;
+    doc: string;
   };
 };
 
@@ -95,6 +100,11 @@ export const GET_EXTRINSIC_BY_PK = gql`
       section
       success
       timestamp
+      isSigned: is_signed
+      signer
+      args
+      argsDef: args_def
+      doc
     }
   }
 `;

@@ -9,7 +9,7 @@ import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import { GetExtrinsicByPK, GET_EXTRINSIC_BY_PK } from '../../schemas/extrinsics.schema';
 import NotFound from '../NotFound';
 import ExtrinsicEventsTabs from './extrinsic/ExtrinsicEventsTabs';
-import Summary from './extrinsic/Summary';
+import Summary from './extrinsic/summary';
 
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();
