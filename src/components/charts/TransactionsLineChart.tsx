@@ -9,11 +9,13 @@ const data = {
   }],
 };
 
-const TransactionsChart = () => (
-  <Stack spacing={4} sx={{ width: '100%' }}>
-    <Typography variant='h3'>Transactions</Typography>
-    <Line style={{ flexGrow: 1 }} data={data} />
-  </Stack>
-)
+const TransactionsChart = () => {
+  return (
+    <Stack spacing={4} sx={{ width: '100%' }}>
+      <Typography variant='h3'>Transactions</Typography>
+      <Line style={{ flexGrow: 1 }} data={data} />
+    </Stack>
+  )
+}
 
 export default TransactionsChart;

@@ -1,3 +1,10 @@
+declare module 'chart.js' {
+  interface TooltipPositionerMap {
+    myCustomPositioner: TooltipPositionerFunction<ChartType>;
+  }
+}
+
+
 import type { PointOptionsObject } from 'highcharts';
 
 export type PercentageValues = {
