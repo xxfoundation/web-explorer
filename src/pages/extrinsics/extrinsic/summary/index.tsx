@@ -55,7 +55,7 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
         >
           <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
         </SummaryRow>
-        <ParametersFragment args={JSON.parse(extrinsic.args)} def={JSON.parse(extrinsic.argsDef)} />
+        <ParametersFragment args={extrinsic.args} def={extrinsic.argsDef} />
         {extrinsic.signer && extrinsic.isSigned && (
           <SummaryRow label='signer'>
             <Address value={extrinsic.signer} />
