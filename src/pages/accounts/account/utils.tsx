@@ -14,7 +14,6 @@ export const TypographyBody: FC = ({ children }) => {
   return (
     <Typography
       marginLeft={'30px'}
-      letterSpacing={'8%'}
       fontSize={14}
       fontWeight={400}
       color={theme.palette.grey[500]}
