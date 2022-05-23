@@ -88,7 +88,7 @@ export type GetExtrinsicByPK = {
 };
 
 export const GET_EXTRINSIC_BY_PK = gql`
-  query EventByPk($blockNumber: bigint!, $extrinsicIndex: Int!) {
+  query GetExtrinsicByPk($blockNumber: bigint!, $extrinsicIndex: Int!) {
     extrinsic: extrinsic_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
       hash
       method

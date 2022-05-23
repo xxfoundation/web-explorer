@@ -21,7 +21,7 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
     <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated showTooltip />,
     <TimeAgoComponent date={extrinsic.timestamp} />,
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
-    <Link to='#'>{`${extrinsic.section} (${extrinsic.method})`}</Link>
+    <Link to='#'>{`${extrinsic.method} (${extrinsic.section})`}</Link>
   ]);
 };
 

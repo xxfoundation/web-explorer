@@ -33,7 +33,7 @@ const rowsParser = (rowData: ExtrinsicsTyp) => {
     />,
     <TimeAgoComponent date={rowData.timestamp} />,
     <CheckCircleOutlineIcon color='success' />,
-    <Link to='#'>{`${rowData.section} (${rowData.method})`}</Link>
+    <Link to='#'>{`${rowData.method} (${rowData.section})`}</Link>
   ]);
 };
 
