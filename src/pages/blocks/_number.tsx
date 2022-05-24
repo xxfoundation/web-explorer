@@ -8,7 +8,7 @@ import BlockSummary from '../../components/block/BlockSummary';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BackAndForwardArrows from '../../components/buttons/BackAndForwardArrows';
 import Link from '../../components/Link';
-import LoadingSummary from '../../components/Paper/LoadingSummary';
+import SummaryLoader from '../../components/Paper/SummaryLoader';
 import { GetBlockByPK, GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import NotFound from '../NotFound';
 
@@ -63,7 +63,7 @@ const Block = () => {
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <BlockSummaryHeader blockNumber={blockNumber} />
-      {loading ? <LoadingSummary number={9} /> : data?.block && <BlockSummary data={data.block} />}
+      {loading ? <SummaryLoader number={9} /> : data?.block && <BlockSummary data={data.block} />}
       <Box sx={{ mt: 2 }}>
         <BlockDetailedEventsTabs
           blockNumber={blockNumber}

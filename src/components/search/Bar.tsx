@@ -93,7 +93,6 @@ const SearchAccount: FC = () => {
         if (data.account?.id) {
           history.push(`/accounts/${data.account.id}`);
         } else {
-          console.warn(JSON.stringify(data.account));
           enqueueSnackbar(`no account found for the address ${v}`, { variant: 'error' });
         }
       }}

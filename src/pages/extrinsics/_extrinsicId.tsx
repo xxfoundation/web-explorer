@@ -3,8 +3,8 @@ import { Box, Container, Skeleton, Typography } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import LoadingSummary from '../../components/Paper/LoadingSummary';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
+import SummaryLoader from '../../components/Paper/SummaryLoader';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import { GetExtrinsicByPK, GET_EXTRINSIC_BY_PK } from '../../schemas/extrinsics.schema';
 import NotFound from '../NotFound';
@@ -33,7 +33,7 @@ const Extrinsic = () => {
       {data?.extrinsic.timestamp ? (
         <Summary extrinsic={data.extrinsic} extrinsicId={{ blockNumber, extrinsicIndex }} />
       ) : (
-        <LoadingSummary number={9} />
+        <SummaryLoader number={9} />
       )}
       <Box sx={{ mt: 2 }}>
         {loading ? (

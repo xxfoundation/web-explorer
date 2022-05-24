@@ -25,11 +25,6 @@ export function usePaginatorByCursor<T extends object>(props: Props<T>): Result<
   const onPageChange = useCallback(
     (data?: T) => {
       return (_: unknown, number: number) => {
-        console.warn(
-          `paginator cursorField: ${cursorField} props.cursorField: ${
-            props.cursorField
-          } data: ${JSON.stringify(data)}`
-        );
         if (cursorField === undefined && data && data[props.cursorField] !== undefined) {
           setCursorField(data[props.cursorField]);
         }

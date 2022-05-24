@@ -42,20 +42,4 @@ export const SummaryPaperWrapper: React.FC = ({ children }) => {
   );
 };
 
-const SummaryPaper: React.FC<{
-  data: SummaryPaperData[];
-}> = ({ data }) => {
-  return (
-    <PaperStyled>
-      <Grid container>
-        {data.map((item, index) => (
-          <SummaryRow label={item.label} action={item.action} key={index}>
-            {item.value}
-          </SummaryRow>
-        ))}
-      </Grid>
-    </PaperStyled>
-  );
-};
-
-export default SummaryPaper;
+export default SummaryPaperWrapper;
