@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 
 export const DarkTooltip = styled('div')(({ theme }) => ({
+  pointerEvents: 'none',
   backgroundColor: theme.palette.grey[600],
   padding: '0.75rem',
   fontWeight: 400,
@@ -12,6 +13,7 @@ export const DarkTooltip = styled('div')(({ theme }) => ({
 }));
 
 export const LightTooltip = styled('div')(({ theme }) => ({
+  pointerEvents: 'none',
   position: 'absolute',
   background: 'rgba(255, 255, 255, 0.91)',
   boxShadow: '0px 0px 23px rgba(0, 0, 0, 0.08)',
@@ -26,7 +28,7 @@ export const LightTooltip = styled('div')(({ theme }) => ({
   color: theme.palette.grey[500]
 }));
 
-export const LightHeader = styled('h6')(({ theme }) => ({
+export const LightTooltipHeader = styled('h6')(({ theme }) => ({
   color: theme.palette.grey[800],
   fontWeight: 700,
   fontSize: '14px',
