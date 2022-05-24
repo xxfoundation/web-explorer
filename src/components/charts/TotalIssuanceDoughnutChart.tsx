@@ -1,9 +1,15 @@
-import React from 'react';
-import { Doughnut, ChartProps }  from 'react-chartjs-2';
+import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types';
+
+import React, { useRef, useMemo } from 'react';
+import { Doughnut }  from 'react-chartjs-2';
 import { Box, Stack } from '@mui/material'
 import Legend from './Legend';
 import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typographies';
 import FormatBalance from '../FormatBalance';
+import { LightTooltipHeader, LightTooltip } from '../Tooltips';
+import useCustomTooltip from '../../hooks/useCustomTooltip';
+
+type Options = ChartProps<'doughnut'>['options'];
 
 const sampleCustomData = [
   { name: 'circulation', color: '#13EEF9', value: 162301, percentage: 6, title: true, id: 'stakeable' },
@@ -34,10 +40,26 @@ const data: ChartProps<'doughnut'>['data'] = {
 };
 
 const TotalIssuance = () => {
+  const chartRef = useRef<ChartJSOrUndefined<'doughnut', number[], unknown>>(null);
+  const customTooltip = useCustomTooltip(chartRef);
+
+  const chartOptions = useMemo<Options>(() => ({
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      tooltip: customTooltip.plugin
+    }
+  }), [customTooltip.plugin]);
+
   return (
     <Stack direction='row' spacing={3} sx={{ flexGrow: 1 }}>
-      <Box className='chart-container' style={{  width: '50%', flexGrow: 1 }}>
-        <Doughnut options={{ maintainAspectRatio: false, responsive: true }} data={data}/>
+      <Box className='chart-container' style={{  width: '50%', flexGrow: 1, position: 'relative' }}>
+        <Doughnut ref={chartRef} options={chartOptions} data={data}/>
+        <LightTooltip style={customTooltip.styles}>
+          <LightTooltipHeader>
+            {customTooltip.label} {customTooltip.value}%
+          </LightTooltipHeader>
+        </LightTooltip>
       </Box>
       <Stack
         style={{ minWidth: '33%' }}

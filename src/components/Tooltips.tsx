@@ -15,7 +15,7 @@ export const DarkTooltip = styled('div')(({ theme }) => ({
 export const LightTooltip = styled('div')(({ theme }) => ({
   pointerEvents: 'none',
   position: 'absolute',
-  background: 'rgba(255, 255, 255, 0.91)',
+  background: 'rgba(255, 255, 255, 0.95)',
   boxShadow: '0px 0px 23px rgba(0, 0, 0, 0.08)',
   backdropFilter: 'blur(16px)',
   padding: '2rem',
@@ -36,4 +36,5 @@ export const LightTooltipHeader = styled('h6')(({ theme }) => ({
   letterSpacing: '0.5px',
   textTransform: 'uppercase',
   margin: 0,
+  whiteSpace: 'nowrap',
 }));
