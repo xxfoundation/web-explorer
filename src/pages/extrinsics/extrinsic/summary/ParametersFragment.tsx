@@ -1,5 +1,5 @@
 import { Box, Button, Stack, styled } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { callbackCopyMessage } from '../../../../components/buttons/CopyButton';
 import { SummaryRow } from '../../../../components/Paper/SummaryPaper';
 import { useToggle } from '../../../../hooks';
@@ -17,33 +17,38 @@ const RoundedButton = styled(Button)(({}) => {
   };
 });
 
-const userParserOfArgs = (args: string, def: string) => {
-  const definition = Object.keys(JSON.parse(def));
+const useParserOfArgs = (args: string, def: string) => {
+  return useMemo(() => {
+    const definition = Object.keys(JSON.parse(def));
 
-  const parsedArgs: [] = JSON.parse(args);
-  return definition.reduce<Record<string, string | Record<string, string>>>(
-    (p, c, index) => ({ ...p, [c]: parsedArgs[index] }),
-    {}
-  );
+    const parsedArgs: [] = JSON.parse(args);
+    return definition.reduce<Record<string, string | Record<string, string>>>(
+      (p, c, index) => ({ ...p, [c]: parsedArgs[index] }),
+      {}
+    );
+  }, [args, def]);
 };
 
 const ParametersFragment: FC<Props> = ({ args, def }) => {
-  const parameters = userParserOfArgs(args, def);
+  const parameters = useParserOfArgs(args, def);
   const staticCopy = useCopyClipboard()[1];
   const [isActive, { toggle }] = useToggle();
+  const onclickCopy = useCallback(
+    () => staticCopy(JSON.stringify(parameters), callbackCopyMessage),
+    [parameters, staticCopy]
+  );
   return (
     <SummaryRow label='parameters'>
       <Stack>
         <Box>
-          <RoundedButton
-            variant='contained'
-            onClick={() => staticCopy(JSON.stringify(parameters), callbackCopyMessage)}
-          >
-            copy
+          <RoundedButton variant='contained' onClick={() => toggle()}>
+            {isActive ? 'Hide' : 'Show'}
           </RoundedButton>
-          <RoundedButton variant='contained' sx={{ marginLeft: '24px' }} onClick={() => toggle()}>
-            {isActive ? 'hide code' : 'view code'}
-          </RoundedButton>
+          {isActive && (
+            <RoundedButton sx={{ marginLeft: '24px' }} variant='contained' onClick={onclickCopy}>
+              copy
+            </RoundedButton>
+          )}
         </Box>
         {isActive && (
           <Box
