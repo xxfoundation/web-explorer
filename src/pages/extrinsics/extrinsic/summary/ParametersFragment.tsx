@@ -1,11 +1,10 @@
-import { Box, Button, Stack, styled } from '@mui/material';
+import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import React, { FC, useCallback, useMemo } from 'react';
 import { callbackCopyMessage } from '../../../../components/buttons/CopyButton';
 import { SummaryRow } from '../../../../components/Paper/SummaryPaper';
 import { useToggle } from '../../../../hooks';
 import useCopyClipboard from '../../../../hooks/useCopyToClibboard';
-
-type Props = { args: string; def: string };
+import { theme } from '../../../../themes/default';
 
 const RoundedButton = styled(Button)(({}) => {
   return {
@@ -22,14 +21,43 @@ const useParserOfArgs = (args: string, def: string) => {
     const definition = Object.keys(JSON.parse(def));
 
     const parsedArgs: [] = JSON.parse(args);
-    return definition.reduce<Record<string, string | Record<string, string>>>(
+    return definition.reduce<Record<string, unknown>>(
       (p, c, index) => ({ ...p, [c]: parsedArgs[index] }),
       {}
     );
   }, [args, def]);
 };
 
-const ParametersFragment: FC<Props> = ({ args, def }) => {
+const ParamTile: FC<{ label: string; value: unknown }> = ({ label, value }) => {
+  return (
+    <Stack
+      sx={{
+        padding: '10px',
+        marginTop: '24px',
+        borderColor: theme.palette.grey['200'],
+        borderRadius: '10px',
+        borderStyle: 'solid',
+        borderWidth: '1px'
+      }}
+    >
+      <Typography variant='h5'>{label}</Typography>
+      <Box
+        component={'pre'}
+        sx={{
+          padding: '10px',
+          marginTop: '10px',
+          maxHeight: '100px',
+          overflowY: 'auto',
+          background: 'rgb(0 0 0 / 4%)'
+        }}
+      >
+        {JSON.stringify(value, null, 2)}
+      </Box>
+    </Stack>
+  );
+};
+
+const ParametersFragment: FC<{ args: string; def: string }> = ({ args, def }) => {
   const parameters = useParserOfArgs(args, def);
   const staticCopy = useCopyClipboard()[1];
   const [isActive, { toggle }] = useToggle();
@@ -37,11 +65,15 @@ const ParametersFragment: FC<Props> = ({ args, def }) => {
     () => staticCopy(JSON.stringify(parameters), callbackCopyMessage),
     [parameters, staticCopy]
   );
+  const paramTiles = useMemo(
+    () => Object.entries(parameters).map(([label, value]) => <ParamTile label={label} value={value} />),
+    [parameters]
+  );
   return (
     <SummaryRow label='parameters'>
       <Stack>
         <Box>
-          <RoundedButton variant='contained' onClick={() => toggle()}>
+          <RoundedButton variant='contained' onClick={toggle}>
             {isActive ? 'Hide' : 'Show'}
           </RoundedButton>
           {isActive && (
@@ -50,20 +82,7 @@ const ParametersFragment: FC<Props> = ({ args, def }) => {
             </RoundedButton>
           )}
         </Box>
-        {isActive && (
-          <Box
-            component={'code'}
-            sx={{
-              padding: '10px',
-              marginTop: '24px',
-              maxHeight: '100px',
-              overflowY: 'auto',
-              background: 'rgb(0 0 0 / 4%)'
-            }}
-          >
-            {JSON.stringify(parameters)}
-          </Box>
-        )}
+        {isActive && paramTiles}
       </Stack>
     </SummaryRow>
   );
