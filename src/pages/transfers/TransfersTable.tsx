@@ -18,9 +18,9 @@ import {
 } from '../../schemas/transfers.schema';
 
 const TransferRow = (data: Transference) => {
-  const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.extrinsicIndex}`;
+  const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
   return [
-    { value: <Link to={extrinsicIdLink}>{`${data.blockNumber}-${data.extrinsicIndex}`}</Link> },
+    { value: <Link to={extrinsicIdLink}>{`${data.blockNumber}-${data.index}`}</Link> },
     { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
     { value: <TimeAgo date={data.timestamp} /> },
     {
@@ -60,23 +60,17 @@ const headers = [
 ];
 
 const TransferTable = () => {
-  // FIXME timestamp cannot be the cursor
-  const {
-    cursorField: timestamp,
-    onPageChange,
-    onRowsPerPageChange,
-    page,
-    rowsPerPage
-  } = usePaginatorByCursor<Transference>({
-    cursorField: 'timestamp',
-    rowsPerPage: 20
-  });
+  const { cursorField, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
+    usePaginatorByCursor<Transference & { id: number }>({
+      cursorField: 'id',
+      rowsPerPage: 20
+    });
   const { data, loading } = useQuery<GetTransferencesByBlock>(GET_TRANSFERS_OF_BLOCK, {
     variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      orderBy: [{ timestamp: 'desc' }],
-      where: { timestamp: { _lte: timestamp } }
+      orderBy: [{ id: 'desc' }],
+      where: { id: { _lte: cursorField } }
     }
   });
   if (loading) return <TableSkeleton rows={12} cells={6} footer />;

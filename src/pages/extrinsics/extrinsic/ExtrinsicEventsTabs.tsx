@@ -8,15 +8,7 @@ const ExtrinsicEventsTabs: FC<{ blockNumber: number }> = ({ blockNumber }) => {
     return [
       {
         label: <TabText message='events' count={9} />,
-        content: (
-          <EventsTable
-            where={{
-              block_number: {
-                _eq: blockNumber
-              }
-            }}
-          />
-        )
+        content: <EventsTable where={{ block_number: { _eq: blockNumber } }} />
       }
     ];
   }, [blockNumber]);

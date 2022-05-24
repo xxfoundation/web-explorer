@@ -9,7 +9,8 @@ export const LIST_EVENTS_OF_BLOCK = gql`
   ) {
     events: event(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       blockNumber: block_number
-      id: event_index
+      index: event_index
+      id
       method
       section
       timestamp

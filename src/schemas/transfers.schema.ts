@@ -27,7 +27,7 @@ export const LISTEN_FOR_TRANSFERS_ORDERED = gql`
 
 export type Transference = {
   blockNumber: number;
-  extrinsicIndex: number;
+  index: number;
   hash: string;
   source: string;
   destination: string;
@@ -42,7 +42,7 @@ export type Transference = {
 export const TRANSFER_FRAGMENT = gql`
   fragment transference_common_fields on transfer {
     blockNumber: block_number
-    extrinsicIndex: extrinsic_index
+    index: extrinsic_index
     hash
     source
     destination
@@ -55,7 +55,7 @@ export const TRANSFER_FRAGMENT = gql`
   }
 `;
 
-export type GetTransferencesByBlock = { transfers: Transference[] };
+export type GetTransferencesByBlock = { transfers: (Transference & { id: number })[] };
 
 export const GET_TRANSFERS_OF_BLOCK = gql`
   ${TRANSFER_FRAGMENT}
@@ -67,6 +67,7 @@ export const GET_TRANSFERS_OF_BLOCK = gql`
   ) {
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       ...transference_common_fields
+      id
     }
   }
 `;

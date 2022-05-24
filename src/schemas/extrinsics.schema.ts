@@ -28,6 +28,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
     $where: extrinsic_bool_exp
   ) {
     extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+      id
       index: extrinsic_index
       blockNumber: block_number
       hash
@@ -41,6 +42,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
 
 export type ListExtrinsics = {
   extrinsics: {
+    id: number;
     index: number;
     blockNumber: number;
     timestamp: number;
@@ -65,6 +67,7 @@ export const LIST_EXTRINSICS = gql`
       }
     }
     extrinsics: extrinsic(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+      id
       index: extrinsic_index
       blockNumber: block_number
       timestamp

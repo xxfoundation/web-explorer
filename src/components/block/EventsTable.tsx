@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { TableCellProps, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import { usePaginator } from '../../hooks/usePaginatiors';
+import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { LIST_EVENTS_OF_BLOCK } from '../../schemas/events.schema';
 import { Hash } from '../ChainId';
 import Link from '../Link';
@@ -11,6 +11,7 @@ import { TableSkeleton } from '../Tables/TableSkeleton';
 
 type EventType = {
   id: number;
+  index: number;
   hash?: string;
   section: string;
   method: string;
@@ -29,30 +30,31 @@ const HashCell: FC<{ value?: string }> = ({ value }) => {
 
 const props: TableCellProps = { align: 'left' };
 
-const rowsParser = ({ hash, id, method, section }: EventType): BaselineCell[] => {
+const rowsParser = ({ hash, index, method, section }: EventType): BaselineCell[] => {
   return [
-    { value: id, props },
+    { value: index, props },
     { value: <HashCell value={hash} />, props },
-    { value: <Link to='#' textTransform={'capitalize'}>{`${method} (${section})`}</Link> }
+    { value: <Link to='#' textTransform={'capitalize'}>{`${section} (${method})`}</Link> }
   ];
 };
 
 const headers = [{ value: 'event id', props }, { value: 'hash', props }, { value: 'action' }];
 
-const EventsTable: FC<{ where: unknown }> = ({ where }) => {
-  const paginator = usePaginator({ rowsPerPage: 4 });
-  const { data, loading } = useQuery<Response>(LIST_EVENTS_OF_BLOCK, {
-    variables: {
-      orderBy: [
-        {
-          event_index: 'desc'
-        }
-      ],
+const EventsTable: FC<{ where: Record<string, unknown> }> = ({ where }) => {
+  const { cursorField, ...paginator } = usePaginatorByCursor({ rowsPerPage: 4, cursorField: 'id' });
+  const variables = useMemo(
+    () => ({
+      orderBy: [{ id: 'desc' }],
       limit: paginator.rowsPerPage,
       offset: paginator.page * paginator.rowsPerPage,
-      where
-    }
-  });
+      where: {
+        ...where,
+        id: { _lte: cursorField }
+      }
+    }),
+    [cursorField, paginator.page, paginator.rowsPerPage, where]
+  );
+  const { data, loading } = useQuery<Response>(LIST_EVENTS_OF_BLOCK, { variables });
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
 
   if (loading) return <TableSkeleton rows={4} cells={4} footer />;
@@ -65,7 +67,7 @@ const EventsTable: FC<{ where: unknown }> = ({ where }) => {
           page={paginator.page}
           count={data?.events.length || 0}
           rowsPerPage={paginator.rowsPerPage}
-          onPageChange={paginator.onPageChange}
+          onPageChange={paginator.onPageChange(data?.events.at(0))}
           rowsPerPageOptions={[2, 4, 6]}
           onRowsPerPageChange={paginator.onRowsPerPageChange}
         />

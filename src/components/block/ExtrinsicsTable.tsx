@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import React, { FC, useMemo } from 'react';
-import { usePaginator } from '../../hooks/usePaginatiors';
+import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { EXTRINSICS_OF_BLOCK } from '../../schemas/extrinsics.schema';
 import { Hash } from '../ChainId';
 import Link from '../Link';
@@ -11,6 +11,7 @@ import { TableSkeleton } from '../Tables/TableSkeleton';
 import TimeAgoComponent from '../TimeAgo';
 
 type ExtrinsicsTyp = {
+  id: number;
   index: number;
   hash: string;
   blockNumber: string;
@@ -39,20 +40,20 @@ const rowsParser = (rowData: ExtrinsicsTyp) => {
 
 const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
 
-const BlockExtrinsics: FC<{ where: unknown }> = ({ where }) => {
-  const { onPageChange, onRowsPerPageChange, page, rowsPerPage } = usePaginator({ rowsPerPage: 4 });
+const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
+  const { cursorField, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
+    usePaginatorByCursor({
+      rowsPerPage: 4,
+      cursorField: 'id'
+    });
   const variables = useMemo(() => {
     return {
-      orderBy: [
-        {
-          extrinsic_index: 'desc'
-        }
-      ],
+      orderBy: [{ id: 'desc' }],
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      where
+      where: { ...where, id: cursorField }
     };
-  }, [page, rowsPerPage, where]);
+  }, [cursorField, page, rowsPerPage, where]);
   const { data, loading } = useQuery<Response>(EXTRINSICS_OF_BLOCK, { variables });
   const rows = useMemo(() => (data?.extrinsic || []).map(rowsParser), [data?.extrinsic]);
   if (loading) return <TableSkeleton rows={6} cells={6} footer />;
@@ -65,7 +66,7 @@ const BlockExtrinsics: FC<{ where: unknown }> = ({ where }) => {
           count={data?.extrinsic.length || 0}
           page={page}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange}
+          onPageChange={onPageChange(data?.extrinsic.at(0))}
           onRowsPerPageChange={onRowsPerPageChange}
           rowsPerPageOptions={[2, 4, 6]}
         />

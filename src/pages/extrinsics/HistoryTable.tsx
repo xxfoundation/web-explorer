@@ -21,7 +21,7 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
     <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated showTooltip />,
     <TimeAgoComponent date={extrinsic.timestamp} />,
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
-    <Link to='#'>{`${extrinsic.method} (${extrinsic.section})`}</Link>
+    <Link to='#'>{`${extrinsic.section} (${extrinsic.method})`}</Link>
   ]);
 };
 
@@ -39,13 +39,13 @@ const HistoryTable: FC<{
 }> = (props) => {
   // FIXME timestamp cannot be the cursor
   const {
-    cursorField: timestamp,
+    cursorField: id,
     onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage
   } = usePaginatorByCursor<ListExtrinsics['extrinsics'][0]>({
-    cursorField: 'timestamp',
+    cursorField: 'id',
     rowsPerPage: ROWS_PER_PAGE
   });
 
@@ -53,15 +53,15 @@ const HistoryTable: FC<{
     variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      orderBy: [{ timestamp: 'desc' }],
-      where: { timestamp: { _lte: timestamp } }
+      orderBy: [{ id: 'desc' }],
+      where: { id: { _lte: id } }
     }
   });
 
   const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
 
   useEffect(() => {
-    if (data?.agg && !timestamp) {
+    if (data?.agg && !id) {
       props.setTotalOfExtrinsics(data.agg.aggregate.count);
     }
   });
