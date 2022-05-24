@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
-import IdentityCard from './account/Identity';
+import IdentityCard from './account/identity';
 import Info from './account/Info';
 import PerformanceCard from './account/performance';
 import StakingCard from './account/staking';
