@@ -38,7 +38,7 @@ export type ListBlockOrdered = {
 export const LIST_BLOCK_ORDERED = gql`
   ${BLOCK_KEYS_FRAGMENT}
   query ListBlocksOrdered($limit: Int, $offset: Int = 0, $where: block_bool_exp) {
-    agg: block_aggregate(where: $where) {
+    agg: block_aggregate {
       aggregate {
         count
       }

@@ -13,7 +13,7 @@ import TimeAgo from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import {
   GetTransferencesByBlock,
-  GET_TRANSFERS_OF_BLOCK,
+  LIST_TRANSFERS_ORDERED,
   Transference
 } from '../../schemas/transfers.schema';
 
@@ -65,7 +65,7 @@ const TransferTable = () => {
       cursorField: 'id',
       rowsPerPage: 20
     });
-  const { data, loading } = useQuery<GetTransferencesByBlock>(GET_TRANSFERS_OF_BLOCK, {
+  const { data, loading } = useQuery<GetTransferencesByBlock>(LIST_TRANSFERS_ORDERED, {
     variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,
@@ -81,7 +81,7 @@ const TransferTable = () => {
       footer={
         <TablePagination
           page={page}
-          count={data?.transfers.length || 0}
+          count={data?.agg.aggregate.count || 0}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data?.transfers.at(0))}
           rowsPerPageOptions={[20, 30, 40, 50]}

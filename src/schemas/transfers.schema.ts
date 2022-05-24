@@ -55,9 +55,12 @@ export const TRANSFER_FRAGMENT = gql`
   }
 `;
 
-export type GetTransferencesByBlock = { transfers: (Transference & { id: number })[] };
+export type GetTransferencesByBlock = {
+  transfers: (Transference & { id: number })[];
+  agg: { aggregate: { count: number } };
+};
 
-export const GET_TRANSFERS_OF_BLOCK = gql`
+export const LIST_TRANSFERS_ORDERED = gql`
   ${TRANSFER_FRAGMENT}
   query ListTransfersOrdered(
     $orderBy: [transfer_order_by!]
@@ -65,6 +68,11 @@ export const GET_TRANSFERS_OF_BLOCK = gql`
     $offset: Int
     $where: transfer_bool_exp
   ) {
+    agg: transfer_aggregate {
+      aggregate {
+        count
+      }
+    }
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       ...transference_common_fields
       id

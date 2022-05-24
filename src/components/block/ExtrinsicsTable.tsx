@@ -21,7 +21,7 @@ type ExtrinsicsTyp = {
   section: string;
 };
 
-type Response = { extrinsic: ExtrinsicsTyp[] };
+type Response = { extrinsic: ExtrinsicsTyp[]; agg: { aggregate: { count: number } } };
 
 const rowsParser = (rowData: ExtrinsicsTyp) => {
   return BaseLineCellsWrapper([
@@ -51,7 +51,8 @@ const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
       orderBy: [{ id: 'desc' }],
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      where: { ...where, id: cursorField }
+      where: { ...where, id: cursorField },
+      aggWhere: { ...where }
     };
   }, [cursorField, page, rowsPerPage, where]);
   const { data, loading } = useQuery<Response>(EXTRINSICS_OF_BLOCK, { variables });
@@ -63,7 +64,7 @@ const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
       rows={rows}
       footer={
         <TablePagination
-          count={data?.extrinsic.length || 0}
+          count={data?.agg.aggregate.count || 0}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data?.extrinsic.at(0))}

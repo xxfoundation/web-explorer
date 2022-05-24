@@ -19,7 +19,7 @@ type EventType = {
   timestamp: number;
 };
 
-type Response = { events: EventType[] };
+type Response = { events: EventType[]; agg: { aggregate: { count: number } } };
 
 const HashCell: FC<{ value?: string }> = ({ value }) => {
   if (!value) {
@@ -50,7 +50,8 @@ const EventsTable: FC<{ where: Record<string, unknown> }> = ({ where }) => {
       where: {
         ...where,
         id: { _lte: cursorField }
-      }
+      },
+      eventAggWhere: where
     }),
     [cursorField, paginator.page, paginator.rowsPerPage, where]
   );
@@ -65,7 +66,7 @@ const EventsTable: FC<{ where: Record<string, unknown> }> = ({ where }) => {
       footer={
         <TablePagination
           page={paginator.page}
-          count={data?.events.length || 0}
+          count={data?.agg.aggregate.count || 0}
           rowsPerPage={paginator.rowsPerPage}
           onPageChange={paginator.onPageChange(data?.events.at(0))}
           rowsPerPageOptions={[2, 4, 6]}

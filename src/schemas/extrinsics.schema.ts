@@ -26,6 +26,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
     $limit: Int
     $offset: Int
     $where: extrinsic_bool_exp
+    $aggWhere: extrinsic_bool_exp
   ) {
     extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       id
@@ -36,6 +37,11 @@ export const EXTRINSICS_OF_BLOCK = gql`
       success
       section
       method
+    }
+    agg:extrinsic_aggregate(where: $aggWhere) {
+      aggregate {
+        count
+      }
     }
   }
 `;
@@ -61,7 +67,7 @@ export const LIST_EXTRINSICS = gql`
     $orderBy: [extrinsic_order_by!]
     $where: extrinsic_bool_exp
   ) {
-    agg: extrinsic_aggregate(where: $where) {
+    agg: extrinsic_aggregate {
       aggregate {
         count
       }
