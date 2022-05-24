@@ -3,7 +3,6 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { OperationDefinitionNode } from 'graphql';
 import { createClient } from 'graphql-ws';
-import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import apolloCache from './apolloCache';
@@ -11,6 +10,7 @@ import App from './App';
 import './dayjs';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import SnackbarProvider from './SnackbarProvider';
 
 const graphqlHost = process.env.REACT_APP_BACKEND_HOST || 'localhost:8080';
 
@@ -29,14 +29,7 @@ const splitLink = split(
 
 ReactDOM.render(
   <React.StrictMode>
-    <SnackbarProvider
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right'
-      }}
-      autoHideDuration={4000}
-      style={{ borderRadius: 14 }}
-    >
+    <SnackbarProvider>
       <ApolloProvider
         client={
           new ApolloClient({
