@@ -8,9 +8,14 @@ import {
   TooltipProps,
   Typography
 } from '@mui/material';
+import { HtmlRenderer, Parser } from 'commonmark';
+import parse from 'html-react-parser';
 import React, { FC, useMemo } from 'react';
-import MarkdownView from 'react-showdown';
 import Tag from '../../../components/Tags/Tag';
+import { theme } from '../../../themes/default';
+
+const reader = new Parser();
+const writer = new HtmlRenderer();
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -24,13 +29,21 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
     p: { fontSize: '10px' },
     ul: { paddingInlineStart: '20px' },
     li: { fontSize: '10px' },
-    h2: { fontSize: '10px' }
+    h2: { fontSize: '10px' },
+    hr: {
+      borderBottom: theme.borders?.light,
+      borderTop: 'none',
+      borderLeft: 'none',
+      borderRight: 'none'
+    },
+    a: { color: theme.palette.primary.main }
   }
 });
 
 const ModuleCalls: FC<{ module: string; call: string; doc: string }> = ({ call, doc, module }) => {
   const title = useMemo(() => {
-    const text = JSON.parse(doc).join('\r\n');
+    const parsed = reader.parse(JSON.parse(doc).join('\r\n'));
+    const result = writer.render(parsed);
     return (
       <Box>
         <Typography
@@ -39,10 +52,11 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string }> = ({ call, 
           letterSpacing='1px'
           textTransform='uppercase'
         >{`${module} / ${call}`}</Typography>
-        <MarkdownView markdown={text} options={{ emoji: true }} />
+        {parse(result)}
       </Box>
     );
   }, [call, doc, module]);
+
   return (
     <>
       <Breadcrumbs separator='/'>
@@ -57,7 +71,6 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string }> = ({ call, 
           </Typography>
         </Tag>
       </Breadcrumbs>
-      {title}
       <CustomTooltip title={title}>
         <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
       </CustomTooltip>
