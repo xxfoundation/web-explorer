@@ -1,6 +1,6 @@
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Box, Button, Stack, styled, Typography } from '@mui/material';
-import React, { FC, useCallback, useMemo } from 'react';
-import { callbackCopyMessage } from '../../../../components/buttons/CopyButton';
+import React, { FC, ReactNode, useCallback, useMemo } from 'react';
 import { SummaryRow } from '../../../../components/Paper/SummaryPaper';
 import { useToggle } from '../../../../hooks';
 import useCopyClipboard from '../../../../hooks/useCopyToClibboard';
@@ -16,10 +16,33 @@ const RoundedButton = styled(Button)(({}) => {
   };
 });
 
+const callbackCopyMessage = (value: ReactNode) => {
+  return (
+    <Stack
+      spacing={1}
+      sx={{
+        maxWidth: '25vw',
+        maxHeight: '60px',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis'
+      }}
+    >
+      <Stack direction={'row'} alignItems={'center'} spacing={2}>
+        <CheckCircleOutlineIcon sx={{ color: theme.palette.success.light }} />
+        <Typography fontSize={10} fontWeight={600}>
+          Copied to Clipboard
+        </Typography>
+      </Stack>
+      <Typography fontSize={10} component={'code'}>
+        {value}
+      </Typography>
+    </Stack>
+  );
+};
+
 const useParserOfArgs = (args: string, def: string) => {
   return useMemo(() => {
     const definition = Object.keys(JSON.parse(def));
-
     const parsedArgs: [] = JSON.parse(args);
     return definition.reduce<Record<string, unknown>>(
       (p, c, index) => ({ ...p, [c]: parsedArgs[index] }),
@@ -66,7 +89,8 @@ const ParametersFragment: FC<{ args: string; def: string }> = ({ args, def }) =>
     [parameters, staticCopy]
   );
   const paramTiles = useMemo(
-    () => Object.entries(parameters).map(([label, value]) => <ParamTile label={label} value={value} />),
+    () =>
+      Object.entries(parameters).map(([label, value]) => <ParamTile label={label} value={value} />),
     [parameters]
   );
   return (
