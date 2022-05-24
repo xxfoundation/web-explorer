@@ -43,8 +43,7 @@ const useCustomTooltip = <T extends keyof ChartTypeRegistry>(chart?: RefObject<C
         setTooltipStyles((styles) => ({ ...styles, top, left }));
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tooltipStyles?.top]);
+  }, [chart, tooltipStyles?.top]);
 
   const plugin = useMemo<PluginOptions<T>>(() => ({
     callbacks: {
