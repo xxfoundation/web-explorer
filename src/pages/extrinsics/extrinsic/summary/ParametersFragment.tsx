@@ -90,7 +90,9 @@ const ParametersFragment: FC<{ args: string; def: string }> = ({ args, def }) =>
   );
   const paramTiles = useMemo(
     () =>
-      Object.entries(parameters).map(([label, value]) => <ParamTile label={label} value={value} />),
+      Object.entries(parameters).map(([label, value], index) => (
+        <ParamTile key={index} label={label} value={value} />
+      )),
     [parameters]
   );
   return (
