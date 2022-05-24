@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Doughnut, ChartProps }  from 'react-chartjs-2';
 import { Box, Stack } from '@mui/material'
 import Legend from './Legend';
@@ -12,23 +12,28 @@ const sampleCustomData = [
   { name: 'others', color: '#59BD1C', value: 82145, percentage: 6, id: 'unstakeable-team' }
 ];
 
+const secondData = {
+  backgroundColor: ['#FFC908', '#EAEAEA'],
+  data: [10, 90]
+};
+
+const legendData = sampleCustomData.map(({ color, name, percentage }) => ({
+  label: `${percentage}% ${name}`,
+  color,
+})).concat([{
+  label: '14% Staking Supply',
+  color: '#FFC908'
+}])
+
 const data: ChartProps<'doughnut'>['data'] = {
   labels: sampleCustomData.map((s) => s.name),
   datasets: [{
     backgroundColor: sampleCustomData.map((s) => s.color),
     data: sampleCustomData.map((s) => s.percentage)
-  }, {
-    backgroundColor: ['#FFC908', '#EAEAEA'],
-    data: [10, 90]
-  }],
+  }, secondData],
 };
 
 const TotalIssuance = () => {
-  const legend = useMemo(() => sampleCustomData.map(({ color, name, percentage }) => ({
-    label: `${percentage}% ${name}`,
-    color,
-  })), []);
-
   return (
     <Stack direction='row' spacing={3} sx={{ flexGrow: 1 }}>
       <Box className='chart-container' style={{  width: '50%', flexGrow: 1 }}>
@@ -45,7 +50,7 @@ const TotalIssuance = () => {
             <FormatBalance value='118716570' />
           </LegendTypographySubHeaders>
         </Box>
-        <Legend data={legend} />
+        <Legend data={legendData} />
       </Stack>
     </Stack>
   );
