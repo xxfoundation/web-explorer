@@ -10,7 +10,9 @@ type Result<T> = {
   rowsPerPage: number;
   page: number;
   onRowsPerPageChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onPageChange: (data?: T) => (_: unknown, number: number) => void;
+  onPageChange: (data: T) => (_: unknown, number: number) => void;
+  limit: number;
+  offset: number;
 };
 
 export function usePaginatorByCursor<T extends object>(props: Props<T>): Result<T> {
@@ -23,7 +25,7 @@ export function usePaginatorByCursor<T extends object>(props: Props<T>): Result<
     setPage(0);
   }, []);
   const onPageChange = useCallback(
-    (data?: T) => {
+    (data: T) => {
       return (_: unknown, number: number) => {
         if (cursorField === undefined && data && data[props.cursorField] !== undefined) {
           setCursorField(data[props.cursorField]);
@@ -34,24 +36,13 @@ export function usePaginatorByCursor<T extends object>(props: Props<T>): Result<
     [cursorField, props.cursorField]
   );
 
-  return { cursorField, rowsPerPage, page, onRowsPerPageChange, onPageChange };
-}
-
-export function usePaginator(props: { rowsPerPage: number }): {
-  rowsPerPage: number;
-  page: number;
-  onRowsPerPageChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onPageChange: (_: unknown, number: number) => void;
-} {
-  const [rowsPerPage, setRowsPerPage] = useState(props.rowsPerPage);
-  const [page, setPage] = useState(0);
-  const onRowsPerPageChange = useCallback(({ target: { value } }) => {
-    setRowsPerPage(parseInt(value));
-    setPage(0);
-  }, []);
-  const onPageChange = useCallback((_: unknown, number: number) => {
-    setPage(number);
-  }, []);
-
-  return { rowsPerPage, page, onRowsPerPageChange, onPageChange };
+  return {
+    cursorField,
+    rowsPerPage,
+    page,
+    onRowsPerPageChange,
+    onPageChange,
+    limit: rowsPerPage,
+    offset: page * rowsPerPage
+  };
 }

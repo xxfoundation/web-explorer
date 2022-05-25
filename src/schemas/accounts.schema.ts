@@ -1,4 +1,6 @@
 import { gql } from '@apollo/client';
+import { GetRankingByAccountId } from './ranking.schema';
+import { TotalOfItems } from './types';
 
 export type GetAccountIdentityByAddressType = {
   account: {
@@ -34,7 +36,7 @@ export type GetAccountByAddressType = {
     timestamp: number;
     totalBalance: number;
   };
-};
+} & GetRankingByAccountId;
 
 export const GET_ACCOUNT_BY_PK = gql`
   query GetAccountByPK($accountId: String!) {
@@ -58,8 +60,7 @@ export const GET_ACCOUNT_BY_PK = gql`
 
 export type ListAccounts = {
   account: { address: string; timestamp: number }[];
-  accountAgg: { aggregate: { count: number } };
-};
+} & TotalOfItems;
 
 export const LIST_ACCOUNTS = gql`
   query ListAccounts(
@@ -69,10 +70,10 @@ export const LIST_ACCOUNTS = gql`
     $where: account_bool_exp
   ) {
     account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
-      address:account_id
+      address: account_id
       timestamp
     }
-    accountAgg: account_aggregate(where: $where) {
+    agg: account_aggregate(where: $where) {
       aggregate {
         count
       }

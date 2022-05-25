@@ -132,6 +132,8 @@ const useHeaders = () => {
 const HoldersTable: FC = () => {
   const {
     cursorField: timestamp,
+    limit,
+    offset,
     onPageChange,
     onRowsPerPageChange,
     page,
@@ -143,40 +145,36 @@ const HoldersTable: FC = () => {
   const headers: BaselineCell[] = useHeaders();
   const variables = useMemo(
     () => ({
-      limit: rowsPerPage,
-      offset: page * rowsPerPage,
-      where: {
-        timestamp: {
-          _lte: timestamp
-        }
-      }
+      limit,
+      offset,
+      where: { timestamp: { _lte: timestamp } }
     }),
-    [page, rowsPerPage, timestamp]
+    [limit, offset, timestamp]
   );
-  const { data, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, {
-    variables
-  });
+  const { data, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
   const rows = useMemo(() => (data?.account || []).map(accountToRow), [data?.account]);
+  const footer = useMemo(() => {
+    if (data?.agg && data?.account && data.account.length) {
+      return (
+        <TablePagination
+          page={page}
+          count={data.agg.aggregate.count}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onPageChange(data.account[0])}
+          rowsPerPageOptions={[10, 20, 30, 40, 50]}
+          onRowsPerPageChange={onRowsPerPageChange}
+        />
+      );
+    }
+    return <></>;
+  }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
   if (loading) return <TableSkeleton cells={6} rows={rowsPerPage} />;
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
         Account Holders
       </Typography>
-      <BaselineTable
-        rows={rows}
-        headers={headers}
-        footer={
-          <TablePagination
-            page={page}
-            count={data?.accountAgg.aggregate.count || 0}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onPageChange(data?.account.at(0))}
-            rowsPerPageOptions={[10, 20, 30, 40, 50]}
-            onRowsPerPageChange={onRowsPerPageChange}
-          />
-        }
-      />
+      <BaselineTable headers={headers} rows={rows} footer={footer} />
     </PaperStyled>
   );
 };

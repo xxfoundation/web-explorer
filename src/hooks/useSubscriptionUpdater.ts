@@ -5,7 +5,7 @@ type Props<T> = {
   key: keyof T;
 };
 
-export const useSubscriptionUpdater = <T extends object>(props: Props<T>) => {
+export function useSubscriptionUpdater<T extends object>(props: Props<T>) {
   const [state, setState] = useState<{ data: T[] }>({ data: [] });
   useEffect(() => {
     const oldHashes = state.data.map((item) => item[props.key]);
@@ -19,4 +19,4 @@ export const useSubscriptionUpdater = <T extends object>(props: Props<T>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.newData]);
   return state.data;
-};
+}

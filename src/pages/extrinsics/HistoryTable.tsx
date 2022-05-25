@@ -40,6 +40,8 @@ const HistoryTable: FC<{
   // FIXME timestamp cannot be the cursor
   const {
     cursorField: id,
+    limit,
+    offset,
     onPageChange,
     onRowsPerPageChange,
     page,
@@ -51,8 +53,8 @@ const HistoryTable: FC<{
 
   const { data, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, {
     variables: {
-      limit: rowsPerPage,
-      offset: page * rowsPerPage,
+      limit,
+      offset,
       orderBy: [{ id: 'desc' }],
       where: { id: { _lte: id } }
     }
@@ -66,24 +68,25 @@ const HistoryTable: FC<{
     }
   });
 
-  if (loading) return <TableSkeleton rows={12} cells={6} footer />;
-
-  return (
-    <BaselineTable
-      headers={headers}
-      rows={rows}
-      footer={
+  const footer = useMemo(() => {
+    if (data?.agg && data?.extrinsics && data.extrinsics.length) {
+      return (
         <TablePagination
           page={page}
-          count={data?.agg.aggregate.count || 0}
+          count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange(data?.extrinsics.at(0))}
+          onPageChange={onPageChange(data.extrinsics[0])}
           rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
-      }
-    />
-  );
+      );
+    }
+    return <></>;
+  }, [data?.agg, data?.extrinsics, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+
+  if (loading) return <TableSkeleton rows={12} cells={6} footer />;
+
+  return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 
 export default HistoryTable;

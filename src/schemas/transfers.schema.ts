@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { TotalOfItems } from './types';
 
 export const TRANSFER_KEYS_FRAGMENT = gql`
   fragment transfer_key on transfer {
@@ -57,8 +58,7 @@ export const TRANSFER_FRAGMENT = gql`
 
 export type GetTransferencesByBlock = {
   transfers: (Transference & { id: number })[];
-  agg: { aggregate: { count: number } };
-};
+} & TotalOfItems;
 
 export const LIST_TRANSFERS_ORDERED = gql`
   ${TRANSFER_FRAGMENT}

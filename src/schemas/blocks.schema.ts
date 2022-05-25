@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { TotalOfItems } from './types';
 
 export const BLOCK_KEYS_FRAGMENT = gql`
   fragment blocks on block {
@@ -32,13 +33,12 @@ export type ListBlockOrdered = {
     author: string;
     authorName: string;
   }[];
-  agg: { aggregate: { count: number } };
-};
+} & TotalOfItems;
 
 export const LIST_BLOCK_ORDERED = gql`
   ${BLOCK_KEYS_FRAGMENT}
   query ListBlocksOrdered($limit: Int, $offset: Int = 0, $where: block_bool_exp) {
-    agg: block_aggregate {
+    agg: block_aggregate(where: $where) {
       aggregate {
         count
       }

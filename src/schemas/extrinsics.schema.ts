@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { TotalOfItems } from './types';
 
 export type FindExtrinsicByHashType = {
   extrinsic?: [
@@ -26,7 +27,6 @@ export const EXTRINSICS_OF_BLOCK = gql`
     $limit: Int
     $offset: Int
     $where: extrinsic_bool_exp
-    $aggWhere: extrinsic_bool_exp
   ) {
     extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       id
@@ -38,7 +38,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
       section
       method
     }
-    agg:extrinsic_aggregate(where: $aggWhere) {
+    agg: extrinsic_aggregate(where: $where) {
       aggregate {
         count
       }
@@ -57,8 +57,7 @@ export type ListExtrinsics = {
     section: string;
     hash: string;
   }[];
-  agg: { aggregate: { count: number } };
-};
+} & TotalOfItems;
 
 export const LIST_EXTRINSICS = gql`
   query ListExtrinsicOrdered(
@@ -67,7 +66,7 @@ export const LIST_EXTRINSICS = gql`
     $orderBy: [extrinsic_order_by!]
     $where: extrinsic_bool_exp
   ) {
-    agg: extrinsic_aggregate {
+    agg: extrinsic_aggregate(where: $where) {
       aggregate {
         count
       }

@@ -3,6 +3,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import React, { FC, useMemo } from 'react';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { EXTRINSICS_OF_BLOCK } from '../../schemas/extrinsics.schema';
+import { TotalOfItems } from '../../schemas/types';
 import { Hash } from '../ChainId';
 import Link from '../Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
@@ -21,7 +22,7 @@ type ExtrinsicsTyp = {
   section: string;
 };
 
-type Response = { extrinsic: ExtrinsicsTyp[]; agg: { aggregate: { count: number } } };
+type Response = { extrinsic: ExtrinsicsTyp[] } & TotalOfItems;
 
 const rowsParser = (rowData: ExtrinsicsTyp) => {
   return BaseLineCellsWrapper([
@@ -41,7 +42,7 @@ const rowsParser = (rowData: ExtrinsicsTyp) => {
 const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
 
 const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
-  const { cursorField, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
+  const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor({
       rowsPerPage: 4,
       cursorField: 'id'
@@ -49,31 +50,30 @@ const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
   const variables = useMemo(() => {
     return {
       orderBy: [{ id: 'desc' }],
-      limit: rowsPerPage,
-      offset: page * rowsPerPage,
-      where: { ...where, id: cursorField },
-      aggWhere: { ...where }
+      limit,
+      offset,
+      where: { ...where, id: cursorField }
     };
-  }, [cursorField, page, rowsPerPage, where]);
+  }, [cursorField, limit, offset, where]);
   const { data, loading } = useQuery<Response>(EXTRINSICS_OF_BLOCK, { variables });
   const rows = useMemo(() => (data?.extrinsic || []).map(rowsParser), [data?.extrinsic]);
-  if (loading) return <TableSkeleton rows={6} cells={6} footer />;
-  return (
-    <BaselineTable
-      headers={headers}
-      rows={rows}
-      footer={
+  const footer = useMemo(() => {
+    if (data?.agg && data?.extrinsic && data.extrinsic.length) {
+      return (
         <TablePagination
-          count={data?.agg.aggregate.count || 0}
+          count={data.agg.aggregate.count}
           page={page}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange(data?.extrinsic.at(0))}
+          onPageChange={onPageChange(data.extrinsic[0])}
           onRowsPerPageChange={onRowsPerPageChange}
           rowsPerPageOptions={[2, 4, 6]}
         />
-      }
-    />
-  );
+      );
+    }
+    return <></>;
+  }, [data?.agg, data?.extrinsic, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  if (loading) return <TableSkeleton rows={6} cells={6} footer />;
+  return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 
 export default BlockExtrinsics;

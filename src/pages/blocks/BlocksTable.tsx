@@ -72,6 +72,8 @@ const headers = BaseLineCellsWrapper([
 const BlocksTable: FC = () => {
   const {
     cursorField: blockNumber,
+    limit,
+    offset,
     onPageChange,
     onRowsPerPageChange,
     page,
@@ -82,8 +84,8 @@ const BlocksTable: FC = () => {
   });
   const { data, loading } = useQuery<ListBlockOrdered>(LIST_BLOCK_ORDERED, {
     variables: {
-      limit: rowsPerPage,
-      offset: page * rowsPerPage,
+      limit,
+      offset,
       where: {
         block_number: {
           _lte: blockNumber
@@ -92,24 +94,23 @@ const BlocksTable: FC = () => {
     }
   });
   const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
-
-  if (loading) return <TableSkeleton rows={6} cells={6} footer />;
-  return (
-    <BaselineTable
-      headers={headers}
-      rows={rows}
-      footer={
+  const footer = useMemo(() => {
+    if (data?.agg && data?.blocks && data.blocks.length) {
+      return (
         <TablePagination
-          count={data?.agg.aggregate.count || 0}
+          count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={onPageChange(data?.blocks.at(0))}
+          onPageChange={onPageChange(data.blocks[0])}
           rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
-      }
-    />
-  );
+      );
+    }
+    return <></>;
+  }, [data?.agg, data?.blocks, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  if (loading) return <TableSkeleton rows={6} cells={6} footer />;
+  return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 
 export default BlocksTable;

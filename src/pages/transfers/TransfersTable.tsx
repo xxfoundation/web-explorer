@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
@@ -60,34 +60,44 @@ const headers = [
 ];
 
 const TransferTable = () => {
-  const { cursorField, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
+  const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Transference & { id: number }>({
       cursorField: 'id',
       rowsPerPage: 20
     });
-  const { data, loading } = useQuery<GetTransferencesByBlock>(LIST_TRANSFERS_ORDERED, {
-    variables: {
-      limit: rowsPerPage,
-      offset: page * rowsPerPage,
+  const variables = useMemo(
+    () => ({
+      limit,
+      offset,
       orderBy: [{ id: 'desc' }],
       where: { id: { _lte: cursorField } }
-    }
+    }),
+    [cursorField, limit, offset]
+  );
+  const { data, loading } = useQuery<GetTransferencesByBlock>(LIST_TRANSFERS_ORDERED, {
+    variables
   });
+  const footer = useMemo(() => {
+    if (data?.agg && data?.transfers && data.transfers.length) {
+      return (
+        <TablePagination
+          page={page}
+          count={data.agg.aggregate.count}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onPageChange(data.transfers[0])}
+          rowsPerPageOptions={[20, 30, 40, 50]}
+          onRowsPerPageChange={onRowsPerPageChange}
+        />
+      );
+    }
+    return <></>;
+  }, [data?.agg, data?.transfers, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
   if (loading) return <TableSkeleton rows={12} cells={6} footer />;
   return (
     <BaselineTable
       headers={headers}
       rows={(data?.transfers || []).map(TransferRow)}
-      footer={
-        <TablePagination
-          page={page}
-          count={data?.agg.aggregate.count || 0}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange(data?.transfers.at(0))}
-          rowsPerPageOptions={[20, 30, 40, 50]}
-          onRowsPerPageChange={onRowsPerPageChange}
-        />
-      }
+      footer={footer}
     />
   );
 };
