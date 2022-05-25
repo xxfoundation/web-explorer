@@ -10,18 +10,16 @@ export type DeepPartial<T> = T extends Function ? T : (T extends object ? { [P i
 type Plugin<T extends keyof ChartTypeRegistry> = PluginChartOptions<T>['plugins']['tooltip'];
 type CustomTooltip<T extends keyof ChartTypeRegistry> = Plugin<T>['external'];
 type PluginOptions<T extends keyof ChartTypeRegistry> = DeepPartial<Plugin<T>>;
+type DataState<D> = { data?: D, label?: string };
 
-const useCustomTooltip = <T extends keyof ChartTypeRegistry>(chart?: RefObject<ChartJSOrUndefined<T, unknown, unknown>>) => {
+const useCustomTooltip = <T extends keyof ChartTypeRegistry, D>(chart?: RefObject<ChartJSOrUndefined<T, D[], unknown>>) => {
   const [tooltipStyles, setTooltipStyles] = useState<CSSProperties>({
     opacity: 0,
     left: 0,
     right: 0,
   });
 
-  const [{ label, value }, setData] = useState({
-    value: 0,
-    label: '',
-  })
+  const [{ data, label }, setData] = useState<DataState<D>>({})
 
   const tooltip = useCallback<CustomTooltip<T>>((context) => {
     if (context.tooltip.opacity == 0) {
@@ -49,9 +47,9 @@ const useCustomTooltip = <T extends keyof ChartTypeRegistry>(chart?: RefObject<C
     callbacks: {
       beforeBody: (items) => {
         const { label: itemLabel, raw } = items[0] ?? {};
-        setData({ label: itemLabel, value: raw as number })
+        setData({ label: itemLabel, data: raw as D })
         return '';
-      }
+      },
     },
     enabled: false,
     position: 'nearest',
@@ -59,12 +57,12 @@ const useCustomTooltip = <T extends keyof ChartTypeRegistry>(chart?: RefObject<C
   }), [tooltip]);
   
   return {
+    data,
     label,
     tooltip,
     plugin,
     setData,
-    styles: tooltipStyles,
-    value
+    styles: tooltipStyles
   }
 }
 

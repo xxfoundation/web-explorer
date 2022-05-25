@@ -10,18 +10,14 @@ import { LightTooltipHeader, LightTooltip } from '../Tooltips';
 import useCustomTooltip from '../../hooks/useCustomTooltip';
 
 type Options = ChartProps<'doughnut'>['options'];
+type Data = { name: string, color: string, value: number, percentage: number };
 
-const sampleCustomData = [
-  { name: 'circulation', color: '#13EEF9', value: 162301, percentage: 6, title: true, id: 'stakeable' },
-  { name: 'vesting',  color: '#00A2D6', value: 80156, percentage: 49, id: 'stakeable-foundation' },
-  { name: 'rewards', color: '#6F74FF', value: 162301, percentage: 39, title: true, id: 'unstakeable' },
-  { name: 'others', color: '#59BD1C', value: 82145, percentage: 6, id: 'unstakeable-team' }
+const sampleCustomData: Data[] = [
+  { name: 'circulation', color: '#13EEF9', value: 162301, percentage: 6 },
+  { name: 'vesting',  color: '#00A2D6', value: 80156, percentage: 49 },
+  { name: 'rewards', color: '#6F74FF', value: 162301, percentage: 39 },
+  { name: 'others', color: '#59BD1C', value: 82145, percentage: 6 }
 ];
-
-const secondData = {
-  backgroundColor: ['#FFC908', '#EAEAEA'],
-  data: [10, 90]
-};
 
 const legendData = sampleCustomData.map(({ color, name, percentage }) => ({
   label: `${percentage}% ${name}`,
@@ -31,16 +27,18 @@ const legendData = sampleCustomData.map(({ color, name, percentage }) => ({
   color: '#FFC908'
 }])
 
-const data: ChartProps<'doughnut'>['data'] = {
-  labels: sampleCustomData.map((s) => s.name),
+const data: ChartProps<'doughnut', Data[]>['data'] = {
   datasets: [{
     backgroundColor: sampleCustomData.map((s) => s.color),
-    data: sampleCustomData.map((s) => s.percentage)
-  }, secondData],
+    data: sampleCustomData
+  }, {
+    backgroundColor: ['#FFC908', '#EAEAEA'],
+    data: [{ name: 'staking supply', color: '#FFC908', value: 16620319, percentage: 14 }, { name: 'Other', color: 'grey', percentage: 86, value: 102096250 }]
+  }],
 };
 
 const TotalIssuance = () => {
-  const chartRef = useRef<ChartJSOrUndefined<'doughnut', number[], unknown>>(null);
+  const chartRef = useRef<ChartJSOrUndefined<'doughnut', Data[]>>(null);
   const customTooltip = useCustomTooltip(chartRef);
 
   const chartOptions = useMemo<Options>(() => ({
@@ -48,6 +46,10 @@ const TotalIssuance = () => {
     responsive: true,
     plugins: {
       tooltip: customTooltip.plugin
+    },
+    parsing: {
+      xAxisKey: 'name',
+      yAxisKey: 'percentage',
     }
   }), [customTooltip.plugin]);
 
@@ -57,8 +59,9 @@ const TotalIssuance = () => {
         <Doughnut ref={chartRef} options={chartOptions} data={data}/>
         <LightTooltip style={customTooltip.styles}>
           <LightTooltipHeader>
-            {customTooltip.label} {customTooltip.value}%
+            {customTooltip.data?.name} {customTooltip.data?.percentage}%
           </LightTooltipHeader>
+          <FormatBalance value={customTooltip.data?.value.toString()} />
         </LightTooltip>
       </Box>
       <Stack

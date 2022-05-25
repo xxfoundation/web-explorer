@@ -47,7 +47,7 @@ const StakingSupply: FC = () => {
         <Doughnut ref={chartRef} options={chartOptions} data={data}/>
         <LightTooltip style={customTooltip.styles}>
           <LightTooltipHeader>
-            {customTooltip.label} {customTooltip.value}%
+            {customTooltip.label} {customTooltip.data}%
           </LightTooltipHeader>
         </LightTooltip>
       </Box>
