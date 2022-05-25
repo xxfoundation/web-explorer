@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import { GetRankingByAccountId } from './ranking.schema';
 import { TotalOfItems } from './types';
 
 export type GetAccountIdentityByAddressType = {
@@ -36,7 +35,7 @@ export type GetAccountByAddressType = {
     timestamp: number;
     totalBalance: number;
   };
-} & GetRankingByAccountId;
+};
 
 export const GET_ACCOUNT_BY_PK = gql`
   query GetAccountByPK($accountId: String!) {
