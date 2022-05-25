@@ -1,15 +1,18 @@
 import React, { FC, useMemo } from 'react';
 import PaperWrapStyled from '../../../../components/Paper/PaperWrap.styled';
-import { AccountType } from '../../types';
+import { Account } from '../../../../schemas/accounts.schema';
 import FullIdentity from './FullIdentity';
 import ShortIdentity from './ShortIdentity';
+import { Identity } from './types';
 
-const IdentityCard: FC<{ account: AccountType }> = ({ account }) => {
+const IdentityCard: FC<{ account: Account }> = ({ account }) => {
   const IdentityDisplay = useMemo(() => {
-    if (account.roles.includes('validator') || account.roles.includes('nominator')) {
-      return <FullIdentity account={account} />;
+    const identity: Identity = account.identity ? JSON.parse(account.identity) : {};
+    const roles = account.roles || [];
+    if (roles.includes('validator') || roles.includes('nominator')) {
+      return <FullIdentity account={account} identity={identity} />;
     }
-    return <ShortIdentity account={account} />;
+    return <ShortIdentity account={account} identity={identity} />;
   }, [account]);
 
   return (

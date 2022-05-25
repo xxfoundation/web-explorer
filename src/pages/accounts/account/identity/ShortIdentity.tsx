@@ -14,7 +14,8 @@ import {
 import React, { FC } from 'react';
 import CopyButton from '../../../../components/buttons/CopyButton';
 import Socials from '../../../../components/Socials';
-import { AccountType } from '../../types';
+import { Account } from '../../../../schemas/accounts.schema';
+import { Identity } from './types';
 
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -24,7 +25,9 @@ const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 });
 
-const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
+const publicKey = '?????';
+
+const IdentityMobile: FC<{ account: Account; identity: Identity }> = ({ account, identity }) => {
   return (
     <Stack
       sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' } }}
@@ -48,18 +51,18 @@ const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
             <CustomWidthTooltip
               title={
                 <Stack direction={'row'} spacing={1} alignItems={'center'}>
-                  <Typography variant='body5'>{account.address}</Typography>
-                  <CopyButton value={account.address} />
+                  <Typography variant='body5'>{account.id}</Typography>
+                  <CopyButton value={account.id} />
                 </Stack>
               }
               placement='top'
               arrow
             >
               <span>
-                <CopyButton value={account.address} />
+                <CopyButton value={account.id} />
               </span>
             </CustomWidthTooltip>
-            <Tooltip title={`public key: ${account.publicKey}`} arrow placement='top'>
+            <Tooltip title={`public key: ${publicKey}`} arrow placement='top'>
               <KeyIcon color='primary' sx={{ transform: 'rotate(90deg)' }} />
             </Tooltip>
           </Box>
@@ -69,7 +72,7 @@ const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
         <Socials
           socials={{
             github: '#hey',
-            twitter: account.twitter || '#blah',
+            twitter: identity.twitter || '#blah',
             telegram: '#yo',
             discord: '#sup'
           }}
@@ -79,7 +82,7 @@ const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
   );
 };
 
-const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
+const IdentityDesktop: FC<{ account: Account; identity: Identity }> = ({ account, identity }) => {
   return (
     <Grid container sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
       <Grid item md={8}>
@@ -99,18 +102,18 @@ const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
           <CustomWidthTooltip
             title={
               <Stack direction={'row'} spacing={1} alignItems={'center'}>
-                <Typography variant='body5'>{account.address}</Typography>
-                <CopyButton value={account.address} />
+                <Typography variant='body5'>{account.id}</Typography>
+                <CopyButton value={account.id} />
               </Stack>
             }
             placement='top'
             arrow
           >
             <span>
-              <CopyButton value={account.address} />
+              <CopyButton value={account.id} />
             </span>
           </CustomWidthTooltip>
-          <Tooltip title={`public key: ${account.publicKey}`} arrow placement='top'>
+          <Tooltip title={`public key: ${publicKey}`} arrow placement='top'>
             <KeyIcon color='primary' sx={{ transform: 'rotate(90deg)' }} />
           </Tooltip>
         </Stack>
@@ -119,7 +122,7 @@ const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
         <Socials
           socials={{
             github: '#hey',
-            twitter: account.twitter || '#',
+            twitter: identity.twitter || '#',
             telegram: '#yo',
             discord: '#sup'
           }}
@@ -129,11 +132,11 @@ const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
   );
 };
 
-const ShortIdentity: FC<{ account: AccountType }> = ({ account }) => {
+const ShortIdentity: FC<{ account: Account; identity: Identity }> = ({ account, identity }) => {
   return (
     <>
-      <IdentityMobile account={account} />
-      <IdentityDesktop account={account} />
+      <IdentityMobile account={account} identity={identity} />
+      <IdentityDesktop account={account} identity={identity} />
     </>
   );
 };

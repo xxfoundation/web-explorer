@@ -1,102 +1,94 @@
-import { Container, Grid, Typography } from '@mui/material';
-import React, { FC, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { Container, Grid, Skeleton, Typography } from '@mui/material';
+import React, { FC } from 'react';
+import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import BalanceCard from './account/Balance';
-import BlockchainCard from './account/blockchain';
+import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
+import { GetAccountByAddress, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
+import { GetRankingByAccountId, GET_RANKING_BY_ACCOUNT_ID } from '../../schemas/ranking.schema';
+import NotFound from '../NotFound';
 import IdentityCard from './account/identity';
-import Info from './account/Info';
-import PerformanceCard from './account/performance';
-import StakingCard from './account/staking';
-import { AccountType } from './types';
 
-const sampleAccount: AccountType = {
-  address: '6a7YefNJArBVBBVzdMdJ5V4giafmBdfhwi7DiAcxseKA2zbt',
-  roles: ['nominator'],
-  stash: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
-  controller: '15a9ScnYeVfQGL9HQtTn3nkUY1DTB8LzEX391yZvFRzJZ9V7',
-  id: '0x6d6f646c43726f77646c6f610000000000000000',
-  publicKey: '0x165161616161',
+// const useTestRole = (): Roles[] => {
+//   const { search } = useLocation();
+//   const query = useMemo(() => new URLSearchParams(search), [search]);
+//   const rolesquery = query.get('roles');
+//   return (rolesquery ? rolesquery.split(',') : ['nominators']) as Roles[];
+// };
 
-  rank: 1,
-  transactions: 123,
-  lockedCoin: '000000',
-  balance: {
-    transferable: '123231200000'
-  },
-  reserved: {
-    bonded: '234565',
-    unbonding: '2144',
-    democracy: '234',
-    election: '234',
-    vesting: '2342'
-  },
-  locked: {
-    bonded: '6772',
-    unbonding: '3',
-    democracy: '5',
-    election: '76',
-    vesting: '32'
-  },
+const useGetAccount = (
+  accountId: string
+): {
+  data?: { account: GetAccountByAddress['account']; ranking?: GetRankingByAccountId['ranking'] };
+  loading: boolean;
+} => {
+  const accountResult = useQuery<GetAccountByAddress>(GET_ACCOUNT_BY_PK, {
+    variables: { accountId }
+  });
 
-  era: 800,
-  firstValidatorEra: 800,
+  const rankingResult = useQuery<GetRankingByAccountId>(GET_RANKING_BY_ACCOUNT_ID, {
+    variables: {
+      blockHeight: accountResult.data?.account.blockHeight,
+      stashAddress: accountResult.data?.account.id
+    },
+    skip: accountResult.loading || !accountResult.data?.account.roles?.includes('validator')
+  });
 
-  latestSlashes: 0,
-  holderSlashes: 1,
-
-  nominators: 100,
-
-  eraPoints: 0,
-
-  averageCommission: 99.9,
-
-  democracy: {
-    councilMember: false,
-    proposalVoteForCouncil: 1,
-    proposalVotePerMonth: 0,
-    missedProposals: 13213,
-    latestNumberOfVotes: 0
-  },
-
-  legalName: 'aaaaa',
-  displayName: 'Display name',
-  blurb:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ultrices aliquet est ac consequat. Quisque tincidunt tellus at dapibus lacinia. Etiam gravida pulvinar vestibulum.',
-  riotName: '@jacogr:matrix.parity.io',
-  website: 'http://github/jacobgr',
-  email: 'test@elixxir.io',
-  twitter: 'xx_network',
-  judgement: 'Known Good'
-};
-
-function useQuery() {
-  const { search } = useLocation();
-  return useMemo(() => new URLSearchParams(search), [search]);
-}
-
-const AccountId: FC = () => {
-  // TODO remove code in development tests
-  const query = useQuery();
-  const rolesquery = query.get('roles');
-  if (rolesquery) {
-    sampleAccount.roles = rolesquery.split(',') as AccountType['roles'];
+  const loading = accountResult.loading || rankingResult.loading;
+  if (loading) {
+    return { loading: true };
   }
 
+  if (accountResult.data?.account.roles?.includes('validator')) {
+    return {
+      data: {
+        account: accountResult.data?.account,
+        ranking: rankingResult.data?.ranking
+      },
+      loading: false
+    };
+  }
+
+  return accountResult;
+};
+
+const AccountId: FC = ({}) => {
+  const { accountId } = useParams<{ accountId: string }>();
+  const { data, loading } = useGetAccount(accountId);
+  // const role = useTestRole();
+  if (loading)
+    return (
+      <Container sx={{ my: 5 }}>
+        <Typography>
+          <Skeleton />
+        </Typography>
+        <Typography variant='h1'>
+          <Skeleton />
+        </Typography>
+        <Grid container spacing={3} marginTop='5px'>
+          <Grid item xs={12}>
+            <PaperWrapStyled sx={{ maxWidth: '1142px', height: 'fit-content' }}>
+              <Skeleton />
+            </PaperWrapStyled>
+          </Grid>
+        </Grid>
+      </Container>
+    );
+  if (!data?.account) return <NotFound />;
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Typography variant='h1'>{sampleAccount.displayName}</Typography>
+      <Typography variant='h1'>{data.account.identityDisplay || accountId}</Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
-          <IdentityCard account={sampleAccount} />
+          <IdentityCard account={data.account} />
         </Grid>
-        <Grid item xs={12} md={6}>
+        {/* <Grid item xs={12} md={6}>
           <BalanceCard
-            balance={sampleAccount.balance}
+            balance={JSON.parse(data.account.balances)}
             reserved={sampleAccount.reserved}
             locked={sampleAccount.locked}
-          />
+          /> 
         </Grid>
         <Grid item xs={12} md={6}>
           <Info createdDate={1652101618} nonce={23} roles={sampleAccount.roles} />
@@ -106,13 +98,13 @@ const AccountId: FC = () => {
         </Grid>
         {/* <Grid item xs={12}>
           <GovernanceCard roles={sampleAccount.roles} />
-        </Grid> */}
+        </Grid> 
         <Grid item xs={12}>
           <StakingCard roles={sampleAccount.roles} />
         </Grid>
         <Grid item xs={12}>
           <PerformanceCard account={sampleAccount} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );

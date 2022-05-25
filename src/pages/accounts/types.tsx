@@ -1,10 +1,35 @@
 import BN from 'bn.js';
 import { ReactNode } from 'react';
 
-export type Roles = 'validator' | 'nominator' | 'council' | 'technical committee' | 'treasury';
-
 export type BalanceType = {
-  transferable: string | BN;
+  accountId: string;
+  accountNonce?: string;
+  additional?: [];
+  freeBalance?: string;
+  frozenFee?: string;
+  frozenMisc?: string;
+  reservedBalance?: string;
+  votingBalance?: string;
+  availableBalance?: string;
+  lockedBalance?: string;
+  lockedBreakdown?: {
+    id: string;
+    amount: number;
+    reasons: string | 'Misc' | 'All';
+  }[];
+  vestingLocked?: string;
+  isVesting?: boolean;
+  vestedBalance?: string;
+  vestedClaimable?: string;
+  vesting?: {
+    endBlock: string;
+    locked: string;
+    perBlock: string;
+    startingBlock: string;
+    vested: string;
+  }[];
+  vestingTotal?: string;
+  namedReserves: [][];
 };
 
 export type LockedBalanceType = {
@@ -34,47 +59,6 @@ export type AccountIdentityFields = {
   judgement?: Judgements;
   parentIdentity?: string[];
   childrenIdentity?: string[];
-};
-
-export type AccountType = AccountIdentityFields & {
-  id: string;
-  address: string;
-  publicKey: string;
-  stash: string;
-  controller: string;
-  roles: Roles[];
-
-  rank: number;
-  transactions: number;
-  lockedCoin: string | BN;
-
-  balance: BalanceType;
-  reserved: LockedBalanceType;
-  locked: LockedBalanceType;
-
-  era: number;
-
-  // validator fields?
-  firstValidatorEra?: number;
-  latestSlashes?: number;
-  holderSlashes?: number;
-
-  nominators?: number;
-
-  eraPoints?: number;
-
-  averageCommission?: number;
-
-  frequencyOfRewards?: number;
-  unclaimedRewards?: number;
-
-  democracy?: {
-    latestNumberOfVotes: number;
-    proposalVotePerMonth: number;
-    proposalVoteForCouncil: number;
-    missedProposals: number;
-    councilMember: boolean;
-  };
 };
 
 export type MetricsType =
