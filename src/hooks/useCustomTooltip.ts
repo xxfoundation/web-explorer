@@ -12,7 +12,9 @@ type CustomTooltip<T extends keyof ChartTypeRegistry> = Plugin<T>['external'];
 type PluginOptions<T extends keyof ChartTypeRegistry> = DeepPartial<Plugin<T>>;
 type DataState<D> = { data?: D, label?: string };
 
-const useCustomTooltip = <T extends keyof ChartTypeRegistry, D>(chart?: RefObject<ChartJSOrUndefined<T, D[], unknown>>) => {
+const useCustomTooltip = <T extends keyof ChartTypeRegistry, D>(
+  chart?: RefObject<ChartJSOrUndefined<T, D[], unknown>>
+) => {
   const [tooltipStyles, setTooltipStyles] = useState<CSSProperties>({
     opacity: 0,
     left: 0,
