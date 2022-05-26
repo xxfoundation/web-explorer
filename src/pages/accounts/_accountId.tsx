@@ -7,7 +7,10 @@ import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import { GetAccountByAddress, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
 import { GetRankingByAccountId, GET_RANKING_BY_ACCOUNT_ID } from '../../schemas/ranking.schema';
 import NotFound from '../NotFound';
+import BalanceCard from './account/Balance';
+import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
+import Info from './account/Info';
 
 // const useTestRole = (): Roles[] => {
 //   const { search } = useLocation();
@@ -83,18 +86,19 @@ const AccountId: FC = ({}) => {
         <Grid item xs={12}>
           <IdentityCard account={data.account} />
         </Grid>
-        {/* <Grid item xs={12} md={6}>
-          <BalanceCard
-            balance={JSON.parse(data.account.balances)}
-            reserved={sampleAccount.reserved}
-            locked={sampleAccount.locked}
-          /> 
-        </Grid>
         <Grid item xs={12} md={6}>
-          <Info createdDate={1652101618} nonce={23} roles={sampleAccount.roles} />
+          <BalanceCard account={data.account} />
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Info
+            createdDate={1652101618}
+            nonce={data.account.nonce}
+            roles={data.account.roles || ['???', '????']}
+          />
         </Grid>
         <Grid item xs={12}>
-          <BlockchainCard roles={sampleAccount.roles} />
+          <BlockchainCard roles={[]} />
         </Grid>
         {/* <Grid item xs={12}>
           <GovernanceCard roles={sampleAccount.roles} />

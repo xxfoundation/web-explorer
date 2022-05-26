@@ -12,8 +12,9 @@ import {
 import React, { FC } from 'react';
 import FormatBalance from '../../../components/FormatBalance';
 import PaperStyled from '../../../components/Paper/PaperWrap.styled';
+import { Account } from '../../../schemas/accounts.schema';
 import { theme } from '../../../themes/default';
-import { BalanceType, LockedBalanceType } from '../types';
+import { BalanceType } from '../types';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -72,51 +73,51 @@ const TooltipLineBody = styled(Typography)(({}) => ({
   letterSpacing: '1px'
 }));
 
-const BalanceTooltipContent: FC<{ data: BalanceType }> = ({ data }) => {
+const TransferableBalanceTooltipContent: FC<{ balance: number }> = ({ balance }) => {
   return (
     <TooltipBody>
       <TooltipStack>
         <TooltipLineHeader>transferable</TooltipLineHeader>
         <TooltipLineBody>
-          <FormatBalance value={data.transferable} />
+          <FormatBalance value={balance.toString()} />
         </TooltipLineBody>
       </TooltipStack>
     </TooltipBody>
   );
 };
 
-const LockedTooltipContent: FC<{ data: LockedBalanceType }> = ({ data }) => {
+const LockedTooltipContent: FC<{ balance: BalanceType }> = ({ balance }) => {
   return (
     <>
       <TooltipBody>
-        <TooltipStack>
+        {/* <TooltipStack>
           <TooltipLineHeader>bonded</TooltipLineHeader>
           <TooltipLineBody>
             <FormatBalance value={data.bonded} />
           </TooltipLineBody>
-        </TooltipStack>
-        <TooltipStack>
+        </TooltipStack> */}
+        {/* <TooltipStack>
           <TooltipLineHeader>unbonding</TooltipLineHeader>
           <TooltipLineBody>
             <FormatBalance value={data.unbonding} />
           </TooltipLineBody>
-        </TooltipStack>
-        <TooltipStack>
+        </TooltipStack> */}
+        {/* <TooltipStack>
           <TooltipLineHeader>democracy</TooltipLineHeader>
           <TooltipLineBody>
             <FormatBalance value={data.democracy} />
           </TooltipLineBody>
-        </TooltipStack>
-        <TooltipStack>
+        </TooltipStack> */}
+        {/* <TooltipStack>
           <TooltipLineHeader>election</TooltipLineHeader>
           <TooltipLineBody>
             <FormatBalance value={data.unbonding} />
           </TooltipLineBody>
-        </TooltipStack>
+        </TooltipStack> */}
         <TooltipStack>
           <TooltipLineHeader>vesting</TooltipLineHeader>
           <TooltipLineBody>
-            <FormatBalance value={data.vesting} />
+            {balance.vestedBalance ? <FormatBalance value={balance.vestedBalance} /> : '-'}
           </TooltipLineBody>
         </TooltipStack>
       </TooltipBody>
@@ -129,33 +130,25 @@ const LockedTooltipContent: FC<{ data: LockedBalanceType }> = ({ data }) => {
   );
 };
 
-const sumBalance = (balance: LockedBalanceType) => {
-  const resultSum =
-    Number(balance.bonded) +
-    Number(balance.democracy) +
-    Number(balance.election) +
-    Number(balance.unbonding) +
-    Number(balance.vesting);
-  return <FormatBalance value={resultSum.toString()} />;
-};
-
 const Balance: FC<{
-  balance: BalanceType;
-  reserved: LockedBalanceType;
-  locked: LockedBalanceType;
-}> = ({ balance, locked, reserved }) => {
+  account: Account;
+}> = ({ account }) => {
+  const balance: BalanceType = JSON.parse(account.balances);
   return (
     <PaperStyled>
       <InfoCardRow>
         <Box width='110px'>
-          <CustomTooltip title={<BalanceTooltipContent data={balance} />} placement='bottom-start'>
+          <CustomTooltip
+            title={<TransferableBalanceTooltipContent balance={account.availableBalance} />}
+            placement='bottom-start'
+          >
             <CardHeaderButton size='small'>
               <TypographyHeader>balance</TypographyHeader>
             </CardHeaderButton>
           </CustomTooltip>
         </Box>
         <TypographyBody>
-          <FormatBalance value={balance.transferable} />
+          <FormatBalance value={account.availableBalance.toString()} />
         </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
@@ -165,7 +158,7 @@ const Balance: FC<{
             sx={{
               ':hover': {
                 backgroundColor: 'inherit',
-                cursor: 'default',
+                cursor: 'default'
               }
             }}
             disableRipple
@@ -175,17 +168,21 @@ const Balance: FC<{
             <TypographyHeader>reserved</TypographyHeader>
           </Button>
         </Box>
-        <TypographyBody>{sumBalance(reserved)}</TypographyBody>
+        <TypographyBody>
+          <FormatBalance value={account.reservedBalance.toString()} />
+        </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
         <Box width='110px'>
-          <CustomTooltip title={<LockedTooltipContent data={locked} />} placement='right-start'>
+          <CustomTooltip title={<LockedTooltipContent balance={balance} />} placement='right-start'>
             <CardHeaderButton size='small'>
               <TypographyHeader>locked</TypographyHeader>
             </CardHeaderButton>
           </CustomTooltip>
         </Box>
-        <TypographyBody>{sumBalance(locked)}</TypographyBody>
+        <TypographyBody>
+          <FormatBalance value={account.lockedBalance.toString()} />
+        </TypographyBody>
       </InfoCardRow>
     </PaperStyled>
   );

@@ -23,22 +23,21 @@ export const GET_ACCOUNT_IDENTITY_BY_ADDRESS = gql`
 
 export type Account = {
   id: string;
-  availableBalance: number;
-  balances: string;
   blockHeight: number;
-  freeBalance: number;
   identity: string;
   identityDisplay: string;
   identityDisplayParent: string;
-  lockedBalance: number;
   nonce: number;
-  reservedBalance: number;
   timestamp: number;
+  balances: string;
+
+  availableBalance: number;
+  freeBalance: number;
+  lockedBalance: number;
+  reservedBalance: number;
   totalBalance: number;
 
   // madeup fields
-  rank?: number;
-  transactions?: number[];
   roles?: Roles[];
 };
 
@@ -49,17 +48,18 @@ export type GetAccountByAddress = {
 export const ACCOUNT_BY_PK_FRAGMENT = gql`
   fragment account on account {
     id: account_id
-    availableBalance: available_balance
-    balances
     blockHeight: block_height
-    freeBalance: free_balance
     identity
     identityDisplay: identity_display
     identityDisplayParent: identity_display_parent
-    lockedBalance: locked_balance
     nonce
-    reservedBalance: reserved_balance
     timestamp
+    balances
+
+    availableBalance: available_balance
+    freeBalance: free_balance
+    lockedBalance: locked_balance
+    reservedBalance: reserved_balance
     totalBalance: total_balance
   }
 `;

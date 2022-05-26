@@ -3,14 +3,9 @@ import { Box, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../components/Paper/PaperWrap.styled';
 import Tag from '../../../components/Tags/Tag';
-import TimeAgoComponent from '../../../components/TimeAgo';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
-const Info: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
-  createdDate,
-  nonce,
-  roles
-}) => {
+const Info: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({ nonce, roles }) => {
   const rolesTags = useMemo(() => {
     return roles.map((role, index) => (
       <Tag key={role} filled sx={{ marginLeft: index !== 0 ? '8px' : '0' }}>
@@ -25,7 +20,8 @@ const Info: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
       <InfoCardRow sx={{ paddingY: '4px' }}>
         <TypographyHeader sx={{ width: '110px' }}>created</TypographyHeader>
         <TypographyBody>
-          <TimeAgoComponent date={createdDate} />
+          {/* <TimeAgoComponent date={createdDate} /> */}
+          ??????
         </TypographyBody>
       </InfoCardRow>
       <InfoCardRow sx={{ paddingY: '4px' }}>

@@ -1,4 +1,3 @@
-import BN from 'bn.js';
 import { ReactNode } from 'react';
 
 export type BalanceType = {
@@ -30,14 +29,6 @@ export type BalanceType = {
   }[];
   vestingTotal?: string;
   namedReserves: [][];
-};
-
-export type LockedBalanceType = {
-  bonded: string | BN;
-  unbonding: string | BN;
-  democracy: string | BN;
-  election: string | BN;
-  vesting: string | BN;
 };
 
 type Judgements =
