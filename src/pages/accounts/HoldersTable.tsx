@@ -63,7 +63,7 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
   ];
 };
 
-const useHeaders = () => {
+const useHeaders = (): [BaselineCell[], Record<Roles, boolean>] => {
   const [sortVariables, setSortVariables] = useState<Record<Roles, boolean>>({
     validator: false,
     nominator: false,
@@ -72,19 +72,22 @@ const useHeaders = () => {
     treasury: false
   });
   return [
-    { value: 'rank' },
-    { value: 'account' },
-    { value: 'transactions' },
-    {
-      value: (
-        <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>
-          role
-        </HoldersRolesFilters>
-      ),
-      props: { colSpan: 2 }
-    },
-    { value: 'locked xx coin' },
-    { value: 'balance xx' }
+    [
+      { value: 'rank' },
+      { value: 'account' },
+      { value: 'transactions' },
+      {
+        value: (
+          <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>
+            role
+          </HoldersRolesFilters>
+        ),
+        props: { colSpan: 2 }
+      },
+      { value: 'locked xx coin' },
+      { value: 'balance xx' }
+    ],
+    sortVariables
   ];
 };
 
@@ -101,8 +104,7 @@ const HoldersTable: FC = () => {
     rowsPerPage: 20,
     cursorField: 'timestamp'
   });
-  // FIXME handle the rank
-  const headers: BaselineCell[] = useHeaders();
+  const [headers] = useHeaders();
   const variables = useMemo(
     () => ({
       limit,
