@@ -11,11 +11,19 @@ import RolesTable from './RolesTable';
 
 const extrinsicTab = {
   label: <TabText message={'Extrinsic'} count={0} />,
-  content: <BlockExtrinsics />
+  content: (
+    <BlockExtrinsics
+      where={{
+        block_number: {
+          _eq: 2597151
+        }
+      }}
+    />
+  )
 };
 
 const transfersTab = {
-  label: <TabText message='Tranfers' count={0} />,
+  label: <TabText message='Transfers' count={0} />,
   content: <TransferTable />
 };
 

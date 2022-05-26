@@ -1,7 +1,7 @@
 import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types';
 
 import React, { useRef, useMemo } from 'react';
-import { Doughnut }  from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import { Box, Stack } from '@mui/material'
 import Legend from './Legend';
 import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typographies';
@@ -14,7 +14,7 @@ type Data = { name: string, color: string, value: number, percentage: number };
 
 const sampleCustomData: Data[] = [
   { name: 'circulation', color: '#13EEF9', value: 162301, percentage: 6 },
-  { name: 'vesting',  color: '#00A2D6', value: 80156, percentage: 49 },
+  { name: 'vesting', color: '#00A2D6', value: 80156, percentage: 49 },
   { name: 'rewards', color: '#6F74FF', value: 162301, percentage: 39 },
   { name: 'others', color: '#59BD1C', value: 82145, percentage: 6 }
 ];
@@ -55,13 +55,13 @@ const TotalIssuance = () => {
 
   return (
     <Stack direction='row' spacing={3} sx={{ flexGrow: 1 }}>
-      <Box className='chart-container' style={{  width: '50%', flexGrow: 1, position: 'relative' }}>
-        <Doughnut ref={chartRef} options={chartOptions} data={data}/>
+      <Box className='chart-container' style={{ width: '50%', flexGrow: 1, position: 'relative' }}>
+        <Doughnut ref={chartRef} options={chartOptions} data={data} />
         <LightTooltip style={customTooltip.styles}>
           <LightTooltipHeader>
             {customTooltip.data?.name} {customTooltip.data?.percentage}%
           </LightTooltipHeader>
-          <FormatBalance value={customTooltip.data?.value.toString()} />
+          <FormatBalance value={customTooltip.data?.value.toString() || ''} />
         </LightTooltip>
       </Box>
       <Stack

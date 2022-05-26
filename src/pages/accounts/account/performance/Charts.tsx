@@ -1,8 +1,8 @@
 import { Grid } from '@mui/material';
 import React, { FC } from 'react';
-import { formatPercent } from '../../../../components/blockchain/charts/formatters';
-import PaperWithHeader from '../../../../components/blockchain/PaperWithHeader';
+import { formatPercent } from '../../../../components/charts/formatters';
 import { LineChart } from '../../../../components/charts/highcharts';
+import DefaultTile from '../../../../components/DefaultTile';
 import { DataPoint } from '../../../../types';
 
 const sampleDataEra: DataPoint[] = [
@@ -30,29 +30,29 @@ const Charts: FC = () => {
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} md={6}>
-        <PaperWithHeader header={'relative performance'}>
+        <DefaultTile header={'relative performance'}>
           <LineChart data={sampleDataRelativePerformance} />
-        </PaperWithHeader>
+        </DefaultTile>
       </Grid>
       <Grid item xs={12} md={6}>
-        <PaperWithHeader header={'era points'}>
+        <DefaultTile header={'era points'}>
           <LineChart data={sampleDataEra} />
-        </PaperWithHeader>
+        </DefaultTile>
       </Grid>
       <Grid item xs={12} md={6}>
-        <PaperWithHeader header={'commission'}>
+        <DefaultTile header={'commission'}>
           <LineChart
             data={sampleDataCommission}
             labelFormatters={{
               yAxis: formatPercent
             }}
           />
-        </PaperWithHeader>
+        </DefaultTile>
       </Grid>
       <Grid item xs={12} md={6}>
-        <PaperWithHeader header={'elected self stake'}>
+        <DefaultTile header={'elected self stake'}>
           <LineChart data={sampleDataElectedSelfStake} />
-        </PaperWithHeader>
+        </DefaultTile>
       </Grid>
     </Grid>
   );

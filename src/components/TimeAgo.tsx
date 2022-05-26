@@ -8,7 +8,7 @@ const overrides: Partial<Record<Unit, string>> = {
   'minute': 'min'
 };
 
-const defaultFormat = 'llll Z';
+const defaultFormat = 'll LTS Z';
 
 const formatterOverride: Formatter = (value, unit, suffix) => {
   const unitOverride = overrides[unit] ?? unit;

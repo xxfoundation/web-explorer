@@ -16,7 +16,7 @@ type Props = {
   linkName?: string;
 };
 
-const PaperWithHeader: FC<Props> = ({ children, hasDivider, header, height, linkAddress, linkName }) => (
+const DefaultTile: FC<Props> = ({ children, hasDivider, header, height, linkAddress, linkName }) => (
   <PaperWrap sx={{}}>
     {(header || linkName) && (
       <>
@@ -55,4 +55,4 @@ const PaperWithHeader: FC<Props> = ({ children, hasDivider, header, height, link
   </PaperWrap>
 );
 
-export default PaperWithHeader;
+export default DefaultTile;
