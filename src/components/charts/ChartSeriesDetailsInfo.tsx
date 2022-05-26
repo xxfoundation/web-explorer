@@ -1,8 +1,8 @@
-import type { CustomData, CustomPointOptions } from './types';
 import CloseIcon from '@mui/icons-material/Close';
 import { Grid, IconButton, Stack, styled, Typography } from '@mui/material';
-import { default as React, FC, useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import FormatBalance from '../FormatBalance';
+import type { CustomData, CustomPointOptions } from './types';
 
 const LegendTypographyHeader = styled(Typography)(({ theme: th }) => {
   return {

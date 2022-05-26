@@ -1,4 +1,3 @@
-import type { CustomPointOptions } from './types';
 import {
   Popover,
   PopoverProps,
@@ -9,9 +8,10 @@ import {
   tooltipClasses,
   TooltipProps
 } from '@mui/material';
-import { default as React, FC } from 'react';
+import React, { FC } from 'react';
 import { theme } from '../../themes/default';
 import ChartSeriesDetailsInfo from './ChartSeriesDetailsInfo';
+import type { CustomPointOptions } from './types';
 
 type ChartClickModalProps = {
   data: CustomPointOptions;

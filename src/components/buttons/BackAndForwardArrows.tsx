@@ -1,7 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { ButtonGroup, IconButton, IconButtonProps } from '@mui/material';
-import { default as React, FC } from 'react';
+import React, { FC } from 'react';
 
 export const BackAndForwardArrows: FC<{ back: IconButtonProps; forward: IconButtonProps }> = ({
   back,
