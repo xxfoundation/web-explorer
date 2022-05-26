@@ -11,20 +11,6 @@ import scoreEvaluator from './scoreEvaluator';
 import ScoreIcon from './ScoreIcons';
 import getTooltipConfiguration from './tooltipConfiguration';
 
-// const metrics: MetricsType[] = ['identity'];
-const metrics: MetricsType[] = [
-  'identity',
-  'address creation',
-  'slashes',
-  'subaccounts',
-  'nominators',
-  'era points',
-  'commission',
-  'frequency of payouts',
-  'governance',
-  'validator time'
-];
-
 const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: string }> = ({
   description,
   metric,
@@ -78,14 +64,10 @@ const MetricCards: FC<{ account: Account; ranking: CommonFieldsRankingFragment }
   account
 }) => {
   const scoreTiles = useMemo(() => {
-    const validationResult = scoreEvaluator(account);
-    return metrics.map((metric, index) => {
-      const result = validationResult[metric];
-      if (!result) return <></>;
-      const [score, description] = result;
+    return Object.entries(scoreEvaluator(account)).map(([metric, [score, description]], index) => {
       return (
         <Grid item xs={12} md={6} key={index}>
-          <ScoreTile metric={metric} score={score} description={description} />
+          <ScoreTile metric={metric as MetricsType} score={score} description={description} />
         </Grid>
       );
     });
