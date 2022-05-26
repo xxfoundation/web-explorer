@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import ApolloClient from './apolloClient';
 import App from './App';
 import './dayjs';
+import './charts';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 

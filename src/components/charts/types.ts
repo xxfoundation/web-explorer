@@ -1,4 +1,11 @@
-import { PointOptionsObject } from 'highcharts';
+declare module 'chart.js' {
+  interface TooltipPositionerMap {
+    myCustomPositioner: TooltipPositionerFunction<ChartType>;
+  }
+}
+
+
+import type { PointOptionsObject } from 'highcharts';
 
 export type PercentageValues = {
   team: {
@@ -19,12 +26,15 @@ export type CustomData = {
   title?: boolean;
 };
 
+
 export interface Custom {
   noClick?: boolean;
   hiddenLegend?: boolean;
   data?: CustomData[];
 }
 
+
 export interface CustomPointOptions extends PointOptionsObject {
   custom: Custom;
 }
+

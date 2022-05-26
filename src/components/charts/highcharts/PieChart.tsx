@@ -1,9 +1,9 @@
+import type { CustomPointOptions } from '../types';
 import { Grid } from '@mui/material';
 import BN from 'bn.js';
 import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC, useCallback, useMemo } from 'react';
-import { CustomPointOptions } from '../../blockchain/types';
 import ChartsLegends from '../ChartsLegends';
 import SeriesPopover from '../ChartsPopover';
 
