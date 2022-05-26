@@ -1,4 +1,3 @@
-import { PointOptionsObject } from 'highcharts';
 
 export type Block = {
   hash: string;
@@ -14,7 +13,7 @@ export type ListBlocks = {
   blocks: Block[];
 };
 
-export type Transference = {
+export type Transfer = {
   hash: string;
   blockNumber: number;
   extrinsicIndex: number;
@@ -28,35 +27,6 @@ export type Transference = {
   timestamp: number;
 };
 
-export type ListOfTransferences = {
-  transfers: Transference[];
+export type ListOfTransfers = {
+  transfers: Transfer[];
 };
-
-export type PercentageValues = {
-  team: {
-    value: number;
-    percentage: number;
-  };
-  foundation: {
-    value: number;
-    percentage: number;
-  };
-};
-
-export type CustomData = {
-  id: string;
-  name: string;
-  value: number;
-  percentage: number;
-  title?: boolean;
-};
-
-export interface Custom {
-  noClick?: boolean;
-  hiddenLegend?: boolean;
-  data?: CustomData[];
-}
-
-export interface CustomPointOptions extends PointOptionsObject {
-  custom: Custom;
-}

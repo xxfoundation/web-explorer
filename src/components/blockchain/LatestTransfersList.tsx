@@ -10,11 +10,11 @@ import FormatBalance from '../FormatBalance';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import { ListSkeleton } from './ListSkeleton';
-import type { ListOfTransferences, Transference } from './types';
+import type { ListOfTransfers, Transfer } from './types';
 
 const PAGE_LIMIT = 8;
 
-const ItemHandler: FC<Transference> = (props) => {
+const ItemHandler: FC<Transfer> = (props) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant='body2' sx={{ mb: 1 }}>
@@ -66,7 +66,7 @@ const ItemHandler: FC<Transference> = (props) => {
 };
 
 const LatestTransfersList = () => {
-  const { data, loading } = useSubscription<ListOfTransferences>(LISTEN_FOR_TRANSFERS_ORDERED, {
+  const { data, loading } = useSubscription<ListOfTransfers>(LISTEN_FOR_TRANSFERS_ORDERED, {
     variables: { limit: PAGE_LIMIT }
   });
   const content = useSubscriptionUpdater({

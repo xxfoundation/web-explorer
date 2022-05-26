@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import ProgressBar from './ProgressBar';
-import StakingSupplyChart from './StakingSupplyChart';
+import StakingSupplyChart from '../../components/charts/StakingSupplyDoughnutChart';
 
 const dividerMargins = { ml: 3, mr: 3, mt: 0, mb: 0 };
 
 export default () => (
   <Stack
-    direction={{ xs: 'column', md: 'row' }}>
+    direction={{ xs: 'column', md: 'row' }} spacing={3}>
     <Stack direction={{ xs: 'row', md: 'column' }} sx={{ justifyContent: 'space-between' }}>
       <Box>
         <Typography variant='h6'>
@@ -52,8 +52,8 @@ export default () => (
       </Box>
     </Stack>
     <Divider sx={dividerMargins} orientation='vertical' variant='middle' flexItem />
-    <Box>
-      <StakingSupplyChart id='staking-supply-chart' />
+    <Box width={400} height={180} sx={{ position: 'relative' }}>
+      <StakingSupplyChart />
     </Box>
   </Stack>
 )

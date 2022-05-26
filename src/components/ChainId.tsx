@@ -14,12 +14,12 @@ type IdProperties = {
 
 const contentRenderer = (
   text: string,
-  isvalid: boolean,
+  isValid: boolean,
   link?: IdProperties['link'],
   props?: TypographyProps
 ) => {
   return (
-    <Typography {...props} color={isvalid ? 'info' : 'red'}>
+    <Typography {...props} color={isValid ? 'info' : 'red'}>
       {link ? <Link to={link}>{text}</Link> : text}
     </Typography>
   );
@@ -32,7 +32,7 @@ const Hash: FC<IdProperties & { showTooltip?: boolean }> = ({
   value,
   ...props
 }) => {
-  const isvalid = HashValidator(value);
+  const isValid = HashValidator(value);
   const displayValue = truncated ? shortString(value) : value;
   if (showTooltip && truncated) {
     return (
@@ -45,11 +45,11 @@ const Hash: FC<IdProperties & { showTooltip?: boolean }> = ({
         placement='top'
         arrow
       >
-        {contentRenderer(displayValue, isvalid, link, props)}
+        {contentRenderer(displayValue, isValid, link, props)}
       </Tooltip>
     );
   }
-  return contentRenderer(displayValue, isvalid, link, props);
+  return contentRenderer(displayValue, isValid, link, props);
 };
 
 const Address: FC<
@@ -73,7 +73,7 @@ const Address: FC<
   }, [name, avatarUrl]);
 
   const content = useMemo(() => {
-    const isvalid = isValidXXNetworkAddress(value);
+    const isValid = isValidXXNetworkAddress(value);
     if (name) {
       return (
         <Tooltip
@@ -84,7 +84,7 @@ const Address: FC<
           }
           arrow
         >
-          {contentRenderer(name, isvalid, link, props)}
+          {contentRenderer(name, isValid, link, props)}
         </Tooltip>
       );
     } else {
@@ -97,10 +97,10 @@ const Address: FC<
           }
           arrow
         >
-          {contentRenderer(truncated ? shortString(value) : value, isvalid, link, props)}
+          {contentRenderer(truncated ? shortString(value) : value, isValid, link, props)}
         </Tooltip>
       ) : (
-        contentRenderer(value, isvalid, link, props)
+        contentRenderer(value, isValid, link, props)
       );
     }
   }, [value, name, link, props, truncated]);

@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 import apolloCache from './apolloCache';
 import App from './App';
 import './dayjs';
+import './charts';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import SnackbarProvider from './SnackbarProvider';
