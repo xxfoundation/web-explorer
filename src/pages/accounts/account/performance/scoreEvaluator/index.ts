@@ -1,12 +1,8 @@
 import { Account } from '../../../../../schemas/accounts.schema';
-import { GetRankingByAccountId } from '../../../../../schemas/ranking.schema';
 import { MetricScores, MetricsType } from '../../../types';
 import getIdentityScore from './identity';
 
-const validations = (
-  account: Account,
-  ranking: GetRankingByAccountId['ranking']
-): Partial<Record<MetricsType, [MetricScores, string]>> => {
+const scoreEvaluator = (account: Account): Partial<Record<MetricsType, [MetricScores, string]>> => {
   return {
     identity: getIdentityScore(account)
     // 'address creation': getaAddressCreationScore(account),
@@ -21,4 +17,4 @@ const validations = (
   };
 };
 
-export default validations;
+export default scoreEvaluator;

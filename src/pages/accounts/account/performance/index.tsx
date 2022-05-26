@@ -2,14 +2,14 @@ import { Box, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Account } from '../../../../schemas/accounts.schema';
-import { GetRankingByAccountId } from '../../../../schemas/ranking.schema';
+import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
 import Charts from './Charts';
 import MetricCards from './MetricsCards';
 
-const PerformanceCard: FC<{ account: Account; ranking: GetRankingByAccountId['ranking'] }> = ({
-  account,
-  ranking
-}) => {
+const PerformanceCard: FC<{
+  account: Account;
+  ranking: CommonFieldsRankingFragment;
+}> = ({ account, ranking }) => {
   const incompatibleRole = useMemo(() => !(account.roles || []).includes('validator'), [account]);
   const panels = useMemo(() => {
     if (incompatibleRole) return [];

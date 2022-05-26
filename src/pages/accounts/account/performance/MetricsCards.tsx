@@ -3,7 +3,7 @@ import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import { Account } from '../../../../schemas/accounts.schema';
-import { GetRankingByAccountId } from '../../../../schemas/ranking.schema';
+import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
 import { theme } from '../../../../themes/default';
 import { MetricScores, MetricsType } from '../../types';
 import MetricTooltip from './MetricTooltip';
@@ -74,11 +74,11 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
   );
 };
 
-const MetricCards: FC<{ account: Account; ranking: GetRankingByAccountId['ranking'] }> = ({
-  account, ranking
+const MetricCards: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = ({
+  account
 }) => {
   const scoreTiles = useMemo(() => {
-    const validationResult = scoreEvaluator(account, ranking);
+    const validationResult = scoreEvaluator(account);
     return metrics.map((metric, index) => {
       const result = validationResult[metric];
       if (!result) return <></>;
@@ -89,7 +89,7 @@ const MetricCards: FC<{ account: Account; ranking: GetRankingByAccountId['rankin
         </Grid>
       );
     });
-  }, [account, ranking]);
+  }, [account]);
   return (
     <Grid container spacing={1}>
       {scoreTiles}

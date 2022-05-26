@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import { GetAccountByAddress, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
-import { GetRankingByAccountId, GET_RANKING_BY_ACCOUNT_ID } from '../../schemas/ranking.schema';
 import NotFound from '../NotFound';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
@@ -21,48 +20,11 @@ import StakingCard from './account/staking';
 //   return (rolesquery ? rolesquery.split(',') : ['nominators']) as Roles[];
 // };
 
-const useGetAccount = (
-  accountId: string
-): {
-  data?: { account: GetAccountByAddress['account']; ranking?: GetRankingByAccountId['ranking'] };
-  loading: boolean;
-} => {
-  const accountResult = useQuery<GetAccountByAddress>(GET_ACCOUNT_BY_PK, {
-    variables: { accountId }
-  });
-
-  const rankingResult = useQuery<GetRankingByAccountId>(GET_RANKING_BY_ACCOUNT_ID, {
-    skip:
-      accountResult.loading ||
-      !accountResult.data?.account ||
-      !accountResult.data.account.roles?.includes('validator'),
-    variables: accountResult.data?.account && {
-      blockHeight: accountResult.data.account.blockHeight,
-      stashAddress: accountResult.data.account.id
-    }
-  });
-
-  const loading = accountResult.loading || rankingResult.loading;
-  if (loading) {
-    return { loading: true };
-  }
-
-  if (accountResult.data?.account && accountResult.data.account.roles?.includes('validator')) {
-    return {
-      data: {
-        account: accountResult.data?.account,
-        ranking: rankingResult.data?.ranking
-      },
-      loading: false
-    };
-  }
-
-  return accountResult;
-};
-
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
-  const { data, loading } = useGetAccount(accountId);
+  const { data, loading } = useQuery<GetAccountByAddress>(GET_ACCOUNT_BY_PK, {
+    variables: { accountId }
+  });
   // const role = useTestRole();
   if (loading)
     return (

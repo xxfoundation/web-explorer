@@ -9,7 +9,7 @@ import { FindExtrinsicByHashType, FIND_EXTRINSIC_BY_HASH } from '../../schemas/e
 import { Bar, SelectItem, SelectOption } from './Bar.styles';
 import { GenericSearchInput } from './SearchInputGroup';
 import { SearchTypes } from './types';
-import validators from './validations';
+import validators from './validators';
 
 const dividerSxProps: SxProps = {
   position: 'absolute',

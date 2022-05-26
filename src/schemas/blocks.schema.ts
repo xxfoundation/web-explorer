@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 import { TotalOfItems } from './types';
 
 export const BLOCK_KEYS_FRAGMENT = gql`
-  fragment blocks on block {
+  fragment blocks on blockchain_block {
     number: block_number
     hash: block_hash
   }
@@ -11,7 +11,7 @@ export const BLOCK_KEYS_FRAGMENT = gql`
 export const LISTEN_FOR_BLOCKS_ORDERED = gql`
   ${BLOCK_KEYS_FRAGMENT}
   subscription ListenForBlocksOrdered($limit: Int) {
-    blocks: block(order_by: { block_number: desc }, limit: $limit) {
+    blocks: blockchain_block(order_by: { block_number: desc }, limit: $limit) {
       ...blocks
       finalized: finalized
       currentEra: active_era
@@ -37,13 +37,13 @@ export type ListBlockOrdered = {
 
 export const LIST_BLOCK_ORDERED = gql`
   ${BLOCK_KEYS_FRAGMENT}
-  query ListBlocksOrdered($limit: Int, $offset: Int = 0, $where: block_bool_exp) {
-    agg: block_aggregate(where: $where) {
+  query ListBlocksOrdered($limit: Int, $offset: Int = 0, $where: blockchain_block_bool_exp) {
+    agg: blockchain_block_aggregate(where: $where) {
       aggregate {
         count
       }
     }
-    blocks: block(order_by: { block_number: desc }, where: $where, limit: $limit, offset: $offset) {
+    blocks: blockchain_block(order_by: { block_number: desc }, where: $where, limit: $limit, offset: $offset) {
       ...blocks
       finalized: finalized
       currentEra: active_era
@@ -76,7 +76,7 @@ export type GetBlockByPK = {
 export const GET_BLOCK_BY_PK = gql`
   ${BLOCK_KEYS_FRAGMENT}
   query GetBlockByPK($blockNumber: bigint!) {
-    block: block_by_pk(block_number: $blockNumber) {
+    block: blockchain_block_by_pk(block_number: $blockNumber) {
       ...blocks
       finalized: finalized
       currentEra: active_era
