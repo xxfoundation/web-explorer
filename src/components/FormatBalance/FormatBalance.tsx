@@ -13,7 +13,7 @@ interface Props {
   isShort?: boolean;
   label?: React.ReactNode;
   labelPost?: LabelPost;
-  value: BN | string;
+  value: BN | string | undefined | number;
   withCurrency?: boolean;
   withSi?: boolean;
 }
@@ -29,7 +29,7 @@ function createElement (prefix: string, postfix: string, unit: string, label: La
   return <>{`${prefix}${hasDecimal ? '.' : ''}`}{!isShort && <span className='ui--FormatBalance-postfix'>{postfix ? `${postfix || ''}` : ''}</span>}<span className='ui--FormatBalance-unit'>&nbsp;{unit}</span>{label}</>;
 }
 
-function applyFormat (value: BN | string, denomination: number, symbol: string, withCurrency = true, withSi?: boolean, _isShort?: boolean, labelPost?: LabelPost, precision?: number): React.ReactNode {
+function applyFormat (value: Props['value'], denomination: number, symbol: string, withCurrency = true, withSi?: boolean, _isShort?: boolean, labelPost?: LabelPost, precision?: number): React.ReactNode {
   const [prefix, postfix] = formatBalance(value, { decimals: denomination, forceUnit: '-', precision, withSi: false }).split('.');
   const isShort = _isShort || (withSi && prefix.length >= K_LENGTH);
   const unitPost = withCurrency ? symbol : '';
