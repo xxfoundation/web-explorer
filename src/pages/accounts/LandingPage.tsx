@@ -1,4 +1,4 @@
-import { styled, Container, Grid, Typography } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import NewAccounts from '../../components/blockchain/charts/NewAccountsLineChart';
 import HoldersTable from './HoldersTable';
