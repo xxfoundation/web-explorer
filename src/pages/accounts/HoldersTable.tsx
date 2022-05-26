@@ -49,10 +49,10 @@ const rolesToCell = (roles?: Roles[]) => {
   );
 };
 
-const accountToRow = (item: ListAccounts['account'][0]): BaselineCell[] => {
-  const rankProps = item.rank && item.rank <= 10 ? { style: { fontWeight: 900 } } : {};
+const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineCell[] => {
+  const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
   return [
-    { value: item.rank || '-', props: rankProps },
+    { value: rank, props: rankProps },
     {
       value: <Address value={item.address} link={`/accounts/${item.address}`} truncated />
     },
@@ -113,7 +113,10 @@ const HoldersTable: FC = () => {
     [limit, offset, timestamp]
   );
   const { data, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
-  const rows = useMemo(() => (data?.account || []).map(accountToRow), [data?.account]);
+  const rows = useMemo(
+    () => (data?.account || []).map((item, index) => accountToRow(item, index + offset)),
+    [data?.account, offset]
+  );
   const footer = useMemo(() => {
     if (data?.agg && data?.account && data.account.length) {
       return (
