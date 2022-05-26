@@ -1,7 +1,7 @@
 import { TooltipFormatterContextObject } from 'highcharts';
 
 export function percentTooltipFormatter(this: TooltipFormatterContextObject) {
-  return `<b>${this.series.name} ${this.x}</b><br />${Math.floor(this.y * 100)}%`;
+  return `<b>${this.series.name} ${this.x}</b><br />${Math.floor((this.y ?? 0) * 100)}%`;
 }
 
 export function formatPercent(this: { value: string | number }) {

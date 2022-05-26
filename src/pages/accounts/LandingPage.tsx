@@ -1,9 +1,8 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
+import NewAccounts from '../../components/blockchain/charts/NewAccountsLineChart';
 import HoldersTable from './HoldersTable';
-import StakingSupply from './StakingSupply';
 import Summary from './Summary';
-import TotalIssuance from './TotalIssuance';
 
 const LandingPage: FC = () => {
   return (
@@ -13,11 +12,8 @@ const LandingPage: FC = () => {
         <Grid item xs={12} md={12}>
           <Summary />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <TotalIssuance />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <StakingSupply />
+        <Grid item xs={12}>
+          <NewAccounts />
         </Grid>
         <Grid item xs={12} md={12}>
           <HoldersTable />
