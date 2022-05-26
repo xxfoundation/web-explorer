@@ -17,7 +17,7 @@ function getRandomX() {
 }
 
 function amountByEraTooltip(this: TooltipFormatterContextObject) {
-  const result = formatBalance(this?.y?.toString(), { decimals: 0, withUnit: ' XX' });
+  const result = formatBalance(this.y ?? 0, { decimals: 0, withUnit: ' XX' });
   return `${this.x}<br /><b>${this.series.name} ${result}</b>`;
 }
 
