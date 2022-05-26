@@ -1,14 +1,8 @@
-import { styled, Container, Grid, Typography } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
+import NewAccounts from '../../components/charts/NewAccountsLineChart';
 import HoldersTable from './HoldersTable';
 import Summary from './Summary';
-import { TotalIssuanceDoughnutChart, StakingSupplyDoughnutChart } from '../../components/charts';
-import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
-
-const ChartWrap = styled(PaperWrapStyled)({
-  height: '16rem',
-  display: 'flex'
-});
 
 const LandingPage: FC = () => {
   return (
@@ -20,15 +14,8 @@ const LandingPage: FC = () => {
         <Grid item xs={12} md={12}>
           <Summary />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <ChartWrap>
-            <TotalIssuanceDoughnutChart />
-          </ChartWrap>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <ChartWrap>
-            <StakingSupplyDoughnutChart />
-          </ChartWrap>
+        <Grid item xs={12}>
+          <NewAccounts />
         </Grid>
         <Grid item xs={12} md={12}>
           <HoldersTable />
