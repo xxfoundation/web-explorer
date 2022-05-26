@@ -1,49 +1,28 @@
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import React, { useCallback, useMemo, useState } from 'react';
+import { useQuery } from '@apollo/client';
+import React, { FC, useEffect, useMemo } from 'react';
+import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
-import { TableCellLeftDivider } from '../../components/Tables/TableCell';
 import TablePagination from '../../components/Tables/TablePagination';
+import { TableSkeleton } from '../../components/Tables/TableSkeleton';
+import TimeAgoComponent from '../../components/TimeAgo';
+import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
+import { ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
 
-type Extrinsic = {
-  id: string;
-  block: number;
-  hash: string;
-  time: string;
-  action: string;
-};
+const ROWS_PER_PAGE = 25;
 
-const extrinsicToRow = (extrinsic: Extrinsic): BaselineCell[] => {
-  const extrinsicIdLink = `/extrinsics/${extrinsic.id}`;
+const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
-    <Link to={extrinsicIdLink}>{extrinsic.id}</Link>,
-    <Link to={`/blocks/${extrinsic.block}`}>{extrinsic.block}</Link>,
-    <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated />,
-    extrinsic.time,
-    <AccessTimeIcon color='warning' />,
-    <Link to='#'>{extrinsic.action}</Link>,
-    <TableCellLeftDivider>
-      <Link to={extrinsicIdLink}>
-        <ArrowForwardIosIcon />
-      </Link>
-    </TableCellLeftDivider>
+    <Link
+      to={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.index}`}
+    >{`${extrinsic.blockNumber}-${extrinsic.index}`}</Link>,
+    <Link to={`/blocks/${extrinsic.blockNumber}`}>{extrinsic.blockNumber}</Link>,
+    <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated showTooltip />,
+    <TimeAgoComponent date={extrinsic.timestamp} />,
+    <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
+    <Link to='#'>{`${extrinsic.section} (${extrinsic.method})`}</Link>
   ]);
-};
-
-const sampleData = () => {
-  const items = [];
-  for (let step = 0; step < 21; step++) {
-    items.push({
-      id: '357706-' + step,
-      block: 357968,
-      hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
-      time: '32 min',
-      action: 'balances (transfer)'
-    });
-  }
-  return items;
 };
 
 const headers = BaseLineCellsWrapper([
@@ -52,46 +31,62 @@ const headers = BaseLineCellsWrapper([
   'extrinsics hash',
   'time',
   'result',
-  'action',
-  ''
+  'action'
 ]);
 
-const HistoryTable = () => {
-  const extrinsicsHistoryData = sampleData();
-  const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [page, setPage] = useState(0);
-  const onRowsPerPageChange = useCallback((event) => {
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-  }, []);
-  const onChangePage = useCallback((_: unknown, number: number) => {
-    setPage(number);
-  }, []);
-  const rows = useMemo(() => {
-    return (
-      rowsPerPage > 0
-        ? extrinsicsHistoryData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        : extrinsicsHistoryData
-    ).map(extrinsicToRow);
-  }, [extrinsicsHistoryData, page, rowsPerPage]);
+const HistoryTable: FC<{
+  setTotalOfExtrinsics: React.Dispatch<React.SetStateAction<number | undefined>>;
+}> = (props) => {
+  // FIXME timestamp cannot be the cursor
+  const {
+    cursorField: id,
+    limit,
+    offset,
+    onPageChange,
+    onRowsPerPageChange,
+    page,
+    rowsPerPage
+  } = usePaginatorByCursor<ListExtrinsics['extrinsics'][0]>({
+    cursorField: 'id',
+    rowsPerPage: ROWS_PER_PAGE
+  });
 
-  return (
-    <BaselineTable
-      tableProps={{ sx: { 'th:last-child, td:last-child': { maxWidth: '6px' } } }}
-      headers={headers}
-      rows={rows}
-      footer={
+  const { data, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, {
+    variables: {
+      limit,
+      offset,
+      orderBy: [{ id: 'desc' }],
+      where: { id: { _lte: id } }
+    }
+  });
+
+  const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
+
+  useEffect(() => {
+    if (data?.agg && !id) {
+      props.setTotalOfExtrinsics(data.agg.aggregate.count);
+    }
+  });
+
+  const footer = useMemo(() => {
+    if (data?.agg && data?.extrinsics && data.extrinsics.length) {
+      return (
         <TablePagination
           page={page}
-          count={extrinsicsHistoryData.length}
+          count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          rowsPerPageOptions={[20, 30, 40, 50]}
+          onPageChange={onPageChange(data.extrinsics[0])}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
-      }
-    />
-  );
+      );
+    }
+    return <></>;
+  }, [data?.agg, data?.extrinsics, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+
+  if (loading) return <TableSkeleton rows={12} cells={6} footer />;
+
+  return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 
 export default HistoryTable;

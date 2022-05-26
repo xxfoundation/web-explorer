@@ -1,81 +1,79 @@
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useQuery } from '@apollo/client';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Tooltip, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
+import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
+import { EXTRINSICS_OF_BLOCK } from '../../schemas/extrinsics.schema';
+import { TotalOfItems } from '../../schemas/types';
 import { Hash } from '../ChainId';
 import Link from '../Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
-import { TableCellLeftDivider } from '../Tables/TableCell';
 import TablePagination from '../Tables/TablePagination';
 import { TableSkeleton } from '../Tables/TableSkeleton';
 import TimeAgoComponent from '../TimeAgo';
 
 type ExtrinsicsTyp = {
-  extrinsicId: string;
+  id: number;
+  index: number;
   hash: string;
-  time: string;
-  action: string;
-  eventId: number;
+  blockNumber: string;
+  timestamp: number;
+  success: boolean;
+  method: string;
+  section: string;
 };
 
-const rowParser = (rowData: ExtrinsicsTyp) => {
+type Response = { extrinsic: ExtrinsicsTyp[] } & TotalOfItems;
+
+const rowsParser = (rowData: ExtrinsicsTyp) => {
   return BaseLineCellsWrapper([
-    <Link to={`/extrinsics/${rowData.extrinsicId}`}>{rowData.extrinsicId}</Link>,
-    <Tooltip
-      title={
-        <Typography fontSize={'10px'} fontWeight={400}>
-          {rowData.hash}
-        </Typography>
-      }
-      placement={'top'}
-      arrow
-    >
-      <span>
-        <Hash value={rowData.hash} truncated />
-      </span>
-    </Tooltip>,
-    <TimeAgoComponent date={rowData.time} />,
+    <Link to={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}>{rowData.index}</Link>,
+    <Hash
+      value={rowData.hash}
+      truncated
+      link={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}
+      showTooltip
+    />,
+    <TimeAgoComponent date={rowData.timestamp} />,
     <CheckCircleOutlineIcon color='success' />,
-    <Link to='#'>{rowData.action}</Link>,
-    <TableCellLeftDivider>
-      <Link to={`/events/${rowData.eventId}`}>
-        <ArrowForwardIosIcon />
-      </Link>
-    </TableCellLeftDivider>
+    <Link to='#'>{`${rowData.section} (${rowData.method})`}</Link>
   ]);
 };
 
-const data = [
-  {
-    extrinsicId: '312313-3',
-    action: 'parachainsystem (set_validation_data)',
-    time: '2022-02-16 01:56:42 (+UTC)',
-    hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
-    eventId: 12313
-  }
-];
+const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
 
-const headers = BaseLineCellsWrapper([
-  'extrinsic id',
-  'hash',
-  'time',
-  'result',
-  'action',
-  <TableCellLeftDivider>
-    <Link to='/extrinsics'>view all</Link>
-  </TableCellLeftDivider>
-]);
-
-const BlockExtrinsics: FC<{ loading?: boolean }> = ({ loading }) => {
-  const rows = useMemo(() => data.map(rowParser), []);
+const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
+  const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
+    usePaginatorByCursor({
+      rowsPerPage: 4,
+      cursorField: 'id'
+    });
+  const variables = useMemo(() => {
+    return {
+      orderBy: [{ id: 'desc' }],
+      limit,
+      offset,
+      where: { ...where, id: cursorField }
+    };
+  }, [cursorField, limit, offset, where]);
+  const { data, loading } = useQuery<Response>(EXTRINSICS_OF_BLOCK, { variables });
+  const rows = useMemo(() => (data?.extrinsic || []).map(rowsParser), [data?.extrinsic]);
+  const footer = useMemo(() => {
+    if (data?.agg && data?.extrinsic && data.extrinsic.length) {
+      return (
+        <TablePagination
+          count={data.agg.aggregate.count}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onPageChange(data.extrinsic[0])}
+          onRowsPerPageChange={onRowsPerPageChange}
+          rowsPerPageOptions={[2, 4, 6]}
+        />
+      );
+    }
+    return <></>;
+  }, [data?.agg, data?.extrinsic, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
   if (loading) return <TableSkeleton rows={6} cells={6} footer />;
-  return (
-    <BaselineTable
-      headers={headers}
-      rows={rows}
-      footer={<TablePagination count={data.length} page={0} />}
-    />
-  );
+  return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 
 export default BlockExtrinsics;

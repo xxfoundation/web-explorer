@@ -7,3 +7,7 @@ export const makeid = (length: number) => {
   }
   return result;
 }
+export const shortString = (addr: string, offset = 4, replaceStr = '...') =>
+  addr
+    ? addr.slice(0, offset + 2).concat(replaceStr, addr.slice(addr.length - offset, addr.length))
+    : '';

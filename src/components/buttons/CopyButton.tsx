@@ -8,7 +8,16 @@ import { theme } from '../../themes/default';
 
 export const callbackCopyMessage = (value: ReactNode) => {
   return (
-    <Stack spacing={1}>
+    <Stack
+      spacing={1}
+      sx={{
+        maxHeight: '60px',
+        maxWidth: '300px',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap'
+      }}
+    >
       <Stack direction={'row'} alignItems={'center'} spacing={2}>
         <CheckCircleOutlineIcon sx={{ color: theme.palette.success.light }} />
         <Typography fontSize={10} fontWeight={600}>

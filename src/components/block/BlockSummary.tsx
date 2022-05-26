@@ -1,89 +1,60 @@
 import { Stack, Typography } from '@mui/material';
 import { default as React, FC } from 'react';
-import BackAndForwardArrows from '../buttons/BackAndForwardArrows';
+import { GetBlockByPK } from '../../schemas/blocks.schema';
 import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
-import genSkeletons from '../genSkeletons';
 import Link from '../Link';
-import SummaryPaper from '../Paper/SummaryPaper';
+import { SummaryPaperWrapper, SummaryRow } from '../Paper/SummaryPaper';
 import TimeAgoComponent from '../TimeAgo';
 import BlockStatusIcon from './BlockStatusIcon';
-import { BlockType } from './types';
 
-const summaryDataParser = (data: BlockType) => {
-  return [
-    { label: 'time', value: <Typography>{data.timestamp}</Typography> },
-    {
-      label: 'status',
-      value: (
+const BlockSummary: FC<{
+  data: GetBlockByPK['block'];
+}> = ({ data }) => {
+  return (
+    <SummaryPaperWrapper>
+      <SummaryRow label='title'>
+        <Typography>{data.timestamp}</Typography>
+      </SummaryRow>
+      <SummaryRow label='status'>
         <Stack direction={'row'} alignItems='center'>
           <BlockStatusIcon status={data.number > data.numberFinalized ? 'pending' : 'successful'} />
         </Stack>
-      )
-    },
-    { label: 'era', value: <Typography>{data.currentEra}</Typography> },
-    {
-      label: 'hash',
-      value: <Hash value={data.hash} />,
-      action: <CopyButton value={data.hash} />
-    },
-    {
-      label: 'parent hash',
-      value: <Hash value={data.parentHash} />,
-      action: <BackAndForwardArrows back={{ disabled: true }} forward={{ disabled: true }} />
-    },
-    {
-      label: 'state root',
-      value: <Hash value={data.stateRoot} />
-    },
-    {
-      label: 'extrinsics root',
-      value: <Hash value={data.extrinsicsRoot} />
-    },
-    {
-      label: 'block producer',
-      value: (
+      </SummaryRow>
+      <SummaryRow label='era'>
+        <Typography>{data.currentEra}</Typography>
+      </SummaryRow>
+      <SummaryRow label='hash' action={<CopyButton value={data.hash} />}>
+        <Hash value={data.hash} />
+      </SummaryRow>
+      <SummaryRow label='parent hash'>
+        <Hash value={data.parentHash} />
+      </SummaryRow>
+      <SummaryRow label='state root'>
+        <Hash value={data.stateRoot} />
+      </SummaryRow>
+      <SummaryRow label='extrinsics root'>
+        <Hash value={data.extrinsicsRoot} />
+      </SummaryRow>
+      <SummaryRow label='block producer' action={<CopyButton value={data.author} />}>
         <Address
           name={data.authorName}
           value={data.author}
           link={`/blocks/${data.hash}/producer/${data.author}`}
         />
-      ),
-      action: <CopyButton value={data.author} />
-    },
-    {
-      label: 'block time',
-      value: (
+      </SummaryRow>
+      <SummaryRow label='block time'>
         <Typography>
           <TimeAgoComponent date={data.timestamp} />
         </Typography>
-      )
-    },
-    {
-      label: 'spec version',
-      value: (
+      </SummaryRow>
+      <SummaryRow label='spec version'>
         <Link to={'#'}>
           <Typography>{data.specVersion}</Typography>
         </Link>
-      )
-    }
-  ];
-};
-
-const BlockSummary: FC<{
-  data?: BlockType;
-  loading: boolean;
-}> = ({ data, loading }) => {
-  if (loading) {
-    return (
-      <SummaryPaper
-        data={genSkeletons(9).map((Row) => {
-          return { label: <Row width={'90%'} />, value: <Row width={'90%'} /> };
-        })}
-      />
-    );
-  }
-  return <SummaryPaper data={data ? summaryDataParser(data) : []} />;
+      </SummaryRow>
+    </SummaryPaperWrapper>
+  );
 };
 
 export default BlockSummary;

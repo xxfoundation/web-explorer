@@ -1,6 +1,7 @@
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { Avatar, Stack, Tooltip, Typography, TypographyTypeMap } from '@mui/material';
+import { Avatar, Stack, Tooltip, Typography, TypographyProps } from '@mui/material';
 import React, { FC, useMemo } from 'react';
+import { shortString } from '../utils';
 import HashValidator from './HashValidator';
 import isValidXXNetworkAddress from './IsValidXXNetworkAddress';
 import Link from './Link';
@@ -9,45 +10,63 @@ type IdProperties = {
   link?: string;
   truncated?: boolean;
   value: string;
-  variant?: TypographyTypeMap['props']['variant'];
-};
-
-const shortString = (addr: string, offset = 5, replaceStr = '...') =>
-  addr
-    ? addr.slice(0, offset + 2).concat(replaceStr, addr.slice(addr.length - offset, addr.length))
-    : '';
+} & TypographyProps;
 
 const contentRenderer = (
   text: string,
   isValid: boolean,
-  variant?: TypographyTypeMap['props']['variant'],
-  link?: IdProperties['link']
+  link?: IdProperties['link'],
+  props?: TypographyProps
 ) => {
   return (
-    <Typography variant={variant} color={isValid ? 'info' : 'red'}>
+    <Typography {...props} color={isValid ? 'info' : 'red'}>
       {link ? <Link to={link}>{text}</Link> : text}
     </Typography>
   );
 };
 
-const Hash: FC<IdProperties> = ({ link, truncated, value, variant }) => {
-  const isValid = HashValidator(value);
-  return contentRenderer(truncated ? shortString(value) : value, isValid, variant, link);
-};
-
-const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = ({
-  avatarUrl,
+const Hash: FC<IdProperties & { showTooltip?: boolean }> = ({
   link,
-  name,
+  showTooltip,
   truncated,
   value,
-  variant
+  ...props
 }) => {
+  const isValid = HashValidator(value);
+  const displayValue = truncated ? shortString(value) : value;
+  if (showTooltip && truncated) {
+    return (
+      <Tooltip
+        title={
+          <Typography fontSize={'10px'} fontWeight={400}>
+            {value}
+          </Typography>
+        }
+        placement='top'
+        arrow
+      >
+        {contentRenderer(displayValue, isValid, link, props)}
+      </Tooltip>
+    );
+  }
+  return contentRenderer(displayValue, isValid, link, props);
+};
+
+const Address: FC<
+  IdProperties & { name?: string; disableAvatar?: boolean; avatarUrl?: string }
+> = ({ avatarUrl, disableAvatar, link, name, truncated, value, ...props }) => {
   const avatar = useMemo(() => {
     return name ? (
       <Avatar sx={{ width: 25, height: 25, mr: 1 }} src={avatarUrl} alt={name} />
     ) : (
-      <Tooltip title='Identity Level: No Judgement' placement='bottom' arrow>
+      <Tooltip
+        title={
+          <Typography fontSize={'10px'} fontWeight={400}>
+            Identity Level: No Judgement
+          </Typography>
+        }
+        arrow
+      >
         <RemoveCircleIcon sx={{ mr: 1 }} />
       </Tooltip>
     );
@@ -57,22 +76,38 @@ const Address: FC<IdProperties & { name?: string; avatarUrl?: string }> = ({
     const isValid = isValidXXNetworkAddress(value);
     if (name) {
       return (
-        <Tooltip title={value} placement='top' arrow>
-          {contentRenderer(name, isValid, variant, link)}
+        <Tooltip
+          title={
+            <Typography fontSize={'10px'} fontWeight={400}>
+              {value}
+            </Typography>
+          }
+          arrow
+        >
+          {contentRenderer(name, isValid, link, props)}
         </Tooltip>
       );
     } else {
       return truncated ? (
-        <Tooltip title={value} placement='top' arrow>
-          {contentRenderer(truncated ? shortString(value) : value, isValid, variant, link)}
+        <Tooltip
+          title={
+            <Typography fontSize={'10px'} fontWeight={400}>
+              {value}
+            </Typography>
+          }
+          arrow
+        >
+          {contentRenderer(truncated ? shortString(value) : value, isValid, link, props)}
         </Tooltip>
       ) : (
-        contentRenderer(value, isValid, variant, link)
+        contentRenderer(value, isValid, link, props)
       );
     }
-  }, [name, value, truncated, variant, link]);
+  }, [value, name, link, props, truncated]);
 
-  return (
+  return disableAvatar ? (
+    content
+  ) : (
     <Stack direction={'row'} alignItems='center'>
       {avatar}
       {content}
