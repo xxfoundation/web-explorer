@@ -12,12 +12,12 @@ import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgo from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import {
-  GetTransferencesByBlock,
+  GetTransfersByBlock,
   LIST_TRANSFERS_ORDERED,
-  Transference
+  Transfer
 } from '../../schemas/transfers.schema';
 
-const TransferRow = (data: Transference) => {
+const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
   return [
     { value: <Link to={extrinsicIdLink}>{`${data.blockNumber}-${data.index}`}</Link> },
@@ -61,7 +61,7 @@ const headers = [
 
 const TransferTable = () => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
-    usePaginatorByCursor<Transference & { id: number }>({
+    usePaginatorByCursor<Transfer & { id: number }>({
       cursorField: 'id',
       rowsPerPage: 20
     });
@@ -74,7 +74,7 @@ const TransferTable = () => {
     }),
     [cursorField, limit, offset]
   );
-  const { data, loading } = useQuery<GetTransferencesByBlock>(LIST_TRANSFERS_ORDERED, {
+  const { data, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
     variables
   });
   const footer = useMemo(() => {

@@ -1,3 +1,4 @@
+import type { CustomPointOptions } from './types';
 import {
   Popover,
   PopoverProps,
@@ -10,8 +11,7 @@ import {
 } from '@mui/material';
 import { default as React, FC } from 'react';
 import { theme } from '../../themes/default';
-import { CustomPointOptions } from '../blockchain/types';
-import SeriesDetailedInfo from './ChartSeriesDetailsInfo';
+import ChartSeriesDetailsInfo from './ChartSeriesDetailsInfo';
 
 type ChartClickModalProps = {
   data: CustomPointOptions;
@@ -66,7 +66,7 @@ export const SeriesPopover: FC<ChartClickModalProps & PopoverProps> = ({
       }}
       PaperProps={{ sx: popooverProps }}
     >
-      <SeriesDetailedInfo name={data.name} custom={data.custom} onClose={closeModal} />
+      <ChartSeriesDetailsInfo name={data.name} custom={data.custom} onClose={closeModal} />
     </Popover>
   );
 };

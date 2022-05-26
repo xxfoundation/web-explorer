@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import React, { FC } from 'react';
-import { formatPercent } from '../../../../components/blockchain/charts/formatters';
+import { formatPercent } from '../../../../components/charts/formatters';
 import { LineChart } from '../../../../components/charts/highcharts';
 import DefaultTile from '../../../../components/DefaultTile';
 import { DataPoint } from '../../../../types';
