@@ -1,9 +1,12 @@
-import { AccountType, MetricScores } from '../../../types';
+import { MetricScores } from '../../../types';
 
 const getSlashesScore = ({
   holderSlashes = 0,
   latestSlashes = 0
-}: AccountType): [MetricScores, string] => {
+}: {
+  holderSlashes: number;
+  latestSlashes: number;
+}): [MetricScores, string] => {
   if (latestSlashes > 0 || holderSlashes > 1) {
     return ['very bad', 'Slashes more than once'];
   }

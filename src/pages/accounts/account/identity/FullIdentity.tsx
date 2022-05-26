@@ -2,7 +2,7 @@ import { Avatar, Divider, Grid, Link, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import Socials from '../../../../components/Socials';
 import { Account } from '../../../../schemas/accounts.schema';
-import { Identity } from './types';
+import { Identity } from '../../types';
 
 type Props = { account: Account; identity: Identity };
 

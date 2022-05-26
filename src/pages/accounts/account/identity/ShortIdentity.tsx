@@ -15,7 +15,7 @@ import React, { FC } from 'react';
 import CopyButton from '../../../../components/buttons/CopyButton';
 import Socials from '../../../../components/Socials';
 import { Account } from '../../../../schemas/accounts.schema';
-import { Identity } from './types';
+import { Identity } from '../../types';
 
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />

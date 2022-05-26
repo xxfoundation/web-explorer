@@ -31,6 +31,22 @@ export type BalanceType = {
   namedReserves: [][];
 };
 
+export type Identity = {
+  display?: string;
+  displayParent?: string;
+  email?: string;
+  judgements?: Judgements[];
+  legal?: string;
+  other?: unknown;
+  parent?: string;
+  twitter?: string;
+  web?: string;
+  blurb?: string;
+
+  // FIXME madeup field
+  riotName?: string;
+};
+
 type Judgements =
   | 'Unknown'
   | 'Reasonable'
@@ -38,19 +54,6 @@ type Judgements =
   | 'Out of Date'
   | 'Low Quality'
   | 'Erroneous';
-
-export type AccountIdentityFields = {
-  displayName?: string;
-  legalName?: string;
-  email?: string;
-  website?: string;
-  twitter?: string;
-  riotName?: string;
-  blurb?: string;
-  judgement?: Judgements;
-  parentIdentity?: string[];
-  childrenIdentity?: string[];
-};
 
 export type MetricsType =
   | 'identity'

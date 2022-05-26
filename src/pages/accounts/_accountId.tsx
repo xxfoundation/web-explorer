@@ -11,6 +11,7 @@ import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
 import Info from './account/Info';
+import PerformanceCard from './account/performance';
 import StakingCard from './account/staking';
 
 // const useTestRole = (): Roles[] => {
@@ -110,9 +111,9 @@ const AccountId: FC = ({}) => {
         <Grid item xs={12}>
           <StakingCard account={data.account} />
         </Grid>
-        {/* <Grid item xs={12}>
-          <PerformanceCard account={sampleAccount} />
-        </Grid> */}
+        <Grid item xs={12}>
+          {data.ranking && <PerformanceCard account={data.account} ranking={data.ranking} />}
+        </Grid>
       </Grid>
     </Container>
   );

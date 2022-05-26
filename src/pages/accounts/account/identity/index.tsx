@@ -1,9 +1,9 @@
 import React, { FC, useMemo } from 'react';
 import PaperWrapStyled from '../../../../components/Paper/PaperWrap.styled';
 import { Account } from '../../../../schemas/accounts.schema';
+import { Identity } from '../../types';
 import FullIdentity from './FullIdentity';
 import ShortIdentity from './ShortIdentity';
-import { Identity } from './types';
 
 const IdentityCard: FC<{ account: Account }> = ({ account }) => {
   const IdentityDisplay = useMemo(() => {

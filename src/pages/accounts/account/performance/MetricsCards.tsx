@@ -2,8 +2,10 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
+import { Account } from '../../../../schemas/accounts.schema';
+import { GetRankingByAccountId } from '../../../../schemas/ranking.schema';
 import { theme } from '../../../../themes/default';
-import { AccountType, MetricScores, MetricsType } from '../../types';
+import { MetricScores, MetricsType } from '../../types';
 import MetricTooltip from './MetricTooltip';
 import scoreEvaluator from './scoreEvaluator';
 import ScoreIcon from './ScoreIcons';
@@ -72,18 +74,22 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
   );
 };
 
-const MetricCards: FC<{ account: AccountType }> = ({ account }) => {
+const MetricCards: FC<{ account: Account; ranking: GetRankingByAccountId['ranking'] }> = ({
+  account, ranking
+}) => {
   const scoreTiles = useMemo(() => {
-    const validationResult = scoreEvaluator(account);
+    const validationResult = scoreEvaluator(account, ranking);
     return metrics.map((metric, index) => {
-      const [score, description] = validationResult[metric];
+      const result = validationResult[metric];
+      if (!result) return <></>;
+      const [score, description] = result;
       return (
         <Grid item xs={12} md={6} key={index}>
           <ScoreTile metric={metric} score={score} description={description} />
         </Grid>
       );
     });
-  }, [account]);
+  }, [account, ranking]);
   return (
     <Grid container spacing={1}>
       {scoreTiles}

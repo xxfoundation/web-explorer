@@ -1,8 +1,18 @@
-import { AccountType, MetricScores } from '../../../types';
+import { MetricScores } from '../../../types';
 
 const baseMsg = (value: unknown) => `The validator ${value}`;
 
-const getGovernanceScore = ({ democracy }: AccountType): [MetricScores, string] => {
+const getGovernanceScore = ({
+  democracy
+}: {
+  democracy: {
+    latestNumberOfVotes: number;
+    missedProposals: number;
+    proposalVotePerMonth: number;
+    proposalVoteForCouncil: number;
+    councilMember: boolean;
+  };
+}): [MetricScores, string] => {
   if (!democracy) {
     return ['very bad', baseMsg('Never participated in Democracy')];
   }
