@@ -11,6 +11,7 @@ import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
 import Info from './account/Info';
+import StakingCard from './account/staking';
 
 // const useTestRole = (): Roles[] => {
 //   const { search } = useLocation();
@@ -30,11 +31,14 @@ const useGetAccount = (
   });
 
   const rankingResult = useQuery<GetRankingByAccountId>(GET_RANKING_BY_ACCOUNT_ID, {
-    variables: {
-      blockHeight: accountResult.data?.account.blockHeight,
-      stashAddress: accountResult.data?.account.id
-    },
-    skip: accountResult.loading || !accountResult.data?.account.roles?.includes('validator')
+    skip:
+      accountResult.loading ||
+      !accountResult.data?.account ||
+      !accountResult.data.account.roles?.includes('validator'),
+    variables: accountResult.data?.account && {
+      blockHeight: accountResult.data.account.blockHeight,
+      stashAddress: accountResult.data.account.id
+    }
   });
 
   const loading = accountResult.loading || rankingResult.loading;
@@ -42,7 +46,7 @@ const useGetAccount = (
     return { loading: true };
   }
 
-  if (accountResult.data?.account.roles?.includes('validator')) {
+  if (accountResult.data?.account && accountResult.data.account.roles?.includes('validator')) {
     return {
       data: {
         account: accountResult.data?.account,
@@ -98,15 +102,15 @@ const AccountId: FC = ({}) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <BlockchainCard roles={[]} />
+          <BlockchainCard account={data.account} />
         </Grid>
         {/* <Grid item xs={12}>
           <GovernanceCard roles={sampleAccount.roles} />
-        </Grid> 
+        </Grid>  */}
         <Grid item xs={12}>
-          <StakingCard roles={sampleAccount.roles} />
+          <StakingCard account={data.account} />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <PerformanceCard account={sampleAccount} />
         </Grid> */}
       </Grid>

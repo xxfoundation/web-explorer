@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Stack, Typography } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
@@ -59,7 +59,7 @@ const headers = [
   { value: 'Hash' }
 ];
 
-const TransferTable = () => {
+const TransferTable: FC<{ where?: Record<string, unknown> }> = ({ where = {} }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Transference & { id: number }>({
       cursorField: 'id',
@@ -70,9 +70,9 @@ const TransferTable = () => {
       limit,
       offset,
       orderBy: [{ id: 'desc' }],
-      where: { id: { _lte: cursorField } }
+      where: { ...where, id: { _lte: cursorField } }
     }),
-    [cursorField, limit, offset]
+    [cursorField, limit, offset, where]
   );
   const { data, loading } = useQuery<GetTransferencesByBlock>(LIST_TRANSFERS_ORDERED, {
     variables
