@@ -18,14 +18,13 @@ const useCustomTooltip = <T extends keyof ChartTypeRegistry, D>(
   const [tooltipStyles, setTooltipStyles] = useState<CSSProperties>({
     opacity: 0,
     left: 0,
-    right: 0,
   });
 
   const [{ data, label }, setData] = useState<DataState<D>>({})
 
   const tooltip = useCallback<CustomTooltip<T>>((context) => {
     if (context.tooltip.opacity == 0) {
-      setTooltipStyles((styles) => ({ ...styles, opacity: 0 }));
+      setTooltipStyles((styles) => ({ ...styles }));
       return;
     }
 
