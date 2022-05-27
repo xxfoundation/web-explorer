@@ -51,13 +51,23 @@ const rolesToCell = (roles?: Roles[]) => {
 
 const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineCell[] => {
   const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
+  const roles = Object.entries(item.roles)
+    .filter((entry) => {
+      return entry[1];
+    })
+    .map(([role]) => {
+      return role as Roles;
+    });
   return [
     { value: rank, props: rankProps },
     {
       value: <Address value={item.address} link={`/accounts/${item.address}`} truncated />
     },
     { value: item.nonce },
-    { value: rolesToCell(item.roles), props: { colSpan: 2 } },
+    {
+      value: rolesToCell(roles),
+      props: { colSpan: 2 }
+    },
     { value: <FormatBalance value={item.lockedBalance.toString()} /> },
     { value: <FormatBalance value={item.availableBalance.toString()} /> }
   ];

@@ -19,7 +19,7 @@ export type CommonFieldsRankingFragment = {
 };
 
 export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
-  fragment ranking on blockchain_ranking {
+  fragment ranking on ranking {
     slashed
     stashAddress: stash_address
     stashAddressCreationBlock: stash_address_creation_block

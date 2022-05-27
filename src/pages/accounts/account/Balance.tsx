@@ -12,9 +12,8 @@ import {
 import React, { FC } from 'react';
 import FormatBalance from '../../../components/FormatBalance';
 import PaperStyled from '../../../components/Paper/PaperWrap.styled';
-import { Account } from '../../../schemas/accounts.schema';
+import { Account, Balance as BalanceType, Roles } from '../../../schemas/accounts.schema';
 import { theme } from '../../../themes/default';
-import { BalanceType } from '../types';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -132,8 +131,8 @@ const LockedTooltipContent: FC<{ balance: BalanceType }> = ({ balance }) => {
 
 const Balance: FC<{
   account: Account;
+  roles: Roles[];
 }> = ({ account }) => {
-  const balance: BalanceType = JSON.parse(account.balances);
   return (
     <PaperStyled>
       <InfoCardRow>
@@ -174,7 +173,10 @@ const Balance: FC<{
       </InfoCardRow>
       <InfoCardRow>
         <Box width='110px'>
-          <CustomTooltip title={<LockedTooltipContent balance={balance} />} placement='right-start'>
+          <CustomTooltip
+            title={<LockedTooltipContent balance={account.balances} />}
+            placement='right-start'
+          >
             <CardHeaderButton size='small'>
               <TypographyHeader>locked</TypographyHeader>
             </CardHeaderButton>

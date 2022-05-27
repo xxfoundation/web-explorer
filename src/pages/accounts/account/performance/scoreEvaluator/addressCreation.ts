@@ -1,3 +1,5 @@
+import { Account } from '../../../../../schemas/accounts.schema';
+import { CommonFieldsRankingFragment } from '../../../../../schemas/ranking.schema';
 import { MetricScores } from '../../../types';
 
 const baseMessage = (blockNumber: unknown, seniority: string) =>
@@ -5,9 +7,13 @@ const baseMessage = (blockNumber: unknown, seniority: string) =>
 
 const presumedCurrentEra = 1000;
 
-const getaAddressCreationScore = (account: { era: number }): [MetricScores, string] => {
+const getaAddressCreationScore = (props: {
+  account: Account;
+  ranking: CommonFieldsRankingFragment;
+}): [MetricScores, string] => {
   // fetch latest block to check blocknumber number and era
-  const eraDifference = presumedCurrentEra - account.era;
+  // const eraDifference = presumedCurrentEra - account.era;
+  const eraDifference = presumedCurrentEra - props.ranking.eraPointsRating;
   if (eraDifference >= 365) {
     return ['very good', baseMessage('"unknown"', 'a veteran')];
   }

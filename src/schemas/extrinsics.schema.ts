@@ -12,8 +12,8 @@ export type FindExtrinsicByHashType = {
 };
 
 export const FIND_EXTRINSIC_BY_HASH = gql`
-  query FindExtrinsicByHash($where: blockchain_extrinsic_bool_exp) {
-    extrinsic: blockchain_extrinsic(where: $where) {
+  query FindExtrinsicByHash($where: extrinsic_bool_exp) {
+    extrinsic: extrinsic(where: $where) {
       blockNumber: block_number
       index: extrinsic_index
       hash
@@ -23,12 +23,12 @@ export const FIND_EXTRINSIC_BY_HASH = gql`
 
 export const EXTRINSICS_OF_BLOCK = gql`
   query ListExtrinsicOfBlock(
-    $orderBy: [blockchain_extrinsic_order_by!]
+    $orderBy: [extrinsic_order_by!]
     $limit: Int
     $offset: Int
-    $where: blockchain_extrinsic_bool_exp
+    $where: extrinsic_bool_exp
   ) {
-    extrinsic: blockchain_extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+    extrinsic: extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       id
       index: extrinsic_index
       blockNumber: block_number
@@ -38,7 +38,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
       section
       method
     }
-    agg: blockchain_extrinsic_aggregate(where: $where) {
+    agg: extrinsic_aggregate(where: $where) {
       aggregate {
         count
       }
@@ -63,15 +63,15 @@ export const LIST_EXTRINSICS = gql`
   query ListExtrinsicOrdered(
     $limit: Int
     $offset: Int = 0
-    $orderBy: [blockchain_extrinsic_order_by!]
-    $where: blockchain_extrinsic_bool_exp
+    $orderBy: [extrinsic_order_by!]
+    $where: extrinsic_bool_exp
   ) {
-    agg: blockchain_extrinsic_aggregate(where: $where) {
+    agg: extrinsic_aggregate(where: $where) {
       aggregate {
         count
       }
     }
-    extrinsics: blockchain_extrinsic(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    extrinsics: extrinsic(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
       id
       index: extrinsic_index
       blockNumber: block_number
@@ -94,15 +94,15 @@ export type GetExtrinsicByPK = {
     success: boolean;
     signer?: string;
     isSigned: boolean;
-    args: string;
-    argsDef: string;
-    doc: string;
+    args: unknown[];
+    argsDef: Record<string, string>;
+    doc: string[];
   };
 };
 
 export const GET_EXTRINSIC_BY_PK = gql`
   query GetExtrinsicByPk($blockNumber: bigint!, $extrinsicIndex: Int!) {
-    extrinsic: blockchain_extrinsic_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
+    extrinsic: extrinsic_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
       hash
       method
       section

@@ -60,18 +60,14 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
   );
 };
 
-const MetricCards: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = ({
-  account
-}) => {
+const MetricCards: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = (props) => {
   const scoreTiles = useMemo(() => {
-    return Object.entries(scoreEvaluator(account)).map(([metric, [score, description]], index) => {
-      return (
-        <Grid item xs={12} md={6} key={index}>
-          <ScoreTile metric={metric as MetricsType} score={score} description={description} />
-        </Grid>
-      );
-    });
-  }, [account]);
+    return Object.entries(scoreEvaluator(props)).map(([metric, [score, description]], index) => (
+      <Grid item xs={12} md={6} key={index}>
+        <ScoreTile metric={metric as MetricsType} score={score} description={description} />
+      </Grid>
+    ));
+  }, [props]);
   return (
     <Grid container spacing={1}>
       {scoreTiles}

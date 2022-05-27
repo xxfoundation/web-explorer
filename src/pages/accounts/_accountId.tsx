@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
-import { GetAccountByAddress, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
+import { GetAccountByAddress, GET_ACCOUNT_BY_PK, Roles } from '../../schemas/accounts.schema';
 import NotFound from '../NotFound';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
@@ -45,33 +45,31 @@ const AccountId: FC = ({}) => {
       </Container>
     );
   if (!data?.account) return <NotFound />;
+  const roles = Object.entries(data.account.roles)
+    .filter((entry) => entry[1])
+    .map(([role]) => role as Roles);
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <Typography variant='h1'>{data.account.identityDisplay || accountId}</Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
-          <IdentityCard account={data.account} />
+          <IdentityCard account={data.account} roles={roles} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <BalanceCard account={data.account} />
+          <BalanceCard account={data.account} roles={roles} />
         </Grid>
-
         <Grid item xs={12} md={6}>
-          <Info
-            createdDate={1652101618}
-            nonce={data.account.nonce}
-            roles={data.account.roles || ['???', '????']}
-          />
+          <Info createdDate={1652101618} nonce={data.account.nonce} roles={roles} />
         </Grid>
         <Grid item xs={12}>
-          <BlockchainCard account={data.account} />
+          <BlockchainCard account={data.account} roles={roles} />
         </Grid>
         {/* <Grid item xs={12}>
           <GovernanceCard roles={sampleAccount.roles} />
         </Grid>  */}
         <Grid item xs={12}>
-          <StakingCard account={data.account} />
+          <StakingCard account={data.account} roles={roles} />
         </Grid>
         <Grid item xs={12}>
           {data.ranking && <PerformanceCard account={data.account} ranking={data.ranking} />}

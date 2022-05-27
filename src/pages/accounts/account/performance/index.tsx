@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import TabsWithPanels from '../../../../components/Tabs';
-import { Account } from '../../../../schemas/accounts.schema';
+import { Account, Roles } from '../../../../schemas/accounts.schema';
 import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
 import Charts from './Charts';
 import MetricCards from './MetricsCards';
@@ -9,21 +9,28 @@ import MetricCards from './MetricsCards';
 const PerformanceCard: FC<{
   account: Account;
   ranking: CommonFieldsRankingFragment;
-}> = ({ account, ranking }) => {
-  const incompatibleRole = useMemo(() => !(account.roles || []).includes('validator'), [account]);
+}> = (props) => {
+  const incompatibleRole = useMemo(
+    () =>
+      !Object.entries(props.account.roles)
+        .filter((entry) => entry[1])
+        .map(([role]) => role as Roles)
+        .includes('validator'),
+    [props.account]
+  );
   const panels = useMemo(() => {
     if (incompatibleRole) return [];
     return [
       {
         label: <Typography>metrics</Typography>,
-        content: <MetricCards account={account} ranking={ranking} />
+        content: <MetricCards {...props} />
       },
       {
         label: <Typography>charts</Typography>,
         content: <Charts />
       }
     ];
-  }, [account, incompatibleRole, ranking]);
+  }, [props, incompatibleRole]);
   if (incompatibleRole) return <></>;
   return (
     <Box padding={'40px'}>

@@ -1,18 +1,73 @@
 import { gql } from '@apollo/client';
-import { CommonFieldsRankingFragment, COMMON_FIELDS_RANKING_FRAGMENT } from './ranking.schema';
+import { CommonFieldsRankingFragment } from './ranking.schema';
 import { TotalOfItems } from './types';
 
 export type Roles = 'validator' | 'nominator' | 'council' | 'technical committee' | 'treasury';
 
+export type Identity = {
+  display?: string;
+  displayParent?: string;
+  email?: string;
+  judgements?: Judgements[];
+  legal?: string;
+  other?: unknown;
+  parent?: string;
+  twitter?: string;
+  web?: string;
+  blurb?: string;
+
+  // FIXME madeup field
+  riotName?: string;
+};
+
+type Judgements =
+  | 'Unknown'
+  | 'Reasonable'
+  | 'Known Good'
+  | 'Out of Date'
+  | 'Low Quality'
+  | 'Erroneous';
+
+export type Balance = {
+  accountId: string;
+  accountNonce?: string;
+  additional?: [];
+  freeBalance?: string;
+  frozenFee?: string;
+  frozenMisc?: string;
+  reservedBalance?: string;
+  votingBalance?: string;
+  availableBalance?: string;
+  lockedBalance?: string;
+  lockedBreakdown?: {
+    id: string;
+    amount: number;
+    reasons: string | 'Misc' | 'All';
+  }[];
+  vestingLocked?: string;
+  isVesting?: boolean;
+  vestedBalance?: string;
+  vestedClaimable?: string;
+  vesting?: {
+    endBlock: string;
+    locked: string;
+    perBlock: string;
+    startingBlock: string;
+    vested: string;
+  }[];
+  vestingTotal?: string;
+  namedReserves: [][];
+};
+
 export type Account = {
   id: string;
   blockHeight: number;
-  identity: string;
+  identity: Identity;
   identityDisplay: string;
   identityDisplayParent: string;
   nonce: number;
   timestamp: number;
-  balances: string;
+  balances: Balance;
 
   availableBalance: number;
   freeBalance: number;
@@ -20,7 +75,7 @@ export type Account = {
   reservedBalance: number;
   totalBalance: number;
 
-  roles?: Roles[];
+  roles: Record<Roles, boolean>;
 };
 
 export type GetAccountByAddress = {
@@ -29,7 +84,7 @@ export type GetAccountByAddress = {
 };
 
 export const ACCOUNT_BY_PK_FRAGMENT = gql`
-  fragment account on blockchain_account {
+  fragment account on account {
     id: account_id
     blockHeight: block_height
     identity
@@ -38,6 +93,7 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
     nonce
     timestamp
     balances
+    roles
 
     availableBalance: available_balance
     freeBalance: free_balance
@@ -49,13 +105,9 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
 
 export const GET_ACCOUNT_BY_PK = gql`
   ${ACCOUNT_BY_PK_FRAGMENT}
-  ${COMMON_FIELDS_RANKING_FRAGMENT}
   query GetAccountByPK($accountId: String!) {
-    account: blockchain_account_by_pk(account_id: $accountId) {
+    account: account_by_pk(account_id: $accountId) {
       ...account
-      ranking {
-        ...ranking
-      }
     }
   }
 `;
@@ -67,25 +119,25 @@ export type ListAccounts = {
     availableBalance: number;
     lockedBalance: number;
     nonce: number;
-    roles?: Roles[];
+    roles: Record<Roles, boolean>;
   }[];
 } & TotalOfItems;
 
 export const LIST_ACCOUNTS = gql`
   query ListAccounts(
-    $orderBy: [blockchain_account_order_by!]
+    $orderBy: [account_order_by!]
     $offset: Int
     $limit: Int
-    $where: blockchain_account_bool_exp
+    $where: account_bool_exp
   ) {
-    account: blockchain_account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
+    account: account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
       address: account_id
       timestamp
       availableBalance: available_balance
       lockedBalance: locked_balance
       nonce
     }
-    agg: blockchain_account_aggregate(where: $where) {
+    agg: account_aggregate(where: $where) {
       aggregate {
         count
       }

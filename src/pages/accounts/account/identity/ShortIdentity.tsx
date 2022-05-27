@@ -13,9 +13,8 @@ import {
 } from '@mui/material';
 import React, { FC } from 'react';
 import CopyButton from '../../../../components/buttons/CopyButton';
-import Socials from '../../../../components/Socials';
 import { Account } from '../../../../schemas/accounts.schema';
-import { Identity } from '../../types';
+import SocialIconsGroup from './SocialIconsGroup';
 
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -27,7 +26,7 @@ const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const publicKey = '?????';
 
-const IdentityMobile: FC<{ account: Account; identity: Identity }> = ({ account, identity }) => {
+const IdentityMobile: FC<{ account: Account }> = ({ account }) => {
   return (
     <Stack
       sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' } }}
@@ -69,20 +68,13 @@ const IdentityMobile: FC<{ account: Account; identity: Identity }> = ({ account,
         </Stack>
       </Stack>
       <Box>
-        <Socials
-          socials={{
-            github: '#hey',
-            twitter: identity.twitter || '#blah',
-            telegram: '#yo',
-            discord: '#sup'
-          }}
-        />
+        <SocialIconsGroup identity={account.identity} />
       </Box>
     </Stack>
   );
 };
 
-const IdentityDesktop: FC<{ account: Account; identity: Identity }> = ({ account, identity }) => {
+const IdentityDesktop: FC<{ account: Account }> = ({ account }) => {
   return (
     <Grid container sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
       <Grid item md={8}>
@@ -119,24 +111,17 @@ const IdentityDesktop: FC<{ account: Account; identity: Identity }> = ({ account
         </Stack>
       </Grid>
       <Grid item md={4} container justifyContent={'flex-end'}>
-        <Socials
-          socials={{
-            github: '#hey',
-            twitter: identity.twitter || '#',
-            telegram: '#yo',
-            discord: '#sup'
-          }}
-        />
+        <SocialIconsGroup identity={account.identity} />
       </Grid>
     </Grid>
   );
 };
 
-const ShortIdentity: FC<{ account: Account; identity: Identity }> = ({ account, identity }) => {
+const ShortIdentity: FC<{ account: Account }> = ({ account }) => {
   return (
     <>
-      <IdentityMobile account={account} identity={identity} />
-      <IdentityDesktop account={account} identity={identity} />
+      <IdentityMobile account={account} />
+      <IdentityDesktop account={account} />
     </>
   );
 };

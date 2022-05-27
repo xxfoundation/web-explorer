@@ -1,5 +1,5 @@
-import { Account } from '../../../../../schemas/accounts.schema';
-import { Identity, MetricScores } from '../../../types';
+import { Account, Identity } from '../../../../../schemas/accounts.schema';
+import { MetricScores } from '../../../types';
 
 type IdentityFieldsType = keyof Identity;
 
@@ -20,9 +20,9 @@ const identityFields: IdentityFieldsType[] = [
 const baseMessage = (value: string) => `Validator ${value} information on his identity`;
 
 const getIdentityScore = (account: Account): [MetricScores, string] => {
-  const identity: Identity = JSON.parse(account.identity);
+  const identity = account.identity;
   const result = identityFields.filter((field) => {
-    const hasField = Object.keys(account).includes(field);
+    const hasField = Object.keys(identity).includes(field);
     return hasField ? !!identity[field] : false;
   });
   // TODO check judments

@@ -3,7 +3,7 @@ import React, { FC, useMemo } from 'react';
 import BlockExtrinsics from '../../../../components/block/ExtrinsicsTable';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../../components/Tabs';
-import { Account } from '../../../../schemas/accounts.schema';
+import { Account, Roles } from '../../../../schemas/accounts.schema';
 import TransferTable from '../../../transfers/TransfersTable';
 import AuthoredBlocksTable from './AuthoredBlocksTable';
 import BalanceHistoryChart from './BalanceHistoryChart';
@@ -34,7 +34,7 @@ const authoredBlocksTab = {
   content: <AuthoredBlocksTable />
 };
 
-const BlockchainCard: FC<{ account: Account }> = ({ account }) => {
+const BlockchainCard: FC<{ account: Account; roles: Roles[] }> = ({ account, roles }) => {
   const memoistPanels = useMemo(() => {
     const panels = [
       extrinsicTab(account.id),
@@ -42,11 +42,11 @@ const BlockchainCard: FC<{ account: Account }> = ({ account }) => {
       rolesTab,
       balanceHistoryTab
     ];
-    if ((account.roles || []).includes('validator')) {
+    if (roles.includes('validator')) {
       panels.push(authoredBlocksTab);
     }
     return panels;
-  }, [account.id, account.roles]);
+  }, [account.id, roles]);
   return (
     <PaperStyled>
       <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>

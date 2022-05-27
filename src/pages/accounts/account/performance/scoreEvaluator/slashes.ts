@@ -1,18 +1,20 @@
+import { Account } from '../../../../../schemas/accounts.schema';
+import { CommonFieldsRankingFragment } from '../../../../../schemas/ranking.schema';
 import { MetricScores } from '../../../types';
 
 const getSlashesScore = ({
-  holderSlashes = 0,
-  latestSlashes = 0
+  ranking: {}
 }: {
-  holderSlashes: number;
-  latestSlashes: number;
+  account: Account;
+  ranking: CommonFieldsRankingFragment;
 }): [MetricScores, string] => {
-  if (latestSlashes > 0 || holderSlashes > 1) {
-    return ['very bad', 'Slashes more than once'];
-  }
-  if (latestSlashes + holderSlashes > 0) {
-    return ['bad', 'Slashes only once'];
-  }
+  // if (latestSlashes > 0 || holderSlashes > 1) {
+  //   return ['very bad', 'Slashes more than once'];
+  // }
+  // if (latestSlashes + holderSlashes > 0) {
+  //   return ['bad', 'Slashes only once'];
+  // }
+  // return ['good', 'No slashes detected'];
   return ['good', 'No slashes detected'];
 };
 
