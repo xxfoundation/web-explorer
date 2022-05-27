@@ -136,6 +136,7 @@ export const LIST_ACCOUNTS = gql`
       availableBalance: available_balance
       lockedBalance: locked_balance
       nonce
+      roles
     }
     agg: account_aggregate(where: $where) {
       aggregate {

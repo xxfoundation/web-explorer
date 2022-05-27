@@ -1,6 +1,7 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import NewAccounts from '../../components/charts/NewAccountsLineChart';
+import { PaperStyled } from '../../components/Paper/SummaryPaper.styled';
 import HoldersTable from './HoldersTable';
 import Summary from './Summary';
 
@@ -15,7 +16,9 @@ const LandingPage: FC = () => {
           <Summary />
         </Grid>
         <Grid item xs={12}>
-          <NewAccounts />
+          <PaperStyled sx={{ padding: '40px' }}>
+            <NewAccounts />
+          </PaperStyled>
         </Grid>
         <Grid item xs={12} md={12}>
           <HoldersTable />
