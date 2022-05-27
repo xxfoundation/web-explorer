@@ -13,6 +13,11 @@ const BlockDetailedEventsTabs: React.FC<{
   loading: boolean;
 }> = ({ blockNumber, events, loading }) => {
   const panels = useMemo(() => {
+    const where = {
+      block_number: {
+        _eq: blockNumber
+      }
+    };
     return loading
       ? [
           {
@@ -27,19 +32,11 @@ const BlockDetailedEventsTabs: React.FC<{
       : [
           {
             label: <TabText message='extrinsics' count={1} />,
-            content: <ExtrinsicsTable />
+            content: <ExtrinsicsTable where={where} />
           },
           {
             label: <TabText message='events' count={events} />,
-            content: (
-              <EventsTable
-                where={{
-                  block_number: {
-                    _eq: blockNumber
-                  }
-                }}
-              />
-            )
+            content: <EventsTable where={where} />
           }
         ];
   }, [blockNumber, events, loading]);

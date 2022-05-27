@@ -5,11 +5,11 @@ import { useHistory, useParams } from 'react-router-dom';
 import { BlockNav } from '../../components/block/Block.styled';
 import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
 import BlockSummary from '../../components/block/BlockSummary';
-import { BlockSummaryType } from '../../components/block/types';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BackAndForwardArrows from '../../components/buttons/BackAndForwardArrows';
 import Link from '../../components/Link';
-import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
+import SummaryLoader from '../../components/Paper/SummaryLoader';
+import { GetBlockByPK, GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import NotFound from '../NotFound';
 
 const useArrowButtonsOptions = (number: number) => {
@@ -18,7 +18,7 @@ const useArrowButtonsOptions = (number: number) => {
     return { variables: { blockNumber } };
   }, []);
   const buttonProps = useCallback(
-    ({ data, loading }: QueryResult<BlockSummaryType, OperationVariables>) => ({
+    ({ data, loading }: QueryResult<GetBlockByPK, OperationVariables>) => ({
       disabled: loading || !data?.block?.number,
       onClick: () => {
         history.push(`/blocks/${data?.block?.number}`);
@@ -26,8 +26,8 @@ const useArrowButtonsOptions = (number: number) => {
     }),
     [history]
   );
-  const nextBlockQuery = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, variables(number + 1));
-  const previousBlockQuery = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, variables(number - 1));
+  const nextBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_PK, variables(number + 1));
+  const previousBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_PK, variables(number - 1));
   return { next: buttonProps(nextBlockQuery), previous: buttonProps(previousBlockQuery) };
 };
 
@@ -52,24 +52,24 @@ const BlockSummaryHeader: React.FC<{
 const Block = () => {
   const { number } = useParams<{ number: string }>();
   const blockNumber = Number(number);
-  const { data, loading } = useQuery<BlockSummaryType>(GET_BLOCK_BY_PK, {
+  const { data, loading } = useQuery<GetBlockByPK>(GET_BLOCK_BY_PK, {
     variables: { blockNumber }
   });
 
-  if (!loading && !data?.block?.number) {
+  if (!loading && !data?.block && !data?.block?.number) {
     return <NotFound />;
   }
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <BlockSummaryHeader blockNumber={blockNumber} />
-      <BlockSummary data={data?.block} loading={loading} />
+      {loading ? <SummaryLoader number={9} /> : data?.block && <BlockSummary data={data.block} />}
       <Box sx={{ mt: 2 }}>
         <BlockDetailedEventsTabs
           blockNumber={blockNumber}
           loading={loading}
           events={data?.block.totalEvents}
-          extrinsics={data?.block.numTransfers}
+          extrinsics={data?.block.totalExtrinsics}
         />
       </Box>
     </Container>

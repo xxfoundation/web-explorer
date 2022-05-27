@@ -1,11 +1,9 @@
 import base64url from 'base64url';
 import React from 'react';
 import { Link } from '@mui/material';
+import { shortString } from '../utils'
 
 const toBase64Url = (addr: string) => base64url.fromBase64(addr);
-const shortHash = (addr: string) => addr
-  ? addr.slice(0, 4).concat('...', addr.slice(addr.length - 4, addr.length))
-  : '';
 
 const toDashboardNodeUrl = (addr: string) => {
   const basedAf = toBase64Url(addr);
@@ -31,8 +29,8 @@ const CmixAddress: React.FC<{ nodeId?: string, shorten?: boolean, className?: st
           rel='noreferrer noopener'
           target='__blank'
         >
-          { shorten
-            ? shortHash(nodeId)
+          {shorten
+            ? shortString(nodeId)
             : nodeId
           }
         </Link>

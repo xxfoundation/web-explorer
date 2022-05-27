@@ -1,44 +1,28 @@
+import { useQuery } from '@apollo/client';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Stack, Typography } from '@mui/material';
-import React, { useCallback, useMemo, useState } from 'react';
-import BlockStatusIcon, { BlockStatus } from '../../components/block/BlockStatusIcon';
-import { Hash } from '../../components/ChainId';
+import React, { useMemo } from 'react';
+import BlockStatusIcon from '../../components/block/BlockStatusIcon';
+import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import { BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
+import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgo from '../../components/TimeAgo';
+import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
+import {
+  GetTransfersByBlock,
+  LIST_TRANSFERS_ORDERED,
+  Transfer
+} from '../../schemas/transfers.schema';
 
-type Transfer = {
-  amount: string;
-  block: number;
-  extrinsicId: string;
-  from: string;
-  hash: string;
-  status: BlockStatus;
-  time: number;
-  to: string;
-};
-
-const statuses: Transfer['status'][] = ['failed', 'successful', 'pending'];
-
-const transfers: Transfer[] = Array.from(Array(9).keys()).map((i) => ({
-  extrinsicId: '357706-' + i,
-  block: 357968,
-  status: statuses[Math.trunc(Math.random() * statuses.length)],
-  amount: Math.trunc(Math.random() * 10000).toString(),
-  from: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
-  to: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
-  hash: '0xa2876369e34f570fb55d11c29c60e45d10a889dc23d1210e5e716013066382b7',
-  time: new Date().getTime() - i * 1000
-}));
-
-const TransferRow = ({ amount, block, extrinsicId, from, hash, status, time, to }: Transfer) => {
-  const extrinsicIdLink = `/extrinsics/${extrinsicId}`;
+const TransferRow = (data: Transfer) => {
+  const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
   return [
-    { value: <Link to={extrinsicIdLink}>{extrinsicId}</Link> },
-    { value: <Link to={`/blocks/${block}`}>{block}</Link> },
-    { value: <TimeAgo date={time} /> },
+    { value: <Link to={extrinsicIdLink}>{`${data.blockNumber}-${data.index}`}</Link> },
+    { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
+    { value: <TimeAgo date={data.timestamp} /> },
     {
       value: (
         <Stack
@@ -46,15 +30,15 @@ const TransferRow = ({ amount, block, extrinsicId, from, hash, status, time, to 
           style={{ alignItems: 'flex-end', justifyContent: 'space-between' }}
           maxWidth={'260px'}
         >
-          <Hash value={from} truncated />
+          <Address value={data.source} truncated />
           <ArrowForwardIosIcon />
-          <Hash value={to} truncated />
+          <Address value={data.destination} truncated />
         </Stack>
       )
     },
-    { value: <FormatBalance value={amount} /> },
-    { value: <BlockStatusIcon status={status} /> },
-    { value: <Hash value={hash} truncated /> }
+    { value: <FormatBalance value={data.amount.toString()} /> },
+    { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
+    { value: <Hash value={data.hash} truncated showTooltip /> }
   ];
 };
 
@@ -76,38 +60,44 @@ const headers = [
 ];
 
 const TransferTable = () => {
-  const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [page, setPage] = useState(0);
-  const rows = useMemo(() => {
-    return (
-      rowsPerPage > 0
-        ? transfers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        : transfers
-    ).map(TransferRow);
-  }, [page, rowsPerPage]);
-  const onRowsPerPageChange = useCallback((event) => {
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-  }, []);
-
-  const onPageChange = useCallback((_: unknown, number: number) => {
-    setPage(number);
-  }, []);
-
-  return (
-    <BaselineTable
-      headers={headers}
-      rows={rows}
-      footer={
+  const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
+    usePaginatorByCursor<Transfer & { id: number }>({
+      cursorField: 'id',
+      rowsPerPage: 20
+    });
+  const variables = useMemo(
+    () => ({
+      limit,
+      offset,
+      orderBy: [{ id: 'desc' }],
+      where: { id: { _lte: cursorField } }
+    }),
+    [cursorField, limit, offset]
+  );
+  const { data, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
+    variables
+  });
+  const footer = useMemo(() => {
+    if (data?.agg && data?.transfers && data.transfers.length) {
+      return (
         <TablePagination
           page={page}
-          count={transfers.length}
+          count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange}
+          onPageChange={onPageChange(data.transfers[0])}
           rowsPerPageOptions={[20, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
-      }
+      );
+    }
+    return <></>;
+  }, [data?.agg, data?.transfers, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  if (loading) return <TableSkeleton rows={12} cells={6} footer />;
+  return (
+    <BaselineTable
+      headers={headers}
+      rows={(data?.transfers || []).map(TransferRow)}
+      footer={footer}
     />
   );
 };

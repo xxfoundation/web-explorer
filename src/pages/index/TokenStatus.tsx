@@ -1,13 +1,13 @@
 import { styled, Box, Grid, Typography } from '@mui/material';
 import React from 'react';
-import TransactionsChart from '../../components/blockchain/charts/TransactionsLineChart';
-import AverageAnnualReturn from '../../components/blockchain/charts/AverageAnnualReturnLineChart';
-import NewAccounts from '../../components/blockchain/charts/NewAccountsLineChart';
-import StakingRatio from '../../components/blockchain/charts/StakingRatioLineChart';
+import AverageAnnualReturn from '../../components/charts/AverageAnnualReturnLineChart';
+import NewAccounts from '../../components/charts/NewAccountsLineChart';
+import StakingRatio from '../../components/charts/StakingRatioLineChart';
+import TransactionsChart from '../../components/charts/TransactionsLineChart';
+import LatestBlocks from '../../components/blockchain/LatestBlocksList';
+import Transfers from '../../components/blockchain/LatestTransfersList';
 import StakingSupplyChart from '../../components/charts/StakingSupplyDoughnutChart';
 import TotalIssuance from '../../components/charts/TotalIssuanceDoughnutChart';
-import LatestBlocks from '../../components/blockchain/LatestBlocksTable';
-import Transfers from '../../components/blockchain/TransfersTable';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 
 const ChartWrap = styled(PaperWrapStyled)({
@@ -43,7 +43,7 @@ const TokenStatus = () => {
           <TransactionsChart />
         </Grid>
         <Grid item xs={12} md={6}>
-            <NewAccounts />
+          <NewAccounts />
         </Grid>
         <Grid item xs={12} md={6}>
           <StakingRatio />
