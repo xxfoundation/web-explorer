@@ -28,10 +28,10 @@ const AccountId: FC = ({}) => {
   if (loading)
     return (
       <Container sx={{ my: 5 }}>
-        <Typography>
+        <Typography maxWidth={'100px'}>
           <Skeleton />
         </Typography>
-        <Typography variant='h1'>
+        <Typography variant='h1' maxWidth={'500px'}>
           <Skeleton />
         </Typography>
         <Grid container spacing={3} marginTop='5px'>
@@ -50,7 +50,9 @@ const AccountId: FC = ({}) => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Typography variant='h1'>{data.account.identityDisplay || accountId}</Typography>
+      <Typography variant='h1' maxWidth='700px'>
+        {data.account.identityDisplay || accountId}
+      </Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
           <IdentityCard account={data.account} roles={roles} />

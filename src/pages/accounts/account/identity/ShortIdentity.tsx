@@ -1,4 +1,3 @@
-import KeyIcon from '@mui/icons-material/Key';
 import {
   Avatar,
   Box,
@@ -23,8 +22,6 @@ const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
     maxWidth: 500
   }
 });
-
-const publicKey = '?????';
 
 const IdentityMobile: FC<{ account: Account }> = ({ account }) => {
   return (
@@ -61,9 +58,9 @@ const IdentityMobile: FC<{ account: Account }> = ({ account }) => {
                 <CopyButton value={account.id} />
               </span>
             </CustomWidthTooltip>
-            <Tooltip title={`public key: ${publicKey}`} arrow placement='top'>
+            {/* <Tooltip title={`public key: ${publicKey}`} arrow placement='top'>
               <KeyIcon color='primary' sx={{ transform: 'rotate(90deg)' }} />
-            </Tooltip>
+            </Tooltip> */}
           </Box>
         </Stack>
       </Stack>
@@ -105,9 +102,9 @@ const IdentityDesktop: FC<{ account: Account }> = ({ account }) => {
               <CopyButton value={account.id} />
             </span>
           </CustomWidthTooltip>
-          <Tooltip title={`public key: ${publicKey}`} arrow placement='top'>
+          {/* <Tooltip title={`public key: ${publicKey}`} arrow placement='top'>
             <KeyIcon color='primary' sx={{ transform: 'rotate(90deg)' }} />
-          </Tooltip>
+          </Tooltip> */}
         </Stack>
       </Grid>
       <Grid item md={4} container justifyContent={'flex-end'}>

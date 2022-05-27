@@ -7,7 +7,6 @@ import { Account, Roles } from '../../../../schemas/accounts.schema';
 import TransferTable from '../../../transfers/TransfersTable';
 import AuthoredBlocksTable from './AuthoredBlocksTable';
 import BalanceHistoryChart from './BalanceHistoryChart';
-import RolesTable from './RolesTable';
 
 const extrinsicTab = (author: string) => ({
   label: <TabText message={'Extrinsic'} count={0} />,
@@ -19,10 +18,10 @@ const transfersTab = (author: string) => ({
   content: <TransferTable where={{ block: { block_author: { _eq: author } } }} />
 });
 
-const rolesTab = {
-  label: <Typography>Roles</Typography>,
-  content: <RolesTable />
-};
+// const rolesTab = {
+//   label: <Typography>Roles</Typography>,
+//   content: <RolesTable />
+// };
 
 const balanceHistoryTab = {
   label: <Typography>Balance History</Typography>,
@@ -39,7 +38,7 @@ const BlockchainCard: FC<{ account: Account; roles: Roles[] }> = ({ account, rol
     const panels = [
       extrinsicTab(account.id),
       transfersTab(account.id),
-      rolesTab,
+      // rolesTab,
       balanceHistoryTab
     ];
     if (roles.includes('validator')) {

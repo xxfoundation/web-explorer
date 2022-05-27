@@ -34,16 +34,16 @@ const rowsParser = ({ blockNumber, index, method, section, timestamp }: Event): 
 const HistoryTable = () => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Event>({
-      cursorField: 'timestamp',
+      cursorField: 'id',
       rowsPerPage: 20
     });
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ timestamp: 'desc' }],
+      orderBy: [{ id: 'desc' }],
       limit: limit,
       offset: offset,
-      where: { timestamp: { _lte: cursorField } }
+      where: { id: { _lte: cursorField } }
     }),
     [cursorField, limit, offset]
   );

@@ -30,6 +30,7 @@ export const LIST_EVENTS = gql`
       blockNumber: block_number
       index: event_index
       method
+      id
       section
       timestamp
     }
