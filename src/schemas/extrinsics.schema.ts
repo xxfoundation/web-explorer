@@ -94,8 +94,8 @@ export type GetExtrinsicByPK = {
     success: boolean;
     signer?: string;
     isSigned: boolean;
-    args: string;
-    argsDef: string;
+    args: Array<string | number>;
+    argsDef: Record<string, string>;
     doc: string;
   };
 };
