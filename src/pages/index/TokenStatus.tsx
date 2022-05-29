@@ -2,10 +2,10 @@ import { styled, Box, Grid, Typography } from '@mui/material';
 import React from 'react';
 import AverageAnnualReturn from '../../components/charts/AverageAnnualReturnLineChart';
 import NewAccounts from '../../components/charts/NewAccountsLineChart';
-import StakingRatio from '../../components/charts/StakingRatioLineChart';
-import TransactionsChart from '../../components/charts/TransactionsLineChart';
+import StakingRatio from '../../components/charts/highcharts/StakingRatioLineChart';
+import TransactionsChart from '../../components/charts/highcharts/TransactionsLineChart';
 import LatestBlocks from '../../components/blockchain/LatestBlocksList';
-import Transfers from '../../components/blockchain/LatestTransfersList';
+import TransfersTable from '../../components/blockchain/LatestTransfersList';
 import StakingSupplyChart from '../../components/charts/StakingSupplyDoughnutChart';
 import TotalIssuance from '../../components/charts/TotalIssuanceDoughnutChart';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
@@ -29,7 +29,7 @@ const TokenStatus = () => {
           </ChartWrap>
         </Grid>
         <Grid item xs={12} md={6}>
-          <ChartWrap>
+          <ChartWrap >
             <StakingSupplyChart />
           </ChartWrap>
         </Grid>
@@ -37,19 +37,27 @@ const TokenStatus = () => {
           <LatestBlocks />
         </Grid>
         <Grid item xs={12} md={6}>
-          <Transfers />
+          <TransfersTable />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TransactionsChart />
+          <PaperWrapStyled>
+            <TransactionsChart />
+          </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
-          <NewAccounts />
+          <PaperWrapStyled>
+            <NewAccounts />
+          </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
-          <StakingRatio />
+          <PaperWrapStyled>
+            <StakingRatio />
+          </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
-          <AverageAnnualReturn />
+          <PaperWrapStyled>
+            <AverageAnnualReturn />
+          </PaperWrapStyled>
         </Grid>
       </Grid>
     </Box>

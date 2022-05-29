@@ -1,8 +1,9 @@
+import type { ListOfTransfers, Transfer } from './types';
+
 import { useSubscription } from '@apollo/client';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import BN from 'bn.js';
 import React, { FC } from 'react';
-import { useSubscriptionUpdater } from '../../hooks/useSubscriptionUpdater';
 import { LISTEN_FOR_TRANSFERS_ORDERED } from '../../schemas/transfers.schema';
 import { Address } from '../ChainId';
 import DefaultTile from '../DefaultTile';
@@ -10,11 +11,10 @@ import FormatBalance from '../FormatBalance';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import { ListSkeleton } from './ListSkeleton';
-import type { ListOfTransfers, Transfer } from './types';
 
 const PAGE_LIMIT = 8;
 
-const ItemHandler: FC<Transfer> = (props) => {
+const TransferRow: FC<Transfer> = (props) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant='body2' sx={{ mb: 1 }}>
@@ -69,10 +69,8 @@ const LatestTransfersList = () => {
   const { data, loading } = useSubscription<ListOfTransfers>(LISTEN_FOR_TRANSFERS_ORDERED, {
     variables: { limit: PAGE_LIMIT }
   });
-  const content = useSubscriptionUpdater({
-    key: 'extrinsicIndex',
-    newData: data?.transfers
-  }).map((transfer) => <ItemHandler {...transfer} key={transfer.extrinsicIndex} />);
+
+  const transfers = data?.transfers;
 
   return (
     <DefaultTile
@@ -82,7 +80,11 @@ const LatestTransfersList = () => {
       linkAddress={'/transfers'}
       height={500}
     >
-      {loading ? <ListSkeleton number={PAGE_LIMIT} /> : content}
+      {loading
+        ? <ListSkeleton number={PAGE_LIMIT} />
+        : transfers?.map((tx) => (
+          <TransferRow {...tx} key={tx.hash} />
+        ))}
     </DefaultTile>
   );
 };

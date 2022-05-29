@@ -1,20 +1,24 @@
+import type { DataPoint } from './highcharts';
 import React from 'react';
-import { Line }  from 'react-chartjs-2';
-import { Stack, Typography } from '@mui/material';
+import { LineChart, percentTooltipFormatter } from './highcharts';
+import ChartWrap from './highcharts/ChartWrap';
 
-const data = {
-  labels: [321, 320, 319, 318],
-  datasets: [{
-    data: [147, 238, 212, 68]
-  }],
-};
+
+const data: DataPoint[] = [
+  [665, 0.01],
+  [789, 0.3],
+  [13, 0.1],
+  [75, 0.23]
+];
 
 const AverageAnnualReturn = () => {
   return (
-    <Stack spacing={4} sx={{ width: '100%' }}>
-      <Typography variant='h3'>Average Annual Return</Typography>
-      <Line style={{ flexGrow: 1 }} data={data} />
-    </Stack>
+    <ChartWrap title='Average Annual Return'>
+      <LineChart
+        tooltipFormatter={percentTooltipFormatter}
+        data={data}
+      />
+    </ChartWrap>
   );
 };
 

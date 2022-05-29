@@ -1,8 +1,8 @@
+import type { DataPoint } from '../../../../components/charts/highcharts';
 import { TooltipFormatterContextObject } from 'highcharts';
 import React, { FC } from 'react';
 import StepChart from '../../../../components/charts/highcharts/StepChart';
 import { formatBalance } from '../../../../components/FormatBalance/formatter';
-import { DataPoint } from '../../../../types';
 
 function getRandomY() {
   const min = Math.ceil(54000000);

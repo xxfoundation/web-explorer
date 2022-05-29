@@ -1,4 +1,4 @@
-import type { Block, ListBlocks } from '../charts/types';
+import type { Block, ListBlocks } from './types';
 
 import { useSubscription } from '@apollo/client';
 import { Box, Grid, Typography } from '@mui/material';

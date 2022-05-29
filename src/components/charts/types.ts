@@ -7,20 +7,6 @@ declare module 'chart.js' {
 
 import type { PointOptionsObject } from 'highcharts';
 
-export type Block = {
-  hash: string;
-  number: number;
-  finalized: boolean;
-  currentEra: number;
-  totalEvents: number;
-  totalExtrinsics: number;
-  timestamp: number;
-};
-
-export type ListBlocks = {
-  blocks: Block[];
-};
-
 export type PercentageValues = {
   team: {
     value: number;

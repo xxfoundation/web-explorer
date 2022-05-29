@@ -1,20 +1,20 @@
+import type { DataPoint } from './highcharts';
 import React from 'react';
-import { Line }  from 'react-chartjs-2';
-import { Stack, Typography } from '@mui/material';
+import { LineChart }  from './highcharts';
 
-const data = {
-  labels: [321, 320, 319, 318],
-  datasets: [{
-    data: [147, 238, 212, 68]
-  }],
-};
+import ChartWrap from './highcharts/ChartWrap';
+
+const data: DataPoint[] = [
+  [123, 1231],
+  [441, 6671],
+  [155, 667]
+];
 
 const NewAccounts = () => {
   return (
-    <Stack spacing={4} sx={{ width: '100%' }}>
-      <Typography variant='h3'>New Accounts</Typography>
-      <Line style={{ flexGrow: 1 }} data={data} />
-    </Stack>
+    <ChartWrap title='New Accounts'>
+      <LineChart data={data} />
+    </ChartWrap>
   );
 };
 

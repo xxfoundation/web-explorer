@@ -168,13 +168,17 @@ const HoldersTable: FC = () => {
     }
     return <></>;
   }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading) return <TableSkeleton cells={6} rows={rowsPerPage} />;
+
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
         Account Holders
       </Typography>
-      <BaselineTable headers={headers} rows={rows} footer={footer} />
+      {
+        loading
+          ? <TableSkeleton cells={headers.length} rows={rowsPerPage} />
+          : <BaselineTable headers={headers} rows={rows} footer={footer} />
+      }
     </PaperStyled>
   );
 };
