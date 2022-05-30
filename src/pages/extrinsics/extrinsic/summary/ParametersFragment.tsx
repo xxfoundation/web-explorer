@@ -40,12 +40,11 @@ const callbackCopyMessage = (value: ReactNode) => {
   );
 };
 
-const useParserOfArgs = (args: string, def: string) => {
+const useParserOfArgs = (args: unknown[], def: Record<string, string>) => {
   return useMemo(() => {
-    const definition = Object.keys(JSON.parse(def));
-    const parsedArgs: [] = JSON.parse(args);
+    const definition = Object.keys(def);
     return definition.reduce<Record<string, unknown>>(
-      (p, c, index) => ({ ...p, [c]: parsedArgs[index] }),
+      (p, c, index) => ({ ...p, [c]: args[index] }),
       {}
     );
   }, [args, def]);
@@ -80,7 +79,7 @@ const ParamTile: FC<{ label: string; value: unknown }> = ({ label, value }) => {
   );
 };
 
-const ParametersFragment: FC<{ args: string; def: string }> = ({ args, def }) => {
+const ParametersFragment: FC<{ args: unknown[]; def: Record<string, string> }> = ({ args, def }) => {
   const parameters = useParserOfArgs(args, def);
   const staticCopy = useCopyClipboard()[1];
   const [isActive, { toggle }] = useToggle();

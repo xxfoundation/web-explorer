@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Stack, Typography } from '@mui/material';
-import React, { useMemo } from 'react';
+import { Grid, Stack, Typography } from '@mui/material';
+import React, { FC, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
@@ -25,15 +25,17 @@ const TransferRow = (data: Transfer) => {
     { value: <TimeAgo date={data.timestamp} /> },
     {
       value: (
-        <Stack
-          direction='row'
-          style={{ alignItems: 'flex-end', justifyContent: 'space-between' }}
-          maxWidth={'260px'}
-        >
-          <Address value={data.source} truncated />
-          <ArrowForwardIosIcon />
-          <Address value={data.destination} truncated />
-        </Stack>
+        <Grid container>
+          <Grid xs={5} item>
+            {<Address value={data.source} truncated />}
+          </Grid>
+          <Grid xs={1} item>
+            <ArrowForwardIosIcon />
+          </Grid>
+          <Grid xs={5} item>
+            {<Address value={data.destination} truncated />}
+          </Grid>
+        </Grid>
       )
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
@@ -59,7 +61,7 @@ const headers = [
   { value: 'Hash' }
 ];
 
-const TransferTable = () => {
+const TransferTable: FC<{ where?: Record<string, unknown> }> = ({ where = {} }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Transfer & { id: number }>({
       cursorField: 'id',
@@ -70,9 +72,9 @@ const TransferTable = () => {
       limit,
       offset,
       orderBy: [{ id: 'desc' }],
-      where: { id: { _lte: cursorField } }
+      where: { ...where, id: { _lte: cursorField } }
     }),
-    [cursorField, limit, offset]
+    [cursorField, limit, offset, where]
   );
   const { data, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
     variables

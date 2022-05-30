@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels from '../../../../components/Tabs';
-import { Roles } from '../../types';
+import { Roles } from '../../../../schemas/accounts.schema';
 import CouncilActivityTable from './CouncilActivityTable';
 import ElectionActivityTable from './ElectionActivityTable';
 import IdentityActivityTable from './IdentityActivityTable';

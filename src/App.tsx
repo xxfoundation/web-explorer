@@ -6,11 +6,12 @@ import SiteFooter from './components/Footer';
 import SiteHeader from './components/Header';
 import Accounts from './pages/accounts';
 import Blocks from './pages/blocks';
+import EventsHistory from './pages/events';
 import ExtrinsicsRouter from './pages/extrinsics';
 import BlockChain from './pages/index';
 import NotFound from './pages/NotFound';
-import Transfers from './pages/transfers';
 import Staking from './pages/staking';
+import Transfers from './pages/transfers';
 import { theme } from './themes/default';
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
             <Transfers />
           </Route>
           <Route path='/events'>
-            <h1>events</h1>
+            <EventsHistory />
           </Route>
           <Route path='/governance'>
             <h1>governance</h1>

@@ -1,7 +1,9 @@
 import { Avatar, Divider, Grid, Link, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import Socials from '../../../../components/Socials';
-import { AccountType } from '../../types';
+import { Account, Roles } from '../../../../schemas/accounts.schema';
+import SocialIconsGroup from './SocialIconsGroup';
+
+type Props = { account: Account; roles: Roles[] };
 
 const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => {
   return (
@@ -21,8 +23,8 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
   );
 };
 
-const NameHeaderTypography: FC<{ account: AccountType }> = ({ account }) => {
-  if (!account.legalName) {
+const NameHeaderTypography: FC<Omit<Props, 'roles'>> = ({ account: { identity } }) => {
+  if (!identity.legal) {
     return (
       <Typography
         fontSize={24}
@@ -38,41 +40,23 @@ const NameHeaderTypography: FC<{ account: AccountType }> = ({ account }) => {
   }
   return (
     <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-      {account.legalName}
+      {identity.legal}
     </Typography>
   );
 };
 
-const DisplayBlurb: FC<{ account: AccountType }> = ({ account }) => {
-  if (account.roles.includes('nominator') || !account.blurb) return <></>;
+const DisplayBlurb: FC<Props> = ({ account: { identity }, roles }) => {
+  if (roles.includes('nominator') || !identity.blurb) return <></>;
   return (
     <Grid item xs={12}>
       <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>
-        {account.blurb}
+        {identity.blurb}
       </Typography>
     </Grid>
   );
 };
 
-const SocialIconsGroup: FC<{ account: AccountType }> = ({ account }) => {
-  const socials: Record<string, string> = {};
-  if (account.email) {
-    socials.email = account.email;
-  }
-  if (account.twitter) {
-    socials.twitter = account.twitter;
-  }
-  if (socials.twitter || socials.email) {
-    return (
-      <Grid item>
-        <Socials socials={socials} />
-      </Grid>
-    );
-  }
-  return <></>;
-};
-
-const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
+const IdentityMobile: FC<Props> = (props) => {
   return (
     <Grid container spacing={2} sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' } }}>
       <Grid
@@ -90,29 +74,33 @@ const IdentityMobile: FC<{ account: AccountType }> = ({ account }) => {
           alt='something I do not know'
           sx={{ width: 125, height: 125, marginRight: '15px' }}
         />
-        <NameHeaderTypography account={account} />
+        <NameHeaderTypography {...props} />
       </Grid>
-      {(!account.blurb || account.roles.includes('nominator')) &&
-      !account.email &&
-      !account.twitter ? (
+      {(!props.account.identity.blurb || props.roles.includes('nominator')) &&
+      !props.account.identity.email &&
+      !props.account.identity.twitter ? (
         <></>
       ) : (
         <>
           <Grid item xs={12}>
             <Divider />
           </Grid>
-          <DisplayBlurb account={account} />
-          <SocialIconsGroup account={account} />
+          <DisplayBlurb {...props} />
+          <SocialIconsGroup identity={props.account.identity} />
         </>
       )}
       <Grid item xs={12}>
         <Divider />
       </Grid>
       <Grid item xs={12} margin={'10px'}>
-        <TextWithLabel label='stash' text={account.stash} />
-        <TextWithLabel label='controller' text={account.controller} />
-        {account.riotName && <TextWithLabel label='riot' text={account.riotName} />}
-        {account.website && <TextWithLabel label='web' text={account.website} />}
+        {/* <TextWithLabel label='stash' text={props.account.stash} />
+        <TextWithLabel label='controller' text={props.account.controller} /> */}
+        {props.account.identity.riotName && (
+          <TextWithLabel label='riot' text={props.account.identity.riotName} />
+        )}
+        {props.account.identity.web && (
+          <TextWithLabel label='web' text={props.account.identity.web} />
+        )}
       </Grid>
     </Grid>
   );
@@ -126,12 +114,12 @@ const PaddedGridItem: FC<{ md: number }> = ({ children, md }) => {
   );
 };
 
-const NameAndBlurbCell: FC<{ account: AccountType }> = ({ account }) => {
+const NameAndBlurbCell: FC<Props> = (props) => {
   const hasBlurb = useMemo(
-    () => !account.roles.includes('nominator') && account.blurb,
-    [account.blurb, account.roles]
+    () => !props.roles.includes('nominator') && props.account.identity.blurb,
+    [props.account.identity.blurb, props.roles]
   );
-  if (!account.legalName) {
+  if (!props.account.identity.legal) {
     return (
       <Typography
         fontSize={24}
@@ -148,18 +136,18 @@ const NameAndBlurbCell: FC<{ account: AccountType }> = ({ account }) => {
   return (
     <>
       <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-        {account.legalName}
+        {props.account.identity.legal}
       </Typography>
       {hasBlurb && (
         <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>
-          {account.blurb}
+          {props.account.identity.blurb}
         </Typography>
       )}
     </>
   );
 };
 
-const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
+const IdentityDesktop: FC<Props> = (props) => {
   return (
     <Grid container sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
       <Grid item md={2}>
@@ -172,35 +160,34 @@ const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
       <Grid item md={10}>
         <Grid item container md={12} alignItems={'end'}>
           <PaddedGridItem md={8}>
-            <NameAndBlurbCell account={account} />
+            <NameAndBlurbCell {...props} />
             <Divider sx={{ marginTop: '12px' }} />
           </PaddedGridItem>
           <PaddedGridItem md={4}>
             <Grid item>
-              <Socials
-                socials={{
-                  email: account.email || '#blash',
-                  twitter: account.twitter || '#blah'
-                }}
-              />
+              <SocialIconsGroup identity={props.account.identity} />
             </Grid>
-            {(account.twitter || account.email) && <Divider />}
+            {(props.account.identity.twitter || props.account.identity.email) && <Divider />}
           </PaddedGridItem>
         </Grid>
         <Grid item container md={12}>
           <PaddedGridItem md={8}>
-            <TextWithLabel label='stash' text={account.stash} />
+            <TextWithLabel label='stash' text={'????'} />
           </PaddedGridItem>
           <PaddedGridItem md={4}>
-            {account.riotName && <TextWithLabel label='riot' text={account.riotName} />}
+            {props.account.identity.riotName && (
+              <TextWithLabel label='riot' text={props.account.identity.riotName} />
+            )}
           </PaddedGridItem>
         </Grid>
         <Grid item container md={12}>
           <PaddedGridItem md={8}>
-            <TextWithLabel label='controller' text={account.controller} />
+            <TextWithLabel label='controller' text={'????'} />
           </PaddedGridItem>
           <PaddedGridItem md={4}>
-            {account.website && <TextWithLabel label='web' text={account.website} />}
+            {props.account.identity.web && (
+              <TextWithLabel label='web' text={props.account.identity.web} />
+            )}
           </PaddedGridItem>
         </Grid>
       </Grid>
@@ -208,11 +195,11 @@ const IdentityDesktop: FC<{ account: AccountType }> = ({ account }) => {
   );
 };
 
-const FullIdentity: FC<{ account: AccountType }> = ({ account }) => {
+const FullIdentity: FC<Props> = (props) => {
   return (
     <>
-      <IdentityMobile account={account} />
-      <IdentityDesktop account={account} />
+      <IdentityMobile {...props} />
+      <IdentityDesktop {...props} />
     </>
   );
 };

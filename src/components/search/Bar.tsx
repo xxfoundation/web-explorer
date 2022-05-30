@@ -3,13 +3,13 @@ import { Divider, FormControl, Grid, SxProps } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React, { FC, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { GetAccountByAddressType, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
+import { GetAccountByAddress, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
 import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import { FindExtrinsicByHashType, FIND_EXTRINSIC_BY_HASH } from '../../schemas/extrinsics.schema';
 import { Bar, SelectItem, SelectOption } from './Bar.styles';
 import { GenericSearchInput } from './SearchInputGroup';
 import { SearchTypes } from './types';
-import validators from './validations';
+import validators from './validators';
 
 const dividerSxProps: SxProps = {
   position: 'absolute',
@@ -89,7 +89,7 @@ const SearchAccount: FC = () => {
       variables={(v: string) => ({ accountId: v })}
       option='account'
       optionValidator={validators.accounts}
-      successSearchCallback={(v: string, data: GetAccountByAddressType) => {
+      successSearchCallback={(v: string, data: GetAccountByAddress) => {
         if (data.account?.id) {
           history.push(`/accounts/${data.account.id}`);
         } else {

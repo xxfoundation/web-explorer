@@ -13,7 +13,7 @@ export type FindExtrinsicByHashType = {
 
 export const FIND_EXTRINSIC_BY_HASH = gql`
   query FindExtrinsicByHash($where: extrinsic_bool_exp) {
-    extrinsic(where: $where) {
+    extrinsic: extrinsic(where: $where) {
       blockNumber: block_number
       index: extrinsic_index
       hash
@@ -28,7 +28,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
     $offset: Int
     $where: extrinsic_bool_exp
   ) {
-    extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+    extrinsic: extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       id
       index: extrinsic_index
       blockNumber: block_number
@@ -94,9 +94,9 @@ export type GetExtrinsicByPK = {
     success: boolean;
     signer?: string;
     isSigned: boolean;
-    args: string;
-    argsDef: string;
-    doc: string;
+    args: unknown[];
+    argsDef: Record<string, string>;
+    doc: string[];
   };
 };
 

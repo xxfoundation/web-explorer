@@ -1,64 +1,126 @@
 import { gql } from '@apollo/client';
+import { CommonFieldsRankingFragment } from './ranking.schema';
 import { TotalOfItems } from './types';
 
-export type GetAccountIdentityByAddressType = {
-  account: {
-    id: string;
-    identityDisplay: string;
-    nonce: number;
-  };
+export type Roles = 'validator' | 'nominator' | 'council' | 'technical committee' | 'treasury';
+
+export type Identity = {
+  display?: string;
+  displayParent?: string;
+  email?: string;
+  judgements?: Judgements[];
+  legal?: string;
+  other?: unknown;
+  parent?: string;
+  twitter?: string;
+  web?: string;
+  blurb?: string;
+
+  // FIXME madeup field
+  riotName?: string;
 };
 
-export const GET_ACCOUNT_IDENTITY_BY_ADDRESS = gql`
-  query GetAccountIdentityByPK($accountId: String!) {
-    account: account_by_pk(account_id: $accountId) {
-      id: account_id
-      identityDisplay: identity_display
-      nonce
-    }
+type Judgements =
+  | 'Unknown'
+  | 'Reasonable'
+  | 'Known Good'
+  | 'Out of Date'
+  | 'Low Quality'
+  | 'Erroneous';
+
+export type Balance = {
+  accountId: string;
+  accountNonce?: string;
+  additional?: [];
+  freeBalance?: string;
+  frozenFee?: string;
+  frozenMisc?: string;
+  reservedBalance?: string;
+  votingBalance?: string;
+  availableBalance?: string;
+  lockedBalance?: string;
+  lockedBreakdown?: {
+    id: string;
+    amount: number;
+    reasons: string | 'Misc' | 'All';
+  }[];
+  vestingLocked?: string;
+  isVesting?: boolean;
+  vestedBalance?: string;
+  vestedClaimable?: string;
+  vesting?: {
+    endBlock: string;
+    locked: string;
+    perBlock: string;
+    startingBlock: string;
+    vested: string;
+  }[];
+  vestingTotal?: string;
+  namedReserves: [][];
+};
+
+export type Account = {
+  id: string;
+  blockHeight: number;
+  identity: Identity;
+  identityDisplay: string;
+  identityDisplayParent: string;
+  nonce: number;
+  timestamp: number;
+  balances: Balance;
+
+  availableBalance: number;
+  freeBalance: number;
+  lockedBalance: number;
+  reservedBalance: number;
+  totalBalance: number;
+
+  roles: Record<Roles, boolean>;
+};
+
+export type GetAccountByAddress = {
+  account: Account;
+  ranking?: CommonFieldsRankingFragment;
+};
+
+export const ACCOUNT_BY_PK_FRAGMENT = gql`
+  fragment account on account {
+    id: account_id
+    blockHeight: block_height
+    identity
+    identityDisplay: identity_display
+    identityDisplayParent: identity_display_parent
+    nonce
+    timestamp
+    balances
+    roles
+
+    availableBalance: available_balance
+    freeBalance: free_balance
+    lockedBalance: locked_balance
+    reservedBalance: reserved_balance
+    totalBalance: total_balance
   }
 `;
 
-export type GetAccountByAddressType = {
-  account: {
-    id: string;
-    availableBalance: number;
-    balances: string;
-    blockHeight: number;
-    freeBalance: number;
-    identity: string;
-    identityDisplay: string;
-    identityDisplayParent: string;
-    lockedBalance: number;
-    nonce: number;
-    reservedBalance: number;
-    timestamp: number;
-    totalBalance: number;
-  };
-};
-
 export const GET_ACCOUNT_BY_PK = gql`
+  ${ACCOUNT_BY_PK_FRAGMENT}
   query GetAccountByPK($accountId: String!) {
     account: account_by_pk(account_id: $accountId) {
-      id: account_id
-      availableBalance: available_balance
-      balances
-      blockHeight: block_height
-      freeBalance: free_balance
-      identity
-      identityDisplay: identity_display
-      identityDisplayParent: identity_display_parent
-      lockedBalance: locked_balance
-      nonce
-      reservedBalance: reserved_balance
-      timestamp
-      totalBalance: total_balance
+      ...account
     }
   }
 `;
 
 export type ListAccounts = {
-  account: { address: string; timestamp: number }[];
+  account: {
+    address: string;
+    timestamp: number;
+    availableBalance: number;
+    lockedBalance: number;
+    nonce: number;
+    roles: Record<Roles, boolean>;
+  }[];
 } & TotalOfItems;
 
 export const LIST_ACCOUNTS = gql`
@@ -68,9 +130,13 @@ export const LIST_ACCOUNTS = gql`
     $limit: Int
     $where: account_bool_exp
   ) {
-    account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
+    account: account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
       address: account_id
       timestamp
+      availableBalance: available_balance
+      lockedBalance: locked_balance
+      nonce
+      roles
     }
     agg: account_aggregate(where: $where) {
       aggregate {

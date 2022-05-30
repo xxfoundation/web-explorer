@@ -68,7 +68,7 @@ export const LIST_TRANSFERS_ORDERED = gql`
     $offset: Int
     $where: transfer_bool_exp
   ) {
-    agg: transfer_aggregate {
+    agg: transfer_aggregate(where: $where) {
       aggregate {
         count
       }
@@ -76,17 +76,38 @@ export const LIST_TRANSFERS_ORDERED = gql`
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       ...transference_common_fields
       id
+      source
+      destination
     }
   }
 `;
 
-export type GetTransferByPK = { transfer: Transfer };
+export type GetTransferByPK = {
+  transfer: Transfer & {
+    source: {
+      address: string;
+      identityDisplay?: string;
+    };
+    destination: {
+      address: string;
+      identityDisplay?: string;
+    };
+  };
+};
 
 export const GET_TRANSFER_BY_PK = gql`
   ${TRANSFER_FRAGMENT}
   query GetTransferByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
     transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
       ...transference_common_fields
+      source: account {
+        address: id
+        identityDisplay
+      }
+      destination: accountByDestination {
+        address: id
+        identityDisplay
+      }
     }
   }
 `;
