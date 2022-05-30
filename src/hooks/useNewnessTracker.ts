@@ -10,16 +10,10 @@ const useNewnessTracker = <T>(items: T[] | undefined, idKey: keyof T): WithNew<T
   useEffect(() => {
     setTracked(
       (oldItems) => {
-        const oldIds = oldItems?.map((v) => v[idKey]) as T[keyof T][] ?? [];
-        const currentIds = items?.map((i) => i[idKey]) ?? [];
-        const itemsToAdd = items?.filter((i) => !oldIds.includes(i[idKey]))
-          .map((i) => ({...i, new: true })) ?? [];
-        const idsOfItemsToRemove = oldIds.filter((id) => !currentIds.includes(id))
-        const filteredOldItems = oldItems?.map((i) => ({ ...i, new: false })).filter(
-          (i) => !idsOfItemsToRemove.includes(i[idKey])
-        ) ?? [];
-        
-        return itemsToAdd.concat(filteredOldItems);
+        return items?.map((item): WithNew<T> => ({
+          new: oldItems?.find((old) => old[idKey] === item[idKey]) === undefined,
+          ...item,
+        }));
       }
     );
   }, [idKey, items]);
