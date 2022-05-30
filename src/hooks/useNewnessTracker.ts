@@ -14,14 +14,12 @@ const useNewnessTracker = <T>(items: T[] | undefined, idKey: keyof T): WithNew<T
         const currentIds = items?.map((i) => i[idKey]) ?? [];
         const itemsToAdd = items?.filter((i) => !oldIds.includes(i[idKey]))
           .map((i) => ({...i, new: true })) ?? [];
-
         const idsOfItemsToRemove = oldIds.filter((id) => !currentIds.includes(id))
-
-        return itemsToAdd.concat(
-          oldItems?.map((i) => ({ ...i, new: false })).filter(
-            (i) => !idsOfItemsToRemove.includes(i[idKey])
-          ) ?? []
-        );
+        const filteredOldItems = oldItems?.map((i) => ({ ...i, new: false })).filter(
+          (i) => !idsOfItemsToRemove.includes(i[idKey])
+        ) ?? [];
+        
+        return itemsToAdd.concat(filteredOldItems);
       }
     );
   }, [idKey, items]);
