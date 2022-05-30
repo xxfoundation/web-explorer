@@ -78,7 +78,7 @@ export type Account = {
   roles: Record<Roles, boolean>;
 };
 
-export type GetAccountByAddress = {
+export type GetAccountByAddressType = {
   account: Account;
   ranking?: CommonFieldsRankingFragment;
 };

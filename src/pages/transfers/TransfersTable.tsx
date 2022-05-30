@@ -38,7 +38,7 @@ const TransferRow = (data: Transfer) => {
         </Grid>
       )
     },
-    { value: <FormatBalance value={data.amount.toString()} /> },
+    { value: <FormatBalance value={data.amount} /> },
     { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
     { value: <Hash value={data.hash} truncated showTooltip /> }
   ];

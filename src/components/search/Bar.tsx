@@ -3,7 +3,7 @@ import { Divider, FormControl, Grid, SxProps } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React, { FC, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { GetAccountByAddress, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
+import { GetAccountByAddressType, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
 import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
 import { FindExtrinsicByHashType, FIND_EXTRINSIC_BY_HASH } from '../../schemas/extrinsics.schema';
 import { Bar, SelectItem, SelectOption } from './Bar.styles';
@@ -81,25 +81,36 @@ const SearchExtrinsics: FC = () => {
 const SearchAccount: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
+
+  const onSuccess = useCallback(
+    (v: string, data: GetAccountByAddressType) => {
+      if (data.account?.id) {
+        history.push(`/accounts/${data.account.id}`);
+      } else {
+        enqueueSnackbar(`no account found for the address ${v}`, { variant: 'error' });
+      }
+    },
+    [enqueueSnackbar, history]
+  );
+
+  const onError = useCallback(
+    (v: string, err: unknown) => {
+      enqueueSnackbar(`problem searching account with address ${v}`, { variant: 'warning' });
+      console.error(err);
+    },
+    [enqueueSnackbar]
+  );
+
   return (
     <GenericSearchInput
       messageLoader={(value: string) => `Querying address with: ${value}`}
-      placeholder='Search by Account Address (insert a ss58 string)'
+      placeholder='Search by Account Address (insert an ss58 string)'
       document={GET_ACCOUNT_BY_PK}
       variables={(v: string) => ({ accountId: v })}
       option='account'
       optionValidator={validators.accounts}
-      successSearchCallback={(v: string, data: GetAccountByAddress) => {
-        if (data.account?.id) {
-          history.push(`/accounts/${data.account.id}`);
-        } else {
-          enqueueSnackbar(`no account found for the address ${v}`, { variant: 'error' });
-        }
-      }}
-      errorSearchCallback={(v: string, err: unknown) => {
-        enqueueSnackbar(`problem searching account with address ${v}`, { variant: 'warning' });
-        console.error(err);
-      }}
+      successSearchCallback={onSuccess}
+      errorSearchCallback={onError}
     />
   );
 };

@@ -1,8 +1,10 @@
+
 declare module 'chart.js' {
   interface TooltipPositionerMap {
     myCustomPositioner: TooltipPositionerFunction<ChartType>;
   }
 }
+
 import type { PointOptionsObject } from 'highcharts';
 
 export type PercentageValues = {
@@ -36,3 +38,20 @@ export interface CustomPointOptions extends PointOptionsObject {
   custom: Custom;
 }
 
+export type Transfer = {
+  hash: string;
+  blockNumber: number;
+  extrinsicIndex: number;
+  source: string;
+  destination: string;
+  amount: number;
+  fee_amount: number;
+  section: string;
+  method: string;
+  success: boolean;
+  timestamp: number;
+};
+
+export type ListOfTransfers = {
+  transfers: Transfer[];
+};

@@ -16,7 +16,10 @@ const data = {
   ]
 };
 
-const ChainInfoCard: FC<{ title: string, value: string | React.ReactNode }> = ({ title, value }) => {
+const ChainInfoCard: FC<{ title: string; value: string | React.ReactNode }> = ({
+  title,
+  value
+}) => {
   return (
     <Grid item xs={6} sm={3} md={3} key={title}>
       <Item>

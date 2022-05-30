@@ -1,13 +1,11 @@
 import type { CustomPointOptions } from './types';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import { Stack, Typography } from '@mui/material';
-import BN from 'bn.js';
 import React, { FC, useMemo } from 'react';
 import { theme } from '../../themes/default';
 import FormatBalance from '../FormatBalance';
 import SeriesDetailedInfo, { LegendTypographySubHeaders } from './ChartSeriesDetailsInfo';
 import { HtmlTooltip } from './ChartsPopover';
-
 
 const LegendItem: FC<CustomPointOptions> = (props) => {
   const title = useMemo(() => {
@@ -41,7 +39,7 @@ const LegendItems: FC<{ data: CustomPointOptions[] }> = ({ data }) => {
 const ChartsLegends: FC<{
   legends: CustomPointOptions[];
   name: string;
-  value: string | BN;
+  value: string | number;
 }> = ({ legends, name, value }) => {
   return (
     <>

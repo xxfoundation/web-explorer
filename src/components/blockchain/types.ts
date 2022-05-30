@@ -1,4 +1,3 @@
-
 export type Block = {
   hash: string;
   number: number;

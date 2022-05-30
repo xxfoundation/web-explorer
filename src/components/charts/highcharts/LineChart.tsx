@@ -6,7 +6,7 @@ import Highcharts, {
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC, useMemo } from 'react';
 import { theme } from '../../../themes/footer';
-import { DataPoint } from '../../../types';
+import { DataPoint } from './types';
 
 const calculateMaximums = (data: DataPoint[]) => {
   const xItems = data.map(([x]) => x);

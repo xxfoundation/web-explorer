@@ -109,7 +109,7 @@ const BlocksTable: FC = () => {
     }
     return <></>;
   }, [data?.agg, data?.blocks, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading) return <TableSkeleton rows={6} cells={6} footer />;
+  if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 

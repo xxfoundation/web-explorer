@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
-import { GetAccountByAddress, GET_ACCOUNT_BY_PK, Roles } from '../../schemas/accounts.schema';
+import { GetAccountByAddressType, GET_ACCOUNT_BY_PK, Roles } from '../../schemas/accounts.schema';
 import NotFound from '../NotFound';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
@@ -21,7 +21,7 @@ import StakingCard from './account/staking';
 
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
-  const { data, loading } = useQuery<GetAccountByAddress>(GET_ACCOUNT_BY_PK, {
+  const { data, loading } = useQuery<GetAccountByAddressType>(GET_ACCOUNT_BY_PK, {
     variables: { accountId }
   });
   // const role = useTestRole();

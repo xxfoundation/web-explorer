@@ -24,7 +24,7 @@ const useCustomTooltip = <T extends keyof ChartTypeRegistry, D>(
 
   const tooltip = useCallback<CustomTooltip<T>>((context) => {
     if (context.tooltip.opacity == 0) {
-      setTooltipStyles((styles) => ({ ...styles }));
+      setTooltipStyles((styles) => ({ ...styles, opacity: 0 }));
       return;
     }
 
@@ -33,7 +33,6 @@ const useCustomTooltip = <T extends keyof ChartTypeRegistry, D>(
     if (canvas) {
       setTooltipStyles((styles) => ({ ...styles, opacity: 1 }));
 
-      // set position of tooltip
       const left = context.tooltip.x;
       const top = context.tooltip.y;
 
