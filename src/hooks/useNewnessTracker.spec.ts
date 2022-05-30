@@ -19,7 +19,7 @@ test(`${useNewnessTracker.name} hook`, async () => {
     { id: 'three', new: false, value: 3 }
   ]);
 
-  const renderedItems = hook.result.current.slice(0, 2) as Item[];
+  const renderedItems = hook.result.current?.slice(0, 2) as Item[];
 
   hook.rerender(renderedItems.concat(lastItems));
 
