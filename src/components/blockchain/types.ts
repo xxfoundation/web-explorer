@@ -1,3 +1,17 @@
+export type Placeholder = {
+  header: string;
+  name: string;
+  value: string | JSX.Element;
+}
+
+export type Totals = {
+  title: string;
+  value: string;
+}
+
+export type Summary = {
+  totals: Totals[];
+}
 
 export type Block = {
   hash: string;
