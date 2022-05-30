@@ -1,11 +1,11 @@
-import { AccountType, MetricScores } from '../../../types';
+import { MetricScores } from '../../../types';
 
 const baseMsg = (number: string) =>
   `Validator’s performance in the network is in the following range: ${number}`;
 
 const presumedNetworkPointAverage = 1000;
 
-const getEraPointsScore = ({ eraPoints = 0 }: AccountType): [MetricScores, string] => {
+const getEraPointsScore = ({ eraPoints = 0 }: { eraPoints: number }): [MetricScores, string] => {
   if (eraPoints <= presumedNetworkPointAverage * 0.01) {
     return ['very bad', baseMsg('bottom 10%')];
   }

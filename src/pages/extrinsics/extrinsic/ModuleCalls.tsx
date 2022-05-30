@@ -49,7 +49,7 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string }> = ({ call, 
     } catch (err) {
       console.error((err as Error).message);
     }
-       
+
     return (
       <Box>
         <Typography

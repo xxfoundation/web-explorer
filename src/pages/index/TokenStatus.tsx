@@ -1,4 +1,4 @@
-import { styled, Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, styled, Typography } from '@mui/material';
 import React from 'react';
 import {
   TransactionsChart,
