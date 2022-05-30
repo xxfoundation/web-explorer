@@ -136,7 +136,7 @@ const sumBalance = (balance: LockedBalanceType) => {
     Number(balance.election) +
     Number(balance.unbonding) +
     Number(balance.vesting);
-  return <FormatBalance value={resultSum.toString()} />;
+  return <FormatBalance value={resultSum} />;
 };
 
 const Balance: FC<{
@@ -165,7 +165,7 @@ const Balance: FC<{
             sx={{
               ':hover': {
                 backgroundColor: 'inherit',
-                cursor: 'default',
+                cursor: 'default'
               }
             }}
             disableRipple

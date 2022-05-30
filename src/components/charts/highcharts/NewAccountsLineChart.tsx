@@ -4,17 +4,17 @@ import { LineChart, amountByEraTooltip } from '.';
 import ChartWrap from '../ChartWrap';
 
 const data: DataPoint[] = [
-  [100, 3123],
-  [150, 2133],
-  [200, 6132]
+  [123, 1231],
+  [441, 6671],
+  [155, 667]
 ];
 
-const TransactionsChart = () => {
+const NewAccountsChart = () => {
   return (
-    <ChartWrap title='Transactions'>
+    <ChartWrap title='New Accounts'>
       <LineChart tooltipFormatter={amountByEraTooltip} data={data} />
     </ChartWrap>
   );
 };
 
-export default TransactionsChart;
+export default NewAccountsChart;

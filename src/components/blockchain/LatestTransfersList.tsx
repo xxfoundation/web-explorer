@@ -2,7 +2,6 @@ import type { ListOfTransfers, Transfer } from './types';
 
 import { useSubscription } from '@apollo/client';
 import { Box, Grid, Stack, Typography } from '@mui/material';
-import BN from 'bn.js';
 import React, { FC } from 'react';
 import { LISTEN_FOR_TRANSFERS_ORDERED } from '../../schemas/transfers.schema';
 import { Address } from '../ChainId';
@@ -57,7 +56,7 @@ const TransferRow: FC<Transfer> = (props) => {
             <TimeAgo date={props.timestamp} />
           </Typography>
           <Typography variant='body3'>
-            <FormatBalance value={new BN(props.amount)} />
+            <FormatBalance value={props.amount} />
           </Typography>
         </Stack>
       </Stack>
@@ -80,11 +79,11 @@ const LatestTransfersList = () => {
       linkAddress={'/transfers'}
       height={500}
     >
-      {loading
-        ? <ListSkeleton number={PAGE_LIMIT} />
-        : transfers?.map((tx) => (
-          <TransferRow {...tx} key={tx.hash} />
-        ))}
+      {loading ? (
+        <ListSkeleton number={PAGE_LIMIT} />
+      ) : (
+        transfers?.map((tx) => <TransferRow {...tx} key={tx.hash} />)
+      )}
     </DefaultTile>
   );
 };

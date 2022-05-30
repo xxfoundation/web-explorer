@@ -1,18 +1,17 @@
-import BN from 'bn.js';
 import { ReactNode } from 'react';
 
 export type Roles = 'validator' | 'nominator' | 'council' | 'technical committee' | 'treasury';
 
 export type BalanceType = {
-  transferable: string | BN;
+  transferable: string | number;
 };
 
 export type LockedBalanceType = {
-  bonded: string | BN;
-  unbonding: string | BN;
-  democracy: string | BN;
-  election: string | BN;
-  vesting: string | BN;
+  bonded: string | number;
+  unbonding: string | number;
+  democracy: string | number;
+  election: string | number;
+  vesting: string | number;
 };
 
 type Judgements =
@@ -46,7 +45,7 @@ export type AccountType = AccountIdentityFields & {
 
   rank: number;
   transactions: number;
-  lockedCoin: string | BN;
+  lockedCoin: string | number;
 
   balance: BalanceType;
   reserved: LockedBalanceType;

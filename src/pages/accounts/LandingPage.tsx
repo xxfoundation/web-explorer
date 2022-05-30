@@ -1,6 +1,6 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import NewAccounts from '../../components/charts/NewAccountsLineChart';
+import NewAccounts from '../../components/charts/highcharts/NewAccountsLineChart';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import HoldersTable from './HoldersTable';
 import Summary from './Summary';

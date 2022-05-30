@@ -1,4 +1,3 @@
-import BN from 'bn.js';
 import React, { FC } from 'react';
 import { Address } from '../../../../components/ChainId';
 import FormatBalance from '../../../../components/FormatBalance';
@@ -8,9 +7,9 @@ import { BaselineCell, BaselineTable } from '../../../../components/Tables';
 type StakingActivityType = {
   validator: string;
   validatorAddress: string;
-  bonded: string | BN;
+  bonded: string | number;
   bond: number;
-  totalBonded: string | BN;
+  totalBonded: string | number;
   nominator: number;
   commission: number;
   share: number;
