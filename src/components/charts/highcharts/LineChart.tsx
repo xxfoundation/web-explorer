@@ -10,15 +10,13 @@ import { DataPoint } from './types';
 
 const calculateMaximums = (data: DataPoint[]) => {
   const xItems = data.map(([x]) => x);
-  const yItems = data.map(([, y]) => y);
+  // const yItems = data.map(([, y]) => y);
   const maxX = Math.max(...xItems);
   const minX = Math.min(...xItems);
 
-  const maxY = Math.max(...yItems);
   return {
-    minX: minX * 0.3,
-    maxX: maxX * 1.02,
-    maxY: maxY * 1.02
+    minX: minX * 0.9,
+    maxX: maxX * 1.1
   };
 };
 
@@ -34,8 +32,8 @@ type Props = {
 
 const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }) => {
   const options = useMemo<Options>(() => {
-    const { maxX, maxY, minX } = calculateMaximums(data);
-
+    const { maxX, minX } = calculateMaximums(data);
+    console.warn(`aaa ${maxX}, ${minX}`);
     return {
       title: {
         text: title,
@@ -80,7 +78,6 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
         title: { text: '' },
         labels: { align: 'right', x: 20, formatter: labelFormatters?.yAxis },
         min: 0,
-        max: maxY
       },
       plotOptions: {
         series: {
