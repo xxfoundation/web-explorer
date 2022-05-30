@@ -1,7 +1,7 @@
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
-import { IconButton, Stack, Typography } from '@mui/material';
+import { IconButton, IconButtonProps, Stack, Typography } from '@mui/material';
 import React, { ReactNode } from 'react';
 import useCopyClipboard from '../../hooks/useCopyToClibboard';
 import { theme } from '../../themes/default';
@@ -31,10 +31,11 @@ export const callbackCopyMessage = (value: ReactNode) => {
   );
 };
 
-const CopyButton: React.FC<{ value: string }> = ({ value }) => {
+const CopyButton: React.FC<{ value: string } & IconButtonProps> = ({ value, ...props }) => {
   const [isCopied, staticCopy] = useCopyClipboard(4000);
   return (
     <IconButton
+      {...props}
       size='small'
       arial-label='copy'
       onClick={() => {

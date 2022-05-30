@@ -4,6 +4,7 @@ import CopyButton from '../../components/buttons/CopyButton';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import { SummaryPaperWrapper, SummaryRow } from '../../components/Paper/SummaryPaper';
+import { Account } from '../../schemas/accounts.schema';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
 
@@ -29,40 +30,42 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
   );
 };
 
-const Summary = () => {
+const Summary: FC<{ account: Account }> = ({ account }) => {
   return (
     <SummaryPaperWrapper>
       <SummaryRow label='stash' action={<CopyButton value={sampleHash} />}>
-        <Address value={sampleHash} />
-      </SummaryRow>
-      <SummaryRow label='controller' action={<CopyButton value={sampleHash} />}>
-        <Address name='test' value={sampleHash} />
-      </SummaryRow>
-      <SummaryRow label='reward' action={<CopyButton value={sampleHash} />}>
-        <Address value={sampleHash} />
+        <Address value={account.id} />
       </SummaryRow>
       <SummaryRow
-        label='cmix id'
-        action={<CopyButton value={'kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C'} />}
+        label='controller'
+        action={<CopyButton value={account.controllerAddress || '???'} />}
       >
-        <Typography>kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C</Typography>
+        <Address name='test' value={'???'} />
+      </SummaryRow>
+      <SummaryRow label='reward' action={<CopyButton disabled value={'???'} />}>
+        <Address value={'???'} />
+      </SummaryRow>
+      <SummaryRow label='cmix id' action={<CopyButton disabled value={'???'} />}>
+        <Typography>???</Typography>
       </SummaryRow>
       <SummaryRow label='location'>
-        <Typography>Big Sur, California</Typography>
+        <Typography>???</Typography>
       </SummaryRow>
       <SummaryRow label='own stake'>
-        <Typography>1.00 XX</Typography>
+        <Typography>
+          <FormatBalance value={'00'} />
+        </Typography>
       </SummaryRow>
       <SummaryRow label='total stake'>
         <Typography>
-          <FormatBalance value={'3038663570'} />
+          <FormatBalance value={''} />
         </Typography>
       </SummaryRow>
       <SummaryRow label='nominators'>
-        <Typography>3</Typography>
+        <Typography>???</Typography>
       </SummaryRow>
       <SummaryRow label='commission'>
-        <Typography>10.00%</Typography>
+        <Typography>???</Typography>
       </SummaryRow>
       <SummaryRow label='session key'>
         <SessionKeyValue
