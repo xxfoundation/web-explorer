@@ -1,12 +1,12 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import { useSubscription } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
-import { LISTEN_FOR_TOTALS } from '../../schemas/summary.schema';
+import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
 import { Data, Item, Wrap } from './ChainInfo.styles';
 import FormatBalance from '../FormatBalance';
-import { Summary, Totals, Placeholder } from './types';
+import { ChainData, EraMetrics, Metric } from './types';
 
-const placeholder: Placeholder[] = [
+const chainData: ChainData[] = [
   {
     header: 'Finalized Blocks',
     name: 'blocks',
@@ -63,11 +63,11 @@ const ChainInfoCard: FC<{ title: string; value: string | React.ReactNode }> = ({
   );
 };
 
-const processTotals = (loading: boolean, data: Totals[] | undefined): JSX.Element[] => {
-  let summary = placeholder;
+const processData = (loading: boolean, data: Metric[] | undefined): JSX.Element[] => {
+  let eraMetrics = chainData;
   if (data !== undefined && !loading) {
     const validatorSet = data.find(({ title }) => title === 'validator_set') || 0;
-    summary = placeholder.map((item) => {
+    eraMetrics = chainData.map((item) => {
       const aux = data.find(({ title }) => title === item.name);
       if (aux) {
         if (item.header == 'Total Issuance') {
@@ -84,15 +84,15 @@ const processTotals = (loading: boolean, data: Totals[] | undefined): JSX.Elemen
       return item;
     });
   }
-  return summary.map(({ header, value }, index) => (
+  return eraMetrics.map(({ header, value }, index) => (
     <ChainInfoCard title={header} value={value} key={index} />
   ));
 };
 
 const ChainInfo = () => {
-  const { data, loading } = useSubscription<Summary>(LISTEN_FOR_TOTALS);
+  const { data, loading } = useSubscription<EraMetrics>(LISTEN_FOR_ERA_METRICS);
   const content = useMemo(() => {
-    return processTotals(loading, data?.totals);
+    return processData(loading, data?.metrics);
   }, [data, loading]);
   return (
     <Box className='blockchain-component-chainInfo' mb={7}>

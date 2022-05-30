@@ -1,16 +1,16 @@
-export type Placeholder = {
+export type ChainData = {
   header: string;
   name: string;
   value: string | JSX.Element;
 }
 
-export type Totals = {
+export type Metric = {
   title: string;
   value: string;
 }
 
-export type Summary = {
-  totals: Totals[];
+export type EraMetrics = {
+  metrics: Metric[];
 }
 
 export type Block = {

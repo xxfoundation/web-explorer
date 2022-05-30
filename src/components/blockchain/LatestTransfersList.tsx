@@ -72,9 +72,7 @@ const LatestTransfersList = () => {
   const content = useSubscriptionUpdater({
     key: 'extrinsicIndex',
     newData: data?.transfers
-  }).map((transfer) => (
-    <ItemHandler {...transfer} key={`${transfer.blockNumber}-${transfer.extrinsicIndex}`} />
-  ));
+  }).map((transfer) => <ItemHandler {...transfer} key={`${transfer.hash}`} />);
 
   return (
     <DefaultTile
