@@ -3,34 +3,25 @@ import React, { FC, useMemo } from 'react';
 import BlockExtrinsics from '../../../../components/block/ExtrinsicsTable';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../../components/Tabs';
+import { Account, Roles } from '../../../../schemas/accounts.schema';
 import TransferTable from '../../../transfers/TransfersTable';
-import { Roles } from '../../types';
 import AuthoredBlocksTable from './AuthoredBlocksTable';
 import BalanceHistoryChart from './BalanceHistoryChart';
-import RolesTable from './RolesTable';
 
-const extrinsicTab = {
+const extrinsicTab = (author: string) => ({
   label: <TabText message={'Extrinsic'} count={0} />,
-  content: (
-    <BlockExtrinsics
-      where={{
-        block_number: {
-          _eq: 2597151
-        }
-      }}
-    />
-  )
-};
+  content: <BlockExtrinsics where={{ block: { block_author: { _eq: author } } }} />
+});
 
-const transfersTab = {
+const transfersTab = (author: string) => ({
   label: <TabText message='Transfers' count={0} />,
-  content: <TransferTable />
-};
+  content: <TransferTable where={{ block: { block_author: { _eq: author } } }} />
+});
 
-const rolesTab = {
-  label: <Typography>Roles</Typography>,
-  content: <RolesTable />
-};
+// const rolesTab = {
+//   label: <Typography>Roles</Typography>,
+//   content: <RolesTable />
+// };
 
 const balanceHistoryTab = {
   label: <Typography>Balance History</Typography>,
@@ -42,14 +33,19 @@ const authoredBlocksTab = {
   content: <AuthoredBlocksTable />
 };
 
-const BlockchainCard: FC<{ roles: Roles[] }> = ({ roles }) => {
+const BlockchainCard: FC<{ account: Account; roles: Roles[] }> = ({ account, roles }) => {
   const memoistPanels = useMemo(() => {
-    const panels = [extrinsicTab, transfersTab, rolesTab, balanceHistoryTab];
+    const panels = [
+      extrinsicTab(account.id),
+      transfersTab(account.id),
+      // rolesTab,
+      balanceHistoryTab
+    ];
     if (roles.includes('validator')) {
       panels.push(authoredBlocksTab);
     }
     return panels;
-  }, [roles]);
+  }, [account.id, roles]);
   return (
     <PaperStyled>
       <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>

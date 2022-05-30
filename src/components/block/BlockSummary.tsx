@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material';
-import { default as React, FC } from 'react';
+import React, { FC } from 'react';
 import { GetBlockByPK } from '../../schemas/blocks.schema';
 import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';

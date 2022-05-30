@@ -4,6 +4,7 @@ import React, { FC, ReactNode, useCallback, useMemo } from 'react';
 import { SummaryRow } from '../../../../components/Paper/SummaryPaper';
 import { useToggle } from '../../../../hooks';
 import useCopyClipboard from '../../../../hooks/useCopyToClibboard';
+import { GetExtrinsicByPK } from '../../../../schemas/extrinsics.schema';
 import { theme } from '../../../../themes/default';
 
 const RoundedButton = styled(Button)(({}) => {
@@ -40,18 +41,7 @@ const callbackCopyMessage = (value: ReactNode) => {
   );
 };
 
-const useParserOfArgs = (args: string, def: string) => {
-  return useMemo(() => {
-    const definition = Object.keys(JSON.parse(def));
-    const parsedArgs: [] = JSON.parse(args);
-    return definition.reduce<Record<string, unknown>>(
-      (p, c, index) => ({ ...p, [c]: parsedArgs[index] }),
-      {}
-    );
-  }, [args, def]);
-};
-
-const ParamTile: FC<{ label: string; value: unknown }> = ({ label, value }) => {
+const ParamTile: FC<{ label: string; value: unknown; type?: string }> = ({ label, value }) => {
   return (
     <Stack
       sx={{
@@ -80,21 +70,23 @@ const ParamTile: FC<{ label: string; value: unknown }> = ({ label, value }) => {
   );
 };
 
-const ParametersFragment: FC<{ args: string; def: string }> = ({ args, def }) => {
-  const parameters = useParserOfArgs(args, def);
+type Params = Pick<GetExtrinsicByPK['extrinsic'], 'args' | 'argsDef'>;
+
+const ParametersFragment: FC<Params> = ({ args, argsDef }) => {
   const staticCopy = useCopyClipboard()[1];
   const [isActive, { toggle }] = useToggle();
   const onclickCopy = useCallback(
-    () => staticCopy(JSON.stringify(parameters), callbackCopyMessage),
-    [parameters, staticCopy]
+    () => staticCopy(JSON.stringify(args), callbackCopyMessage),
+    [args, staticCopy]
   );
   const paramTiles = useMemo(
     () =>
-      Object.entries(parameters).map(([label, value], index) => (
-        <ParamTile key={index} label={label} value={value} />
+      Object.entries(argsDef).map(([label, type], index) => (
+        <ParamTile key={index} label={label} type={type} value={args[index]} />
       )),
-    [parameters]
+    [args, argsDef]
   );
+
   return (
     <SummaryRow label='parameters'>
       <Stack>

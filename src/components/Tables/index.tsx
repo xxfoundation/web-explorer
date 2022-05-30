@@ -61,7 +61,6 @@ export const BaselineTable: FC<{
   );
 };
 
-// TODO make those two obsolete
 export const BaseLineCellWrapper = (element: JSX.Element | string | number) => {
   return {
     value: element

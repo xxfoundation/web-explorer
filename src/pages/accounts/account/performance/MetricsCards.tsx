@@ -2,26 +2,14 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
+import { Account } from '../../../../schemas/accounts.schema';
+import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
 import { theme } from '../../../../themes/default';
-import { AccountType, MetricScores, MetricsType } from '../../types';
+import { MetricScores, MetricsType } from '../../types';
 import MetricTooltip from './MetricTooltip';
 import scoreEvaluator from './scoreEvaluator';
 import ScoreIcon from './ScoreIcons';
 import getTooltipConfiguration from './tooltipConfiguration';
-
-// const metrics: MetricsType[] = ['identity'];
-const metrics: MetricsType[] = [
-  'identity',
-  'address creation',
-  'slashes',
-  'subaccounts',
-  'nominators',
-  'era points',
-  'commission',
-  'frequency of payouts',
-  'governance',
-  'validator time'
-];
 
 const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: string }> = ({
   description,
@@ -72,18 +60,14 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
   );
 };
 
-const MetricCards: FC<{ account: AccountType }> = ({ account }) => {
+const MetricCards: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = (props) => {
   const scoreTiles = useMemo(() => {
-    const validationResult = scoreEvaluator(account);
-    return metrics.map((metric, index) => {
-      const [score, description] = validationResult[metric];
-      return (
-        <Grid item xs={12} md={6} key={index}>
-          <ScoreTile metric={metric} score={score} description={description} />
-        </Grid>
-      );
-    });
-  }, [account]);
+    return Object.entries(scoreEvaluator(props)).map(([metric, [score, description]], index) => (
+      <Grid item xs={12} md={6} key={index}>
+        <ScoreTile metric={metric as MetricsType} score={score} description={description} />
+      </Grid>
+    ));
+  }, [props]);
   return (
     <Grid container spacing={1}>
       {scoreTiles}

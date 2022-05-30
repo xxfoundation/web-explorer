@@ -1,9 +1,9 @@
-import { AccountType, MetricScores } from '../../../types';
+import { MetricScores } from '../../../types';
 
 const baseMsg = (number: unknown, value: string) =>
   `Detected ${number} nominators, validator is ${value}`;
 
-const getNominatorsScore = ({ nominators = 0 }: AccountType): [MetricScores, string] => {
+const getNominatorsScore = ({ nominators = 0 }: { nominators: number }): [MetricScores, string] => {
   if (nominators < 150) {
     return ['good', baseMsg(nominators, 'undersubscribed')];
   }

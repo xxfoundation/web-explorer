@@ -1,9 +1,12 @@
-import { AccountType, MetricScores } from '../../../types';
+import { MetricScores } from '../../../types';
 
 const getSubaccountsScore = ({
   parentIdentity = [],
   childrenIdentity = []
-}: AccountType): [MetricScores, string] => {
+}: {
+  parentIdentity: [];
+  childrenIdentity: [];
+}): [MetricScores, string] => {
   if (parentIdentity.length || childrenIdentity.length) {
     return [
       'good',

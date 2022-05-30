@@ -7,7 +7,7 @@ const ExtrinsicEventsTabs: FC<{ blockNumber: number }> = ({ blockNumber }) => {
   const panels = useMemo(() => {
     return [
       {
-        label: <TabText message='events' count={9} />,
+        label: <TabText message='events' />,
         content: <EventsTable where={{ block_number: { _eq: blockNumber } }} />
       }
     ];

@@ -1,9 +1,12 @@
-import { AccountType, MetricScores } from '../../../types';
+import { MetricScores } from '../../../types';
 
 const getFrequencyOfPayouts = ({
   frequencyOfRewards = 0,
   unclaimedRewards = 0
-}: AccountType): [MetricScores, string] => {
+}: {
+  frequencyOfRewards: number;
+  unclaimedRewards: number;
+}): [MetricScores, string] => {
   // TODO has a maxium of eras to consider
   if (!frequencyOfRewards) {
     return ['neutral', 'validator never received a reward'];
