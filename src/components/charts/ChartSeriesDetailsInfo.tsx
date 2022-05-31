@@ -1,8 +1,8 @@
-import type { CustomData, CustomPointOptions } from './types';
 import CloseIcon from '@mui/icons-material/Close';
 import { Grid, IconButton, Stack, styled, Typography } from '@mui/material';
-import { default as React, FC, useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import FormatBalance from '../FormatBalance';
+import type { CustomData, CustomPointOptions } from './types';
 
 const LegendTypographyHeader = styled(Typography)(({ theme: th }) => {
   return {
@@ -54,7 +54,7 @@ const SeriesInfoLine: FC<CustomData> = (props) => {
       </Grid>
       <Grid item xs={5} marginTop={margin.top}>
         <LegendEl>
-          <FormatBalance value={`${props.value}`} precision={3} />
+          <FormatBalance value={props.value} precision={3} />
         </LegendEl>
       </Grid>
       <Grid item xs={2} marginTop={margin.top}>

@@ -10,7 +10,7 @@ const BlockProducer = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Typography variant='h1' sx={{ mb: 5 }}>
+      <Typography variant='h1' maxWidth={'400px'} sx={{ mb: 5 }}>
         {nameOrId}
       </Typography>
       <Summary />

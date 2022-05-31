@@ -1,8 +1,12 @@
-import { AccountType, MetricScores } from '../../../types';
+import { MetricScores } from '../../../types';
 
 const baseMsg = (value: string) => `Current commission is ${value}`;
 
-const getCommissionScore = ({ averageCommission = 0 }: AccountType): [MetricScores, string] => {
+const getCommissionScore = ({
+  averageCommission = 0
+}: {
+  averageCommission: number;
+}): [MetricScores, string] => {
   if (averageCommission >= 30) {
     return ['very bad', baseMsg('much higher than the majority of validators')];
   }

@@ -3,8 +3,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Button, Checkbox, FormControlLabel, FormGroup, Popover, Stack } from '@mui/material';
 import React, { Dispatch, FC, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useToggle } from '../../hooks';
+import { Roles } from '../../schemas/accounts.schema';
 import { theme } from '../../themes/default';
-import { Roles } from './types';
 
 type RoleFiltersType = Roles | 'all';
 

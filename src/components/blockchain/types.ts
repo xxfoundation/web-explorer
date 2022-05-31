@@ -1,3 +1,18 @@
+export type ChainData = {
+  header: string;
+  name: string;
+  value: string | JSX.Element;
+}
+
+export type Metric = {
+  title: string;
+  value: string;
+}
+
+export type EraMetrics = {
+  metrics: Metric[];
+}
+
 export type Block = {
   hash: string;
   number: number;

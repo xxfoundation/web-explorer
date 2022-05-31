@@ -86,7 +86,6 @@ const ParametersFragment: FC<Params> = ({ args, argsDef }) => {
       )),
     [args, argsDef]
   );
-  
   return (
     <SummaryRow label='parameters'>
       <Stack>

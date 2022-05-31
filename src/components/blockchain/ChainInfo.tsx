@@ -1,24 +1,60 @@
-import { Box, Grid, Typography } from '@mui/material';
-import React, { FC } from 'react';
-import FormatBalance from '../FormatBalance';
+import { Box, Grid, Skeleton, Typography } from '@mui/material';
+import { useSubscription } from '@apollo/client';
+import React, { FC, useMemo } from 'react';
+import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
 import { Data, Item, Wrap } from './ChainInfo.styles';
+import FormatBalance from '../FormatBalance';
+import { ChainData, EraMetrics, Metric } from './types';
 
-const data = {
-  items: [
-    { title: 'FINALIZED BLOCKS', value: '8,657,975' },
-    { title: 'ACTIVE ERA', value: '568' },
-    { title: 'TRANSFERS', value: '524,609' },
-    { title: 'HOLDERS', value: '866,441' },
-    { title: 'TOTAL ISSUANCE', value: <FormatBalance value='1060000000' /> },
-    { title: 'NOMINATORS', value: '53/53' },
-    { title: 'VALIDATORS', value: '874,609' },
-    { title: 'INFLATION RATE', value: '7.86%' }
-  ]
-};
+const chainData: ChainData[] = [
+  {
+    header: 'Finalized Blocks',
+    name: 'blocks',
+    value: <Skeleton />
+  },
+  {
+    header: 'Active Era',
+    name: 'current_era',
+    value: <Skeleton />
+  },
+  {
+    header: 'Transfers',
+    name: 'transfers',
+    value: <Skeleton />
+  },
+  {
+    header: 'Holders',
+    name: 'accounts',
+    value: <Skeleton />
+  },
+  {
+    header: 'Total Issuance',
+    name: 'total_issuance',
+    value: <Skeleton />
+  },
+  {
+    header: 'Nominators',
+    name: 'nominator_count',
+    value: <Skeleton />
+  },
+  {
+    header: 'Validators',
+    name: 'active_validator_count',
+    value: <Skeleton />
+  },
+  {
+    header: 'Inflation Rate',
+    name: 'inflation_rate',
+    value: <Skeleton />
+  }
+];
 
-const ChainInfoCard: FC<{ title: string, value: string | React.ReactNode }> = ({ title, value }) => {
+const ChainInfoCard: FC<{ title: string; value: string | React.ReactNode }> = ({
+  title,
+  value
+}) => {
   return (
-    <Grid item xs={6} sm={3} md={3} key={title}>
+    <Grid item xs={6} sm={3} md={3}>
       <Item>
         <Typography variant='body4'>{title}</Typography>
         <Data>{value}</Data>
@@ -27,16 +63,44 @@ const ChainInfoCard: FC<{ title: string, value: string | React.ReactNode }> = ({
   );
 };
 
+const processData = (loading: boolean, data: Metric[] | undefined): JSX.Element[] => {
+  let eraMetrics = chainData;
+  if (data !== undefined && !loading) {
+    const validatorSet = data.find(({ title }) => title === 'validator_set') || 0;
+    eraMetrics = chainData.map((item) => {
+      const aux = data.find(({ title }) => title === item.name);
+      if (aux) {
+        if (item.header == 'Total Issuance') {
+          return { ...item, value: <FormatBalance value={aux.value as string} /> };
+        }
+        if (item.header == 'Validators') {
+          return { ...item, value: `${aux.value}/${validatorSet}` };
+        }
+        if (item.header == 'Inflation Rate') {
+          return { ...item, value: `${aux.value}%` };
+        }
+        return { ...item, value: aux.value };
+      }
+      return item;
+    });
+  }
+  return eraMetrics.map(({ header, value }, index) => (
+    <ChainInfoCard title={header} value={value} key={index} />
+  ));
+};
+
 const ChainInfo = () => {
+  const { data, loading } = useSubscription<EraMetrics>(LISTEN_FOR_ERA_METRICS);
+  const content = useMemo(() => {
+    return processData(loading, data?.metrics);
+  }, [data, loading]);
   return (
     <Box className='blockchain-component-chainInfo' mb={7}>
       <Typography variant='h3' gutterBottom>
         Chain data
       </Typography>
       <Wrap container spacing={{ xs: 1 }}>
-        {data.items.map(({ title, value }) => (
-          <ChainInfoCard title={title} value={value} key={title} />
-        ))}
+        {content}
       </Wrap>
     </Box>
   );
