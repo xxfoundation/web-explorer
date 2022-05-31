@@ -33,7 +33,6 @@ type Props = {
 const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }) => {
   const options = useMemo<Options>(() => {
     const { maxX, minX } = calculateMaximums(data);
-    console.warn(`aaa ${maxX}, ${minX}`);
     return {
       title: {
         text: title,

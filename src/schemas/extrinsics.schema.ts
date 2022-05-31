@@ -116,3 +116,12 @@ export const GET_EXTRINSIC_BY_PK = gql`
     }
   }
 `;
+
+export const LISTEN_FOR_EXTRINSIC_HISTORY = gql`
+  subscription ListenForExtrinsicHistory {
+    extrinsicsByHour: extrinsics_by_hour {
+      extrinsics
+      timestamp
+    }
+  }
+`;
