@@ -3,6 +3,7 @@ import type { Block, ListBlocks } from './types';
 import { useSubscription } from '@apollo/client';
 import { Box, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
+import useNewnessTracker, { WithNew } from '../../hooks/useNewnessTracker';
 import { LISTEN_FOR_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
 import BlockStatusIcon from '../block/BlockStatusIcon';
 import DefaultTile from '../DefaultTile';
@@ -12,7 +13,7 @@ import { ListSkeleton } from './ListSkeleton';
 
 const PAGE_LIMIT = 8;
 
-const BlockRow: FC<Block> = ({
+const BlockRow: FC<WithNew<Block>> = ({
   finalized,
   number,
   timestamp,
@@ -56,6 +57,8 @@ const LatestBlocksList = () => {
     variables: { limit: PAGE_LIMIT }
   });
 
+  const tracked = useNewnessTracker(data?.blocks, 'hash');
+
   return (
     <DefaultTile
       header='Latest Blocks'
@@ -64,14 +67,11 @@ const LatestBlocksList = () => {
       linkAddress={'/blocks'}
       height={500}
     >
-      {loading
-        ? <ListSkeleton number={PAGE_LIMIT} />
-        : (
-          data?.blocks?.map((block) => (
-            <BlockRow {...block} key={block.hash} />
-          ))
-        )
-      }
+      {loading ? (
+        <ListSkeleton number={PAGE_LIMIT} />
+      ) : (
+        tracked?.map((block) => <BlockRow {...block} key={block.hash} />)
+      )}
     </DefaultTile>
   );
 };

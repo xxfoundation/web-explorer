@@ -3,6 +3,7 @@ import type { ListOfTransfers, Transfer } from './types';
 import { useSubscription } from '@apollo/client';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
+import useNewnessTracker, { WithNew } from '../../hooks/useNewnessTracker';
 import { LISTEN_FOR_TRANSFERS_ORDERED } from '../../schemas/transfers.schema';
 import { Address } from '../ChainId';
 import DefaultTile from '../DefaultTile';
@@ -13,7 +14,7 @@ import { ListSkeleton } from './ListSkeleton';
 
 const PAGE_LIMIT = 8;
 
-const TransferRow: FC<Transfer> = (props) => {
+const TransferRow: FC<WithNew<Transfer>> = (props) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant='body2' sx={{ mb: 1 }}>
@@ -69,7 +70,7 @@ const LatestTransfersList = () => {
     variables: { limit: PAGE_LIMIT }
   });
 
-  const transfers = data?.transfers;
+  const transfers = useNewnessTracker(data?.transfers, 'hash');
 
   return (
     <DefaultTile
