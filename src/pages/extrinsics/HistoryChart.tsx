@@ -1,34 +1,37 @@
 import { useSubscription } from '@apollo/client';
 import { Box, CircularProgress } from '@mui/material';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import BarChart from '../../components/charts/BarChart/BarChart';
+import { TimeInterval } from '../../components/charts/BarChart/types';
 import { LISTEN_FOR_EXTRINSICS_TIMESTAMPS } from '../../schemas/extrinsics.schema';
-
-// const extrinsinctCountIn72Hours = 4320;
-// const HOUR = 60 * 60 * 1000;
-
-// function buildExtrinsicsTimestamps() {
-//   const date = dayjs();
-//   const timestamps = Array.from(Array(extrinsinctCountIn72Hours).keys()).map(() =>
-//     Math.floor(date.unix() * 1000 - Math.random() * (48 * HOUR))
-//   );
-//   timestamps.sort();
-//   return timestamps;
-// }
 
 type Response = {
   extrinsic: { timestamp: number }[];
 };
 
+const defineMinTimestamp = (interval: TimeInterval) => {
+  const minRange = new Date();
+  if (interval === '1h') {
+    minRange.setHours(minRange.getHours() - 48);
+  }
+  if (interval === '6h') {
+    minRange.setHours(minRange.getHours() - 24 * 10);
+  }
+  if (interval === '1d') {
+    minRange.setMonth(minRange.getMonth() - 1);
+    minRange.setHours(0, 0, 0, 0);
+  }
+  return minRange.getTime();
+};
+
 const HistoryChart: FC = () => {
+  const [interval, setInterval] = useState<TimeInterval>('1h');
   const variables = useMemo(() => {
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setHours(twoDaysAgo.getHours() - 48);
     return {
       orderBy: [{ timestamp: 'asc' }],
-      where: { timestamp: { _gte: twoDaysAgo.getTime() } }
+      where: { timestamp: { _gte: defineMinTimestamp(interval) } }
     };
-  }, []);
+  }, [interval]);
   const { data, loading } = useSubscription<Response>(LISTEN_FOR_EXTRINSICS_TIMESTAMPS, {
     variables
   });
@@ -47,7 +50,7 @@ const HistoryChart: FC = () => {
   }
   return (
     <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-      <BarChart series={{ timestamps, label: 'Extrinsic' }} />
+      <BarChart series={{ timestamps, label: 'Extrinsic' }} changeIntervalCallback={setInterval} />
     </Box>
   );
 };
