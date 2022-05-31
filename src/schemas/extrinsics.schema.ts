@@ -117,10 +117,12 @@ export const GET_EXTRINSIC_BY_PK = gql`
   }
 `;
 
-export const LISTEN_FOR_EXTRINSIC_HISTORY = gql`
-  subscription ListenForExtrinsicHistory {
-    extrinsicsByHour: extrinsics_by_hour {
-      extrinsics
+export const LISTEN_FOR_EXTRINSICS_TIMESTAMPS = gql`
+  subscription ListenForExtrinsicsTimestamps(
+    $orderBy: [extrinsic_order_by!]
+    $where: extrinsic_bool_exp
+  ) {
+    extrinsic(order_by: $orderBy, where: $where) {
       timestamp
     }
   }

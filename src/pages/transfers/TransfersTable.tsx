@@ -29,7 +29,7 @@ const TransferRow = (data: Transfer) => {
           <Grid xs={5} item>
             {<Address value={data.source} truncated />}
           </Grid>
-          <Grid xs={1} item>
+          <Grid xs={2} item sx={{ textAlign: 'center' }}>
             <ArrowForwardIosIcon />
           </Grid>
           <Grid xs={5} item>
