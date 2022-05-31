@@ -59,6 +59,7 @@ const Block = () => {
   if (!loading && !data?.block && !data?.block?.number) {
     return <NotFound />;
   }
+
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />

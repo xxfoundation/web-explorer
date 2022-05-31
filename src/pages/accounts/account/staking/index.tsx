@@ -2,12 +2,13 @@ import { Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels from '../../../../components/Tabs';
-import { Roles } from '../../types';
+import { Account, Roles } from '../../../../schemas/accounts.schema';
 import NominatorActivityTable from './NominatorActivityTable';
 import RewardStashTable from './RewardStashTable';
 import StakingActivityTable from './StakingActivityTable';
 
-const StakingCard: FC<{ roles: Roles[] }> = ({ roles }) => {
+const StakingCard: FC<{ account: Account; roles: Roles[] }> = ({ roles }) => {
+  // const roles = ['validator'];
   const panels = useMemo(() => {
     const cachedPanels = [
       {

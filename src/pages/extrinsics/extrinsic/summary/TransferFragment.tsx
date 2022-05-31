@@ -6,30 +6,17 @@ import { Address } from '../../../../components/ChainId';
 import FormatBalance from '../../../../components/FormatBalance';
 import genSkeletons from '../../../../components/genSkeletons';
 import { SummaryRow } from '../../../../components/Paper/SummaryPaper';
-import {
-  GetAccountIdentityByAddressType,
-  GET_ACCOUNT_IDENTITY_BY_ADDRESS
-} from '../../../../schemas/accounts.schema';
 import { GetTransferByPK, GET_TRANSFER_BY_PK } from '../../../../schemas/transfers.schema';
 
 type Props = { blockNumber: number; extrinsicIndex: number };
 
-const AddressesHandler: FC<{ address: string }> = ({ address }) => {
-  // TODO embbed logic on the address component itself
-  const { data, loading } = useQuery<GetAccountIdentityByAddressType>(
-    GET_ACCOUNT_IDENTITY_BY_ADDRESS,
-    {
-      variables: { accountId: address }
-    }
-  );
-  if (!loading && data?.account && data?.account.id)
-    return (
-      <Address
-        value={data.account.id}
-        name={data.account.identityDisplay}
-        link={`/accounts/${data.account.id}`}
-      />
-    );
+const AddressesHandler: FC<{
+  address: string;
+  identityDisplay?: string;
+}> = ({ address, identityDisplay }) => {
+  if (identityDisplay) {
+    return <Address value={address} name={identityDisplay} link={`/accounts/${address}`} />;
+  }
   return <Address value={address} link={`/accounts/${address}`} />;
 };
 
@@ -56,12 +43,12 @@ const SummaryFragment: FC<Props> = (variables) => {
       </SummaryRow>
       <SummaryRow label='value'>
         <Typography>
-          <FormatBalance value={data.transfer.amount.toString()} />
+          <FormatBalance value={data.transfer.amount} />
         </Typography>
       </SummaryRow>
       <SummaryRow label='fee'>
         <Typography>
-          <FormatBalance value={data.transfer.feeAmount.toString()} />
+          <FormatBalance value={data.transfer.feeAmount} />
         </Typography>
       </SummaryRow>
     </>

@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { TableCellProps, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
-import { LIST_EVENTS_OF_BLOCK } from '../../schemas/events.schema';
+import { LIST_EVENTS } from '../../schemas/events.schema';
 import { TotalOfItems } from '../../schemas/types';
 import { Hash } from '../ChainId';
 import Link from '../Link';
@@ -52,12 +52,11 @@ const EventsTable: FC<{ where: Record<string, unknown> }> = ({ where }) => {
       where: {
         ...where,
         id: { _lte: cursorField }
-      },
-      eventAggWhere: where
+      }
     }),
     [cursorField, limit, offset, where]
   );
-  const { data, loading } = useQuery<Response>(LIST_EVENTS_OF_BLOCK, { variables });
+  const { data, loading } = useQuery<Response>(LIST_EVENTS, { variables });
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
   const footer = useMemo(() => {
     if (data?.agg && data?.events && data.events.length) {

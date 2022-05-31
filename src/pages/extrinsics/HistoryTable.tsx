@@ -84,7 +84,12 @@ const HistoryTable: FC<{
     return <></>;
   }, [data?.agg, data?.extrinsics, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
 
-  if (loading) return <TableSkeleton rows={12} cells={6} footer />;
+  if (loading) return (
+    <TableSkeleton
+      rows={rowsPerPage}
+      cells={headers.length}
+      footer />
+  );
 
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };

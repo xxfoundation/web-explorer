@@ -1,9 +1,9 @@
+import type { DataPoint } from '../../../../components/charts/highcharts';
 import { Grid } from '@mui/material';
 import React, { FC } from 'react';
-import { formatPercent } from '../../../../components/charts/formatters';
+import { formatPercent } from '../../../../components/charts/highcharts/formatters';
 import { LineChart } from '../../../../components/charts/highcharts';
 import DefaultTile from '../../../../components/DefaultTile';
-import { DataPoint } from '../../../../types';
 
 const sampleDataEra: DataPoint[] = [
   [515, 17000],
