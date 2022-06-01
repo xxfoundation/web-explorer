@@ -4,7 +4,6 @@ import { Provider } from './BarChartContext';
 import BarInfoContainer from './BarInfoContainer';
 import BarIntervalLabels from './BarIntervalLabels';
 import BarSeries from './BarSeries';
-import Controls from './Controls';
 import type { SeriesData, TimeInterval } from './types';
 
 const ChartContainer = styled('div')({
@@ -20,13 +19,10 @@ const hasTwoSeries = (
 
 type BarChartContainerProps = {
   series: SeriesData | [SeriesData, SeriesData];
-  changeIntervalCallback?: (interval: TimeInterval) => void;
+  interval: TimeInterval;
 };
 
-const BarChartContainer: FC<BarChartContainerProps> = ({
-  changeIntervalCallback,
-  series
-}) => {
+const BarChartContainer: FC<BarChartContainerProps> = ({ interval, series }) => {
   const hasTwo = hasTwoSeries(series);
   const seriesA = hasTwo ? series[0] : series;
   const seriesB = hasTwo ? series[1] : undefined;
@@ -36,21 +32,15 @@ const BarChartContainer: FC<BarChartContainerProps> = ({
       : seriesB?.timestamps;
 
   return (
-    <Provider
-      seriesA={seriesA}
-      seriesB={seriesB}
-      timestamps={timestamps}
-      changeIntervalCallback={changeIntervalCallback}
-    >
-      <Box>
-        <Controls />
+    <Provider seriesA={seriesA} seriesB={seriesB} timestamps={timestamps} interval={interval}>
+      <>
         <ChartContainer sx={{ minHeight: hasTwo ? '22rem' : '16rem' }}>
           <BarSeries />
           <BarIntervalLabels />
           {seriesB ? <BarSeries inverse={true} /> : <Box sx={{ pb: hasTwo ? 10 : 0 }} />}
           <BarInfoContainer />
         </ChartContainer>
-      </Box>
+      </>
     </Provider>
   );
 };

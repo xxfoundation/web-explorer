@@ -7,24 +7,15 @@ type SelectedIntervalContextType = {
     value: string;
     makeSetter: (value: string) => () => void;
   };
-  interval: {
-    value: TimeInterval;
-    makeSetter: (interval: TimeInterval) => () => void;
-  };
+  interval: TimeInterval;
   infoA?: SeriesMetadata;
   infoB?: SeriesMetadata;
   timestamps: number[];
 };
 
 const SelectedIntervalContext = createContext<SelectedIntervalContextType>({
-  timestamp: {
-    value: '',
-    makeSetter: () => () => {}
-  },
-  interval: {
-    value: '1h',
-    makeSetter: () => () => {}
-  },
+  timestamp: { value: '', makeSetter: () => () => {} },
+  interval: '1h',
   timestamps: []
 });
 
@@ -32,32 +23,22 @@ export const useBarchartContext = () => useContext(SelectedIntervalContext);
 
 export const Provider: React.FC<{
   timestamps: number[];
+  interval: TimeInterval;
   seriesA: SeriesData;
   seriesB?: SeriesData;
-  changeIntervalCallback?: (interval: TimeInterval) => void;
-}> = ({ changeIntervalCallback, children, seriesA, seriesB, timestamps }) => {
+}> = ({ children, interval, seriesA, seriesB, timestamps }) => {
   const [timestamp, setTimestamp] = useState<string>('');
-  const [interval, setInterval] = useState<TimeInterval>('1h');
-
   const makeTimestampSetter = useCallback((t: string) => () => setTimestamp(t), []);
-
-  const makeIntervalSetter = useCallback(
-    (t: TimeInterval) => () => {
-      if (changeIntervalCallback) changeIntervalCallback(t);
-      setInterval(t);
-    },
-    [changeIntervalCallback]
-  );
 
   const value = useMemo<SelectedIntervalContextType>(
     () => ({
       timestamp: { value: timestamp.toString(), makeSetter: makeTimestampSetter },
-      interval: { value: interval, makeSetter: makeIntervalSetter },
       infoA: extractInfo(seriesA, interval),
       infoB: seriesB && extractInfo(seriesB, interval),
-      timestamps
+      timestamps,
+      interval
     }),
-    [interval, makeIntervalSetter, makeTimestampSetter, seriesA, seriesB, timestamp, timestamps]
+    [interval, makeTimestampSetter, seriesA, seriesB, timestamp, timestamps]
   );
 
   useEffect(() => {
