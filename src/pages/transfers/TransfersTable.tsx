@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Grid, Stack, Typography } from '@mui/material';
-import React, { FC, useMemo } from 'react';
+import React, { Dispatch, FC, SetStateAction, useEffect, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Address, Hash } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
@@ -61,7 +61,10 @@ const headers = [
   { value: 'Hash' }
 ];
 
-const TransferTable: FC<{ where?: Record<string, unknown> }> = ({ where = {} }) => {
+const TransferTable: FC<{
+  where?: Record<string, unknown>;
+  setTotalOfTransfers?: Dispatch<SetStateAction<number | undefined>>;
+}> = ({ where = {}, setTotalOfTransfers }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Transfer & { id: number }>({
       cursorField: 'id',
@@ -94,6 +97,11 @@ const TransferTable: FC<{ where?: Record<string, unknown> }> = ({ where = {} }) 
     }
     return <></>;
   }, [data?.agg, data?.transfers, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  useEffect(() => {
+    if (data?.agg && !cursorField && setTotalOfTransfers) {
+      setTotalOfTransfers(data.agg.aggregate.count);
+    }
+  }, [cursorField, data?.agg, setTotalOfTransfers]);
   if (loading) return <TableSkeleton rows={12} cells={6} footer />;
   return (
     <BaselineTable
