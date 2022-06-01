@@ -27,12 +27,13 @@ type Props = {
     xAxis?: LabelFormatter;
     yAxis?: LabelFormatter;
   };
+  x?: { maxX: number; minX: number };
   tooltipFormatter?: TooltipFormatter;
 };
 
-const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }) => {
+const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, x }) => {
   const options = useMemo<Options>(() => {
-    const { maxX, minX } = calculateMaximums(data);
+    const { maxX, minX } = x || calculateMaximums(data);
     return {
       title: {
         text: title,
@@ -76,7 +77,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
         gridLineWidth: 0,
         title: { text: '' },
         labels: { align: 'right', x: 20, formatter: labelFormatters?.yAxis },
-        min: 0,
+        min: 0
       },
       plotOptions: {
         series: {
@@ -95,7 +96,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
         }
       ]
     };
-  }, [data, labelFormatters, title, tooltipFormatter]);
+  }, [data, labelFormatters?.xAxis, labelFormatters?.yAxis, title, tooltipFormatter, x]);
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 };
