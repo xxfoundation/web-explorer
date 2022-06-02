@@ -1,22 +1,33 @@
-import React, { FC } from 'react';
+import { useSubscription } from '@apollo/client';
+import React, { FC, useMemo } from 'react';
 import { DataPoint, formatPercent, LineChart } from '../../../../../components/charts/highcharts';
+import Loader from '../../../../../components/charts/highcharts/Loader';
 import DefaultTile from '../../../../../components/DefaultTile';
+import { LISTEN_FOR_ERA_COMMISSION } from '../../../../../schemas/points.schema';
 
-const sampleDataCommission: DataPoint[] = [
-  [515, 0.96],
-  [521, 0.5],
-  [545, 0.72]
-];
+type ResultType = {
+  eraCommissions: { era: number; commission: number }[];
+};
 
-const Commission: FC = () => {
+const parser = (item: ResultType['eraCommissions'][0]): DataPoint => [item.era, item.commission];
+
+const Commission: FC<{ stashAddress: string }> = ({ stashAddress }) => {
+  const { data, loading } = useSubscription<ResultType>(LISTEN_FOR_ERA_COMMISSION, {
+    variables: { stashAddress }
+  });
+  const chartData = useMemo(() => (data?.eraCommissions || []).map(parser), [data?.eraCommissions]);
   return (
-    <DefaultTile header={'commission'}>
-      <LineChart
-        data={sampleDataCommission}
-        labelFormatters={{
-          yAxis: formatPercent
-        }}
-      />
+    <DefaultTile header='commission' height='400px'>
+      {loading ? (
+        <Loader />
+      ) : (
+        <LineChart
+          data={chartData}
+          labelFormatters={{
+            yAxis: formatPercent
+          }}
+        />
+      )}
     </DefaultTile>
   );
 };

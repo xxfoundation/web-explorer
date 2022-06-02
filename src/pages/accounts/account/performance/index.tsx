@@ -27,7 +27,7 @@ const PerformanceCard: FC<{
       },
       {
         label: <Typography>charts</Typography>,
-        content: <Charts />
+        content: <Charts {...props} />
       }
     ];
   }, [props, incompatibleRole]);

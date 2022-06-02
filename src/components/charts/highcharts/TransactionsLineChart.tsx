@@ -1,5 +1,4 @@
 import { useSubscription } from '@apollo/client';
-import { Box, CircularProgress } from '@mui/material';
 import React, { useMemo } from 'react';
 import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
@@ -7,7 +6,8 @@ import {
   ListenForEraTransactions,
   LISTEN_FOR_ERA_TRANSACTIONS
 } from '../../../schemas/transfers.schema';
-import ChartWrap from '../ChartWrap';
+import DefaultTile from '../../DefaultTile';
+import Loader from './Loader';
 
 const TransactionsChart = () => {
   const { data, loading } = useSubscription<ListenForEraTransactions>(LISTEN_FOR_ERA_TRANSACTIONS);
@@ -19,17 +19,9 @@ const TransactionsChart = () => {
     [data?.eraTransactions]
   );
   return (
-    <ChartWrap title='Transactions'>
-      {loading ? (
-        <Box
-          sx={{ height: '400px', justifyContent: 'center', alignItems: 'center', display: 'flex' }}
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
-        <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} />
-      )}
-    </ChartWrap>
+    <DefaultTile header='Transactions' height='400px'>
+      {loading ? <Loader /> : <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} />}
+    </DefaultTile>
   );
 };
 

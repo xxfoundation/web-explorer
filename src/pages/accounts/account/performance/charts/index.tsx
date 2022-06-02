@@ -1,24 +1,29 @@
 import { Grid } from '@mui/material';
 import React, { FC } from 'react';
+import { Account } from '../../../../../schemas/accounts.schema';
+import { CommonFieldsRankingFragment } from '../../../../../schemas/ranking.schema';
 import Commission from './Commission';
 import ElectedSelfStake from './ElectedSelfStake';
 import EraPoints from './EraPoints';
 import RelativePerformance from './RelativePerformance';
 
-const Charts: FC = () => {
+const Charts: FC<{
+  account: Account;
+  ranking: CommonFieldsRankingFragment;
+}> = ({ account }) => {
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} md={6}>
-        <RelativePerformance />
+        <RelativePerformance stashAddress={account.id} />
       </Grid>
       <Grid item xs={12} md={6}>
-        <EraPoints />
+        <EraPoints stashAddress={account.id} />
       </Grid>
       <Grid item xs={12} md={6}>
-        <Commission />
+        <Commission stashAddress={account.id} />
       </Grid>
       <Grid item xs={12} md={6}>
-        <ElectedSelfStake />
+        <ElectedSelfStake stashAddress={account.id} />
       </Grid>
     </Grid>
   );

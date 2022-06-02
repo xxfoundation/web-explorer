@@ -1,17 +1,25 @@
-import React, { FC } from 'react';
+import { useSubscription } from '@apollo/client';
+import React, { FC, useMemo } from 'react';
 import { DataPoint, LineChart } from '../../../../../components/charts/highcharts';
+import Loader from '../../../../../components/charts/highcharts/Loader';
 import DefaultTile from '../../../../../components/DefaultTile';
+import { LISTEN_FOR_ERA_POINTS } from '../../../../../schemas/points.schema';
 
-const sampleDataEra: DataPoint[] = [
-  [515, 17000],
-  [521, 23000],
-  [545, 9000]
-];
+type ResultType = { eraPoints: { era: number; points: number }[] };
 
-const EraPoints: FC = () => {
+const parser = (item: ResultType['eraPoints'][0]): DataPoint => [item.era, item.points];
+
+const EraPoints: FC<{ stashAddress: string }> = ({ stashAddress }) => {
+  const { data, loading } = useSubscription<ResultType>(LISTEN_FOR_ERA_POINTS, {
+    variables: { stashAddress }
+  });
+  const chartData = useMemo(
+    (): DataPoint[] => (data?.eraPoints || []).map(parser),
+    [data?.eraPoints]
+  );
   return (
-    <DefaultTile header={'era points'}>
-      <LineChart data={sampleDataEra} />
+    <DefaultTile header='era points' height='400px'>
+      {loading ? <Loader /> : <LineChart data={chartData} />}
     </DefaultTile>
   );
 };
