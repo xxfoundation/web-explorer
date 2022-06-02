@@ -3,8 +3,8 @@ import React from 'react';
 import {
   TransactionsChart,
   NewAccountsChart,
-  StakingRatioChart,
-  StakingInterestChart,
+  // StakingRatioChart,
+  // StakingInterestChart,
   TotalIssuanceDonutChart,
   StakingSupplyDonutChart
 } from '../../components/charts';
@@ -51,7 +51,7 @@ const TokenStatus = () => {
             <NewAccountsChart />
           </PaperWrapStyled>
         </Grid>
-        <Grid item xs={12} md={6}>
+        {/* <Grid item xs={12} md={6}>
           <PaperWrapStyled>
             <StakingRatioChart />
           </PaperWrapStyled>
@@ -60,7 +60,7 @@ const TokenStatus = () => {
           <PaperWrapStyled>
             <StakingInterestChart />
           </PaperWrapStyled>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

@@ -11,7 +11,7 @@ const SubduedHeader = styled(Typography)(({ theme }) => ({
   color: theme.palette.grey[400],
   letterSpacing: 1,
   textTransform: 'uppercase'
-}))
+}));
 
 const DarkSubtitle = styled(Typography)(({ theme }) => ({
   fontWeight: 400,
@@ -22,7 +22,7 @@ const DarkSubtitle = styled(Typography)(({ theme }) => ({
 
 const SummaryInfo = () => {
   return (
-    <Stack direction='row' justifyContent={{ md: 'space-between', sm: 'flex-start'}} spacing={5}>
+    <Stack direction='row' justifyContent={{ md: 'space-between', sm: 'flex-start' }} spacing={5}>
       <Stack>
         <SubduedHeader>decimals</SubduedHeader>
         <DarkSubtitle>9</DarkSubtitle>
@@ -43,18 +43,20 @@ const ContactInfo = () => {
   return (
     <Grid container>
       <Grid item xs={12} sx={{ mb: 1 }}>
-        <Typography>xxNetwork (XX)</Typography>
+        <Typography>xx network (XX)</Typography>
         <Link target={'_blank'} href='https://xx.network'>
           https://xx.network
         </Link>
       </Grid>
       <Grid item>
-        <Socials socials={{
-          twitter: '#blah',
-          github: '#hey',
-          telegram: '#yo',
-          discord: '#sup'
-        }} />
+        <Socials
+          socials={{
+            twitter: '#blah',
+            github: '#hey',
+            telegram: '#yo',
+            discord: '#sup'
+          }}
+        />
       </Grid>
     </Grid>
   );
@@ -83,12 +85,16 @@ const Summary: FC = () => {
             flexItem
           />
         </Hidden>
-        <Grid item sm={12} md={4} sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexDirection: 'column'
-        }}>
-
+        <Grid
+          item
+          sm={12}
+          md={4}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column'
+          }}
+        >
           <SummaryInfo />
         </Grid>
       </Grid>

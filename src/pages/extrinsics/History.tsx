@@ -2,7 +2,7 @@ import { Box, Button, Container, Stack, Tooltip, Typography } from '@mui/materia
 import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import DownloadDataButton from '../../components/buttons/DownloadDataButton';
+// import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import BarChart from '../../components/charts/BarChart/BarChart';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { theme } from '../../themes/default';
@@ -34,9 +34,9 @@ const HistoryPage = () => {
         sx={{ mb: 5 }}
       >
         <Typography variant='h1'>Extrinsic History</Typography>
-        <DownloadDataButton onClick={() => {}} disabled>
+        {/* <DownloadDataButton onClick={() => {}} disabled>
           Download data
-        </DownloadDataButton>
+        </DownloadDataButton> */}
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled>

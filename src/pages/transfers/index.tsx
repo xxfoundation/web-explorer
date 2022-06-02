@@ -2,7 +2,7 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import DownloadDataButton from '../../components/buttons/DownloadDataButton';
+// import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import BarChart from '../../components/charts/BarChart/BarChart';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import TransferTable from './TransfersTable';
@@ -10,10 +10,11 @@ import TransferTable from './TransfersTable';
 const extrinsincCountIn72Hours = 4320;
 const HOUR = 60 * 60 * 1000;
 
-function buildTimestamps () {
+function buildTimestamps() {
   const date = dayjs();
-  const timestamps = Array.from(Array(extrinsincCountIn72Hours).keys())
-    .map(() => Math.floor((date.unix() * 1000) - (Math.random() * (48 * HOUR))))
+  const timestamps = Array.from(Array(extrinsincCountIn72Hours).keys()).map(() =>
+    Math.floor(date.unix() * 1000 - Math.random() * (48 * HOUR))
+  );
   timestamps.sort();
   return timestamps;
 }
@@ -33,12 +34,17 @@ const TransfersPage = () => {
         sx={{ mb: 5 }}
       >
         <Typography variant='h1'>Transfers</Typography>
-        <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton>
+        {/* <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton> */}
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled>
           <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
-            <BarChart series={[{ timestamps, label: 'xx' }, { timestamps: timestampsB, label: 'transfers' }]}  />
+            <BarChart
+              series={[
+                { timestamps, label: 'xx' },
+                { timestamps: timestampsB, label: 'transfers' }
+              ]}
+            />
           </Box>
         </PaperStyled>
       </Box>
