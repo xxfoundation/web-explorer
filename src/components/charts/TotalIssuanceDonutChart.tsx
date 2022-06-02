@@ -1,55 +1,190 @@
+import type { FC } from 'react';
+import type { Economics } from '../../schemas/economics.schema';
 import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types';
 
+import { useSubscription } from '@apollo/client';
 import React, { useRef, useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
+import { pick, mapValues } from 'lodash';
+import BN from 'bn.js';
+
 import Legend from './Legend';
 import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typographies';
 import FormatBalance from '../FormatBalance';
 import { LightTooltipHeader, LightTooltip } from '../Tooltips';
 import useCustomTooltip from '../../hooks/useCustomTooltip';
+import { LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 
 type Options = ChartProps<'doughnut'>['options'];
-type Data = { name: string; color: string; value: number; percentage: number };
+enum DataLabels {
+  Circulating = 'Circulating',
+  Vesting = 'Circulating',
+  Rewards = 'Rewards',
+  Others = 'Others',
+  StakeableSupply = 'Stakeable Supply',
+  Other = 'Other'
+}
 
-const sampleCustomData: Data[] = [
-  { name: 'circulation', color: '#13EEF9', value: 162301, percentage: 6 },
-  { name: 'vesting', color: '#00A2D6', value: 80156, percentage: 49 },
-  { name: 'rewards', color: '#6F74FF', value: 162301, percentage: 39 },
-  { name: 'others', color: '#59BD1C', value: 82145, percentage: 6 }
-];
-
-const legendData = sampleCustomData
-  .map(({ color, name, percentage }) => ({
-    label: `${percentage}% ${name}`,
-    color
-  }))
-  .concat([
-    {
-      label: '14% Staking Supply',
-      color: '#FFC908'
-    }
-  ]);
-
-const data: ChartProps<'doughnut', Data[]>['data'] = {
-  datasets: [
-    {
-      backgroundColor: sampleCustomData.map((s) => s.color),
-      data: sampleCustomData
-    },
-    {
-      backgroundColor: ['#FFC908', '#EAEAEA'],
-      data: [
-        { name: 'staking supply', color: '#FFC908', value: 16620319, percentage: 14 },
-        { name: 'Other', color: 'grey', percentage: 86, value: 102096250 }
-      ]
-    }
-  ]
+type Data = {
+  label: DataLabels;
+  value: BN;
+  percentage: number;
+  color: string;
+  hideTooltip?: boolean
 };
 
+const seriesKeys: (keyof Economics)[] = [
+  'circulating',
+  'rewards',
+  'totalSupply',
+  'vesting',
+  'stakeableSupply',
+];
+
+const keysCollapsedUnderOther: (keyof Economics)[] = [
+  'bridge',
+  'canary',
+  'claims',
+  'custody',
+  'sales',
+  'treasury'
+];
+
+const OthersTooltipExtension: FC<Economics> = (economics) => (
+  <Stack spacing={1} sx={{ mt: 1 }}>
+    <Box>
+      <LightTooltipHeader>
+        Treasury
+      </LightTooltipHeader>
+      <FormatBalance value={economics.treasury} />
+    </Box>
+    <Box>
+      <LightTooltipHeader>
+        Canary
+      </LightTooltipHeader>
+      <FormatBalance value={economics.canary} />
+    </Box>
+    <Box>
+      <LightTooltipHeader>
+        Sales
+      </LightTooltipHeader>
+      <FormatBalance value={economics.sales} />
+    </Box>
+    <Box>
+      <LightTooltipHeader>
+        Claims
+      </LightTooltipHeader>
+      <FormatBalance value={economics.claims} />
+    </Box>
+    <Box>
+      <LightTooltipHeader>
+        Bridge
+      </LightTooltipHeader>
+      <FormatBalance value={economics.bridge} />
+    </Box>
+    <Box>
+      <LightTooltipHeader>
+        Custody
+      </LightTooltipHeader>
+      <FormatBalance value={economics.custody} />
+    </Box>
+  </Stack>
+);
+
+const extractChartData = (economics?: Economics) => {
+  if (!economics) {
+    return {
+      legendData: [],
+      data: {
+        datasets: []
+      }
+    };
+  }
+  const converted = mapValues(
+    pick(economics, seriesKeys.concat(keysCollapsedUnderOther)),
+    (o) => new BN(o.toString())
+  );
+  const others = Object.values(pick(converted, keysCollapsedUnderOther)).reduce((acc, cur) => acc.add(cur), new BN('0'));
+  const { circulating, rewards, stakeableSupply, totalSupply, vesting } = converted;
+  
+  const calculatePercentage = (n: BN) => n.muln(100).div(totalSupply).toNumber();
+
+  const serieA: Data[] = [
+    {
+      color: '#13EEF9',
+      label: DataLabels.Circulating,
+      value: circulating,
+      percentage: calculatePercentage(circulating)
+    },
+    {
+      color: '#00A2D6',
+      label: DataLabels.Vesting,
+      value: vesting,
+      percentage: calculatePercentage(vesting)
+    },
+    {
+      color: '#6F74FF',
+      label: DataLabels.Rewards,
+      value: rewards,
+      percentage: calculatePercentage(rewards),
+    },
+    {
+      color: '#59BD1C',
+      label: DataLabels.Others,
+      value: others,
+      percentage: calculatePercentage(others),
+    }
+  ];
+
+  const other = totalSupply.sub(stakeableSupply);
+
+  const serieB: Data[] = [
+    {
+      color: '#FFC908',
+      label: DataLabels.StakeableSupply,
+      value: stakeableSupply,
+      percentage: calculatePercentage(stakeableSupply)
+    },
+    {
+      color: '#EAEAEA',
+      label: DataLabels.Other,
+      value: other,
+      percentage: calculatePercentage(other),
+      hideTooltip: true,
+    }
+  ];
+
+  const legendMapper = ({ color, label, percentage }: Data) => ({
+    label: `${percentage}% ${label}`,
+    color
+  });
+
+  const legendData = serieA.concat(serieB).filter((s) => !s.hideTooltip).map(legendMapper)
+
+  return {
+    legendData,
+    data: {
+      datasets: [
+        {
+          backgroundColor: serieA.map((s) => s.color),
+          data: serieA
+        }, {
+          backgroundColor: serieB.map((s) => s.color),
+          data: serieB
+        }
+      ]
+    }
+  }
+}
+
 const TotalIssuanceDonutChart = () => {
+  const subscription = useSubscription<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
+  const economics = subscription.data?.economics[0];
+
   const chartRef = useRef<ChartJSOrUndefined<'doughnut', Data[]>>(null);
   const customTooltip = useCustomTooltip(chartRef);
+  const { data, legendData } = useMemo(() => extractChartData(economics), [economics]);
 
   const chartOptions = useMemo<Options>(
     () => ({
@@ -59,30 +194,45 @@ const TotalIssuanceDonutChart = () => {
         tooltip: customTooltip.plugin
       },
       parsing: {
-        xAxisKey: 'name',
+        xAxisKey: 'label',
         yAxisKey: 'percentage'
       }
     }),
     [customTooltip.plugin]
   );
 
+  if (subscription.error) {
+    return (
+      <Typography color='red'>Something went wrong...</Typography>
+    )
+  }
+
   return (
     <Stack direction='row' spacing={3} sx={{ flexGrow: 1 }}>
       <Box className='chart-container' style={{ width: '50%', flexGrow: 1, position: 'relative' }}>
         <Doughnut ref={chartRef} options={chartOptions} data={data} />
-        <LightTooltip style={customTooltip.styles}>
-          <LightTooltipHeader>
-            {customTooltip.data?.name} {customTooltip.data?.percentage}%
-          </LightTooltipHeader>
-          <FormatBalance value={customTooltip.data?.value || ''} />
-        </LightTooltip>
+        {!customTooltip.data?.hideTooltip && (
+          <LightTooltip style={customTooltip.styles}>
+            <LightTooltipHeader>
+              {customTooltip.data?.label} {customTooltip.data?.percentage}%
+            </LightTooltipHeader>
+            {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value} />}
+            {economics && customTooltip.data?.label === DataLabels.Others && (
+              <OthersTooltipExtension {...economics} />
+            )}
+          </LightTooltip>
+        )}
       </Box>
       <Stack style={{ minWidth: '33%' }} spacing={2}>
         <Box>
-          <LegendTypographyHeader>Total Issuance</LegendTypographyHeader>
-          <LegendTypographySubHeaders>
-            <FormatBalance value='118716570' />
-          </LegendTypographySubHeaders>
+          {economics?.totalSupply && (
+            <>
+              <LegendTypographyHeader>Total Issuance</LegendTypographyHeader>
+              <LegendTypographySubHeaders>
+                <FormatBalance value={economics.totalSupply} denomination={0} />
+              </LegendTypographySubHeaders>
+            </>
+          )}
         </Box>
         <Legend data={legendData} />
       </Stack>

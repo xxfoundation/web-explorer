@@ -1,4 +1,5 @@
 import React from 'react';
+import BN from 'bn.js';
 import { formatBalance } from './formatter';
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
   isShort?: boolean;
   label?: React.ReactNode;
   labelPost?: LabelPost;
-  value: string | number;
+  value: string | number | BN;
   withCurrency?: boolean;
   withSi?: boolean;
 }
@@ -87,7 +88,7 @@ function applyFormat(
 function FormatBalance({
   children,
   className = '',
-  denomination = 9,
+  denomination = 0,
   isShort,
   label,
   labelPost,
