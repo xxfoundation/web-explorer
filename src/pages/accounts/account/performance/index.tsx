@@ -31,7 +31,7 @@ const PerformanceCard: FC<{
       }
     ];
   }, [props, incompatibleRole]);
-  if (incompatibleRole) return <>fukk</>;
+  if (incompatibleRole) return <></>;
   return (
     <Box padding={'40px'}>
       <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
