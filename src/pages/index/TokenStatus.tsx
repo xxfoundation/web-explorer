@@ -4,8 +4,8 @@ import LatestBlocksList from '../../components/blockchain/LatestBlocksList';
 import LatestTransfersList from '../../components/blockchain/LatestTransfersList';
 import {
   NewAccountsChart,
-  StakingInterestChart,
-  StakingRatioChart,
+  // StakingRatioChart,
+  // StakingInterestChart,
   StakingSupplyDonutChart,
   TotalIssuanceDonutChart,
   TransactionsChart
@@ -51,7 +51,7 @@ const TokenStatus = () => {
             <NewAccountsChart />
           </PaperWrapStyled>
         </Grid>
-        <Grid item xs={12} md={6}>
+        {/* <Grid item xs={12} md={6}>
           <PaperWrapStyled>
             <StakingRatioChart />
           </PaperWrapStyled>
@@ -60,7 +60,7 @@ const TokenStatus = () => {
           <PaperWrapStyled>
             <StakingInterestChart />
           </PaperWrapStyled>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

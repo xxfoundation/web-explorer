@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import DownloadDataButton from '../../components/buttons/DownloadDataButton';
+// import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import BarChart from '../../components/charts/BarChart/BarChart';
 import IntervalControls, {
   intervalToTimestamp
@@ -48,9 +48,7 @@ const TransfersPage = () => {
         sx={{ mb: 5 }}
       >
         <Typography variant='h1'>Transfers</Typography>
-        <DownloadDataButton onClick={() => {}} disabled>
-          Download data
-        </DownloadDataButton>
+        {/* <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton> */}
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled>
