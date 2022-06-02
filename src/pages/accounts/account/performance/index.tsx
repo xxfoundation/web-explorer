@@ -3,7 +3,7 @@ import React, { FC, useMemo } from 'react';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Account, Roles } from '../../../../schemas/accounts.schema';
 import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
-import Charts from './Charts';
+import Charts from './charts';
 import MetricCards from './MetricsCards';
 
 const PerformanceCard: FC<{
@@ -31,7 +31,7 @@ const PerformanceCard: FC<{
       }
     ];
   }, [props, incompatibleRole]);
-  if (incompatibleRole) return <></>;
+  if (incompatibleRole) return <>fukk</>;
   return (
     <Box padding={'40px'}>
       <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
