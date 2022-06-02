@@ -111,3 +111,29 @@ export const GET_TRANSFER_BY_PK = gql`
     }
   }
 `;
+
+type EraByTransaction = { era: number; transactions: number };
+
+export type ListenForEraTransactions = {
+  eraTransactions: EraByTransaction[];
+};
+
+export const LISTEN_FOR_ERA_TRANSACTIONS = gql`
+  subscription ListenForEraTransactions {
+    eraTransactions: era_transactions {
+      era
+      transactions
+    }
+  }
+`;
+
+export const LISTEN_FOR_TRANSFERS_TIMESTAMPS = gql`
+  subscription ListenForTransfersTimestamps(
+    $orderBy: [transfer_order_by!]
+    $where: transfer_bool_exp
+  ) {
+    transfer(order_by: $orderBy, where: $where) {
+      timestamp
+    }
+  }
+`;

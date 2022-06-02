@@ -1,15 +1,15 @@
 import { Box, Grid, styled, Typography } from '@mui/material';
 import React from 'react';
+import LatestBlocksList from '../../components/blockchain/LatestBlocksList';
+import LatestTransfersList from '../../components/blockchain/LatestTransfersList';
 import {
-  TransactionsChart,
   NewAccountsChart,
-  StakingRatioChart,
   StakingInterestChart,
+  StakingRatioChart,
+  StakingSupplyDonutChart,
   TotalIssuanceDonutChart,
-  StakingSupplyDonutChart
+  TransactionsChart
 } from '../../components/charts';
-import LatestBlocks from '../../components/blockchain/LatestBlocksList';
-import TransfersTable from '../../components/blockchain/LatestTransfersList';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 
 const ChartWrap = styled(PaperWrapStyled)({
@@ -36,10 +36,10 @@ const TokenStatus = () => {
           </ChartWrap>
         </Grid>
         <Grid item xs={12} md={6}>
-          <LatestBlocks />
+          <LatestBlocksList />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TransfersTable />
+          <LatestTransfersList />
         </Grid>
         <Grid item xs={12} md={6}>
           <PaperWrapStyled>

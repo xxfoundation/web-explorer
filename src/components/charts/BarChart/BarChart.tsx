@@ -1,12 +1,10 @@
-import type { SeriesData } from './types';
-import React, { FC } from 'react';
 import { Box, styled } from '@mui/material';
-
+import React, { FC } from 'react';
 import { Provider } from './BarChartContext';
-import BarSeries from './BarSeries';
-import Controls from './Controls';
-import BarIntervalLabels from './BarIntervalLabels';
 import BarInfoContainer from './BarInfoContainer';
+import BarIntervalLabels from './BarIntervalLabels';
+import BarSeries from './BarSeries';
+import type { SeriesData, TimeInterval } from './types';
 
 const ChartContainer = styled('div')({
   display: 'flex',
@@ -15,38 +13,36 @@ const ChartContainer = styled('div')({
   alignItems: 'stretch'
 });
 
-const hasTwoSeries = (series: SeriesData | [SeriesData, SeriesData]): series is [SeriesData, SeriesData] => Array.isArray(series); 
+const hasTwoSeries = (
+  series: SeriesData | [SeriesData, SeriesData]
+): series is [SeriesData, SeriesData] => Array.isArray(series);
 
 type BarChartContainerProps = {
   series: SeriesData | [SeriesData, SeriesData];
-}
-  
-const BarChartContainer: FC<BarChartContainerProps> = ({ series }) => {
+  interval: TimeInterval;
+};
+
+const BarChartContainer: FC<BarChartContainerProps> = ({ interval, series }) => {
   const hasTwo = hasTwoSeries(series);
   const seriesA = hasTwo ? series[0] : series;
   const seriesB = hasTwo ? series[1] : undefined;
-  const timestamps = !seriesB?.timestamps
-    || (seriesA.timestamps.length > (seriesB.timestamps.length ?? 0))
-    ? seriesA.timestamps
-    : seriesB?.timestamps;
+  const timestamps =
+    !seriesB?.timestamps || seriesA.timestamps.length > (seriesB.timestamps.length ?? 0)
+      ? seriesA.timestamps
+      : seriesB?.timestamps;
 
   return (
-    <Provider timestamps={timestamps} seriesA={seriesA} seriesB={seriesB}>
-      <Box>
-        <Controls />
+    <Provider seriesA={seriesA} seriesB={seriesB} timestamps={timestamps} interval={interval}>
+      <>
         <ChartContainer sx={{ minHeight: hasTwo ? '22rem' : '16rem' }}>
           <BarSeries />
           <BarIntervalLabels />
-          {seriesB ? (
-            <BarSeries inverse={true} />
-          ) : (
-            <Box sx={{ pb: hasTwo ? 10 : 0 }} />
-          )}
+          {seriesB ? <BarSeries inverse={true} /> : <Box sx={{ pb: hasTwo ? 10 : 0 }} />}
           <BarInfoContainer />
         </ChartContainer>
-      </Box>
+      </>
     </Provider>
-  )
+  );
 };
 
 export default BarChartContainer;

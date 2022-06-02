@@ -145,3 +145,12 @@ export const LIST_ACCOUNTS = gql`
     }
   }
 `;
+
+export const LISTEN_FOR_NEW_ACCOUNTS = gql`
+  subscription ListenForNewAccounts {
+    new_accounts(order_by: [{ era: asc }]) {
+      accounts
+      era
+    }
+  }
+`;
