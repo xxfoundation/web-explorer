@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material';
 import Highcharts, {
   AxisLabelsFormatterCallbackFunction as LabelFormatter,
   Options,
@@ -97,6 +98,20 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, 
     };
   }, [data, labelFormatters?.xAxis, labelFormatters?.yAxis, title, tooltipFormatter, x]);
 
+  if (!data.length) {
+    return (
+      <Box
+        sx={{
+          height: 'inherit',
+          justifyContent: 'center',
+          alignItems: 'center',
+          display: 'flex'
+        }}
+      >
+        <Typography>no data</Typography>
+      </Box>
+    );
+  }
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 };
 

@@ -1,17 +1,15 @@
 import { useSubscription } from '@apollo/client';
-import { Box, CircularProgress, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
 import { LISTEN_FOR_NEW_ACCOUNTS } from '../../../schemas/accounts.schema';
-import ChartWrap from '../ChartWrap';
+import DefaultTile from '../../DefaultTile';
+import Loader from './Loader';
 
-//TODO get a month 30eras
 const NewAccountsChart = () => {
   const { data, loading } = useSubscription<{ new_accounts: { accounts: number; era: number }[] }>(
     LISTEN_FOR_NEW_ACCOUNTS
   );
-
   const chartData: DataPoint[] = useMemo(() => {
     return (data?.new_accounts || []).map(
       (item) => [item.era, item.accounts],
@@ -32,19 +30,13 @@ const NewAccountsChart = () => {
     [data?.new_accounts]
   );
   return (
-    <ChartWrap title='New Accounts'>
+    <DefaultTile header='new accounts' height='400px'>
       {loading ? (
-        <Box
-          sx={{ height: '400px', justifyContent: 'center', alignItems: 'center', display: 'flex' }}
-        >
-          <CircularProgress />
-        </Box>
-      ) : data?.new_accounts && data.new_accounts.length ? (
-        <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} x={xRange} />
+        <Loader />
       ) : (
-        <Typography textAlign='center'>no data</Typography>
+        <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} x={xRange} />
       )}
-    </ChartWrap>
+    </DefaultTile>
   );
 };
 
