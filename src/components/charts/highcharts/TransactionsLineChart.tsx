@@ -1,5 +1,5 @@
 import { useSubscription } from '@apollo/client';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
@@ -26,8 +26,10 @@ const TransactionsChart = () => {
         >
           <CircularProgress />
         </Box>
-      ) : (
+      ) : data?.eraTransactions && data.eraTransactions.length ? (
         <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} />
+      ) : (
+        <Typography textAlign='center'>no data</Typography>
       )}
     </ChartWrap>
   );
