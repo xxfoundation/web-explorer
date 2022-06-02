@@ -1,19 +1,17 @@
 import { useQuery } from '@apollo/client';
-import { TableCellProps, Typography } from '@mui/material';
+import { TableCellProps } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { LIST_EVENTS } from '../../schemas/events.schema';
 import { TotalOfItems } from '../../schemas/types';
-import { Hash } from '../ChainId';
-import Link from '../Link';
 import { BaselineCell, BaselineTable } from '../Tables';
 import TablePagination from '../Tables/TablePagination';
 import { TableSkeleton } from '../Tables/TableSkeleton';
+import TimeAgoComponent from '../TimeAgo';
 
 type EventType = {
   id: number;
   index: number;
-  hash?: string;
   section: string;
   method: string;
   blockNumber: number;
@@ -22,24 +20,17 @@ type EventType = {
 
 type Response = { events: EventType[] } & TotalOfItems;
 
-const HashCell: FC<{ value?: string }> = ({ value }) => {
-  if (!value) {
-    return <Typography>-</Typography>;
-  }
-  return <Hash value={value} truncated showTooltip />;
-};
-
 const props: TableCellProps = { align: 'left' };
 
-const rowsParser = ({ hash, index, method, section }: EventType): BaselineCell[] => {
+const rowsParser = ({ index, method, section, timestamp }: EventType): BaselineCell[] => {
   return [
     { value: index, props },
-    { value: <HashCell value={hash} />, props },
-    { value: <Link to='#' textTransform={'capitalize'}>{`${section} (${method})`}</Link> }
+    { value: <TimeAgoComponent date={timestamp} /> },
+    { value: `${section} (${method})` }
   ];
 };
 
-const headers = [{ value: 'event id', props }, { value: 'hash', props }, { value: 'action' }];
+const headers = [{ value: 'event id', props }, { value: 'time' }, { value: 'action' }];
 
 const EventsTable: FC<{ where: Record<string, unknown> }> = ({ where }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =

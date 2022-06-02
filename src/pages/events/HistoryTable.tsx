@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Button, Stack, TableCellProps, Tooltip, Typography } from '@mui/material';
+import { Button, Skeleton, Stack, TableCellProps, Tooltip, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
-import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
@@ -14,7 +13,6 @@ import { theme } from '../../themes/default';
 const headers = [
   { value: 'event id' },
   { value: 'block number' },
-  { value: 'extrinsics hash' },
   { value: 'time' },
   { value: 'action' }
 ];
@@ -24,10 +22,9 @@ const props: TableCellProps = { align: 'left' };
 const rowsParser = ({ blockNumber, index, method, section, timestamp }: Event): BaselineCell[] => {
   return [
     { value: `${blockNumber}-${index}`, props },
-    { value: blockNumber },
-    { value: <Hash value={''} truncated showTooltip />, props },
+    { value: <Link to={`/blocks/${blockNumber}`}>{blockNumber}</Link> },
     { value: <TimeAgoComponent date={timestamp} /> },
-    { value: <Link to='#' textTransform={'capitalize'}>{`${section} (${method})`}</Link> }
+    { value: `${section} (${method})` }
   ];
 };
 
@@ -65,7 +62,13 @@ const HistoryTable = () => {
     }
     return <></>;
   }, [data?.agg, data?.events, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading) return <TableSkeleton cells={6} rows={20} />;
+  if (loading)
+    return (
+      <>
+        <Skeleton width='12%' sx={{ marginBottom: '18px' }} />
+        <TableSkeleton cells={4} rows={20} />
+      </>
+    );
   return (
     <>
       {data?.agg.aggregate.count && (
