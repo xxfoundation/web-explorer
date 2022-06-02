@@ -3,7 +3,7 @@ import React, { FC, useMemo } from 'react';
 import { DataPoint, LineChart } from '../../../../../components/charts/highcharts';
 import Loader from '../../../../../components/charts/highcharts/Loader';
 import DefaultTile from '../../../../../components/DefaultTile';
-import { LISTEN_FOR_ELECTED_SELF_STAKE } from '../../../../../schemas/points.schema';
+import { LISTEN_FOR_ELECTED_SELF_STAKE } from '../../../../../schemas/validator.schema';
 
 type ResultType = {
   eraSelfStake: { era: number; selfStake: number }[];

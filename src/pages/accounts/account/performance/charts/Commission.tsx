@@ -3,7 +3,7 @@ import React, { FC, useMemo } from 'react';
 import { DataPoint, formatPercent, LineChart } from '../../../../../components/charts/highcharts';
 import Loader from '../../../../../components/charts/highcharts/Loader';
 import DefaultTile from '../../../../../components/DefaultTile';
-import { LISTEN_FOR_ERA_COMMISSION } from '../../../../../schemas/points.schema';
+import { LISTEN_FOR_ERA_COMMISSION } from '../../../../../schemas/validator.schema';
 
 type ResultType = {
   eraCommissions: { era: number; commission: number }[];
