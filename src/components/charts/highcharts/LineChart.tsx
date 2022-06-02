@@ -10,7 +10,6 @@ import { DataPoint } from './types';
 
 const calculateMaximums = (data: DataPoint[]) => {
   const xItems = data.map(([x]) => x);
-  // const yItems = data.map(([, y]) => y);
   const maxX = Math.max(...xItems);
   const minX = Math.min(...xItems);
 
