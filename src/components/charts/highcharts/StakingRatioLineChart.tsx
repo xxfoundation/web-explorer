@@ -1,6 +1,6 @@
 import React from 'react';
 import type { DataPoint } from '.';
-import { LineChart, percentTooltipFormatter, formatPercent } from '.';
+import { formatPercent, LineChart, percentTooltipFormatter } from '.';
 import ChartWrap from '../ChartWrap';
 
 const data: DataPoint[] = [

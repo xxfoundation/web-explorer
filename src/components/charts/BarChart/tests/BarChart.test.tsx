@@ -1,65 +1,46 @@
-import React from 'react';
-import MockDate from 'mockdate'
 import { mount } from 'enzyme';
-import BarChart from '../BarChart';
+import MockDate from 'mockdate';
+import React from 'react';
 import Bar from '../Bar';
+import BarChart from '../BarChart';
 import BarDivider from '../BarDivider';
-import Controls from '../Controls';
 import LegendTicks from '../LegendTicks';
 import { hourCounts, tenMinCounts } from './timestamps';
-import { act } from 'react-dom/test-utils';
-import { Button } from '@mui/material';
 
 beforeEach(() => {
   MockDate.set('2020-01-04 00:00:00');
 });
 
 afterEach(() => {
-  MockDate.reset()
-})
+  MockDate.reset();
+});
 
 describe('When displaying 10 min counts', () => {
-  const wrapper = mount(
-    <BarChart series={{ timestamps: tenMinCounts }} />
-  );
-
   it('should show two bars and one divider', () => {
+    const wrapper = mount(<BarChart series={{ timestamps: tenMinCounts }} interval={'1h'} />);
     expect(wrapper.find(Bar).getElements().length).toEqual(2);
-    expect(wrapper.find(Controls).getElements().length).toEqual(1);
     expect(wrapper.find(LegendTicks).getElements().length).toEqual(1);
     expect(wrapper.find(BarDivider).getElements().length).toEqual(1);
   });
 
-
   it('Should only have one bar after selecting 6h option', () => {
-    act(() => {
-      // assumes 6h is option #2
-      wrapper.find(Controls).find(Button).at(1).find('button').simulate('click');
-    });
+    const wrapper = mount(<BarChart series={{ timestamps: tenMinCounts }} interval={'6h'} />);
     wrapper.update();
     expect(wrapper.find(Bar).getElements().length).toEqual(1);
   });
 });
 
 describe('When displaying 1 hour counts', () => {
-  const wrapper = mount(
-    <BarChart series={{ timestamps: hourCounts }} />
-  );
-
   it('should show 16 bars and one divider', () => {
+    const wrapper = mount(<BarChart series={{ timestamps: hourCounts }} interval={'1h'} />);
     expect(wrapper.find(Bar).getElements().length).toEqual(16);
-    expect(wrapper.find(Controls).getElements().length).toEqual(1);
     expect(wrapper.find(LegendTicks).getElements().length).toEqual(1);
     expect(wrapper.find(BarDivider).getElements().length).toEqual(1);
   });
 
   it('Should only have one bar after 1d', () => {
-    act(() => {
-      // assumes 1d is option #3
-      wrapper.find(Controls).find(Button).at(2).find('button').simulate('click');
-    });
+    const wrapper = mount(<BarChart series={{ timestamps: hourCounts }} interval={'1d'} />);
     wrapper.update();
     expect(wrapper.find(Bar).getElements().length).toEqual(1);
   });
 });
-

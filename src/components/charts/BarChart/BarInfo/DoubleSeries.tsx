@@ -1,15 +1,15 @@
-import React, { FC, useMemo } from 'react';
-import dayjs from 'dayjs';
 import { Typography } from '@mui/material';
-import { useBarchartContext } from '../BarChartContext';
-
-import BarInformation from './BarInformation';
+import dayjs from 'dayjs';
+import React, { FC, useMemo } from 'react';
 import FormatBalance from '../../../FormatBalance';
+import { useBarchartContext } from '../BarChartContext';
+import BarInformation from './BarInformation';
+
 
 const DoubleSeries: FC = () => {
   const context = useBarchartContext();
   const timestamp = context.timestamp.value;
-  const interval = context.interval.value;
+  const interval = context.interval;
   const count = context.infoA?.counts?.[timestamp] ?? 0;
   const timeFormat = interval?.includes('h') ? 'YYYY.MM.DD | HH:MM (UTC)' : 'YYYY.MM.DD';
 
