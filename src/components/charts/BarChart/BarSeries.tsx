@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
 import { Box, Stack, styled } from '@mui/material';
-
+import React, { FC } from 'react';
+import { useBarchartContext } from './BarChartContext';
 import Bars from './Bars';
+import { LABEL_WIDTH, LEGEND_WIDTH } from './config';
 import LegendTicks from './LegendTicks';
 import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
-import { LABEL_WIDTH, LEGEND_WIDTH } from './config';
-import { useBarchartContext } from './BarChartContext';
+
 
 const LegendLabelContainer = styled(Box)({
   display: 'flex',

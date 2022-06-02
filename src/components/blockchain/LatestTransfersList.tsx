@@ -1,5 +1,3 @@
-import type { ListOfTransfers, Transfer } from './types';
-
 import { useSubscription } from '@apollo/client';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
@@ -11,6 +9,8 @@ import FormatBalance from '../FormatBalance';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import { ListSkeleton } from './ListSkeleton';
+import type { ListOfTransfers, Transfer } from './types';
+
 
 const PAGE_LIMIT = 8;
 

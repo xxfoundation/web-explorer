@@ -1,12 +1,12 @@
-import type { Theme } from '../../../themes/types'
-
-import React, { useCallback } from 'react';
-import dayjs from 'dayjs';
 import { Box, Stack, styled } from '@mui/material';
-
-import { BAR_PADDING, BAR_WIDTH, LEGEND_WIDTH } from './config';
+import dayjs from 'dayjs';
+import React, { useCallback } from 'react';
+import type { Theme } from '../../../themes/types';
 import { useBarchartContext } from './BarChartContext';
+import { BAR_PADDING, BAR_WIDTH, LEGEND_WIDTH } from './config';
 import { DividerSpacer, LabelSpacer } from './spacers';
+
+
 
 const typography = (theme: Theme) => ({
   fontSize: 12,
@@ -30,9 +30,9 @@ const IntervalLabel = styled(Box)(({ theme }) => ({
 const BarIntervalLabels = () => {
   const context = useBarchartContext();
   const { interval } = context;
-  const unitLabel = interval.value.toLowerCase().includes('h') ? 'HRS' : 'DAY';
+  const unitLabel = interval.toLowerCase().includes('h') ? 'HRS' : 'DAY';
 
-  const barInfoFormat = interval.value.includes('h')
+  const barInfoFormat = interval.includes('h')
     ? 'HH'
     : 'DD';
 

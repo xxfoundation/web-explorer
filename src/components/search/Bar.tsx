@@ -82,24 +82,18 @@ const SearchAccount: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
-  const onSuccess = useCallback(
-    (v: string, data: GetAccountByAddressType) => {
-      if (data.account?.id) {
-        history.push(`/accounts/${data.account.id}`);
-      } else {
-        enqueueSnackbar(`no account found for the address ${v}`, { variant: 'error' });
-      }
-    },
-    [enqueueSnackbar, history]
-  );
+  const onSuccess = useCallback((v: string, data: GetAccountByAddressType) => {
+    if (data.account?.id) {
+      history.push(`/accounts/${data.account.id}`);
+    } else {
+      enqueueSnackbar(`no account found for the address ${v}`, { variant: 'error' });
+    }
+  }, [enqueueSnackbar, history]);
 
-  const onError = useCallback(
-    (v: string, err: unknown) => {
-      enqueueSnackbar(`problem searching account with address ${v}`, { variant: 'warning' });
-      console.error(err);
-    },
-    [enqueueSnackbar]
-  );
+  const onError = useCallback((v: string, err: unknown) => {
+    enqueueSnackbar(`problem searching account with address ${v}`, { variant: 'warning' });
+    console.error(err);
+  }, [enqueueSnackbar])
 
   return (
     <GenericSearchInput
