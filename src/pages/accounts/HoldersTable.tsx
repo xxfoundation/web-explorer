@@ -88,7 +88,7 @@ const useHeaders = (): [BaselineCell[], Record<Roles, boolean>] => {
     nominator: false,
     council: false,
     techcommit: false,
-    treasury: false
+    // treasury: false
   });
   return [
     [

@@ -13,7 +13,7 @@ export const filtersDefaultState = (): Record<Roles, boolean> => ({
   nominator: false,
   council: false,
   techcommit: false,
-  treasury: false
+  // treasury: false
 });
 
 const cleanLocalStateFilters = () => {
@@ -107,14 +107,14 @@ const HoldersRolesFilters: FC<{
             nominator: true,
             council: true,
             techcommit: true,
-            treasury: true
+            // treasury: true
           }
         : {
             validator: selection.validator,
             nominator: selection.nominator,
             council: selection.council,
             techcommit: selection.techcommit,
-            treasury: selection.treasury
+            // treasury: selection.treasury
           }
     );
     handleClose();

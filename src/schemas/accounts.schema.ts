@@ -2,14 +2,13 @@ import { gql } from '@apollo/client';
 import { CommonFieldsRankingFragment } from './ranking.schema';
 import { TotalOfItems } from './types';
 
-export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit' | 'treasury';
+export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit';
 
 export type RolesMap = {
   validator: 'validator';
   nominator: 'nominator';
   council: 'council';
   techcommit: 'technical committee';
-  treasury: 'treasury';
 };
 
 export type Identity = {
@@ -56,14 +55,7 @@ export type Account = {
   unbondingBalance: number;
   vestingBalance: number;
 
-  roles: {
-    council: boolean;
-    nominator: boolean;
-    special: boolean;
-    techcommit: boolean;
-    treasury: boolean;
-    validator: boolean;
-  };
+  roles: Record<Roles, boolean>;
 };
 
 export type GetAccountByAddressType = {
@@ -81,13 +73,12 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
     identityDisplayParent: identity_display_parent
     nonce
     timestamp
-    roles: account_roles {
+    roles: role {
       council
       nominator
-      special
       techcommit
-      treasury
       validator
+      special
     }
 
     lockedBalance: locked_balance
@@ -135,7 +126,13 @@ export const LIST_ACCOUNTS = gql`
       totalBalance: total_balance
       lockedBalance: locked_balance
       nonce
-      roles
+      roles: role {
+        council
+        nominator
+        techcommit
+        validator
+        special
+      }
     }
     agg: account_aggregate(where: $where) {
       aggregate {
