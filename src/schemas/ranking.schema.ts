@@ -38,7 +38,7 @@ export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
   }
 `;
 
-export const GetAccountRanking = gql`
+export const GET_ACCOUNT_RANKING = gql`
   ${COMMON_FIELDS_RANKING_FRAGMENT}
   query GetAccountRanking($blockHeight: bigint!, $stashAddress: String!) {
     ranking: ranking_by_pk(block_height: $blockHeight, stash_address: $stashAddress) {

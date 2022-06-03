@@ -1,11 +1,10 @@
-import { useQuery } from '@apollo/client';
 import { Container, Grid, Skeleton, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
-import { GetAccountByAddressType, GET_ACCOUNT_BY_PK, Roles } from '../../schemas/accounts.schema';
-import { GetAccountRanking } from '../../schemas/ranking.schema';
+import useFetchRankingAccountInfo from '../../hooks/useFetchRankingAccountInfo';
+import { Roles } from '../../schemas/accounts.schema';
 import NotFound from '../NotFound';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
@@ -19,39 +18,6 @@ import PerformanceCard from './account/performance';
 //   const rolesquery = query.get('roles');
 //   return (rolesquery ? rolesquery.split(',') : ['nominators']) as Roles[];
 // };
-
-const useFetchRankingAccountInfo = (
-  accountId: string
-): { loading: boolean; data?: Partial<GetAccountByAddressType> } => {
-  const accountResult = useQuery<Omit<GetAccountByAddressType, 'ranking'>>(GET_ACCOUNT_BY_PK, {
-    variables: { accountId }
-  });
-  const accountRankingResult = useQuery<Omit<GetAccountByAddressType, 'account'>>(
-    GetAccountRanking,
-    !accountResult.loading &&
-      accountResult.data?.account &&
-      accountResult.data.account.roles.validator
-      ? {
-          variables: {
-            blockHeight: accountResult.data.account.blockHeight,
-            stashAddress: accountResult.data.account.id
-          }
-        }
-      : { skip: true }
-  );
-
-  if (accountResult.loading || accountRankingResult.loading) {
-    return { loading: true };
-  }
-
-  return {
-    loading: false,
-    data: {
-      account: accountResult.data?.account,
-      ranking: accountRankingResult.data?.ranking
-    }
-  };
-};
 
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();

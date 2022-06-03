@@ -5,6 +5,7 @@ import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import { SummaryPaperWrapper, SummaryRow } from '../../components/Paper/SummaryPaper';
 import { Account } from '../../schemas/accounts.schema';
+import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
 
@@ -30,7 +31,7 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
   );
 };
 
-const Summary: FC<{ account: Account }> = ({ account }) => {
+const Summary: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = ({ account }) => {
   return (
     <SummaryPaperWrapper>
       <SummaryRow label='stash' action={<CopyButton value={sampleHash} />}>
@@ -38,9 +39,11 @@ const Summary: FC<{ account: Account }> = ({ account }) => {
       </SummaryRow>
       <SummaryRow
         label='controller'
-        action={<CopyButton value={account.controllerAddress || '???'} />}
+        action={
+          account.controllerAddress ? <CopyButton value={account.controllerAddress} /> : undefined
+        }
       >
-        <Address name='test' value={'???'} />
+        <Address name='test' value={account.controllerAddress} />
       </SummaryRow>
       <SummaryRow label='reward' action={<CopyButton disabled value={'???'} />}>
         <Address value={'???'} />

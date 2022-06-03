@@ -61,6 +61,7 @@ export type Balance = {
 
 export type Account = {
   id: string;
+  controllerAddress: string;
   blockHeight: number;
   identity: Identity;
   identityDisplay: string;
@@ -86,6 +87,7 @@ export type GetAccountByAddressType = {
 export const ACCOUNT_BY_PK_FRAGMENT = gql`
   fragment account on account {
     id: account_id
+    controllerAddress: controller_address
     blockHeight: block_height
     identity
     identityDisplay: identity_display
