@@ -12,8 +12,8 @@ type Props = { blockNumber: number; extrinsicIndex: number };
 
 const AddressesHandler: FC<{
   address: string;
-  identityDisplay?: string;
-}> = ({ address, identityDisplay }) => {
+  identity?: string;
+}> = ({ address, identity: identityDisplay }) => {
   if (identityDisplay) {
     return <Address value={address} name={identityDisplay} link={`/accounts/${address}`} />;
   }
@@ -35,11 +35,17 @@ const SummaryFragment: FC<Props> = (variables) => {
   if (!data?.transfer) return <></>;
   return (
     <>
-      <SummaryRow label='sender' action={<CopyButton value={data.transfer.source} />}>
-        <AddressesHandler address={data.transfer.source} />
+      <SummaryRow label='sender' action={<CopyButton value={data.transfer.sender.address} />}>
+        <AddressesHandler
+          address={data.transfer.sender.address}
+          identity={data.transfer.sender.identityDisplay}
+        />
       </SummaryRow>
-      <SummaryRow label='destination' action={<CopyButton value={data.transfer.destination} />}>
-        <AddressesHandler address={data.transfer.destination} />
+      <SummaryRow label='destination' action={<CopyButton value={data.transfer.target.address} />}>
+        <AddressesHandler
+          address={data.transfer.target.address}
+          identity={data.transfer.target.identityDisplay}
+        />
       </SummaryRow>
       <SummaryRow label='value'>
         <Typography>

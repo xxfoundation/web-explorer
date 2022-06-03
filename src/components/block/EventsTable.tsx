@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { TableCellProps } from '@mui/material';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { LIST_EVENTS } from '../../schemas/events.schema';
 import { TotalOfItems } from '../../schemas/types';
@@ -22,9 +22,15 @@ type Response = { events: EventType[] } & TotalOfItems;
 
 const props: TableCellProps = { align: 'left' };
 
-const rowsParser = ({ index, method, section, timestamp }: EventType): BaselineCell[] => {
+const rowsParser = ({
+  blockNumber,
+  index,
+  method,
+  section,
+  timestamp
+}: EventType): BaselineCell[] => {
   return [
-    { value: index, props },
+    { value: `${blockNumber}-${index}`, props },
     { value: <TimeAgoComponent date={timestamp} /> },
     { value: `${section} (${method})` }
   ];
@@ -32,7 +38,10 @@ const rowsParser = ({ index, method, section, timestamp }: EventType): BaselineC
 
 const headers = [{ value: 'event id', props }, { value: 'time' }, { value: 'action' }];
 
-const EventsTable: FC<{ where: Record<string, unknown> }> = ({ where }) => {
+const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: number) => void }> = ({
+  where,
+  setCount = () => {}
+}) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor({ rowsPerPage: 4, cursorField: 'id' });
   const variables = useMemo(
@@ -49,6 +58,11 @@ const EventsTable: FC<{ where: Record<string, unknown> }> = ({ where }) => {
   );
   const { data, loading } = useQuery<Response>(LIST_EVENTS, { variables });
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
+  useEffect(() => {
+    if (setCount !== undefined && data?.agg) {
+      setCount(data.agg.aggregate.count);
+    }
+  }, [data?.agg, setCount]);
   const footer = useMemo(() => {
     if (data?.agg && data?.events && data.events.length) {
       return (

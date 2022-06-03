@@ -40,11 +40,11 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 });
 
-const ModuleCalls: FC<{ module: string; call: string; doc: string }> = ({ call, doc, module }) => {
+const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({ call, doc, module }) => {
   const title = useMemo(() => {
     let result = '';
     try {
-      const parsed = reader.parse(JSON.parse(doc).join('\r\n'));
+      const parsed = reader.parse(doc.join('\r\n'));
       result = writer.render(parsed);
     } catch (err) {
       console.error((err as Error).message);

@@ -27,20 +27,20 @@ const TransferRow = (data: Transfer) => {
       value: (
         <Grid container>
           <Grid xs={5} item>
-            {<Address value={data.source} truncated />}
+            {<Address value={data.source} link={`/accounts/${data.source}`} truncated />}
           </Grid>
           <Grid xs={2} item sx={{ textAlign: 'center' }}>
             <ArrowForwardIosIcon />
           </Grid>
           <Grid xs={5} item>
-            {<Address value={data.destination} truncated />}
+            {<Address value={data.destination} link={`/accounts/${data.destination}`} truncated />}
           </Grid>
         </Grid>
       )
     },
     { value: <FormatBalance value={data.amount} /> },
     { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
-    { value: <Hash value={data.hash} truncated showTooltip /> }
+    { value: <Hash value={data.hash} link={extrinsicIdLink} truncated showTooltip /> }
   ];
 };
 

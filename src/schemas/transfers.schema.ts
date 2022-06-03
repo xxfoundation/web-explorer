@@ -84,13 +84,13 @@ export const LIST_TRANSFERS_ORDERED = gql`
 
 export type GetTransferByPK = {
   transfer: Transfer & {
-    source: {
+    sender: {
       address: string;
-      identityDisplay?: string;
+      identityDisplay: string;
     };
-    destination: {
+    target: {
       address: string;
-      identityDisplay?: string;
+      identityDisplay: string;
     };
   };
 };
@@ -100,13 +100,13 @@ export const GET_TRANSFER_BY_PK = gql`
   query GetTransferByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
     transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
       ...transference_common_fields
-      source: account {
-        address: id
-        identityDisplay
+      sender: account {
+        address: account_id
+        identityDisplay:identity_display
       }
-      destination: accountByDestination {
-        address: id
-        identityDisplay
+      target: accountByDestination {
+        address: account_id
+        identityDisplay:identity_display
       }
     }
   }
