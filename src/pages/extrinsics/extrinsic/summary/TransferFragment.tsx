@@ -43,12 +43,12 @@ const SummaryFragment: FC<Props> = (variables) => {
       </SummaryRow>
       <SummaryRow label='value'>
         <Typography>
-          <FormatBalance value={data.transfer.amount.toString()} />
+          <FormatBalance value={data.transfer.amount} />
         </Typography>
       </SummaryRow>
       <SummaryRow label='fee'>
         <Typography>
-          <FormatBalance value={data.transfer.feeAmount.toString()} />
+          <FormatBalance value={data.transfer.feeAmount} />
         </Typography>
       </SummaryRow>
     </>

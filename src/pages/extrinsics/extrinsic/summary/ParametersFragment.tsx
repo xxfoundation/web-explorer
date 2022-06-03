@@ -4,6 +4,7 @@ import React, { FC, ReactNode, useCallback, useMemo } from 'react';
 import { SummaryRow } from '../../../../components/Paper/SummaryPaper';
 import { useToggle } from '../../../../hooks';
 import useCopyClipboard from '../../../../hooks/useCopyToClibboard';
+import { GetExtrinsicByPK } from '../../../../schemas/extrinsics.schema';
 import { theme } from '../../../../themes/default';
 
 const RoundedButton = styled(Button)(({}) => {
@@ -40,17 +41,7 @@ const callbackCopyMessage = (value: ReactNode) => {
   );
 };
 
-const useParserOfArgs = (args: unknown[], def: Record<string, string>) => {
-  return useMemo(() => {
-    const definition = Object.keys(def);
-    return definition.reduce<Record<string, unknown>>(
-      (p, c, index) => ({ ...p, [c]: args[index] }),
-      {}
-    );
-  }, [args, def]);
-};
-
-const ParamTile: FC<{ label: string; value: unknown }> = ({ label, value }) => {
+const ParamTile: FC<{ label: string; value: unknown, type?: string }> = ({ label, value }) => {
   return (
     <Stack
       sx={{
@@ -62,7 +53,7 @@ const ParamTile: FC<{ label: string; value: unknown }> = ({ label, value }) => {
         borderWidth: '1px'
       }}
     >
-      <Typography variant='h5'>{label}</Typography>
+      <Typography variant='h5'>{label}</Typography> 
       <Box
         component={'pre'}
         sx={{
@@ -79,20 +70,21 @@ const ParamTile: FC<{ label: string; value: unknown }> = ({ label, value }) => {
   );
 };
 
-const ParametersFragment: FC<{ args: unknown[]; def: Record<string, string> }> = ({ args, def }) => {
-  const parameters = useParserOfArgs(args, def);
+type Params = Pick<GetExtrinsicByPK['extrinsic'], 'args' | 'argsDef'>;
+
+const ParametersFragment: FC<Params> = ({ args, argsDef }) => {
   const staticCopy = useCopyClipboard()[1];
   const [isActive, { toggle }] = useToggle();
   const onclickCopy = useCallback(
-    () => staticCopy(JSON.stringify(parameters), callbackCopyMessage),
-    [parameters, staticCopy]
+    () => staticCopy(JSON.stringify(args), callbackCopyMessage),
+    [args, staticCopy]
   );
   const paramTiles = useMemo(
     () =>
-      Object.entries(parameters).map(([label, value], index) => (
-        <ParamTile key={index} label={label} value={value} />
+      Object.entries(argsDef).map(([label, type], index) => (
+        <ParamTile key={index} label={label} type={type} value={args[index]} />
       )),
-    [parameters]
+    [args, argsDef]
   );
   return (
     <SummaryRow label='parameters'>

@@ -1,4 +1,3 @@
-import type { BN } from '@polkadot/util';
 import { bnToBn, calcSi, formatDecimal, isBoolean } from '@polkadot/util';
 import { SiDef, ToBn } from '@polkadot/util/types';
 import { SI, SI_MID } from '@polkadot/util/format/si';
@@ -14,7 +13,7 @@ interface Options {
   withUnit?: boolean | string;
 }
 
-function getUnits (si: SiDef, withSi: boolean, withSiFull: boolean, withUnit: boolean | string): string {
+function getUnits(si: SiDef, withSi: boolean, withSiFull: boolean, withUnit: boolean | string): string {
   const unit = isBoolean(withUnit)
     ? SI[SI_MID].text
     : withUnit;
@@ -29,7 +28,7 @@ function getUnits (si: SiDef, withSi: boolean, withSiFull: boolean, withUnit: bo
 }
 
 
-function getPrePost (text: string, decimals: number, forceUnit?: string, precision = 4): [SiDef, string, string] {
+function getPrePost(text: string, decimals: number, forceUnit?: string, precision = 4): [SiDef, string, string] {
   // NOTE We start at midpoint (8) minus 1 - this means that values display as
   // 123.456 instead of 0.123k (so always 6 relevant). Additionally we use ceil
   // so there are at most 3 decimal before the decimal separator
@@ -46,7 +45,7 @@ function getPrePost (text: string, decimals: number, forceUnit?: string, precisi
 }
 
 // Formats a string/number with <prefix>.<postfix><type> notation
-export function formatBalance <ExtToBn extends ToBn> (input?: number | string | BN | bigint | ExtToBn, options: Options | boolean = true, optDecimals: number = defaultDecimals): string {
+export function formatBalance<ExtToBn extends ToBn>(input?: number | string | bigint | ExtToBn, options: Options | boolean = true, optDecimals: number = defaultDecimals): string {
   let text = bnToBn(input).toString();
 
   if (text.length === 0 || text === '0') {

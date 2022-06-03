@@ -72,7 +72,7 @@ const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
     }
     return <></>;
   }, [data?.agg, data?.extrinsic, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading) return <TableSkeleton rows={6} cells={6} footer />;
+  if (loading) return <TableSkeleton rows={headers.length} cells={rowsPerPage} footer />;
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 

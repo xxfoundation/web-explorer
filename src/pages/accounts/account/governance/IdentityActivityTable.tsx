@@ -7,6 +7,7 @@ const headers = [
   { value: 'Timestamp' },
   { value: 'Fields' }
 ];
+
 const IdentityActivityTable: FC = () => {
   return <BaselineTable headers={headers} rows={[]} />;
 };

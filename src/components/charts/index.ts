@@ -1,5 +1,7 @@
-export { default as AverageAnnualReturnLineChart } from './AverageAnnualReturnLineChart';
-export { default as NewAccountsLineChart } from './NewAccountsLineChart';
-export { default as StakingRatioLineChart } from './StakingRatioLineChart';
-export { default as TotalIssuanceDoughnutChart } from './TotalIssuanceDoughnutChart';
-export { default as StakingSupplyDoughnutChart } from './StakingSupplyDoughnutChart';
+export { default as NewAccountsChart } from './highcharts/NewAccountsLineChart';
+export { default as StakingInterestChart } from './highcharts/StakingInterestLineChart';
+export { default as StakingRatioChart } from './highcharts/StakingRatioLineChart';
+export { default as TransactionsChart } from './highcharts/TransactionsLineChart';
+export { default as StakingSupplyDonutChart } from './StakingSupplyDonutChart';
+export { default as TotalIssuanceDonutChart } from './TotalIssuanceDonutChart';
+

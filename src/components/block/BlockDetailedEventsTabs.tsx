@@ -11,7 +11,7 @@ const BlockDetailedEventsTabs: React.FC<{
   extrinsics?: number;
   blockNumber?: number;
   loading: boolean;
-}> = ({ blockNumber, events, loading }) => {
+}> = ({ blockNumber, events, extrinsics, loading }) => {
   const panels = useMemo(() => {
     const where = {
       block_number: {
@@ -31,7 +31,7 @@ const BlockDetailedEventsTabs: React.FC<{
         ]
       : [
           {
-            label: <TabText message='extrinsics' count={1} />,
+            label: <TabText message='extrinsics' count={extrinsics} />,
             content: <ExtrinsicsTable where={where} />
           },
           {
@@ -39,7 +39,7 @@ const BlockDetailedEventsTabs: React.FC<{
             content: <EventsTable where={where} />
           }
         ];
-  }, [blockNumber, events, loading]);
+  }, [blockNumber, events, extrinsics, loading]);
   return (
     <PaperStyled>
       <TabsWithPanels panels={panels} tabsLabel='block event tabs' />

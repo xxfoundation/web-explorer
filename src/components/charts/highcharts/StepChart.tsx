@@ -1,12 +1,12 @@
+import type { DataPoint } from './types';
+import React, { FC } from 'react';
 import Highcharts, {
   AxisLabelsFormatterCallbackFunction,
   Options,
   TooltipFormatterCallbackFunction
 } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import React, { FC } from 'react';
 import { theme } from '../../../themes/default';
-import { DataPoint } from '../../../types';
 
 type Props = {
   title?: string;

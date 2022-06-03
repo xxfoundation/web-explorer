@@ -46,8 +46,13 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({
   module
 }) => {
   const title = useMemo(() => {
-    const parsed = reader.parse(doc.join('\r\n'));
-    const result = writer.render(parsed);
+    let result = '';
+    try {
+      const parsed = reader.parse(doc.join('\r\n'));
+      result = writer.render(parsed);
+    } catch (err) {
+      console.error((err as Error).message);
+    }
     return (
       <Box>
         <Typography

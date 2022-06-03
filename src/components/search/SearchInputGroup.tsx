@@ -36,7 +36,7 @@ export const GenericSearchInput = <T extends object>({
       if (optionValidator(String(value))) {
         return true;
       }
-      const msg = value ? `${option} is not valid` : 'the search is empty';
+      const msg = value ? `${option} is not valid` : 'Search is empty';
       enqueueSnackbar(msg, { variant: 'error' });
       return false;
     },

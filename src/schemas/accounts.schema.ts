@@ -61,7 +61,6 @@ export type Balance = {
 
 export type Account = {
   id: string;
-  controllerAddress: string;
   blockHeight: number;
   identity: Identity;
   identityDisplay: string;
@@ -79,7 +78,7 @@ export type Account = {
   roles: Record<Roles, boolean>;
 };
 
-export type GetAccountByAddress = {
+export type GetAccountByAddressType = {
   account: Account;
   ranking?: CommonFieldsRankingFragment;
 };
@@ -87,7 +86,6 @@ export type GetAccountByAddress = {
 export const ACCOUNT_BY_PK_FRAGMENT = gql`
   fragment account on account {
     id: account_id
-    controllerAddress: controller_address
     blockHeight: block_height
     identity
     identityDisplay: identity_display
@@ -144,6 +142,15 @@ export const LIST_ACCOUNTS = gql`
       aggregate {
         count
       }
+    }
+  }
+`;
+
+export const LISTEN_FOR_NEW_ACCOUNTS = gql`
+  subscription ListenForNewAccounts {
+    new_accounts(order_by: [{ era: asc }]) {
+      accounts
+      era
     }
   }
 `;

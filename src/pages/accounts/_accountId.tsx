@@ -4,13 +4,14 @@ import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
-import { GetAccountByAddress, GET_ACCOUNT_BY_PK, Roles } from '../../schemas/accounts.schema';
+import { GetAccountByAddressType, GET_ACCOUNT_BY_PK, Roles } from '../../schemas/accounts.schema';
+import { GetAccountRanking } from '../../schemas/ranking.schema';
 import NotFound from '../NotFound';
 import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
 import Info from './account/Info';
-import StakingCard from './account/staking';
+import PerformanceCard from './account/performance';
 
 // const useTestRole = (): Roles[] => {
 //   const { search } = useLocation();
@@ -19,12 +20,43 @@ import StakingCard from './account/staking';
 //   return (rolesquery ? rolesquery.split(',') : ['nominators']) as Roles[];
 // };
 
-const AccountId: FC = ({}) => {
-  const { accountId } = useParams<{ accountId: string }>();
-  const { data, loading } = useQuery<GetAccountByAddress>(GET_ACCOUNT_BY_PK, {
+const useFetchRankingAccountInfo = (
+  accountId: string
+): { loading: boolean; data?: Partial<GetAccountByAddressType> } => {
+  const accountResult = useQuery<Omit<GetAccountByAddressType, 'ranking'>>(GET_ACCOUNT_BY_PK, {
     variables: { accountId }
   });
-  // const role = useTestRole();
+  const accountRankingResult = useQuery<Omit<GetAccountByAddressType, 'account'>>(
+    GetAccountRanking,
+    !accountResult.loading &&
+      accountResult.data?.account &&
+      accountResult.data.account.roles.validator
+      ? {
+          variables: {
+            blockHeight: accountResult.data.account.blockHeight,
+            stashAddress: accountResult.data.account.id
+          }
+        }
+      : { skip: true }
+  );
+
+  if (accountResult.loading || accountRankingResult.loading) {
+    return { loading: true };
+  }
+
+  return {
+    loading: false,
+    data: {
+      account: accountResult.data?.account,
+      ranking: accountRankingResult.data?.ranking
+    }
+  };
+};
+
+const AccountId: FC = ({}) => {
+  const { accountId } = useParams<{ accountId: string }>();
+  const { data, loading } = useFetchRankingAccountInfo(accountId);
+  // const roles = useTestRole();
   if (loading)
     return (
       <Container sx={{ my: 5 }}>
@@ -68,13 +100,13 @@ const AccountId: FC = ({}) => {
         </Grid>
         {/* <Grid item xs={12}>
           <GovernanceCard roles={sampleAccount.roles} />
-        </Grid>  */}
+        </Grid> 
         <Grid item xs={12}>
           <StakingCard account={data.account} roles={roles} />
-        </Grid>
-        {/* <Grid item xs={12}>
-          {data.ranking && <PerformanceCard account={data.account} ranking={data.ranking} />}
         </Grid> */}
+        <Grid item xs={12}>
+          {data.ranking && <PerformanceCard account={data.account} ranking={data.ranking} />}
+        </Grid>
       </Grid>
     </Container>
   );

@@ -12,12 +12,14 @@ import ModuleCalls from '../ModuleCalls';
 import ParametersFragment from './ParametersFragment';
 import SummaryFragment from './TransferFragment';
 
+type Extrinsic = GetExtrinsicByPK['extrinsic'];
+
 type Props = {
-  extrinsic: GetExtrinsicByPK['extrinsic'];
+  extrinsic: Extrinsic;
   extrinsicId: { blockNumber: number; extrinsicIndex: number };
 };
 
-const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
+const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {  
   return (
     <>
       <SummaryPaperWrapper>
@@ -55,7 +57,7 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
         >
           <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
         </SummaryRow>
-        <ParametersFragment args={extrinsic.args} def={extrinsic.argsDef} />
+        <ParametersFragment {...extrinsic} />
         {extrinsic.signer && extrinsic.isSigned && (
           <SummaryRow label='signer'>
             <Address value={extrinsic.signer} />
