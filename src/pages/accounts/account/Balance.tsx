@@ -78,11 +78,11 @@ const TransferableBalanceTooltipContent: FC<{ account: Account }> = ({ account }
       </TooltipStack>
       <TooltipStack>
         <TooltipLineHeader>election</TooltipLineHeader>
-        <TooltipLineBody>???</TooltipLineBody>
+        <TooltipLineBody>N/D</TooltipLineBody>
       </TooltipStack>
       <TooltipStack>
         <TooltipLineHeader>democracy</TooltipLineHeader>
-        <TooltipLineBody>???</TooltipLineBody>
+        <TooltipLineBody>N/D</TooltipLineBody>
       </TooltipStack>
     </TooltipBody>
   );
@@ -94,7 +94,7 @@ const LockedTooltipContent: FC<{ account: Account }> = ({}) => {
       <TooltipBody>
         <TooltipStack>
           <TooltipLineHeader>vesting</TooltipLineHeader>
-          <TooltipLineBody>????</TooltipLineBody>
+          <TooltipLineBody>N/D?</TooltipLineBody>
         </TooltipStack>
       </TooltipBody>
       <TooltipFooter>

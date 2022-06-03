@@ -172,7 +172,7 @@ const IdentityDesktop: FC<Props> = (props) => {
         </Grid>
         <Grid item container md={12}>
           <PaddedGridItem md={8}>
-            <TextWithLabel label='stash' text={'????'} />
+            <TextWithLabel label='stash' text={'N/D'} />
           </PaddedGridItem>
           <PaddedGridItem md={4}>
             {props.account.identity.riotName && (
@@ -182,7 +182,7 @@ const IdentityDesktop: FC<Props> = (props) => {
         </Grid>
         <Grid item container md={12}>
           <PaddedGridItem md={8}>
-            <TextWithLabel label='controller' text={'????'} />
+            <TextWithLabel label='controller' text={'N/D'} />
           </PaddedGridItem>
           <PaddedGridItem md={4}>
             {props.account.identity.web && (

@@ -57,7 +57,7 @@ const SummaryInfo = () => {
           ) : mappedMetrics.holders !== undefined ? (
             mappedMetrics.holders
           ) : (
-            '?????'
+            'N/D'
           )}
         </DarkSubtitle>
       </Stack>
@@ -69,7 +69,7 @@ const SummaryInfo = () => {
           ) : mappedMetrics.transfers !== undefined ? (
             mappedMetrics.transfers
           ) : (
-            '-'
+            'N/D'
           )}
         </DarkSubtitle>
       </Stack>
