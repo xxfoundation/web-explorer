@@ -33,8 +33,8 @@ const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
   );
 };
 
-const rolesToCell = (roles?: Roles[]) => {
-  return !roles || !roles.length ? (
+const rolesToCell = (roles: Roles[]) => {
+  return !roles.length ? (
     <>
       <span>unknown</span>
       <AccountBoxIcon />
@@ -56,7 +56,7 @@ const rolesToCell = (roles?: Roles[]) => {
 const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineCell[] => {
   const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
   const roles = Object.entries(item.roles)
-    .filter((entry) => entry[1])
+    .filter((entry) => entry[1] === true)
     .map(([role]) => role as Roles);
   return [
     { value: rank, props: rankProps },
@@ -87,7 +87,7 @@ const useHeaders = (): [BaselineCell[], Record<Roles, boolean>] => {
     validator: false,
     nominator: false,
     council: false,
-    techcommit: false,
+    techcommit: false
     // treasury: false
   });
   return [

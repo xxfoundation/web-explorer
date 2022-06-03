@@ -16,6 +16,12 @@ export type CommonFieldsRankingFragment = {
   slashRating: number;
   subAccountsRating: number;
   totalRating: number;
+
+  selfStake: number;
+  otherStake: number;
+  totalStake: number;
+  nominators: number;
+  commission: string;
 };
 
 export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
@@ -35,6 +41,12 @@ export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
     slashRating: slash_rating
     subAccountsRating: sub_accounts_rating
     totalRating: total_rating
+
+    selfStake: self_stake
+    otherStake: other_stake
+    totalStake: total_stake
+    nominators
+    commission
   }
 `;
 

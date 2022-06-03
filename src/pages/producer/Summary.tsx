@@ -31,7 +31,10 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
   );
 };
 
-const Summary: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = ({ account }) => {
+const Summary: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = ({
+  account,
+  ranking
+}) => {
   return (
     <SummaryPaperWrapper>
       <SummaryRow label='stash' action={<CopyButton value={sampleHash} />}>
@@ -56,19 +59,24 @@ const Summary: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = 
       </SummaryRow>
       <SummaryRow label='own stake'>
         <Typography>
-          <FormatBalance value={'00'} />
+          <FormatBalance value={ranking.selfStake} />
+        </Typography>
+      </SummaryRow>
+      <SummaryRow label='other stake'>
+        <Typography>
+          <FormatBalance value={ranking.otherStake} />
         </Typography>
       </SummaryRow>
       <SummaryRow label='total stake'>
         <Typography>
-          <FormatBalance value={''} />
+          <FormatBalance value={ranking.totalStake} />
         </Typography>
       </SummaryRow>
       <SummaryRow label='nominators'>
-        <Typography>???</Typography>
+        <Typography>{ranking.nominators}</Typography>
       </SummaryRow>
       <SummaryRow label='commission'>
-        <Typography>???</Typography>
+        <Typography>{ranking.commission}</Typography>
       </SummaryRow>
       <SummaryRow label='session key'>
         <SessionKeyValue

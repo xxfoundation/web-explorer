@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
-  Box, Divider,
+  Box,
+  Divider,
   Stack,
   Tooltip,
   tooltipClasses,
@@ -56,7 +57,7 @@ const TooltipStack: FC = ({ children }) => {
 };
 
 const TooltipLineHeader: FC = ({ children }) => (
-  <Typography fontSize={'11px'} fontWeight={500} letterSpacing={'1px'} width={'70px'}>
+  <Typography fontSize={'11px'} fontWeight={500} letterSpacing={'1px'} width={'80px'}>
     {children}
   </Typography>
 );
@@ -71,30 +72,48 @@ const TransferableBalanceTooltipContent: FC<{ account: Account }> = ({ account }
   return (
     <TooltipBody>
       <TooltipStack>
-        <TooltipLineHeader>unbounding</TooltipLineHeader>
+        <TooltipLineHeader>transferable</TooltipLineHeader>
         <TooltipLineBody>
-          <FormatBalance value={account.totalBalance.toString()} />
+          <FormatBalance value={account.transferrableBalance.toString()} />
         </TooltipLineBody>
-      </TooltipStack>
-      <TooltipStack>
-        <TooltipLineHeader>election</TooltipLineHeader>
-        <TooltipLineBody>N/D</TooltipLineBody>
-      </TooltipStack>
-      <TooltipStack>
-        <TooltipLineHeader>democracy</TooltipLineHeader>
-        <TooltipLineBody>N/D</TooltipLineBody>
       </TooltipStack>
     </TooltipBody>
   );
 };
 
-const LockedTooltipContent: FC<{ account: Account }> = ({}) => {
+const LockedTooltipContent: FC<{ account: Account }> = ({ account }) => {
   return (
     <>
       <TooltipBody>
         <TooltipStack>
           <TooltipLineHeader>vesting</TooltipLineHeader>
-          <TooltipLineBody>N/D?</TooltipLineBody>
+          <TooltipLineBody>
+            <FormatBalance value={account.vestingBalance.toString()} />
+          </TooltipLineBody>
+        </TooltipStack>
+        <TooltipStack>
+          <TooltipLineHeader>unbonding</TooltipLineHeader>
+          <TooltipLineBody>
+            <FormatBalance value={account.unbondingBalance.toString()} />
+          </TooltipLineBody>
+        </TooltipStack>
+        <TooltipStack>
+          <TooltipLineHeader>bonded</TooltipLineHeader>
+          <TooltipLineBody>
+            <FormatBalance value={account.bondedBalance.toString()} />
+          </TooltipLineBody>
+        </TooltipStack>
+        <TooltipStack>
+          <TooltipLineHeader>democracy</TooltipLineHeader>
+          <TooltipLineBody>
+            <FormatBalance value={account.democracyBalance.toString()} />
+          </TooltipLineBody>
+        </TooltipStack>
+        <TooltipStack>
+          <TooltipLineHeader>council</TooltipLineHeader>
+          <TooltipLineBody>
+            <FormatBalance value={account.councilBalance.toString()} />
+          </TooltipLineBody>
         </TooltipStack>
       </TooltipBody>
       <TooltipFooter>
@@ -113,7 +132,7 @@ const Balance: FC<{
     <PaperStyled>
       <InfoCardRow>
         <Box width='110px' display='flex' alignItems={'center'} justifyContent='space-between'>
-          <TypographyHeader>balance</TypographyHeader>
+          <TypographyHeader>Total</TypographyHeader>
           <CustomTooltip
             title={<TransferableBalanceTooltipContent account={account} />}
             placement='bottom'
@@ -136,10 +155,7 @@ const Balance: FC<{
       <InfoCardRow>
         <Box width='110px' display='flex' alignItems={'center'} justifyContent='space-between'>
           <TypographyHeader>locked</TypographyHeader>
-          <CustomTooltip
-            title={<LockedTooltipContent account={account} />}
-            placement='bottom'
-          >
+          <CustomTooltip title={<LockedTooltipContent account={account} />} placement='bottom'>
             <InfoOutlinedIcon fontSize='small' color='primary' />
           </CustomTooltip>
         </Box>

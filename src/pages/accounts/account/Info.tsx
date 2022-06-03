@@ -8,13 +8,16 @@ import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
 const Info: FC<{ account: Account }> = ({ account }) => {
   const rolesTags = useMemo(() => {
-    return Object.entries(account.roles).map(([role, active], index) => (
-      <Tag hidden={!active} key={role} filled sx={{ marginLeft: index !== 0 ? '8px' : '0' }}>
-        <Typography fontSize={'12px'} fontWeight={400}>
-          {role}
-        </Typography>
-      </Tag>
-    ));
+    return Object.entries(account.roles)
+      .filter(([name, isTrue]) => name !== '__typename' && isTrue === true)
+      .slice(0, 3) // TODO Remove this
+      .map(([role], index) => (
+        <Tag key={role} filled sx={{ marginLeft: index !== 0 ? '8px' : '0' }}>
+          <Typography fontSize={'12px'} fontWeight={400}>
+            {role}
+          </Typography>
+        </Tag>
+      ));
   }, [account.roles]);
   return (
     <PaperStyled>
