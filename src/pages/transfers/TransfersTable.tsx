@@ -17,6 +17,8 @@ import {
   Transfer
 } from '../../schemas/transfers.schema';
 
+const ROWS_PER_PAGE = 20;
+
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
   return [
@@ -68,7 +70,7 @@ const TransferTable: FC<{
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Transfer & { id: number }>({
       cursorField: 'id',
-      rowsPerPage: 20
+      rowsPerPage: ROWS_PER_PAGE
     });
   const variables = useMemo(
     () => ({
@@ -90,7 +92,7 @@ const TransferTable: FC<{
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.transfers[0])}
-          rowsPerPageOptions={[20, 30, 40, 50]}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
@@ -102,7 +104,7 @@ const TransferTable: FC<{
       setTotalOfTransfers(data.agg.aggregate.count);
     }
   }, [cursorField, data?.agg, setTotalOfTransfers]);
-  if (loading) return <TableSkeleton rows={12} cells={6} footer />;
+  if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
   return (
     <BaselineTable
       headers={headers}

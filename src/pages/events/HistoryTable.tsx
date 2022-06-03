@@ -10,6 +10,8 @@ import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { Event, ListEvents, LIST_EVENTS } from '../../schemas/events.schema';
 import { theme } from '../../themes/default';
 
+const ROWS_PER_PAGE = 25;
+
 const headers = [
   { value: 'event id' },
   { value: 'block number' },
@@ -55,7 +57,7 @@ const HistoryTable = () => {
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.events[0])}
-          rowsPerPageOptions={[5, 20, 50]}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
@@ -66,7 +68,7 @@ const HistoryTable = () => {
     return (
       <>
         <Skeleton width='12%' sx={{ marginBottom: '18px' }} />
-        <TableSkeleton cells={4} rows={20} />
+        <TableSkeleton cells={headers.length} rows={rowsPerPage} />
       </>
     );
   return (

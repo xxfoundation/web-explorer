@@ -9,6 +9,8 @@ import TablePagination from '../Tables/TablePagination';
 import { TableSkeleton } from '../Tables/TableSkeleton';
 import TimeAgoComponent from '../TimeAgo';
 
+const DEFAULT_ROWS_PER_PAGE = 5;
+
 type EventType = {
   id: number;
   index: number;
@@ -43,7 +45,7 @@ const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: numbe
   setCount = () => {}
 }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
-    usePaginatorByCursor({ rowsPerPage: 5, cursorField: 'id' });
+    usePaginatorByCursor({ rowsPerPage: DEFAULT_ROWS_PER_PAGE, cursorField: 'id' });
   const variables = useMemo(
     () => ({
       orderBy: [{ id: 'desc' }],
@@ -71,7 +73,7 @@ const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: numbe
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.events[0])}
-          rowsPerPageOptions={[5, 20, 50]}
+          rowsPerPageOptions={[DEFAULT_ROWS_PER_PAGE, 20, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
@@ -79,7 +81,7 @@ const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: numbe
     return <></>;
   }, [data?.agg, data?.events, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
 
-  if (loading) return <TableSkeleton rows={5} cells={3} footer />;
+  if (loading) return <TableSkeleton rows={rowsPerPage} cells={3} footer />;
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 

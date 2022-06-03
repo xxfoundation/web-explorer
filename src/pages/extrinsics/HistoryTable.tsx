@@ -10,7 +10,7 @@ import TimeAgoComponent from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
 
-const ROWS_PER_PAGE = 25;
+const ROWS_PER_PAGE = 20;
 
 const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
   const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.index}`;
@@ -74,7 +74,7 @@ const HistoryTable: FC<{
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.extrinsics[0])}
-          rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );

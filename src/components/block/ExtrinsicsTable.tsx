@@ -11,6 +11,8 @@ import TablePagination from '../Tables/TablePagination';
 import { TableSkeleton } from '../Tables/TableSkeleton';
 import TimeAgoComponent from '../TimeAgo';
 
+const DEFAULT_ROWS_PER_PAGE = 5;
+
 type ExtrinsicsTyp = {
   id: number;
   index: number;
@@ -66,13 +68,13 @@ const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.extrinsic[0])}
           onRowsPerPageChange={onRowsPerPageChange}
-          rowsPerPageOptions={[5, 20, 50]}
+          rowsPerPageOptions={[DEFAULT_ROWS_PER_PAGE, 20, 50]}
         />
       );
     }
     return <></>;
   }, [data?.agg, data?.extrinsic, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading) return <TableSkeleton rows={headers.length} cells={rowsPerPage} footer />;
+  if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 
