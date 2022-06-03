@@ -15,7 +15,7 @@ export const LegendTypographyHeader = styled(Typography)(({ theme }) => ({
 
 export const LegendTypographySubHeaders = styled(Typography)(({ theme }) => ({
   fontWeight: 400,
-  fontSize: 20,
+  fontSize: 18,
   color: theme.palette.grey[800],
   textTransform: 'uppercase',
   letterSpacing: '7%',

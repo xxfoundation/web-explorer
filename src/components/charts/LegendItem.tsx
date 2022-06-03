@@ -7,7 +7,7 @@ const LegendTypographyItem = styled(Typography)(({ theme }) => ({
   textTransform: 'capitalize',
   whiteSpace: 'nowrap',
   [theme.breakpoints.down('sm')]: {
-    fontSize: 10
+    fontSize: 9
   }
 }));
 
@@ -25,6 +25,6 @@ const LegendItem: FC<{ color: string }> = ({ children, color }) => {
       <LegendTypographyItem variant='body3'>{children}</LegendTypographyItem>
     </Stack>
   );
-}
+};
 
 export default LegendItem;

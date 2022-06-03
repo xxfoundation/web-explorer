@@ -4,9 +4,9 @@ import React, { FC, useMemo, useRef } from 'react';
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 
 import { Doughnut } from 'react-chartjs-2';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { useSubscription } from '@apollo/client';
-import { mapValues, pick } from 'lodash'
+import { mapValues, pick } from 'lodash';
 import BN from 'bn.js';
 
 import Legend from './Legend';
@@ -26,14 +26,10 @@ type Data = {
   value: BN;
   percentage: string;
   color: string;
-  hideTooltip?: boolean
+  hideTooltip?: boolean;
 };
 
-const fields: (keyof Economics)[] = [
-  'staked',
-  'unbonding',
-  'stakeableSupply'
-];
+const fields: (keyof Economics)[] = ['staked', 'unbonding', 'stakeableSupply'];
 
 const extractChartData = (economics?: Economics) => {
   if (!economics) {
@@ -44,8 +40,7 @@ const extractChartData = (economics?: Economics) => {
       }
     };
   }
-  
-  
+
   const { stakeableSupply, staked, unbonding } = mapValues(
     pick(economics, fields),
     (o) => new BN(o)
@@ -53,7 +48,8 @@ const extractChartData = (economics?: Economics) => {
 
   const liquid = stakeableSupply.sub(staked).sub(unbonding);
 
-  const calculatePercentage = (n: BN) => (n.muln(1e6).div(stakeableSupply).toNumber() / 1e4).toFixed(2);
+  const calculatePercentage = (n: BN) =>
+    (n.muln(1e6).div(stakeableSupply).toNumber() / 1e4).toFixed(0);
 
   const serieA: Data[] = [
     {
@@ -72,7 +68,7 @@ const extractChartData = (economics?: Economics) => {
       color: '#59BD1C',
       label: DataLabels.Unbonding,
       value: unbonding,
-      percentage: calculatePercentage(unbonding),
+      percentage: calculatePercentage(unbonding)
     }
   ];
 
@@ -81,7 +77,7 @@ const extractChartData = (economics?: Economics) => {
     color
   });
 
-  const legendData = serieA.filter((s) => !s.hideTooltip).map(legendMapper)
+  const legendData = serieA.filter((s) => !s.hideTooltip).map(legendMapper);
 
   return {
     legendData,
@@ -93,8 +89,8 @@ const extractChartData = (economics?: Economics) => {
         }
       ]
     }
-  }
-}
+  };
+};
 type Options = ChartProps<'doughnut'>['options'];
 
 const StakingSupplyDonutChart: FC = () => {
@@ -118,12 +114,18 @@ const StakingSupplyDonutChart: FC = () => {
 
   return (
     <Stack direction='row' spacing={3} sx={{ flexGrow: 1 }}>
-      <Box className='chart-container' style={{ width: '50%', flexShrink: 1, position: 'relative' }}>
+      <Box
+        className='chart-container'
+        style={{ width: '50%', flexShrink: 1, position: 'relative' }}
+      >
         <Doughnut ref={chartRef} options={chartOptions} data={data} />
         <LightTooltip style={customTooltip.styles}>
-            <LightTooltipHeader>
-              {customTooltip.data?.label} {customTooltip.data?.percentage}%
-            </LightTooltipHeader>
+          <LightTooltipHeader>
+            {customTooltip.data?.label} | {customTooltip.data?.percentage}%
+          </LightTooltipHeader>
+          <Typography variant={'body1'}>
+            {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value} />}
+          </Typography>
         </LightTooltip>
       </Box>
       <Stack style={{ minWidth: '33%' }} spacing={2}>

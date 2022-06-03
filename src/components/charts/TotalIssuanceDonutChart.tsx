@@ -50,43 +50,44 @@ const keysCollapsedUnderOther: (keyof Economics)[] = [
   'sales',
   'treasury'
 ];
-
+const tooltipHeaderWidth = 5;
+const tooltipBalanceaWidth = 7;
 const OthersTooltipExtension: FC<Economics> = (economics) => (
-  <Grid container sx={{ mt: 1, minWidth: '10rem' }}>
-    <Grid item xs={6}>
+  <Grid container sx={{ mt: 1, minWidth: '10rem', fontSize: '12px' }}>
+    <Grid item xs={tooltipHeaderWidth}>
       Treasury &nbsp;
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipBalanceaWidth}>
       <FormatBalance value={economics.treasury} />
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipHeaderWidth}>
       Canary &nbsp;
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipBalanceaWidth}>
       <FormatBalance value={economics.canary} />
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipHeaderWidth}>
       Sales &nbsp;
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipBalanceaWidth}>
       <FormatBalance value={economics.sales} />
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipHeaderWidth}>
       Claims &nbsp;
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipBalanceaWidth}>
       <FormatBalance value={economics.claims} />
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipHeaderWidth}>
       Bridge &nbsp;
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipBalanceaWidth}>
       <FormatBalance value={economics.bridge} />
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipHeaderWidth}>
       Custody &nbsp;
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={tooltipBalanceaWidth}>
       <FormatBalance value={economics.custody} />
     </Grid>
   </Grid>
@@ -113,7 +114,7 @@ const extractChartData = (economics?: Economics) => {
   );
   const { circulating, rewards, stakeableSupply, totalSupply, vesting } = converted;
 
-  const calculatePercentage = (n: BN) => (n.muln(1e6).div(totalSupply).toNumber() / 1e4).toFixed(2);
+  const calculatePercentage = (n: BN) => (n.muln(1e6).div(totalSupply).toNumber() / 1e4).toFixed(0);
 
   const serieA: Data[] = [
     {
@@ -226,11 +227,11 @@ const TotalIssuanceDonutChart = () => {
         {!customTooltip.data?.hideTooltip && (
           <LightTooltip style={customTooltip.styles}>
             <LightTooltipHeader>
-              {customTooltip.data?.label} {customTooltip.data?.percentage}%
+              {customTooltip.data?.label} | {customTooltip.data?.percentage}%
             </LightTooltipHeader>
-            {customTooltip.data?.value && (
-              <FormatBalance value={customTooltip.data.value} denomination={9} />
-            )}
+            <Typography variant={'body1'}>
+              {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value} />}
+            </Typography>
             {economics && customTooltip.data?.label === DataLabels.Others && (
               <OthersTooltipExtension {...economics} />
             )}
