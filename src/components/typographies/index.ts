@@ -7,7 +7,10 @@ export const LegendTypographyHeader = styled(Typography)(({ theme }) => ({
   textTransform: 'uppercase',
   letterSpacing: '1px',
   textOverflow: 'ellipsis',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: 12
+  }
 }));
 
 export const LegendTypographySubHeaders = styled(Typography)(({ theme }) => ({
@@ -15,5 +18,8 @@ export const LegendTypographySubHeaders = styled(Typography)(({ theme }) => ({
   fontSize: 20,
   color: theme.palette.grey[800],
   textTransform: 'uppercase',
-  letterSpacing: '7%'
+  letterSpacing: '7%',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: 14,
+  }
 }));

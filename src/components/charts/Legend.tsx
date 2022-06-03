@@ -13,7 +13,7 @@ type Props = {
 }
 
 const Legend: FC<Props> = ({ data }) => (
-  <Stack spacing={1}>
+  <Stack spacing={{ xs: 0.5, sm: 0.75 }}>
     {data.map(({ color, label }) => (
       <LegendItem key={`${color}-${label}`} color={color}>
         {label}

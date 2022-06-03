@@ -1,5 +1,3 @@
-import type { Block, ListBlocks } from './types';
-
 import { useSubscription } from '@apollo/client';
 import { Box, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
@@ -10,6 +8,8 @@ import DefaultTile from '../DefaultTile';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import { ListSkeleton } from './ListSkeleton';
+import type { Block, ListBlocks } from './types';
+
 
 const PAGE_LIMIT = 8;
 

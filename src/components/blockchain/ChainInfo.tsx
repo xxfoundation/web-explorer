@@ -98,6 +98,7 @@ const ChainInfo = () => {
   const content = useMemo(() => {
     return processData(loading, data?.metrics);
   }, [data, loading]);
+
   return (
     <Box className='blockchain-component-chainInfo' mb={7}>
       <Typography variant='h3' gutterBottom>

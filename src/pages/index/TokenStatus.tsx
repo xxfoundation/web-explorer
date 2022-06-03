@@ -1,22 +1,28 @@
-import { Box, Grid, styled, Typography } from '@mui/material';
-import React from 'react';
+import { styled, Box, Grid, Typography } from '@mui/material';
+import React, { FC } from 'react';
+import LatestBlocksList from '../../components/blockchain/LatestBlocksList';
+import LatestTransfersList from '../../components/blockchain/LatestTransfersList';
 import {
-  TransactionsChart,
   NewAccountsChart,
-  StakingRatioChart,
-  StakingInterestChart,
+  StakingSupplyDonutChart,
   TotalIssuanceDonutChart,
-  StakingSupplyDonutChart
+  TransactionsChart
 } from '../../components/charts';
-import LatestBlocks from '../../components/blockchain/LatestBlocksList';
-import TransfersTable from '../../components/blockchain/LatestTransfersList';
-import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
+import AspectBox from '../../components/AspectBox';
 
-const ChartWrap = styled(PaperWrapStyled)({
-  height: '16rem',
-  display: 'flex',
-  justifyContent: 'stretch'
-});
+const ChartWrapContainer = styled(PaperWrap)(({ theme }) => ({
+  minHeight: '10rem',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2)
+  }
+}));
+
+const ChartWrap: FC = ({ children }) => (
+  <ChartWrapContainer>
+    <AspectBox ratio={2 / 1}>{children}</AspectBox>
+  </ChartWrapContainer>
+);
 
 const TokenStatus = () => {
   return (
@@ -25,42 +31,34 @@ const TokenStatus = () => {
         Token Status
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={12} lg={6} md={6}>
           <ChartWrap>
             <TotalIssuanceDonutChart />
           </ChartWrap>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={12} lg={6} md={6}>
           <ChartWrap>
             <StakingSupplyDonutChart />
           </ChartWrap>
         </Grid>
         <Grid item xs={12} md={6}>
-          <LatestBlocks />
+          <LatestBlocksList />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TransfersTable />
+          <LatestTransfersList />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
-            <TransactionsChart />
-          </PaperWrapStyled>
+          <TransactionsChart />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
-            <NewAccountsChart />
-          </PaperWrapStyled>
+          <NewAccountsChart />
+        </Grid>
+        {/* <Grid item xs={12} md={6}>
+          <StakingRatioChart />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
-            <StakingRatioChart />
-          </PaperWrapStyled>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
-            <StakingInterestChart />
-          </PaperWrapStyled>
-        </Grid>
+          <StakingInterestChart />
+        </Grid> */}
       </Grid>
     </Box>
   );

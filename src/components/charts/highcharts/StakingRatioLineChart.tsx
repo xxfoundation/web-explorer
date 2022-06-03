@@ -1,7 +1,7 @@
 import React from 'react';
 import type { DataPoint } from '.';
-import { LineChart, percentTooltipFormatter, formatPercent } from '.';
-import ChartWrap from '../ChartWrap';
+import { formatPercent, LineChart, percentTooltipFormatter } from '.';
+import DefaultTile from '../../DefaultTile';
 
 const data: DataPoint[] = [
   [90, 0.01],
@@ -11,15 +11,13 @@ const data: DataPoint[] = [
 
 const StakingRatioChart = () => {
   return (
-    <ChartWrap title='Staking Ratio'>
-      <LineChart
-        tooltipFormatter={percentTooltipFormatter}
+    <DefaultTile header='staking ratio' height='400px'>
+      <LineChart tooltipFormatter={percentTooltipFormatter}
         labelFormatters={{
           yAxis: formatPercent
         }}
-        data={data}
-      />
-    </ChartWrap>
+        data={data} />
+    </DefaultTile>
   );
 };
 

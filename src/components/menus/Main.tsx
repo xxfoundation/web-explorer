@@ -1,7 +1,7 @@
 import { Box, Grid } from '@mui/material';
 import React from 'react';
 import BlockchainMenu from './Blockchain';
-import GovernanceMenu from './Governance';
+// import GovernanceMenu from './Governance';
 import { MenuButton } from './menu.styles';
 
 export default function DesktopNav() {
@@ -17,9 +17,9 @@ export default function DesktopNav() {
           </MenuButton>
         </Grid>
 
-        <Grid item xs>
+        {/* <Grid item xs>
           <GovernanceMenu />
-        </Grid>
+        </Grid> */}
         <Grid item xs>
           <MenuButton id='accounts-button' href='/accounts'>
             Accounts

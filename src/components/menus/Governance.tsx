@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { useToggle } from '../../hooks';
 import { MenuButton, MenuLink } from './menu.styles';
 
-export default function Blockchain() {
+export default function Governance() {
   const button = useRef(null);
   const [opened, { toggle, toggleOff: close }] = useToggle();
 
@@ -31,12 +31,24 @@ export default function Blockchain() {
             'aria-labelledby': 'governance-button'
           }}
         >
-          <MenuLink to={'/'} onClick={close}>Overview</MenuLink>
-          <MenuLink to={'/'} onClick={close}>Democracy</MenuLink>
-          <MenuLink to={'/'} onClick={close}>Council</MenuLink>
-          <MenuLink to={'/'} onClick={close}>Tech Committee</MenuLink>
-          <MenuLink to={'/'} onClick={close}>Treasury</MenuLink>
-          <MenuLink to={'/'} onClick={close}>Bounties</MenuLink>
+          <MenuLink to={'/'} onClick={close}>
+            Overview
+          </MenuLink>
+          <MenuLink to={'/'} onClick={close}>
+            Democracy
+          </MenuLink>
+          <MenuLink to={'/'} onClick={close}>
+            Council
+          </MenuLink>
+          <MenuLink to={'/'} onClick={close}>
+            Tech Committee
+          </MenuLink>
+          <MenuLink to={'/'} onClick={close}>
+            Treasury
+          </MenuLink>
+          <MenuLink to={'/'} onClick={close}>
+            Bounties
+          </MenuLink>
         </Menu>
       )}
     </>

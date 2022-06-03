@@ -35,9 +35,9 @@ function App() {
           <Route path='/events'>
             <EventsHistory />
           </Route>
-          <Route path='/governance'>
+          {/* <Route path='/governance'>
             <h1>governance</h1>
-          </Route>
+          </Route> */}
           <Route path='/accounts'>
             <Accounts />
           </Route>

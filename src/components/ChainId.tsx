@@ -19,7 +19,7 @@ const contentRenderer = (
   props?: TypographyProps
 ) => {
   return (
-    <Typography {...props} color={isValid ? 'info' : 'red'}>
+    <Typography {...props} fontFamily={'Roboto Mono'} color={isValid ? 'info' : 'red'}>
       {link ? <Link to={link}>{text}</Link> : text}
     </Typography>
   );

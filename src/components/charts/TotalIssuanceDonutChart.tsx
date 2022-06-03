@@ -5,7 +5,7 @@ import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types'
 import { useSubscription } from '@apollo/client';
 import React, { useRef, useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import { pick, mapValues } from 'lodash';
 import BN from 'bn.js';
 
@@ -21,15 +21,15 @@ enum DataLabels {
   Circulating = 'Circulating',
   Vesting = 'Vesting',
   Rewards = 'Rewards',
-  Others = 'Others',
-  StakeableSupply = 'Stakeable Supply',
-  Other = 'Other'
+  Others = 'Other',
+  StakeableSupply = 'Stakeable',
+  StakeableSupplyOther = 'Other'
 }
 
 type Data = {
   label: DataLabels;
   value: BN;
-  percentage: number;
+  percentage: string;
   color: string;
   hideTooltip?: boolean;
 };
@@ -52,32 +52,44 @@ const keysCollapsedUnderOther: (keyof Economics)[] = [
 ];
 
 const OthersTooltipExtension: FC<Economics> = (economics) => (
-  <Stack spacing={1} sx={{ mt: 1 }}>
-    <Box>
-      <LightTooltipHeader>Treasury</LightTooltipHeader>
+  <Grid container sx={{ mt: 1, minWidth: '10rem' }}>
+    <Grid item xs={6}>
+      Treasury &nbsp;
+    </Grid>
+    <Grid item xs={6}>
       <FormatBalance value={economics.treasury} />
-    </Box>
-    <Box>
-      <LightTooltipHeader>Canary</LightTooltipHeader>
+    </Grid>
+    <Grid item xs={6}>
+      Canary &nbsp;
+    </Grid>
+    <Grid item xs={6}>
       <FormatBalance value={economics.canary} />
-    </Box>
-    <Box>
-      <LightTooltipHeader>Sales</LightTooltipHeader>
+    </Grid>
+    <Grid item xs={6}>
+      Sales &nbsp;
+    </Grid>
+    <Grid item xs={6}>
       <FormatBalance value={economics.sales} />
-    </Box>
-    <Box>
-      <LightTooltipHeader>Claims</LightTooltipHeader>
+    </Grid>
+    <Grid item xs={6}>
+      Claims &nbsp;
+    </Grid>
+    <Grid item xs={6}>
       <FormatBalance value={economics.claims} />
-    </Box>
-    <Box>
-      <LightTooltipHeader>Bridge</LightTooltipHeader>
+    </Grid>
+    <Grid item xs={6}>
+      Bridge &nbsp;
+    </Grid>
+    <Grid item xs={6}>
       <FormatBalance value={economics.bridge} />
-    </Box>
-    <Box>
-      <LightTooltipHeader>Custody</LightTooltipHeader>
+    </Grid>
+    <Grid item xs={6}>
+      Custody &nbsp;
+    </Grid>
+    <Grid item xs={6}>
       <FormatBalance value={economics.custody} />
-    </Box>
-  </Stack>
+    </Grid>
+  </Grid>
 );
 
 const extractChartData = (economics?: Economics) => {
@@ -89,18 +101,19 @@ const extractChartData = (economics?: Economics) => {
       }
     };
   }
+
   const converted = mapValues(
     pick(economics, seriesKeys.concat(keysCollapsedUnderOther)),
-    (o) => new BN(o.toString().replace('.', ''))
+    (o) => new BN(o)
   );
+
   const others = Object.values(pick(converted, keysCollapsedUnderOther)).reduce(
     (acc, cur) => acc.add(cur),
     new BN('0')
   );
-  console.warn(converted);
   const { circulating, rewards, stakeableSupply, totalSupply, vesting } = converted;
 
-  const calculatePercentage = (n: BN) => n.muln(1e6).div(totalSupply).toNumber() / 1e6;
+  const calculatePercentage = (n: BN) => (n.muln(1e6).div(totalSupply).toNumber() / 1e4).toFixed(2);
 
   const serieA: Data[] = [
     {
@@ -140,7 +153,7 @@ const extractChartData = (economics?: Economics) => {
     },
     {
       color: '#EAEAEA',
-      label: DataLabels.Other,
+      label: DataLabels.StakeableSupplyOther,
       value: other,
       percentage: calculatePercentage(other),
       hideTooltip: true
@@ -184,8 +197,8 @@ const TotalIssuanceDonutChart = () => {
 
   const chartOptions = useMemo<Options>(
     () => ({
-      maintainAspectRatio: false,
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         tooltip: customTooltip.plugin
       },
@@ -198,13 +211,18 @@ const TotalIssuanceDonutChart = () => {
   );
 
   if (subscription.error) {
-    return <Typography color='red'>Something went wrong...</Typography>;
+    return <Typography color='red'>Data unavailable...</Typography>;
   }
 
   return (
-    <Stack direction='row' spacing={3} sx={{ flexGrow: 1 }}>
-      <Box className='chart-container' style={{ width: '50%', flexGrow: 1, position: 'relative' }}>
-        <Doughnut ref={chartRef} options={chartOptions} data={data} />
+    <Stack direction='row' style={{ width: '100%' }} spacing={2}>
+      <Box style={{ flexShrink: 1, flexGrow: 1, position: 'relative' }}>
+        <Doughnut
+          style={{ position: 'absolute', width: '100%', left: 0, top: 0 }}
+          ref={chartRef}
+          options={chartOptions}
+          data={data}
+        />
         {!customTooltip.data?.hideTooltip && (
           <LightTooltip style={customTooltip.styles}>
             <LightTooltipHeader>
@@ -220,16 +238,14 @@ const TotalIssuanceDonutChart = () => {
         )}
       </Box>
       <Stack style={{ minWidth: '33%' }} spacing={2}>
-        <Box>
-          {economics?.totalSupply && (
-            <>
-              <LegendTypographyHeader>Total Issuance</LegendTypographyHeader>
-              <LegendTypographySubHeaders>
-                <FormatBalance value={economics.totalSupply} denomination={9} />
-              </LegendTypographySubHeaders>
-            </>
-          )}
-        </Box>
+        {economics?.totalSupply && (
+          <Box>
+            <LegendTypographyHeader>Total Supply</LegendTypographyHeader>
+            <LegendTypographySubHeaders>
+              <FormatBalance value={economics.totalSupply} />
+            </LegendTypographySubHeaders>
+          </Box>
+        )}
         <Legend data={legendData} />
       </Stack>
     </Stack>

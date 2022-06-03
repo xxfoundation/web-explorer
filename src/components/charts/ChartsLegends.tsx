@@ -39,7 +39,7 @@ const LegendItems: FC<{ data: CustomPointOptions[] }> = ({ data }) => {
 const ChartsLegends: FC<{
   legends: CustomPointOptions[];
   name: string;
-  value: string | number;
+  value: string;
 }> = ({ legends, name, value }) => {
   return (
     <>

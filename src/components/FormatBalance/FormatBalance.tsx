@@ -1,6 +1,7 @@
 import React from 'react';
 import BN from 'bn.js';
 import { formatBalance } from './formatter';
+import { stripNonDigits } from '../../utils';
 
 interface Props {
   children?: React.ReactNode;
@@ -11,7 +12,7 @@ interface Props {
   isShort?: boolean;
   label?: React.ReactNode;
   labelPost?: LabelPost;
-  value: string | number | BN;
+  value: string | BN;
   withCurrency?: boolean;
   withSi?: boolean;
 }
@@ -52,7 +53,8 @@ function applyFormat(
   labelPost?: LabelPost,
   precision?: number
 ): React.ReactNode {
-  const [prefix, postfix] = formatBalance(value, {
+  const stripped = stripNonDigits(value);
+  const [prefix, postfix] = formatBalance(stripped, {
     decimals: denomination,
     forceUnit: '-',
     precision,
@@ -62,7 +64,11 @@ function applyFormat(
   const unitPost = withCurrency ? symbol : '';
 
   if (prefix.length > M_LENGTH) {
-    const formatted = formatBalance(value, { decimals: denomination, precision, withUnit: false });
+    const formatted = formatBalance(stripped, {
+      decimals: denomination,
+      precision,
+      withUnit: false
+    });
     const divider = formatted.includes('.') ? '.' : ' ';
     const [major, rest] = formatted.split(divider);
     const [minor, unit] = rest.includes(' ') ? rest.split(' ') : [, rest];

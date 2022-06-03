@@ -83,7 +83,7 @@ type PieChartWithLegendProps = {
   crustData?: CustomPointOptions[];
   data: CustomPointOptions[];
   name: string;
-  value: string | number;
+  value: string;
   height: number;
 };
 
