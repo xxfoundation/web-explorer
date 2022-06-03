@@ -55,7 +55,7 @@ const HistoryTable = () => {
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.events[0])}
-          rowsPerPageOptions={[2, 4, 6]}
+          rowsPerPageOptions={[5, 20, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );

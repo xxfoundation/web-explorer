@@ -43,7 +43,7 @@ const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: numbe
   setCount = () => {}
 }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
-    usePaginatorByCursor({ rowsPerPage: 4, cursorField: 'id' });
+    usePaginatorByCursor({ rowsPerPage: 5, cursorField: 'id' });
   const variables = useMemo(
     () => ({
       orderBy: [{ id: 'desc' }],
@@ -71,7 +71,7 @@ const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: numbe
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.events[0])}
-          rowsPerPageOptions={[2, 4, 6]}
+          rowsPerPageOptions={[5, 20, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
@@ -79,7 +79,7 @@ const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: numbe
     return <></>;
   }, [data?.agg, data?.events, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
 
-  if (loading) return <TableSkeleton rows={4} cells={4} footer />;
+  if (loading) return <TableSkeleton rows={5} cells={3} footer />;
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 

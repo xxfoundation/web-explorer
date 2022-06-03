@@ -44,7 +44,7 @@ const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 
 const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor({
-      rowsPerPage: 4,
+      rowsPerPage: 5,
       cursorField: 'id'
     });
   const variables = useMemo(() => {
@@ -66,7 +66,7 @@ const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.extrinsic[0])}
           onRowsPerPageChange={onRowsPerPageChange}
-          rowsPerPageOptions={[2, 4, 6]}
+          rowsPerPageOptions={[5, 20, 50]}
         />
       );
     }
