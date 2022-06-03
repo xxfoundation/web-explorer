@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
-  Box,
-  Button,
-  Divider,
+  Box, Divider,
   Stack,
   Tooltip,
   tooltipClasses,
@@ -24,10 +23,6 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
     padding: 0
   }
 });
-
-const CardHeaderButton = styled(Button)(({}) => ({
-  ':hover': { backgroundColor: theme.palette.grey[200] }
-}));
 
 const TooltipBody = styled(Box)(({}) => ({
   padding: '30px 40px 20px 40px'
@@ -118,49 +113,38 @@ const Balance: FC<{
   return (
     <PaperStyled>
       <InfoCardRow>
-        <Box width='110px'>
+        <Box width='110px' display='flex' alignItems={'center'} justifyContent='space-between'>
+          <TypographyHeader>balance</TypographyHeader>
           <CustomTooltip
             title={<TransferableBalanceTooltipContent account={account} />}
-            placement='bottom-start'
+            placement='bottom'
           >
-            <CardHeaderButton size='small'>
-              <TypographyHeader>balance</TypographyHeader>
-            </CardHeaderButton>
+            <InfoOutlinedIcon fontSize='small' color='primary' />
           </CustomTooltip>
         </Box>
-        <TypographyBody>
+        <Typography fontWeight='100'>|</Typography>
+        <Typography fontSize={14} fontWeight={400} color={theme.palette.grey[500]}>
           <FormatBalance value={account.totalBalance.toString()} />
-        </TypographyBody>
+        </Typography>
       </InfoCardRow>
       <InfoCardRow>
-        <Box width='110px'>
-          <Button
-            size='small'
-            sx={{
-              ':hover': {
-                backgroundColor: 'inherit',
-                cursor: 'default'
-              }
-            }}
-            disableRipple
-            disableTouchRipple
-            disableElevation
-          >
-            <TypographyHeader>reserved</TypographyHeader>
-          </Button>
-        </Box>
+        <TypographyHeader width='110px'>reserved</TypographyHeader>
+        <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
           <FormatBalance value={account.reservedBalance.toString()} />
         </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
-        <Box width='110px'>
-          <CustomTooltip title={<LockedTooltipContent account={account} />} placement='right-start'>
-            <CardHeaderButton size='small'>
-              <TypographyHeader>locked</TypographyHeader>
-            </CardHeaderButton>
+        <Box width='110px' display='flex' alignItems={'center'} justifyContent='space-between'>
+          <TypographyHeader>locked</TypographyHeader>
+          <CustomTooltip
+            title={<LockedTooltipContent account={account} />}
+            placement='bottom'
+          >
+            <InfoOutlinedIcon fontSize='small' color='primary' />
           </CustomTooltip>
         </Box>
+        <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
           <FormatBalance value={account.lockedBalance.toString()} />
         </TypographyBody>

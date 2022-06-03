@@ -29,18 +29,21 @@ const Info: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
   }, [roles]);
   return (
     <PaperStyled>
-      <InfoCardRow sx={{ paddingY: '4px' }}>
+      <InfoCardRow>
         <TypographyHeader sx={{ width: '110px' }}>created</TypographyHeader>
+        <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
           <TimeAgoComponent date={createdDate} />
         </TypographyBody>
       </InfoCardRow>
-      <InfoCardRow sx={{ paddingY: '4px' }}>
+      <InfoCardRow>
         <TypographyHeader sx={{ width: '110px' }}>nonce</TypographyHeader>
+        <Typography fontWeight='100'>|</Typography>
         <TypographyBody>{nonce}</TypographyBody>
       </InfoCardRow>
-      <InfoCardRow sx={{ paddingY: '4px' }}>
+      <InfoCardRow>
         <TypographyHeader sx={{ width: '110px' }}>role</TypographyHeader>
+        <Typography fontWeight='100'>|</Typography>
         <Box display={'flex'} alignItems={'center'}>
           {rolesTags}
         </Box>

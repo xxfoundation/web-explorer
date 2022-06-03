@@ -1,4 +1,4 @@
-import { Divider, Stack, StackProps, styled, Typography } from '@mui/material';
+import { Stack, StackProps, styled, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../../../themes/default';
 
@@ -27,7 +27,6 @@ export const InfoCardRow: FC<StackProps> = ({ children, ...props }) => {
   return (
     <Stack
       direction={'row'}
-      divider={<Divider flexItem variant='middle' orientation='vertical' />}
       spacing={3}
       marginBottom={'6px'}
       alignItems={'center'}
