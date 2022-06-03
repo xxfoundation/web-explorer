@@ -56,13 +56,13 @@ const TooltipStack: FC = ({ children }) => {
 };
 
 const TooltipLineHeader: FC = ({ children }) => (
-  <Typography fontSize={'10px'} fontWeight={500} letterSpacing={'1px'} width={'70px'}>
+  <Typography fontSize={'11px'} fontWeight={500} letterSpacing={'1px'} width={'70px'}>
     {children}
   </Typography>
 );
 
 const TooltipLineBody = styled(Typography)(({}) => ({
-  fontSize: '10px',
+  fontSize: '11px',
   fontWeight: 400,
   letterSpacing: '1px'
 }));

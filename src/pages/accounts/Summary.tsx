@@ -54,8 +54,8 @@ const SummaryInfo = () => {
         <DarkSubtitle>
           {loading ? (
             <Skeleton />
-          ) : mappedMetrics.holders !== undefined ? (
-            mappedMetrics.holders
+          ) : mappedMetrics.accounts !== undefined ? (
+            mappedMetrics.accounts
           ) : (
             'N/D'
           )}
