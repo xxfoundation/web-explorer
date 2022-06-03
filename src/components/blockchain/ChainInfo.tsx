@@ -71,7 +71,7 @@ const processData = (loading: boolean, data: Metric[] | undefined): JSX.Element[
       const aux = data.find(({ title }) => title === item.name);
       if (aux) {
         if (item.header == 'Total Issuance') {
-          return { ...item, value: <FormatBalance value={aux.value as string} /> };
+          return { ...item, value: <FormatBalance value={aux.value.toString()} /> };
         }
         if (item.header == 'Validators') {
           return { ...item, value: `${aux.value}/${validatorSet}` };
@@ -94,6 +94,7 @@ const ChainInfo = () => {
   const content = useMemo(() => {
     return processData(loading, data?.metrics);
   }, [data, loading]);
+
   return (
     <Box className='blockchain-component-chainInfo' mb={7}>
       <Typography variant='h3' gutterBottom>

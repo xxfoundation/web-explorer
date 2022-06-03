@@ -33,7 +33,7 @@ export type Transfer = {
   extrinsicIndex: number;
   source: string;
   destination: string;
-  amount: number;
+  amount: string;
   fee_amount: number;
   section: string;
   method: string;

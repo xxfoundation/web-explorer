@@ -28,7 +28,6 @@ export const getCountsByTimestamp = (
 ) => timestamps.reduce(
   (acc, timestamp) => {
     const nearest = convertToNearestTimestamp(timestamp, interval);
-
     
     return {
       ...acc,

@@ -25,7 +25,10 @@ export const LightTooltip = styled('div')(({ theme }) => ({
     textTransform: 'uppercase',
     color: theme.palette.grey[600]
   },
-  color: theme.palette.grey[500]
+  color: theme.palette.grey[500],
+  [theme.breakpoints.down('sm')]: {
+    fontSize: 12
+  }
 }));
 
 export const LightTooltipHeader = styled('h6')(({ theme }) => ({
@@ -37,4 +40,7 @@ export const LightTooltipHeader = styled('h6')(({ theme }) => ({
   textTransform: 'uppercase',
   margin: 0,
   whiteSpace: 'nowrap',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: 12
+  }
 }));

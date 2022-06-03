@@ -1,5 +1,5 @@
-import { Box, Grid, styled, Typography } from '@mui/material';
-import React from 'react';
+import { styled, Box, Grid, Typography } from '@mui/material';
+import React, { FC } from 'react';
 import {
   TransactionsChart,
   NewAccountsChart,
@@ -10,13 +10,23 @@ import {
 } from '../../components/charts';
 import LatestBlocks from '../../components/blockchain/LatestBlocksList';
 import TransfersTable from '../../components/blockchain/LatestTransfersList';
-import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
+import AspectBox from '../../components/AspectBox';
 
-const ChartWrap = styled(PaperWrapStyled)({
-  height: '16rem',
-  display: 'flex',
-  justifyContent: 'stretch'
-});
+const ChartWrapContainer = styled(PaperWrap)(({ theme }) => ({
+  minHeight: '10rem',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2)
+  }
+}));
+
+const ChartWrap: FC = ({ children }) => (
+  <ChartWrapContainer>
+    <AspectBox ratio={2 / 1}>
+      {children}
+    </AspectBox>
+  </ChartWrapContainer>
+)
 
 const TokenStatus = () => {
   return (
@@ -25,12 +35,12 @@ const TokenStatus = () => {
         Token Status
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={12} lg={6} md={6}>
           <ChartWrap>
             <TotalIssuanceDonutChart />
           </ChartWrap>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={12} lg={6} md={6}>
           <ChartWrap>
             <StakingSupplyDonutChart />
           </ChartWrap>
@@ -42,24 +52,24 @@ const TokenStatus = () => {
           <TransfersTable />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
+          <PaperWrap>
             <TransactionsChart />
-          </PaperWrapStyled>
+          </PaperWrap>
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
+          <PaperWrap>
             <NewAccountsChart />
-          </PaperWrapStyled>
+          </PaperWrap>
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
+          <PaperWrap>
             <StakingRatioChart />
-          </PaperWrapStyled>
+          </PaperWrap>
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
+          <PaperWrap>
             <StakingInterestChart />
-          </PaperWrapStyled>
+          </PaperWrap>
         </Grid>
       </Grid>
     </Box>
