@@ -19,7 +19,7 @@ import { LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 type Options = ChartProps<'doughnut'>['options'];
 enum DataLabels {
   Circulating = 'Circulating',
-  Vesting = 'Circulating',
+  Vesting = 'Vesting',
   Rewards = 'Rewards',
   Others = 'Others',
   StakeableSupply = 'Stakeable Supply',
@@ -31,7 +31,7 @@ type Data = {
   value: BN;
   percentage: number;
   color: string;
-  hideTooltip?: boolean
+  hideTooltip?: boolean;
 };
 
 const seriesKeys: (keyof Economics)[] = [
@@ -39,7 +39,7 @@ const seriesKeys: (keyof Economics)[] = [
   'rewards',
   'totalSupply',
   'vesting',
-  'stakeableSupply',
+  'stakeableSupply'
 ];
 
 const keysCollapsedUnderOther: (keyof Economics)[] = [
@@ -54,39 +54,27 @@ const keysCollapsedUnderOther: (keyof Economics)[] = [
 const OthersTooltipExtension: FC<Economics> = (economics) => (
   <Stack spacing={1} sx={{ mt: 1 }}>
     <Box>
-      <LightTooltipHeader>
-        Treasury
-      </LightTooltipHeader>
+      <LightTooltipHeader>Treasury</LightTooltipHeader>
       <FormatBalance value={economics.treasury} />
     </Box>
     <Box>
-      <LightTooltipHeader>
-        Canary
-      </LightTooltipHeader>
+      <LightTooltipHeader>Canary</LightTooltipHeader>
       <FormatBalance value={economics.canary} />
     </Box>
     <Box>
-      <LightTooltipHeader>
-        Sales
-      </LightTooltipHeader>
+      <LightTooltipHeader>Sales</LightTooltipHeader>
       <FormatBalance value={economics.sales} />
     </Box>
     <Box>
-      <LightTooltipHeader>
-        Claims
-      </LightTooltipHeader>
+      <LightTooltipHeader>Claims</LightTooltipHeader>
       <FormatBalance value={economics.claims} />
     </Box>
     <Box>
-      <LightTooltipHeader>
-        Bridge
-      </LightTooltipHeader>
+      <LightTooltipHeader>Bridge</LightTooltipHeader>
       <FormatBalance value={economics.bridge} />
     </Box>
     <Box>
-      <LightTooltipHeader>
-        Custody
-      </LightTooltipHeader>
+      <LightTooltipHeader>Custody</LightTooltipHeader>
       <FormatBalance value={economics.custody} />
     </Box>
   </Stack>
@@ -103,12 +91,16 @@ const extractChartData = (economics?: Economics) => {
   }
   const converted = mapValues(
     pick(economics, seriesKeys.concat(keysCollapsedUnderOther)),
-    (o) => new BN(o.toString())
+    (o) => new BN(o.toString().replace('.', ''))
   );
-  const others = Object.values(pick(converted, keysCollapsedUnderOther)).reduce((acc, cur) => acc.add(cur), new BN('0'));
+  const others = Object.values(pick(converted, keysCollapsedUnderOther)).reduce(
+    (acc, cur) => acc.add(cur),
+    new BN('0')
+  );
+  console.warn(converted);
   const { circulating, rewards, stakeableSupply, totalSupply, vesting } = converted;
-  
-  const calculatePercentage = (n: BN) => n.muln(100).div(totalSupply).toNumber();
+
+  const calculatePercentage = (n: BN) => n.muln(1e6).div(totalSupply).toNumber() / 1e6;
 
   const serieA: Data[] = [
     {
@@ -127,13 +119,13 @@ const extractChartData = (economics?: Economics) => {
       color: '#6F74FF',
       label: DataLabels.Rewards,
       value: rewards,
-      percentage: calculatePercentage(rewards),
+      percentage: calculatePercentage(rewards)
     },
     {
       color: '#59BD1C',
       label: DataLabels.Others,
       value: others,
-      percentage: calculatePercentage(others),
+      percentage: calculatePercentage(others)
     }
   ];
 
@@ -151,7 +143,7 @@ const extractChartData = (economics?: Economics) => {
       label: DataLabels.Other,
       value: other,
       percentage: calculatePercentage(other),
-      hideTooltip: true,
+      hideTooltip: true
     }
   ];
 
@@ -160,7 +152,10 @@ const extractChartData = (economics?: Economics) => {
     color
   });
 
-  const legendData = serieA.concat(serieB).filter((s) => !s.hideTooltip).map(legendMapper)
+  const legendData = serieA
+    .concat(serieB)
+    .filter((s) => !s.hideTooltip)
+    .map(legendMapper);
 
   return {
     legendData,
@@ -169,14 +164,15 @@ const extractChartData = (economics?: Economics) => {
         {
           backgroundColor: serieA.map((s) => s.color),
           data: serieA
-        }, {
+        },
+        {
           backgroundColor: serieB.map((s) => s.color),
           data: serieB
         }
       ]
     }
-  }
-}
+  };
+};
 
 const TotalIssuanceDonutChart = () => {
   const subscription = useSubscription<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
@@ -202,9 +198,7 @@ const TotalIssuanceDonutChart = () => {
   );
 
   if (subscription.error) {
-    return (
-      <Typography color='red'>Something went wrong...</Typography>
-    )
+    return <Typography color='red'>Something went wrong...</Typography>;
   }
 
   return (
@@ -216,7 +210,9 @@ const TotalIssuanceDonutChart = () => {
             <LightTooltipHeader>
               {customTooltip.data?.label} {customTooltip.data?.percentage}%
             </LightTooltipHeader>
-            {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value} />}
+            {customTooltip.data?.value && (
+              <FormatBalance value={customTooltip.data.value} denomination={9} />
+            )}
             {economics && customTooltip.data?.label === DataLabels.Others && (
               <OthersTooltipExtension {...economics} />
             )}
@@ -229,7 +225,7 @@ const TotalIssuanceDonutChart = () => {
             <>
               <LegendTypographyHeader>Total Issuance</LegendTypographyHeader>
               <LegendTypographySubHeaders>
-                <FormatBalance value={economics.totalSupply} denomination={0} />
+                <FormatBalance value={economics.totalSupply} denomination={9} />
               </LegendTypographySubHeaders>
             </>
           )}

@@ -1,12 +1,14 @@
+import { BN } from '@polkadot/util';
+
 export type ChainData = {
   header: string;
   name: string;
-  value: string | JSX.Element;
+  value: string | BN | JSX.Element;
 }
 
 export type Metric = {
   title: string;
-  value: string;
+  value: string | BN;
 }
 
 export type EraMetrics = {

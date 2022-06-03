@@ -88,7 +88,7 @@ function applyFormat(
 function FormatBalance({
   children,
   className = '',
-  denomination = 0,
+  denomination = 9,
   isShort,
   label,
   labelPost,
