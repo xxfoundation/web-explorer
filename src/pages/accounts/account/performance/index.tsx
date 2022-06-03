@@ -3,7 +3,7 @@ import React, { FC, useMemo } from 'react';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Account, Roles } from '../../../../schemas/accounts.schema';
 import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
-import Charts from './Charts';
+import Charts from './charts';
 import MetricCards from './MetricsCards';
 
 const PerformanceCard: FC<{
@@ -27,7 +27,7 @@ const PerformanceCard: FC<{
       },
       {
         label: <Typography>charts</Typography>,
-        content: <Charts />
+        content: <Charts {...props} />
       }
     ];
   }, [props, incompatibleRole]);

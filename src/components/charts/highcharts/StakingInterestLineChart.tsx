@@ -1,7 +1,7 @@
 import React from 'react';
 import type { DataPoint } from '.';
-import { LineChart, decimalTooltipFormatter } from '.';
-import ChartWrap from '../ChartWrap';
+import { decimalTooltipFormatter, LineChart } from '.';
+import DefaultTile from '../../DefaultTile';
 
 const data: DataPoint[] = [
   [665, 0.01],
@@ -12,9 +12,9 @@ const data: DataPoint[] = [
 
 const StakingInterestChart = () => {
   return (
-    <ChartWrap title='Staking Interest (APY)'>
+    <DefaultTile header='staking interest (apy)' height='400px'>
       <LineChart tooltipFormatter={decimalTooltipFormatter} data={data} />
-    </ChartWrap>
+    </DefaultTile>
   );
 };
 

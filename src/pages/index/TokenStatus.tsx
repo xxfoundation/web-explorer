@@ -3,10 +3,7 @@ import React from 'react';
 import LatestBlocksList from '../../components/blockchain/LatestBlocksList';
 import LatestTransfersList from '../../components/blockchain/LatestTransfersList';
 import {
-  NewAccountsChart,
-  // StakingRatioChart,
-  // StakingInterestChart,
-  StakingSupplyDonutChart,
+  NewAccountsChart, StakingSupplyDonutChart,
   TotalIssuanceDonutChart,
   TransactionsChart
 } from '../../components/charts';
@@ -42,24 +39,16 @@ const TokenStatus = () => {
           <LatestTransfersList />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
-            <TransactionsChart />
-          </PaperWrapStyled>
+          <TransactionsChart />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
-            <NewAccountsChart />
-          </PaperWrapStyled>
+          <NewAccountsChart />
         </Grid>
         {/* <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
-            <StakingRatioChart />
-          </PaperWrapStyled>
+          <StakingRatioChart />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled>
-            <StakingInterestChart />
-          </PaperWrapStyled>
+          <StakingInterestChart />
         </Grid> */}
       </Grid>
     </Box>

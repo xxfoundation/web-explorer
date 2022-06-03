@@ -2,9 +2,7 @@ import { Account } from '../../../../../schemas/accounts.schema';
 import { CommonFieldsRankingFragment } from '../../../../../schemas/ranking.schema';
 import { MetricScores } from '../../../types';
 
-const getSlashesScore = ({
-  ranking: {}
-}: {
+const getSlashesScore = ({}: {
   account: Account;
   ranking: CommonFieldsRankingFragment;
 }): [MetricScores, string] => {
