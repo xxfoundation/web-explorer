@@ -12,7 +12,7 @@ import {
 import React, { FC } from 'react';
 import FormatBalance from '../../../components/FormatBalance';
 import PaperStyled from '../../../components/Paper/PaperWrap.styled';
-import { Account, Balance as BalanceType, Roles } from '../../../schemas/accounts.schema';
+import { Account, Roles } from '../../../schemas/accounts.schema';
 import { theme } from '../../../themes/default';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
@@ -72,52 +72,34 @@ const TooltipLineBody = styled(Typography)(({}) => ({
   letterSpacing: '1px'
 }));
 
-const TransferableBalanceTooltipContent: FC<{ balance: number }> = ({ balance }) => {
+const TransferableBalanceTooltipContent: FC<{ account: Account }> = ({ account }) => {
   return (
     <TooltipBody>
       <TooltipStack>
-        <TooltipLineHeader>transferable</TooltipLineHeader>
+        <TooltipLineHeader>unbounding</TooltipLineHeader>
         <TooltipLineBody>
-          <FormatBalance value={balance.toString()} />
+          <FormatBalance value={account.totalBalance.toString()} />
         </TooltipLineBody>
+      </TooltipStack>
+      <TooltipStack>
+        <TooltipLineHeader>election</TooltipLineHeader>
+        <TooltipLineBody>???</TooltipLineBody>
+      </TooltipStack>
+      <TooltipStack>
+        <TooltipLineHeader>democracy</TooltipLineHeader>
+        <TooltipLineBody>???</TooltipLineBody>
       </TooltipStack>
     </TooltipBody>
   );
 };
 
-const LockedTooltipContent: FC<{ balance: BalanceType }> = ({ balance }) => {
+const LockedTooltipContent: FC<{ account: Account }> = ({}) => {
   return (
     <>
       <TooltipBody>
-        {/* <TooltipStack>
-          <TooltipLineHeader>bonded</TooltipLineHeader>
-          <TooltipLineBody>
-            <FormatBalance value={data.bonded} />
-          </TooltipLineBody>
-        </TooltipStack> */}
-        {/* <TooltipStack>
-          <TooltipLineHeader>unbonding</TooltipLineHeader>
-          <TooltipLineBody>
-            <FormatBalance value={data.unbonding} />
-          </TooltipLineBody>
-        </TooltipStack> */}
-        {/* <TooltipStack>
-          <TooltipLineHeader>democracy</TooltipLineHeader>
-          <TooltipLineBody>
-            <FormatBalance value={data.democracy} />
-          </TooltipLineBody>
-        </TooltipStack> */}
-        {/* <TooltipStack>
-          <TooltipLineHeader>election</TooltipLineHeader>
-          <TooltipLineBody>
-            <FormatBalance value={data.unbonding} />
-          </TooltipLineBody>
-        </TooltipStack> */}
         <TooltipStack>
           <TooltipLineHeader>vesting</TooltipLineHeader>
-          <TooltipLineBody>
-            {balance.vestedBalance ? <FormatBalance value={balance.vestedBalance} /> : '-'}
-          </TooltipLineBody>
+          <TooltipLineBody>????</TooltipLineBody>
         </TooltipStack>
       </TooltipBody>
       <TooltipFooter>
@@ -138,7 +120,7 @@ const Balance: FC<{
       <InfoCardRow>
         <Box width='110px'>
           <CustomTooltip
-            title={<TransferableBalanceTooltipContent balance={account.availableBalance} />}
+            title={<TransferableBalanceTooltipContent account={account} />}
             placement='bottom-start'
           >
             <CardHeaderButton size='small'>
@@ -147,7 +129,7 @@ const Balance: FC<{
           </CustomTooltip>
         </Box>
         <TypographyBody>
-          <FormatBalance value={account.availableBalance.toString()} />
+          <FormatBalance value={account.totalBalance.toString()} />
         </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
@@ -173,10 +155,7 @@ const Balance: FC<{
       </InfoCardRow>
       <InfoCardRow>
         <Box width='110px'>
-          <CustomTooltip
-            title={<LockedTooltipContent balance={account.balances} />}
-            placement='right-start'
-          >
+          <CustomTooltip title={<LockedTooltipContent account={account} />} placement='right-start'>
             <CardHeaderButton size='small'>
               <TypographyHeader>locked</TypographyHeader>
             </CardHeaderButton>

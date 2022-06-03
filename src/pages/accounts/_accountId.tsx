@@ -13,13 +13,6 @@ import IdentityCard from './account/identity';
 import Info from './account/Info';
 import PerformanceCard from './account/performance';
 
-// const useTestRole = (): Roles[] => {
-//   const { search } = useLocation();
-//   const query = useMemo(() => new URLSearchParams(search), [search]);
-//   const rolesquery = query.get('roles');
-//   return (rolesquery ? rolesquery.split(',') : ['nominators']) as Roles[];
-// };
-
 const useFetchRankingAccountInfo = (
   accountId: string
 ): { loading: boolean; data?: Partial<GetAccountByAddressType> } => {
@@ -56,7 +49,6 @@ const useFetchRankingAccountInfo = (
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
   const { data, loading } = useFetchRankingAccountInfo(accountId);
-  // const roles = useTestRole();
   if (loading)
     return (
       <Container sx={{ my: 5 }}>

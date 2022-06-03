@@ -32,20 +32,22 @@ const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
 };
 
 const rolesToCell = (roles?: Roles[]) => {
-  if (!roles || !roles.length) {
-    return <span>Unknown</span>;
-  }
-  return (
-    <Stack
-      direction={'row'}
-      spacing={1}
-      divider={<Divider flexItem variant='middle' orientation='vertical' />}
-    >
+  return !roles || !roles.length ? (
+    <>
+      <span>unknown</span>
+      <AccountBoxIcon />
+    </>
+  ) : (
+    <>
       <span>{roles[0]}</span>
-      <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
-        {roles.length > 1 ? <SwitchAccountIcon /> : <AccountBoxIcon />}
-      </CustomTooltip>
-    </Stack>
+      {roles.length > 1 ? (
+        <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
+          <SwitchAccountIcon />
+        </CustomTooltip>
+      ) : (
+        <AccountBoxIcon />
+      )}
+    </>
   );
 };
 
@@ -61,11 +63,20 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
     },
     { value: item.nonce },
     {
-      value: rolesToCell(roles),
+      value: (
+        <Stack
+          direction={'row'}
+          spacing={1}
+          justifyContent='space-evenly'
+          divider={<Divider flexItem variant='middle' orientation='vertical' />}
+        >
+          {rolesToCell(roles)}
+        </Stack>
+      ),
       props: { colSpan: 2 }
     },
     { value: <FormatBalance value={item.lockedBalance.toString()} /> },
-    { value: <FormatBalance value={item.availableBalance.toString()} /> }
+    { value: <FormatBalance value={item.totalBalance.toString()} /> }
   ];
 };
 

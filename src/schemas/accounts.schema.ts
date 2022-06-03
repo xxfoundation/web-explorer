@@ -116,7 +116,7 @@ export type ListAccounts = {
   account: {
     address: string;
     timestamp: number;
-    availableBalance: number;
+    totalBalance: number;
     lockedBalance: number;
     nonce: number;
     roles: Record<Roles, boolean>;
@@ -133,7 +133,7 @@ export const LIST_ACCOUNTS = gql`
     account: account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
       address: account_id
       timestamp
-      availableBalance: available_balance
+      totalBalance: total_balance
       lockedBalance: locked_balance
       nonce
       roles

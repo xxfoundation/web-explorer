@@ -56,7 +56,7 @@ const SearchExtrinsics: FC = () => {
       document={FIND_EXTRINSIC_BY_HASH}
       variables={(v: string) => ({
         where: {
-          extrinsic_hash: {
+          hash: {
             _eq: v
           }
         }
@@ -64,8 +64,8 @@ const SearchExtrinsics: FC = () => {
       option='extrinsic'
       optionValidator={validators.extrinsic}
       successSearchCallback={(v: string, data: FindExtrinsicByHashType) => {
-        if (data.extrinsic?.at(0)?.index) {
-          history.push(`/extrinsics/${data.extrinsic[0].index}`);
+        if (data.extrinsic?.at(0)?.hash) {
+          history.push(`/extrinsics/${data.extrinsic[0].blockNumber}-${data.extrinsic[0].index}`);
         } else {
           enqueueSnackbar(`no extrinsic found for hash ${v}`, { variant: 'error' });
         }
@@ -82,18 +82,24 @@ const SearchAccount: FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
 
-  const onSuccess = useCallback((v: string, data: GetAccountByAddressType) => {
-    if (data.account?.id) {
-      history.push(`/accounts/${data.account.id}`);
-    } else {
-      enqueueSnackbar(`no account found for the address ${v}`, { variant: 'error' });
-    }
-  }, [enqueueSnackbar, history]);
+  const onSuccess = useCallback(
+    (v: string, data: GetAccountByAddressType) => {
+      if (data.account?.id) {
+        history.push(`/accounts/${data.account.id}`);
+      } else {
+        enqueueSnackbar(`no account found for the address ${v}`, { variant: 'error' });
+      }
+    },
+    [enqueueSnackbar, history]
+  );
 
-  const onError = useCallback((v: string, err: unknown) => {
-    enqueueSnackbar(`problem searching account with address ${v}`, { variant: 'warning' });
-    console.error(err);
-  }, [enqueueSnackbar])
+  const onError = useCallback(
+    (v: string, err: unknown) => {
+      enqueueSnackbar(`problem searching account with address ${v}`, { variant: 'warning' });
+      console.error(err);
+    },
+    [enqueueSnackbar]
+  );
 
   return (
     <GenericSearchInput
