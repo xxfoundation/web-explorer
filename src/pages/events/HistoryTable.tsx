@@ -23,7 +23,7 @@ const props: TableCellProps = { align: 'left' };
 
 const rowsParser = ({ blockNumber, index, method, section, timestamp }: Event): BaselineCell[] => {
   return [
-    { value: `${blockNumber}-${index}`, props },
+    { value: index, props },
     { value: <Link to={`/blocks/${blockNumber}`}>{blockNumber}</Link> },
     { value: <TimeAgoComponent date={timestamp} /> },
     { value: `${section} (${method})` }
