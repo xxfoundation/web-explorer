@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material';
 import Highcharts, {
   AxisLabelsFormatterCallbackFunction as LabelFormatter,
   Options,
@@ -10,15 +11,12 @@ import { DataPoint } from './types';
 
 const calculateMaximums = (data: DataPoint[]) => {
   const xItems = data.map(([x]) => x);
-  const yItems = data.map(([, y]) => y);
   const maxX = Math.max(...xItems);
   const minX = Math.min(...xItems);
 
-  const maxY = Math.max(...yItems);
   return {
-    minX: minX * 0.3,
-    maxX: maxX * 1.02,
-    maxY: maxY * 1.02
+    minX: minX * 0.9,
+    maxX: maxX * 1.1
   };
 };
 
@@ -29,13 +27,13 @@ type Props = {
     xAxis?: LabelFormatter;
     yAxis?: LabelFormatter;
   };
+  x?: { maxX: number; minX: number };
   tooltipFormatter?: TooltipFormatter;
 };
 
-const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }) => {
+const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, x }) => {
   const options = useMemo<Options>(() => {
-    const { maxX, maxY, minX } = calculateMaximums(data);
-
+    const { maxX, minX } = x || calculateMaximums(data);
     return {
       title: {
         text: title,
@@ -79,8 +77,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
         gridLineWidth: 0,
         title: { text: '' },
         labels: { align: 'right', x: 20, formatter: labelFormatters?.yAxis },
-        min: 0,
-        max: maxY
+        min: 0
       },
       plotOptions: {
         series: {
@@ -99,8 +96,22 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter }
         }
       ]
     };
-  }, [data, labelFormatters, title, tooltipFormatter]);
+  }, [data, labelFormatters?.xAxis, labelFormatters?.yAxis, title, tooltipFormatter, x]);
 
+  if (!data.length) {
+    return (
+      <Box
+        sx={{
+          height: 'inherit',
+          justifyContent: 'center',
+          alignItems: 'center',
+          display: 'flex'
+        }}
+      >
+        <Typography>no data</Typography>
+      </Box>
+    );
+  }
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 };
 

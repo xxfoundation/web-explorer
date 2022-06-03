@@ -27,18 +27,18 @@ const headers = [
   { value: 'my share' }
 ];
 
-const sampleData = [
-  {
-    validatorAddress: '6agYSwtSM4AVwxBjVDaVcC9SVwUZa9a6xcZERLoYdJHJVH2T',
-    validator: 'pos.dog/4',
-    bonded: '30000000',
-    bond: 0,
-    totalBonded: '1620936584655401318',
-    nominator: 162,
-    commission: 2.0,
-    share: 2.95
-  }
-];
+// const sampleData = [
+//   {
+//     validatorAddress: '6agYSwtSM4AVwxBjVDaVcC9SVwUZa9a6xcZERLoYdJHJVH2T',
+//     validator: 'pos.dog/4',
+//     bonded: '30000000',
+//     bond: 0,
+//     totalBonded: '1620936584655401318',
+//     nominator: 162,
+//     commission: 2.0,
+//     share: 2.95
+//   }
+// ];
 
 const stakingActivityToRow = (item: StakingActivityType): BaselineCell[] => {
   return [
@@ -53,7 +53,7 @@ const stakingActivityToRow = (item: StakingActivityType): BaselineCell[] => {
 };
 
 const StakingActivityTable: FC = ({}) => {
-  return <BaselineTable rows={sampleData.map(stakingActivityToRow)} headers={headers} />;
+  return <BaselineTable rows={[].map(stakingActivityToRow)} headers={headers} />;
 };
 
 export default StakingActivityTable;

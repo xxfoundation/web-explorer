@@ -1,15 +1,14 @@
 import { styled, Box, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
+import { Box, Grid, styled, Typography } from '@mui/material';
+import React from 'react';
+import LatestBlocksList from '../../components/blockchain/LatestBlocksList';
+import LatestTransfersList from '../../components/blockchain/LatestTransfersList';
 import {
-  TransactionsChart,
-  NewAccountsChart,
-  StakingRatioChart,
-  StakingInterestChart,
+  NewAccountsChart, StakingSupplyDonutChart,
   TotalIssuanceDonutChart,
-  StakingSupplyDonutChart
+  TransactionsChart
 } from '../../components/charts';
-import LatestBlocks from '../../components/blockchain/LatestBlocksList';
-import TransfersTable from '../../components/blockchain/LatestTransfersList';
 import PaperWrap from '../../components/Paper/PaperWrap.styled';
 import AspectBox from '../../components/AspectBox';
 
@@ -46,31 +45,23 @@ const TokenStatus = () => {
           </ChartWrap>
         </Grid>
         <Grid item xs={12} md={6}>
-          <LatestBlocks />
+          <LatestBlocksList />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TransfersTable />
+          <LatestTransfersList />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrap>
-            <TransactionsChart />
-          </PaperWrap>
+          <TransactionsChart />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrap>
-            <NewAccountsChart />
-          </PaperWrap>
+          <NewAccountsChart />
+        </Grid>
+        {/* <Grid item xs={12} md={6}>
+          <StakingRatioChart />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrap>
-            <StakingRatioChart />
-          </PaperWrap>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <PaperWrap>
-            <StakingInterestChart />
-          </PaperWrap>
-        </Grid>
+          <StakingInterestChart />
+        </Grid> */}
       </Grid>
     </Box>
   );

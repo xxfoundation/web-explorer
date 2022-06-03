@@ -37,3 +37,12 @@ export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
     totalRating: total_rating
   }
 `;
+
+export const GetAccountRanking = gql`
+  ${COMMON_FIELDS_RANKING_FRAGMENT}
+  query GetAccountRanking($blockHeight: bigint!, $stashAddress: String!) {
+    ranking: ranking_by_pk(block_height: $blockHeight, stash_address: $stashAddress) {
+      ...ranking
+    }
+  }
+`;

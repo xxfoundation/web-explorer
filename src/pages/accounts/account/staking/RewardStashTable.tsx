@@ -23,17 +23,17 @@ const headers = [
   { value: 'Time' }
 ];
 
-const sampleData = [
-  {
-    eventID: '123131',
-    extrinsicID: '1231',
-    action: 'Staking (Rewarded)',
-    validator: '15p158r32Z12YyFU7BiqLcqpySmHUedVfJLJ4M73THBixKJY',
-    era: '699',
-    value: '0000000000',
-    time: 1652220328
-  }
-];
+// const sampleData = [
+//   {
+//     eventID: '123131',
+//     extrinsicID: '1231',
+//     action: 'Staking (Rewarded)',
+//     validator: '15p158r32Z12YyFU7BiqLcqpySmHUedVfJLJ4M73THBixKJY',
+//     era: '699',
+//     value: '0000000000',
+//     time: 1652220328
+//   }
+// ];
 
 const dataToRow = (props: RewardStashType) => {
   return [
@@ -59,7 +59,7 @@ const dataToRow = (props: RewardStashType) => {
 };
 
 const RewardStashTable: FC = ({}) => {
-  return <BaselineTable headers={headers} rows={sampleData.map(dataToRow)} />;
+  return <BaselineTable headers={headers} rows={[].map(dataToRow)} />;
 };
 
 export default RewardStashTable;

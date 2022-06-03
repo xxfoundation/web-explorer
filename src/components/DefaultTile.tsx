@@ -11,12 +11,19 @@ const PaperWrap = styled(Paper)(({ theme }) => ({
 type Props = {
   hasDivider?: boolean;
   header?: string | React.ReactNode;
-  height?: number;
+  height?: string | number;
   linkAddress?: string;
   linkName?: string;
 };
 
-const DefaultTile: FC<Props> = ({ children, hasDivider, header, height, linkAddress, linkName }) => (
+const DefaultTile: FC<Props> = ({
+  children,
+  hasDivider,
+  header,
+  height,
+  linkAddress,
+  linkName
+}) => (
   <PaperWrap sx={{}}>
     {(header || linkName) && (
       <>
@@ -47,7 +54,7 @@ const DefaultTile: FC<Props> = ({ children, hasDivider, header, height, linkAddr
         my: 4,
         px: { xs: 3, md: 6 },
         overflow: 'auto',
-        height: { height }
+        height
       }}
     >
       {children}
