@@ -5,6 +5,7 @@ import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
 import { Data, Item, Wrap } from './ChainInfo.styles';
 import FormatBalance from '../FormatBalance';
 import { ChainData, EraMetrics, Metric } from './types';
+import { BN } from '@polkadot/util';
 
 const chainData: ChainData[] = [
   {
@@ -49,7 +50,7 @@ const chainData: ChainData[] = [
   }
 ];
 
-const ChainInfoCard: FC<{ title: string; value: string | React.ReactNode }> = ({
+const ChainInfoCard: FC<{ title: string; value: string | BN | React.ReactNode }> = ({
   title,
   value
 }) => {
@@ -66,12 +67,15 @@ const ChainInfoCard: FC<{ title: string; value: string | React.ReactNode }> = ({
 const processData = (loading: boolean, data: Metric[] | undefined): JSX.Element[] => {
   let eraMetrics = chainData;
   if (data !== undefined && !loading) {
-    const validatorSet = data.find(({ title }) => title === 'validator_set') || 0;
+    const validatorSet = data.find(({ title }) => title === 'validator_set')?.value || '0';
     eraMetrics = chainData.map((item) => {
       const aux = data.find(({ title }) => title === item.name);
       if (aux) {
         if (item.header == 'Total Issuance') {
-          return { ...item, value: <FormatBalance value={aux.value as string} /> };
+          return {
+            ...item,
+            value: <FormatBalance value={aux.value.toString()} />
+          };
         }
         if (item.header == 'Validators') {
           return { ...item, value: `${aux.value}/${validatorSet}` };
@@ -94,6 +98,7 @@ const ChainInfo = () => {
   const content = useMemo(() => {
     return processData(loading, data?.metrics);
   }, [data, loading]);
+
   return (
     <Box className='blockchain-component-chainInfo' mb={7}>
       <Typography variant='h3' gutterBottom>

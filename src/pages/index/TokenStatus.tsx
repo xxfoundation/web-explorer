@@ -1,19 +1,28 @@
-import { Box, Grid, styled, Typography } from '@mui/material';
-import React from 'react';
+import { styled, Box, Grid, Typography } from '@mui/material';
+import React, { FC } from 'react';
 import LatestBlocksList from '../../components/blockchain/LatestBlocksList';
 import LatestTransfersList from '../../components/blockchain/LatestTransfersList';
 import {
-  NewAccountsChart, StakingSupplyDonutChart,
+  NewAccountsChart,
+  StakingSupplyDonutChart,
   TotalIssuanceDonutChart,
   TransactionsChart
 } from '../../components/charts';
-import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
+import PaperWrap from '../../components/Paper/PaperWrap.styled';
+import AspectBox from '../../components/AspectBox';
 
-const ChartWrap = styled(PaperWrapStyled)({
-  height: '16rem',
-  display: 'flex',
-  justifyContent: 'stretch'
-});
+const ChartWrapContainer = styled(PaperWrap)(({ theme }) => ({
+  minHeight: '10rem',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2)
+  }
+}));
+
+const ChartWrap: FC = ({ children }) => (
+  <ChartWrapContainer>
+    <AspectBox ratio={2 / 1}>{children}</AspectBox>
+  </ChartWrapContainer>
+);
 
 const TokenStatus = () => {
   return (
@@ -22,12 +31,12 @@ const TokenStatus = () => {
         Token Status
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={12} lg={6} md={6}>
           <ChartWrap>
             <TotalIssuanceDonutChart />
           </ChartWrap>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} sm={12} lg={6} md={6}>
           <ChartWrap>
             <StakingSupplyDonutChart />
           </ChartWrap>

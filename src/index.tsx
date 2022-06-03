@@ -14,7 +14,6 @@ import reportWebVitals from './reportWebVitals';
 import SnackbarProvider from './SnackbarProvider';
 
 const graphqlHost = process.env.REACT_APP_BACKEND_HOST || 'localhost:8080';
-
 const httpLink = new HttpLink({ uri: `https://${graphqlHost}/v1/graphql` });
 const wsLink = new GraphQLWsLink(
   createClient({ url: `wss://${graphqlHost}/v1/graphql`, disablePong: true })
