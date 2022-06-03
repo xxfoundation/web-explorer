@@ -15,7 +15,10 @@ export const TableSkeleton: FC<{ rows: number; cells: number; footer?: boolean }
       })
     );
   }, [cells]);
-  const loadingRows = useMemo(() => genSkeletons(rows).map(() => loadingCells), [loadingCells, rows]);
+  const loadingRows = useMemo(
+    () => genSkeletons(rows).map(() => loadingCells),
+    [loadingCells, rows]
+  );
   const footerEl = useMemo(() => (footer ? <Skeleton /> : undefined), [footer]);
 
   return <BaselineTable headers={loadingCells} rows={loadingRows} footer={footerEl} />;

@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import { GetBlockByPK } from '../../schemas/blocks.schema';
 import CopyButton from '../buttons/CopyButton';
 import { Address, Hash } from '../ChainId';
-import Link from '../Link';
 import { SummaryPaperWrapper, SummaryRow } from '../Paper/SummaryPaper';
 import TimeAgoComponent from '../TimeAgo';
 import BlockStatusIcon from './BlockStatusIcon';
@@ -47,11 +46,6 @@ const BlockSummary: FC<{
         <Typography>
           <TimeAgoComponent date={data.timestamp} />
         </Typography>
-      </SummaryRow>
-      <SummaryRow label='spec version'>
-        <Link to={'#'}>
-          <Typography>{data.specVersion}</Typography>
-        </Link>
       </SummaryRow>
     </SummaryPaperWrapper>
   );

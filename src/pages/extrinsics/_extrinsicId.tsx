@@ -16,6 +16,7 @@ const Extrinsic = () => {
   const extrinsicIdParts = extrinsicId.split('-');
   const blockNumber = Number(extrinsicIdParts[0]);
   const extrinsicIndex = Number(extrinsicIdParts[1]);
+
   const { data, loading } = useQuery<GetExtrinsicByPK>(GET_EXTRINSIC_BY_PK, {
     variables: { blockNumber, extrinsicIndex }
   });

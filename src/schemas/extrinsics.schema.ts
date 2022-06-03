@@ -86,9 +86,11 @@ export const LIST_EXTRINSICS = gql`
 
 export type GetExtrinsicByPK = {
   extrinsic: {
+    blockNumber: number;
+    index: number;
+    hash: string;
     lifetime?: string | number;
     timestamp: number;
-    hash: string;
     method: string;
     section: string;
     success: boolean;
@@ -96,13 +98,15 @@ export type GetExtrinsicByPK = {
     isSigned: boolean;
     args: Array<string | number>;
     argsDef: Record<string, string>;
-    doc: string;
+    doc: string[];
   };
 };
 
 export const GET_EXTRINSIC_BY_PK = gql`
   query GetExtrinsicByPk($blockNumber: bigint!, $extrinsicIndex: Int!) {
     extrinsic: extrinsic_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
+      blockNumber: block_number
+      index: extrinsic_index
       hash
       method
       section

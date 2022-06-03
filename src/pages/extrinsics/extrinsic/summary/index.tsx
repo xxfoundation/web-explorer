@@ -19,7 +19,7 @@ type Props = {
   extrinsicId: { blockNumber: number; extrinsicIndex: number };
 };
 
-const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {  
+const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
   return (
     <>
       <SummaryPaperWrapper>

@@ -10,18 +10,17 @@ import TimeAgoComponent from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
 
-const ROWS_PER_PAGE = 25;
+const ROWS_PER_PAGE = 20;
 
 const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
+  const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.index}`;
   return BaseLineCellsWrapper([
-    <Link
-      to={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.index}`}
-    >{`${extrinsic.blockNumber}-${extrinsic.index}`}</Link>,
+    <Link to={linkToExtrinsic}>{`${extrinsic.blockNumber}-${extrinsic.index}`}</Link>,
     <Link to={`/blocks/${extrinsic.blockNumber}`}>{extrinsic.blockNumber}</Link>,
-    <Hash value={extrinsic.hash} link={`/extrinsics/${extrinsic.hash}`} truncated showTooltip />,
+    <Hash value={extrinsic.hash} link={linkToExtrinsic} truncated showTooltip />,
     <TimeAgoComponent date={extrinsic.timestamp} />,
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
-    <Link to='#'>{`${extrinsic.section} (${extrinsic.method})`}</Link>
+    <Link to={linkToExtrinsic}>{`${extrinsic.section} (${extrinsic.method})`}</Link>
   ]);
 };
 
@@ -37,7 +36,6 @@ const headers = BaseLineCellsWrapper([
 const HistoryTable: FC<{
   setTotalOfExtrinsics: React.Dispatch<React.SetStateAction<number | undefined>>;
 }> = (props) => {
-  // FIXME timestamp cannot be the cursor
   const {
     cursorField: id,
     limit,
@@ -76,7 +74,7 @@ const HistoryTable: FC<{
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.extrinsics[0])}
-          rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
@@ -84,12 +82,7 @@ const HistoryTable: FC<{
     return <></>;
   }, [data?.agg, data?.extrinsics, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
 
-  if (loading) return (
-    <TableSkeleton
-      rows={rowsPerPage}
-      cells={headers.length}
-      footer />
-  );
+  if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
 
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
