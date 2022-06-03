@@ -9,12 +9,14 @@ import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 const Info: FC<{ account: Account }> = ({ account }) => {
   const rolesTags = useMemo(() => {
     return Object.entries(account.roles)
-      .filter(([name, isTrue]) => name !== '__typename' && isTrue === true)
-      .slice(0, 3) // TODO Remove this
-      .map(([role], index) => (
+      .filter(
+        ([name, content]) =>
+          name !== '__typename' && (content === true || typeof content === 'string')
+      )
+      .map(([role, value], index) => (
         <Tag key={role} filled sx={{ marginLeft: index !== 0 ? '8px' : '0' }}>
           <Typography fontSize={'12px'} fontWeight={400}>
-            {role}
+            {role === 'special' ? value : role}
           </Typography>
         </Tag>
       ));

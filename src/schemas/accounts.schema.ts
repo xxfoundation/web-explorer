@@ -39,7 +39,7 @@ export type Account = {
   id: string;
   controllerAddress: string;
   blockHeight: number;
-  identity: Identity;
+  identity: Identity; // TODO change database structure to a json type
   identityDisplay: string;
   identityDisplayParent: string;
   nonce: number;

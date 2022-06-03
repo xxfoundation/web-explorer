@@ -119,7 +119,7 @@ const NameAndBlurbCell: FC<Props> = (props) => {
     () => !props.account.roles.nominator && props.account.identity.blurb,
     [props.account.identity.blurb, props.account.roles.nominator]
   );
-  if (!props.account.identity.legal) {
+  if (!props.account.identityDisplay) {
     return (
       <Typography
         fontSize={24}
@@ -136,7 +136,7 @@ const NameAndBlurbCell: FC<Props> = (props) => {
   return (
     <>
       <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-        {props.account.identity.legal}
+        {props.account.identityDisplay}
       </Typography>
       {hasBlurb && (
         <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>

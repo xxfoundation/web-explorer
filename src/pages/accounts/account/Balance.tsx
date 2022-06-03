@@ -146,13 +146,6 @@ const Balance: FC<{
         </Typography>
       </InfoCardRow>
       <InfoCardRow>
-        <TypographyHeader width='110px'>reserved</TypographyHeader>
-        <Typography fontWeight='100'>|</Typography>
-        <TypographyBody>
-          <FormatBalance value={account.reservedBalance.toString()} />
-        </TypographyBody>
-      </InfoCardRow>
-      <InfoCardRow>
         <Box width='110px' display='flex' alignItems={'center'} justifyContent='space-between'>
           <TypographyHeader>locked</TypographyHeader>
           <CustomTooltip title={<LockedTooltipContent account={account} />} placement='bottom'>
@@ -162,6 +155,13 @@ const Balance: FC<{
         <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
           <FormatBalance value={account.lockedBalance.toString()} />
+        </TypographyBody>
+      </InfoCardRow>
+      <InfoCardRow>
+        <TypographyHeader width='110px'>reserved</TypographyHeader>
+        <Typography fontWeight='100'>|</Typography>
+        <TypographyBody>
+          <FormatBalance value={account.reservedBalance.toString()} />
         </TypographyBody>
       </InfoCardRow>
     </PaperStyled>

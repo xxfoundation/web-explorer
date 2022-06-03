@@ -88,7 +88,6 @@ const useHeaders = (): [BaselineCell[], Record<Roles, boolean>] => {
     nominator: false,
     council: false,
     techcommit: false
-    // treasury: false
   });
   return [
     [
@@ -103,8 +102,8 @@ const useHeaders = (): [BaselineCell[], Record<Roles, boolean>] => {
         ),
         props: { colSpan: 2 }
       },
-      { value: 'locked xx coin' },
-      { value: 'balance xx' }
+      { value: 'locked balance' },
+      { value: 'total balance' }
     ],
     sortVariables
   ];
