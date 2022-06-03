@@ -41,10 +41,10 @@ const SummaryFragment: FC<Props> = (variables) => {
           identity={data.transfer.sender.identityDisplay}
         />
       </SummaryRow>
-      <SummaryRow label='destination' action={<CopyButton value={data.transfer.received.address} />}>
+      <SummaryRow label='destination' action={<CopyButton value={data.transfer.receiver.address} />}>
         <AddressesHandler
-          address={data.transfer.received.address}
-          identity={data.transfer.received.identityDisplay}
+          address={data.transfer.receiver.address}
+          identity={data.transfer.receiver.identityDisplay}
         />
       </SummaryRow>
       <SummaryRow label='value'>

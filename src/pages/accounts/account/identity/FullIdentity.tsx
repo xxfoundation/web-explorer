@@ -1,9 +1,9 @@
 import { Avatar, Divider, Grid, Link, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import { Account, Roles } from '../../../../schemas/accounts.schema';
+import { Account } from '../../../../schemas/accounts.schema';
 import SocialIconsGroup from './SocialIconsGroup';
 
-type Props = { account: Account; roles: Roles[] };
+type Props = { account: Account };
 
 const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => {
   return (
@@ -23,7 +23,7 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
   );
 };
 
-const NameHeaderTypography: FC<Omit<Props, 'roles'>> = ({ account: { identity } }) => {
+const NameHeaderTypography: FC<Props> = ({ account: { identity } }) => {
   if (!identity.legal) {
     return (
       <Typography
@@ -45,8 +45,8 @@ const NameHeaderTypography: FC<Omit<Props, 'roles'>> = ({ account: { identity } 
   );
 };
 
-const DisplayBlurb: FC<Props> = ({ account: { identity }, roles }) => {
-  if (roles.includes('nominator') || !identity.blurb) return <></>;
+const DisplayBlurb: FC<Props> = ({ account: { identity, roles } }) => {
+  if (roles.nominator || !identity.blurb) return <></>;
   return (
     <Grid item xs={12}>
       <Typography fontSize={'16px'} fontWeight={'400'} component={'p'}>
@@ -76,7 +76,7 @@ const IdentityMobile: FC<Props> = (props) => {
         />
         <NameHeaderTypography {...props} />
       </Grid>
-      {(!props.account.identity.blurb || props.roles.includes('nominator')) &&
+      {(!props.account.identity.blurb || props.account.roles.nominator) &&
       !props.account.identity.email &&
       !props.account.identity.twitter ? (
         <></>
@@ -116,8 +116,8 @@ const PaddedGridItem: FC<{ md: number }> = ({ children, md }) => {
 
 const NameAndBlurbCell: FC<Props> = (props) => {
   const hasBlurb = useMemo(
-    () => !props.roles.includes('nominator') && props.account.identity.blurb,
-    [props.account.identity.blurb, props.roles]
+    () => !props.account.roles.nominator && props.account.identity.blurb,
+    [props.account.identity.blurb, props.account.roles.nominator]
   );
   if (!props.account.identity.legal) {
     return (

@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
-import { GetAccountByAddressType, GET_ACCOUNT_BY_PK, Roles } from '../../schemas/accounts.schema';
+import { GetAccountByAddressType, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
 import { GetAccountRanking } from '../../schemas/ranking.schema';
 import NotFound from '../NotFound';
 import BalanceCard from './account/Balance';
@@ -68,9 +68,6 @@ const AccountId: FC = ({}) => {
       </Container>
     );
   if (!data?.account) return <NotFound />;
-  const roles = Object.entries(data.account.roles)
-    .filter((entry) => entry[1])
-    .map(([role]) => role as Roles);
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
@@ -79,16 +76,16 @@ const AccountId: FC = ({}) => {
       </Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
-          <IdentityCard account={data.account} roles={roles} />
+          <IdentityCard account={data.account} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <BalanceCard account={data.account} roles={roles} />
+          <BalanceCard account={data.account} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <Info createdDate={data.account.timestamp} nonce={data.account.nonce} roles={roles} />
+          <Info account={data.account} />
         </Grid>
         <Grid item xs={12}>
-          <BlockchainCard account={data.account} roles={roles} />
+          <BlockchainCard account={data.account} />
         </Grid>
         {/* <Grid item xs={12}>
           <GovernanceCard roles={sampleAccount.roles} />

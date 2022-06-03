@@ -11,7 +11,7 @@ import {
 import React, { FC } from 'react';
 import FormatBalance from '../../../components/FormatBalance';
 import PaperStyled from '../../../components/Paper/PaperWrap.styled';
-import { Account, Roles } from '../../../schemas/accounts.schema';
+import { Account } from '../../../schemas/accounts.schema';
 import { theme } from '../../../themes/default';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
@@ -108,7 +108,6 @@ const LockedTooltipContent: FC<{ account: Account }> = ({}) => {
 
 const Balance: FC<{
   account: Account;
-  roles: Roles[];
 }> = ({ account }) => {
   return (
     <PaperStyled>
