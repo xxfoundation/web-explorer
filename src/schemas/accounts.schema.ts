@@ -2,7 +2,15 @@ import { gql } from '@apollo/client';
 import { CommonFieldsRankingFragment } from './ranking.schema';
 import { TotalOfItems } from './types';
 
-export type Roles = 'validator' | 'nominator' | 'council' | 'technical committee' | 'treasury';
+export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit' | 'treasury';
+
+export type RolesMap = {
+  validator: 'validator';
+  nominator: 'nominator';
+  council: 'council';
+  techcommit: 'technical committee';
+  treasury: 'treasury';
+};
 
 export type Identity = {
   display?: string;
@@ -28,37 +36,6 @@ type Judgements =
   | 'Low Quality'
   | 'Erroneous';
 
-export type Balance = {
-  accountId: string;
-  accountNonce?: string;
-  additional?: [];
-  freeBalance?: string;
-  frozenFee?: string;
-  frozenMisc?: string;
-  reservedBalance?: string;
-  votingBalance?: string;
-  availableBalance?: string;
-  lockedBalance?: string;
-  lockedBreakdown?: {
-    id: string;
-    amount: number;
-    reasons: string | 'Misc' | 'All';
-  }[];
-  vestingLocked?: string;
-  isVesting?: boolean;
-  vestedBalance?: string;
-  vestedClaimable?: string;
-  vesting?: {
-    endBlock: string;
-    locked: string;
-    perBlock: string;
-    startingBlock: string;
-    vested: string;
-  }[];
-  vestingTotal?: string;
-  namedReserves: [][];
-};
-
 export type Account = {
   id: string;
   controllerAddress: string;
@@ -68,15 +45,25 @@ export type Account = {
   identityDisplayParent: string;
   nonce: number;
   timestamp: number;
-  balances: Balance;
 
-  availableBalance: number;
-  freeBalance: number;
   lockedBalance: number;
   reservedBalance: number;
   totalBalance: number;
+  bondedBalance: number;
+  councilBalance: number;
+  democracyBalance: number;
+  transferrableBalance: number;
+  unbondingBalance: number;
+  vestingBalance: number;
 
-  roles: Record<Roles, boolean>;
+  roles: {
+    council: boolean;
+    nominator: boolean;
+    special: boolean;
+    techcommit: boolean;
+    treasury: boolean;
+    validator: boolean;
+  };
 };
 
 export type GetAccountByAddressType = {
@@ -94,14 +81,24 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
     identityDisplayParent: identity_display_parent
     nonce
     timestamp
-    balances
-    roles
+    roles: account_roles {
+      council
+      nominator
+      special
+      techcommit
+      treasury
+      validator
+    }
 
-    availableBalance: available_balance
-    freeBalance: free_balance
     lockedBalance: locked_balance
     reservedBalance: reserved_balance
     totalBalance: total_balance
+    bondedBalance: bonded_balance
+    councilBalance: council_balance
+    democracyBalance: democracy_balance
+    transferrableBalance: transferrable_balance
+    unbondingBalance: unbonding_balance
+    vestingBalance: vesting_balance
   }
 `;
 
@@ -118,7 +115,7 @@ export type ListAccounts = {
   account: {
     address: string;
     timestamp: number;
-    availableBalance: number;
+    totalBalance: number;
     lockedBalance: number;
     nonce: number;
     roles: Record<Roles, boolean>;
@@ -135,7 +132,7 @@ export const LIST_ACCOUNTS = gql`
     account: account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
       address: account_id
       timestamp
-      availableBalance: available_balance
+      totalBalance: total_balance
       lockedBalance: locked_balance
       nonce
       roles

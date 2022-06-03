@@ -1,12 +1,14 @@
-import React, { FC, useMemo, useState } from 'react';
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import React, { FC, useMemo, useState } from 'react';
+import CmixAddress from '../../components/CmixAddress';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
-import ValidatorTableControls, { ValidatorFilter, ValidatorFilterLabels } from './ValidatorTableControls';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
-import CmixAddress from '../../components/CmixAddress';
 import { makeid } from '../../utils';
+import ValidatorTableControls, { ValidatorFilter, ValidatorFilterLabels } from './ValidatorTableControls';
+
+const ROWS_PER_PAGE = 20
 
 type Validator = {
   addressId: string;
@@ -87,7 +89,7 @@ const labels: ValidatorFilterLabels = {
 };
 
 const ValidatorsTable = () => {
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<ValidatorFilter>('current');
   const validators = filter === 'current' ? current : waiting;
@@ -130,7 +132,7 @@ const ValidatorsTable = () => {
           onPageChange={(_: unknown, number: number) => {
             setPage(number);
           }}
-          rowsPerPageOptions={[20, 30, 40, 50]}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 30, 40, 50]}
           onRowsPerPageChange={(event) => {
             setRowsPerPage(parseInt(event.target.value));
             setPage(0);

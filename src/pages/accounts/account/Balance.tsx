@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
-  Box,
-  Button,
-  Divider,
+  Box, Divider,
   Stack,
   Tooltip,
   tooltipClasses,
@@ -12,7 +11,7 @@ import {
 import React, { FC } from 'react';
 import FormatBalance from '../../../components/FormatBalance';
 import PaperStyled from '../../../components/Paper/PaperWrap.styled';
-import { Account, Balance as BalanceType, Roles } from '../../../schemas/accounts.schema';
+import { Account } from '../../../schemas/accounts.schema';
 import { theme } from '../../../themes/default';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
@@ -24,10 +23,6 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
     padding: 0
   }
 });
-
-const CardHeaderButton = styled(Button)(({}) => ({
-  ':hover': { backgroundColor: theme.palette.grey[200] }
-}));
 
 const TooltipBody = styled(Box)(({}) => ({
   padding: '30px 40px 20px 40px'
@@ -61,63 +56,45 @@ const TooltipStack: FC = ({ children }) => {
 };
 
 const TooltipLineHeader: FC = ({ children }) => (
-  <Typography fontSize={'10px'} fontWeight={500} letterSpacing={'1px'} width={'70px'}>
+  <Typography fontSize={'11px'} fontWeight={500} letterSpacing={'1px'} width={'70px'}>
     {children}
   </Typography>
 );
 
 const TooltipLineBody = styled(Typography)(({}) => ({
-  fontSize: '10px',
+  fontSize: '11px',
   fontWeight: 400,
   letterSpacing: '1px'
 }));
 
-const TransferableBalanceTooltipContent: FC<{ balance: number }> = ({ balance }) => {
+const TransferableBalanceTooltipContent: FC<{ account: Account }> = ({ account }) => {
   return (
     <TooltipBody>
       <TooltipStack>
-        <TooltipLineHeader>transferable</TooltipLineHeader>
+        <TooltipLineHeader>unbounding</TooltipLineHeader>
         <TooltipLineBody>
-          <FormatBalance value={balance.toString()} />
+          <FormatBalance value={account.totalBalance.toString()} />
         </TooltipLineBody>
+      </TooltipStack>
+      <TooltipStack>
+        <TooltipLineHeader>election</TooltipLineHeader>
+        <TooltipLineBody>N/D</TooltipLineBody>
+      </TooltipStack>
+      <TooltipStack>
+        <TooltipLineHeader>democracy</TooltipLineHeader>
+        <TooltipLineBody>N/D</TooltipLineBody>
       </TooltipStack>
     </TooltipBody>
   );
 };
 
-const LockedTooltipContent: FC<{ balance: BalanceType }> = ({ balance }) => {
+const LockedTooltipContent: FC<{ account: Account }> = ({}) => {
   return (
     <>
       <TooltipBody>
-        {/* <TooltipStack>
-          <TooltipLineHeader>bonded</TooltipLineHeader>
-          <TooltipLineBody>
-            <FormatBalance value={data.bonded} />
-          </TooltipLineBody>
-        </TooltipStack> */}
-        {/* <TooltipStack>
-          <TooltipLineHeader>unbonding</TooltipLineHeader>
-          <TooltipLineBody>
-            <FormatBalance value={data.unbonding} />
-          </TooltipLineBody>
-        </TooltipStack> */}
-        {/* <TooltipStack>
-          <TooltipLineHeader>democracy</TooltipLineHeader>
-          <TooltipLineBody>
-            <FormatBalance value={data.democracy} />
-          </TooltipLineBody>
-        </TooltipStack> */}
-        {/* <TooltipStack>
-          <TooltipLineHeader>election</TooltipLineHeader>
-          <TooltipLineBody>
-            <FormatBalance value={data.unbonding} />
-          </TooltipLineBody>
-        </TooltipStack> */}
         <TooltipStack>
           <TooltipLineHeader>vesting</TooltipLineHeader>
-          <TooltipLineBody>
-            {balance.vestedBalance ? <FormatBalance value={balance.vestedBalance} /> : '-'}
-          </TooltipLineBody>
+          <TooltipLineBody>N/D?</TooltipLineBody>
         </TooltipStack>
       </TooltipBody>
       <TooltipFooter>
@@ -131,57 +108,42 @@ const LockedTooltipContent: FC<{ balance: BalanceType }> = ({ balance }) => {
 
 const Balance: FC<{
   account: Account;
-  roles: Roles[];
 }> = ({ account }) => {
   return (
     <PaperStyled>
       <InfoCardRow>
-        <Box width='110px'>
+        <Box width='110px' display='flex' alignItems={'center'} justifyContent='space-between'>
+          <TypographyHeader>balance</TypographyHeader>
           <CustomTooltip
-            title={<TransferableBalanceTooltipContent balance={account.availableBalance} />}
-            placement='bottom-start'
+            title={<TransferableBalanceTooltipContent account={account} />}
+            placement='bottom'
           >
-            <CardHeaderButton size='small'>
-              <TypographyHeader>balance</TypographyHeader>
-            </CardHeaderButton>
+            <InfoOutlinedIcon fontSize='small' color='primary' />
           </CustomTooltip>
         </Box>
-        <TypographyBody>
-          <FormatBalance value={account.availableBalance.toString()} />
-        </TypographyBody>
+        <Typography fontWeight='100'>|</Typography>
+        <Typography fontSize={14} fontWeight={400} color={theme.palette.grey[500]}>
+          <FormatBalance value={account.totalBalance.toString()} />
+        </Typography>
       </InfoCardRow>
       <InfoCardRow>
-        <Box width='110px'>
-          <Button
-            size='small'
-            sx={{
-              ':hover': {
-                backgroundColor: 'inherit',
-                cursor: 'default'
-              }
-            }}
-            disableRipple
-            disableTouchRipple
-            disableElevation
-          >
-            <TypographyHeader>reserved</TypographyHeader>
-          </Button>
-        </Box>
+        <TypographyHeader width='110px'>reserved</TypographyHeader>
+        <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
           <FormatBalance value={account.reservedBalance.toString()} />
         </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
-        <Box width='110px'>
+        <Box width='110px' display='flex' alignItems={'center'} justifyContent='space-between'>
+          <TypographyHeader>locked</TypographyHeader>
           <CustomTooltip
-            title={<LockedTooltipContent balance={account.balances} />}
-            placement='right-start'
+            title={<LockedTooltipContent account={account} />}
+            placement='bottom'
           >
-            <CardHeaderButton size='small'>
-              <TypographyHeader>locked</TypographyHeader>
-            </CardHeaderButton>
+            <InfoOutlinedIcon fontSize='small' color='primary' />
           </CustomTooltip>
         </Box>
+        <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
           <FormatBalance value={account.lockedBalance.toString()} />
         </TypographyBody>

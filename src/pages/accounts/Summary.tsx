@@ -1,8 +1,19 @@
-import { Box, Divider, Hidden, Grid, Link, Stack, styled, Typography } from '@mui/material';
-import React, { FC } from 'react';
-
+import { useSubscription } from '@apollo/client';
+import {
+  Box,
+  Divider,
+  Grid,
+  Hidden,
+  Link,
+  Skeleton,
+  Stack,
+  styled,
+  Typography
+} from '@mui/material';
+import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import Socials from '../../components/Socials';
+import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
 import NetworkIcon from './NetworkIcon';
 
 const SubduedHeader = styled(Typography)(({ theme }) => ({
@@ -21,6 +32,17 @@ const DarkSubtitle = styled(Typography)(({ theme }) => ({
 }));
 
 const SummaryInfo = () => {
+  const { data, loading } = useSubscription<{ metrics: { title: string; value: number }[] }>(
+    LISTEN_FOR_ERA_METRICS
+  );
+  const mappedMetrics = useMemo(() => {
+    return (data?.metrics || []).reduce((prev, current) => {
+      return {
+        ...prev,
+        [current.title]: current.value
+      };
+    }, {} as Record<string, number>);
+  }, [data?.metrics]);
   return (
     <Stack direction='row' justifyContent={{ md: 'space-between', sm: 'flex-start' }} spacing={5}>
       <Stack>
@@ -29,11 +51,27 @@ const SummaryInfo = () => {
       </Stack>
       <Stack>
         <SubduedHeader>holders</SubduedHeader>
-        <DarkSubtitle>100,765</DarkSubtitle>
+        <DarkSubtitle>
+          {loading ? (
+            <Skeleton />
+          ) : mappedMetrics.accounts !== undefined ? (
+            mappedMetrics.accounts
+          ) : (
+            'N/D'
+          )}
+        </DarkSubtitle>
       </Stack>
       <Stack>
         <SubduedHeader>transfers</SubduedHeader>
-        <DarkSubtitle>894,765</DarkSubtitle>
+        <DarkSubtitle>
+          {loading ? (
+            <Skeleton />
+          ) : mappedMetrics.transfers !== undefined ? (
+            mappedMetrics.transfers
+          ) : (
+            'N/D'
+          )}
+        </DarkSubtitle>
       </Stack>
     </Stack>
   );
@@ -51,10 +89,10 @@ const ContactInfo = () => {
       <Grid item>
         <Socials
           socials={{
-            twitter: '#blah',
-            github: '#hey',
-            telegram: '#yo',
-            discord: '#sup'
+            twitter: 'https://twitter.com/xx_network',
+            github: 'https://github.com/xx-labs',
+            telegram: 'https://t.me/xxnetwork',
+            discord: 'https://discord.com/invite/Y8pCkbK'
           }}
         />
       </Grid>

@@ -14,6 +14,8 @@ import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListAccounts, LIST_ACCOUNTS, Roles } from '../../schemas/accounts.schema';
 import HoldersRolesFilters from './HoldersRolesFilters';
 
+const DEFAULT_ROWS_PER_PAGE = 20;
+
 const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
   const labels = useMemo(
     () => roles.slice(1).map((role, index) => <span key={index}>{role}</span>),
@@ -32,20 +34,22 @@ const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
 };
 
 const rolesToCell = (roles?: Roles[]) => {
-  if (!roles || !roles.length) {
-    return <span>Unknown</span>;
-  }
-  return (
-    <Stack
-      direction={'row'}
-      spacing={1}
-      divider={<Divider flexItem variant='middle' orientation='vertical' />}
-    >
+  return !roles || !roles.length ? (
+    <>
+      <span>unknown</span>
+      <AccountBoxIcon />
+    </>
+  ) : (
+    <>
       <span>{roles[0]}</span>
-      <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
-        {roles.length > 1 ? <SwitchAccountIcon /> : <AccountBoxIcon />}
-      </CustomTooltip>
-    </Stack>
+      {roles.length > 1 ? (
+        <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
+          <SwitchAccountIcon />
+        </CustomTooltip>
+      ) : (
+        <AccountBoxIcon />
+      )}
+    </>
   );
 };
 
@@ -61,11 +65,20 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
     },
     { value: item.nonce },
     {
-      value: rolesToCell(roles),
+      value: (
+        <Stack
+          direction={'row'}
+          spacing={1}
+          justifyContent='space-evenly'
+          divider={<Divider flexItem variant='middle' orientation='vertical' />}
+        >
+          {rolesToCell(roles)}
+        </Stack>
+      ),
       props: { colSpan: 2 }
     },
     { value: <FormatBalance value={item.lockedBalance.toString()} /> },
-    { value: <FormatBalance value={item.availableBalance.toString()} /> }
+    { value: <FormatBalance value={item.totalBalance.toString()} /> }
   ];
 };
 
@@ -74,7 +87,7 @@ const useHeaders = (): [BaselineCell[], Record<Roles, boolean>] => {
     validator: false,
     nominator: false,
     council: false,
-    'technical committee': false,
+    techcommit: false,
     treasury: false
   });
   return [
@@ -107,7 +120,7 @@ const HoldersTable: FC = () => {
     page,
     rowsPerPage
   } = usePaginatorByCursor<ListAccounts['account'][0]>({
-    rowsPerPage: 20,
+    rowsPerPage: DEFAULT_ROWS_PER_PAGE,
     cursorField: 'timestamp'
   });
   const [headers] = useHeaders();
@@ -133,19 +146,13 @@ const HoldersTable: FC = () => {
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.account[0])}
-          rowsPerPageOptions={[10, 20, 30, 40, 50]}
+          rowsPerPageOptions={[10, DEFAULT_ROWS_PER_PAGE, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
     }
     return <></>;
   }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading)
-    return (
-      <PaperStyled>
-        <TableSkeleton cells={6} rows={rowsPerPage} />
-      </PaperStyled>
-    );
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>

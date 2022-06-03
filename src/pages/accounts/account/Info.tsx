@@ -3,44 +3,36 @@ import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../components/Paper/PaperWrap.styled';
 import Tag from '../../../components/Tags/Tag';
 import TimeAgoComponent from '../../../components/TimeAgo';
+import { Account } from '../../../schemas/accounts.schema';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
-const Info: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
-  createdDate,
-  nonce,
-  roles
-}) => {
+const Info: FC<{ account: Account }> = ({ account }) => {
   const rolesTags = useMemo(() => {
-    if (!roles || !roles.length)
-      return (
-        <Tag filled>
-          <Typography fontSize={'12px'} fontWeight={400}>
-            unknown
-          </Typography>
-        </Tag>
-      );
-    return roles.map((role, index) => (
-      <Tag key={role} filled sx={{ marginLeft: index !== 0 ? '8px' : '0' }}>
+    return Object.entries(account.roles).map(([role, active], index) => (
+      <Tag hidden={!active} key={role} filled sx={{ marginLeft: index !== 0 ? '8px' : '0' }}>
         <Typography fontSize={'12px'} fontWeight={400}>
           {role}
         </Typography>
       </Tag>
     ));
-  }, [roles]);
+  }, [account.roles]);
   return (
     <PaperStyled>
-      <InfoCardRow sx={{ paddingY: '4px' }}>
+      <InfoCardRow>
         <TypographyHeader sx={{ width: '110px' }}>created</TypographyHeader>
+        <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
-          <TimeAgoComponent date={createdDate} />
+          <TimeAgoComponent date={account.timestamp} />
         </TypographyBody>
       </InfoCardRow>
-      <InfoCardRow sx={{ paddingY: '4px' }}>
+      <InfoCardRow>
         <TypographyHeader sx={{ width: '110px' }}>nonce</TypographyHeader>
-        <TypographyBody>{nonce}</TypographyBody>
+        <Typography fontWeight='100'>|</Typography>
+        <TypographyBody>{account.nonce}</TypographyBody>
       </InfoCardRow>
-      <InfoCardRow sx={{ paddingY: '4px' }}>
+      <InfoCardRow>
         <TypographyHeader sx={{ width: '110px' }}>role</TypographyHeader>
+        <Typography fontWeight='100'>|</Typography>
         <Box display={'flex'} alignItems={'center'}>
           {rolesTags}
         </Box>

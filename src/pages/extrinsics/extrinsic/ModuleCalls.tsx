@@ -40,11 +40,7 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 });
 
-const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({
-  call,
-  doc,
-  module
-}) => {
+const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({ call, doc, module }) => {
   const title = useMemo(() => {
     let result = '';
     try {

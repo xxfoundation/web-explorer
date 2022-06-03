@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Button, Stack, TableCellProps, Tooltip, Typography } from '@mui/material';
+import { Button, Skeleton, Stack, TableCellProps, Tooltip, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
-import { Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
@@ -11,10 +10,11 @@ import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { Event, ListEvents, LIST_EVENTS } from '../../schemas/events.schema';
 import { theme } from '../../themes/default';
 
+const ROWS_PER_PAGE = 25;
+
 const headers = [
   { value: 'event id' },
   { value: 'block number' },
-  { value: 'extrinsics hash' },
   { value: 'time' },
   { value: 'action' }
 ];
@@ -23,11 +23,10 @@ const props: TableCellProps = { align: 'left' };
 
 const rowsParser = ({ blockNumber, index, method, section, timestamp }: Event): BaselineCell[] => {
   return [
-    { value: `${blockNumber}-${index}`, props },
-    { value: blockNumber },
-    { value: <Hash value={''} truncated showTooltip />, props },
+    { value: index, props },
+    { value: <Link to={`/blocks/${blockNumber}`}>{blockNumber}</Link> },
     { value: <TimeAgoComponent date={timestamp} /> },
-    { value: <Link to='#' textTransform={'capitalize'}>{`${section} (${method})`}</Link> }
+    { value: `${section} (${method})` }
   ];
 };
 
@@ -40,7 +39,7 @@ const HistoryTable = () => {
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ id: 'desc' }],
+      orderBy: [{ block_number: 'desc', event_index: 'asc' }],
       limit: limit,
       offset: offset,
       where: { id: { _lte: cursorField } }
@@ -58,14 +57,20 @@ const HistoryTable = () => {
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.events[0])}
-          rowsPerPageOptions={[2, 4, 6]}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
     }
     return <></>;
   }, [data?.agg, data?.events, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading) return <TableSkeleton cells={6} rows={20} />;
+  if (loading)
+    return (
+      <>
+        <Skeleton width='12%' sx={{ marginBottom: '18px' }} />
+        <TableSkeleton cells={headers.length} rows={rowsPerPage} />
+      </>
+    );
   return (
     <>
       {data?.agg.aggregate.count && (

@@ -11,6 +11,8 @@ import TablePagination from '../Tables/TablePagination';
 import { TableSkeleton } from '../Tables/TableSkeleton';
 import TimeAgoComponent from '../TimeAgo';
 
+const DEFAULT_ROWS_PER_PAGE = 5;
+
 type ExtrinsicsTyp = {
   id: number;
   index: number;
@@ -44,7 +46,7 @@ const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 
 const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor({
-      rowsPerPage: 4,
+      rowsPerPage: 5,
       cursorField: 'id'
     });
   const variables = useMemo(() => {
@@ -66,13 +68,13 @@ const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange(data.extrinsic[0])}
           onRowsPerPageChange={onRowsPerPageChange}
-          rowsPerPageOptions={[2, 4, 6]}
+          rowsPerPageOptions={[DEFAULT_ROWS_PER_PAGE, 20, 50]}
         />
       );
     }
     return <></>;
   }, [data?.agg, data?.extrinsic, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading) return <TableSkeleton rows={headers.length} cells={rowsPerPage} footer />;
+  if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 

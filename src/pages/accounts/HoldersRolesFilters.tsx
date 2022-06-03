@@ -12,7 +12,7 @@ export const filtersDefaultState = (): Record<Roles, boolean> => ({
   validator: false,
   nominator: false,
   council: false,
-  'technical committee': false,
+  techcommit: false,
   treasury: false
 });
 
@@ -106,14 +106,14 @@ const HoldersRolesFilters: FC<{
             validator: true,
             nominator: true,
             council: true,
-            'technical committee': true,
+            techcommit: true,
             treasury: true
           }
         : {
             validator: selection.validator,
             nominator: selection.nominator,
             council: selection.council,
-            'technical committee': selection['technical committee'],
+            techcommit: selection.techcommit,
             treasury: selection.treasury
           }
     );
