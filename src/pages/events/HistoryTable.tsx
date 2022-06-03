@@ -39,7 +39,7 @@ const HistoryTable = () => {
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ id: 'desc' }],
+      orderBy: [{ block_number: 'desc', event_index: 'asc' }],
       limit: limit,
       offset: offset,
       where: { id: { _lte: cursorField } }

@@ -48,7 +48,7 @@ const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: numbe
     usePaginatorByCursor({ rowsPerPage: DEFAULT_ROWS_PER_PAGE, cursorField: 'id' });
   const variables = useMemo(
     () => ({
-      orderBy: [{ id: 'desc' }],
+      orderBy: [{ block_number: 'desc', event_index: 'asc' }],
       limit: limit,
       offset: offset,
       where: {
