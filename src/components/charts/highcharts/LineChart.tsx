@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import Highcharts, {
   AxisLabelsFormatterCallbackFunction as LabelFormatter,
   Options,
@@ -7,6 +7,7 @@ import Highcharts, {
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC, useMemo } from 'react';
 import { theme } from '../../../themes/footer';
+import Error from '../../Error';
 import { DataPoint } from './types';
 
 const calculateMaximums = (data: DataPoint[]) => {
@@ -108,7 +109,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, 
           display: 'flex'
         }}
       >
-        <Typography>no data</Typography>
+        <Error type='data-unavailable' />
       </Box>
     );
   }

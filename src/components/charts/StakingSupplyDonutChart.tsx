@@ -15,6 +15,7 @@ import FormatBalance from '../FormatBalance';
 import { LightTooltipHeader, LightTooltip } from '../Tooltips';
 import useCustomTooltip from '../../hooks/useCustomTooltip';
 import Error from '../Error';
+import Loading from '../Loading';
 
 enum DataLabels {
   Staked = 'Staked',
@@ -114,7 +115,11 @@ const StakingSupplyDonutChart: FC = () => {
   );
 
   if (subscription.error) {
-    return <Error type='fetching' />
+    return <Error type='data-unavailable' />
+  }
+
+  if (subscription.loading) {
+    return <Loading />
   }
 
   return (

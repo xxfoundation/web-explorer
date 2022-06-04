@@ -51,7 +51,7 @@ const ChainInfo = () => {
   const { inflationRate, totalSupply } = economicsSubscription.data?.economics[0] ?? {};
 
   if (metricsSubscription.error || economicsSubscription.error) {
-    return <Error type='fetching' />
+    return <Error type='data-unavailable' />
   }
 
   return (

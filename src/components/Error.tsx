@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { Typography } from '@mui/material';
 
-type ErrorType = 'fetching' | 'general';
+type ErrorType = 'data-unavailable' | 'general';
 
 const messages: Record<ErrorType, string> = {
-  'fetching': 'Data unavailable...',
+  'data-unavailable': 'Data unavailable...',
   'general': 'Something went wrong...'
 }
 
