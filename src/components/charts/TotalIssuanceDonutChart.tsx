@@ -15,6 +15,7 @@ import FormatBalance from '../FormatBalance';
 import { LightTooltipHeader, LightTooltip } from '../Tooltips';
 import useCustomTooltip from '../../hooks/useCustomTooltip';
 import { LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
+import Error from '../Error';
 
 type Options = ChartProps<'doughnut'>['options'];
 enum DataLabels {
@@ -212,7 +213,7 @@ const TotalIssuanceDonutChart = () => {
   );
 
   if (subscription.error) {
-    return <Typography color='red'>Data unavailable...</Typography>;
+    return <Error type='fetching' />
   }
 
   return (

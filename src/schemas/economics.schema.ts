@@ -19,6 +19,10 @@ export type Economics = {
   vesting: string;
 }
 
+export type EconomicsSubscription = {
+  economics: Economics[];
+}
+
 export const LISTEN_FOR_ECONOMICS = gql`
   subscription ListenForEconomics {
     economics(limit: 1, order_by: {active_era: desc}) {

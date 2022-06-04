@@ -8,7 +8,7 @@ export type ChainData = {
 
 export type Metric = {
   title: string;
-  value: string | BN;
+  value: string;
 }
 
 export type EraMetrics = {

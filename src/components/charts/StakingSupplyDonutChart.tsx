@@ -14,6 +14,7 @@ import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typograph
 import FormatBalance from '../FormatBalance';
 import { LightTooltipHeader, LightTooltip } from '../Tooltips';
 import useCustomTooltip from '../../hooks/useCustomTooltip';
+import Error from '../Error';
 
 enum DataLabels {
   Staked = 'Staked',
@@ -111,6 +112,10 @@ const StakingSupplyDonutChart: FC = () => {
     }),
     [customTooltip.plugin]
   );
+
+  if (subscription.error) {
+    return <Error type='fetching' />
+  }
 
   return (
     <Stack direction='row' spacing={3} sx={{ flexGrow: 1 }}>
