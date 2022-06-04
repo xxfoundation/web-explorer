@@ -88,7 +88,7 @@ export type GetTransferByPK = {
       address: string;
       identityDisplay: string;
     };
-    received: {
+    receiver: {
       address: string;
       identityDisplay: string;
     };
@@ -104,7 +104,7 @@ export const GET_TRANSFER_BY_PK = gql`
         address: account_id
         identityDisplay:identity_display
       }
-      received: accountByDestination {
+      receiver: accountByDestination {
         address: account_id
         identityDisplay:identity_display
       }

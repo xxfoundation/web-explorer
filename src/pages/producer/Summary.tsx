@@ -4,6 +4,8 @@ import CopyButton from '../../components/buttons/CopyButton';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import { SummaryPaperWrapper, SummaryRow } from '../../components/Paper/SummaryPaper';
+import { Account } from '../../schemas/accounts.schema';
+import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
 
@@ -29,40 +31,52 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
   );
 };
 
-const Summary = () => {
+const Summary: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = ({
+  account,
+  ranking
+}) => {
   return (
     <SummaryPaperWrapper>
       <SummaryRow label='stash' action={<CopyButton value={sampleHash} />}>
-        <Address value={sampleHash} />
-      </SummaryRow>
-      <SummaryRow label='controller' action={<CopyButton value={sampleHash} />}>
-        <Address name='test' value={sampleHash} />
-      </SummaryRow>
-      <SummaryRow label='reward' action={<CopyButton value={sampleHash} />}>
-        <Address value={sampleHash} />
+        <Address value={account.id} />
       </SummaryRow>
       <SummaryRow
-        label='cmix id'
-        action={<CopyButton value={'kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C'} />}
+        label='controller'
+        action={
+          account.controllerAddress ? <CopyButton value={account.controllerAddress} /> : undefined
+        }
       >
-        <Typography>kgGYMH8rxprBOvOvGAZI2chj5xJI71CqIM34DpCII10C</Typography>
+        <Address name='test' value={account.controllerAddress} />
+      </SummaryRow>
+      <SummaryRow label='reward' action={<CopyButton disabled value={'???'} />}>
+        <Address value={'???'} />
+      </SummaryRow>
+      <SummaryRow label='cmix id' action={<CopyButton disabled value={'???'} />}>
+        <Typography>???</Typography>
       </SummaryRow>
       <SummaryRow label='location'>
-        <Typography>Big Sur, California</Typography>
+        <Typography>???</Typography>
       </SummaryRow>
       <SummaryRow label='own stake'>
-        <Typography>1.00 XX</Typography>
+        <Typography>
+          <FormatBalance value={ranking.selfStake.toString()} />
+        </Typography>
+      </SummaryRow>
+      <SummaryRow label='other stake'>
+        <Typography>
+          <FormatBalance value={ranking.otherStake.toString()} />
+        </Typography>
       </SummaryRow>
       <SummaryRow label='total stake'>
         <Typography>
-          <FormatBalance value={'3038663570'} />
+          <FormatBalance value={ranking.totalStake.toString()} />
         </Typography>
       </SummaryRow>
       <SummaryRow label='nominators'>
-        <Typography>3</Typography>
+        <Typography>{ranking.nominators}</Typography>
       </SummaryRow>
       <SummaryRow label='commission'>
-        <Typography>10.00%</Typography>
+        <Typography>{ranking.commission}</Typography>
       </SummaryRow>
       <SummaryRow label='session key'>
         <SessionKeyValue

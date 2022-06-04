@@ -4,16 +4,16 @@ import TabsWithPanels, { TabText } from '../../components/Tabs';
 import ErasTable from './ErasTable';
 import NominatorsTable from './NominatorsTable';
 
-const ProducerTabs: React.FC<{ eras: string[]; nominators: string[] }> = ({ eras, nominators }) => {
+const ProducerTabs: React.FC<{ eras: string[]; nominators: string[] }> = ({}) => {
   const panels = useMemo(() => {
     return [
       {
-        label: <TabText message='nominators' count={nominators.length} />,
+        label: <TabText message='nominators' count={'??'} />,
         content: <NominatorsTable />
       },
-      { label: <TabText message='eras' count={eras.length} />, content: <ErasTable /> }
+      { label: <TabText message='eras' count={'??'} />, content: <ErasTable /> }
     ];
-  }, [eras, nominators]);
+  }, []);
   return (
     <PaperStyled>
       <TabsWithPanels panels={panels} tabsLabel='producers tables tabs' />

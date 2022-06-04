@@ -8,13 +8,14 @@ type Stake = {
   share: string;
 };
 
-const data = [
-  {
-    account: '6aTgpWh4Ny1j8uvXbvBb5pY1cokWMthuAUvcMKi9V1WkCsUo',
-    stake: '200.00 XX',
-    share: '0.00%'
-  }
-];
+const data: Stake[] = [];
+// const data = [
+//   {
+//     account: '6aTgpWh4Ny1j8uvXbvBb5pY1cokWMthuAUvcMKi9V1WkCsUo',
+//     stake: '200.00 XX',
+//     share: '0.00%'
+//   }
+// ];
 
 const EraStake = ({ account, share, stake }: Stake) => {
   return BaseLineCellsWrapper([<Link to={`/accounts/${account}`}>{account}</Link>, stake, share]);

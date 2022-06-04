@@ -47,7 +47,7 @@ const GovernanceCard: FC<{ roles: Roles[] }> = ({ roles }) => {
       panels.push(electionActivityTab);
       panels.push(councilActivityTab);
     }
-    if (roles.includes('technical committee')) {
+    if (roles.includes('techcommit')) {
       panels.push(techCommitteActivityTab);
     }
     return panels;

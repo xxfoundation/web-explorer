@@ -1,16 +1,16 @@
 import React, { FC, useMemo } from 'react';
 import PaperWrapStyled from '../../../../components/Paper/PaperWrap.styled';
-import { Account, Roles } from '../../../../schemas/accounts.schema';
+import { Account } from '../../../../schemas/accounts.schema';
 import FullIdentity from './FullIdentity';
 import ShortIdentity from './ShortIdentity';
 
-const IdentityCard: FC<{ account: Account; roles: Roles[] }> = ({ account, roles }) => {
+const IdentityCard: FC<{ account: Account }> = ({ account }) => {
   const IdentityDisplay = useMemo(() => {
-    if (roles.includes('validator') || roles.includes('nominator')) {
-      return <FullIdentity account={account} roles={roles} />;
+    if (account.roles.validator || account.roles.nominator) {
+      return <FullIdentity account={account} />;
     }
     return <ShortIdentity account={account} />;
-  }, [account, roles]);
+  }, [account]);
 
   return (
     <PaperWrapStyled sx={{ maxWidth: '1142px', height: 'fit-content' }}>

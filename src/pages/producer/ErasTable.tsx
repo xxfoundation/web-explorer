@@ -11,16 +11,17 @@ type Era = {
   blockNumber: number;
 };
 
-const eras = [
-  {
-    index: '12313',
-    startBlock: 1245151,
-    endBlock: 15666655,
-    rewardPoint: 12313.31231,
-    blocksProduced: 113,
-    blockNumber: 123123
-  }
-];
+const eras: Era[] = [];
+// const eras = [
+//   {
+//     index: '12313',
+//     startBlock: 1245151,
+//     endBlock: 15666655,
+//     rewardPoint: 12313.31231,
+//     blocksProduced: 113,
+//     blockNumber: 123123
+//   }
+// ];
 
 const EraRow = (rowData: Era) => {
   return BaseLineCellsWrapper([
