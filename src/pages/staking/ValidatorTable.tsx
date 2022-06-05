@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { useQuery, useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import Error from '../../components/Error';
