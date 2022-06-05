@@ -1,29 +1,27 @@
+/* eslint-disable no-console */
+import { useQuery, useSubscription } from '@apollo/client';
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
-import CmixAddress from '../../components/CmixAddress';
+import Error from '../../components/Error';
+// import CmixAddress from '../../components/CmixAddress';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
+import Loading from '../../components/Loading';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
-import { makeid } from '../../utils';
+import { GET_RANKED_ACCOUNTS, RankedAccountsQuery, RankedAccount } from '../../schemas/ranking.schema';
 import ValidatorTableControls, { ValidatorFilter, ValidatorFilterLabels } from './ValidatorTableControls';
 
 const ROWS_PER_PAGE = 20
 
-type Validator = {
-  addressId: string;
-  name: string;
-  cmixId: string;
-  location: string;
-  nominatorCount: number;
-  commissionPercent: number;
-  ownStake: string;
-  totalStake: string;
-};
-
-type WithRank<T> = T & { rank: number };
-
-const ValidatorRow: FC<WithRank<Validator>> = ({ addressId, cmixId, location, name, nominatorCount, ownStake, rank, totalStake }: WithRank<Validator> ) => {
+const ValidatorRow: FC<RankedAccount> = ({
+  addressId,
+  name,
+  nominators,
+  ownStake,
+  rank,
+  totalStake
+}) => {
   const validatorLink = `/validators/${addressId}`;
 
   return (
@@ -37,7 +35,7 @@ const ValidatorRow: FC<WithRank<Validator>> = ({ addressId, cmixId, location, na
         <Link to={validatorLink}>{name}</Link>
       </TableCell>
       <TableCell>
-        {location}
+        {/* {location} */}
       </TableCell>
       <TableCell>
         <FormatBalance denomination={2} value={ownStake} />
@@ -47,56 +45,41 @@ const ValidatorRow: FC<WithRank<Validator>> = ({ addressId, cmixId, location, na
       </TableCell>
       <TableCell>
         <Typography variant='code'>
-          <CmixAddress shorten nodeId={cmixId} />
+          {/* <CmixAddress shorten nodeId={cmixId} /> */}
         </Typography>
       </TableCell>
       <TableCell>
-        {nominatorCount}
+        {nominators}
       </TableCell>
     </TableRow>
   );
-};
-
-const current: WithRank<Validator>[] = Array.from(Array(360).keys()).map((i) => ({
-  key: makeid(32),
-  rank: i + 1,
-  addressId: makeid(32),
-  cmixId: '6tf8WVFH2JBJ1JAY0BRRavMiccCJBk/vbo09U50modAC',
-  location: 'Berlin, DE',
-  name: 'daniel',
-  ownStake: '100000',
-  totalStake: '1590433',
-  nominatorCount: Math.ceil(Math.random() * 30),
-  commissionPercent: Math.ceil(Math.random() * 10),
-}));
-
-const waiting: WithRank<Validator>[] = Array.from(Array(737).keys()).map((i) => ({
-  key: makeid(32),
-  rank: i + 1,
-  addressId: makeid(32),
-  cmixId: '6tf8WVFH2JBJ1JAY0BRRavMiccCJBk/vbo09U50modAC',
-  location: 'Somewhere else',
-  name: 'not daniel',
-  ownStake: '100313',
-  totalStake: '1590433',
-  nominatorCount: Math.ceil(Math.random() * 30),
-  commissionPercent: Math.ceil(Math.random() * 10),
-}));
-
-const labels: ValidatorFilterLabels = {
-  current: <><strong>Current</strong> | 352/360</>,
-  waiting: <><strong>Waiting</strong> | 737</>
 };
 
 const ValidatorsTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<ValidatorFilter>('current');
-  const validators = filter === 'current' ? current : waiting;
-  const paginated = useMemo(
-    () => validators.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [page, rowsPerPage, validators]
+  const variables = useMemo(() => ({
+      limit: rowsPerPage,
+      offset: page * rowsPerPage,
+      where: { active: { _eq: filter === 'current' }}
+    }),
+    [filter, page, rowsPerPage]
   );
+  console.log(JSON.stringify(variables));
+  const query = useQuery<RankedAccountsQuery>(GET_RANKED_ACCOUNTS, { variables });
+  const validators = query.data?.validators;
+  const activeCount = query.data?.active.aggregate.count;
+  const waitingCount = query.data?.waiting.aggregate.count;
+  const count = filter === 'current' ? activeCount : waitingCount;
+
+  const labels: ValidatorFilterLabels = useMemo(() => ({
+      current: <><strong>Current</strong> {activeCount !== undefined &&  `| ${activeCount}`}</>,
+      waiting: <><strong>Waiting</strong> {waitingCount !== undefined && `| ${waitingCount}`}</>
+    }),
+    [activeCount, waitingCount]
+  );
+
 
   return (
     <Stack spacing={3}>
@@ -120,14 +103,24 @@ const ValidatorsTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginated.map((validator) => (
+            {query.loading || query.error || !validators && (
+              <TableRow>
+                <TableCell colSpan={7}>
+                  {(query.error || !validators) && <Error type='data-unavailable' />}
+                  {query.loading && <Loading />}
+                </TableCell>
+              </TableRow>
+            )}
+            {validators ? validators.map((validator) => (
               <ValidatorRow key={validator.addressId} {...validator} />
-            ))}
+            )) : <TableRow>
+              
+              </TableRow>}
           </TableBody>
         </Table>
         <TablePagination
           page={page}
-          count={validators.length}
+          count={count ?? 0}
           rowsPerPage={rowsPerPage}
           onPageChange={(_: unknown, number: number) => {
             setPage(number);
