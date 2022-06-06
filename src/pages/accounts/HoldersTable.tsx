@@ -1,9 +1,11 @@
+/* eslint-disable no-console */
 import { useQuery } from '@apollo/client';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import { Address } from '../../components/ChainId';
+import Error from '../../components/Error';
 import FormatBalance from '../../components/FormatBalance';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
@@ -82,21 +84,22 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
   ];
 };
 
-const useHeaders = (): [BaselineCell[], Record<Roles, boolean>] => {
-  const [sortVariables, setSortVariables] = useState<Record<Roles, boolean>>({
+const useHeaders = () => {
+  const [filters, setFilters] = useState<Record<Roles, boolean>>({
     validator: false,
     nominator: false,
     council: false,
     techcommit: false
   });
-  return [
+
+  const headers = useMemo(() => 
     [
       { value: 'rank' },
       { value: 'account' },
       { value: 'transactions' },
       {
         value: (
-          <HoldersRolesFilters callback={setSortVariables} roles={sortVariables}>
+          <HoldersRolesFilters callback={setFilters} roles={filters}>
             role
           </HoldersRolesFilters>
         ),
@@ -105,8 +108,13 @@ const useHeaders = (): [BaselineCell[], Record<Roles, boolean>] => {
       { value: 'locked balance' },
       { value: 'total balance' }
     ],
-    sortVariables
-  ];
+    [filters]
+  );
+
+  return {
+    headers,
+    filters,
+  }
 };
 
 const HoldersTable: FC = () => {
@@ -122,21 +130,34 @@ const HoldersTable: FC = () => {
     rowsPerPage: DEFAULT_ROWS_PER_PAGE,
     cursorField: 'timestamp'
   });
-  const [headers] = useHeaders();
+  const { filters, headers } = useHeaders();
+  const hasFilters = Object.values(filters).some((v) => !!v);
   const variables = useMemo(
     () => ({
       limit,
       offset,
-      where: { timestamp: { _lte: timestamp } },
+      where: {
+        _and: [
+          { timestamp: { _lte: timestamp } },
+          hasFilters
+            ? { _or: Object.entries(filters)
+                .filter(([,v]) => !!v)
+                .map(([key, value]) => ({ role: { [key]: {_eq: value }  } }))}
+            : {}
+        ]
+      },
       orderBy: [{ total_balance: 'desc' }]
     }),
-    [limit, offset, timestamp]
+    [filters, hasFilters, limit, offset, timestamp]
   );
-  const { data, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
+
+  console.log(JSON.stringify(variables));
+  const { data, error, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
   const rows = useMemo(
     () => (data?.account || []).map((item, index) => accountToRow(item, index + offset)),
     [data?.account, offset]
   );
+
   const footer = useMemo(() => {
     if (data?.agg && data?.account && data.account.length) {
       return (
@@ -152,6 +173,8 @@ const HoldersTable: FC = () => {
     }
     return <></>;
   }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  
+  console.log(error);
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
@@ -160,7 +183,11 @@ const HoldersTable: FC = () => {
       {loading ? (
         <TableSkeleton cells={headers.length} rows={rowsPerPage} />
       ) : (
-        <BaselineTable headers={headers} rows={rows} footer={footer} />
+        error
+        ? <Error type='data-unavailable' />
+        : (
+          <BaselineTable headers={headers} rows={rows} footer={footer} />
+        )
       )}
     </PaperStyled>
   );
