@@ -65,7 +65,7 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
   const accountLink = `accounts/${item.address}`;
   let identity = null;
   try {
-    identity = item.identity && JSON.parse(item.identity) as Record<string, string>;
+    identity = item.identity && (JSON.parse(item.identity) as Record<string, string>);
   } catch (err) {
     console.error('Error parsing identity for id:', item.address, item.identity);
   }
@@ -73,9 +73,11 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
   return [
     { value: rank, props: rankProps },
     {
-      value: identity
-        ? <Link to={accountLink}>{identity.display}</Link>
-        : <Address value={item.address} link={accountLink} truncated />
+      value: identity ? (
+        <Link to={accountLink}>{identity.display}</Link>
+      ) : (
+        <Address value={item.address} link={accountLink} truncated />
+      )
     },
     { value: item.nonce },
     {
@@ -104,8 +106,8 @@ const useHeaders = () => {
     techcommit: false
   });
 
-  const headers = useMemo(() => 
-    [
+  const headers = useMemo(
+    () => [
       { value: 'rank' },
       { value: 'account' },
       { value: 'transactions' },
@@ -125,8 +127,8 @@ const useHeaders = () => {
 
   return {
     headers,
-    filters,
-  }
+    filters
+  };
 };
 
 const HoldersTable: FC = () => {
@@ -152,9 +154,11 @@ const HoldersTable: FC = () => {
         _and: [
           { timestamp: { _lte: timestamp } },
           hasFilters
-            ? { _or: Object.entries(filters)
-                .filter(([,v]) => !!v)
-                .map(([key, value]) => ({ role: { [key]: {_eq: value }  } }))}
+            ? {
+                _or: Object.entries(filters)
+                  .filter(([, v]) => !!v)
+                  .map(([key, value]) => ({ role: { [key]: { _eq: value } } }))
+              }
             : {}
         ]
       },
@@ -165,7 +169,7 @@ const HoldersTable: FC = () => {
 
   const { data, error, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
   const rows = useMemo(
-    () => (data?.account || []).map((item, index) => accountToRow(item, index + offset)),
+    () => (data?.account || []).map((item, index) => accountToRow(item, index + 1 + offset)),
     [data?.account, offset]
   );
 
@@ -192,12 +196,10 @@ const HoldersTable: FC = () => {
       </Typography>
       {loading ? (
         <TableSkeleton cells={headers.length} rows={rowsPerPage} />
+      ) : error ? (
+        <Error type='data-unavailable' />
       ) : (
-        error
-        ? <Error type='data-unavailable' />
-        : (
-          <BaselineTable headers={headers} rows={rows} footer={footer} />
-        )
+        <BaselineTable headers={headers} rows={rows} footer={footer} />
       )}
     </PaperStyled>
   );
