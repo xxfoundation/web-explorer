@@ -33,7 +33,7 @@ type Data = {
 
 const fields: (keyof Economics)[] = ['staked', 'unbonding', 'stakeableSupply'];
 
-const extractChartData = (economics?: Economics) => {
+export const extractChartData = (economics?: Economics) => {
   if (!economics) {
     return {
       legendData: [],
@@ -115,11 +115,11 @@ const StakingSupplyDonutChart: FC = () => {
   );
 
   if (subscription.error) {
-    return <Error type='data-unavailable' />
+    return <Error type='data-unavailable' />;
   }
 
   if (subscription.loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
@@ -141,7 +141,7 @@ const StakingSupplyDonutChart: FC = () => {
       <Stack style={{ minWidth: '33%' }} spacing={2}>
         {economics?.stakeableSupply && (
           <Box>
-            <LegendTypographyHeader>Staking Supply</LegendTypographyHeader>
+            <LegendTypographyHeader>Stakeable Supply</LegendTypographyHeader>
             <LegendTypographySubHeaders>
               <FormatBalance value={economics.stakeableSupply} />
             </LegendTypographySubHeaders>

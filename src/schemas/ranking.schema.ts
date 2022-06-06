@@ -63,6 +63,8 @@ export type RankedAccount = {
   addressId: string;
   rank: number;
   name: string;
+  location: string;
+  cmixId: string;
   nominators: number;
   ownStake: string;
   totalStake: string;
@@ -81,6 +83,8 @@ export const GET_RANKED_ACCOUNTS = gql`
       rank
       name
       nominators,
+      location,
+      cmixId: cmix_id,
       ownStake: self_stake
       totalStake: total_stake
       otherStake: other_stake

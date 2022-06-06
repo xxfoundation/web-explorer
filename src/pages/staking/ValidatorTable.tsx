@@ -2,6 +2,7 @@
 import { useQuery } from '@apollo/client';
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
+import CmixAddress from '../../components/CmixAddress';
 import Error from '../../components/Error';
 // import CmixAddress from '../../components/CmixAddress';
 import FormatBalance from '../../components/FormatBalance';
@@ -9,13 +10,22 @@ import Link from '../../components/Link';
 import Loading from '../../components/Loading';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
-import { GET_RANKED_ACCOUNTS, RankedAccountsQuery, RankedAccount } from '../../schemas/ranking.schema';
-import ValidatorTableControls, { ValidatorFilter, ValidatorFilterLabels } from './ValidatorTableControls';
+import {
+  GET_RANKED_ACCOUNTS,
+  RankedAccountsQuery,
+  RankedAccount
+} from '../../schemas/ranking.schema';
+import ValidatorTableControls, {
+  ValidatorFilter,
+  ValidatorFilterLabels
+} from './ValidatorTableControls';
 
-const ROWS_PER_PAGE = 20
+const ROWS_PER_PAGE = 20;
 
 const ValidatorRow: FC<RankedAccount> = ({
   addressId,
+  cmixId,
+  location,
   name,
   nominators,
   ownStake,
@@ -27,16 +37,12 @@ const ValidatorRow: FC<RankedAccount> = ({
   return (
     <TableRow key={addressId}>
       <TableCell>
-        <Typography variant='h4'>
-          {rank}
-        </Typography>
+        <Typography variant='h4'>{rank}</Typography>
       </TableCell>
       <TableCell>
         <Link to={validatorLink}>{name}</Link>
       </TableCell>
-      <TableCell>
-        {/* {location} */}
-      </TableCell>
+      <TableCell>{location}</TableCell>
       <TableCell>
         <FormatBalance denomination={2} value={ownStake} />
       </TableCell>
@@ -45,12 +51,10 @@ const ValidatorRow: FC<RankedAccount> = ({
       </TableCell>
       <TableCell>
         <Typography variant='code'>
-          {/* <CmixAddress shorten nodeId={cmixId} /> */}
+          <CmixAddress shorten nodeId={cmixId} />
         </Typography>
       </TableCell>
-      <TableCell>
-        {nominators}
-      </TableCell>
+      <TableCell>{nominators}</TableCell>
     </TableRow>
   );
 };
@@ -59,27 +63,35 @@ const ValidatorsTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<ValidatorFilter>('current');
-  const variables = useMemo(() => ({
+  const variables = useMemo(
+    () => ({
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      where: { active: { _eq: filter === 'current' }}
+      where: { active: { _eq: filter === 'current' } }
     }),
     [filter, page, rowsPerPage]
   );
-  console.log(JSON.stringify(variables));
   const query = useQuery<RankedAccountsQuery>(GET_RANKED_ACCOUNTS, { variables });
   const validators = query.data?.validators;
   const activeCount = query.data?.active.aggregate.count;
   const waitingCount = query.data?.waiting.aggregate.count;
   const count = filter === 'current' ? activeCount : waitingCount;
 
-  const labels: ValidatorFilterLabels = useMemo(() => ({
-      current: <><strong>Current</strong> {activeCount !== undefined &&  `| ${activeCount}`}</>,
-      waiting: <><strong>Waiting</strong> {waitingCount !== undefined && `| ${waitingCount}`}</>
+  const labels: ValidatorFilterLabels = useMemo(
+    () => ({
+      current: (
+        <>
+          <strong>Current</strong> {activeCount !== undefined && `| ${activeCount}`}
+        </>
+      ),
+      waiting: (
+        <>
+          <strong>Waiting</strong> {waitingCount !== undefined && `| ${waitingCount}`}
+        </>
+      )
     }),
     [activeCount, waitingCount]
   );
-
 
   return (
     <Stack spacing={3}>
@@ -103,19 +115,23 @@ const ValidatorsTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {query.loading || query.error || !validators && (
-              <TableRow>
-                <TableCell colSpan={7}>
-                  {(query.error || !validators) && <Error type='data-unavailable' />}
-                  {query.loading && <Loading />}
-                </TableCell>
-              </TableRow>
+            {query.loading ||
+              query.error ||
+              (!validators && (
+                <TableRow>
+                  <TableCell colSpan={7}>
+                    {(query.error || !validators) && <Error type='data-unavailable' />}
+                    {query.loading && <Loading />}
+                  </TableCell>
+                </TableRow>
+              ))}
+            {validators ? (
+              validators.map((validator) => (
+                <ValidatorRow key={validator.addressId} {...validator} />
+              ))
+            ) : (
+              <TableRow></TableRow>
             )}
-            {validators ? validators.map((validator) => (
-              <ValidatorRow key={validator.addressId} {...validator} />
-            )) : <TableRow>
-              
-              </TableRow>}
           </TableBody>
         </Table>
         <TablePagination

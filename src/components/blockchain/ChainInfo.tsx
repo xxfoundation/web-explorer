@@ -25,14 +25,18 @@ const ChainInfoCard: FC<{ title: string; value: string | BN | React.ReactNode }>
   );
 };
 
-const processMetrics = (data?: Metric[]) => (data ?? []).reduce((acc, { title, value }) => ({
-  ...acc,
-  [camelCase(title)]: value
-}), {} as Record<string, string>);
+const processMetrics = (data?: Metric[]) =>
+  (data ?? []).reduce(
+    (acc, { title, value }) => ({
+      ...acc,
+      [camelCase(title)]: value
+    }),
+    {} as Record<string, string>
+  );
 
 const ChainInfo = () => {
   const metricsSubscription = useSubscription<EraMetrics>(LISTEN_FOR_ERA_METRICS);
-  const economicsSubscription = useSubscription<EconomicsSubscription>(LISTEN_FOR_ECONOMICS)
+  const economicsSubscription = useSubscription<EconomicsSubscription>(LISTEN_FOR_ECONOMICS);
   const data = useMemo(
     () => processMetrics(metricsSubscription.data?.metrics),
     [metricsSubscription.data?.metrics]
@@ -48,10 +52,10 @@ const ChainInfo = () => {
     validatorSet
   } = data;
 
-  const { inflationRate, totalSupply } = economicsSubscription.data?.economics[0] ?? {};
+  const { inflationRate, totalIssuance } = economicsSubscription.data?.economics[0] ?? {};
 
   if (metricsSubscription.error || economicsSubscription.error) {
-    return <Error type='data-unavailable' />
+    return <Error type='data-unavailable' />;
   }
 
   return (
@@ -64,16 +68,16 @@ const ChainInfo = () => {
         <ChainInfoCard title='Active Era' value={currentEra} />
         <ChainInfoCard title='Transfers' value={transfers} />
         <ChainInfoCard title='Holders' value={accounts} />
-        <ChainInfoCard title='Total Issuance' value={
-          totalSupply && <FormatBalance value={totalSupply} />
-        } />
+        <ChainInfoCard
+          title='Total Issuance'
+          value={totalIssuance && <FormatBalance value={totalIssuance} />}
+        />
         <ChainInfoCard title='Nominators' value={nominatorCount} />
         <ChainInfoCard
           title='Validators'
-          value={activeValidatorCount && validatorSet && `${activeValidatorCount}/${validatorSet}`} />
-        <ChainInfoCard
-          title='Inflation Rate'
-          value={inflationRate && `${inflationRate}%`} />
+          value={activeValidatorCount && validatorSet && `${activeValidatorCount}/${validatorSet}`}
+        />
+        <ChainInfoCard title='Inflation Rate' value={inflationRate && `${inflationRate}%`} />
       </Grid>
     </Box>
   );
