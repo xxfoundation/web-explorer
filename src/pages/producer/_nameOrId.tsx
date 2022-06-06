@@ -23,9 +23,6 @@ const BlockProducer = () => {
         <Skeleton />
         <Skeleton sx={{ mb: 5, maxWidth: '500px' }} />
         <SummaryLoader number={10} />
-        {/* <Box sx={{ mt: 2 }}>
-          <ProducerTabs eras={[]} nominators={[]} />
-        </Box> */}
       </Container>
     );
   }
@@ -38,7 +35,12 @@ const BlockProducer = () => {
       </Typography>
       <Summary ranking={data.ranking} />
       <Box sx={{ mt: 2 }}>
-        <ProducerTabs eras={[]} nominators={[]} />
+        <ProducerTabs
+          addressStash={data.ranking.stashAddress}
+          blockHeight={data.ranking.blockHeight}
+          eras={data.ranking.activeEras}
+          nominators={data.ranking.nominators}
+        />
       </Box>
     </Container>
   );

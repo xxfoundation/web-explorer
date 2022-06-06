@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export type CommonFieldsRankingFragment = {
   slashed: boolean;
   stashAddress: string;
+  blockHeight: number;
   stashAddressCreationBlock: number;
   controllerAddress: string;
   activeRating: number;
@@ -21,6 +22,8 @@ export type CommonFieldsRankingFragment = {
   location: string;
   sessionKeys: string;
 
+  activeEras: number;
+
   selfStake: number;
   otherStake: number;
   totalStake: number;
@@ -31,6 +34,7 @@ export type CommonFieldsRankingFragment = {
 export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
   fragment ranking on ranking {
     slashed
+    blockHeight: block_height
     stashAddress: stash_address
     stashAddressCreationBlock: stash_address_creation_block
     controllerAddress: controller_address
@@ -45,6 +49,8 @@ export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
     slashRating: slash_rating
     subAccountsRating: sub_accounts_rating
     totalRating: total_rating
+
+    activeEras: active_eras
 
     cmixId: cmix_id
     rewardsAddress: rewards_address
