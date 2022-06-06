@@ -55,16 +55,24 @@ const Footer = () => (
           </Grid>
           <Grid container item xs='auto' spacing={1.5}>
             <Grid item xs>
-              <img src={twitterIcon} alt='Follow us on Twitter' />
+              <a href='https://twitter.com/xx_network' rel='noopener'>
+                <img src={twitterIcon} alt='Follow us on Twitter' />
+              </a>
             </Grid>
             <Grid item xs>
-              <img src={discordIcon} alt='Join our Discord' />
+              <a href='https://discord.gg/Y8pCkbK' rel='noopener'>
+                <img src={discordIcon} alt='Join our Discord' />
+              </a>
             </Grid>
             <Grid item xs>
-              <img src={telegramIcon} alt='Message us on Telegram' />
+              <a href='https://t.me/xxnetwork' rel='noopener'>
+                <img src={telegramIcon} alt='Message us on Telegram' />
+              </a>
             </Grid>
             <Grid item xs>
-              <img src={emailIcon} alt='Email us' />
+              <a href='https://xx.network/contact/' rel='noopener'>
+                <img src={emailIcon} alt='Contact us' />
+              </a>
             </Grid>
           </Grid>
         </Grid>
