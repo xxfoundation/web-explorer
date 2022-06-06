@@ -34,8 +34,8 @@ const ValidatorRow: FC<RankedAccount> = ({
   let parsed;
 
   try {
-    const { city, country } = location ? JSON.parse(location) : {} as Record<string, string>;
-    parsed = location ? (`${city ? `${city}, ` : ' '}${country ?? ''}`) : 'N/A'
+    const { city, country } = location ? JSON.parse(location) : ({} as Record<string, string>);
+    parsed = location ? `${city ? `${city}, ` : ' '}${country ?? ''}` : 'N/A';
   } catch (err) {
     console.error('Error parsing location for ', name);
   }
@@ -50,10 +50,10 @@ const ValidatorRow: FC<RankedAccount> = ({
       </TableCell>
       <TableCell>{parsed}</TableCell>
       <TableCell>
-        <FormatBalance denomination={2} value={ownStake} />
+        <FormatBalance value={ownStake} />
       </TableCell>
       <TableCell>
-        <FormatBalance denomination={2} value={totalStake} />
+        <FormatBalance value={totalStake} />
       </TableCell>
       <TableCell>
         <Typography variant='code'>
@@ -123,7 +123,9 @@ const ValidatorsTable = () => {
           <TableBody>
             <TableRow>
               <TableCell colSpan={7}>
-                {(!query.loading && (query.error || !validators)) && <Error type='data-unavailable' />}
+                {!query.loading && (query.error || !validators) && (
+                  <Error type='data-unavailable' />
+                )}
                 {query.loading && <Loading />}
               </TableCell>
             </TableRow>

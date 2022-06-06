@@ -11,7 +11,7 @@ import { stripNonDigits } from '../../utils';
 
 const dividerMargins = { ml: 3, mr: 3, mt: 0, mb: 0 };
 
-const ERA_HOUR = 7;
+const ERA_HOUR = 7; // Era starts everyday at 7am UTC
 
 const extractMetrics = (economics?: Economics) => {
   const now = dayjs().utc();
