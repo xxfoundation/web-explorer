@@ -79,7 +79,7 @@ export type RankedAccountsQuery = {
 
 export const GET_RANKED_ACCOUNTS = gql`
   query GetRankedAccounts($limit: Int!, $offset: Int!, $where: ranking_bool_exp) {
-    ranking(order_by: { rank: asc }, limit: $limit, offset: $offset, where: $where) {
+    validators: ranking(order_by: { rank: asc }, limit: $limit, offset: $offset, where: $where) {
       rank
       name
       nominators,

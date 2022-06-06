@@ -4,7 +4,6 @@ import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } f
 import React, { FC, useMemo, useState } from 'react';
 import CmixAddress from '../../components/CmixAddress';
 import Error from '../../components/Error';
-// import CmixAddress from '../../components/CmixAddress';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import Loading from '../../components/Loading';
@@ -33,6 +32,14 @@ const ValidatorRow: FC<RankedAccount> = ({
   totalStake
 }) => {
   const validatorLink = `/validators/${addressId}`;
+  let parsed;
+
+  try {
+    const { city, country } = location ? JSON.parse(location) : {} as Record<string, string>;
+    parsed = location ? (`${city ? `${city}, ` : ' '}${country ?? ''}`) : 'N/A'
+  } catch (err) {
+    console.error('Error parsing location');
+  }
 
   return (
     <TableRow key={addressId}>
@@ -42,7 +49,7 @@ const ValidatorRow: FC<RankedAccount> = ({
       <TableCell>
         <Link to={validatorLink}>{name}</Link>
       </TableCell>
-      <TableCell>{location}</TableCell>
+      <TableCell>{parsed}</TableCell>
       <TableCell>
         <FormatBalance denomination={2} value={ownStake} />
       </TableCell>
@@ -93,6 +100,8 @@ const ValidatorsTable = () => {
     [activeCount, waitingCount]
   );
 
+  console.log(JSON.stringify(query.data));
+
   return (
     <Stack spacing={3}>
       <Stack sx={{ mb: 3 }} spacing={2}>
@@ -115,16 +124,12 @@ const ValidatorsTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {query.loading ||
-              query.error ||
-              (!validators && (
-                <TableRow>
-                  <TableCell colSpan={7}>
-                    {(query.error || !validators) && <Error type='data-unavailable' />}
-                    {query.loading && <Loading />}
-                  </TableCell>
-                </TableRow>
-              ))}
+            <TableRow>
+              <TableCell colSpan={7}>
+                {(!query.loading && (query.error || !validators)) && <Error type='data-unavailable' />}
+                {query.loading && <Loading />}
+              </TableCell>
+            </TableRow>
             {validators ? (
               validators.map((validator) => (
                 <ValidatorRow key={validator.addressId} {...validator} />
