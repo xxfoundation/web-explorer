@@ -27,7 +27,6 @@ export const intervals: TimeInterval[] = ['1h', '6h', '1d'];
 export const getCountsByTimestamp = (timestamps: number[], interval: TimeInterval = '1h') =>
   timestamps.reduce((acc, timestamp) => {
     const nearest = convertToNearestTimestamp(timestamp, interval);
-
     return {
       ...acc,
       [nearest]: (acc[nearest] ?? 0) + 1

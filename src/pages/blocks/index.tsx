@@ -28,7 +28,7 @@ const BlockRouter = () => {
       <Route exact path={path}>
         <Block />
       </Route>
-      <Route path={`${path}/producer/:nameOrId`}>
+      <Route path={`${path}/producer/:accountId`}>
         <BlockProducer />
       </Route>
       <Route path={`${path}/version/:version`}>

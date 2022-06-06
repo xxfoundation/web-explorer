@@ -1,6 +1,7 @@
 import { bnToBn, calcSi, formatDecimal, isBoolean } from '@polkadot/util';
 import { SiDef, ToBn } from '@polkadot/util/types';
 import { SI, SI_MID } from '@polkadot/util/format/si';
+import BN from 'bn.js';
 
 const defaultDecimals = 0;
 
@@ -45,7 +46,7 @@ function getPrePost(text: string, decimals: number, forceUnit?: string, precisio
 }
 
 // Formats a string/number with <prefix>.<postfix><type> notation
-export function formatBalance<ExtToBn extends ToBn>(input?: number | string | bigint | ExtToBn, options: Options | boolean = true, optDecimals: number = defaultDecimals): string {
+export function formatBalance<ExtToBn extends ToBn>(input?: number | string | bigint | ExtToBn | BN, options: Options | boolean = true, optDecimals: number = defaultDecimals): string {
   let text = bnToBn(input).toString();
 
   if (text.length === 0 || text === '0') {

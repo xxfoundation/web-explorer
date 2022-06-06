@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export type CommonFieldsRankingFragment = {
   slashed: boolean;
   stashAddress: string;
+  blockHeight: number;
   stashAddressCreationBlock: number;
   controllerAddress: string;
   activeRating: number;
@@ -16,6 +17,12 @@ export type CommonFieldsRankingFragment = {
   slashRating: number;
   subAccountsRating: number;
   totalRating: number;
+  cmixId: string;
+  rewardsAddress: string;
+  location: string;
+  sessionKeys: string;
+
+  activeEras: number;
 
   selfStake: number;
   otherStake: number;
@@ -27,6 +34,7 @@ export type CommonFieldsRankingFragment = {
 export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
   fragment ranking on ranking {
     slashed
+    blockHeight: block_height
     stashAddress: stash_address
     stashAddressCreationBlock: stash_address_creation_block
     controllerAddress: controller_address
@@ -42,6 +50,13 @@ export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
     subAccountsRating: sub_accounts_rating
     totalRating: total_rating
 
+    activeEras: active_eras
+
+    cmixId: cmix_id
+    rewardsAddress: rewards_address
+    location
+    sessionKeys: session_keys
+
     selfStake: self_stake
     otherStake: other_stake
     totalStake: total_stake
@@ -50,11 +65,61 @@ export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
   }
 `;
 
+export type GetAccountRanking = {
+  ranking: CommonFieldsRankingFragment;
+};
+
 export const GET_ACCOUNT_RANKING = gql`
   ${COMMON_FIELDS_RANKING_FRAGMENT}
   query GetAccountRanking($blockHeight: bigint!, $stashAddress: String!) {
     ranking: ranking_by_pk(block_height: $blockHeight, stash_address: $stashAddress) {
       ...ranking
+    }
+  }
+`;
+
+export type RankedAccount = {
+  addressId: string;
+  rank: number;
+  name: string;
+  location: string;
+  cmixId: string;
+  nominators: number;
+  ownStake: string;
+  totalStake: string;
+  otherStake: string;
+};
+
+export type RankedAccountsQuery = {
+  validators: RankedAccount[];
+  active: { aggregate: { count: number } };
+  waiting: { aggregate: { count: number } };
+};
+
+export const GET_RANKED_ACCOUNTS = gql`
+  query GetRankedAccounts($limit: Int!, $offset: Int!, $where: ranking_bool_exp) {
+    validators: ranking(order_by: { rank: asc }, limit: $limit, offset: $offset, where: $where) {
+      rank
+      name
+      nominators
+      location
+      cmixId: cmix_id
+      ownStake: self_stake
+      totalStake: total_stake
+      otherStake: other_stake
+      addressId: stash_address
+    }
+
+    active: ranking_aggregate(where: { active: { _eq: true } }) {
+      aggregate {
+        count
+      }
+    }
+
+    waiting: ranking_aggregate(where: { active: { _eq: false } }) {
+      aggregate {
+        count
+      }
     }
   }
 `;

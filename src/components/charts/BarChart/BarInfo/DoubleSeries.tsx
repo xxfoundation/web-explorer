@@ -32,7 +32,7 @@ const DoubleSeries: FC = () => {
         variant='subheader4'
         style={{ whiteSpace: 'nowrap' }}
       >
-        <FormatBalance value={count} />
+        <FormatBalance value={count.toString()} />
       </Typography>
       &nbsp;|&nbsp;
       <Typography
