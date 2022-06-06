@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useQuery } from '@apollo/client';
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';

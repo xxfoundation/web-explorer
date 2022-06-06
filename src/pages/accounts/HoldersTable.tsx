@@ -4,6 +4,8 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
+
+import Link from '../../components/Link';
 import { Address } from '../../components/ChainId';
 import Error from '../../components/Error';
 import FormatBalance from '../../components/FormatBalance';
@@ -60,10 +62,20 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
   const roles = Object.entries(item.roles)
     .filter((entry) => entry[1] === true)
     .map(([role]) => role as Roles);
+  const accountLink = `accounts/${item.address}`;
+  let identity = null;
+  try {
+    identity = item.identity && JSON.parse(item.identity) as Record<string, string>;
+  } catch (err) {
+    console.error('Error parsing identity for id:', item.address, item.identity);
+  }
+
   return [
     { value: rank, props: rankProps },
     {
-      value: <Address value={item.address} link={`/accounts/${item.address}`} truncated />
+      value: identity
+        ? <Link to={accountLink}>{identity.display}</Link>
+        : <Address value={item.address} link={accountLink} truncated />
     },
     { value: item.nonce },
     {
@@ -172,7 +184,7 @@ const HoldersTable: FC = () => {
     }
     return <></>;
   }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  
+
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
