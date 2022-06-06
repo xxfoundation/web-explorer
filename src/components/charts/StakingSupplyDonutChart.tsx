@@ -1,39 +1,107 @@
 import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types';
 
 import React, { FC, useMemo, useRef } from 'react';
+import { Economics, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
+
 import { Doughnut } from 'react-chartjs-2';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
+import { useSubscription } from '@apollo/client';
+import { mapValues, pick } from 'lodash';
+import BN from 'bn.js';
+
 import Legend from './Legend';
 import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typographies';
 import FormatBalance from '../FormatBalance';
 import { LightTooltipHeader, LightTooltip } from '../Tooltips';
 import useCustomTooltip from '../../hooks/useCustomTooltip';
+import Error from '../Error';
+import Loading from '../Loading';
 
-const data = {
-  labels: ['Staked', 'Liquid', 'Unbonding'],
-  datasets: [
-    {
-      label: 'Percentage',
-      backgroundColor: ['#00A2D6', '#6F74FF', '#59BD1C'],
-      data: [5.2, 34, 8]
-    }
-  ]
+enum DataLabels {
+  Staked = 'Staked',
+  Liquid = 'Liquid',
+  Unbonding = 'Unbonding'
+}
+
+type Data = {
+  label: DataLabels;
+  value: BN;
+  percentage: string;
+  color: string;
+  hideTooltip?: boolean;
 };
 
+const fields: (keyof Economics)[] = ['staked', 'unbonding', 'stakeableSupply'];
+
+export const extractChartData = (economics?: Economics) => {
+  if (!economics) {
+    return {
+      legendData: [],
+      data: {
+        datasets: []
+      }
+    };
+  }
+
+  const { stakeableSupply, staked, unbonding } = mapValues(
+    pick(economics, fields),
+    (o) => new BN(o)
+  );
+
+  const liquid = stakeableSupply.sub(staked).sub(unbonding);
+
+  const calculatePercentage = (n: BN) =>
+    (n.muln(1e6).div(stakeableSupply).toNumber() / 1e4).toFixed(0);
+
+  const serieA: Data[] = [
+    {
+      color: '#00A2D6',
+      label: DataLabels.Staked,
+      value: staked,
+      percentage: calculatePercentage(staked)
+    },
+    {
+      color: '#6F74FF',
+      label: DataLabels.Liquid,
+      value: liquid,
+      percentage: calculatePercentage(liquid)
+    },
+    {
+      color: '#59BD1C',
+      label: DataLabels.Unbonding,
+      value: unbonding,
+      percentage: calculatePercentage(unbonding)
+    }
+  ];
+
+  const legendMapper = ({ color, label, percentage }: Data) => ({
+    label: `${percentage}% ${label}`,
+    color
+  });
+
+  const legendData = serieA.filter((s) => !s.hideTooltip).map(legendMapper);
+
+  return {
+    legendData,
+    data: {
+      datasets: [
+        {
+          backgroundColor: serieA.map((s) => s.color),
+          data: serieA
+        }
+      ]
+    }
+  };
+};
 type Options = ChartProps<'doughnut'>['options'];
 
 const StakingSupplyDonutChart: FC = () => {
-  const chartRef = useRef<ChartJSOrUndefined<'doughnut', number[], unknown>>(null);
+  const subscription = useSubscription<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
+  const economics = subscription.data?.economics[0];
+  const chartRef = useRef<ChartJSOrUndefined<'doughnut', Data[]>>(null);
   const customTooltip = useCustomTooltip(chartRef);
 
-  const legend = useMemo(
-    () =>
-      data.datasets[0].data.map((percentage, index) => ({
-        label: `${percentage}% ${data.labels[index]}`,
-        color: data.datasets[0]?.backgroundColor[index]
-      })),
-    []
-  );
+  const { data, legendData } = useMemo(() => extractChartData(economics), [economics]);
 
   const chartOptions = useMemo<Options>(
     () => ({
@@ -46,24 +114,40 @@ const StakingSupplyDonutChart: FC = () => {
     [customTooltip.plugin]
   );
 
+  if (subscription.error) {
+    return <Error type='data-unavailable' />;
+  }
+
+  if (subscription.loading) {
+    return <Loading />;
+  }
+
   return (
     <Stack direction='row' spacing={3} sx={{ flexGrow: 1 }}>
-      <Box className='chart-container' style={{ width: '50%', flexGrow: 1, position: 'relative' }}>
+      <Box
+        className='chart-container'
+        style={{ width: '50%', flexShrink: 1, position: 'relative' }}
+      >
         <Doughnut ref={chartRef} options={chartOptions} data={data} />
         <LightTooltip style={customTooltip.styles}>
           <LightTooltipHeader>
-            {customTooltip.label} {customTooltip.data}%
+            {customTooltip.data?.label} | {customTooltip.data?.percentage}%
           </LightTooltipHeader>
+          <Typography variant={'body1'}>
+            {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value} />}
+          </Typography>
         </LightTooltip>
       </Box>
       <Stack style={{ minWidth: '33%' }} spacing={2}>
-        <Box>
-          <LegendTypographyHeader>Staking Supply</LegendTypographyHeader>
-          <LegendTypographySubHeaders>
-            <FormatBalance value='118716570' />
-          </LegendTypographySubHeaders>
-        </Box>
-        <Legend data={legend} />
+        {economics?.stakeableSupply && (
+          <Box>
+            <LegendTypographyHeader>Stakeable Supply</LegendTypographyHeader>
+            <LegendTypographySubHeaders>
+              <FormatBalance value={economics.stakeableSupply} />
+            </LegendTypographySubHeaders>
+          </Box>
+        )}
+        <Legend data={legendData} />
       </Stack>
     </Stack>
   );

@@ -59,17 +59,17 @@ const Summary: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = 
       </SummaryRow>
       <SummaryRow label='own stake'>
         <Typography>
-          <FormatBalance value={ranking.selfStake} />
+          <FormatBalance value={ranking.selfStake.toString()} />
         </Typography>
       </SummaryRow>
       <SummaryRow label='other stake'>
         <Typography>
-          <FormatBalance value={ranking.otherStake} />
+          <FormatBalance value={ranking.otherStake.toString()} />
         </Typography>
       </SummaryRow>
       <SummaryRow label='total stake'>
         <Typography>
-          <FormatBalance value={ranking.totalStake} />
+          <FormatBalance value={ranking.totalStake.toString()} />
         </Typography>
       </SummaryRow>
       <SummaryRow label='nominators'>

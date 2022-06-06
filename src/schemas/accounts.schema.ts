@@ -105,6 +105,7 @@ export const GET_ACCOUNT_BY_PK = gql`
 export type ListAccounts = {
   account: {
     address: string;
+    identity: string;
     timestamp: number;
     totalBalance: number;
     lockedBalance: number;
@@ -125,6 +126,7 @@ export const LIST_ACCOUNTS = gql`
       timestamp
       totalBalance: total_balance
       lockedBalance: locked_balance
+      identity
       nonce
       roles: role {
         council
