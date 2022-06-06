@@ -38,7 +38,7 @@ const ValidatorRow: FC<RankedAccount> = ({
     const { city, country } = location ? JSON.parse(location) : {} as Record<string, string>;
     parsed = location ? (`${city ? `${city}, ` : ' '}${country ?? ''}`) : 'N/A'
   } catch (err) {
-    console.error('Error parsing location');
+    console.error('Error parsing location for ', name);
   }
 
   return (
