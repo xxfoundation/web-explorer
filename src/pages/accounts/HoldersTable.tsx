@@ -74,8 +74,8 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
     { value: rank, props: rankProps },
     {
       value: identity
-      ? <Link to={accountLink}>{identity.display}</Link>
-      : <Address value={item.address} link={accountLink} truncated />
+        ? <Link to={accountLink}>{identity.display}</Link>
+        : <Address value={item.address} link={accountLink} truncated />
     },
     { value: item.nonce },
     {
