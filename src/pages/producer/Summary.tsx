@@ -1,10 +1,9 @@
 import { Divider, Grid, Typography } from '@mui/material';
-import React, { FC, Fragment } from 'react';
+import React, { FC, Fragment, useMemo } from 'react';
 import CopyButton from '../../components/buttons/CopyButton';
 import { Address } from '../../components/ChainId';
 import FormatBalance from '../../components/FormatBalance';
 import { SummaryPaperWrapper, SummaryRow } from '../../components/Paper/SummaryPaper';
-import { Account } from '../../schemas/accounts.schema';
 import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
 
 const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
@@ -22,7 +21,7 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
               <Divider orientation='vertical' />
             </Grid>
             <Grid item xs={9} sm={9} md={9}>
-              {value}
+              <Typography>{value}</Typography>
             </Grid>
           </Fragment>
         );
@@ -31,31 +30,30 @@ const SessionKeyValue: FC<{ entries: Record<string, string | JSX.Element> }> = (
   );
 };
 
-const Summary: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = ({
-  account,
-  ranking
-}) => {
+const Summary: FC<{ ranking: CommonFieldsRankingFragment }> = ({ ranking }) => {
+  const location = useMemo(() => {
+    const parsedLocation: { city: string; country: string; geoBin: string } = JSON.parse(
+      ranking.location
+    );
+    return `${parsedLocation.city}, ${parsedLocation.country}`;
+  }, [ranking.location]);
+  const sessionEntries = useMemo(() => JSON.parse(ranking.sessionKeys), [ranking.sessionKeys]);
   return (
     <SummaryPaperWrapper>
       <SummaryRow label='stash' action={<CopyButton value={sampleHash} />}>
-        <Address value={account.id} />
+        <Address value={ranking.stashAddress} />
       </SummaryRow>
-      <SummaryRow
-        label='controller'
-        action={
-          account.controllerAddress ? <CopyButton value={account.controllerAddress} /> : undefined
-        }
-      >
-        <Address name='test' value={account.controllerAddress} />
+      <SummaryRow label='controller' action={<CopyButton value={ranking.controllerAddress} />}>
+        <Address name='test' value={ranking.controllerAddress} />
       </SummaryRow>
-      <SummaryRow label='reward' action={<CopyButton disabled value={'???'} />}>
-        <Address value={'???'} />
+      <SummaryRow label='reward' action={<CopyButton disabled value={ranking.rewardsAddress} />}>
+        <Address value={ranking.rewardsAddress} />
       </SummaryRow>
-      <SummaryRow label='cmix id' action={<CopyButton disabled value={'???'} />}>
-        <Typography>???</Typography>
+      <SummaryRow label='cmix id' action={<CopyButton disabled value={ranking.cmixId} />}>
+        <Typography>{ranking.cmixId}</Typography>
       </SummaryRow>
       <SummaryRow label='location'>
-        <Typography>???</Typography>
+        <Typography>{location}</Typography>
       </SummaryRow>
       <SummaryRow label='own stake'>
         <Typography>
@@ -79,30 +77,7 @@ const Summary: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = 
         <Typography>{ranking.commission}</Typography>
       </SummaryRow>
       <SummaryRow label='session key'>
-        <SessionKeyValue
-          entries={{
-            babe: (
-              <Typography>
-                0xf2b63387ce5b649f9388fd1be38ee4357b48dc0146e78b91f8f6469a78dc9f58
-              </Typography>
-            ),
-            grandpa: (
-              <Typography>
-                0x5b379072ec1f3f70b4650979a47b24f9b080c03450f7e9587d92cb599fcf4d6b
-              </Typography>
-            ),
-            im_online: (
-              <Typography>
-                0x5b379072ec1f3f70b4650979a47b24f9b080c03450f7e9587d92cb599fcf4d6b
-              </Typography>
-            ),
-            authority_discovery: (
-              <Typography>
-                0x5b379072ec1f3f70b4650979a47b24f9b080c03450f7e9587d92cb599fcf4d6b
-              </Typography>
-            )
-          }}
-        />
+        <SessionKeyValue entries={sessionEntries} />
       </SummaryRow>
       <SummaryRow label=''></SummaryRow>
     </SummaryPaperWrapper>

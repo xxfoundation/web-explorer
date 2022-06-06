@@ -16,6 +16,10 @@ export type CommonFieldsRankingFragment = {
   slashRating: number;
   subAccountsRating: number;
   totalRating: number;
+  cmixId: string;
+  rewardsAddress: string;
+  location: string;
+  sessionKeys: string;
 
   selfStake: number;
   otherStake: number;
@@ -42,6 +46,11 @@ export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
     subAccountsRating: sub_accounts_rating
     totalRating: total_rating
 
+    cmixId: cmix_id
+    rewardsAddress: rewards_address
+    location
+    sessionKeys: session_keys
+
     selfStake: self_stake
     otherStake: other_stake
     totalStake: total_stake
@@ -49,6 +58,10 @@ export const COMMON_FIELDS_RANKING_FRAGMENT = gql`
     commission
   }
 `;
+
+export type GetAccountRanking = {
+  ranking: CommonFieldsRankingFragment;
+};
 
 export const GET_ACCOUNT_RANKING = gql`
   ${COMMON_FIELDS_RANKING_FRAGMENT}
@@ -69,34 +82,34 @@ export type RankedAccount = {
   ownStake: string;
   totalStake: string;
   otherStake: string;
-}
+};
 
 export type RankedAccountsQuery = {
   validators: RankedAccount[];
   active: { aggregate: { count: number } };
   waiting: { aggregate: { count: number } };
-}
+};
 
 export const GET_RANKED_ACCOUNTS = gql`
   query GetRankedAccounts($limit: Int!, $offset: Int!, $where: ranking_bool_exp) {
     validators: ranking(order_by: { rank: asc }, limit: $limit, offset: $offset, where: $where) {
       rank
       name
-      nominators,
-      location,
-      cmixId: cmix_id,
+      nominators
+      location
+      cmixId: cmix_id
       ownStake: self_stake
       totalStake: total_stake
       otherStake: other_stake
       addressId: stash_address
     }
-    
+
     active: ranking_aggregate(where: { active: { _eq: true } }) {
       aggregate {
         count
       }
     }
-    
+
     waiting: ranking_aggregate(where: { active: { _eq: false } }) {
       aggregate {
         count
