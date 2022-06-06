@@ -57,8 +57,6 @@ const Address: FC<
 > = ({ avatarUrl, disableAvatar, link, name, truncated, value, ...props }) => {
   const avatar = useMemo(() => {
     return name ? (
-      <Avatar sx={{ width: 25, height: 25, mr: 1 }} src={avatarUrl} alt={name} />
-    ) : (
       <Tooltip
         title={
           <Typography fontSize={'10px'} fontWeight={400}>
@@ -69,6 +67,8 @@ const Address: FC<
       >
         <RemoveCircleIcon sx={{ mr: 1 }} />
       </Tooltip>
+    ) : (
+      <Avatar sx={{ width: 25, height: 25, mr: 1 }} src={avatarUrl} alt={name} />
     );
   }, [name, avatarUrl]);
 

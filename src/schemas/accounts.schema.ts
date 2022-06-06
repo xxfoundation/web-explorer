@@ -2,14 +2,7 @@ import { gql } from '@apollo/client';
 import { CommonFieldsRankingFragment } from './ranking.schema';
 import { TotalOfItems } from './types';
 
-export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit';
-
-export type RolesMap = {
-  validator: 'validator';
-  nominator: 'nominator';
-  council: 'council';
-  techcommit: 'technical committee';
-};
+export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit' | 'special';
 
 export type Identity = {
   display?: string;
@@ -110,7 +103,7 @@ export type ListAccounts = {
     totalBalance: number;
     lockedBalance: number;
     nonce: number;
-    roles: Record<Roles, boolean>;
+    roles: Record<Roles, boolean | string>;
   }[];
 } & TotalOfItems;
 

@@ -5,7 +5,7 @@ import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 
-import Link from '../../components/Link';
+import { theme } from '../../themes/default';
 import { Address } from '../../components/ChainId';
 import Error from '../../components/Error';
 import FormatBalance from '../../components/FormatBalance';
@@ -40,28 +40,31 @@ const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
 const rolesToCell = (roles: Roles[]) => {
   return !roles.length ? (
     <>
-      <span>unknown</span>
       <AccountBoxIcon />
+      <span>none</span>
     </>
   ) : (
     <>
-      <span>{roles[0]}</span>
       {roles.length > 1 ? (
         <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
-          <SwitchAccountIcon />
+          <SwitchAccountIcon style={{ color: theme.palette.primary.main }} />
         </CustomTooltip>
       ) : (
-        <AccountBoxIcon />
+        <AccountBoxIcon style={{ color: theme.palette.primary.main }} />
       )}
+      <span>{roles[0]}</span>
     </>
   );
 };
 
 const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineCell[] => {
   const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
-  const roles = Object.entries(item.roles)
-    .filter((entry) => entry[1] === true)
-    .map(([role]) => role as Roles);
+  const filteredRoles = Object.entries(item.roles).filter(([key]) => key !== '__typename');
+  const roles = filteredRoles
+    .filter(([, value]) => value)
+    .map(([role, value]) => {
+      return role === 'special' ? (value as Roles) : (role as Roles);
+    });
   const accountLink = `accounts/${item.address}`;
   let identity = null;
   try {
@@ -74,7 +77,7 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
     { value: rank, props: rankProps },
     {
       value: identity ? (
-        <Link to={accountLink}>{identity.display}</Link>
+        <Address name={identity.display} value={item.address} link={accountLink} truncated />
       ) : (
         <Address value={item.address} link={accountLink} truncated />
       )
@@ -85,7 +88,7 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
         <Stack
           direction={'row'}
           spacing={1}
-          justifyContent='space-evenly'
+          justifyContent='flex-start'
           divider={<Divider flexItem variant='middle' orientation='vertical' />}
         >
           {rolesToCell(roles)}
@@ -103,7 +106,8 @@ const useHeaders = () => {
     validator: false,
     nominator: false,
     council: false,
-    techcommit: false
+    techcommit: false,
+    special: false
   });
 
   const headers = useMemo(
@@ -156,7 +160,7 @@ const HoldersTable: FC = () => {
           hasFilters
             ? {
                 _or: Object.entries(filters)
-                  .filter(([, v]) => !!v)
+                  .filter(([k, v]) => !!v)
                   .map(([key, value]) => ({ role: { [key]: { _eq: value } } }))
               }
             : {}

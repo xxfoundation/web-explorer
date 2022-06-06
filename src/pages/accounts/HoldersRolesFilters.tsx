@@ -8,11 +8,21 @@ import { theme } from '../../themes/default';
 
 type RoleFiltersType = Roles | 'all';
 
+const rolesMap = {
+  all: 'all',
+  validator: 'validator',
+  nominator: 'nominator',
+  council: 'council',
+  techcommit: 'technical committee',
+  special: 'special'
+};
+
 export const filtersDefaultState = (): Record<Roles, boolean> => ({
   validator: false,
   nominator: false,
   council: false,
-  techcommit: false
+  techcommit: false,
+  special: false
 });
 
 const cleanLocalStateFilters = () => {
@@ -38,7 +48,7 @@ const HoldersRolesFilters: FC<{
       setAnchorEl(currentTarget);
       toggle(true);
       setSeletedRoles(() => ({
-        all: Object.values(roles).filter((r) => r).length === 5,
+        all: Object.values(roles).filter((r) => r).length === 6,
         ...roles
       }));
     },
@@ -74,7 +84,7 @@ const HoldersRolesFilters: FC<{
               onChange={({ target: { checked } }) => onCheckBoxChange(label, checked)}
             />
           }
-          label={label}
+          label={rolesMap[label as RoleFiltersType]}
         />
       );
     });
@@ -105,13 +115,15 @@ const HoldersRolesFilters: FC<{
             validator: true,
             nominator: true,
             council: true,
-            techcommit: true
+            techcommit: true,
+            special: true
           }
         : {
             validator: selection.validator,
             nominator: selection.nominator,
             council: selection.council,
-            techcommit: selection.techcommit
+            techcommit: selection.techcommit,
+            special: selection.special
           }
     );
     handleClose();
@@ -141,7 +153,7 @@ const HoldersRolesFilters: FC<{
           <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
             <Button
               variant='contained'
-              sx={{ borderRadius: '45px', textTransform: 'uppercase' }}
+              sx={{ borderRadius: '45px', textTransform: 'uppercase', marginRight: '1em' }}
               onClick={applyOnClick}
             >
               apply
