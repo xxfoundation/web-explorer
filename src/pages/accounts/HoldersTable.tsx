@@ -151,7 +151,6 @@ const HoldersTable: FC = () => {
     [filters, hasFilters, limit, offset, timestamp]
   );
 
-  console.log(JSON.stringify(variables));
   const { data, error, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
   const rows = useMemo(
     () => (data?.account || []).map((item, index) => accountToRow(item, index + offset)),
@@ -174,7 +173,6 @@ const HoldersTable: FC = () => {
     return <></>;
   }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
   
-  console.log(error);
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
