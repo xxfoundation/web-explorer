@@ -77,14 +77,14 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, 
       yAxis: {
         gridLineWidth: 0,
         title: { text: '' },
-        labels: { align: 'right', x: 20, formatter: labelFormatters?.yAxis },
+        labels: { align: 'right', x: 0, formatter: labelFormatters?.yAxis },
         min: 0
       },
       plotOptions: {
         series: {
           marker: {
             enabled: true,
-            radius: 6
+            radius: 5
           }
         }
       },

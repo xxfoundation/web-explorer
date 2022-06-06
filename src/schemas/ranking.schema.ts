@@ -58,3 +58,49 @@ export const GET_ACCOUNT_RANKING = gql`
     }
   }
 `;
+
+export type RankedAccount = {
+  addressId: string;
+  rank: number;
+  name: string;
+  location: string;
+  cmixId: string;
+  nominators: number;
+  ownStake: string;
+  totalStake: string;
+  otherStake: string;
+}
+
+export type RankedAccountsQuery = {
+  validators: RankedAccount[];
+  active: { aggregate: { count: number } };
+  waiting: { aggregate: { count: number } };
+}
+
+export const GET_RANKED_ACCOUNTS = gql`
+  query GetRankedAccounts($limit: Int!, $offset: Int!, $where: ranking_bool_exp) {
+    validators: ranking(order_by: { rank: asc }, limit: $limit, offset: $offset, where: $where) {
+      rank
+      name
+      nominators,
+      location,
+      cmixId: cmix_id,
+      ownStake: self_stake
+      totalStake: total_stake
+      otherStake: other_stake
+      addressId: stash_address
+    }
+    
+    active: ranking_aggregate(where: { active: { _eq: true } }) {
+      aggregate {
+        count
+      }
+    }
+    
+    waiting: ranking_aggregate(where: { active: { _eq: false } }) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;

@@ -4,6 +4,7 @@ export type Economics = {
   activeEra: number;
   inflationRate: string;
   timestamp: string;
+  totalIssuance: string;
   totalSupply: string;
   bridge: string;
   canary: string;
@@ -38,6 +39,7 @@ export const LISTEN_FOR_ECONOMICS = gql`
       stakeableSupply: stakeable_supply
       staked
       timestamp
+      totalIssuance: total_issuance
       totalSupply: total_supply
       treasury
       unbonding

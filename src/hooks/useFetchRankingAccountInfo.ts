@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { GetAccountByAddressType, GET_ACCOUNT_BY_PK } from '../schemas/accounts.schema';
-import { GET_ACCOUNT_RANKING } from '../schemas/ranking.schema';
+import { GET_RANKED_ACCOUNTS } from '../schemas/ranking.schema';
 
 const useFetchRankingAccountInfo = (
   accountId: string
@@ -9,7 +9,7 @@ const useFetchRankingAccountInfo = (
     variables: { accountId }
   });
   const accountRankingResult = useQuery<Omit<GetAccountByAddressType, 'account'>>(
-    GET_ACCOUNT_RANKING,
+    GET_RANKED_ACCOUNTS,
     !accountResult.loading &&
       accountResult.data?.account &&
       accountResult.data.account.roles.validator
