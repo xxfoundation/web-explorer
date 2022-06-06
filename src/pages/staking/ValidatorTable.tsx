@@ -100,8 +100,6 @@ const ValidatorsTable = () => {
     [activeCount, waitingCount]
   );
 
-  console.log(JSON.stringify(query.data));
-
   return (
     <Stack spacing={3}>
       <Stack sx={{ mb: 3 }} spacing={2}>
