@@ -75,15 +75,12 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
   } catch (err) {
     console.error('Error parsing identity for id:', item.address, item.identity);
   }
+  const name = (identity && identity.display) || '';
 
   return [
     { value: rank, props: rankProps },
     {
-      value: identity ? (
-        <Address name={identity.display} value={item.address} link={accountLink} truncated />
-      ) : (
-        <Address value={item.address} link={accountLink} truncated />
-      )
+      value: <Address name={name} value={item.address} link={accountLink} truncated />
     },
     { value: item.nonce },
     {
