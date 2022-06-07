@@ -16,13 +16,16 @@ import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import CustomTooltip from '../../components/Tooltip';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListAccounts, LIST_ACCOUNTS, Roles } from '../../schemas/accounts.schema';
-import HoldersRolesFilters from './HoldersRolesFilters';
+import { HoldersRolesFilters, rolesMap, RoleFiltersType } from './HoldersRolesFilters';
 
 const DEFAULT_ROWS_PER_PAGE = 20;
 
 const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
   const labels = useMemo(
-    () => roles.slice(1).map((role, index) => <span key={index}>{role}</span>),
+    () =>
+      roles
+        .slice(1)
+        .map((role, index) => <span key={index}>{rolesMap[role as RoleFiltersType]}</span>),
     [roles]
   );
   return (
@@ -46,7 +49,7 @@ const rolesToCell = (roles: Roles[]) => {
   ) : (
     <>
       {roles.length > 1 ? (
-        <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='right'>
+        <CustomTooltip title={<RolesTooltipContent roles={roles} />} arrow placement='left'>
           <SwitchAccountIcon style={{ color: theme.palette.primary.main }} />
         </CustomTooltip>
       ) : (
@@ -160,7 +163,7 @@ const HoldersTable: FC = () => {
           hasFilters
             ? {
                 _or: Object.entries(filters)
-                  .filter(([k, v]) => !!v)
+                  .filter(([, v]) => !!v)
                   .map(([key, value]) => ({ role: { [key]: { _eq: value } } }))
               }
             : {}

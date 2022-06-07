@@ -6,9 +6,9 @@ import { useToggle } from '../../hooks';
 import { Roles } from '../../schemas/accounts.schema';
 import { theme } from '../../themes/default';
 
-type RoleFiltersType = Roles | 'all';
+export type RoleFiltersType = Roles | 'all';
 
-const rolesMap = {
+export const rolesMap = {
   all: 'all',
   validator: 'validator',
   nominator: 'nominator',
@@ -17,7 +17,7 @@ const rolesMap = {
   special: 'special'
 };
 
-export const filtersDefaultState = (): Record<Roles, boolean> => ({
+const filtersDefaultState = (): Record<Roles, boolean> => ({
   validator: false,
   nominator: false,
   council: false,
@@ -33,7 +33,7 @@ const cleanLocalStateFilters = () => {
   };
 };
 
-const HoldersRolesFilters: FC<{
+export const HoldersRolesFilters: FC<{
   callback: Dispatch<SetStateAction<Record<Roles, boolean>>>;
   roles: Record<Roles, boolean>;
 }> = ({ callback, children, roles }) => {
@@ -181,5 +181,3 @@ const HoldersRolesFilters: FC<{
     </>
   );
 };
-
-export default HoldersRolesFilters;
