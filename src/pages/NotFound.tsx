@@ -6,7 +6,7 @@ import {
   styled,
   Typography, useMediaQuery
 } from '@mui/material';
-import React from 'react';
+import React, { FC } from 'react';
 import SlashStroke from '../assets/images/icons/SlashStroke.svg';
 import Link from '../components/Link';
 import PaperStyled from '../components/Paper/PaperWrap.styled';
@@ -51,12 +51,12 @@ const RoundedButton = styled(Button)(({}) => {
   };
 });
 
-const NotFound = () => {
+const NotFound: FC<{ message?: string }> = ({ message = 'Page Not Found'}) => {
   return (
     <Container sx={{ my: 6, textAlign: 'center' }} maxWidth='sm'>
       <PaperStyled sx={{ paddingY: '60px' }}>
         <Typography variant='subtitle2'>Hmmm...</Typography>
-        <InfoTitle>Page Not Found</InfoTitle>
+        <InfoTitle>{message}</InfoTitle>
         <RoundedButton variant='contained'>
           <Link to={'/'}>home</Link>
         </RoundedButton>

@@ -5,18 +5,22 @@ import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import SummaryLoader from '../../components/Paper/SummaryLoader';
 import { GetAccountRanking, GET_ACCOUNT_RANKING } from '../../schemas/ranking.schema';
+import Error from '../../components/Error';
 import NotFound from '../NotFound';
 import ProducerTabs from './ProducerTabs';
 import Summary from './Summary';
 
 const BlockProducer = () => {
-  const { accountId: id, number: blockNumber } = useParams<{ accountId: string; number: string }>();
-  const { data, loading } = useQuery<GetAccountRanking>(GET_ACCOUNT_RANKING, {
+  const { accountId: id, blockHeight } = useParams<{ accountId: string; blockHeight: string }>();
+ // eslint-disable-next-line no-console
+ console.log(blockHeight);
+  const { data, error, loading } = useQuery<GetAccountRanking>(GET_ACCOUNT_RANKING, {
     variables: {
-      blockHeight: blockNumber,
-      stashAddress: id
+      stashAddress: id,
+      blockHeight
     }
   });
+
   if (loading) {
     return (
       <Container sx={{ my: 5 }}>
@@ -26,7 +30,20 @@ const BlockProducer = () => {
       </Container>
     );
   }
-  if (!data?.ranking || !data.ranking?.stashAddress) return <NotFound />;
+
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+    return (
+      <Container sx={{ my: 5 }}>
+        <Typography variant='h1' maxWidth={'400px'} sx={{ mb: 5 }}>
+          <Error type='data-unavailable' />
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (!data?.ranking || !data.ranking?.stashAddress) return <NotFound message='Producer Not Found'/>;
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
