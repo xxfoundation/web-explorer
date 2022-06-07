@@ -17,7 +17,9 @@ const LegendLabelContainer = styled(Box)({
 const LegendTicksContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
-  flex: `0 0 ${LEGEND_WIDTH}`
+  flex: `0 0 ${LEGEND_WIDTH}`,
+  overflow: 'hidden',
+  maxWidth: LEGEND_WIDTH
 });
 
 type BarSeriesProps = {
