@@ -12,8 +12,6 @@ import Summary from './Summary';
 
 const BlockProducer = () => {
   const { accountId: id, blockHeight } = useParams<{ accountId: string; blockHeight: string }>();
- // eslint-disable-next-line no-console
- console.log(blockHeight);
   const { data, error, loading } = useQuery<GetAccountRanking>(GET_ACCOUNT_RANKING, {
     variables: {
       stashAddress: id,
@@ -32,8 +30,6 @@ const BlockProducer = () => {
   }
 
   if (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
     return (
       <Container sx={{ my: 5 }}>
         <Typography variant='h1' maxWidth={'400px'} sx={{ mb: 5 }}>
