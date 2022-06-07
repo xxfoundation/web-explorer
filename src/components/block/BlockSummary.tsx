@@ -39,7 +39,7 @@ const BlockSummary: FC<{
         <Address
           name={data.authorName}
           value={data.author}
-          link={`/blocks/${data.hash}/producer/${data.author}`}
+          link={`/blocks/${data.number}/producer/${data.author}`}
         />
       </SummaryRow>
       <SummaryRow label='block time'>
