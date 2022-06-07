@@ -98,7 +98,7 @@ export const GET_ACCOUNT_BY_PK = gql`
 export type ListAccounts = {
   account: {
     address: string;
-    identity: string;
+    identity: Record<string, string>;
     timestamp: number;
     totalBalance: number;
     lockedBalance: number;
