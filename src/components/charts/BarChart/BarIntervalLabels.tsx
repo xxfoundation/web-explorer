@@ -6,18 +6,16 @@ import { useBarchartContext } from './BarChartContext';
 import { BAR_PADDING, BAR_WIDTH, LEGEND_WIDTH } from './config';
 import { DividerSpacer, LabelSpacer } from './spacers';
 
-
-
 const typography = (theme: Theme) => ({
   fontSize: 12,
   fontWeight: 400,
-  color: theme.palette.grey[400],
-})
+  color: theme.palette.grey[400]
+});
 
 const UnitLabel = styled(Box)(({ theme }) => ({
   ...typography(theme),
   flex: `0 0 ${LEGEND_WIDTH}`
-}))
+}));
 
 const IntervalLabel = styled(Box)(({ theme }) => ({
   ...typography(theme),
@@ -32,9 +30,7 @@ const BarIntervalLabels = () => {
   const { interval } = context;
   const unitLabel = interval.toLowerCase().includes('h') ? 'HRS' : 'DAY';
 
-  const barInfoFormat = interval.includes('h')
-    ? 'HH'
-    : 'DD';
+  const barInfoFormat = interval.includes('h') ? 'HH' : 'DD';
 
   const formatter = useCallback(
     (timestamp: string) => dayjs.utc(parseInt(timestamp)).format(barInfoFormat),
@@ -44,25 +40,19 @@ const BarIntervalLabels = () => {
   return (
     <Stack direction='row' sx={{ mt: 1, mb: 1 }}>
       <LabelSpacer />
-      <UnitLabel>
-        {unitLabel}
-      </UnitLabel>
+      <UnitLabel>{unitLabel}</UnitLabel>
       {context.infoA?.grouped.map(([label, counts]) => (
         <React.Fragment key={label}>
           <DividerSpacer />
-          {
-            counts.map(([t], index) => (
-              <IntervalLabel
-                key={t}
-                onMouseEnter={context.timestamp.makeSetter(t)}>
-                {index % 2 === 1 ? formatter(t) : null}
-              </IntervalLabel>
-            ))
-          }
+          {counts.map(([t], index) => (
+            <IntervalLabel key={t} onMouseEnter={context.timestamp.makeSetter(t)}>
+              {index % 2 === 1 ? formatter(t) : null}
+            </IntervalLabel>
+          ))}
         </React.Fragment>
       ))}
     </Stack>
-  )
+  );
 };
 
 export default BarIntervalLabels;

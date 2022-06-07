@@ -32,7 +32,11 @@ const BarChartContainer: FC<BarChartContainerProps> = ({ interval, series }) => 
       : seriesB?.timestamps;
 
   return (
-    <Provider seriesA={seriesA} seriesB={seriesB} timestamps={timestamps} interval={interval}>
+    <Provider
+      seriesA={seriesA}
+      seriesB={seriesB}
+      timestamps={timestamps}
+      interval={interval}>
       <>
         <ChartContainer sx={{ minHeight: hasTwo ? '22rem' : '16rem' }}>
           <BarSeries />

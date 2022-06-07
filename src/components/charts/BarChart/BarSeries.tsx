@@ -6,7 +6,6 @@ import { LABEL_WIDTH, LEGEND_WIDTH } from './config';
 import LegendTicks from './LegendTicks';
 import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
 
-
 const LegendLabelContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
@@ -17,7 +16,9 @@ const LegendLabelContainer = styled(Box)({
 const LegendTicksContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
-  flex: `0 0 ${LEGEND_WIDTH}`
+  flex: `0 0 ${LEGEND_WIDTH}`,
+  overflow: 'hidden',
+  maxWidth: LEGEND_WIDTH
 });
 
 type BarSeriesProps = {
@@ -38,7 +39,10 @@ const BarSeries: FC<BarSeriesProps> = ({ inverse }) => {
         )}
       </LegendLabelContainer>
       <LegendTicksContainer>
-        <LegendTicks ticks={info?.ticks ?? []} inverse={inverse}/>
+        <LegendTicks
+          ticks={info?.ticks ?? []}
+          inverse={inverse}
+          isCurrency={info?.isCurrency} />
       </LegendTicksContainer>
       <Bars inverse={inverse} />
     </Stack>

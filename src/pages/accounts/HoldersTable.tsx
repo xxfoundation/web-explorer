@@ -15,17 +15,16 @@ import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import CustomTooltip from '../../components/Tooltip';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
-import { ListAccounts, LIST_ACCOUNTS, Roles } from '../../schemas/accounts.schema';
-import { HoldersRolesFilters, rolesMap, RoleFiltersType } from './HoldersRolesFilters';
+import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
+import { HoldersRolesFilters, rolesMap } from './HoldersRolesFilters';
 
 const DEFAULT_ROWS_PER_PAGE = 20;
 
-const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
+type Filters = Record<string, boolean>;
+
+const RolesTooltipContent: FC<{ roles: string[] }> = ({ roles }) => {
   const labels = useMemo(
-    () =>
-      roles
-        .slice(1)
-        .map((role, index) => <span key={index}>{rolesMap[role as RoleFiltersType]}</span>),
+    () => roles.slice(1).map((role, index) => <span key={index}>{rolesMap[role] ?? role}</span>),
     [roles]
   );
   return (
@@ -40,7 +39,7 @@ const RolesTooltipContent: FC<{ roles: Roles[] }> = ({ roles }) => {
   );
 };
 
-const rolesToCell = (roles: Roles[]) => {
+const rolesToCell = (roles: string[]) => {
   return !roles.length ? (
     <>
       <AccountBoxIcon />
@@ -60,15 +59,20 @@ const rolesToCell = (roles: Roles[]) => {
   );
 };
 
-const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineCell[] => {
+const accountToRow = (
+  item: ListAccounts['account'][0],
+  rank: number,
+  filters: Filters
+): BaselineCell[] => {
   const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
-  const filteredRoles = Object.entries(item.roles).filter(([key]) => key !== '__typename');
-  const roles = filteredRoles
-    .filter(([, value]) => value)
-    .map(([role, value]) => {
-      return role === 'special' ? (value as Roles) : (role as Roles);
-    });
+
+  const roles = Object.entries(item.roles)
+    .filter(([key]) => key !== '__typename')
+    .filter(([, value]) => !!value)
+    .sort(([roleA], [roleB]) => (filters[roleB] ? 1 : 0) - (filters[roleA] ? 1 : 0))
+    .map(([role, value]): string => (role === 'special' ? (value as string) : role));
   const accountLink = `accounts/${item.address}`;
+
   let identity = null;
   try {
     identity = item.identity && (JSON.parse(item.identity) as Record<string, string>);
@@ -102,7 +106,7 @@ const accountToRow = (item: ListAccounts['account'][0], rank: number): BaselineC
 };
 
 const useHeaders = () => {
-  const [filters, setFilters] = useState<Record<Roles, boolean>>({
+  const [filters, setFilters] = useState<Filters>({
     validator: false,
     nominator: false,
     council: false,
@@ -117,7 +121,7 @@ const useHeaders = () => {
       { value: 'transactions' },
       {
         value: (
-          <HoldersRolesFilters callback={setFilters} roles={filters}>
+          <HoldersRolesFilters callback={setFilters} filters={filters}>
             role
           </HoldersRolesFilters>
         ),
@@ -135,6 +139,16 @@ const useHeaders = () => {
   };
 };
 
+const buildOrClause = (filters: Filters) => {
+  return [
+    filters.council && { role: { council: { _eq: true } } },
+    filters.nominator && { role: { nominator: { _eq: true } } },
+    filters.techcommit && { role: { techcommit: { _eq: true } } },
+    filters.validator && { role: { validator: { _eq: true } } },
+    filters.special && { role: { special: { _neq: 'null' } } }
+  ].filter((v) => !!v);
+};
+
 const HoldersTable: FC = () => {
   const {
     cursorField: timestamp,
@@ -150,6 +164,9 @@ const HoldersTable: FC = () => {
   });
   const { filters, headers } = useHeaders();
   const hasFilters = Object.values(filters).some((v) => !!v);
+
+  const orClause = useMemo(() => buildOrClause(filters), [filters]);
+
   const variables = useMemo(
     () => ({
       limit,
@@ -159,22 +176,21 @@ const HoldersTable: FC = () => {
           { timestamp: { _lte: timestamp } },
           hasFilters
             ? {
-                _or: Object.entries(filters)
-                  .filter(([, v]) => !!v)
-                  .map(([key, value]) => ({ role: { [key]: { _eq: value } } }))
+                _or: orClause
               }
             : {}
         ]
       },
       orderBy: [{ total_balance: 'desc' }]
     }),
-    [filters, hasFilters, limit, offset, timestamp]
+    [hasFilters, limit, offset, orClause, timestamp]
   );
 
   const { data, error, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
   const rows = useMemo(
-    () => (data?.account || []).map((item, index) => accountToRow(item, index + 1 + offset)),
-    [data?.account, offset]
+    () =>
+      (data?.account || []).map((item, index) => accountToRow(item, index + 1 + offset, filters)),
+    [data?.account, filters, offset]
   );
 
   const footer = useMemo(() => {
@@ -192,6 +208,8 @@ const HoldersTable: FC = () => {
     }
     return <></>;
   }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+
+  console.log(error);
 
   return (
     <PaperStyled>

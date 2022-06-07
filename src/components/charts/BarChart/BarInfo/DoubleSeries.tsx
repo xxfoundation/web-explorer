@@ -5,13 +5,12 @@ import FormatBalance from '../../../FormatBalance';
 import { useBarchartContext } from '../BarChartContext';
 import BarInformation from './BarInformation';
 
-
 const DoubleSeries: FC = () => {
   const context = useBarchartContext();
   const timestamp = context.timestamp.value;
   const interval = context.interval;
   const count = context.infoA?.counts?.[timestamp] ?? 0;
-  const timeFormat = interval?.includes('h') ? 'YYYY.MM.DD | HH:MM (UTC)' : 'YYYY.MM.DD';
+  const timeFormat = interval?.includes('h') ? 'YYYY.MM.DD | h:mm A (UTC)' : 'YYYY.MM.DD';
 
   const formatted = useMemo(
     () => dayjs.utc(parseInt(timestamp, 10)).format(timeFormat),

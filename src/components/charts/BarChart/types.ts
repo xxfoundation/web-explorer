@@ -12,10 +12,13 @@ export type SeriesMetadata = {
   ticks: number[];
   maxTick: number;
   grouped: LabelledSeries;
+  isCurrency?: boolean;
 }
 
 export type SeriesData = {
   timestamps: number[];
   label?: string;
+  magnitudes?: number[];
+  isCurrency?: boolean;
 }
 
