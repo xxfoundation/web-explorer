@@ -8,7 +8,7 @@ import { theme } from '../../themes/default';
 
 export type RoleFiltersType = Roles | 'all';
 
-export const rolesMap = {
+export const rolesMap: Record<string, string> = {
   all: 'all',
   validator: 'validator',
   nominator: 'nominator',
@@ -34,12 +34,12 @@ const cleanLocalStateFilters = () => {
 };
 
 export const HoldersRolesFilters: FC<{
-  callback: Dispatch<SetStateAction<Record<Roles, boolean>>>;
-  roles: Record<Roles, boolean>;
-}> = ({ callback, children, roles }) => {
+  callback: Dispatch<SetStateAction<Record<string, boolean>>>;
+  filters: Record<string, boolean>;
+}> = ({ callback, children, filters: roles }) => {
   const [open, { set: toggle }] = useToggle();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedRoles, setSeletedRoles] = useState<Record<RoleFiltersType, boolean>>(
+  const [selectedRoles, setSeletedRoles] = useState<Record<string, boolean>>(
     cleanLocalStateFilters()
   );
 
@@ -48,7 +48,7 @@ export const HoldersRolesFilters: FC<{
       setAnchorEl(currentTarget);
       toggle(true);
       setSeletedRoles(() => ({
-        all: Object.values(roles).filter((r) => r).length === 6,
+        all: Object.values(roles).every((r) => r),
         ...roles
       }));
     },

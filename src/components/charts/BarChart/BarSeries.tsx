@@ -6,7 +6,6 @@ import { LABEL_WIDTH, LEGEND_WIDTH } from './config';
 import LegendTicks from './LegendTicks';
 import VerticalTextStyled from './VerticalDivider/VerticalText.styled';
 
-
 const LegendLabelContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
