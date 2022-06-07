@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client';
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
+import { Address } from '../../components/ChainId';
 import CmixAddress from '../../components/CmixAddress';
 import Error from '../../components/Error';
 import FormatBalance from '../../components/FormatBalance';
-import Link from '../../components/Link';
 import Loading from '../../components/Loading';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
@@ -30,7 +30,7 @@ const ValidatorRow: FC<RankedAccount> = ({
   rank,
   totalStake
 }) => {
-  const validatorLink = `/validators/${addressId}`;
+  const validatorLink = `/accounts/${addressId}`;
   let parsed;
 
   try {
@@ -46,7 +46,7 @@ const ValidatorRow: FC<RankedAccount> = ({
         <Typography variant='h4'>{rank}</Typography>
       </TableCell>
       <TableCell>
-        <Link to={validatorLink}>{name}</Link>
+        <Address value={addressId} link={validatorLink} truncated />
       </TableCell>
       <TableCell>{parsed}</TableCell>
       <TableCell>
