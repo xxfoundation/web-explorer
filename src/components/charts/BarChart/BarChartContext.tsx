@@ -26,7 +26,13 @@ export const Provider: React.FC<{
   interval: TimeInterval;
   seriesA: SeriesData;
   seriesB?: SeriesData;
-}> = ({ children, interval, seriesA, seriesB, timestamps }) => {
+}> = ({
+  children,
+  interval,
+  seriesA,
+  seriesB,
+  timestamps,
+}) => {
   const [timestamp, setTimestamp] = useState<string>('');
   const makeTimestampSetter = useCallback((t: string) => () => setTimestamp(t), []);
 

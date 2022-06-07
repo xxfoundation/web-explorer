@@ -6,8 +6,6 @@ import { useBarchartContext } from './BarChartContext';
 import { BAR_PADDING, BAR_WIDTH, LEGEND_WIDTH } from './config';
 import { DividerSpacer, LabelSpacer } from './spacers';
 
-
-
 const typography = (theme: Theme) => ({
   fontSize: 12,
   fontWeight: 400,
