@@ -54,7 +54,7 @@ const rolesToCell = (roles: string[]) => {
       ) : (
         <AccountBoxIcon style={{ color: theme.palette.primary.main }} />
       )}
-      <span>{roles[0]}</span>
+      <span>{rolesMap[roles[0]] ?? roles[0]}</span>
     </>
   );
 };
@@ -75,7 +75,7 @@ const accountToRow = (
 
   let identity = null;
   try {
-    identity = item.identity && (JSON.parse(item.identity) as Record<string, string>);
+    identity = item.identity && JSON.parse(item.identity);
   } catch (err) {
     console.error('Error parsing identity for id:', item.address, item.identity);
   }
