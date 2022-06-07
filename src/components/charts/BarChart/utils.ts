@@ -24,12 +24,12 @@ const getMagnitude = (x: number) => Math.floor(Math.log10(x) + 1);
 
 export const intervals: TimeInterval[] = ['1h', '6h', '1d'];
 
-export const getCountsByTimestamp = (timestamps: number[], interval: TimeInterval = '1h') =>
-  timestamps.reduce((acc, timestamp) => {
+export const getCountsByTimestamp = (timestamps: number[], interval: TimeInterval = '1h', magnitudes?: number[]) =>
+  timestamps.reduce((acc, timestamp, index) => {
     const nearest = convertToNearestTimestamp(timestamp, interval);
     return {
       ...acc,
-      [nearest]: (acc[nearest] ?? 0) + 1
+      [nearest]: (acc[nearest] ?? 0) + (1 * (magnitudes?.[index] ?? 1))
     };
   }, {} as TimestampCounts);
 
@@ -61,11 +61,11 @@ export const groupCountByInterval = (
 };
 
 export const extractInfo = (
-  { label, timestamps }: SeriesData,
+  { isCurrency, label, magnitudes, timestamps }: SeriesData,
   interval: TimeInterval,
   numberOfTicks = NUMBER_OF_TICKS
 ): SeriesMetadata => {
-  const counts = getCountsByTimestamp(timestamps, interval);
+  const counts = getCountsByTimestamp(timestamps, interval, magnitudes);
   const maxY = Math.max(...Object.values(counts));
   const tickSize = calculateTickSize(maxY, numberOfTicks);
   const ticks = Array.from(Array(numberOfTicks).keys()).map((i) => (i + 1) * tickSize);
@@ -76,6 +76,7 @@ export const extractInfo = (
     counts,
     interval,
     label,
+    isCurrency,
     maxY,
     tickSize,
     ticks,

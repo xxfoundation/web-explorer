@@ -134,6 +134,7 @@ export const LISTEN_FOR_TRANSFERS_TIMESTAMPS = gql`
   ) {
     transfer(order_by: $orderBy, where: $where) {
       timestamp
+      amount
     }
   }
 `;
