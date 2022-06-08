@@ -33,11 +33,12 @@ const AccountId: FC = ({}) => {
       </Container>
     );
   if (!data?.account) return <NotFound />;
+  console.warn(data.account.identity);
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <Typography variant='h1' maxWidth='700px'>
-        {data.account.identityDisplay || accountId}
+        {data.account.identity.display || accountId}
       </Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
@@ -58,9 +59,9 @@ const AccountId: FC = ({}) => {
         <Grid item xs={12}>
           <StakingCard account={data.account} roles={roles} />
         </Grid> */}
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           {data.ranking && <PerformanceCard account={data.account} ranking={data.ranking} />}
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );

@@ -39,7 +39,7 @@ const Info: FC<{ account: Account }> = ({ account }) => {
         <TypographyHeader sx={{ width: '110px' }}>role</TypographyHeader>
         <Typography fontWeight='100'>|</Typography>
         <Box display={'flex'} alignItems={'center'}>
-          {rolesTags}
+          {rolesTags.length ? rolesTags : <Typography fontWeight='100'>N/A</Typography>}
         </Box>
       </InfoCardRow>
     </PaperStyled>

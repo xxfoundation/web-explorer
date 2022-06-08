@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useMemo, useEffect } from 'react';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { EXTRINSICS_OF_BLOCK } from '../../schemas/extrinsics.schema';
 import { TotalOfItems } from '../../schemas/types';
@@ -43,7 +43,10 @@ const rowsParser = (rowData: ExtrinsicsTyp) => {
 
 const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
 
-const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
+const BlockExtrinsics: FC<{
+  where: Record<string, unknown>;
+  setCount?: (count: number) => void;
+}> = ({ where, setCount: setCount = () => {} }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor({
       rowsPerPage: 5,
@@ -59,6 +62,15 @@ const BlockExtrinsics: FC<{ where: Record<string, unknown> }> = ({ where }) => {
   }, [cursorField, limit, offset, where]);
   const { data, loading } = useQuery<Response>(EXTRINSICS_OF_BLOCK, { variables });
   const rows = useMemo(() => (data?.extrinsic || []).map(rowsParser), [data?.extrinsic]);
+  useEffect(() => {
+    if (setCount !== undefined && data?.agg) {
+      setCount(data.agg.aggregate.count);
+    }
+  }, [data?.agg, setCount]);
+  console.warn(data?.extrinsic);
+  console.warn(page);
+  console.warn(rowsPerPage);
+  console.warn(cursorField);
   const footer = useMemo(() => {
     if (data?.agg && data?.extrinsic && data.extrinsic.length) {
       return (
