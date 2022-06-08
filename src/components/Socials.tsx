@@ -33,24 +33,30 @@ const urlMappers: Record<string, (a: string) => string> = {
   twitter: (username: string) => `https://twitter.com/${username}`,
   email: (email: string) => `mailto:${email}`,
   github: (username: string) => `https://github.com/${username}`,
-}
+  telegram: (username: string) => `https://t.me/${username}`,
+  discord: (code: string) => `https://discord.com/invite/${code}`
+};
 
 const Socials: React.FC<Props> = ({ socials }) => {
   return (
     <Stack direction='row' sx={{ mt: 2, mb: 2 }} spacing={1}>
-      {Object.entries(socials).filter(([,username]) => !!username).map(
-        ([social, username]) =>
-          images(`./${social}.svg`) && username && (
-            <SocialLink
-              key={`${social}-${username}`}
-              href={urlMappers[social]?.(username)}
-              target='_blank'>
-              <SocialsLogo>
-                <SocialsImage src={images(`./${social}.svg`)} />
-              </SocialsLogo>
-            </SocialLink>
-          )
-      )}
+      {Object.entries(socials)
+        .filter(([, username]) => !!username)
+        .map(
+          ([social, username]) =>
+            images(`./${social}.svg`) &&
+            username && (
+              <SocialLink
+                key={`${social}-${username}`}
+                href={urlMappers[social]?.(username)}
+                target='_blank'
+              >
+                <SocialsLogo>
+                  <SocialsImage src={images(`./${social}.svg`)} />
+                </SocialsLogo>
+              </SocialLink>
+            )
+        )}
     </Stack>
   );
 };

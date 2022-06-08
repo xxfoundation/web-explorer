@@ -89,10 +89,10 @@ const ContactInfo = () => {
       <Grid item>
         <Socials
           socials={{
-            twitter: 'https://twitter.com/xx_network',
-            github: 'https://github.com/xx-labs',
-            telegram: 'https://t.me/xxnetwork',
-            discord: 'https://discord.com/invite/Y8pCkbK'
+            twitter: 'xx_network',
+            github: 'xx-labs',
+            telegram: 'xxnetwork',
+            discord: 'Y8pCkbK'
           }}
         />
       </Grid>
