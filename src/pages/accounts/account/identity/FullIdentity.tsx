@@ -71,7 +71,7 @@ const IdentityMobile: FC<Props> = (props) => {
       >
         <Avatar
           src=''
-          alt='something I do not know'
+          alt='Avatar'
           sx={{ width: 125, height: 125, marginRight: '15px' }}
         />
         <NameHeaderTypography {...props} />

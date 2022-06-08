@@ -4,24 +4,16 @@ import Socials from '../../../../components/Socials';
 import { Identity } from '../../../../schemas/accounts.schema';
 
 const SocialIconsGroup: FC<{ identity: Identity }> = ({ identity }) => {
-  const socials: Record<string, string> = {};
-  if (identity.email) {
-    socials.email = identity.email;
-  }
-  if (identity.twitter) {
-    socials.twitter = identity.twitter;
-  }
+  const { email, twitter } = identity;
 
-  // github: '#hey',
-  // telegram: '#yo',
-  // discord: '#sup'
-  if (socials.twitter || socials.email) {
+  if (twitter || email) {
     return (
       <Grid item>
-        <Socials socials={socials} />
+        <Socials socials={{ email, twitter }} />
       </Grid>
     );
   }
+
   return <></>;
 };
 
