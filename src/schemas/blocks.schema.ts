@@ -92,3 +92,19 @@ export const GET_BLOCK_BY_PK = gql`
     }
   }
 `;
+
+export type GetBlocksByBP = {
+  blocks: {
+    number: number;
+    currentEra: number;
+  }[];
+};
+
+export const GET_BLOCKS_BY_BP = gql`
+  query ListBlocksOrdered($where: block_bool_exp) {
+    blocks: block(where: $where) {
+      number: block_number
+      currentEra: active_era
+    }
+  }
+`;

@@ -20,6 +20,7 @@ export type CommonFieldsRankingFragment = {
 
   // tabs
   nominations: string;
+  eraPointsHistory: string;
 };
 
 export type GetAccountRanking = {
@@ -46,6 +47,7 @@ export const GET_ACCOUNT_RANKING = gql`
       sessionKeys: session_keys
 
       nominations
+      eraPointsHistory: era_points_history
     }
   }
 `;

@@ -41,7 +41,10 @@ const NominatorsTable: FC<{ nominations: string }> = ({ nominations }) => {
     setPage(number);
   }, []);
 
+  // Process Data
   const accountNominators = nominations as unknown as NominatorsOfAccount[];
+
+  // Display Data in Paginated Table
   const rows = useMemo(() => {
     return paginate(accountNominators, rowsPerPage, page).map(EraStake);
   }, [accountNominators, page, rowsPerPage]);

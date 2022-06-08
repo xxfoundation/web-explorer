@@ -47,13 +47,15 @@ const BlockProducer = () => {
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <Typography variant='h1' maxWidth='700px' sx={{ mb: 5 }}>
-        {identity.display || shortString(ranking.stashAddress)}
+        Block Producer . {identity.display || shortString(ranking.stashAddress)}
       </Typography>
-      <Summary ranking={ranking} />
+      <Summary ranking={ranking} name={identity.display} />
       <Box sx={{ mt: 2 }}>
         <ProducerTabs
+          producerId={ranking.stashAddress}
           blockHeight={ranking.blockHeight}
           eras={ranking.activeEras}
+          eraPointsHistory={ranking.eraPointsHistory}
           nominators={ranking.nominators}
           nominations={ranking.nominations}
         />

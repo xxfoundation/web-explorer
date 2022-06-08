@@ -34,7 +34,7 @@ const SessionKeyValue: FC<{ entries: Record<string, string | string> }> = ({ ent
   );
 };
 
-const Summary: FC<{ ranking: CommonFieldsRankingFragment }> = ({ ranking }) => {
+const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ name, ranking }) => {
   const location = useMemo(() => {
     const parsedLocation: { city: string; country: string; geoBin: string } = JSON.parse(
       ranking.location
@@ -45,7 +45,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment }> = ({ ranking }) => {
   return (
     <SummaryPaperWrapper>
       <SummaryRow label='stash' action={<CopyButton value={sampleHash} />}>
-        <Address value={ranking.stashAddress} />
+        <Address name={name} value={ranking.stashAddress} />
       </SummaryRow>
       <SummaryRow label='controller' action={<CopyButton value={ranking.controllerAddress} />}>
         <Address value={ranking.controllerAddress} />
