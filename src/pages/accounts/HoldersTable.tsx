@@ -200,9 +200,7 @@ const HoldersTable: FC = () => {
     }
     return <></>;
   }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-
-  console.log(error);
-
+  
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
