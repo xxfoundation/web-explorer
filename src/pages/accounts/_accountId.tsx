@@ -32,8 +32,9 @@ const AccountId: FC = ({}) => {
         </Grid>
       </Container>
     );
-  if (!data?.account) return <NotFound />;
-  console.warn(data.account.identity);
+
+  if (!data?.account) return <NotFound message='Account Not Found'/>;
+
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />

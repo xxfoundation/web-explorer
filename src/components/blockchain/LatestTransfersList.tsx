@@ -11,7 +11,6 @@ import TimeAgo from '../TimeAgo';
 import { ListSkeleton } from './ListSkeleton';
 import type { ListOfTransfers, Transfer } from './types';
 
-
 const PAGE_LIMIT = 8;
 
 const TransferRow: FC<WithNew<Transfer>> = (props) => {
@@ -33,7 +32,7 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
           <Grid item>
             <Address
               value={props.source}
-              link={`/transfers/${props.source}`}
+              link={`/accounts/${props.source}`}
               truncated
               disableAvatar
             />
@@ -46,7 +45,7 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
           <Grid item>
             <Address
               value={props.destination}
-              link={`/transfers/${props.destination}`}
+              link={`/accounts/${props.destination}`}
               truncated
               disableAvatar
             />
