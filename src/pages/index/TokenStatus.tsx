@@ -53,12 +53,6 @@ const TokenStatus = () => {
         <Grid item xs={12} md={6}>
           <NewAccountsChart />
         </Grid>
-        {/* <Grid item xs={12} md={6}>
-          <StakingRatioChart />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <StakingInterestChart />
-        </Grid> */}
       </Grid>
     </Box>
   );
