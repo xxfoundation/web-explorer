@@ -41,9 +41,9 @@ const crumbSplats: Record<string, React.FC<ParamsType>> = {
       Accounts
     </CustomLink>
   ),
-  'producerId:2': ({ params: { blockHeight } }) => (
-    <CustomLink to={`/blocks/${blockHeight}`} underline='hover'>
-      Block #{`${blockHeight.toString()}`}
+  'producerId:4': ({ params: { number } }) => (
+    <CustomLink to={`/blocks/${number}`} underline='hover'>
+      Block #{`${number.toString()}`}
     </CustomLink>
   )
 };

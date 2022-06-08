@@ -13,7 +13,6 @@ import { shortString } from '../../utils';
 
 const BlockProducer = () => {
   const { producerId } = useParams<{ producerId: string }>();
-  console.warn(producerId);
   const { data, error, loading } = useQuery<GetAccountRanking>(GET_ACCOUNT_RANKING, {
     variables: {
       where: { stash_address: { _eq: producerId } }
