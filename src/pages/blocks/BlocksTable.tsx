@@ -1,8 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Stack, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
-import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
@@ -11,33 +9,9 @@ import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListBlockOrdered, LIST_BLOCK_ORDERED } from '../../schemas/blocks.schema';
+import { HashColumnWithTooltip } from '../../components/Tooltip';
 
 const ROWS_PER_PAGE = 25;
-
-const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))({
-  [`& .${tooltipClasses.tooltip}`]: {
-    maxWidth: 500
-  }
-});
-
-const HashColumnWithTooltip: FC<{ blockHash: string }> = ({ blockHash, children }) => {
-  return (
-    <CustomWidthTooltip
-      title={
-        <Stack direction={'row'} spacing={1} alignItems={'center'}>
-          <Typography variant='body5'>{blockHash}</Typography>
-          <CopyButton value={blockHash} />
-        </Stack>
-      }
-      placement='left'
-      arrow
-    >
-      <span>{children}</span>
-    </CustomWidthTooltip>
-  );
-};
 
 const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
@@ -53,7 +27,7 @@ const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
       truncated
       disableAvatar
     />,
-    <HashColumnWithTooltip blockHash={block.hash}>
+    <HashColumnWithTooltip hash={block.hash}>
       <Hash value={block.hash} link={`/blocks/${block.number}`} truncated />
     </HashColumnWithTooltip>
   ]);

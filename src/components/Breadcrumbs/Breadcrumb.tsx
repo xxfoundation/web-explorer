@@ -12,10 +12,8 @@ const blockchainHome = () => <CustomLink to='/'>Blockchain</CustomLink>;
 const blockNumber = ({ params: { number } }: ParamsType) => (
   <CustomLink to={`/blocks/${number}`}>{truncateCrumb(number.toString())}</CustomLink>
 );
-
 const crumbRoutes: Record<string, React.FC<ParamsType>> = {
   blocks: blockchainHome,
-  producer: blockNumber,
   version: blockNumber,
   extrinsics: blockchainHome,
   transfers: blockchainHome,
@@ -41,6 +39,11 @@ const crumbSplats: Record<string, React.FC<ParamsType>> = {
   'accountId:2': () => (
     <CustomLink to={'/accounts/'} underline='hover'>
       Accounts
+    </CustomLink>
+  ),
+  'producerId:2': ({ params: { blockHeight } }) => (
+    <CustomLink to={`/blocks/${blockHeight}`} underline='hover'>
+      Block #{`${blockHeight.toString()}`}
     </CustomLink>
   )
 };

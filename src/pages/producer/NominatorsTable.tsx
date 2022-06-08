@@ -1,24 +1,36 @@
-import { useQuery } from '@apollo/client';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
-import { TableSkeleton } from '../../components/Tables/TableSkeleton';
-import { GetNominatorsOfAccount, GET_NOMINATORS_OF_ACCOUNT } from '../../schemas/nominators.schema';
 
-const EraStake = ({ accountId, share, stake }: GetNominatorsOfAccount['nominations'][0]) => {
+export type NominatorsOfAccount = {
+  share: string;
+  stake: string;
+  account_id: string;
+};
+
+const EraStake = (nominator: NominatorsOfAccount) => {
   return BaseLineCellsWrapper([
-    <Link to={`/accounts/${accountId}`}>{accountId}</Link>,
-    <FormatBalance value={stake.toString()} />,
-    `${share}%`
+    <Link to={`/accounts/${nominator.account_id}`}>{nominator.account_id}</Link>,
+    <FormatBalance value={nominator.stake.toString()} />,
+    `${nominator.share}%`
   ]);
 };
 
 const DEFAULT_ROWS_PER_PAGE = 5;
 const headers = BaseLineCellsWrapper(['Account', 'Stake', 'Share']);
 
-const NominatorsTable: FC<{ stashAddress: string }> = ({ stashAddress }) => {
+const paginate = (
+  nominators: NominatorsOfAccount[],
+  rowsPerPage: number,
+  page: number
+): NominatorsOfAccount[] => {
+  // page starts at 0
+  return nominators.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+};
+
+const NominatorsTable: FC<{ nominations: string }> = ({ nominations }) => {
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
   const onRowsPerPageChange = useCallback(({ target: { value } }) => {
@@ -28,23 +40,17 @@ const NominatorsTable: FC<{ stashAddress: string }> = ({ stashAddress }) => {
   const onPageChange = useCallback((_: unknown, number: number) => {
     setPage(number);
   }, []);
-  const { data, loading } = useQuery<GetNominatorsOfAccount>(GET_NOMINATORS_OF_ACCOUNT, {
-    variables: {
-      stashAddress,
-      orderBy: [{ block_number: 'desc', event_index: 'asc' }],
-      limit: rowsPerPage,
-      offset: page * rowsPerPage
-    }
-  });
+
+  const accountNominators = nominations as unknown as NominatorsOfAccount[];
   const rows = useMemo(() => {
-    return (data?.nominations || []).map(EraStake);
-  }, [data?.nominations]);
+    return paginate(accountNominators, rowsPerPage, page).map(EraStake);
+  }, [accountNominators, page, rowsPerPage]);
   const footer = useMemo(() => {
-    if (data?.agg && data?.nominations && data.nominations.length) {
+    if (accountNominators && accountNominators.length) {
       return (
         <TablePagination
           page={page}
-          count={data.agg.aggregate.count}
+          count={accountNominators.length}
           rowsPerPage={rowsPerPage}
           onPageChange={onPageChange}
           rowsPerPageOptions={[DEFAULT_ROWS_PER_PAGE, 20, 50]}
@@ -53,8 +59,7 @@ const NominatorsTable: FC<{ stashAddress: string }> = ({ stashAddress }) => {
       );
     }
     return <></>;
-  }, [data?.agg, data?.nominations, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading) return <TableSkeleton rows={DEFAULT_ROWS_PER_PAGE} cells={headers.length} />;
+  }, [accountNominators, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 

@@ -5,20 +5,20 @@ import ErasTable from './ErasTable';
 import NominatorsTable from './NominatorsTable';
 
 const ProducerTabs: React.FC<{
-  addressStash: string;
   blockHeight: number;
   eras: number;
   nominators: number;
-}> = ({ addressStash, eras, nominators }) => {
+  nominations: string;
+}> = ({ eras, nominations, nominators }) => {
   const panels = useMemo(() => {
     return [
       {
         label: <TabText message='nominators' count={nominators} />,
-        content: <NominatorsTable stashAddress={addressStash} />
+        content: <NominatorsTable nominations={nominations} />
       },
       { label: <TabText message='eras' count={eras} />, content: <ErasTable /> }
     ];
-  }, [addressStash, eras, nominators]);
+  }, [eras, nominations, nominators]);
   return (
     <PaperStyled>
       <TabsWithPanels panels={panels} tabsLabel='producers tables tabs' />
