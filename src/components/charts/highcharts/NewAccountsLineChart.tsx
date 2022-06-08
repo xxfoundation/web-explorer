@@ -2,32 +2,36 @@ import { useSubscription } from '@apollo/client';
 import React, { useMemo } from 'react';
 import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
-import { LISTEN_FOR_NEW_ACCOUNTS } from '../../../schemas/accounts.schema';
+import { LISTEN_FOR_NEW_ACCOUNTS, NewAccounts } from '../../../schemas/accounts.schema';
 import DefaultTile from '../../DefaultTile';
 import Loader from './Loader';
 
 const NewAccountsChart = () => {
-  const { data, loading } = useSubscription<{ new_accounts: { accounts: number; era: number }[] }>(
-    LISTEN_FOR_NEW_ACCOUNTS
-  );
-  const chartData: DataPoint[] = useMemo(() => {
-    return (data?.new_accounts || []).map(
-      (item) => [item.era, item.accounts],
-      [data?.new_accounts]
-    );
-  }, [data?.new_accounts]);
+  const { data, loading } = useSubscription<NewAccounts>(LISTEN_FOR_NEW_ACCOUNTS);
+  const chartData = useMemo(() => {
+    const auxData: DataPoint[] = [];
+    (data?.newAccount || []).forEach((elem) => {
+      const idx = auxData.findIndex((era) => era[0] === elem.block.era);
+      if (idx !== -1) {
+        auxData[idx][1] += 1;
+      } else {
+        auxData.push([elem.block.era, 1]);
+      }
+    });
+    return auxData;
+  }, [data?.newAccount]);
   const xRange = useMemo(
     () =>
-      data?.new_accounts && data.new_accounts.length
+      data?.newAccount && data.newAccount.length
         ? {
-            minX: data.new_accounts[0].era - 2,
+            minX: data.newAccount[0].block.era - 2,
             maxX:
-              (data.new_accounts[data.new_accounts.length - 1].era
-                ? data.new_accounts[data.new_accounts.length - 1].era
-                : data.new_accounts[0].era) + 2
+              (data.newAccount[data.newAccount.length - 1].block.era
+                ? data.newAccount[data.newAccount.length - 1].block.era
+                : data.newAccount[0].block.era) + 2
           }
         : undefined,
-    [data?.new_accounts]
+    [data?.newAccount]
   );
   return (
     <DefaultTile header='new accounts' height='400px'>

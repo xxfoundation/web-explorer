@@ -137,11 +137,22 @@ export const LIST_ACCOUNTS = gql`
   }
 `;
 
+export type NewAccounts = {
+  newAccount: {
+    accounts: string;
+    block: {
+      era: number;
+    }
+  }[]
+}
+
 export const LISTEN_FOR_NEW_ACCOUNTS = gql`
   subscription ListenForNewAccounts {
-    new_accounts(order_by: [{ era: asc }]) {
-      accounts
-      era
+    newAccount: event(where: {method: {_eq: "NewAccount"}}) {
+      accounts: data
+      block {
+        era: active_era
+      }
     }
   }
 `;
