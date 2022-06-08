@@ -76,6 +76,7 @@ export const LIST_TRANSFERS_ORDERED = gql`
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       ...transference_common_fields
       id
+      timestamp
       source
       destination
     }

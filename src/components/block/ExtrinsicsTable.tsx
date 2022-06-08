@@ -54,7 +54,7 @@ const BlockExtrinsics: FC<{
     });
   const variables = useMemo(() => {
     return {
-      orderBy: [{ id: 'desc' }],
+      orderBy: [{ timestamp: 'desc' }],
       limit,
       offset,
       where: { ...where, id: cursorField }
