@@ -9,6 +9,7 @@ import Link from '../../components/Link';
 import { BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
+import Error from '../../components/Error';
 import TimeAgo from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import {
@@ -67,11 +68,12 @@ const TransferTable: FC<{
   where?: Record<string, unknown>;
   setCount?: Dispatch<SetStateAction<number | undefined>>;
 }> = ({ where = {}, setCount: setCount }) => {
-  const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
+  const { cursorField, limit, makeOnPageChange, offset, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Transfer & { id: number }>({
       cursorField: 'id',
       rowsPerPage: ROWS_PER_PAGE
     });
+
   const variables = useMemo(
     () => ({
       limit,
@@ -81,9 +83,11 @@ const TransferTable: FC<{
     }),
     [cursorField, limit, offset, where]
   );
-  const { data, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
+
+  const { data, error, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
     variables
   });
+
   const footer = useMemo(() => {
     if (data?.agg && data?.transfers && data.transfers.length) {
       return (
@@ -91,19 +95,22 @@ const TransferTable: FC<{
           page={page}
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange(data.transfers[0])}
+          onPageChange={makeOnPageChange(data.transfers[0])}
           rowsPerPageOptions={[ROWS_PER_PAGE, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
     }
     return <></>;
-  }, [data?.agg, data?.transfers, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  }, [data?.agg, data?.transfers, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  
   useEffect(() => {
     if (data?.agg && !cursorField && setCount) {
       setCount(data.agg.aggregate.count);
     }
   }, [cursorField, data?.agg, setCount]);
+
+  if (error) return <Error type='data-unavailable' />;
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
   return (
     <BaselineTable

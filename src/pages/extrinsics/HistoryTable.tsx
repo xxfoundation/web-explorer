@@ -39,8 +39,8 @@ const HistoryTable: FC<{
   const {
     cursorField: id,
     limit,
+    makeOnPageChange,
     offset,
-    onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage
@@ -73,14 +73,14 @@ const HistoryTable: FC<{
           page={page}
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange(data.extrinsics[0])}
+          onPageChange={makeOnPageChange(data.extrinsics[0])}
           rowsPerPageOptions={[ROWS_PER_PAGE, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
     }
     return <></>;
-  }, [data?.agg, data?.extrinsics, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  }, [data?.agg, data?.extrinsics, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
 
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
 

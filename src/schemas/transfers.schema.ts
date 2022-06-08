@@ -138,3 +138,21 @@ export const LISTEN_FOR_TRANSFERS_TIMESTAMPS = gql`
     }
   }
 `;
+
+export type GetTransferByAccountId = {
+  transfers: Transfer[];
+};
+
+export const GET_TRANSFERS_BY_ACCOUNT_ID = gql`
+  ${TRANSFER_FRAGMENT}
+  query GetTransfersByAccountId ($accountId: String) {
+    transfers: transfer(where: {
+      _or: [
+        { destination:  { _eq: $accountId } },
+        { source:{ _eq: $accountId } }
+      ]
+    }) {
+      ...transference_common_fields
+    }
+  }
+`
