@@ -46,7 +46,7 @@ const TransfersPage = () => {
           </Stack>
         )}
         <span hidden>filters placeholder</span>
-        <TransferTable setTotalOfTransfers={setTotalOfTransfers} />
+        <TransferTable setCount={setTotalOfTransfers} />
       </PaperStyled>
     </Container>
   );

@@ -65,8 +65,8 @@ const headers = [
 
 const TransferTable: FC<{
   where?: Record<string, unknown>;
-  setTotalOfTransfers?: Dispatch<SetStateAction<number | undefined>>;
-}> = ({ where = {}, setTotalOfTransfers }) => {
+  setCount?: Dispatch<SetStateAction<number | undefined>>;
+}> = ({ where = {}, setCount: setCount }) => {
   const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Transfer & { id: number }>({
       cursorField: 'id',
@@ -100,10 +100,10 @@ const TransferTable: FC<{
     return <></>;
   }, [data?.agg, data?.transfers, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
   useEffect(() => {
-    if (data?.agg && !cursorField && setTotalOfTransfers) {
-      setTotalOfTransfers(data.agg.aggregate.count);
+    if (data?.agg && !cursorField && setCount) {
+      setCount(data.agg.aggregate.count);
     }
-  }, [cursorField, data?.agg, setTotalOfTransfers]);
+  }, [cursorField, data?.agg, setCount]);
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
   return (
     <BaselineTable

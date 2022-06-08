@@ -54,7 +54,7 @@ const rolesToCell = (roles: string[]) => {
       ) : (
         <AccountBoxIcon style={{ color: theme.palette.primary.main }} />
       )}
-      <span>{roles[0]}</span>
+      <span>{rolesMap[roles[0]] ?? roles[0]}</span>
     </>
   );
 };
@@ -76,11 +76,7 @@ const accountToRow = (
   return [
     { value: rank, props: rankProps },
     {
-      value: item.identity ? (
-        <Address name={item.identity.display} value={item.address} link={accountLink} truncated />
-      ) : (
-        <Address value={item.address} link={accountLink} truncated />
-      )
+      value: <Address name={item.identity.display} value={item.address} link={accountLink} truncated />
     },
     { value: item.nonce },
     {
