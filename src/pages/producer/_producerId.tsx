@@ -9,16 +9,15 @@ import Error from '../../components/Error';
 import NotFound from '../NotFound';
 import ProducerTabs from './ProducerTabs';
 import Summary from './Summary';
+import { shortString } from '../../utils';
 
 const BlockProducer = () => {
-  const { accountId: id, blockHeight } = useParams<{ accountId: string; blockHeight: string }>();
+  const { producerId } = useParams<{ producerId: string }>();
   const { data, error, loading } = useQuery<GetAccountRanking>(GET_ACCOUNT_RANKING, {
     variables: {
-      stashAddress: id,
-      blockHeight
+      where: { stash_address: { _eq: producerId } }
     }
   });
-
   if (loading) {
     return (
       <Container sx={{ my: 5 }}>
@@ -39,20 +38,26 @@ const BlockProducer = () => {
     );
   }
 
-  if (!data?.ranking || !data.ranking?.stashAddress) return <NotFound message='Producer Not Found'/>;
+  if (!data?.ranking || !data.ranking[0]?.stashAddress)
+    return <NotFound message='Producer Not Found' />;
+
+  const ranking = data.ranking[0];
+  const identity = JSON.parse(ranking.identity);
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Typography variant='h1' maxWidth={'400px'} sx={{ mb: 5 }}>
-        {id}
+      <Typography variant='h1' maxWidth='700px' sx={{ mb: 5 }}>
+        Block Producer . {identity.display || shortString(ranking.stashAddress)}
       </Typography>
-      <Summary ranking={data.ranking} />
+      <Summary ranking={ranking} name={identity.display} />
       <Box sx={{ mt: 2 }}>
         <ProducerTabs
-          addressStash={data.ranking.stashAddress}
-          blockHeight={data.ranking.blockHeight}
-          eras={data.ranking.activeEras}
-          nominators={data.ranking.nominators}
+          producerId={ranking.stashAddress}
+          blockHeight={ranking.blockHeight}
+          eras={ranking.activeEras}
+          eraPointsHistory={ranking.eraPointsHistory}
+          nominators={ranking.nominators}
+          nominations={ranking.nominations}
         />
       </Box>
     </Container>

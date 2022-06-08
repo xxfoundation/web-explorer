@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import BlockProducer from '../producer/_nameOrId';
+import BlockProducer from '../producer/_producerId';
 import BlocksPage from './BlocksPage';
-import Block from './_blockHeight';
+import Block from './_blockNumber';
 
 const VersionRouter = () => {
   const { path } = useRouteMatch();
@@ -28,7 +28,7 @@ const BlockRouter = () => {
       <Route exact path={path}>
         <Block />
       </Route>
-      <Route path={`${path}/producer/:accountId`}>
+      <Route path={`${path}/producer/:producerId`}>
         <BlockProducer />
       </Route>
       <Route path={`${path}/version/:version`}>
@@ -45,7 +45,7 @@ const BlocksListRouter = () => {
       <Route exact path={path}>
         <BlocksPage />
       </Route>
-      <Route path={`${path}/:blockHeight`}>
+      <Route path={`${path}/:number`}>
         <BlockRouter />
       </Route>
     </Switch>

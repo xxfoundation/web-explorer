@@ -9,6 +9,7 @@ import Link from './Link';
 type IdProperties = {
   link?: string;
   truncated?: boolean;
+  offset?: number;
   value: string;
 } & TypographyProps;
 
@@ -27,13 +28,14 @@ const contentRenderer = (
 
 const Hash: FC<IdProperties & { showTooltip?: boolean }> = ({
   link,
+  offset,
   showTooltip,
   truncated,
   value,
   ...props
 }) => {
   const isValid = HashValidator(value);
-  const displayValue = truncated ? shortString(value) : value;
+  const displayValue = truncated ? shortString(value, offset) : value;
   if (showTooltip && truncated) {
     return (
       <Tooltip

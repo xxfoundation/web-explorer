@@ -13,7 +13,7 @@ import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
-import CustomTooltip from '../../components/Tooltip';
+import { CustomTooltip } from '../../components/Tooltip';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
 import { HoldersRolesFilters, rolesMap } from './HoldersRolesFilters';
@@ -24,10 +24,7 @@ type Filters = Record<string, boolean>;
 
 const RolesTooltipContent: FC<{ roles: string[] }> = ({ roles }) => {
   const labels = useMemo(
-    () =>
-      roles
-        .slice(1)
-        .map((role, index) => <span key={index}>{rolesMap[role] ?? role}</span>),
+    () => roles.slice(1).map((role, index) => <span key={index}>{rolesMap[role] ?? role}</span>),
     [roles]
   );
   return (
@@ -62,14 +59,18 @@ const rolesToCell = (roles: string[]) => {
   );
 };
 
-const accountToRow = (item: ListAccounts['account'][0], rank: number, filters: Filters): BaselineCell[] => {
+const accountToRow = (
+  item: ListAccounts['account'][0],
+  rank: number,
+  filters: Filters
+): BaselineCell[] => {
   const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
 
   const roles = Object.entries(item.roles)
     .filter(([key]) => key !== '__typename')
     .filter(([, value]) => !!value)
     .sort(([roleA], [roleB]) => (filters[roleB] ? 1 : 0) - (filters[roleA] ? 1 : 0))
-    .map(([role, value]): string => role === 'special' ? (value as string) : role);
+    .map(([role, value]): string => (role === 'special' ? (value as string) : role));
   const accountLink = `accounts/${item.address}`;
 
   return [
@@ -135,15 +136,14 @@ const useHeaders = () => {
 };
 
 const buildOrClause = (filters: Filters) => {
-
   return [
     filters.council && { role: { council: { _eq: true } } },
     filters.nominator && { role: { nominator: { _eq: true } } },
     filters.techcommit && { role: { techcommit: { _eq: true } } },
     filters.validator && { role: { validator: { _eq: true } } },
-    filters.special && { role: { special: { _neq: 'null' } } },
+    filters.special && { role: { special: { _neq: 'null' } } }
   ].filter((v) => !!v);
-}
+};
 
 const HoldersTable: FC = () => {
   const {
@@ -184,7 +184,8 @@ const HoldersTable: FC = () => {
 
   const { data, error, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
   const rows = useMemo(
-    () => (data?.account || []).map((item, index) => accountToRow(item, index + 1 + offset, filters)),
+    () =>
+      (data?.account || []).map((item, index) => accountToRow(item, index + 1 + offset, filters)),
     [data?.account, filters, offset]
   );
 
@@ -202,14 +203,7 @@ const HoldersTable: FC = () => {
       );
     }
     return <></>;
-  }, [
-    data?.account,
-    data?.agg,
-    onPageChange,
-    onRowsPerPageChange,
-    page,
-    rowsPerPage
-  ]);
+  }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
 
   console.log(error);
 

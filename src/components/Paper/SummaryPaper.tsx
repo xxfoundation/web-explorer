@@ -37,7 +37,9 @@ export const SummaryRow: FC<{ label: ReactNode; action?: ReactNode }> = (props) 
 export const SummaryPaperWrapper: React.FC = ({ children }) => {
   return (
     <PaperStyled>
-      <Grid container>{children}</Grid>
+      <Grid spacing={1} container>
+        {children}
+      </Grid>
     </PaperStyled>
   );
 };
