@@ -1,5 +1,6 @@
 import { Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Link from '../Link';
 
 export const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -10,7 +11,6 @@ export const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   boxShadow: theme.boxShadow,
   borderRadius: 13,
-  cursor: 'pointer',
   mask: 'linear-gradient(#FFF,#FFF)',
   '&:before': {
     content: '\'\'',
@@ -20,16 +20,6 @@ export const Item = styled(Paper)(({ theme }) => ({
     right: 0,
     bottom: 0,
     background: theme.gradients?.primary,
-    zIndex: '-1'
-  },
-  '&:hover:after': {
-    content: '\'\'',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'rgba(0,0,0,0.25)',
     zIndex: '-1'
   },
   [theme.breakpoints.down('md')]: {
@@ -51,3 +41,15 @@ export const Data = styled(Typography)(({ theme }) => ({
 export const Wrap = styled(Grid)(() => ({
   position: 'relative'
 }));
+
+export const ChainInfoLink = styled(Link)({
+  position: 'absolute',
+  width: '100%',
+  height: '100%',
+  left: 0,
+  top: 0,
+  zIndex: 1,
+  '&:hover': {
+    background: 'rgba(0,0,0,0.25)',
+  }
+});
