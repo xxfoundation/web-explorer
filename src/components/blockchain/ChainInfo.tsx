@@ -67,7 +67,7 @@ const ChainInfo = () => {
         <ChainInfoCard title='Finalized Blocks' value={blocks} />
         <ChainInfoCard title='Active Era' value={currentEra} />
         <ChainInfoCard title='Transfers' value={transfers} />
-        <ChainInfoCard title='Holders' value={accounts} />
+        <ChainInfoCard title='Account Holders' value={accounts} />
         <ChainInfoCard
           title='Total Issuance'
           value={totalIssuance && <FormatBalance value={totalIssuance} />}

@@ -10,7 +10,6 @@ import TimeAgo from '../TimeAgo';
 import { ListSkeleton } from './ListSkeleton';
 import type { Block, ListBlocks } from './types';
 
-
 const PAGE_LIMIT = 8;
 
 const BlockRow: FC<WithNew<Block>> = ({
@@ -33,7 +32,7 @@ const BlockRow: FC<WithNew<Block>> = ({
     </Grid>
     <Grid container sx={{ mt: 1 }}>
       <Grid item xs>
-        <Link to='' underline='hover' variant='body3'>
+        <Link to={'/extrinsics'} underline='hover' variant='body3'>
           {totalExtrinsics} extrinsics
         </Link>{' '}
         <Typography variant='body3' component='span'>
