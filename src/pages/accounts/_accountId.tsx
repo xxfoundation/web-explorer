@@ -9,7 +9,7 @@ import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
 import Info from './account/Info';
-import PerformanceCard from './account/performance';
+// import PerformanceCard from './account/performance';
 
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
