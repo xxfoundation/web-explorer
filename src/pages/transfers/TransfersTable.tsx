@@ -78,7 +78,7 @@ const TransferTable: FC<{
     () => ({
       limit,
       offset,
-      orderBy: [{ id: 'desc' }],
+      orderBy: [{ timestamp: 'desc' }],
       where: { ...where, id: { _lte: cursorField } }
     }),
     [cursorField, limit, offset, where]

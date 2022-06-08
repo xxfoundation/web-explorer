@@ -1,6 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from '@mui/material';
+// import { Link } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -39,8 +39,8 @@ export default function MobileNav() {
         open={opened}
         onClose={close}
         variant='temporary'
-        sx={{ 
-          '.MuiDrawer-paper': { width: '100%', } 
+        sx={{
+          '.MuiDrawer-paper': { width: '100%' }
         }}
       >
         <Box
@@ -52,14 +52,12 @@ export default function MobileNav() {
         >
           <Box sx={{ p: 4 }}>
             <IconButton onClick={close} sx={{ p: 0, ml: -0.5 }}>
-              <CloseIcon
-                sx={{ color: 'secondary.contrastText' }}
-              />
+              <CloseIcon sx={{ color: 'secondary.contrastText' }} />
             </IconButton>
-            <Box 
-              sx={{ 
+            <Box
+              sx={{
                 py: 4,
-                'a': { 
+                a: {
                   color: 'secondary.contrastText',
                   textDecoration: 'none',
                   display: 'block',
@@ -68,18 +66,30 @@ export default function MobileNav() {
               }}
             >
               <Typography variant='h3'>
-                <InternalLink to='/' onClick={close}>Blockchain</InternalLink>
+                <InternalLink to='/' onClick={close}>
+                  Blockchain
+                </InternalLink>
               </Typography>
-              <InternalLink to={'/blocks'} onClick={close}>Blocks</InternalLink>
-              <InternalLink to='/extrinsics' onClick={close}>Extrinsics</InternalLink>
-              <InternalLink to='/transfers' onClick={close}>Transfers</InternalLink>
-              <InternalLink to='/events' onClick={close}>Events</InternalLink>
-              
+              <InternalLink to={'/blocks'} onClick={close}>
+                Blocks
+              </InternalLink>
+              <InternalLink to='/extrinsics' onClick={close}>
+                Extrinsics
+              </InternalLink>
+              <InternalLink to='/transfers' onClick={close}>
+                Transfers
+              </InternalLink>
+              <InternalLink to='/events' onClick={close}>
+                Events
+              </InternalLink>
+
               <Typography variant='h3' sx={{ mt: 2 }}>
-                <InternalLink to='/staking' onClick={close}>Staking</InternalLink>
+                <InternalLink to='/staking' onClick={close}>
+                  Staking
+                </InternalLink>
               </Typography>
-              
-              <Typography variant='h3' sx={{ mt: 2 }}>
+
+              {/* <Typography variant='h3' sx={{ mt: 2 }}>
                 <InternalLink to='governance' onClick={close}>Governance</InternalLink>
               </Typography>
               <Link href='/' onClick={close}>Overview</Link>
@@ -87,15 +97,15 @@ export default function MobileNav() {
               <Link href='/' onClick={close}>Council</Link>
               <Link href='/' onClick={close}>Tech Committee</Link>
               <Link href='/' onClick={close}>Treasury</Link>
-              <Link href='/' onClick={close}>Bounties</Link>
+              <Link href='/' onClick={close}>Bounties</Link> */}
 
               <Typography variant='h3' sx={{ mt: 2 }}>
-                <InternalLink to='/accounts' onClick={close}>Accounts</InternalLink>
+                <InternalLink to='/accounts' onClick={close}>
+                  Accounts
+                </InternalLink>
               </Typography>
-              
             </Box>
           </Box>
-            
         </Box>
       </Drawer>
     </Box>
