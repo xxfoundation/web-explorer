@@ -67,10 +67,6 @@ const BlockExtrinsics: FC<{
       setCount(data.agg.aggregate.count);
     }
   }, [data?.agg, setCount]);
-  console.warn(data?.extrinsic);
-  console.warn(page);
-  console.warn(rowsPerPage);
-  console.warn(cursorField);
   const footer = useMemo(() => {
     if (data?.agg && data?.extrinsic && data.extrinsic.length) {
       return (
