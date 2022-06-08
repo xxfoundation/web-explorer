@@ -63,7 +63,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, 
           text: 'ERA',
           align: 'low',
           textAlign: 'left',
-          style: { fontWeight: 'bolder'  }
+          style: { fontWeight: 'bolder' }
         },
         labels: { y: 20, formatter: labelFormatters?.xAxis },
         tickWidth: 1,
