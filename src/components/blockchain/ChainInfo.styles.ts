@@ -2,7 +2,7 @@ import { Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Link from '../Link';
 
-export const Item = styled(Paper)<{ clickable?: boolean }>(({ theme }) => ({
+export const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   paddingTop: theme.spacing(2.5),
   paddingBottom: theme.spacing(2.5),
