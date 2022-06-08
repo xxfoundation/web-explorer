@@ -27,7 +27,7 @@ export const Item = styled(Paper)(({ theme }) => ({
     paddingBottom: theme.spacing(2),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3)
-  },
+  }
 }));
 
 export const Data = styled(Typography)(({ theme }) => ({
@@ -51,5 +51,5 @@ export const ChainInfoLink = styled(Link)({
   zIndex: 1,
   '&:hover': {
     background: 'rgba(0,0,0,0.25)',
-  },
+  }
 });
