@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Typography } from '@mui/material';
 import React, { FC } from 'react';
-import CopyButton from '../../../../components/buttons/CopyButton';
 import { Address } from '../../../../components/ChainId';
 import FormatBalance from '../../../../components/FormatBalance';
 import { SummaryEntry, SummaryHeader, SummaryValue, WithCopy } from '../../../../components/Summary';

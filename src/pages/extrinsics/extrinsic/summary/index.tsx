@@ -2,7 +2,6 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import BlockStatusIcon from '../../../../components/block/BlockStatusIcon';
-import CopyButton from '../../../../components/buttons/CopyButton';
 import { Address, Hash } from '../../../../components/ChainId';
 import Link from '../../../../components/Link';
 import { SummaryContainer, SummaryEntry, SummaryHeader, SummaryValue, WithCopy } from '../../../../components/Summary';
