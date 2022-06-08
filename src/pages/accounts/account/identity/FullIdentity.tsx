@@ -2,6 +2,7 @@ import { Avatar, Divider, Grid, Link, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import { Account } from '../../../../schemas/accounts.schema';
 import SocialIconsGroup from './SocialIconsGroup';
+import { shortString } from '../../../../utils';
 
 type Props = { account: Account };
 
@@ -23,8 +24,8 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
   );
 };
 
-const NameHeaderTypography: FC<Props> = ({ account: { identity } }) => {
-  if (!identity.legal) {
+const NameHeaderTypography: FC<Props> = ({ account: { id, identity } }) => {
+  if (!identity.display) {
     return (
       <Typography
         fontSize={24}
@@ -34,13 +35,13 @@ const NameHeaderTypography: FC<Props> = ({ account: { identity } }) => {
         width={'100%'}
         sx={{ opacity: 0.7 }}
       >
-        no identify
+        {shortString(id)}
       </Typography>
     );
   }
   return (
     <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-      {identity.legal}
+      {identity.display}
     </Typography>
   );
 };
@@ -69,11 +70,7 @@ const IdentityMobile: FC<Props> = (props) => {
         mb={'16px'}
         mt={'5px'}
       >
-        <Avatar
-          src=''
-          alt='Avatar'
-          sx={{ width: 125, height: 125, marginRight: '15px' }}
-        />
+        <Avatar src='' alt='Avatar' sx={{ width: 125, height: 125, marginRight: '15px' }} />
         <NameHeaderTypography {...props} />
       </Grid>
       {(!props.account.identity.blurb || props.account.roles.nominator) &&
@@ -93,8 +90,8 @@ const IdentityMobile: FC<Props> = (props) => {
         <Divider />
       </Grid>
       <Grid item xs={12} margin={'10px'}>
-        {/* <TextWithLabel label='stash' text={props.account.stash} />
-        <TextWithLabel label='controller' text={props.account.controller} /> */}
+        <TextWithLabel label='stash' text={props.account.id} />
+        <TextWithLabel label='controller' text={props.account.controllerAddress} />
         {props.account.identity.riotName && (
           <TextWithLabel label='riot' text={props.account.identity.riotName} />
         )}
@@ -119,7 +116,7 @@ const NameAndBlurbCell: FC<Props> = (props) => {
     () => !props.account.roles.nominator && props.account.identity.blurb,
     [props.account.identity.blurb, props.account.roles.nominator]
   );
-  if (!props.account.identityDisplay) {
+  if (!props.account.identity.display) {
     return (
       <Typography
         fontSize={24}
@@ -129,7 +126,7 @@ const NameAndBlurbCell: FC<Props> = (props) => {
         width={'100%'}
         sx={{ opacity: 0.7 }}
       >
-        no identify
+        {props.account.id}
       </Typography>
     );
   }
