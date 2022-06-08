@@ -47,7 +47,15 @@ const BlockExtrinsics: FC<{
   where: Record<string, unknown>;
   setCount?: (count: number) => void;
 }> = ({ where, setCount: setCount = () => {} }) => {
-  const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
+  const {
+    cursorField,
+    limit,
+    makeOnPageChange,
+    offset,
+    onRowsPerPageChange,
+    page,
+    rowsPerPage
+  } =
     usePaginatorByCursor({
       rowsPerPage: 5,
       cursorField: 'id'
@@ -74,14 +82,14 @@ const BlockExtrinsics: FC<{
           count={data.agg.aggregate.count}
           page={page}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange(data.extrinsic[0])}
+          onPageChange={makeOnPageChange(data.extrinsic[0])}
           onRowsPerPageChange={onRowsPerPageChange}
           rowsPerPageOptions={[DEFAULT_ROWS_PER_PAGE, 20, 50]}
         />
       );
     }
     return <></>;
-  }, [data?.agg, data?.extrinsic, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  }, [data?.agg, data?.extrinsic, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };

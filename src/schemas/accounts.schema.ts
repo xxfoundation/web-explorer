@@ -156,3 +156,29 @@ export const LISTEN_FOR_NEW_ACCOUNTS = gql`
     }
   }
 `;
+
+export type GetExtrinsicCounts = {
+  extrinsicCount: { aggregate: { count: number } };
+  transferCount: { aggregate: { count: number } };
+}
+
+export const GET_EXTRINSIC_COUNTS = gql`
+query GetExtrinsicCounts ($accountId: String) {
+  extrinsicCount: extrinsic_aggregate(where: { signer: { _eq: $accountId } }) {
+    aggregate {
+      count
+    }
+  }
+
+  transferCount:   transfer_aggregate(where: {
+    _or: [
+      { destination:  { _eq: $accountId } },
+      { source:{ _eq: $accountId } }
+    ]
+  }) {
+    aggregate {
+      count
+    }
+  }
+}
+`

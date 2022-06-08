@@ -1,9 +1,10 @@
+import { useQuery } from '@apollo/client';
 import { Typography } from '@mui/material';
-import React, { FC, useMemo, useState } from 'react';
-import BlockExtrinsics from '../../../../components/block/ExtrinsicsTable';
+import React, { FC, useMemo } from 'react';
+import AccountExtrinsics from './AccountExtrinsics';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../../components/Tabs';
-import { Account } from '../../../../schemas/accounts.schema';
+import { Account, GET_EXTRINSIC_COUNTS, GetExtrinsicCounts } from '../../../../schemas/accounts.schema';
 import TransferTable from '../../../transfers/TransfersTable';
 // import AuthoredBlocksTable from './AuthoredBlocksTable';
 // import BalanceHistoryChart from './BalanceHistoryChart';
@@ -34,8 +35,21 @@ import TransferTable from '../../../transfers/TransfersTable';
 // };
 
 const BlockchainCard: FC<{ account: Account }> = ({ account }) => {
-  const [extrinsicCount, setExtrinsicCount] = useState<number>();
-  const [transferCount, setTransferCount] = useState<number>();
+  const query = useQuery<GetExtrinsicCounts>(
+    GET_EXTRINSIC_COUNTS,
+    { variables: { accountId: account.id } }
+  );
+
+  const extrinsicCount = query.data?.extrinsicCount.aggregate.count;
+  const transferCount = query.data?.transferCount.aggregate.count;
+
+  const transferWhereClause = useMemo(() => ({
+    _or: [
+      { destination:  { _eq: account.id } },
+      { source: { _eq: account.id } }
+    ]
+  }), [account]);
+
   const memoistPanels = useMemo(() => {
     return [
       {
@@ -46,10 +60,7 @@ const BlockchainCard: FC<{ account: Account }> = ({ account }) => {
           />
         ),
         content: (
-          <BlockExtrinsics
-            where={{ block: { block_author: { _eq: account.id } } }}
-            setCount={setExtrinsicCount}
-          />
+          <AccountExtrinsics accountId={account.id} />
         )
       },
       {
@@ -58,13 +69,16 @@ const BlockchainCard: FC<{ account: Account }> = ({ account }) => {
         ),
         content: (
           <TransferTable
-            where={{ block: { block_author: { _eq: account.id } } }}
-            setCount={setTransferCount}
+            where={transferWhereClause}
           />
         )
       }
     ];
-  }, [account.id, extrinsicCount, transferCount]);
+  }, [account.id, extrinsicCount, transferCount, transferWhereClause]);
+
+  // eslint-disable-next-line no-console
+  console.log(query);
+  
   return (
     <PaperStyled>
       <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>

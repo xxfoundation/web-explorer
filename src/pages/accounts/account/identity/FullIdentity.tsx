@@ -34,7 +34,7 @@ const NameHeaderTypography: FC<Props> = ({ account: { identity } }) => {
         width={'100%'}
         sx={{ opacity: 0.7 }}
       >
-        no identify
+        No identity
       </Typography>
     );
   }
