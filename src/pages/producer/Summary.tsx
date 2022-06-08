@@ -1,14 +1,11 @@
 import { Divider, Grid, Typography } from '@mui/material';
 import React, { FC, Fragment, useMemo } from 'react';
-import CopyButton from '../../components/buttons/CopyButton';
 import { Address, Hash } from '../../components/ChainId';
 import CmixAddress from '../../components/CmixAddress';
 import FormatBalance from '../../components/FormatBalance';
-import { SummaryPaperWrapper, SummaryRow } from '../../components/Paper/SummaryPaper';
+import { SummaryContainer, SummaryHeader, SummaryEntry, SummaryValue, WithCopy } from '../../components/Summary';
 import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
 import { HashColumnWithTooltip } from '../../components/Tooltip';
-
-const sampleHash = '6Ze8pqYi4CAuwdm4eTGxKke7LSF6phkzmERUmpG5tTC1yKoh';
 
 const SessionKeyValue: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
   return (
@@ -43,47 +40,106 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
   }, [ranking.location]);
   const sessionEntries = useMemo(() => JSON.parse(ranking.sessionKeys), [ranking.sessionKeys]);
   return (
-    <SummaryPaperWrapper>
-      <SummaryRow label='stash' action={<CopyButton value={sampleHash} />}>
-        <Address name={name} value={ranking.stashAddress} />
-      </SummaryRow>
-      <SummaryRow label='controller' action={<CopyButton value={ranking.controllerAddress} />}>
+    <SummaryContainer>
+      <SummaryEntry>
+        <SummaryHeader>
+          Stash
+        </SummaryHeader>
+        <SummaryValue>
+          <WithCopy value={ranking.stashAddress}>
+            <Address name={name} value={ranking.stashAddress} />
+          </WithCopy>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Controller
+        </SummaryHeader>
         <Address value={ranking.controllerAddress} />
-      </SummaryRow>
-      <SummaryRow label='reward' action={<CopyButton value={ranking.rewardsAddress} />}>
-        <Address value={ranking.rewardsAddress} />
-      </SummaryRow>
-      <SummaryRow label='cmix id' action={<CopyButton value={ranking.cmixId} />}>
-        <CmixAddress nodeId={ranking.cmixId} />
-      </SummaryRow>
-      <SummaryRow label='location'>
-        <Typography>{location}</Typography>
-      </SummaryRow>
-      <SummaryRow label='own stake'>
-        <Typography>
-          <FormatBalance value={ranking.selfStake.toString()} />
-        </Typography>
-      </SummaryRow>
-      <SummaryRow label='other stake'>
-        <Typography>
-          <FormatBalance value={ranking.otherStake.toString()} />
-        </Typography>
-      </SummaryRow>
-      <SummaryRow label='total stake'>
-        <Typography>
-          <FormatBalance value={ranking.totalStake.toString()} />
-        </Typography>
-      </SummaryRow>
-      <SummaryRow label='nominators'>
-        <Typography>{ranking.nominators}</Typography>
-      </SummaryRow>
-      <SummaryRow label='commission'>
-        <Typography>{ranking.commission}</Typography>
-      </SummaryRow>
-      <SummaryRow label='session key'>
-        <SessionKeyValue entries={sessionEntries} />
-      </SummaryRow>
-    </SummaryPaperWrapper>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Reward
+        </SummaryHeader>
+        <SummaryValue>
+          <WithCopy value={ranking.rewardsAddress}>
+            <Address value={ranking.rewardsAddress} />
+          </WithCopy>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Cmix ID
+        </SummaryHeader>
+        <SummaryValue>
+          <WithCopy value={ranking.cmixId}>
+            <CmixAddress nodeId={ranking.cmixId} />
+          </WithCopy>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Location
+        </SummaryHeader>
+        <SummaryValue>
+          <Typography>{location}</Typography>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Own Stake
+        </SummaryHeader>
+        <SummaryValue>
+          <Typography>
+            <FormatBalance value={ranking.selfStake.toString()} />
+          </Typography>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Other Stake
+        </SummaryHeader>
+        <SummaryValue>
+          <Typography>
+            <FormatBalance value={ranking.otherStake.toString()} />
+          </Typography>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Total Stake
+        </SummaryHeader>
+        <SummaryValue>
+          <Typography>
+            <FormatBalance value={ranking.totalStake.toString()} />
+          </Typography>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Nominators
+        </SummaryHeader>
+        <SummaryValue>
+          <Typography>{ranking.nominators}</Typography>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Commission
+        </SummaryHeader>
+        <SummaryValue>
+          <Typography>{ranking.commission}</Typography>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Session Key
+        </SummaryHeader>
+        <SummaryValue>
+          <SessionKeyValue entries={sessionEntries} />
+        </SummaryValue>
+      </SummaryEntry>
+    </SummaryContainer>
   );
 };
 

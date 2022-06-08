@@ -7,9 +7,9 @@ export default styled(Paper)(({ theme }) => ({
   borderRadius: (theme.shape.borderRadius as number) * 3,
   padding: '3rem', 
   [theme.breakpoints.down('md')]: {
-    padding: '2.5rem', 
+    padding: '1.5rem', 
   },
   [theme.breakpoints.down('sm')]: {
-    padding: '2rem', 
+    padding: '0.5rem', 
   },
 }));

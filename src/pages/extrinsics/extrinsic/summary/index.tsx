@@ -5,7 +5,7 @@ import BlockStatusIcon from '../../../../components/block/BlockStatusIcon';
 import CopyButton from '../../../../components/buttons/CopyButton';
 import { Address, Hash } from '../../../../components/ChainId';
 import Link from '../../../../components/Link';
-import { SummaryPaperWrapper, SummaryRow } from '../../../../components/Paper/SummaryPaper';
+import { SummaryContainer, SummaryEntry, SummaryHeader, SummaryValue, WithCopy } from '../../../../components/Summary';
 import TimeAgo from '../../../../components/TimeAgo';
 import { GetExtrinsicByPK } from '../../../../schemas/extrinsics.schema';
 import ModuleCalls from '../ModuleCalls';
@@ -21,50 +21,86 @@ type Props = {
 
 const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
   return (
-    <>
-      <SummaryPaperWrapper>
-        <SummaryRow label='time'>
+    <SummaryContainer>
+      <SummaryEntry>
+        <SummaryHeader>
+          Time
+        </SummaryHeader>
+        <SummaryValue>
           <TimeAgo date={extrinsic.timestamp} />
-        </SummaryRow>
-        <SummaryRow label='block'>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Block
+        </SummaryHeader>
+        <SummaryValue>
           <Link to={`/blocks/${extrinsicId.blockNumber}`}>
             <Stack direction='row' spacing={1} alignItems='center'>
               <CheckCircleOutlineOutlinedIcon color='success' />
               <Typography>{extrinsicId.blockNumber}</Typography>
             </Stack>
           </Link>
-        </SummaryRow>
-        <SummaryRow label='lifetime'>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          LifeTime
+        </SummaryHeader>
+        <SummaryValue>
           <Typography>{extrinsic.lifetime || 'Immortal'}</Typography>
-        </SummaryRow>
-        <SummaryRow label='extrinsic hash' action={<CopyButton value={extrinsic.hash} />}>
-          <Hash value={extrinsic.hash} />
-        </SummaryRow>
-        <SummaryRow label='module/call'>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Extrinsic Hash
+        </SummaryHeader>
+        <SummaryValue>
+          <WithCopy value={extrinsic.hash}>
+            <Hash value={extrinsic.hash} />
+          </WithCopy>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+          Module/Call
+        </SummaryHeader>
+        <SummaryValue>
           <ModuleCalls module={extrinsic.section} call={extrinsic.method} doc={extrinsic.doc} />
-        </SummaryRow>
-        <SummaryFragment {...extrinsicId} />
-        <SummaryRow label='result'>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryFragment {...extrinsicId} />
+      <SummaryEntry>
+        <SummaryHeader>
+          Result
+        </SummaryHeader>
+        <SummaryValue>
           <Stack direction='row' spacing={1} alignItems='center'>
             <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />
             <Typography>{extrinsic.success ? 'Success' : 'Failure'}</Typography>
           </Stack>
-        </SummaryRow>
-        <SummaryRow
-          label={
-            <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
-          }
-        >
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>
+        <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
+        </SummaryHeader>
+        <SummaryValue>
           <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
-        </SummaryRow>
-        <ParametersFragment {...extrinsic} />
-        {extrinsic.signer && extrinsic.isSigned && (
-          <SummaryRow label='signer'>
+        </SummaryValue>
+      </SummaryEntry>
+      <ParametersFragment {...extrinsic} />
+      {extrinsic.signer && extrinsic.isSigned && (
+        <SummaryEntry>
+          <SummaryHeader>
+            Signer
+          </SummaryHeader>
+          <SummaryValue>
             <Address value={extrinsic.signer} />
-          </SummaryRow>
-        )}
-      </SummaryPaperWrapper>
-    </>
+          </SummaryValue>
+        </SummaryEntry>
+      )}
+    </SummaryContainer>
   );
 };
 

@@ -3,7 +3,7 @@ import { Box, Container, Skeleton, Typography } from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import SummaryLoader from '../../components/Paper/SummaryLoader';
+import { SummaryLoader } from '../../components/Summary';
 import { GetAccountRanking, GET_ACCOUNT_RANKING } from '../../schemas/ranking.schema';
 import Error from '../../components/Error';
 import NotFound from '../NotFound';

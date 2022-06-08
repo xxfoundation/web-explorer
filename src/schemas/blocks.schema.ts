@@ -55,22 +55,25 @@ export const LIST_BLOCK_ORDERED = gql`
   }
 `;
 
+export type Block = {
+  numberFinalized: number;
+  number: number;
+  currentEra: string;
+  finalized: boolean;
+  hash: string;
+  parentHash: string;
+  stateRoot: string;
+  extrinsicsRoot: string;
+  author: string;
+  authorName: string;
+  timestamp: number;
+  specVersion: number;
+  totalEvents: number;
+  totalExtrinsics: number;
+}
+
 export type GetBlockByPK = {
-  block: {
-    numberFinalized: number;
-    number: number;
-    currentEra: string;
-    hash: string;
-    parentHash: string;
-    stateRoot: string;
-    extrinsicsRoot: string;
-    author: string;
-    authorName: string;
-    timestamp: number;
-    specVersion: number;
-    totalEvents: number;
-    totalExtrinsics: number;
-  };
+  block: Block;
 };
 
 export const GET_BLOCK_BY_PK = gql`

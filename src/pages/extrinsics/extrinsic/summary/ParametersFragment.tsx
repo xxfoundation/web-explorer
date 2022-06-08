@@ -1,7 +1,7 @@
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import React, { FC, ReactNode, useCallback, useMemo } from 'react';
-import { SummaryRow } from '../../../../components/Paper/SummaryPaper';
+import { SummaryEntry, SummaryHeader, SummaryValue } from '../../../../components/Summary';
 import { useToggle } from '../../../../hooks';
 import useCopyClipboard from '../../../../hooks/useCopyToClibboard';
 import { GetExtrinsicByPK } from '../../../../schemas/extrinsics.schema';
@@ -87,21 +87,26 @@ const ParametersFragment: FC<Params> = ({ args, argsDef }) => {
     [args, argsDef]
   );
   return (
-    <SummaryRow label='parameters'>
-      <Stack>
-        <Box>
-          <RoundedButton variant='contained' onClick={toggle}>
-            {isActive ? 'Hide' : 'Show'}
-          </RoundedButton>
-          {isActive && (
-            <RoundedButton sx={{ marginLeft: '24px' }} variant='contained' onClick={onclickCopy}>
-              copy
+    <SummaryEntry>
+      <SummaryHeader>
+        Parameters
+      </SummaryHeader>
+      <SummaryValue>
+        <Stack>
+          <Box>
+            <RoundedButton variant='contained' onClick={toggle}>
+              {isActive ? 'Hide' : 'Show'}
             </RoundedButton>
-          )}
-        </Box>
-        {isActive && paramTiles}
-      </Stack>
-    </SummaryRow>
+            {isActive && (
+              <RoundedButton sx={{ marginLeft: '24px' }} variant='contained' onClick={onclickCopy}>
+                copy
+              </RoundedButton>
+            )}
+          </Box>
+          {isActive && paramTiles}
+        </Stack>
+      </SummaryValue>
+    </SummaryEntry>
   );
 };
 
