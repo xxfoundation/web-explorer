@@ -73,18 +73,10 @@ const accountToRow = (
     .map(([role, value]): string => (role === 'special' ? (value as string) : role));
   const accountLink = `accounts/${item.address}`;
 
-  let identity = null;
-  try {
-    identity = item.identity && JSON.parse(item.identity);
-  } catch (err) {
-    console.error('Error parsing identity for id:', item.address, item.identity);
-  }
-  const name = (identity && identity.display) || '';
-
   return [
     { value: rank, props: rankProps },
     {
-      value: <Address name={name} value={item.address} link={accountLink} truncated />
+      value: <Address name={identity.displayName} value={item.address} link={accountLink} truncated />
     },
     { value: item.nonce },
     {
