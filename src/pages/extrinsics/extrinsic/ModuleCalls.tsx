@@ -3,6 +3,7 @@ import {
   Box,
   Breadcrumbs,
   styled,
+  Stack,
   Tooltip,
   tooltipClasses,
   TooltipProps,
@@ -63,7 +64,7 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({ call
   }, [call, doc, module]);
 
   return (
-    <>
+    <Stack direction='row' alignItems='center'>
       <Breadcrumbs separator='/'>
         <Tag filled>
           <Typography fontSize={'12px'} fontWeight={400}>
@@ -79,7 +80,7 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({ call
       <CustomTooltip title={title}>
         <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
       </CustomTooltip>
-    </>
+    </Stack>
   );
 };
 
