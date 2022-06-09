@@ -18,7 +18,6 @@ const NewAccountsChart = () => {
         points.push([elem.block.era, 1]);
       }
     });
-    console.warn(points);
     const range = points[0]
       ? {
           minX: points[points.length - 1][0] - 2,

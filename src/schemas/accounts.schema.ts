@@ -30,6 +30,7 @@ type Judgements =
 
 export type Account = {
   id: string;
+  whenCreated: number;
   controllerAddress: string;
   blockHeight: number;
   identity: Identity; // TODO change database structure to a json type
@@ -60,6 +61,7 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
   fragment account on account {
     id: account_id
     controllerAddress: controller_address
+    whenCreated: when_created
     blockHeight: block_height
     identity
     identityDisplay: identity_display
@@ -182,3 +184,14 @@ query GetExtrinsicCounts ($accountId: String) {
   }
 }
 `
+
+// export const GET_WHEN_CREATED = gql`
+// query ListenForNewAccounts {
+//   newAccount: event(where: { method: { _eq: "NewAccount" }, _and: { data: { _like: "%6a6MUC3cr5922vEAVQdDmYqFonVQoEkJrJwj5TkA68dwi5V6%" } } }, order_by: { block: { active_era: desc } }) {
+//     accounts: data
+//     block {
+//       era: active_era
+//     }
+//     timestamp
+//   }
+// }`;
