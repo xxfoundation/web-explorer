@@ -31,7 +31,7 @@ const rowsParser = ({ blockNumber, index, method, section, timestamp }: Event): 
 };
 
 const HistoryTable = () => {
-  const { cursorField, limit, offset, onPageChange, onRowsPerPageChange, page, rowsPerPage } =
+  const { cursorField, limit, makeOnPageChange, offset, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Event>({
       cursorField: 'id',
       rowsPerPage: 20
@@ -56,14 +56,14 @@ const HistoryTable = () => {
           page={page}
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange(data.events[0])}
+          onPageChange={makeOnPageChange(data.events[0])}
           rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
     }
     return <></>;
-  }, [data?.agg, data?.events, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  }, [data?.agg, data?.events, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
   if (loading)
     return (
       <>

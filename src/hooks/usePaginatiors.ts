@@ -10,7 +10,7 @@ type Result<T> = {
   rowsPerPage: number;
   page: number;
   onRowsPerPageChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onPageChange: (data: T) => (_: unknown, number: number) => void;
+  makeOnPageChange: (data: T) => (_: unknown, number: number) => void;
   limit: number;
   offset: number;
 };
@@ -24,7 +24,7 @@ export function usePaginatorByCursor<T extends object>(props: Props<T>): Result<
     setRowsPerPage(parseInt(value));
     setPage(0);
   }, []);
-  const onPageChange = useCallback(
+  const makeOnPageChange = useCallback(
     (data: T) => {
       return (_: unknown, number: number) => {
         if (cursorField === undefined && data && data[props.cursorField] !== undefined) {
@@ -41,7 +41,7 @@ export function usePaginatorByCursor<T extends object>(props: Props<T>): Result<
     rowsPerPage,
     page,
     onRowsPerPageChange,
-    onPageChange,
+    makeOnPageChange,
     limit: rowsPerPage,
     offset: page * rowsPerPage
   };

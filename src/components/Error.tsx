@@ -8,8 +8,15 @@ const messages: Record<ErrorType, string> = {
   'general': 'Something went wrong...'
 }
 
-const Error: FC<{ type: ErrorType }> = ({ type }) => (
-  <Typography color='red'>{messages[type]}</Typography>
+const Error: FC<{ type: ErrorType, error?: boolean }> = ({ children, error, type }) => (
+  <>
+    {
+      error === undefined || !!error
+        ? <Typography color='red'>{messages[type]}</Typography>
+        : children
+    }
+  </>
+  
 );
 
 export default Error;

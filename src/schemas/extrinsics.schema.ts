@@ -1,6 +1,40 @@
 import { gql } from '@apollo/client';
 import { TotalOfItems } from './types';
 
+const EXTRINSIC_FRAGMENT = gql`
+  fragment extrinsicFragment on extrinsic {
+    blockNumber: block_number
+    index: extrinsic_index
+    hash
+    method
+    section
+    success
+    timestamp
+    isSigned: is_signed
+    signer
+    args
+    argsDef: args_def
+    doc
+  }
+`
+
+export type Extrinsic = {
+  id: number;
+  blockNumber: number;
+  index: number;
+  hash: string;
+  lifetime?: string | number;
+  timestamp: number;
+  method: string;
+  section: string;
+  success: boolean;
+  signer?: string;
+  isSigned: boolean;
+  args: Array<string | number>;
+  argsDef: Record<string, string>;
+  doc: string[];
+}
+
 export type FindExtrinsicByHashType = {
   extrinsic?: [
     {
@@ -28,7 +62,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
     $offset: Int
     $where: extrinsic_bool_exp
   ) {
-    extrinsic: extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+    extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       id
       index: extrinsic_index
       blockNumber: block_number
@@ -36,6 +70,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
       timestamp
       success
       section
+      signer
       method
     }
     agg: extrinsic_aggregate(where: $where) {
@@ -46,17 +81,9 @@ export const EXTRINSICS_OF_BLOCK = gql`
   }
 `;
 
+
 export type ListExtrinsics = {
-  extrinsics: {
-    id: number;
-    index: number;
-    blockNumber: number;
-    timestamp: number;
-    success: boolean;
-    method: string;
-    section: string;
-    hash: string;
-  }[];
+  extrinsics: Extrinsic[];
 } & TotalOfItems;
 
 export const LIST_EXTRINSICS = gql`
@@ -103,20 +130,10 @@ export type GetExtrinsicByPK = {
 };
 
 export const GET_EXTRINSIC_BY_PK = gql`
+  ${EXTRINSIC_FRAGMENT}
   query GetExtrinsicByPk($blockNumber: bigint!, $extrinsicIndex: Int!) {
     extrinsic: extrinsic_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
-      blockNumber: block_number
-      index: extrinsic_index
-      hash
-      method
-      section
-      success
-      timestamp
-      isSigned: is_signed
-      signer
-      args
-      argsDef: args_def
-      doc
+      ...extrinsicFragment
     }
   }
 `;
@@ -131,3 +148,23 @@ export const LISTEN_FOR_EXTRINSICS_TIMESTAMPS = gql`
     }
   }
 `;
+
+export type GetExtrinsicsBySigner = {
+  extrinsics: Extrinsic[];
+  count: { aggregate: { count: number } };
+};
+
+export const GET_EXTRINSICS_BY_SIGNER = gql`
+  ${EXTRINSIC_FRAGMENT}
+  query GetExtrinsicsBySigner($signer: String, $limit: Int) {
+    extrinsics: extrinsic(where: { signer: { _eq: $signer } }, limit: $limit, order_by: { extrinsic_index: asc }) {
+      ...extrinsicFragment
+    }
+  
+    count: extrinsic_aggregate(where: { signer: { _eq: $signer } }) {
+      aggregate {
+        count
+      }
+    }
+  }
+`

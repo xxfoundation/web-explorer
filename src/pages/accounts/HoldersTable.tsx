@@ -145,8 +145,8 @@ const HoldersTable: FC = () => {
   const {
     cursorField: timestamp,
     limit,
+    makeOnPageChange,
     offset,
-    onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage
@@ -192,15 +192,15 @@ const HoldersTable: FC = () => {
           page={page}
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
-          onPageChange={onPageChange(data.account[0])}
+          onPageChange={makeOnPageChange(data.account[0])}
           rowsPerPageOptions={[10, DEFAULT_ROWS_PER_PAGE, 30, 40, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
     }
     return <></>;
-  }, [data?.account, data?.agg, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  
+  }, [data?.account, data?.agg, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
+
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>

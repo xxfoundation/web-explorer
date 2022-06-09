@@ -87,8 +87,10 @@ const TabText: FC<{ count?: string | number | JSX.Element; message: string | JSX
   count,
   message
 }) => {
+  const divider = count !== undefined && <Divider orientation='vertical' flexItem />;
+  
   return (
-    <Stack direction='row' spacing={1} divider={<Divider orientation='vertical' flexItem />}>
+    <Stack direction='row' spacing={1} divider={divider}>
       <Typography>{message}</Typography>
       {count !== undefined && (<Typography>{count}</Typography>)}
     </Stack>

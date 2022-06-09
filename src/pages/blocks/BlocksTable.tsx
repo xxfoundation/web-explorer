@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useQuery } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
@@ -47,8 +48,8 @@ const BlocksTable: FC = () => {
   const {
     cursorField: blockNumber,
     limit,
+    makeOnPageChange,
     offset,
-    onPageChange,
     onRowsPerPageChange,
     page,
     rowsPerPage
@@ -56,17 +57,19 @@ const BlocksTable: FC = () => {
     cursorField: 'number',
     rowsPerPage: ROWS_PER_PAGE
   });
-  const { data, loading } = useQuery<ListBlockOrdered>(LIST_BLOCK_ORDERED, {
-    variables: {
+  const variables = useMemo(
+    () => ({
       limit,
       offset,
-      where: {
-        block_number: {
-          _lte: blockNumber
-        }
-      }
-    }
+      blockNumber
+    }),
+    [blockNumber, limit, offset]
+  );
+  
+  const { data, loading } = useQuery<ListBlockOrdered>(LIST_BLOCK_ORDERED, {
+    variables,
   });
+  
   const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
   const footer = useMemo(() => {
     if (data?.agg && data?.blocks && data.blocks.length) {
@@ -75,14 +78,14 @@ const BlocksTable: FC = () => {
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={onPageChange(data.blocks[0])}
+          onPageChange={makeOnPageChange(data.blocks[0])}
           rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
     }
     return <></>;
-  }, [data?.agg, data?.blocks, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  }, [data?.agg, data?.blocks, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };

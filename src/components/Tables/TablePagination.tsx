@@ -2,7 +2,7 @@ import { Divider, TablePagination as MuiTablePagination } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../../themes/default';
 
-const styleConfig = {
+export const styles = {
   mt: 1,
   '.MuiTablePagination-displayedRows': { fontSize: 14, fontWeight: 500 },
   '.MuiTablePagination-selectLabel': { fontSize: 14, fontWeight: 500 },
@@ -42,7 +42,7 @@ const TablePagination: FC<{
       <>
         <Divider />
         <MuiTablePagination
-          sx={styleConfig}
+          sx={styles}
           count={count}
           component={'div'}
           page={page}
