@@ -55,7 +55,9 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>
           Controller
         </SummaryHeader>
-        <Address value={ranking.controllerAddress} />
+        <SummaryValue>
+          <Address value={ranking.controllerAddress} />
+        </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>
