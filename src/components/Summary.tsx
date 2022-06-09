@@ -1,5 +1,16 @@
 import React, { FC } from 'react';
-import { styled, Box, Divider, Paper, Table, TableCell as MuiCell, TableBody, TableRow as SummaryEntry, Skeleton, Stack } from '@mui/material';
+import {
+  styled,
+  Box,
+  Divider,
+  Paper,
+  Table,
+  TableCell as MuiCell,
+  TableBody,
+  TableRow as SummaryEntry,
+  Skeleton,
+  Stack
+} from '@mui/material';
 import CopyButton from './buttons/CopyButton';
 
 const PaperStyled = styled(Paper)({
@@ -12,46 +23,44 @@ const TableStyled = styled(Table)(({ theme }) => ({
   borderCollapse: 'collapse',
   '& tr:first-child td': {
     [theme.breakpoints.up('md')]: {
-      paddingTop: '4rem',
+      paddingTop: '4rem'
     },
     [theme.breakpoints.down('md')]: {
-      paddingTop: '2rem',
-    },
+      paddingTop: '2rem'
+    }
   },
   '& tr:last-child td': {
     [theme.breakpoints.up('md')]: {
-      paddingBottom: '4rem',
+      paddingBottom: '4rem'
     },
     [theme.breakpoints.down('md')]: {
-      paddingBottom: '2rem',
-    },
-  },
+      paddingBottom: '2rem'
+    }
+  }
 }));
 
 export const SummaryContainer: FC = ({ children }) => (
   <PaperStyled>
     <TableStyled size='medium'>
-      <TableBody>
-        {children}
-      </TableBody>
+      <TableBody>{children}</TableBody>
     </TableStyled>
   </PaperStyled>
-)
+);
 
 export { TableRow as SummaryEntry } from '@mui/material';
 
-export const SummaryValue = styled(MuiCell)(({ theme }) =>({
+export const SummaryValue = styled(MuiCell)(({ theme }) => ({
   ...theme.typography.body2,
   [theme.breakpoints.up('sm')]: {
     paddingLeft: '2rem',
-    paddingRight: '2rem',
+    paddingRight: '2rem'
   },
   [theme.breakpoints.up('md')]: {
     paddingLeft: '4rem',
-    paddingRight: '4rem',
+    paddingRight: '4rem'
   },
   border: 'none',
-  fontWeight: 400,
+  fontWeight: 400
 }));
 
 export const SummaryHeader = styled(SummaryValue)(({ theme }) => ({
@@ -71,12 +80,10 @@ export const Ellipsis = styled(Box)({
 });
 
 export const WithCopy: FC<{ value: string }> = ({ children, value }) => (
-  <Stack direction='row' flexWrap='nowrap' alignItems='center' >
-    <Ellipsis>
-      {children}
-    </Ellipsis>
+  <Stack direction='row' flexWrap='nowrap' alignItems='center'>
+    <Ellipsis>{children}</Ellipsis>
     <Divider orientation='vertical' sx={{ mr: 2, ml: 2, height: 19, display: 'inline-block' }} />
-    <CopyButton style={{ display: 'inline-block'}} value={value} />
+    <CopyButton style={{ display: 'inline-block' }} value={value} />
   </Stack>
 );
 

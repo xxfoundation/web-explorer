@@ -88,7 +88,7 @@ const HistoryTable = () => {
           </Button>
           <Typography>|</Typography>
           <Tooltip title='the total of events' placement='top' arrow>
-            <Typography> {data.agg.aggregate.count}</Typography>
+            <Typography>{data.agg.aggregate.count}</Typography>
           </Tooltip>
         </Stack>
       )}

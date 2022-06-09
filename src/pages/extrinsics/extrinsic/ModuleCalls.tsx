@@ -41,12 +41,16 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 });
 
-const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({ call, doc, module }) => {
+const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({
+  call,
+  doc,
+  module
+}) => {
   const title = useMemo(() => {
-    let result = '';
+    let markdownDoc = '';
     try {
       const parsed = reader.parse(doc.join('\r\n'));
-      result = writer.render(parsed);
+      markdownDoc = writer.render(parsed);
     } catch (err) {
       console.error((err as Error).message);
     }
@@ -58,7 +62,7 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({ call
           letterSpacing='1px'
           textTransform='uppercase'
         >{`${module} / ${call}`}</Typography>
-        {parse(result)}
+        {parse(markdownDoc)}
       </Box>
     );
   }, [call, doc, module]);
@@ -78,7 +82,11 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({ call
         </Tag>
       </Breadcrumbs>
       <CustomTooltip title={title}>
-        <InfoOutlinedIcon color='primary' sx={{ marginLeft: '8px' }} fontSize={'small'} />
+        <InfoOutlinedIcon
+          color='primary'
+          sx={{ marginLeft: '8px', alignSelf: 'center' }}
+          fontSize={'small'}
+        />
       </CustomTooltip>
     </Stack>
   );

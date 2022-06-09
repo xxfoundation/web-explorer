@@ -3,7 +3,13 @@ import React, { FC, Fragment, useMemo } from 'react';
 import { Address, Hash } from '../../components/ChainId';
 import CmixAddress from '../../components/CmixAddress';
 import FormatBalance from '../../components/FormatBalance';
-import { SummaryContainer, SummaryHeader, SummaryEntry, SummaryValue, WithCopy } from '../../components/Summary';
+import {
+  SummaryContainer,
+  SummaryHeader,
+  SummaryEntry,
+  SummaryValue,
+  WithCopy
+} from '../../components/Summary';
 import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
 import { HashColumnWithTooltip } from '../../components/Tooltip';
 
@@ -42,9 +48,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
   return (
     <SummaryContainer>
       <SummaryEntry>
-        <SummaryHeader>
-          Stash
-        </SummaryHeader>
+        <SummaryHeader>Stash</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.stashAddress}>
             <Address name={name} value={ranking.stashAddress} />
@@ -52,17 +56,15 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Controller
-        </SummaryHeader>
+        <SummaryHeader>Controller</SummaryHeader>
         <SummaryValue>
-          <Address value={ranking.controllerAddress} />
+          <WithCopy value={ranking.controllerAddress}>
+            <Address value={ranking.controllerAddress} />
+          </WithCopy>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Reward
-        </SummaryHeader>
+        <SummaryHeader>Reward</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.rewardsAddress}>
             <Address value={ranking.rewardsAddress} />
@@ -70,9 +72,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Cmix ID
-        </SummaryHeader>
+        <SummaryHeader>Cmix ID</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.cmixId}>
             <CmixAddress nodeId={ranking.cmixId} />
@@ -80,17 +80,13 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Location
-        </SummaryHeader>
+        <SummaryHeader>Location</SummaryHeader>
         <SummaryValue>
           <Typography>{location}</Typography>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Own Stake
-        </SummaryHeader>
+        <SummaryHeader>Own Stake</SummaryHeader>
         <SummaryValue>
           <Typography>
             <FormatBalance value={ranking.selfStake.toString()} />
@@ -98,9 +94,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Other Stake
-        </SummaryHeader>
+        <SummaryHeader>Other Stake</SummaryHeader>
         <SummaryValue>
           <Typography>
             <FormatBalance value={ranking.otherStake.toString()} />
@@ -108,9 +102,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Total Stake
-        </SummaryHeader>
+        <SummaryHeader>Total Stake</SummaryHeader>
         <SummaryValue>
           <Typography>
             <FormatBalance value={ranking.totalStake.toString()} />
@@ -118,25 +110,19 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Nominators
-        </SummaryHeader>
+        <SummaryHeader>Nominators</SummaryHeader>
         <SummaryValue>
           <Typography>{ranking.nominators}</Typography>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Commission
-        </SummaryHeader>
+        <SummaryHeader>Commission</SummaryHeader>
         <SummaryValue>
           <Typography>{ranking.commission}</Typography>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Session Key
-        </SummaryHeader>
+        <SummaryHeader>Session Key</SummaryHeader>
         <SummaryValue>
           <SessionKeyValue entries={sessionEntries} />
         </SummaryValue>

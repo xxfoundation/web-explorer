@@ -44,7 +44,7 @@ const HistoryPage = () => {
             </Button>
             <Typography>|</Typography>
             <Tooltip title='the total of extrinsics' placement='top' arrow>
-              <Typography> {totalOfExtrinsics}</Typography>
+              <Typography>{totalOfExtrinsics}</Typography>
             </Tooltip>
           </Stack>
         )}

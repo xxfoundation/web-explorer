@@ -18,125 +18,81 @@ const timeFormat = 'YYYY.MM.DD | h:mm A (UTC)';
 
 const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
   const formattedTimestamp = useMemo(
-    () => (
-      block?.timestamp
-        ? dayjs.utc(block?.timestamp).format(timeFormat)
-        : undefined
-      ),
+    () => (block?.timestamp ? dayjs.utc(block?.timestamp).format(timeFormat) : undefined),
     [block?.timestamp]
   );
 
   return (
     <SummaryContainer>
       <SummaryEntry>
-        <SummaryHeader>
-          Time
-        </SummaryHeader>
-        <SummaryValue>
-          {formattedTimestamp ?? <Skeleton />}
-        </SummaryValue>
+        <SummaryHeader>Time</SummaryHeader>
+        <SummaryValue>{formattedTimestamp ?? <Skeleton />}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Status
-        </SummaryHeader>
+        <SummaryHeader>Status</SummaryHeader>
         <SummaryValue>
-          {block?.finalized === undefined
-            ? <Skeleton />
-            : (
+          {block?.finalized === undefined ? (
+            <Skeleton />
+          ) : (
             <Stack direction='row' spacing={2} alignItems='center'>
-              <BlockStatusIcon
-                status={block?.finalized ? 'successful': 'pending'}
-              />
-              <Box sx={{ pb: 0.5 }}>
-                {block?.finalized ? 'Finalized' : 'Pending'}
-              </Box>
+              <BlockStatusIcon status={block?.finalized ? 'successful' : 'pending'} />
+              <Box sx={{ pb: 0.5 }}>{block?.finalized ? 'Finalized' : 'Pending'}</Box>
             </Stack>
-          )
-          }
+          )}
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Era
-        </SummaryHeader>
+        <SummaryHeader>Era</SummaryHeader>
+        <SummaryValue>{block?.currentEra ?? <Skeleton />}</SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Hash</SummaryHeader>
         <SummaryValue>
-          {block?.currentEra ?? <Skeleton />}
+          {block?.hash ? <WithCopy value={block.hash}>{block.hash}</WithCopy> : <Skeleton />}
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Hash
-        </SummaryHeader>
+        <SummaryHeader>Parent Hash</SummaryHeader>
         <SummaryValue>
-            {block?.hash ? (
-              <WithCopy value={block.hash}>
-                {block.hash}
-              </WithCopy>
-            ) : <Skeleton />}
+          <Ellipsis>{block?.parentHash ?? <Skeleton />}</Ellipsis>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Parent Hash
-        </SummaryHeader>
+        <SummaryHeader>State Root</SummaryHeader>
         <SummaryValue>
-          <Ellipsis>
-            {block?.parentHash ?? <Skeleton />}
-          </Ellipsis>
+          <Ellipsis>{block?.stateRoot ?? <Skeleton />}</Ellipsis>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          State Root
-        </SummaryHeader>
+        <SummaryHeader>Extrinsics Root</SummaryHeader>
         <SummaryValue>
-          <Ellipsis>
-            {block?.stateRoot ?? <Skeleton />}
-          </Ellipsis>
+          <Ellipsis>{block?.extrinsicsRoot ?? <Skeleton />}</Ellipsis>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Extrinsics Root
-        </SummaryHeader>
-        <SummaryValue>
-          <Ellipsis>
-            {block?.extrinsicsRoot ?? <Skeleton />}
-          </Ellipsis>
-        </SummaryValue>
-      </SummaryEntry>
-      <SummaryEntry>
-        <SummaryHeader>
-          Block Producer
-        </SummaryHeader>
+        <SummaryHeader>Block Producer</SummaryHeader>
         <SummaryValue>
           <Ellipsis>
             {block ? (
-            <WithCopy value={block.author}>
-              <Address
-                name={block.authorName}
-                value={block.author}
-                link={`/blocks/${block.number}/producer/${block.author}`}
-              />
-            </WithCopy>
-            ): <Skeleton />}
+              <WithCopy value={block.author}>
+                <Address
+                  name={block.authorName}
+                  value={block.author}
+                  link={`/blocks/${block.number}/producer/${block.author}`}
+                />
+              </WithCopy>
+            ) : (
+              <Skeleton />
+            )}
           </Ellipsis>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>
-          Block Time
-        </SummaryHeader>
-        <SummaryValue>
-          {block
-            ? <TimeAgo date={block.timestamp} />
-            : <Skeleton />
-          }
-        </SummaryValue>
+        <SummaryHeader>{'Block Time'}</SummaryHeader>
+        <SummaryValue>{block ? <TimeAgo date={block.timestamp} /> : <Skeleton />}</SummaryValue>
       </SummaryEntry>
     </SummaryContainer>
-  )
-}
+  );
+};
 
 export default BlockSummary;
