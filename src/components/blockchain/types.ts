@@ -1,4 +1,6 @@
-import { BN } from '@polkadot/util';
+import BN  from 'bn.js';
+import type { Block } from  '../../schemas/blocks.schema';
+export type { Block } from '../../schemas/blocks.schema'
 
 export type ChainData = {
   header: string;
@@ -14,16 +16,6 @@ export type Metric = {
 export type EraMetrics = {
   metrics: Metric[];
 }
-
-export type Block = {
-  hash: string;
-  number: number;
-  finalized: boolean;
-  currentEra: number;
-  totalEvents: number;
-  totalExtrinsics: number;
-  timestamp: number;
-};
 
 export type ListBlocks = {
   blocks: Block[];
@@ -46,3 +38,4 @@ export type Transfer = {
 export type ListOfTransfers = {
   transfers: Transfer[];
 };
+

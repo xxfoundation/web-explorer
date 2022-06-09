@@ -4,12 +4,12 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
-import SummaryLoader from '../../components/Paper/SummaryLoader';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import { GetExtrinsicByPK, GET_EXTRINSIC_BY_PK } from '../../schemas/extrinsics.schema';
 import NotFound from '../NotFound';
 import ExtrinsicEventsTabs from './extrinsic/ExtrinsicEventsTabs';
 import Summary from './extrinsic/summary';
+import { SummaryLoader } from '../../components/Summary';
 
 const Extrinsic = () => {
   const { extrinsicId } = useParams<{ extrinsicId: string }>();

@@ -1,53 +1,97 @@
-import { Stack, Typography } from '@mui/material';
-import React, { FC } from 'react';
-import { GetBlockByPK } from '../../schemas/blocks.schema';
-import CopyButton from '../buttons/CopyButton';
-import { Address, Hash } from '../ChainId';
-import { SummaryPaperWrapper, SummaryRow } from '../Paper/SummaryPaper';
-import TimeAgoComponent from '../TimeAgo';
+import type { Block } from '../../schemas/blocks.schema';
+import React, { FC, useMemo } from 'react';
+import { Box, Skeleton, Stack } from '@mui/material';
+import { Address } from '../ChainId';
+import dayjs from 'dayjs';
 import BlockStatusIcon from './BlockStatusIcon';
+import TimeAgo from '../TimeAgo';
+import {
+  Ellipsis,
+  SummaryContainer,
+  SummaryEntry,
+  SummaryHeader,
+  SummaryValue,
+  WithCopy
+} from '../Summary';
 
-const BlockSummary: FC<{
-  data: GetBlockByPK['block'];
-}> = ({ data }) => {
+const timeFormat = 'YYYY.MM.DD | h:mm A (UTC)';
+
+const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
+  const formattedTimestamp = useMemo(
+    () => (block?.timestamp ? dayjs.utc(block?.timestamp).format(timeFormat) : undefined),
+    [block?.timestamp]
+  );
+
   return (
-    <SummaryPaperWrapper>
-      <SummaryRow label='title'>
-        <Typography>{data.timestamp}</Typography>
-      </SummaryRow>
-      <SummaryRow label='status'>
-        <Stack direction={'row'} alignItems='center'>
-          <BlockStatusIcon status={data.number > data.numberFinalized ? 'pending' : 'successful'} />
-        </Stack>
-      </SummaryRow>
-      <SummaryRow label='era'>
-        <Typography>{data.currentEra}</Typography>
-      </SummaryRow>
-      <SummaryRow label='hash' action={<CopyButton value={data.hash} />}>
-        <Hash value={data.hash} />
-      </SummaryRow>
-      <SummaryRow label='parent hash'>
-        <Hash value={data.parentHash} />
-      </SummaryRow>
-      <SummaryRow label='state root'>
-        <Hash value={data.stateRoot} />
-      </SummaryRow>
-      <SummaryRow label='extrinsics root'>
-        <Hash value={data.extrinsicsRoot} />
-      </SummaryRow>
-      <SummaryRow label='block producer' action={<CopyButton value={data.author} />}>
-        <Address
-          name={data.authorName}
-          value={data.author}
-          link={`/blocks/${data.number}/producer/${data.author}`}
-        />
-      </SummaryRow>
-      <SummaryRow label='block time'>
-        <Typography>
-          <TimeAgoComponent date={data.timestamp} />
-        </Typography>
-      </SummaryRow>
-    </SummaryPaperWrapper>
+    <SummaryContainer>
+      <SummaryEntry>
+        <SummaryHeader>Time</SummaryHeader>
+        <SummaryValue>{formattedTimestamp ?? <Skeleton />}</SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Status</SummaryHeader>
+        <SummaryValue>
+          {block?.finalized === undefined ? (
+            <Skeleton />
+          ) : (
+            <Stack direction='row' spacing={2} alignItems='center'>
+              <BlockStatusIcon status={block?.finalized ? 'successful' : 'pending'} />
+              <Box sx={{ pb: 0.5 }}>{block?.finalized ? 'Finalized' : 'Pending'}</Box>
+            </Stack>
+          )}
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Era</SummaryHeader>
+        <SummaryValue>{block?.currentEra ?? <Skeleton />}</SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Hash</SummaryHeader>
+        <SummaryValue>
+          {block?.hash ? <WithCopy value={block.hash}>{block.hash}</WithCopy> : <Skeleton />}
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Parent Hash</SummaryHeader>
+        <SummaryValue>
+          <Ellipsis>{block?.parentHash ?? <Skeleton />}</Ellipsis>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>State Root</SummaryHeader>
+        <SummaryValue>
+          <Ellipsis>{block?.stateRoot ?? <Skeleton />}</Ellipsis>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Extrinsics Root</SummaryHeader>
+        <SummaryValue>
+          <Ellipsis>{block?.extrinsicsRoot ?? <Skeleton />}</Ellipsis>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Block Producer</SummaryHeader>
+        <SummaryValue>
+          <Ellipsis>
+            {block ? (
+              <WithCopy value={block.author}>
+                <Address
+                  name={block.authorName}
+                  value={block.author}
+                  link={`/blocks/${block.number}/producer/${block.author}`}
+                />
+              </WithCopy>
+            ) : (
+              <Skeleton />
+            )}
+          </Ellipsis>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>{'Block Time'}</SummaryHeader>
+        <SummaryValue>{block ? <TimeAgo date={block.timestamp} /> : <Skeleton />}</SummaryValue>
+      </SummaryEntry>
+    </SummaryContainer>
   );
 };
 
