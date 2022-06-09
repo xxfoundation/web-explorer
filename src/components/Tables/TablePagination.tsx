@@ -18,7 +18,7 @@ export const styles = {
   },
   '.MuiTablePagination-actions > button.MuiButtonBase-root.Mui-disabled.MuiIconButton-root.Mui-disabled':
     {
-      color: theme.palette.grey[500]
+      color: theme.palette.grey[400]
     }
 };
 

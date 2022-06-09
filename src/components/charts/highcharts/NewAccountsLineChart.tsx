@@ -9,36 +9,34 @@ import Loader from './Loader';
 const NewAccountsChart = () => {
   const { data, loading } = useSubscription<NewAccounts>(LISTEN_FOR_NEW_ACCOUNTS);
   const chartData = useMemo(() => {
-    const auxData: DataPoint[] = [];
+    const points: DataPoint[] = [];
     (data?.newAccount || []).forEach((elem) => {
-      const idx = auxData.findIndex((era) => era[0] === elem.block.era);
+      const idx = points.findIndex((era) => era[0] === elem.block.era);
       if (idx !== -1) {
-        auxData[idx][1] += 1;
+        points[idx][1] += 1;
       } else {
-        auxData.push([elem.block.era, 1]);
+        points.push([elem.block.era, 1]);
       }
     });
-    return auxData;
+    console.warn(points);
+    const range = points[0]
+      ? {
+          minX: points[points.length - 1][0] - 2,
+          maxX: points[0][0] + 2
+        }
+      : undefined;
+    return { points, range };
   }, [data?.newAccount]);
-  const xRange = useMemo(
-    () =>
-      data?.newAccount && data.newAccount.length
-        ? {
-            minX: data.newAccount[0].block.era - 2,
-            maxX:
-              (data.newAccount[data.newAccount.length - 1].block.era
-                ? data.newAccount[data.newAccount.length - 1].block.era
-                : data.newAccount[0].block.era) + 2
-          }
-        : undefined,
-    [data?.newAccount]
-  );
   return (
     <DefaultTile header='new accounts' height='400px'>
-      {loading ? (
+      {loading || chartData.range === undefined ? (
         <Loader />
       ) : (
-        <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} x={xRange} />
+        <LineChart
+          tooltipFormatter={amountByEraTooltip}
+          data={chartData.points}
+          x={chartData.range}
+        />
       )}
     </DefaultTile>
   );
