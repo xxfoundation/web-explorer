@@ -12,7 +12,6 @@ import Info from './account/Info';
 import Summary from '../producer/Summary';
 
 import { shortString } from '../../utils';
-import { offset } from 'highcharts';
 // import PerformanceCard from './account/performance';
 
 const AccountId: FC = ({}) => {
