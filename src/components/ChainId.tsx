@@ -5,7 +5,7 @@ import { shortString } from '../utils';
 import HashValidator from './HashValidator';
 import isValidXXNetworkAddress from './IsValidXXNetworkAddress';
 import Link from './Link';
-import { styles as ellipsis } from '../components/Ellipsis';
+// import { styles as ellipsis } from '../components/Ellipsis';
 
 type IdProperties = {
   link?: string;
@@ -21,7 +21,7 @@ const contentRenderer = (
   props?: TypographyProps
 ) => {
   return (
-    <Typography {...props} style={ellipsis} fontFamily={'Roboto Mono'} color={isValid ? 'info' : 'red'}>
+    <Typography {...props} fontFamily={'Roboto Mono'} color={isValid ? 'info' : 'red'}>
       {link ? <Link to={link}>{text}</Link> : text}
     </Typography>
   );
