@@ -28,7 +28,7 @@ const TransferRow = (data: Transfer) => {
     { value: <TimeAgo date={data.timestamp} /> },
     {
       value: (
-        <Grid style={{ minWidth: '18rem' }} container>
+        <Grid style={{ maxWidth: '18rem' }} container>
           <Grid xs={5} item>
             {<Address value={data.source} link={`/accounts/${data.source}`} />}
           </Grid>
@@ -43,7 +43,7 @@ const TransferRow = (data: Transfer) => {
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
     { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
-    { value: <Hash value={data.hash} link={extrinsicIdLink} showTooltip /> }
+    { value: <Hash truncated value={data.hash} link={extrinsicIdLink} showTooltip /> }
   ];
 };
 
