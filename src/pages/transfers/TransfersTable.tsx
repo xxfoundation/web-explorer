@@ -30,13 +30,13 @@ const TransferRow = (data: Transfer) => {
       value: (
         <Grid style={{ maxWidth: '18rem' }} container>
           <Grid xs={5} item>
-            {<Address value={data.source} link={`/accounts/${data.source}`} />}
+            {<Address value={data.source} link={`/accounts/${data.source}`} truncated />}
           </Grid>
           <Grid xs={2} item sx={{ textAlign: 'center' }}>
             <ArrowForwardIosIcon />
           </Grid>
           <Grid xs={5} item>
-            {<Address value={data.destination} link={`/accounts/${data.destination}`} />}
+            {<Address value={data.destination} link={`/accounts/${data.destination}`} truncated />}
           </Grid>
         </Grid>
       )
