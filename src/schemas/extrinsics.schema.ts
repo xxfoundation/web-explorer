@@ -58,11 +58,9 @@ export const FIND_EXTRINSIC_BY_HASH = gql`
 export const EXTRINSICS_OF_BLOCK = gql`
   query ListExtrinsicOfBlock(
     $orderBy: [extrinsic_order_by!]
-    $limit: Int
-    $offset: Int
     $where: extrinsic_bool_exp
   ) {
-    extrinsic(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+    extrinsics: extrinsic(order_by: $orderBy, where: $where) {
       id
       index: extrinsic_index
       blockNumber: block_number

@@ -1,41 +1,28 @@
 import { useQuery } from '@apollo/client';
 import { TableCellProps } from '@mui/material';
-import React, { FC, useEffect, useMemo } from 'react';
-import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
-import { LIST_EVENTS } from '../../schemas/events.schema';
-import { TotalOfItems } from '../../schemas/types';
+import React, { FC, useEffect, useMemo, useState, useCallback } from 'react';
+import { EVENTS_OF_BLOCK, ListEvents, Event } from '../../schemas/events.schema';
 import { BaselineCell, BaselineTable } from '../Tables';
 import TablePagination from '../Tables/TablePagination';
 import { TableSkeleton } from '../Tables/TableSkeleton';
 import TimeAgoComponent from '../TimeAgo';
+import Error from '../../components/Error';
 
-const DEFAULT_ROWS_PER_PAGE = 5;
-
-type EventType = {
-  id: number;
-  index: number;
-  section: string;
-  method: string;
-  blockNumber: number;
-  timestamp: number;
-};
-
-type Response = { events: EventType[] } & TotalOfItems;
+const ROWS_PER_PAGE = 5;
 
 const props: TableCellProps = { align: 'left' };
 
-const rowsParser = ({
-  blockNumber,
-  index,
-  method,
-  section,
-  timestamp
-}: EventType): BaselineCell[] => {
+const rowsParser = ({ blockNumber, index, method, section, timestamp }: Event): BaselineCell[] => {
   return [
     { value: `${blockNumber}-${index}`, props },
     { value: <TimeAgoComponent date={timestamp} /> },
     { value: `${section} (${method})` }
   ];
+};
+
+const paginate = (events: Event[], rowsPerPage: number, page: number): Event[] => {
+  // page starts at 0
+  return events.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 };
 
 const headers = [{ value: 'event id', props }, { value: 'time' }, { value: 'action' }];
@@ -44,27 +31,41 @@ const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: numbe
   where,
   setCount = () => {}
 }) => {
-  const { cursorField, limit, makeOnPageChange, offset, onRowsPerPageChange, page, rowsPerPage } =
-    usePaginatorByCursor({ rowsPerPage: DEFAULT_ROWS_PER_PAGE, cursorField: 'id' });
+  const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
+  const [page, setPage] = useState(0);
+  const onRowsPerPageChange = useCallback(({ target: { value } }) => {
+    setRowsPerPage(parseInt(value));
+    setPage(0);
+  }, []);
+  const onPageChange = useCallback((_: unknown, number: number) => {
+    setPage(number);
+  }, []);
+
+  // Query data from DB
   const variables = useMemo(
     () => ({
       orderBy: [{ block_number: 'desc', event_index: 'asc' }],
-      limit: limit,
-      offset: offset,
       where: {
-        ...where,
-        id: { _lte: cursorField }
+        ...where
       }
     }),
-    [cursorField, limit, offset, where]
+    [where]
   );
-  const { data, loading } = useQuery<Response>(LIST_EVENTS, { variables });
-  const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
+  const { data, error, loading } = useQuery<ListEvents>(EVENTS_OF_BLOCK, { variables });
+
+  // Display Data in Paginated Table
+  const rows = useMemo(() => {
+    return paginate(data?.events || [], rowsPerPage, page).map(rowsParser);
+  }, [data?.events, page, rowsPerPage]);
+
+  // Update count
   useEffect(() => {
     if (setCount !== undefined && data?.agg) {
       setCount(data.agg.aggregate.count);
     }
   }, [data?.agg, setCount]);
+
+  // Return rendering components
   const footer = useMemo(() => {
     if (data?.agg && data?.events && data.events.length) {
       return (
@@ -72,15 +73,16 @@ const EventsTable: FC<{ where: Record<string, unknown>; setCount?: (count: numbe
           page={page}
           count={data.agg.aggregate.count}
           rowsPerPage={rowsPerPage}
-          onPageChange={makeOnPageChange(data.events[0])}
-          rowsPerPageOptions={[DEFAULT_ROWS_PER_PAGE, 20, 50]}
+          onPageChange={onPageChange}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 20, 50]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
     }
     return <></>;
-  }, [data?.agg, data?.events, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  }, [data?.agg, data?.events, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
 
+  if (error) return <Error type='data-unavailable' />;
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={3} footer />;
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };

@@ -19,7 +19,7 @@ const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
     <Link to={`/blocks/${block.number}`}>{block.number}</Link>,
     <BlockStatusIcon status={block.number > block.numberFinalized ? 'pending' : 'successful'} />,
     block.currentEra,
-    <TimeAgoComponent date={'2022-02-16 01:56:42 (+UTC)'} />,
+    <TimeAgoComponent date={block.timestamp} />,
     <Link to='#'>{block.totalExtrinsics}</Link>,
     <Address
       value={block.author}
@@ -65,11 +65,11 @@ const BlocksTable: FC = () => {
     }),
     [blockNumber, limit, offset]
   );
-  
+
   const { data, loading } = useQuery<ListBlockOrdered>(LIST_BLOCK_ORDERED, {
-    variables,
+    variables
   });
-  
+
   const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
   const footer = useMemo(() => {
     if (data?.agg && data?.blocks && data.blocks.length) {
@@ -79,7 +79,7 @@ const BlocksTable: FC = () => {
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={makeOnPageChange(data.blocks[0])}
-          rowsPerPageOptions={[ROWS_PER_PAGE, 20, 30, 40]}
+          rowsPerPageOptions={[ROWS_PER_PAGE, 50, 100, 250]}
           onRowsPerPageChange={onRowsPerPageChange}
         />
       );
