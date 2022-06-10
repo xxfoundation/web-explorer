@@ -27,7 +27,7 @@ const Info: FC<{ account: Account }> = ({ account }) => {
         <TypographyHeader sx={{ width: '110px' }}>created</TypographyHeader>
         <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
-          <TimeAgoComponent date={account.timestamp} />
+          <TimeAgoComponent date={account.whenCreated * 1000} />
         </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>

@@ -32,8 +32,8 @@ type EraPoints = {
 const EraRow = (points: EraPoints) => {
   return BaseLineCellsWrapper([
     points.era,
-    <Link to={`/block/${points.startBlock}`}>{points.startBlock}</Link>,
-    <Link to={`/block/${points.endBlock}`}>{points.endBlock}</Link>,
+    <Link to={`/blocks/${points.startBlock}`}>{points.startBlock}</Link>,
+    <Link to={`/blocks/${points.endBlock}`}>{points.endBlock}</Link>,
     points.rewarded,
     <Typography sx={{ width: '20vw', overflowWrap: 'break-word' }}>
       {points.blocksProduced.length}

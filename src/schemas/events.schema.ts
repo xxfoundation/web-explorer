@@ -10,12 +10,33 @@ export type Event = {
   timestamp: string;
 };
 
+export const EVENTS_OF_BLOCK = gql`
+  query ListEventsOfBlock(
+    $orderBy: [event_order_by!]
+    $where: event_bool_exp
+  ) {
+    agg: event_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    events: event(order_by: $orderBy, where: $where) {
+      blockNumber: block_number
+      index: event_index
+      method
+      id
+      section
+      timestamp
+    }
+  }
+`;
+
 export type ListEvents = {
   events: Event[];
 } & TotalOfItems;
 
 export const LIST_EVENTS = gql`
-  query ListEventsOfBlock(
+  query ListEventsOrdered(
     $orderBy: [event_order_by!]
     $limit: Int
     $offset: Int

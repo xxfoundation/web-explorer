@@ -50,7 +50,7 @@ export const SummaryContainer: FC = ({ children }) => (
 export { TableRow as SummaryEntry } from '@mui/material';
 
 export const SummaryValue = styled(MuiCell)(({ theme }) => ({
-  ...theme.typography.body2,
+  ...theme.typography.body1,
   [theme.breakpoints.up('sm')]: {
     paddingLeft: '2rem',
     paddingRight: '2rem'
