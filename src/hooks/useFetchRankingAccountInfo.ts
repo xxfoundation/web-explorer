@@ -10,16 +10,15 @@ const useFetchRankingAccountInfo = (
   });
   const accountRankingResult = useQuery<Omit<GetAccountByAddressType, 'account'>>(
     GET_ACCOUNT_RANKING,
-    !accountResult.loading &&
-      accountResult.data?.account &&
-      accountResult.data.account.roles.validator
-      ? {
-          variables: {
-            blockHeight: accountResult.data.account.blockHeight,
-            stashAddress: accountResult.data.account.id
+    {
+      variables: {
+        where: {
+          stash_address: {
+            _eq: accountId
           }
         }
-      : { skip: true }
+      }
+    }
   );
 
   if (accountResult.loading || accountRankingResult.loading) {

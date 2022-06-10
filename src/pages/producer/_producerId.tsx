@@ -46,7 +46,7 @@ const BlockProducer = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Typography variant='h1' maxWidth='700px' sx={{ mb: 5 }}>
+      <Typography variant='h1' sx={{ mb: 5 }}>
         Block Producer . {identity.display || shortString(ranking.stashAddress)}
       </Typography>
       <Summary ranking={ranking} name={identity.display} />

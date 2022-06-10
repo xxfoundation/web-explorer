@@ -9,6 +9,10 @@ import BalanceCard from './account/Balance';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
 import Info from './account/Info';
+import Summary from '../producer/Summary';
+
+import { shortString } from '../../utils';
+import { offset } from 'highcharts';
 // import PerformanceCard from './account/performance';
 
 const AccountId: FC = ({}) => {
@@ -33,13 +37,15 @@ const AccountId: FC = ({}) => {
       </Container>
     );
 
-  if (!data?.account) return <NotFound message='Account Not Found'/>;
+  if (!data?.account) return <NotFound message='Account Not Found' />;
+  const ranking = data?.ranking && data?.ranking[0];
+  const identity = ranking?.identity && JSON.parse(ranking?.identity);
 
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <Typography variant='h1' maxWidth='700px'>
-        {data.account.identity.display || accountId}
+        {data.account.identity.display || shortString(accountId, 10)}
       </Typography>
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
@@ -51,8 +57,13 @@ const AccountId: FC = ({}) => {
         <Grid item xs={12} md={6}>
           <Info account={data.account} />
         </Grid>
+        {ranking && (
+          <Grid item xs={12}>
+            <Summary ranking={ranking} name={identity.display} />
+          </Grid>
+        )}
         <Grid item xs={12}>
-          <BlockchainCard account={data.account} />
+          <BlockchainCard account={data.account} ranking={ranking} />
         </Grid>
         {/* <Grid item xs={12}>
           <GovernanceCard roles={sampleAccount.roles} />

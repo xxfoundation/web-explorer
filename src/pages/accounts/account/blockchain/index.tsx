@@ -10,9 +10,15 @@ import {
   GET_EXTRINSIC_COUNTS,
   GetExtrinsicCounts
 } from '../../../../schemas/accounts.schema';
+import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
 import TransferTable from '../../../transfers/TransfersTable';
+import ErasTable from '../../../producer/ErasTable';
+import NominatorsTable from '../../../producer/NominatorsTable';
 
-const BlockchainCard: FC<{ account: Account }> = ({ account }) => {
+const BlockchainCard: FC<{
+  account: Account;
+  ranking: CommonFieldsRankingFragment | undefined;
+}> = ({ account, ranking }) => {
   const { data, loading } = useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
     variables: { accountId: account.id }
   });
@@ -29,7 +35,8 @@ const BlockchainCard: FC<{ account: Account }> = ({ account }) => {
         _eq: account.id
       }
     };
-    return loading
+
+    const tabs = loading
       ? [
           {
             label: <Skeleton width={'90%'} />,
@@ -60,7 +67,19 @@ const BlockchainCard: FC<{ account: Account }> = ({ account }) => {
             content: <TransferTable where={transferWhereClause} />
           }
         ];
-  }, [account.id, loading, extrinsicCount, transferCount]);
+    if (!loading && account.roles.validator && ranking !== undefined) {
+      tabs.push({
+        label: <TabText message='nominators' count={ranking.nominators} />,
+        content: <NominatorsTable nominations={ranking.nominations} />
+      });
+      tabs.push({
+        label: <TabText message='eras' count={ranking.activeEras} />,
+        content: <ErasTable producerId={account.id} eraPointsHistory={ranking.eraPointsHistory} />
+      });
+    }
+
+    return tabs;
+  }, [account, loading, extrinsicCount, transferCount, ranking]);
 
   return (
     <PaperStyled>

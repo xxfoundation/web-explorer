@@ -54,7 +54,7 @@ export type Account = {
 
 export type GetAccountByAddressType = {
   account: Account;
-  ranking?: CommonFieldsRankingFragment;
+  ranking?: CommonFieldsRankingFragment[];
 };
 
 export const ACCOUNT_BY_PK_FRAGMENT = gql`
