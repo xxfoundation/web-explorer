@@ -46,7 +46,7 @@ const ValidatorRow: FC<RankedAccount> = ({
         <Typography variant='h4'>{rank}</Typography>
       </TableCell>
       <TableCell>
-        <Address name={name} value={addressId} link={validatorLink} />
+        <Address name={name} value={addressId} link={validatorLink} truncated />
       </TableCell>
       <TableCell>{parsed}</TableCell>
       <TableCell>
