@@ -6,7 +6,6 @@ import NominatorsTable from './NominatorsTable';
 
 const ProducerTabs: React.FC<{
   producerId: string;
-  blockHeight: number;
   eras: number;
   eraPointsHistory: string;
   nominators: number;

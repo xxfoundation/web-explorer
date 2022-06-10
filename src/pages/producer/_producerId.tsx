@@ -53,7 +53,6 @@ const BlockProducer = () => {
       <Box sx={{ mt: 2 }}>
         <ProducerTabs
           producerId={ranking.stashAddress}
-          blockHeight={ranking.blockHeight}
           eras={ranking.activeEras}
           eraPointsHistory={ranking.eraPointsHistory}
           nominators={ranking.nominators}

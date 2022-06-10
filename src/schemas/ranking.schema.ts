@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export type CommonFieldsRankingFragment = {
-  blockHeight: number;
+  era: number;
   identity: string;
   activeEras: number;
 
@@ -30,7 +30,7 @@ export type GetAccountRanking = {
 export const GET_ACCOUNT_RANKING = gql`
   query GetAccountRanking($where: ranking_bool_exp!) {
     ranking: ranking(where: $where) {
-      blockHeight: block_height
+      era
       identity
       activeEras: active_eras
       
