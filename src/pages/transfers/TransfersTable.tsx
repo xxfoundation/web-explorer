@@ -28,7 +28,7 @@ const TransferRow = (data: Transfer) => {
     { value: <TimeAgo date={data.timestamp} /> },
     {
       value: (
-        <Grid style={{ maxWidth: '18rem' }} container>
+        <Grid container>
           <Grid xs={5} item>
             {<Address value={data.source} link={`/accounts/${data.source}`} truncated />}
           </Grid>
