@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import {
   styled,
-  Box,
   Divider,
   Paper,
   Table,
@@ -12,6 +11,7 @@ import {
   Stack
 } from '@mui/material';
 import CopyButton from './buttons/CopyButton';
+import Ellipsis from './Ellipsis';
 
 const PaperStyled = styled(Paper)({
   overflow: 'hidden',
@@ -71,13 +71,6 @@ export const SummaryHeader = styled(SummaryValue)(({ theme }) => ({
   borderRight: `1px solid  ${theme.palette.grey[200]}`,
   textTransform: 'uppercase'
 }));
-
-export const Ellipsis = styled(Box)({
-  display: 'block',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis'
-});
 
 export const WithCopy: FC<{ value: string }> = ({ children, value }) => (
   <Stack direction='row' flexWrap='nowrap' alignItems='center'>

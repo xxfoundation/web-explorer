@@ -25,11 +25,10 @@ const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
       value={block.author}
       name={block.authorName}
       link={`/blocks/${block.number}/producer/${block.author}`}
-      truncated
       disableAvatar
     />,
     <HashColumnWithTooltip hash={block.hash}>
-      <Hash value={block.hash} link={`/blocks/${block.number}`} truncated />
+      <Hash value={block.hash} link={`/blocks/${block.number}`} />
     </HashColumnWithTooltip>
   ]);
 };

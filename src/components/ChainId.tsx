@@ -2,13 +2,13 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { Avatar, Stack, Tooltip, Typography, TypographyProps } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import { shortString } from '../utils';
+import { styles as ellipsis } from './Ellipsis';
 import HashValidator from './HashValidator';
 import isValidXXNetworkAddress from './IsValidXXNetworkAddress';
 import Link from './Link';
 
 type IdProperties = {
   link?: string;
-  truncated?: boolean;
   offset?: number;
   value: string;
 } & TypographyProps;
@@ -20,7 +20,7 @@ const contentRenderer = (
   props?: TypographyProps
 ) => {
   return (
-    <Typography {...props} fontFamily={'Roboto Mono'} color={isValid ? 'info' : 'red'}>
+    <Typography style={ellipsis} fontWeight={300} {...props} fontFamily={'Roboto Mono'} color={isValid ? 'info' : 'red'}>
       {link ? <Link to={link}>{text}</Link> : text}
     </Typography>
   );
@@ -30,33 +30,31 @@ const Hash: FC<IdProperties & { showTooltip?: boolean }> = ({
   link,
   offset,
   showTooltip,
-  truncated,
   value,
   ...props
 }) => {
   const isValid = HashValidator(value);
-  const displayValue = truncated ? shortString(value, offset) : value;
-  if (showTooltip && truncated) {
+  if (showTooltip) {
     return (
       <Tooltip
         title={
-          <Typography fontSize={'10px'} fontWeight={400}>
+          <Typography style={ellipsis} fontSize={'10px'} fontWeight={300}>
             {value}
           </Typography>
         }
         placement='top'
         arrow
       >
-        {contentRenderer(displayValue, isValid, link, props)}
+        {contentRenderer(value, isValid, link, props)}
       </Tooltip>
     );
   }
-  return contentRenderer(displayValue, isValid, link, props);
+  return contentRenderer(value, isValid, link, props);
 };
 
 const Address: FC<
   IdProperties & { name?: string; disableAvatar?: boolean; avatarUrl?: string }
-> = ({ avatarUrl, disableAvatar, link, name, truncated, value, ...props }) => {
+> = ({ avatarUrl, disableAvatar, link, name, value, ...props }) => {
   const avatar = useMemo(() => {
     return name ? (
       <Tooltip
@@ -80,7 +78,7 @@ const Address: FC<
       return (
         <Tooltip
           title={
-            <Typography fontSize={'10px'} fontWeight={400}>
+            <Typography style={ellipsis} fontSize={'10px'} fontWeight={400}>
               {value}
             </Typography>
           }
@@ -90,7 +88,7 @@ const Address: FC<
         </Tooltip>
       );
     } else {
-      return truncated ? (
+      return (
         <Tooltip
           title={
             <Typography fontSize={'10px'} fontWeight={400}>
@@ -99,13 +97,11 @@ const Address: FC<
           }
           arrow
         >
-          {contentRenderer(truncated ? shortString(value) : value, isValid, link, props)}
+          {contentRenderer(value, isValid, link, props)}
         </Tooltip>
-      ) : (
-        contentRenderer(value, isValid, link, props)
       );
     }
-  }, [value, name, link, props, truncated]);
+  }, [value, name, link, props]);
 
   return disableAvatar ? (
     content

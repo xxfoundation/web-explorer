@@ -31,7 +31,6 @@ const rowsParser = (rowData: ExtrinsicsTyp) => {
     <Link to={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}>{rowData.index}</Link>,
     <Hash
       value={rowData.hash}
-      truncated
       link={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}
       showTooltip
     />,

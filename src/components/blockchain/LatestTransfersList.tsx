@@ -33,7 +33,6 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             <Address
               value={props.source}
               link={`/accounts/${props.source}`}
-              truncated
               disableAvatar
             />
           </Grid>
@@ -46,7 +45,6 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             <Address
               value={props.destination}
               link={`/accounts/${props.destination}`}
-              truncated
               disableAvatar
             />
           </Grid>

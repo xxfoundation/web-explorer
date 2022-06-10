@@ -14,6 +14,7 @@ import Info from './account/Info';
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
   const { data, loading } = useFetchRankingAccountInfo(accountId);
+  
   if (loading)
     return (
       <Container sx={{ my: 5 }}>
