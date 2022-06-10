@@ -1,4 +1,4 @@
-import { Divider, Grid, Typography } from '@mui/material';
+import { Divider, Hidden, Grid, Typography } from '@mui/material';
 import React, { FC, Fragment, useMemo } from 'react';
 import { Address, Hash } from '../../components/ChainId';
 import CmixAddress from '../../components/CmixAddress';
@@ -12,6 +12,7 @@ import {
 } from '../../components/Summary';
 import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
 import { HashColumnWithTooltip } from '../../components/Tooltip';
+import Ellipsis from '../../components/Ellipsis';
 
 const SessionKeyValue: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
   return (
@@ -19,16 +20,20 @@ const SessionKeyValue: FC<{ entries: Record<string, string | string> }> = ({ ent
       {Object.entries(entries).map(([name, value]) => {
         return (
           <Fragment key={name}>
-            <Grid item xs={2} md={2}>
+            <Grid item xs={12} md={2}>
               {name}
             </Grid>
-            <Grid item xs={1} md={1}>
-              <Divider orientation='vertical' />
-            </Grid>
+            <Hidden mdDown>
+              <Grid item xs={1} md={1}>
+                <Divider orientation='vertical' />
+              </Grid>
+            </Hidden>
             <Grid item xs={9} md={9}>
-              <HashColumnWithTooltip hash={value}>
-                <Hash value={value} truncated offset={20} />
-              </HashColumnWithTooltip>
+              <Ellipsis>
+                <HashColumnWithTooltip hash={value}>
+                  <Hash value={value} offset={20} />
+                </HashColumnWithTooltip>
+              </Ellipsis>
             </Grid>
           </Fragment>
         );

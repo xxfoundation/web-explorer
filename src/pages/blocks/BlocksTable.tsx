@@ -22,14 +22,14 @@ const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
     <TimeAgoComponent date={block.timestamp} />,
     <Link to='#'>{block.totalExtrinsics}</Link>,
     <Address
+      truncated
       value={block.author}
       name={block.authorName}
       link={`/blocks/${block.number}/producer/${block.author}`}
-      truncated
       disableAvatar
     />,
     <HashColumnWithTooltip hash={block.hash}>
-      <Hash value={block.hash} link={`/blocks/${block.number}`} truncated />
+      <Hash truncated value={block.hash} link={`/blocks/${block.number}`} />
     </HashColumnWithTooltip>
   ]);
 };

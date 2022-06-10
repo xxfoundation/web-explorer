@@ -5,6 +5,7 @@ import { shortString } from '../utils';
 import HashValidator from './HashValidator';
 import isValidXXNetworkAddress from './IsValidXXNetworkAddress';
 import Link from './Link';
+// import { styles as ellipsis } from '../components/Ellipsis';
 
 type IdProperties = {
   link?: string;

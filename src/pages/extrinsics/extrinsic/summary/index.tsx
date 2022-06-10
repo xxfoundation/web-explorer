@@ -1,5 +1,5 @@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { Divider, Stack, Typography } from '@mui/material';
+import { Divider, Stack } from '@mui/material';
 import React, { FC } from 'react';
 import BlockStatusIcon from '../../../../components/block/BlockStatusIcon';
 import { Address, Hash } from '../../../../components/ChainId';
@@ -39,7 +39,7 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
           <Link to={`/blocks/${extrinsicId.blockNumber}`}>
             <Stack direction='row' spacing={1} alignItems='center'>
               <CheckCircleOutlineOutlinedIcon color='success' />
-              <Typography>{extrinsicId.blockNumber}</Typography>
+              &nbsp;{extrinsicId.blockNumber}
             </Stack>
           </Link>
         </SummaryValue>
@@ -47,7 +47,7 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
       <SummaryEntry>
         <SummaryHeader>LifeTime</SummaryHeader>
         <SummaryValue>
-          <Typography>{extrinsic.lifetime || 'Immortal'}</Typography>
+          {extrinsic.lifetime || 'Immortal'}
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
@@ -70,7 +70,7 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
         <SummaryValue>
           <Stack direction='row' spacing={1} alignItems='center'>
             <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />
-            <Typography>{extrinsic.success ? 'Success' : 'Failure'}</Typography>
+            &nbsp;{extrinsic.success ? 'Success' : 'Failure'}
           </Stack>
         </SummaryValue>
       </SummaryEntry>

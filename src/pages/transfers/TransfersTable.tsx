@@ -43,7 +43,7 @@ const TransferRow = (data: Transfer) => {
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
     { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
-    { value: <Hash value={data.hash} link={extrinsicIdLink} truncated showTooltip /> }
+    { value: <Hash truncated value={data.hash} link={extrinsicIdLink} showTooltip /> }
   ];
 };
 

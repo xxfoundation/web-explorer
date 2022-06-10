@@ -6,13 +6,13 @@ import dayjs from 'dayjs';
 import BlockStatusIcon from './BlockStatusIcon';
 import TimeAgo from '../TimeAgo';
 import {
-  Ellipsis,
   SummaryContainer,
   SummaryEntry,
   SummaryHeader,
   SummaryValue,
   WithCopy
 } from '../Summary';
+import Ellipsis from '../Ellipsis';
 
 const timeFormat = 'YYYY.MM.DD | h:mm A (UTC)';
 
