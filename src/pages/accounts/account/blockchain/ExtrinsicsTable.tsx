@@ -17,6 +17,7 @@ const ExtrinsicRow: FC<Extrinsic> = (extrinsic) => (
     <TableCell>
       <Hash
         value={extrinsic.hash}
+        truncated
         link={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.index}`}
         showTooltip
       />
