@@ -52,7 +52,7 @@ const SearchExtrinsics: FC = () => {
   return (
     <GenericSearchInput
       messageLoader={(value: string) => `Querying Extrinsic ${value}`}
-      placeholder='Search by Extrinsic Hash (insert an hexadecimal string)'
+      placeholder='Search by Extrinsic Hash (insert a hexadecimal string)'
       document={FIND_EXTRINSIC_BY_HASH}
       variables={(v: string) => ({
         where: {

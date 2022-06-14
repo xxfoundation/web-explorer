@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
-import { Address } from '../../components/ChainId';
-import CmixAddress from '../../components/CmixAddress';
+import Address from '../../components/Hash/XXNetworkAddress';
+import CmixAddress from '../../components/Hash/CmixAddress';
 import Error from '../../components/Error';
 import FormatBalance from '../../components/FormatBalance';
 import Loading from '../../components/Loading';
@@ -46,7 +46,7 @@ const ValidatorRow: FC<RankedAccount> = ({
         <Typography variant='h4'>{rank}</Typography>
       </TableCell>
       <TableCell>
-        <Address name={name} value={addressId} link={validatorLink} truncated />
+        <Address name={name} value={addressId} url={validatorLink} truncated />
       </TableCell>
       <TableCell>{parsed}</TableCell>
       <TableCell>
@@ -57,7 +57,7 @@ const ValidatorRow: FC<RankedAccount> = ({
       </TableCell>
       <TableCell>
         <Typography variant='code'>
-          <CmixAddress shorten nodeId={cmixId} />
+          <CmixAddress truncated value={cmixId} />
         </Typography>
       </TableCell>
       <TableCell>{nominators}</TableCell>

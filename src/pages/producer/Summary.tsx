@@ -1,7 +1,8 @@
 import { Divider, Hidden, Grid, Typography } from '@mui/material';
 import React, { FC, Fragment, useMemo } from 'react';
-import { Address, Hash } from '../../components/ChainId';
-import CmixAddress from '../../components/CmixAddress';
+import Address from '../../components/Hash/XXNetworkAddress';
+import Hash from '../../components/Hash';
+import CmixAddress from '../../components/Hash/CmixAddress';
 import FormatBalance from '../../components/FormatBalance';
 import {
   SummaryContainer,
@@ -14,7 +15,7 @@ import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
 import { HashColumnWithTooltip } from '../../components/Tooltip';
 import Ellipsis from '../../components/Ellipsis';
 
-const SessionKeyValue: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
+const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
   return (
     <Grid spacing={1} container paddingTop='1em'>
       {Object.entries(entries).map(([name, value]) => {
@@ -31,7 +32,7 @@ const SessionKeyValue: FC<{ entries: Record<string, string | string> }> = ({ ent
             <Grid item xs={9} md={9}>
               <Ellipsis>
                 <HashColumnWithTooltip hash={value}>
-                  <Hash value={value} offset={20} />
+                  <Hash truncated value={value} offset={10} />
                 </HashColumnWithTooltip>
               </Ellipsis>
             </Grid>
@@ -56,7 +57,11 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Stash</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.stashAddress}>
-            <Address name={name} value={ranking.stashAddress} />
+            <Address
+              truncated='lgDown'
+              name={name}
+              value={ranking.stashAddress}
+            />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -64,7 +69,9 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Controller</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.controllerAddress}>
-            <Address value={ranking.controllerAddress} />
+            <Address
+              truncated='lgDown'
+              value={ranking.controllerAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -72,7 +79,9 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Reward</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.rewardsAddress}>
-            <Address value={ranking.rewardsAddress} />
+            <Address
+              truncated='lgDown'
+              value={ranking.rewardsAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -80,7 +89,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Cmix ID</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.cmixId}>
-            <CmixAddress nodeId={ranking.cmixId} />
+            <CmixAddress truncated='mdDown' value={ranking.cmixId} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -129,7 +138,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
       <SummaryEntry>
         <SummaryHeader>Session Key</SummaryHeader>
         <SummaryValue>
-          <SessionKeyValue entries={sessionEntries} />
+          <SessionKeyValues entries={sessionEntries} />
         </SummaryValue>
       </SummaryEntry>
     </SummaryContainer>

@@ -9,8 +9,15 @@ interface LinkRouterProps extends LinkProps {
 }
 
 const Link: React.FC<LinkRouterProps> = React.forwardRef(({ children, ...props }, ref) => {
+  const LinkComponent = props.to.startsWith('/') ? RouterLink : 'a';
+
   return (
-    <MaterialLink underline='hover' component={RouterLink} {...props} ref={ref}>
+    <MaterialLink
+      underline='hover'
+      component={LinkComponent}
+      {...props}
+      href={props.to}
+      ref={ref}>
       {children}
     </MaterialLink>
   );

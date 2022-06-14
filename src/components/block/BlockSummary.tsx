@@ -1,7 +1,7 @@
 import type { Block } from '../../schemas/blocks.schema';
 import React, { FC, useMemo } from 'react';
 import { Box, Skeleton, Stack } from '@mui/material';
-import { Address } from '../ChainId';
+import Address from '../Hash/XXNetworkAddress';
 import dayjs from 'dayjs';
 import BlockStatusIcon from './BlockStatusIcon';
 import TimeAgo from '../TimeAgo';
@@ -78,7 +78,7 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
                 <Address
                   name={block.authorName}
                   value={block.author}
-                  link={`/blocks/${block.number}/producer/${block.author}`}
+                  url={`/blocks/${block.number}/producer/${block.author}`}
                 />
               </WithCopy>
             ) : (

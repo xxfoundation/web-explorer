@@ -3,7 +3,8 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Grid, Stack, Typography } from '@mui/material';
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
-import { Address, Hash } from '../../components/ChainId';
+import Address from '../../components/Hash/XXNetworkAddress';
+import Hash from '../../components/Hash';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import { BaselineTable } from '../../components/Tables';
@@ -30,20 +31,20 @@ const TransferRow = (data: Transfer) => {
       value: (
         <Grid container>
           <Grid xs={5} item>
-            {<Address value={data.source} link={`/accounts/${data.source}`} truncated />}
+            {<Address value={data.source} url={`/accounts/${data.source}`} truncated />}
           </Grid>
           <Grid xs={2} item sx={{ textAlign: 'center' }}>
             <ArrowForwardIosIcon />
           </Grid>
           <Grid xs={5} item>
-            {<Address value={data.destination} link={`/accounts/${data.destination}`} truncated />}
+            {<Address value={data.destination} url={`/accounts/${data.destination}`} truncated />}
           </Grid>
         </Grid>
       )
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
     { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
-    { value: <Hash truncated value={data.hash} link={extrinsicIdLink} showTooltip /> }
+    { value: <Hash truncated value={data.hash} url={extrinsicIdLink} showTooltip /> }
   ];
 };
 
