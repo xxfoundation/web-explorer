@@ -7,9 +7,17 @@ import { isValidXXNetworkAddress } from '../../utils';
 type Props = HashProps & {
   name?: string;
   avatar?: string;
+  disableAvatar?: boolean;
+  disableUrl?: boolean;
 };
 
-const Address: FC<Props> = ({ avatar, name, ...hashProps }) => {
+const Address: FC<Props> = ({
+  avatar,
+  disableAvatar,
+  disableUrl,
+  name,
+  ...hashProps
+}) => {
   const avatarIcon = useMemo(() => {
     return name ? (
       <Tooltip
@@ -32,8 +40,11 @@ const Address: FC<Props> = ({ avatar, name, ...hashProps }) => {
 
   return (
     <Stack direction={'row'} alignItems='center'>
-      {avatarIcon}
-      <Hash {...hashProps} url={url} valid={isValid} />
+      {!disableAvatar && avatarIcon}
+      <Hash
+        {...hashProps}
+        url={!disableUrl ? url : undefined}
+        valid={hashProps.valid === undefined ? isValid : hashProps.valid} />
     </Stack>
   )
 };

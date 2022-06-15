@@ -8,7 +8,7 @@ import { isHex } from '@polkadot/util';
 import Link from '../Link';
 
 const DEFAULT_HASH_BITLENGTH = 256;
-const SHORT_STRING_OFFSET = 4;
+const SHORT_STRING_OFFSET = 6;
 
 type Responsiveness =  'xlDown' | 'lgDown' | 'mdDown' | 'smDown' | 'xsDown' | 'xsUp' | 'smUp' | 'mdUp' | 'lgUp' | 'xlUp';
 
@@ -46,7 +46,7 @@ const EllipsisOnEmpty = styled('span')<{ responsiveness: Responsiveness }>(({ re
   }
 }));
 
-const ResponsiveHash: FC<Pick<Props, 'offset' | 'truncated' | 'value'>> = ({
+export const ResponsiveHash: FC<Pick<Props, 'offset' | 'truncated' | 'value'>> = ({
   offset = SHORT_STRING_OFFSET,
   truncated,
   value
@@ -78,7 +78,7 @@ const Hash: FC<Props> = ({
   valid,
   url,
   offset = SHORT_STRING_OFFSET,
-  showTooltip,
+  showTooltip = true,
   truncated,
   value,
   ...props
@@ -101,6 +101,7 @@ const Hash: FC<Props> = ({
       <Typography
         fontFamily={'Roboto Mono'}
         color={isValid ? 'info' : 'red'}
+        sx={{ fontWeight: 400 }}
         {...props}
       >
         {url ? <Link to={url}>{hash}</Link> : hash}
