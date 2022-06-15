@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Grid, Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -28,19 +27,10 @@ const TransferRow = (data: Transfer) => {
     { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
     { value: <TimeAgo date={data.timestamp} /> },
     {
-      value: (
-        <Grid container>
-          <Grid xs={5} item>
-            {<Address value={data.source} url={`/accounts/${data.source}`} truncated />}
-          </Grid>
-          <Grid xs={2} item sx={{ textAlign: 'center' }}>
-            <ArrowForwardIosIcon />
-          </Grid>
-          <Grid xs={5} item>
-            {<Address value={data.destination} url={`/accounts/${data.destination}`} truncated />}
-          </Grid>
-        </Grid>
-      )
+      value: <Address value={data.source} url={`/accounts/${data.source}`} truncated />
+    },
+    {
+      value: <Address value={data.destination} url={`/accounts/${data.destination}`} truncated />
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
     { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
@@ -53,12 +43,10 @@ const headers = [
   { value: 'Block' },
   { value: 'Time' },
   {
-    value: (
-      <Stack direction={'row'} justifyContent={'space-between'} maxWidth={'260px'}>
-        <Typography>From</Typography>
-        <Typography>To</Typography>
-      </Stack>
-    )
+    value: <Typography>To</Typography>
+  },
+  {
+    value: <Typography>From</Typography>
   },
   { value: 'Amount' },
   { value: 'Result' },

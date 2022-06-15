@@ -26,7 +26,7 @@ const TimeAgoComponent: React.FC<ReactTimeagoProps & Props> = ({ dateFormat = de
   );
 
   return (
-    <Tooltip title={formattedDate} placement='top' className='wtf-bbq' arrow>
+    <Tooltip title={formattedDate} placement='top' arrow>
       <span>
         <TimeAgo
           data-tip={formattedDate}
