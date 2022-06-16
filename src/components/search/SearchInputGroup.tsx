@@ -77,24 +77,10 @@ export const GenericSearchInput = <T extends object>({
     [submitSearch]
   );
 
-  const loadingMsg = useMemo(() => messageLoader(searchInput), [messageLoader, searchInput]);
-
-  if (loading) {
-    return (
-      <SearchInput
-        value={loadingMsg}
-        disabled
-        disableUnderline
-        fullWidth
-        sx={{ maxWidth: '80%' }}
-        startAdornment={
-          <InputAdornment position='start'>
-            <CircularProgress size={20} color='inherit' />
-          </InputAdornment>
-        }
-      />
-    );
-  }
+  const loadingMsg = useMemo(
+    () => messageLoader(searchInput),
+    [messageLoader, searchInput]
+  );
 
   return (
     <>
@@ -103,12 +89,14 @@ export const GenericSearchInput = <T extends object>({
           <SearchInput
             placeholder={placeholder}
             onChange={searchInputOnChange}
-            value={searchInput}
+            value={loading ? loadingMsg : searchInput}
             disableUnderline
             onKeyDown={handleKeyDown}
             startAdornment={
               <InputAdornment position='start'>
-                <SearchIcon />
+                {loading
+                  ? <CircularProgress size={20} color='inherit' />
+                  : <SearchIcon />}
               </InputAdornment>
             }
           />
