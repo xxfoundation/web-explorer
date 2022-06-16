@@ -88,6 +88,7 @@ export const GenericSearchInput = <T extends object>({
         <FormControl fullWidth variant='standard'>
           <SearchInput
             placeholder={placeholder}
+            disabled={loading}
             onChange={searchInputOnChange}
             value={loading ? loadingMsg : searchInput}
             disableUnderline
