@@ -1,11 +1,8 @@
 import { Box, Container, Divider, Grid, Link, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import discordIcon from '../assets/images/icons/discord.svg';
-import githubIcon from '../assets/images/icons/github.svg';
-import telegramIcon from '../assets/images/icons/telegram.svg';
-import twitterIcon from '../assets/images/icons/twitter.svg';
 import xxNetworkLogo from '../assets/images/logos/xx-network-logo--white.svg';
+import Socials from './Socials';
 import { theme } from '../themes/footer';
 import FooterMenu from './menus/Footer';
 
@@ -51,28 +48,18 @@ const Footer = () => (
               </Link>
             </Typography>
           </Grid>
-          <Grid container item xs='auto' spacing={1.5}>
-            <Grid item xs>
-              <a href='https://twitter.com/xx_network' rel='noopener' target='_blank'>
-                <img src={twitterIcon} alt='Follow us on Twitter' />
-              </a>
-            </Grid>
-            <Grid item xs>
-              <a href='https://github.com/xx-labs' rel='noopener' target='_blank'>
-                <img src={githubIcon} alt='Check our Github' />
-              </a>
-            </Grid>
-            <Grid item xs>
-              <a href='https://t.me/xxnetwork' rel='noopener' target='_blank'>
-                <img src={telegramIcon} alt='Message us on Telegram' />
-              </a>
-            </Grid>
-            <Grid item xs>
-              <a href='https://discord.gg/Y8pCkbK' rel='noopener' target='_blank'>
-                <img src={discordIcon} alt='Join our Discord' />
-              </a>
-            </Grid>
+          {/* <Grid container item xs='auto' spacing={1.5}> */}
+          <Grid item padding={'1rem 0'}>
+            <Socials
+              socials={{
+                twitter: 'xx_network',
+                github: 'xx-labs',
+                telegram: 'xxnetwork',
+                discord: 'Y8pCkbK'
+              }}
+            />
           </Grid>
+          {/* </Grid> */}
         </Grid>
       </Container>
     </Box>
