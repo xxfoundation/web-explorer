@@ -1,10 +1,10 @@
 import { Box, Container, Divider, Grid, Link, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import discordIcon from '../assets/images/icons/Discord.svg';
-import emailIcon from '../assets/images/icons/Email.svg';
-import telegramIcon from '../assets/images/icons/Telegram.svg';
-import twitterIcon from '../assets/images/icons/Twitter.svg';
+import discordIcon from '../assets/images/icons/discord.svg';
+import githubIcon from '../assets/images/icons/github.svg';
+import telegramIcon from '../assets/images/icons/telegram.svg';
+import twitterIcon from '../assets/images/icons/twitter.svg';
 import xxNetworkLogo from '../assets/images/logos/xx-network-logo--white.svg';
 import { theme } from '../themes/footer';
 import FooterMenu from './menus/Footer';
@@ -32,9 +32,7 @@ const Footer = () => (
           </Grid>
         </Grid>
         <Grid sx={{ mt: 2 }}>
-            <Typography variant='body5'>
-                xxlabs xxnetwork v0.2.0
-            </Typography>
+          <Typography variant='body5'>xxlabs xxnetwork v0.2.0</Typography>
         </Grid>
         <Divider sx={{ mt: 2, mb: 3, borderColor: 'grey.600' }} />
         <Grid container justifyContent='space-between' spacing={3}>
@@ -55,23 +53,23 @@ const Footer = () => (
           </Grid>
           <Grid container item xs='auto' spacing={1.5}>
             <Grid item xs>
-              <a href='https://twitter.com/xx_network' rel='noopener'>
+              <a href='https://twitter.com/xx_network' rel='noopener' target='_blank'>
                 <img src={twitterIcon} alt='Follow us on Twitter' />
               </a>
             </Grid>
             <Grid item xs>
-              <a href='https://discord.gg/Y8pCkbK' rel='noopener'>
-                <img src={discordIcon} alt='Join our Discord' />
+              <a href='https://github.com/xx-labs' rel='noopener' target='_blank'>
+                <img src={githubIcon} alt='Check our Github' />
               </a>
             </Grid>
             <Grid item xs>
-              <a href='https://t.me/xxnetwork' rel='noopener'>
+              <a href='https://t.me/xxnetwork' rel='noopener' target='_blank'>
                 <img src={telegramIcon} alt='Message us on Telegram' />
               </a>
             </Grid>
             <Grid item xs>
-              <a href='https://xx.network/contact/' rel='noopener'>
-                <img src={emailIcon} alt='Contact us' />
+              <a href='https://discord.gg/Y8pCkbK' rel='noopener' target='_blank'>
+                <img src={discordIcon} alt='Join our Discord' />
               </a>
             </Grid>
           </Grid>
