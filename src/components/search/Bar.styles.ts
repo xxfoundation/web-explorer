@@ -9,7 +9,10 @@ export const Bar = styled(Box)(({ theme }) => {
     borderRadius: 48,
     border: pathname == '/' ? theme.borders?.light : 'none',
     boxShadow: '0px 15px 34px 3px rgba(0, 0, 0, 0.04)',
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(1.25)
+    }
   };
 });
 
@@ -18,7 +21,8 @@ export const SelectOption = styled(Select)(({ theme }) => ({
   paddingLeft: theme.spacing(3),
   background: 'none',
   [theme.breakpoints.down('sm')]: {
-    display: 'none'
+    fontSize: 12,
+    paddingLeft: '1rem',
   },
   '&:before, &:after': {
     border: 'none !important'
@@ -43,6 +47,11 @@ export const SelectItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 export const SearchInput = styled(Input)(({ theme }) => ({
+
+  [theme.breakpoints.down('sm')]: {
+    fontSize: 12,
+  },
+
   '&:before, &:after': {
     border: 'none !important'
   },
