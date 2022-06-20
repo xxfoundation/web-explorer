@@ -3,6 +3,7 @@ import { Avatar, Stack, Tooltip, Typography } from '@mui/material';
 import Hash, { Props as HashProps } from '.';
 import React, { FC, useMemo } from 'react';
 import { isValidXXNetworkAddress } from '../../utils';
+import Link from '../Link';
 
 type Props = HashProps & {
   name?: string;
@@ -36,15 +37,18 @@ const Address: FC<Props> = ({
   }, [name, avatar]);
 
   const isValid = isValidXXNetworkAddress(hashProps.value);
-  const url = hashProps.url || `/accounts/${hashProps.value}`;
+  const url = !disableUrl ? (hashProps.url || `/accounts/${hashProps.value}`) : undefined;
 
   return (
     <Stack direction={'row'} alignItems='center'>
       {!disableAvatar && avatarIcon}
-      <Hash
-        {...hashProps}
-        url={!disableUrl ? url : undefined}
-        valid={hashProps.valid === undefined ? isValid : hashProps.valid} />
+      {name ? <Link to={url}>{name}</Link> : (
+        <Hash
+          {...hashProps}
+          url={url}
+          valid={hashProps.valid === undefined ? isValid : hashProps.valid} />
+      )}
+      
     </Stack>
   )
 };

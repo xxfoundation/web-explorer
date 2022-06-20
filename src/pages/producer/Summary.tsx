@@ -32,7 +32,7 @@ const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ en
             <Grid item xs={9} md={9}>
               <Ellipsis>
                 <HashColumnWithTooltip hash={value}>
-                  <Hash truncated value={value} offset={10} />
+                  <Hash showTooltip={false} truncated value={value} offset={10} />
                 </HashColumnWithTooltip>
               </Ellipsis>
             </Grid>

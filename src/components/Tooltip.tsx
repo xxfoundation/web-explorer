@@ -10,7 +10,7 @@ export const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps)
   }
 });
 
-export const HashColumnWithTooltip: FC<{ hash: string }> = ({ children, hash: hash }) => {
+export const HashColumnWithTooltip: FC<{ hash: string }> = ({ children, hash }) => {
   return (
     <CustomWidthTooltip
       title={
