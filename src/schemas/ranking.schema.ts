@@ -72,7 +72,7 @@ export type RankedAccountsQuery = {
 
 export const GET_RANKED_ACCOUNTS = gql`
   query GetRankedAccounts($limit: Int!, $offset: Int!, $where: ranking_bool_exp) {
-    validators: ranking(limit: $limit, offset: $offset, where: $where, distinct_on: [era, rank], order_by:{era: desc, rank:asc}) {
+    validators: ranking(limit: $limit, offset: $offset, where: $where, distinct_on: [era, rank], order_by:{ era: desc, rank:asc }) {
       rank
       name
       nominators
@@ -83,12 +83,14 @@ export const GET_RANKED_ACCOUNTS = gql`
       otherStake: other_stake
       addressId: stash_address
     }
-    active: ranking_aggregate(where: {active: {_eq: true}}) {
+
+    active: ranking_aggregate(where: { active: { _eq: true }},  distinct_on: [era, rank], order_by:{ era: desc, rank:asc }) {
       aggregate {
         count
       }
     }
-    waiting: ranking_aggregate(where: {active: {_eq: false}}) {
+
+    waiting: ranking_aggregate(where: {active: {_eq: false}},  distinct_on: [era, rank], order_by:{ era: desc, rank:asc }) {
       aggregate {
         count
       }
