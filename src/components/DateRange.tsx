@@ -3,7 +3,8 @@ import TextField from '@mui/material/TextField';
 import { MobileDateTimePicker } from '@mui/x-date-pickers';
 import { Checkbox, FormControl, FormControlLabel, Stack, useTheme } from '@mui/material';
 import { useToggle } from '../hooks';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { useSnackbar } from 'notistack';
 
 const defaultFrom = dayjs.utc().startOf('day');
 defaultFrom.set('hour', 7);
@@ -17,39 +18,97 @@ export type Range = {
 type Props = {
   range?: Range;
   onChange: (range: Range) => void;
+  maximumRange?: number;
 }
 
+const THREE_MONTHS_IN_SECONDS = 7890000000;
 
-const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null } }) => {
+const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null }, maximumRange = THREE_MONTHS_IN_SECONDS }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const [fromEnabled, { toggle: toggleFrom }] = useToggle(!!range.from);
   const [toEnabled, { toggle: toggleTo }] = useToggle(!!range.to);
 
-  const fromChange = useCallback((from: { $d: Date } | null) => {
-    onChange({
-      ...range,
-      from: from && from.$d.toISOString(),
-    })
-  }, [range, onChange]);
+  const validateRange = useCallback((keyChanged: keyof Range, r: Range) => {
+    let newRange = r;
+    const timeThatToIsBehindOfFrom = dayjs.utc(r.from).diff(r.to).valueOf() ?? 0;
 
-  const toChanged = useCallback((to: { $d: Date } | null) => {
-    onChange({
+    if (timeThatToIsBehindOfFrom > 0) {
+      enqueueSnackbar(
+        'You can\'t travel back in time',
+        { variant: 'error' }
+      );
+      
+      newRange = keyChanged === 'from' ? {
+        ...r,
+        from: r.to
+      } : { ...r, to: r.from };
+    }
+
+    const differenceOverMax = dayjs.utc(r.to).diff(r.from).valueOf() - maximumRange;
+    if (differenceOverMax > 0) {
+      enqueueSnackbar(
+        `Date range is over maximum of ${dayjs.duration(maximumRange).humanize()}`,
+        { variant: 'error' }
+      );
+      if (keyChanged === 'to') {
+        newRange = {
+          ...r,
+          to: dayjs.utc(dayjs.utc(r.to).valueOf() - differenceOverMax).toISOString()
+        }
+      } else {
+        newRange = {
+          ...r,
+          from:  dayjs.utc(dayjs.utc(r.from).valueOf() + differenceOverMax).toISOString()
+        }
+      }
+    }
+
+    return newRange;
+  }, [enqueueSnackbar, maximumRange]);
+
+  const validatedOnChange = useCallback(
+    (k: keyof Range, r: Range) => onChange(validateRange(k, r)),
+    [onChange, validateRange]
+  );
+
+  const fromChanged = useCallback((from: Dayjs | null) => {
+    validatedOnChange('from', {
       ...range,
-      to: to && to.$d.toISOString(),
+      from: from?.toISOString() ?? null,
+    });
+  }, [range, validatedOnChange]);
+
+  const toChanged = useCallback((to: Dayjs | null) => {
+      validatedOnChange('to', {
+      ...range,
+      to: to?.toISOString() ?? null,
     })
-  }, [onChange, range]);
+  }, [validatedOnChange, range]);
 
   useEffect(
     () => {
-      const from = !fromEnabled ? null : (range.from ?? defaultFrom.toISOString());
-      const to = !toEnabled ? null : (range.to ?? defaultTo.toISOString());
+      if (fromEnabled && range.from === null) {
+        fromChanged(defaultFrom);
+      }
 
-      onChange({
-        from,
-        to
-      });
+      if (!fromEnabled && range.from !== null) {
+        fromChanged(null);
+      }
     },
-    [fromEnabled, onChange, range.from, range.to, toEnabled]
+    [fromChanged, fromEnabled, range.from]
+  );
+
+  useEffect(
+    () => {
+      if (toEnabled && range.to === null) {
+        toChanged(defaultTo);
+      }
+      
+      if (!toEnabled && range.to !== null) {
+        toChanged(null);
+      }
+    }
   )
 
   return (
@@ -80,8 +139,9 @@ const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null } }) =>
           component='div'
         >
           <MobileDateTimePicker
+            disableFuture
             label={'From (UTC)'}
-            onChange={fromChange}
+            onChange={fromChanged}
             value={range?.from}
             renderInput={(params) => <TextField {...params} />}
           />
@@ -111,6 +171,7 @@ const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null } }) =>
 
       {toEnabled && (
         <MobileDateTimePicker
+          disableFuture
           label={'To (UTC)'}
           onChange={toChanged}
           value={range?.to}

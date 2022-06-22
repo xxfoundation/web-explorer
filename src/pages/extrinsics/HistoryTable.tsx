@@ -49,7 +49,7 @@ const HistoryTable: FC<{
     to: null
   });
 
-  const badgeCount = Object.keys(range).filter((v) => !!v).length;
+  const badgeCount = Object.values(range).filter((v) => !!v).length;
 
   const headers = useMemo(() => BaseLineCellsWrapper([
     'Extrinsics id',
