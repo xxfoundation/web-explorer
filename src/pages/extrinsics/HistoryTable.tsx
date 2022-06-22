@@ -69,7 +69,7 @@ const HistoryTable: FC<{
     </Dropdown>,
     'Result',
     'Action'
-  ]), [range]);
+  ]), [badgeCount, range]);
 
   const { data, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, {
     variables: {
