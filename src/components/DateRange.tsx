@@ -9,9 +9,6 @@ const defaultFrom = dayjs.utc().startOf('day');
 defaultFrom.set('hour', 7);
 const defaultTo = defaultFrom.date(defaultFrom.date() + 1);;
 
-// eslint-disable-next-line no-console
-console.log(defaultTo);
-
 export type Range = {
   from: string | null;
   to: string | null;
