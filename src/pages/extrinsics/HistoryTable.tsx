@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { Box } from '@mui/material';
+import { Badge } from '@mui/material';
 
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Hash } from '../../components/ChainId';
@@ -49,11 +49,22 @@ const HistoryTable: FC<{
     to: null
   });
 
+  const badgeCount = Object.keys(range).filter((v) => !!v).length;
+
   const headers = useMemo(() => BaseLineCellsWrapper([
     'Extrinsics id',
     'Block',
     'Extrinsics hash',
-    <Dropdown buttonLabel='Time'>
+    <Dropdown buttonLabel={
+      <>
+        Time
+        &nbsp;
+        {badgeCount > 0 && <>
+          <Badge color='primary' sx={{ pl: 1 }} badgeContent={badgeCount} />
+          &nbsp;
+        </>
+        }
+      </>}>
       <DateRange range={range} onChange={setRange} />
     </Dropdown>,
     'Result',
