@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControlLabel, FormGroup, Stack } from '@mui/material';
+import { Badge, Button, Checkbox, FormControlLabel, FormGroup, Stack } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
 import Dropdown from '../../components/Dropdown';
 import { Roles } from '../../schemas/accounts.schema';
@@ -37,8 +37,22 @@ export const HoldersRolesFilters: FC<{
   const canApplyChanges = Object.keys(roleToLabelMap)
     .some((filter) => filters[filter] !== filterState[filter]);
 
+  const badgeCount = filters.all
+    ? 0
+    : Object.values(filters).filter((v) => !!v).length;
+
   return (
-    <Dropdown buttonLabel='role'>
+    <Dropdown buttonLabel={
+      <>
+        role
+        &nbsp;
+        {badgeCount > 0 && <>
+          <Badge color='primary' sx={{ pl: 1 }} badgeContent={badgeCount} />
+          &nbsp;
+        </>
+        }
+      </>
+    }>
       <FormGroup sx={{ padding: '30px' }}>
         <Stack direction={'column'} paddingBottom={'5px'}>
           {Object.keys(roleToLabelMap).map((filter) => (

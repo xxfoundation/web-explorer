@@ -5,7 +5,7 @@ import React, { FC, useMemo, useRef } from 'react';
 import { useToggle } from '../hooks';
 
 export const Dropdown: FC<{
-  buttonLabel: string
+  buttonLabel: string | React.ReactNode
 }> = ({ buttonLabel, children }) => {
   const [open, { toggle, toggleOff: close }] = useToggle();
   const buttonRef = useRef<HTMLButtonElement>(null);
