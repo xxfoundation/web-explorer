@@ -1,8 +1,7 @@
-import { Badge, Button, Checkbox, FormControlLabel, FormGroup, Stack } from '@mui/material';
+import { Badge, Button, Checkbox, FormControlLabel, FormGroup, Stack, useTheme } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
 import Dropdown from '../../components/Dropdown';
 import { Roles } from '../../schemas/accounts.schema';
-import { theme } from '../../themes/default';
 
 export type RoleFiltersType = Roles | 'all';
 
@@ -19,6 +18,7 @@ export const HoldersRolesFilters: FC<{
   onChange: (filters: Record<string, boolean>) => void;
   filters: Record<string, boolean>;
 }> = ({ filters, onChange }) => {
+  const theme = useTheme();
   const [filterState, setFilterState] = useState(filters);
 
   const makeFilterToggler = useCallback((key) => () => setFilterState((state) => ({
@@ -44,7 +44,7 @@ export const HoldersRolesFilters: FC<{
   return (
     <Dropdown buttonLabel={
       <>
-        role
+        Roles
         &nbsp;
         {badgeCount > 0 && <>
           <Badge color='primary' sx={{ pl: 1 }} badgeContent={badgeCount} />
@@ -75,7 +75,7 @@ export const HoldersRolesFilters: FC<{
                   onChange={makeFilterToggler(filter)}
                 />
               }
-              label={filter}
+              label={roleToLabelMap[filter]}
             />
           ))}
           

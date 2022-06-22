@@ -97,14 +97,7 @@ const accountToRow = (
 };
 
 const useHeaders = () => {
-  const [filters, setFilters] = useState<Filters>({
-    all: false,
-    validator: false,
-    nominator: false,
-    council: false,
-    techcommit: false,
-    special: false
-  });
+  const [filters, setFilters] = useState<Filters>({});
 
   const headers = useMemo(
     () => [

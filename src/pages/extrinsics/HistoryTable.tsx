@@ -1,7 +1,11 @@
 import { useQuery } from '@apollo/client';
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { Box } from '@mui/material';
+
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Hash } from '../../components/ChainId';
+import DateRange, { Range } from '../../components/DateRange';
+import Dropdown from '../../components/Dropdown';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
@@ -24,17 +28,8 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
   ]);
 };
 
-const headers = BaseLineCellsWrapper([
-  'extrinsics id',
-  'block',
-  'extrinsics hash',
-  'time',
-  'result',
-  'action'
-]);
-
 const HistoryTable: FC<{
-  setTotalOfExtrinsics: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setTotalOfExtrinsics: (total?: number) => void;
 }> = (props) => {
   const {
     cursorField: id,
@@ -48,6 +43,22 @@ const HistoryTable: FC<{
     cursorField: 'id',
     rowsPerPage: ROWS_PER_PAGE
   });
+
+  const [range, setRange] = useState<Range>({
+    from: null,
+    to: null
+  });
+
+  const headers = useMemo(() => BaseLineCellsWrapper([
+    'Extrinsics id',
+    'Block',
+    'Extrinsics hash',
+    <Dropdown buttonLabel='Time'>
+      <DateRange range={range} onChange={setRange} />
+    </Dropdown>,
+    'Result',
+    'Action'
+  ]), [range]);
 
   const { data, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, {
     variables: {
