@@ -12,7 +12,9 @@ import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
-import { ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
+import { GetAvailableActions, GET_AVAILABLE_ACTIONS, ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
+import ResultFilter from './ResultFilter';
+import ValuesFilter from '../../components/ValuesFilter';
 
 const ROWS_PER_PAGE = 20;
 
@@ -24,7 +26,8 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
     <Hash truncated value={extrinsic.hash} link={linkToExtrinsic} showTooltip />,
     <TimeAgoComponent date={extrinsic.timestamp} />,
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
-    <Link to={linkToExtrinsic}>{`${extrinsic.section} (${extrinsic.method})`}</Link>
+    <>{extrinsic.method}</>,
+    <>{extrinsic.section}</>
   ]);
 };
 
@@ -49,7 +52,23 @@ const HistoryTable: FC<{
     to: null
   });
 
+  const [resultFilter, setResultFilter] = useState<boolean | null>(null);
+
   const badgeCount = Object.values(range).filter((v) => !!v).length;
+
+  const actionsQuery = useQuery<GetAvailableActions>(GET_AVAILABLE_ACTIONS);
+  
+  const [methodsFilter, setMethodsFilter] = useState<string[]>();
+  const availableMethods = useMemo(
+    () => actionsQuery.data?.methods.map((m) => m.method),
+    [actionsQuery.data]
+  )
+
+  const [callsFilter, setCallsFilter] = useState<string[]>();
+  const availableCalls = useMemo(
+    () => actionsQuery.data?.calls.map((c) => c.section),
+    [actionsQuery.data]
+  );
 
   const headers = useMemo(() => BaseLineCellsWrapper([
     'Extrinsics id',
@@ -67,18 +86,51 @@ const HistoryTable: FC<{
       </>}>
       <DateRange range={range} onChange={setRange} />
     </Dropdown>,
-    'Result',
-    'Action'
-  ]), [badgeCount, range]);
+    <ResultFilter onChange={setResultFilter} value={resultFilter} />,
+    <ValuesFilter availableValues={availableMethods} buttonLabel='Method' onChange={setMethodsFilter} value={methodsFilter} />,
+    <ValuesFilter availableValues={availableCalls} buttonLabel='Call' onChange={setCallsFilter} value={callsFilter} />,
+   
+  ]), [
+    availableCalls,
+    availableMethods,
+    badgeCount,
+    callsFilter,
+    methodsFilter,
+    range,
+    resultFilter
+  ]);
 
-  const { data, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, {
-    variables: {
+  const variables = useMemo(
+    () => ({
       limit,
       offset,
       orderBy: [{ id: 'desc' }],
-      where: { id: { _lte: id } }
-    }
-  });
+      where: {
+        ...(resultFilter !== null && ({
+          success: { _eq: resultFilter }
+        })), 
+        timestamp: {
+          ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
+          ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
+        },
+        id: { _lte: id },
+        ...(methodsFilter && methodsFilter.length > 0 && ({ method: { _in: methodsFilter }})),
+        ...(callsFilter && callsFilter.length > 0 && ({ section: { _in: callsFilter }}))
+      }
+    }),
+    [
+      callsFilter,
+      id,
+      limit,
+      methodsFilter,
+      offset,
+      range.from,
+      range.to,
+      resultFilter
+    ]
+  );
+
+  const { data, error, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, { variables });
 
   const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
 
@@ -106,7 +158,7 @@ const HistoryTable: FC<{
 
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
 
-  return <BaselineTable headers={headers} rows={rows} footer={footer} />;
+  return <BaselineTable error={!!error} headers={headers} rows={rows} footer={footer} />;
 };
 
 export default HistoryTable;

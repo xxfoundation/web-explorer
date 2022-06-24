@@ -123,15 +123,13 @@ const useHeaders = () => {
 };
 
 
-const buildOrClause = (filters: Filters) => {
-  return [
-    filters.council && { role: { council: { _eq: true } } },
-    filters.nominator && { role: { nominator: { _eq: true } } },
-    filters.techcommit && { role: { techcommit: { _eq: true } } },
-    filters.validator && { role: { validator: { _eq: true } } },
-    filters.special && { role: { special: { _neq: 'null' } } }
-  ].filter((v) => !!v);
-};
+const buildOrClause = (filters: Filters) => [
+  filters.council && { role: { council: { _eq: true } } },
+  filters.nominator && { role: { nominator: { _eq: true } } },
+  filters.techcommit && { role: { techcommit: { _eq: true } } },
+  filters.validator && { role: { validator: { _eq: true } } },
+  filters.special && { role: { special: { _neq: 'null' } } }
+].filter((v) => !!v);
 
 const HoldersTable: FC = () => {
   const {

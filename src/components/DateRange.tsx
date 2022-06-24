@@ -1,14 +1,13 @@
-import React, { FC, useCallback, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { MobileDateTimePicker } from '@mui/x-date-pickers';
-import { Checkbox, FormControl, FormControlLabel, Stack, useTheme } from '@mui/material';
+import { Button, Checkbox, FormControl, FormControlLabel, Stack, TextField, useTheme } from '@mui/material';
 import { useToggle } from '../hooks';
 import dayjs, { Dayjs } from 'dayjs';
 import { useSnackbar } from 'notistack';
 
 const defaultFrom = dayjs.utc().startOf('day');
 defaultFrom.set('hour', 7);
-const defaultTo = defaultFrom.date(defaultFrom.date() + 1);;
+const defaultTo = dayjs.utc();
 
 export type Range = {
   from: string | null;
@@ -26,8 +25,19 @@ const THREE_MONTHS_IN_SECONDS = 7890000000;
 const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null }, maximumRange = THREE_MONTHS_IN_SECONDS }) => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  const [fromEnabled, { toggle: toggleFrom }] = useToggle(!!range.from);
-  const [toEnabled, { toggle: toggleTo }] = useToggle(!!range.to);
+  const [from, setFrom] = useState<string|null>(range.from);
+  const [to, setTo] = useState<string|null>(range.to);
+  const [fromEnabled, { toggle: toggleFrom }] = useToggle(!!from);
+  const [toEnabled, { toggle: toggleTo }] = useToggle(!!to);
+
+  const applyChanges = useCallback(() => {
+    onChange({ from, to });
+  }, [from, to, onChange]);
+
+  const reset = useCallback(() => {
+    setFrom(null);
+    setTo(null);
+  }, []);
 
   const validateRange = useCallback((keyChanged: keyof Range, r: Range) => {
     let newRange = r;
@@ -68,48 +78,58 @@ const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null }, maxi
   }, [enqueueSnackbar, maximumRange]);
 
   const validatedOnChange = useCallback(
-    (k: keyof Range, r: Range) => onChange(validateRange(k, r)),
-    [onChange, validateRange]
+    (k: keyof Range, r: Range) => {
+      const { from: f, to: t } = validateRange(k, r);
+      if (k === 'from') {
+        setFrom(f);
+      } else {
+        setTo(t);
+      }
+    },
+    [validateRange]
   );
 
-  const fromChanged = useCallback((from: Dayjs | null) => {
+  const fromChanged = useCallback((f: Dayjs | null) => {
     validatedOnChange('from', {
       ...range,
-      from: from?.toISOString() ?? null,
+      from: f?.toISOString() ?? null,
     });
   }, [range, validatedOnChange]);
 
-  const toChanged = useCallback((to: Dayjs | null) => {
+  const toChanged = useCallback((t: Dayjs | null) => {
       validatedOnChange('to', {
       ...range,
-      to: to?.toISOString() ?? null,
+      to: t?.toISOString() ?? null,
     })
   }, [validatedOnChange, range]);
 
   useEffect(
     () => {
-      if (fromEnabled && range.from === null) {
+      if (fromEnabled && from === null) {
         fromChanged(defaultFrom);
       }
 
-      if (!fromEnabled && range.from !== null) {
+      if (!fromEnabled && from !== null) {
         fromChanged(null);
       }
     },
-    [fromChanged, fromEnabled, range.from]
+    [fromChanged, fromEnabled, from]
   );
 
   useEffect(
     () => {
-      if (toEnabled && range.to === null) {
+      if (toEnabled && to === null) {
         toChanged(defaultTo);
       }
       
-      if (!toEnabled && range.to !== null) {
+      if (!toEnabled && to !== null) {
         toChanged(null);
       }
-    }
-  )
+    },
+    [to, toChanged, toEnabled]
+  );
+
+  const canApplyChanges = range.from !== from || range.to !== to;
 
   return (
     <Stack padding={2}>
@@ -142,7 +162,7 @@ const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null }, maxi
             disableFuture
             label={'From (UTC)'}
             onChange={fromChanged}
-            value={range?.from}
+            value={from}
             renderInput={(params) => <TextField {...params} />}
           />
         </FormControl>
@@ -174,10 +194,44 @@ const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null }, maxi
           disableFuture
           label={'To (UTC)'}
           onChange={toChanged}
-          value={range?.to}
+          value={to}
           renderInput={(params) => <TextField {...params} />}
         />
       )}
+      <Stack
+        direction={'row'}
+        marginTop={'12px'}
+        justifyContent={'space-evenly'}>
+        <Button
+          disabled={!canApplyChanges}
+          variant='contained'
+          sx={{
+            borderRadius: '45px',
+            textTransform: 'uppercase',
+            marginRight: '1em'
+          }}
+          onClick={applyChanges}
+        >
+          Apply
+        </Button>
+        <Button
+          variant='contained'
+          sx={{
+            bgcolor: theme.palette.grey[200],
+            color: theme.palette.text.primary,
+            borderRadius: '45px',
+            textTransform: 'uppercase',
+            boxShadow: 'none',
+            [':hover']: {
+              bgcolor: theme.palette.grey[200],
+              color: theme.palette.text.primary
+            }
+          }}
+          onClick={reset}
+        >
+          Clear
+        </Button>
+      </Stack>
     </Stack>
   )
 }
