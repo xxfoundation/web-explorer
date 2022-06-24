@@ -151,7 +151,7 @@ export const GET_EXTRINSICS_BY_SIGNER = gql`
 
 export type GetAvailableActions = {
   methods: { method: string }[];
-  calls: { section: string }[]
+  calls: { section: string }[];
 }
 
 export const GET_AVAILABLE_ACTIONS = gql`

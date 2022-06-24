@@ -40,8 +40,10 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
     () => available?.filter(
         (v) => v.toLocaleLowerCase()
           .match(valuesFilter.toLocaleLowerCase())
+      ).sort(
+        (a, b) => (localValues?.includes(a) ? 0 : 1) - (localValues?.includes(b) ? 0 : 1)
       ),
-    [available, valuesFilter]
+    [available, localValues, valuesFilter]
   )
 
   return (
