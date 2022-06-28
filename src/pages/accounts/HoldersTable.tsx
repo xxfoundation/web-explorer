@@ -5,7 +5,7 @@ import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 
 import { theme } from '../../themes/default';
-import { Address } from '../../components/ChainId';
+import Address from '../../components/Hash/XXNetworkAddress';
 import Error from '../../components/Error';
 import FormatBalance from '../../components/FormatBalance';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
@@ -75,7 +75,7 @@ const accountToRow = (
   return [
     { value: rank, props: rankProps },
     {
-      value: <Address truncated name={item.identity.display} value={item.address} link={accountLink} />
+      value: <Address truncated name={item.identity.display} value={item.address} url={accountLink} />
     },
     { value: item.nonce },
     {

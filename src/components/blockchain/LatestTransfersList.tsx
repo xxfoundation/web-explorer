@@ -3,7 +3,7 @@ import { Box, Grid, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import useNewnessTracker, { WithNew } from '../../hooks/useNewnessTracker';
 import { LISTEN_FOR_TRANSFERS_ORDERED } from '../../schemas/transfers.schema';
-import { Address } from '../ChainId';
+import Address from '../Hash/XXNetworkAddress';
 import DefaultTile from '../DefaultTile';
 import FormatBalance from '../FormatBalance';
 import Link from '../Link';
@@ -32,9 +32,8 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
           <Grid item>
             <Address
               value={props.source}
-              link={`/accounts/${props.source}`}
+              url={`/accounts/${props.source}`}
               truncated
-              disableAvatar
             />
           </Grid>
           <Grid item component={'span'} xs={4}>
@@ -45,9 +44,8 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
           <Grid item>
             <Address
               value={props.destination}
-              link={`/accounts/${props.destination}`}
+              url={`/accounts/${props.destination}`}
               truncated
-              disableAvatar
             />
           </Grid>
         </Grid>

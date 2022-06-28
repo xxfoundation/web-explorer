@@ -1,7 +1,6 @@
 import { styled, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import { nFormatter } from '../../../utils';
-import FormatBalance from '../../FormatBalance';
+import { processUnit } from './utils';
 
 const Container = styled('div')({
   '&.inversed': {
@@ -13,15 +12,9 @@ const Container = styled('div')({
   flexGrow: 1
 });
 
-const processTick = (tick: number) => {
-  const truncated = Math.floor(tick * 1000) / 1000;
-  const decimals = truncated.toString().split('.')[1]?.length;
-  return nFormatter(truncated, decimals)
-}
 
-const LegendTicks: FC<{ ticks: number[]; inverse?: boolean, isCurrency?: boolean } & JSX.IntrinsicElements['div']> = ({
+const LegendTicks: FC<{ ticks: number[]; inverse?: boolean } & JSX.IntrinsicElements['div']> = ({
   inverse,
-  isCurrency,
   ticks,
   ...rest
 }) => {
@@ -33,11 +26,7 @@ const LegendTicks: FC<{ ticks: number[]; inverse?: boolean, isCurrency?: boolean
         .reverse()
         .map((tick) => (
           <Typography variant='h4' key={tick}>
-            {
-              isCurrency
-                ? <FormatBalance value={tick.toString()} symbol={''} precision={0} />
-                : processTick(tick)
-            }
+            {processUnit(tick)}
           </Typography>
         ))}
       <span></span>

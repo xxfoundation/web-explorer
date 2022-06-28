@@ -41,8 +41,7 @@ const BarSeries: FC<BarSeriesProps> = ({ inverse }) => {
       <LegendTicksContainer>
         <LegendTicks
           ticks={info?.ticks ?? []}
-          inverse={inverse}
-          isCurrency={info?.isCurrency} />
+          inverse={inverse} />
       </LegendTicksContainer>
       <Bars inverse={inverse} />
     </Stack>

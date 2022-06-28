@@ -2,7 +2,7 @@ import { Avatar, Divider, Grid, Link, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import { Account } from '../../../../schemas/accounts.schema';
 import SocialIconsGroup from './SocialIconsGroup';
-import { shortString } from '../../../../utils';
+import { ResponsiveHash } from '../../../../components/Hash/Hash';
 
 type Props = { account: Account };
 
@@ -24,24 +24,10 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
   );
 };
 
-const NameHeaderTypography: FC<Props> = ({ account: { id, identity } }) => {
-  if (!identity.display) {
-    return (
-      <Typography
-        fontSize={24}
-        fontWeight={700}
-        fontStyle={'italic'}
-        letterSpacing={0.5}
-        width={'100%'}
-        sx={{ opacity: 0.7 }}
-      >
-        {shortString(id)}
-      </Typography>
-    );
-  }
+const NameHeaderTypography: FC<Props> = ({ account: { id } }) => {
   return (
     <Typography fontSize={24} fontWeight={700} letterSpacing={0.5} width={'100%'}>
-      {identity.display}
+      <ResponsiveHash value={id} truncated='mdDown' />
     </Typography>
   );
 };

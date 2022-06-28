@@ -59,7 +59,7 @@
   },
   "jest": {
     "transformIgnorePatterns": [
-      "node_modules/(?!@polkadot/util)"
+      "node_modules/(?!@polkadot)"
     ]
   },
   "devDependencies": {

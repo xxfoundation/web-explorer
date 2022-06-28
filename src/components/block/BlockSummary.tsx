@@ -1,7 +1,7 @@
 import type { Block } from '../../schemas/blocks.schema';
 import React, { FC, useMemo } from 'react';
 import { Box, Skeleton, Stack } from '@mui/material';
-import { Address } from '../ChainId';
+import Address from '../Hash/XXNetworkAddress';
 import dayjs from 'dayjs';
 import BlockStatusIcon from './BlockStatusIcon';
 import TimeAgo from '../TimeAgo';
@@ -9,10 +9,12 @@ import {
   SummaryContainer,
   SummaryEntry,
   SummaryHeader,
+  SummaryLoader,
   SummaryValue,
   WithCopy
 } from '../Summary';
 import Ellipsis from '../Ellipsis';
+import Hash from '../Hash';
 
 const timeFormat = 'YYYY.MM.DD | h:mm A (UTC)';
 
@@ -22,7 +24,7 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
     [block?.timestamp]
   );
 
-  return (
+  return !block ? <SummaryLoader number={9} /> : (
     <SummaryContainer>
       <SummaryEntry>
         <SummaryHeader>Time</SummaryHeader>
@@ -43,30 +45,34 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Era</SummaryHeader>
-        <SummaryValue>{block?.currentEra ?? <Skeleton />}</SummaryValue>
+        <SummaryValue>{block?.currentEra}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Hash</SummaryHeader>
         <SummaryValue>
-          {block?.hash ? <WithCopy value={block.hash}>{block.hash}</WithCopy> : <Skeleton />}
+          <WithCopy value={block.hash}>
+            <Hash truncated='lgDown' value={block.hash} />
+          </WithCopy>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Parent Hash</SummaryHeader>
         <SummaryValue>
-          <Ellipsis>{block?.parentHash ?? <Skeleton />}</Ellipsis>
+          <Ellipsis>
+            <Hash truncated='lgDown' value={block?.parentHash} />
+          </Ellipsis>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>State Root</SummaryHeader>
         <SummaryValue>
-          <Ellipsis>{block?.stateRoot ?? <Skeleton />}</Ellipsis>
+          <Hash truncated='lgDown' value={block?.stateRoot} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Extrinsics Root</SummaryHeader>
         <SummaryValue>
-          <Ellipsis>{block?.extrinsicsRoot ?? <Skeleton />}</Ellipsis>
+          <Hash truncated='lgDown' value={block?.extrinsicsRoot} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
@@ -76,9 +82,10 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
             {block ? (
               <WithCopy value={block.author}>
                 <Address
+                   truncated='mdDown'
                   name={block.authorName}
                   value={block.author}
-                  link={`/blocks/${block.number}/producer/${block.author}`}
+                  url={`/blocks/${block.number}/producer/${block.author}`}
                 />
               </WithCopy>
             ) : (

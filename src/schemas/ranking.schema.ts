@@ -66,13 +66,32 @@ export type RankedAccount = {
 
 export type RankedAccountsQuery = {
   validators: RankedAccount[];
+};
+
+export type ActiveCountsQuery = {
   active: { aggregate: { count: number } };
   waiting: { aggregate: { count: number } };
-};
+}
+
+export const GET_ACTIVE_COUNTS = gql`
+  query ActiveCounts($era: Int!) {
+    active: ranking_aggregate(where: { active: { _eq: true }, era: { _eq: $era }}) {
+      aggregate {
+        count
+      }
+    }
+
+    waiting: ranking_aggregate(where: {active: {_eq: false}, era: { _eq: $era }}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`
 
 export const GET_RANKED_ACCOUNTS = gql`
   query GetRankedAccounts($limit: Int!, $offset: Int!, $where: ranking_bool_exp) {
-    validators: ranking(order_by: { rank: asc }, limit: $limit, offset: $offset, where: $where) {
+    validators: ranking(limit: $limit, offset: $offset, where: $where, distinct_on: [era, rank], order_by:{ era: desc, rank:asc }) {
       rank
       name
       nominators
@@ -83,17 +102,17 @@ export const GET_RANKED_ACCOUNTS = gql`
       otherStake: other_stake
       addressId: stash_address
     }
+  }
+`;
 
-    active: ranking_aggregate(where: { active: { _eq: true } }) {
-      aggregate {
-        count
-      }
-    }
+export type LatestEraQuery = {
+  ranking: { era: number }[]
+}
 
-    waiting: ranking_aggregate(where: { active: { _eq: false } }) {
-      aggregate {
-        count
-      }
+export const GET_LATEST_ERA = gql`
+  query GetRankedAccounts {
+    ranking(limit: 1) {
+      era
     }
   }
 `;

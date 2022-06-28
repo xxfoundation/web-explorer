@@ -56,7 +56,7 @@ const HistoryTable = () => {
     { value: <ValuesFilter availableValues={availableCalls} buttonLabel='Call' onChange={setCallsFilter} value={callsFilter} /> },
   ], [availableCalls, availableMethods, callsFilter, methodsFilter, range]);
 
-  const { cursorField, limit, makeOnPageChange, offset, onRowsPerPageChange, page, rowsPerPage } =
+  const { limit, makeOnPageChange, offset, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Event>({
       cursorField: 'id',
       rowsPerPage: 20
@@ -68,7 +68,6 @@ const HistoryTable = () => {
       limit: limit,
       offset: offset,
       where: {
-        id: { _lte: cursorField },
         timestamp: {
           ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
           ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
@@ -79,7 +78,6 @@ const HistoryTable = () => {
     }),
     [
       callsFilter,
-      cursorField,
       limit,
       methodsFilter,
       offset,
@@ -90,6 +88,7 @@ const HistoryTable = () => {
 
   const { data, loading } = useQuery<ListEvents>(LIST_EVENTS, { variables });
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
+
   const footer = useMemo(() => {
     if (data?.agg && data?.events && data.events.length) {
       return (
@@ -104,15 +103,24 @@ const HistoryTable = () => {
       );
     }
     return <></>;
-  }, [data?.agg, data?.events, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading)
+  }, [
+    data?.agg,
+    data?.events,
+    makeOnPageChange,
+    onRowsPerPageChange,
+    page,
+    rowsPerPage
+  ]);
+
+  if (loading) {
     return (
       <>
         <Skeleton width='12%' sx={{ marginBottom: '18px' }} />
         <TableSkeleton cells={headers.length} rows={rowsPerPage} />
       </>
     );
-    
+  }
+  
   return (
     <>
       {data?.agg.aggregate.count !== undefined && (

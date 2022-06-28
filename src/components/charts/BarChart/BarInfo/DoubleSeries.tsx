@@ -10,6 +10,8 @@ const DoubleSeries: FC = () => {
   const timestamp = context.timestamp.value;
   const interval = context.interval;
   const count = context.infoA?.counts?.[timestamp] ?? 0;
+
+  const labelA = context.infoA?.label;
   const timeFormat = interval?.includes('h') ? 'YYYY.MM.DD | h:mm A (UTC)' : 'YYYY.MM.DD';
 
   const formatted = useMemo(
@@ -31,7 +33,7 @@ const DoubleSeries: FC = () => {
         variant='subheader4'
         style={{ whiteSpace: 'nowrap' }}
       >
-        <FormatBalance value={count.toString()} />
+        {context.infoA?.isCurrency ? <FormatBalance value={count.toString()} /> : `${count} ${labelA}`}
       </Typography>
       &nbsp;|&nbsp;
       <Typography

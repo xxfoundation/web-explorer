@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
-import { Hash } from '../../components/ChainId';
+import Hash from '../../components/Hash';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
@@ -21,7 +21,7 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
   return BaseLineCellsWrapper([
     <Link to={linkToExtrinsic}>{`${extrinsic.blockNumber}-${extrinsic.index}`}</Link>,
     <Link to={`/blocks/${extrinsic.blockNumber}`}>{extrinsic.blockNumber}</Link>,
-    <Hash truncated value={extrinsic.hash} link={linkToExtrinsic} showTooltip />,
+    <Hash truncated value={extrinsic.hash} url={linkToExtrinsic} showTooltip />,
     <TimeAgoComponent date={extrinsic.timestamp} />,
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
     <>{extrinsic.method}</>,
