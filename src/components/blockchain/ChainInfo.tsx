@@ -1,4 +1,4 @@
-import { Box, Grid,  Skeleton, Typography } from '@mui/material';
+import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import { useSubscription } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
 import { BN } from '@polkadot/util';
@@ -6,22 +6,30 @@ import { camelCase } from 'lodash';
 
 import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
 import { ChainInfoLink, Data, Item } from './ChainInfo.styles';
+import { InfoOutlined } from '@mui/icons-material';
 import FormatBalance from '../FormatBalance';
 import { EraMetrics, Metric } from './types';
 import { EconomicsSubscription, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 import Error from '../Error';
+import { CustomTooltip } from '../Tooltip';
 
-const ChainInfoCard: FC<{ title: string; value: string | BN | React.ReactNode, path?: string }> = ({
-  path,
-  title,
-  value
-}) => {
+const ChainInfoCard: FC<{
+  title: string;
+  tooltip?: string;
+  value: string | BN | React.ReactNode;
+  path?: string;
+}> = ({ path, title, tooltip, value }) => {
   return (
     <Grid item xs={6} sm={3} md={3}>
       <Item sx={{ position: 'relative' }}>
-        {path && (
-          <ChainInfoLink to={path} />
+        {tooltip && (
+          <CustomTooltip title={tooltip}>
+            <InfoOutlined
+              style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', zIndex: 2 }}
+            />
+          </CustomTooltip>
         )}
+        {path && <ChainInfoLink style={{ zIndex: 1 }} to={path} />}
         <div style={{ position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
           <Typography variant='body4'>{title}</Typography>
           <Data>{value === undefined ? <Skeleton /> : value}</Data>
@@ -73,9 +81,12 @@ const ChainInfo = () => {
         <ChainInfoCard title='Finalized Blocks' value={blocks} path='/blocks' />
         <ChainInfoCard title='Active Era' value={currentEra} />
         <ChainInfoCard title='Transfers' value={transfers} path='/transfers' />
-        <ChainInfoCard title='Account Holders' value={accounts}  path='/accounts'/>
+        <ChainInfoCard title='Account Holders' value={accounts} path='/accounts' />
         <ChainInfoCard
           title='Total Issuance'
+          tooltip={
+            'Defined by the Total Supply minus the xx issued as an ERC1404 and not claimed yet (Other > Claims).'
+          }
           value={totalIssuance && <FormatBalance value={totalIssuance} />}
         />
         <ChainInfoCard title='Nominators' value={nominatorCount} />
@@ -84,7 +95,13 @@ const ChainInfo = () => {
           path='/staking'
           value={activeValidatorCount && validatorSet && `${activeValidatorCount}/${validatorSet}`}
         />
-        <ChainInfoCard title='Inflation Rate' value={inflationRate && `${inflationRate}%`} />
+        <ChainInfoCard
+          title='Inflation Rate'
+          tooltip={
+            'Defined by the annual percentage increase of the circulating supply given by the distribution of staking reward.'
+          }
+          value={inflationRate && `${inflationRate}%`}
+        />
       </Grid>
     </Box>
   );
