@@ -37,7 +37,6 @@ const HistoryTable: FC<{
   setTotalOfExtrinsics: React.Dispatch<React.SetStateAction<number | undefined>>;
 }> = (props) => {
   const {
-    cursorField: id,
     limit,
     makeOnPageChange,
     offset,
@@ -53,18 +52,17 @@ const HistoryTable: FC<{
     variables: {
       limit,
       offset,
-      orderBy: [{ id: 'desc' }],
-      where: { id: { _lte: id } }
+      orderBy: [{ id: 'desc' }]
     }
   });
 
   const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
 
   useEffect(() => {
-    if (data?.agg && !id) {
+    if (data?.agg.aggregate.count !== undefined) {
       props.setTotalOfExtrinsics(data.agg.aggregate.count);
     }
-  });
+  }, [data?.agg.aggregate.count, props]);
 
   const footer = useMemo(() => {
     if (data?.agg && data?.extrinsics && data.extrinsics.length) {

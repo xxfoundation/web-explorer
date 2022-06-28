@@ -24,6 +24,7 @@ export function usePaginatorByCursor<T extends object>(props: Props<T>): Result<
     setRowsPerPage(parseInt(value));
     setPage(0);
   }, []);
+  
   const makeOnPageChange = useCallback(
     (data: T) => {
       return (_: unknown, number: number) => {
