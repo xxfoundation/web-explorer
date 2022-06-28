@@ -57,3 +57,20 @@ export const LIST_EVENTS = gql`
     }
   }
 `;
+
+export type GetAvailableEventActions = {
+  methods: { method: string }[];
+  calls: { section: string }[];
+}
+
+export const GET_AVAILABLE_EVENT_ACTIONS = gql`
+  query GetAvailableMethods {
+    methods: event (distinct_on: method) {
+      method
+    }
+
+    calls: event (distinct_on: section) {
+      section
+    }
+  }
+`;

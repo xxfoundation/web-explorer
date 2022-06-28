@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useQuery } from '@apollo/client';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
@@ -16,7 +15,7 @@ import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import { CustomTooltip } from '../../components/Tooltip';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
-import { HoldersRolesFilters, rolesMap } from './HoldersRolesFilters';
+import { HoldersRolesFilters, roleToLabelMap } from './HoldersRolesFilters';
 
 const DEFAULT_ROWS_PER_PAGE = 20;
 
@@ -24,7 +23,7 @@ type Filters = Record<string, boolean>;
 
 const RolesTooltipContent: FC<{ roles: string[] }> = ({ roles }) => {
   const labels = useMemo(
-    () => roles.slice(1).map((role, index) => <span key={index}>{rolesMap[role] ?? role}</span>),
+    () => roles.slice(1).map((role, index) => <span key={index}>{roleToLabelMap[role] ?? role}</span>),
     [roles]
   );
   return (
@@ -54,7 +53,7 @@ const rolesToCell = (roles: string[]) => {
       ) : (
         <AccountBoxIcon style={{ color: theme.palette.primary.main }} />
       )}
-      <span>{rolesMap[roles[0]] ?? roles[0]}</span>
+      <span>{roleToLabelMap[roles[0]] ?? roles[0]}</span>
     </>
   );
 };
@@ -98,13 +97,7 @@ const accountToRow = (
 };
 
 const useHeaders = () => {
-  const [filters, setFilters] = useState<Filters>({
-    validator: false,
-    nominator: false,
-    council: false,
-    techcommit: false,
-    special: false
-  });
+  const [filters, setFilters] = useState<Filters>({});
 
   const headers = useMemo(
     () => [
@@ -113,9 +106,7 @@ const useHeaders = () => {
       { value: 'transactions' },
       {
         value: (
-          <HoldersRolesFilters callback={setFilters} filters={filters}>
-            role
-          </HoldersRolesFilters>
+          <HoldersRolesFilters onChange={setFilters} filters={filters} />
         ),
         props: { colSpan: 2 }
       },
@@ -131,15 +122,14 @@ const useHeaders = () => {
   };
 };
 
-const buildOrClause = (filters: Filters) => {
-  return [
-    filters.council && { role: { council: { _eq: true } } },
-    filters.nominator && { role: { nominator: { _eq: true } } },
-    filters.techcommit && { role: { techcommit: { _eq: true } } },
-    filters.validator && { role: { validator: { _eq: true } } },
-    filters.special && { role: { special: { _neq: 'null' } } }
-  ].filter((v) => !!v);
-};
+
+const buildOrClause = (filters: Filters) => [
+  filters.council && { role: { council: { _eq: true } } },
+  filters.nominator && { role: { nominator: { _eq: true } } },
+  filters.techcommit && { role: { techcommit: { _eq: true } } },
+  filters.validator && { role: { validator: { _eq: true } } },
+  filters.special && { role: { special: { _neq: 'null' } } }
+].filter((v) => !!v);
 
 const HoldersTable: FC = () => {
   const {
@@ -155,7 +145,7 @@ const HoldersTable: FC = () => {
     cursorField: 'timestamp'
   });
   const { filters, headers } = useHeaders();
-  const hasFilters = Object.values(filters).some((v) => !!v);
+  const hasFilters = !filters.all && Object.values(filters).some((v) => !!v);
 
   const orClause = useMemo(() => buildOrClause(filters), [filters]);
 

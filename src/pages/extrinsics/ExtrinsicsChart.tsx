@@ -27,6 +27,7 @@ const HistoryChart: FC = () => {
     () => (data?.extrinsic || []).map(({ timestamp }) => timestamp),
     [data?.extrinsic]
   );
+
   return (
     <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
       <IntervalControls interval={interval} setInterval={setInterval} loading={loading} />

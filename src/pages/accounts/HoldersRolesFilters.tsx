@@ -1,14 +1,11 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Button, Checkbox, FormControlLabel, FormGroup, Popover, Stack } from '@mui/material';
-import React, { Dispatch, FC, SetStateAction, useCallback, useMemo, useState } from 'react';
-import { useToggle } from '../../hooks';
+import { Badge, Button, Checkbox, FormControlLabel, FormGroup, Stack, useTheme } from '@mui/material';
+import React, { FC, useCallback, useState } from 'react';
+import Dropdown from '../../components/Dropdown';
 import { Roles } from '../../schemas/accounts.schema';
-import { theme } from '../../themes/default';
 
 export type RoleFiltersType = Roles | 'all';
 
-export const rolesMap: Record<string, string> = {
+export const roleToLabelMap: Record<string, string> = {
   all: 'all',
   validator: 'validator',
   nominator: 'nominator',
@@ -17,167 +14,107 @@ export const rolesMap: Record<string, string> = {
   special: 'special'
 };
 
-const filtersDefaultState = (): Record<Roles, boolean> => ({
-  validator: false,
-  nominator: false,
-  council: false,
-  techcommit: false,
-  special: false
-});
-
-const cleanLocalStateFilters = () => {
-  const defaultState = filtersDefaultState();
-  return {
-    all: false,
-    ...defaultState
-  };
-};
-
 export const HoldersRolesFilters: FC<{
-  callback: Dispatch<SetStateAction<Record<string, boolean>>>;
+  onChange: (filters: Record<string, boolean>) => void;
   filters: Record<string, boolean>;
-}> = ({ callback, children, filters: roles }) => {
-  const [open, { set: toggle }] = useToggle();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedRoles, setSeletedRoles] = useState<Record<string, boolean>>(
-    cleanLocalStateFilters()
-  );
+}> = ({ filters, onChange }) => {
+  const theme = useTheme();
+  const [filterState, setFilterState] = useState(filters);
 
-  const onClick = useCallback(
-    ({ currentTarget }) => {
-      setAnchorEl(currentTarget);
-      toggle(true);
-      setSeletedRoles(() => ({
-        all: Object.values(roles).every((r) => r),
-        ...roles
-      }));
-    },
-    [toggle, roles]
-  );
+  const makeFilterToggler = useCallback((key) => () => setFilterState((state) => ({
+    ...state,
+    [key]: !state[key]
+  })), []);
 
-  const onCheckBoxChange = useCallback(
-    (name: string, checked: boolean) => {
-      setSeletedRoles((prev) => ({ ...prev, [name]: checked }));
-    },
-    [setSeletedRoles]
-  );
+  const applyChanges = useCallback(() => {
+    onChange(filterState);
+  }, [filterState, onChange]);
 
-  const displayedCheckboxList = useMemo(() => {
-    return Object.entries(selectedRoles).map(([label, value]) => {
-      return (
-        <FormControlLabel
-          key={label}
-          sx={{
-            span: {
-              fontSize: '14px',
-              fontWeight: 400,
-              color:
-                value && roles[label as Roles]
-                  ? theme.palette.primary.main
-                  : theme.palette.grey[600]
-            }
-          }}
-          control={
-            <Checkbox
-              disabled={label === 'all' ? false : selectedRoles.all}
-              checked={value as boolean}
-              onChange={({ target: { checked } }) => onCheckBoxChange(label, checked)}
-            />
-          }
-          label={rolesMap[label as RoleFiltersType]}
-        />
-      );
-    });
-  }, [selectedRoles, roles, onCheckBoxChange]);
+  const reset = useCallback(() => {
+    setFilterState({});
+  }, []);
 
-  const cleanFilters = useCallback(() => {
-    return setSeletedRoles(() => {
-      callback(filtersDefaultState());
-      return cleanLocalStateFilters();
-    });
-  }, [callback]);
+  const canApplyChanges = Object.keys(roleToLabelMap)
+    .some((filter) => filters[filter] !== filterState[filter]);
 
-  const handleClose = useCallback(() => {
-    setSeletedRoles(() => {
-      toggle(false);
-      setAnchorEl(null);
-      return {
-        ...cleanLocalStateFilters()
-      };
-    });
-  }, [toggle]);
-
-  const applyOnClick = useCallback(() => {
-    const { all, ...selection } = selectedRoles;
-    callback(
-      all
-        ? {
-            validator: true,
-            nominator: true,
-            council: true,
-            techcommit: true,
-            special: true
-          }
-        : {
-            validator: selection.validator,
-            nominator: selection.nominator,
-            council: selection.council,
-            techcommit: selection.techcommit,
-            special: selection.special
-          }
-    );
-    handleClose();
-  }, [selectedRoles, callback, handleClose]);
-
-  const endIcon = useMemo(
-    () => (open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />),
-    [open]
-  );
+  const badgeCount = filters.all
+    ? 0
+    : Object.values(filters).filter((v) => !!v).length;
 
   return (
-    <>
-      <Button color={'inherit'} endIcon={endIcon} onClick={onClick}>
-        {children}
-      </Button>
-      <Popover
-        id='account-holders-table-filters'
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        onClose={handleClose}
-      >
-        <FormGroup sx={{ padding: '30px' }}>
-          <Stack direction={'column'} paddingBottom={'5px'}>
-            {displayedCheckboxList}
-          </Stack>
-          <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
-            <Button
-              variant='contained'
-              sx={{ borderRadius: '45px', textTransform: 'uppercase', marginRight: '1em' }}
-              onClick={applyOnClick}
-            >
-              apply
-            </Button>
-            <Button
-              variant='contained'
+    <Dropdown buttonLabel={
+      <>
+        Roles
+        &nbsp;
+        {badgeCount > 0 && <>
+          <Badge color='primary' sx={{ pl: 1 }} badgeContent={badgeCount} />
+          &nbsp;
+        </>
+        }
+      </>
+    }>
+      <FormGroup sx={{ padding: '30px' }}>
+        <Stack direction={'column'} paddingBottom={'5px'}>
+          {Object.keys(roleToLabelMap).map((filter) => (
+            <FormControlLabel
+              key={filter}
               sx={{
-                bgcolor: theme.palette.grey[200],
-                color: theme.palette.text.primary,
-                borderRadius: '45px',
-                textTransform: 'uppercase',
-                boxShadow: 'none',
-                [':hover']: {
-                  bgcolor: theme.palette.grey[200],
-                  color: theme.palette.text.primary
+                span: {
+                  fontSize: '14px',
+                  fontWeight: 400,
+                  color:
+                    filterState[filter]
+                      ? theme.palette.primary.main
+                      : theme.palette.grey[600]
                 }
               }}
-              onClick={cleanFilters}
-            >
-              clear
-            </Button>
-          </Stack>
-        </FormGroup>
-      </Popover>
-    </>
+              control={
+                <Checkbox
+                  disabled={filter === 'all' ? false : filterState.all}
+                  checked={filterState.all || !!filterState[filter]}
+                  onChange={makeFilterToggler(filter)}
+                />
+              }
+              label={roleToLabelMap[filter]}
+            />
+          ))}
+          
+        </Stack>
+        <Stack
+          direction={'row'}
+          marginTop={'12px'}
+          justifyContent={'space-evenly'}>
+          <Button
+            disabled={!canApplyChanges}
+            variant='contained'
+            sx={{
+              borderRadius: '45px',
+              textTransform: 'uppercase',
+              marginRight: '1em'
+            }}
+            onClick={applyChanges}
+          >
+            Apply
+          </Button>
+          <Button
+            variant='contained'
+            sx={{
+              bgcolor: theme.palette.grey[200],
+              color: theme.palette.text.primary,
+              borderRadius: '45px',
+              textTransform: 'uppercase',
+              boxShadow: 'none',
+              [':hover']: {
+                bgcolor: theme.palette.grey[200],
+                color: theme.palette.text.primary
+              }
+            }}
+            onClick={reset}
+          >
+            Clear
+          </Button>
+        </Stack>
+      </FormGroup>
+    </Dropdown>
   );
 };

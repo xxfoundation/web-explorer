@@ -7,6 +7,7 @@ import {
   TableProps,
   TableRow
 } from '@mui/material';
+import Error from '../Error';
 import React, { FC, useMemo } from 'react';
 import { TableContainer } from './TableContainer';
 
@@ -17,11 +18,12 @@ export type BaselineCell = {
 };
 
 export const BaselineTable: FC<{
+  error?: boolean;
   headers: BaselineCell[];
   rows: BaselineCell[][];
   footer?: JSX.Element;
   tableProps?: TableProps;
-}> = ({ headers, rows, footer, tableProps = {} }) => {
+}> = ({ error, headers, rows, footer, tableProps = {} }) => {
   const memoistHeaders = useMemo(() => {
     return headers.map(({ key, props, value }, index) => {
       return (
@@ -31,8 +33,11 @@ export const BaselineTable: FC<{
       );
     });
   }, [headers]);
-  const memoistRows = useMemo(() => {
-    return rows.map((row, index) => {
+
+  const memoizedRows = useMemo(() => {
+    return error ? (
+      <TableRow><TableCell colSpan={headers.length}><Error type='data-unavailable' /></TableCell></TableRow>
+    ) : rows.map((row, index) => {
       return (
         <TableRow key={index}>
           {row.map(({ key, props, value }, cellIndex) => {
@@ -45,7 +50,7 @@ export const BaselineTable: FC<{
         </TableRow>
       );
     });
-  }, [rows]);
+  }, [error, headers.length, rows]);
   return (
     <>
       <TableContainer>
@@ -53,7 +58,7 @@ export const BaselineTable: FC<{
           <TableHead>
             <TableRow>{memoistHeaders}</TableRow>
           </TableHead>
-          <TableBody>{memoistRows}</TableBody>
+          <TableBody>{memoizedRows}</TableBody>
         </Table>
         {footer}
       </TableContainer>
