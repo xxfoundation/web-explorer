@@ -48,7 +48,6 @@ export const ChainInfoLink = styled(Link)({
   height: '100%',
   left: 0,
   top: 0,
-  zIndex: 1,
   '&:hover': {
     background: 'rgba(0,0,0,0.25)',
   }

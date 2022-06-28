@@ -6,21 +6,32 @@ import { camelCase } from 'lodash';
 
 import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
 import { ChainInfoLink, Data, Item } from './ChainInfo.styles';
+import { InfoOutlined } from '@mui/icons-material';
 import FormatBalance from '../FormatBalance';
 import { EraMetrics, Metric } from './types';
 import { EconomicsSubscription, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 import Error from '../Error';
+import { CustomTooltip } from '../Tooltip';
 
-const ChainInfoCard: FC<{ title: string; value: string | BN | React.ReactNode, path?: string }> = ({
+const ChainInfoCard: FC<{
+  title: string;
+  tooltip?: string;
+  value: string | BN | React.ReactNode;
+  path?: string;
+}> = ({
   path,
   title,
+  tooltip,
   value
 }) => {
   return (
     <Grid item xs={6} sm={3} md={3}>
       <Item sx={{ position: 'relative' }}>
+        {tooltip && <CustomTooltip title={tooltip}>
+          <InfoOutlined style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', zIndex: 2 }} />
+        </CustomTooltip>}
         {path && (
-          <ChainInfoLink to={path} />
+          <ChainInfoLink style={{ zIndex: 1 }} to={path} />
         )}
         <div style={{ position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
           <Typography variant='body4'>{title}</Typography>
@@ -70,7 +81,11 @@ const ChainInfo = () => {
         Chain data
       </Typography>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
-        <ChainInfoCard title='Finalized Blocks' value={blocks} path='/blocks' />
+        <ChainInfoCard
+          tooltip={'Hi I am a tooltip'}
+          title='Finalized Blocks'
+          value={blocks}
+          path='/blocks' />
         <ChainInfoCard title='Active Era' value={currentEra} />
         <ChainInfoCard title='Transfers' value={transfers} path='/transfers' />
         <ChainInfoCard title='Account Holders' value={accounts}  path='/accounts'/>
