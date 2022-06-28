@@ -2,6 +2,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
+import './plugins';
 import SiteFooter from './components/Footer';
 import SiteHeader from './components/Header';
 import Accounts from './pages/accounts';
