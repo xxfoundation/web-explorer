@@ -37,8 +37,6 @@ const TablePagination: FC<{
   rowsPerPage = 15,
   rowsPerPageOptions = [rowsPerPage]
 }) => {
-  // eslint-disable-next-line no-console
-  console.log(count, rowsPerPage, rowsPerPageOptions[0]);
   if (count > rowsPerPage || count > rowsPerPageOptions[0])
     return (
       <>
