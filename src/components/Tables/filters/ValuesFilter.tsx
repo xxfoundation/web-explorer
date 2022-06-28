@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useTheme, Badge, Button, Checkbox, Input, FormControlLabel, Stack, FormControl } from '@mui/material';
 
-import Dropdown from './Dropdown';
-import { arrayCompare } from './utils';
+import Dropdown from '../../Dropdown';
+import { arrayCompare } from '../../utils';
 
 type Props = {
   buttonLabel: string | null | React.ReactNode;

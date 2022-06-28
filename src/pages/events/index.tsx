@@ -2,7 +2,7 @@ import { Container, Typography } from '@mui/material';
 import React from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
-import HistoryTable from './HistoryTable';
+import EventsTable from './EventsTable';
 
 const EventsHistory = () => {
   return (
@@ -12,7 +12,7 @@ const EventsHistory = () => {
         Events
       </Typography>
       <PaperStyled>
-        <HistoryTable />
+        <EventsTable />
       </PaperStyled>
     </Container>
   );

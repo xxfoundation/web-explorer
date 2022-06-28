@@ -1,20 +1,18 @@
 import { useQuery } from '@apollo/client';
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { Badge } from '@mui/material';
 
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import { Hash } from '../../components/ChainId';
-import DateRange, { Range } from '../../components/DateRange';
-import Dropdown from '../../components/Dropdown';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
-import { GetAvailableActions, GET_AVAILABLE_ACTIONS, ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
+import { GetAvailableExtrinsicActions, GET_AVAILABLE_EXTRINSIC_ACTIONS, ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
 import ResultFilter from './ResultFilter';
-import ValuesFilter from '../../components/ValuesFilter';
+import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
+import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 
 const ROWS_PER_PAGE = 20;
 
@@ -54,9 +52,7 @@ const HistoryTable: FC<{
 
   const [resultFilter, setResultFilter] = useState<boolean | null>(null);
 
-  const badgeCount = Object.values(range).filter((v) => !!v).length;
-
-  const actionsQuery = useQuery<GetAvailableActions>(GET_AVAILABLE_ACTIONS);
+  const actionsQuery = useQuery<GetAvailableExtrinsicActions>(GET_AVAILABLE_EXTRINSIC_ACTIONS);
   
   const [methodsFilter, setMethodsFilter] = useState<string[]>();
   const availableMethods = useMemo(
@@ -74,31 +70,11 @@ const HistoryTable: FC<{
     'Extrinsics id',
     'Block',
     'Extrinsics hash',
-    <Dropdown buttonLabel={
-      <>
-        Time
-        &nbsp;
-        {badgeCount > 0 && <>
-          <Badge color='primary' sx={{ pl: 1 }} badgeContent={badgeCount} />
-          &nbsp;
-        </>
-        }
-      </>}>
-      <DateRange range={range} onChange={setRange} />
-    </Dropdown>,
+    <DateRangeFilter onChange={setRange} value={range} />,
     <ResultFilter onChange={setResultFilter} value={resultFilter} />,
     <ValuesFilter availableValues={availableMethods} buttonLabel='Method' onChange={setMethodsFilter} value={methodsFilter} />,
     <ValuesFilter availableValues={availableCalls} buttonLabel='Call' onChange={setCallsFilter} value={callsFilter} />,
-   
-  ]), [
-    availableCalls,
-    availableMethods,
-    badgeCount,
-    callsFilter,
-    methodsFilter,
-    range,
-    resultFilter
-  ]);
+  ]), [availableCalls, availableMethods, callsFilter, methodsFilter, range, resultFilter]);
 
   const variables = useMemo(
     () => ({

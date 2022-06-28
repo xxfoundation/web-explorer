@@ -149,12 +149,12 @@ export const GET_EXTRINSICS_BY_SIGNER = gql`
   }
 `;
 
-export type GetAvailableActions = {
+export type GetAvailableExtrinsicActions = {
   methods: { method: string }[];
   calls: { section: string }[];
 }
 
-export const GET_AVAILABLE_ACTIONS = gql`
+export const GET_AVAILABLE_EXTRINSIC_ACTIONS = gql`
   query GetAvailableMethods {
     methods: extrinsic (distinct_on: method) {
       method

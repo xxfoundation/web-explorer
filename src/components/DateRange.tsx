@@ -14,19 +14,19 @@ export type Range = {
   to: string | null;
 }
 
-type Props = {
-  range?: Range;
+export type Props = {
+  value?: Range;
   onChange: (range: Range) => void;
   maximumRange?: number;
 }
 
 const THREE_MONTHS_IN_SECONDS = 7890000000;
 
-const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null }, maximumRange = THREE_MONTHS_IN_SECONDS }) => {
+const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maximumRange = THREE_MONTHS_IN_SECONDS }) => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  const [from, setFrom] = useState<string|null>(range.from);
-  const [to, setTo] = useState<string|null>(range.to);
+  const [from, setFrom] = useState<string|null>(value.from);
+  const [to, setTo] = useState<string|null>(value.to);
   const [fromEnabled, { toggle: toggleFrom }] = useToggle(!!from);
   const [toEnabled, { toggle: toggleTo }] = useToggle(!!to);
 
@@ -91,17 +91,17 @@ const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null }, maxi
 
   const fromChanged = useCallback((f: Dayjs | null) => {
     validatedOnChange('from', {
-      ...range,
+      ...value,
       from: f?.toISOString() ?? null,
     });
-  }, [range, validatedOnChange]);
+  }, [value, validatedOnChange]);
 
   const toChanged = useCallback((t: Dayjs | null) => {
       validatedOnChange('to', {
-      ...range,
+      ...value,
       to: t?.toISOString() ?? null,
     })
-  }, [validatedOnChange, range]);
+  }, [validatedOnChange, value]);
 
   useEffect(
     () => {
@@ -129,7 +129,7 @@ const DateRange: FC<Props> = ({ onChange, range = { from: null, to: null }, maxi
     [to, toChanged, toEnabled]
   );
 
-  const canApplyChanges = range.from !== from || range.to !== to;
+  const canApplyChanges = value.from !== from || value.to !== to;
 
   return (
     <Stack padding={2}>
