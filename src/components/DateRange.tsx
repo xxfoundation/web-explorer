@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { MobileDateTimePicker } from '@mui/x-date-pickers';
 import { Button, Checkbox, FormControl, FormControlLabel, Stack, TextField, useTheme } from '@mui/material';
@@ -25,10 +26,10 @@ const THREE_MONTHS_IN_SECONDS = 7890000000;
 const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maximumRange = THREE_MONTHS_IN_SECONDS }) => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  const [from, setFrom] = useState<string|null>(value.from);
-  const [to, setTo] = useState<string|null>(value.to);
-  const [fromEnabled, { toggle: toggleFrom }] = useToggle(!!from);
-  const [toEnabled, { toggle: toggleTo }] = useToggle(!!to);
+  const [from, setFrom] = useState<string | null>(value.from);
+  const [to, setTo] = useState<string | null>(value.to);
+  const [fromEnabled, { toggle: toggleFrom, toggleOff: disableFrom }] = useToggle(!!from);
+  const [toEnabled, { toggle: toggleTo,  toggleOff: disableTo }] = useToggle(!!to);
 
   const applyChanges = useCallback(() => {
     onChange({ from, to });
@@ -36,8 +37,10 @@ const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maxi
 
   const reset = useCallback(() => {
     setFrom(null);
+    disableFrom();
     setTo(null);
-  }, []);
+    disableTo();
+  }, [disableFrom, disableTo]);
 
   const validateRange = useCallback((keyChanged: keyof Range, r: Range) => {
     let newRange = r;

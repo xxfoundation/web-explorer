@@ -1,36 +1,39 @@
 import { useTheme, Badge, Button, Checkbox, FormControlLabel, Stack, Switch } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
 
-import Dropdown from '../../components/Dropdown';
+import Dropdown from '../../Dropdown';
 
-type Props = {
-  value: boolean | null;
+export type Props = {
+  label: string;
+  toggleLabel: (v: boolean) => string;
   onChange: (v: boolean | null) => void;
+  value: boolean | null;
 }
 
-const ResultFilter: FC<Props> = ({ onChange, value }) => {
+const BooleanFilter: FC<Props> = ({ label, onChange, toggleLabel, value }) => {
   const theme = useTheme();
-  const [resultFilter, setResultFilter] = useState(value);
+  const [valueFilter, setValueFilter] = useState(value);
 
-  const reset = useCallback(() => setResultFilter(null), []);
-  const toggleFilter = useCallback(() => setResultFilter((v) => !v), []);
+  const reset = useCallback(() => setValueFilter(null), []);
+  const toggleFilter = useCallback(() => setValueFilter((v) => !v), []);
   const toggleFilterEnabled = useCallback(
-    () => setResultFilter((v) => v === null ? true : null),
+    () => setValueFilter((v) => v === null ? true : null),
     []
   );
   const applyChanges = useCallback(
-    () => onChange(resultFilter),
-    [onChange, resultFilter]
+    () => onChange(valueFilter),
+    [onChange, valueFilter]
   );
 
-  const canApplyChanges = value !== resultFilter;
+  const canApplyChanges = value !== valueFilter;
+  const resultLabel = toggleLabel(valueFilter || false);
 
   return (
     <Dropdown buttonLabel={
       <>
-        Result
+        {label}
         &nbsp;
-        {resultFilter !== null && <>
+        {valueFilter !== null && <>
           <Badge color='primary' sx={{ pl: 1 }} badgeContent={1} />
           &nbsp;
         </>
@@ -45,27 +48,27 @@ const ResultFilter: FC<Props> = ({ onChange, value }) => {
               fontSize: '14px',
               fontWeight: 400,
               color:
-                resultFilter !== null
+                valueFilter !== null
                   ? theme.palette.primary.main
                   : theme.palette.grey[600]
             }
           }}
           control={
             <Checkbox
-              checked={resultFilter !== null}
+              checked={valueFilter !== null}
               onChange={toggleFilterEnabled}
             />
           }
           label={'Enable'}
         />
-        {resultFilter !== null && (
+        {valueFilter !== null && (
           <FormControlLabel
-            label={resultFilter ? 'Success': 'Failed'}
+            label={resultLabel}
             control={
               <Switch
                 onChange={toggleFilter}
-                inputProps={{'aria-label': resultFilter ? 'Success': 'Failed'}}
-                checked={resultFilter}
+                inputProps={{'aria-label': resultLabel}}
+                checked={valueFilter}
                 color='success' />
             }
           />
@@ -109,4 +112,4 @@ const ResultFilter: FC<Props> = ({ onChange, value }) => {
   )
 }
 
-export default ResultFilter;
+export default BooleanFilter;

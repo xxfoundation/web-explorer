@@ -10,7 +10,7 @@ import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { GetAvailableExtrinsicActions, GET_AVAILABLE_EXTRINSIC_ACTIONS, ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
-import ResultFilter from './ResultFilter';
+import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 
@@ -71,7 +71,11 @@ const HistoryTable: FC<{
     'Block',
     'Extrinsics hash',
     <DateRangeFilter onChange={setRange} value={range} />,
-    <ResultFilter onChange={setResultFilter} value={resultFilter} />,
+    <BooleanFilter
+      label='Result'
+      toggleLabel={(v) => v ? 'Success' : 'Failed'}
+      onChange={setResultFilter}
+      value={resultFilter} />,
     <ValuesFilter availableValues={availableMethods} buttonLabel='Method' onChange={setMethodsFilter} value={methodsFilter} />,
     <ValuesFilter availableValues={availableCalls} buttonLabel='Call' onChange={setCallsFilter} value={callsFilter} />,
   ]), [availableCalls, availableMethods, callsFilter, methodsFilter, range, resultFilter]);
