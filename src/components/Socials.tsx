@@ -49,6 +49,7 @@ const Socials: React.FC<Props> = ({ socials }) => {
               <SocialLink
                 key={`${social}-${username}`}
                 href={urlMappers[social]?.(username)}
+                rel='noopener'
                 target='_blank'
               >
                 <SocialsLogo>

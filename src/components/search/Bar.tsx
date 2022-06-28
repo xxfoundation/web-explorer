@@ -1,5 +1,5 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Divider, FormControl, Grid, SxProps } from '@mui/material';
+import { Divider, Hidden, FormControl, Grid, SxProps } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React, { FC, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -136,7 +136,7 @@ const SearchBar = () => {
   return (
     <Bar component={'form'}>
       <Grid container alignItems='center'>
-        <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 } }}>
+        <Grid item xs='auto' sx={{ mr: { xs: 1, sm: 3 } }}>
           <FormControl variant='standard'>
             <SelectOption
               value={option}
@@ -145,9 +145,9 @@ const SearchBar = () => {
               inputProps={{ 'aria-label': 'Without label' }}
               IconComponent={KeyboardArrowDownIcon}
             >
-              <SelectItem value={'blocks'}>Block Number </SelectItem>
-              <SelectItem value={'extrinsic'}>Extrinsic Hash</SelectItem>
-              <SelectItem value={'accounts'}>Account Address</SelectItem>
+              <SelectItem value={'blocks'}>Block <Hidden mdDown>Number</Hidden></SelectItem>
+              <SelectItem value={'extrinsic'}>Extrinsic <Hidden mdDown>Hash</Hidden></SelectItem>
+              <SelectItem value={'accounts'}>Account <Hidden mdDown>Address</Hidden></SelectItem>
             </SelectOption>
           </FormControl>
         </Grid>
