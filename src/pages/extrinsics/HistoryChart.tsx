@@ -16,7 +16,7 @@ const HistoryChart: FC = () => {
   const [interval, setInterval] = useState<TimeInterval>('1h');
   const variables = useMemo(() => {
     return {
-      orderBy: [{ timestamp: 'asc' }],
+      orderBy: [{ timestamp: 'desc' }],
       where: { timestamp: { _gte: intervalToTimestamp(interval) } }
     };
   }, [interval]);
@@ -27,6 +27,10 @@ const HistoryChart: FC = () => {
     () => (data?.extrinsic || []).map(({ timestamp }) => timestamp),
     [data?.extrinsic]
   );
+
+  // eslint-disable-next-line no-console
+  console.log(JSON.stringify(variables));
+
   return (
     <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
       <IntervalControls interval={interval} setInterval={setInterval} loading={loading} />

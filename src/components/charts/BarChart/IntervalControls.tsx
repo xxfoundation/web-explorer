@@ -11,7 +11,7 @@ const intervalMapToTimestamp: Record<TimeInterval, () => number> = {
   },
   '6h': () => {
     const minRange = new Date();
-    minRange.setHours(minRange.getHours() - 24 * 10);
+    minRange.setHours(minRange.getHours() - (24 * 10));
     return minRange.getTime();
   },
   '1d': () => {
