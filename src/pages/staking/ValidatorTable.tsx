@@ -10,8 +10,12 @@ import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
 import {
   GET_RANKED_ACCOUNTS,
+  GET_LATEST_ERA,
+  ActiveCountsQuery,
+  LatestEraQuery,
   RankedAccountsQuery,
-  RankedAccount
+  RankedAccount,
+  GET_ACTIVE_COUNTS
 } from '../../schemas/ranking.schema';
 import ValidatorTableControls, {
   ValidatorFilter,
@@ -69,18 +73,21 @@ const ValidatorsTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<ValidatorFilter>('current');
+  const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
+  const latestEra = latestEraQuery.data?.ranking?.[0].era;
+  const countsQuery = useQuery<ActiveCountsQuery>(GET_ACTIVE_COUNTS, { variables: { era: latestEra }, skip: !latestEra });
   const variables = useMemo(
     () => ({
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      where: { active: { _eq: filter === 'current' } }
+      where: { active: { _eq: filter === 'current' }, era: { _eq: latestEra } }
     }),
-    [filter, page, rowsPerPage]
+    [filter, latestEra, page, rowsPerPage]
   );
-  const query = useQuery<RankedAccountsQuery>(GET_RANKED_ACCOUNTS, { variables });
-  const validators = query.data?.validators;
-  const activeCount = query.data?.active.aggregate.count;
-  const waitingCount = query.data?.waiting.aggregate.count;
+  const rankingQuery = useQuery<RankedAccountsQuery>(GET_RANKED_ACCOUNTS, { variables, skip: !latestEra });
+  const validators = rankingQuery.data?.validators;
+  const activeCount = countsQuery.data?.active.aggregate.count;
+  const waitingCount = countsQuery.data?.waiting.aggregate.count;
   const count = filter === 'current' ? activeCount : waitingCount;
 
   const labels: ValidatorFilterLabels = useMemo(
@@ -98,6 +105,8 @@ const ValidatorsTable = () => {
     }),
     [activeCount, waitingCount]
   );
+
+  const error = latestEraQuery.error || rankingQuery.error;
 
   return (
     <Stack spacing={3}>
@@ -123,10 +132,10 @@ const ValidatorsTable = () => {
           <TableBody>
             <TableRow>
               <TableCell colSpan={7}>
-                {!query.loading && (query.error || !validators) && (
+                {!rankingQuery.loading && (error) && (
                   <Error type='data-unavailable' />
                 )}
-                {query.loading && <Loading />}
+                {rankingQuery.loading && <Loading />}
               </TableCell>
             </TableRow>
             {validators ? (
