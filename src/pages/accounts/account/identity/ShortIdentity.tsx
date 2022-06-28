@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Divider,
+  Hidden,
   Grid,
   Stack,
   styled,
@@ -12,6 +13,7 @@ import {
 } from '@mui/material';
 import React, { FC } from 'react';
 import CopyButton from '../../../../components/buttons/CopyButton';
+import { ResponsiveHash } from '../../../../components/Hash';
 import { Account } from '../../../../schemas/accounts.schema';
 import SocialIconsGroup from './SocialIconsGroup';
 
@@ -41,7 +43,7 @@ const IdentityMobile: FC<{ account: Account }> = ({ account }) => {
               wordBreak: 'break-all'
             }}
           >
-            {account.id}
+            <ResponsiveHash truncated='mdDown' value={account.id} />
           </Typography>
           <Box alignItems={'center'} justifyContent={'start'} display='flex'>
             <CustomWidthTooltip
@@ -85,9 +87,11 @@ const IdentityDesktop: FC<{ account: Account }> = ({ account }) => {
               wordBreak: 'break-all'
             }}
           >
-            {account.id}
+            <ResponsiveHash truncated='mdDown'  value={account.id} />
           </Typography>
-          <Divider variant='middle' orientation='vertical' flexItem />
+          <Hidden mdDown>
+            <Divider variant='middle' orientation='vertical' flexItem />
+          </Hidden>
           <CustomWidthTooltip
             title={
               <Stack direction={'row'} spacing={1} alignItems={'center'}>

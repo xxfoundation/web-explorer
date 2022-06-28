@@ -1,7 +1,8 @@
 import { decodeAddress, encodeAddress } from '@polkadot/keyring';
+import { isHex } from '@polkadot/util';
 
 // Check if an address is a valid xx network address
-const isValidXXNetworkAddress = (address: string): boolean => {
+export const isValidXXNetworkAddress = (address: string): boolean => {
   // Quit early if hex string
   if (address.startsWith('0x')) {
     return false;
@@ -16,4 +17,6 @@ const isValidXXNetworkAddress = (address: string): boolean => {
   }
 };
 
-export default isValidXXNetworkAddress;
+const EXTRINSIC_HASH_BIT_LENGTH = 256;
+
+export const validateExtrinsicHash = (value: string) => isHex(value, EXTRINSIC_HASH_BIT_LENGTH);

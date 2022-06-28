@@ -4,12 +4,12 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 interface LinkRouterProps extends LinkProps {
-  to: string;
+  to?: string;
   replace?: boolean;
 }
 
 const Link: React.FC<LinkRouterProps> = React.forwardRef(({ children, ...props }, ref) => {
-  const LinkComponent = props.to.startsWith('/') ? RouterLink : 'a';
+  const LinkComponent = props.to?.startsWith('/') ? RouterLink : 'a';
 
   return (
     <MaterialLink

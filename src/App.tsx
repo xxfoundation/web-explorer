@@ -14,42 +14,46 @@ import NotFound from './pages/NotFound';
 import Staking from './pages/staking';
 import Transfers from './pages/transfers';
 import { theme } from './themes/default';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-function App() {
+const App = () => {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        <SiteHeader />
-        <Switch>
-          <Route exact path='/'>
-            <BlockChain />
-          </Route>
-          <Route path='/blocks'>
-            <Blocks />
-          </Route>
-          <Route path='/extrinsics'>
-            <ExtrinsicsRouter />
-          </Route>
-          <Route path='/transfers'>
-            <Transfers />
-          </Route>
-          <Route path='/events'>
-            <EventsHistory />
-          </Route>
-          {/* <Route path='/governance'>
-            <h1>governance</h1>
-          </Route> */}
-          <Route path='/accounts'>
-            <Accounts />
-          </Route>
-          <Route path='/staking'>
-            <Staking />
-          </Route>
-          <Route path='*'>
-            <NotFound />
-          </Route>
-        </Switch>
-        <SiteFooter />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <SiteHeader />
+          <Switch>
+            <Route exact path='/'>
+              <BlockChain />
+            </Route>
+            <Route path='/blocks'>
+              <Blocks />
+            </Route>
+            <Route path='/extrinsics'>
+              <ExtrinsicsRouter />
+            </Route>
+            <Route path='/transfers'>
+              <Transfers />
+            </Route>
+            <Route path='/events'>
+              <EventsHistory />
+            </Route>
+            {/* <Route path='/governance'>
+              <h1>governance</h1>
+            </Route> */}
+            <Route path='/accounts'>
+              <Accounts />
+            </Route>
+            <Route path='/staking'>
+              <Staking />
+            </Route>
+            <Route path='*'>
+              <NotFound />
+            </Route>
+          </Switch>
+          <SiteFooter />
+        </LocalizationProvider>
       </ThemeProvider>
     </Router>
   );

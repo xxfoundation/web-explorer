@@ -5,6 +5,7 @@ import type {
   LabelledSeries,
   SeriesData, SeriesMetadata, TimeInterval, TimestampCounts
 } from './types';
+import { nFormatter } from '../../../utils';
 
 const intervalToMilli: Record<TimeInterval, number> = {
   '1h': 60 * 60 * 1000,
@@ -61,7 +62,7 @@ export const groupCountByInterval = (
 };
 
 export const extractInfo = (
-  { isCurrency, label, magnitudes, timestamps }: SeriesData,
+  {  isCurrency, label, magnitudes, timestamps }: SeriesData,
   interval: TimeInterval,
   numberOfTicks = NUMBER_OF_TICKS
 ): SeriesMetadata => {
@@ -75,8 +76,8 @@ export const extractInfo = (
   return {
     counts,
     interval,
-    label,
     isCurrency,
+    label,
     maxY,
     tickSize,
     ticks,
@@ -84,3 +85,9 @@ export const extractInfo = (
     grouped
   };
 };
+
+export const processUnit = (tick: number) => {
+  const truncated = Math.floor(tick * 1000) / 1000;
+  const decimals = truncated.toString().split('.')[1]?.length;
+  return nFormatter(truncated, decimals)
+}

@@ -56,6 +56,8 @@ const TablePagination: FC<{
           }}
           backIconButtonProps={{ size: 'small' }}
           nextIconButtonProps={{ size: 'small' }}
+          showFirstButton={true}
+          showLastButton={true}
         />
       </>
     );

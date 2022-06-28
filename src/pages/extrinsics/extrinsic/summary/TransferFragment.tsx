@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Typography } from '@mui/material';
 import React, { FC } from 'react';
-import { Address } from '../../../../components/ChainId';
+import Address from '../../../../components/Hash/XXNetworkAddress';
 import FormatBalance from '../../../../components/FormatBalance';
 import { SummaryEntry, SummaryHeader, SummaryValue, WithCopy } from '../../../../components/Summary';
 import { GetTransferByPK, GET_TRANSFER_BY_PK } from '../../../../schemas/transfers.schema';
@@ -13,9 +13,9 @@ const AddressesHandler: FC<{
   identity?: string;
 }> = ({ address, identity: identityDisplay }) => {
   if (identityDisplay) {
-    return <Address value={address} name={identityDisplay} link={`/accounts/${address}`} />;
+    return <Address value={address} name={identityDisplay} url={`/accounts/${address}`} />;
   }
-  return <Address value={address} link={`/accounts/${address}`} />;
+  return <Address value={address} url={`/accounts/${address}`} />;
 };
 
 const SummaryFragment: FC<Props> = (variables) => {

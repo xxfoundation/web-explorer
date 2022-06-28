@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { theme } from '../../themes/default';
-import HistoryChart from './HistoryChart';
-import HistoryTable from './HistoryTable';
+import HistoryChart from './ExtrinsicsChart';
+import ExtrinsicsTable from './ExtrinsicsTable';
 
 const HistoryPage = () => {
   const [totalOfExtrinsics, setTotalOfExtrinsics] = useState<number>();
@@ -29,7 +29,7 @@ const HistoryPage = () => {
         </PaperStyled>
       </Box>
       <PaperStyled>
-        {totalOfExtrinsics && (
+        {totalOfExtrinsics !== undefined && (
           <Stack
             direction='row'
             alignItems='center'
@@ -49,7 +49,7 @@ const HistoryPage = () => {
           </Stack>
         )}
         <span hidden>filters placeholder</span>
-        <HistoryTable setTotalOfExtrinsics={setTotalOfExtrinsics} />
+        <ExtrinsicsTable setTotalOfExtrinsics={setTotalOfExtrinsics} />
       </PaperStyled>
     </Container>
   );

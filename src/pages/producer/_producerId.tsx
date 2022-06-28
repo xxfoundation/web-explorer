@@ -9,7 +9,7 @@ import Error from '../../components/Error';
 import NotFound from '../NotFound';
 import ProducerTabs from './ProducerTabs';
 import Summary from './Summary';
-import { shortString } from '../../utils';
+import { ResponsiveHash } from '../../components/Hash/Hash';
 
 const BlockProducer = () => {
   const { producerId } = useParams<{ producerId: string }>();
@@ -18,6 +18,7 @@ const BlockProducer = () => {
       where: { stash_address: { _eq: producerId } }
     }
   });
+
   if (loading) {
     return (
       <Container sx={{ my: 5 }}>
@@ -38,16 +39,23 @@ const BlockProducer = () => {
     );
   }
 
-  if (!data?.ranking || !data.ranking[0]?.stashAddress)
+  if (!data?.ranking || !data.ranking[0]?.stashAddress) {
     return <NotFound message='Producer Not Found' />;
+  }
 
   const ranking = data.ranking[0];
   const identity = JSON.parse(ranking.identity);
+
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Typography variant='h1' sx={{ mb: 5 }}>
-        Block Producer . {identity.display || shortString(ranking.stashAddress)}
+      <Typography variant='h1' sx={{ mb: 1 }}>
+        Block Producer
+      </Typography>
+      <Typography variant='h2' color='grey.700' sx={{ mb: 5 }}>
+        {identity.display || (
+          <ResponsiveHash truncated='lgDown' value={ranking.stashAddress} />
+        )}
       </Typography>
       <Summary ranking={ranking} name={identity.display} />
       <Box sx={{ mt: 2 }}>

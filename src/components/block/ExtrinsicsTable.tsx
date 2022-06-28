@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import React, { FC, useMemo, useEffect, useState, useCallback } from 'react';
 import { EXTRINSICS_OF_BLOCK, ListExtrinsics, Extrinsic } from '../../schemas/extrinsics.schema';
-import { Hash } from '../ChainId';
+import Hash from '../Hash';
 import Link from '../Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
 import TablePagination from '../Tables/TablePagination';
@@ -20,7 +20,7 @@ const rowsParser = (rowData: Extrinsic) => {
     <Hash
       value={rowData.hash}
       truncated
-      link={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}
+      url={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}
       showTooltip
     />,
     <TimeAgoComponent date={rowData.timestamp} />,

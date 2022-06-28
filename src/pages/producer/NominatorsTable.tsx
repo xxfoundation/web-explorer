@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import FormatBalance from '../../components/FormatBalance';
-import Link from '../../components/Link';
+import XXNetworkAddress from '../../components/Hash/XXNetworkAddress';
 import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
 
@@ -12,7 +12,7 @@ export type NominatorsOfAccount = {
 
 const EraStake = (nominator: NominatorsOfAccount) => {
   return BaseLineCellsWrapper([
-    <Link to={`/accounts/${nominator.account_id}`}>{nominator.account_id}</Link>,
+    <XXNetworkAddress truncated='mdDown' value={nominator.account_id} />,
     <FormatBalance value={nominator.stake.toString()} />,
     `${nominator.share}%`
   ]);
@@ -48,6 +48,7 @@ const NominatorsTable: FC<{ nominations: string }> = ({ nominations }) => {
   const rows = useMemo(() => {
     return paginate(accountNominators, rowsPerPage, page).map(EraStake);
   }, [accountNominators, page, rowsPerPage]);
+
   const footer = useMemo(() => {
     if (accountNominators && accountNominators.length) {
       return (
@@ -63,6 +64,7 @@ const NominatorsTable: FC<{ nominations: string }> = ({ nominations }) => {
     }
     return <></>;
   }, [accountNominators, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
+  
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 

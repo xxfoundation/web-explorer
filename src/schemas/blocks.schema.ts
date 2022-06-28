@@ -27,6 +27,7 @@ export type ListBlockOrdered = {
     hash: string;
     number: number;
     numberFinalized: number;
+    finalized: boolean;
     currentEra: number;
     timestamp: number;
     totalExtrinsics: number;
@@ -43,6 +44,7 @@ export const LIST_BLOCK_ORDERED = gql`
         count
       }
     }
+
     blocks: block(order_by: { block_number: desc }, where: $where, limit: $limit, offset: $offset) {
       ...blocks
       finalized: finalized

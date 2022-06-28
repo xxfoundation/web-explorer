@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Address } from '../../../../components/ChainId';
+import Address from '../../../../components/Hash/XXNetworkAddress';
 import FormatBalance from '../../../../components/FormatBalance';
 import Link from '../../../../components/Link';
 import { BaselineCell, BaselineTable } from '../../../../components/Tables';
