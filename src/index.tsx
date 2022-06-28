@@ -1,7 +1,6 @@
-import { ApolloProvider} from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import apolloCache from './apolloCache';
 import './dayjs';
 import App from './App';
 import './charts';
