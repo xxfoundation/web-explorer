@@ -1,3 +1,5 @@
+import base64url from 'base64url';
+
 export const makeid = (length: number) => {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -30,3 +32,8 @@ export const nFormatter = (num: number, precision = 0) => {
   const symbol = item?.symbol ? ` ${item.symbol}` : '';
   return `${fixed}${symbol}`
 }
+
+export const toDashboardNodeUrl = (addr: string) => `https://dashboard.xx.network/nodes/${base64url.fromBase64(addr)}`;
+
+export * from './validators';
+

@@ -2,7 +2,8 @@
 import { useQuery } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
-import { Address, Hash } from '../../components/ChainId';
+import Address from '../../components/Hash/XXNetworkAddress';
+import Hash from '../../components/Hash';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
@@ -25,11 +26,10 @@ const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
       truncated
       value={block.author}
       name={block.authorName}
-      link={`/blocks/${block.number}/producer/${block.author}`}
-      disableAvatar
+      url={`/blocks/${block.number}/producer/${block.author}`}
     />,
     <HashColumnWithTooltip hash={block.hash}>
-      <Hash truncated value={block.hash} link={`/blocks/${block.number}`} />
+      <Hash truncated value={block.hash} url={`/blocks/${block.number}`} />
     </HashColumnWithTooltip>
   ]);
 };
