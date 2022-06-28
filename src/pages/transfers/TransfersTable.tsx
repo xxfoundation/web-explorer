@@ -68,7 +68,7 @@ const TransferTable: FC<{
   where?: Record<string, unknown>;
   setCount?: Dispatch<SetStateAction<number | undefined>>;
 }> = ({ where = {}, setCount: setCount }) => {
-  const { cursorField, limit, makeOnPageChange, offset, onRowsPerPageChange, page, rowsPerPage } =
+  const { limit, makeOnPageChange, offset, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Transfer & { id: number }>({
       cursorField: 'id',
       rowsPerPage: ROWS_PER_PAGE
@@ -79,9 +79,9 @@ const TransferTable: FC<{
       limit,
       offset,
       orderBy: [{ timestamp: 'desc' }],
-      where: { ...where, id: { _lte: cursorField } }
+      where
     }),
-    [cursorField, limit, offset, where]
+    [limit, offset, where]
   );
 
   const { data, error, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
@@ -105,10 +105,10 @@ const TransferTable: FC<{
   }, [data?.agg, data?.transfers, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
   
   useEffect(() => {
-    if (data?.agg && !cursorField && setCount) {
+    if (data?.agg && setCount) {
       setCount(data.agg.aggregate.count);
     }
-  }, [cursorField, data?.agg, setCount]);
+  }, [data?.agg, setCount]);
 
   if (error) return <Error type='data-unavailable' />;
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;

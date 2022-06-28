@@ -31,7 +31,7 @@ const rowsParser = ({ blockNumber, index, method, section, timestamp }: Event): 
 };
 
 const HistoryTable = () => {
-  const { cursorField, limit, makeOnPageChange, offset, onRowsPerPageChange, page, rowsPerPage } =
+  const { limit, makeOnPageChange, offset, onRowsPerPageChange, page, rowsPerPage } =
     usePaginatorByCursor<Event>({
       cursorField: 'id',
       rowsPerPage: 20
@@ -42,13 +42,13 @@ const HistoryTable = () => {
       orderBy: [{ block_number: 'desc', event_index: 'asc' }],
       limit: limit,
       offset: offset,
-      where: { id: { _lte: cursorField } }
     }),
-    [cursorField, limit, offset]
+    [limit, offset]
   );
 
   const { data, loading } = useQuery<ListEvents>(LIST_EVENTS, { variables });
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
+
   const footer = useMemo(() => {
     if (data?.agg && data?.events && data.events.length) {
       return (
@@ -63,14 +63,24 @@ const HistoryTable = () => {
       );
     }
     return <></>;
-  }, [data?.agg, data?.events, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  if (loading)
+  }, [
+    data?.agg,
+    data?.events,
+    makeOnPageChange,
+    onRowsPerPageChange,
+    page,
+    rowsPerPage
+  ]);
+
+  if (loading) {
     return (
       <>
         <Skeleton width='12%' sx={{ marginBottom: '18px' }} />
         <TableSkeleton cells={headers.length} rows={rowsPerPage} />
       </>
     );
+  }
+
   return (
     <>
       {data?.agg.aggregate.count && (
