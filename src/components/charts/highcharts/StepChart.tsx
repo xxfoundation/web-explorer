@@ -6,7 +6,7 @@ import Highcharts, {
   TooltipFormatterCallbackFunction
 } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { theme } from '../../../themes/default';
+import { useTheme } from '@mui/material';
 
 type Props = {
   title?: string;
@@ -30,6 +30,7 @@ const StepChart: FC<Props> = ({
   xName,
   yName
 }) => {
+  const theme = useTheme();
   const options: Options = {
     colors: ['#00C4FF'],
     chart: { zoomType: 'x' },
@@ -100,6 +101,7 @@ const StepChart: FC<Props> = ({
     },
     title: { text: title }
   };
+
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 };
 
