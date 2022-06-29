@@ -85,6 +85,7 @@ export type ListExtrinsics = {
 } & TotalOfItems;
 
 export const LIST_EXTRINSICS = gql`
+  ${EXTRINSIC_FRAGMENT}
   query ListExtrinsicOrdered(
     $limit: Int
     $offset: Int = 0
@@ -96,35 +97,16 @@ export const LIST_EXTRINSICS = gql`
         count
       }
     }
+
     extrinsics: extrinsic(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-      id
-      index: extrinsic_index
-      blockNumber: block_number
-      timestamp
-      success
-      method
-      section
-      hash
+      ...extrinsicFragment
     }
   }
 `;
 
+
 export type GetExtrinsicByPK = {
-  extrinsic: {
-    blockNumber: number;
-    index: number;
-    hash: string;
-    lifetime?: string | number;
-    timestamp: number;
-    method: string;
-    section: string;
-    success: boolean;
-    signer?: string;
-    isSigned: boolean;
-    args: Array<string | number>;
-    argsDef: Record<string, string>;
-    doc: string[];
-  };
+  extrinsic: Extrinsic;
 };
 
 export const GET_EXTRINSIC_BY_PK = gql`
@@ -165,4 +147,21 @@ export const GET_EXTRINSICS_BY_SIGNER = gql`
       }
     }
   }
-`
+`;
+
+export type GetAvailableExtrinsicActions = {
+  methods: { method: string }[];
+  calls: { section: string }[];
+}
+
+export const GET_AVAILABLE_EXTRINSIC_ACTIONS = gql`
+  query GetAvailableMethods {
+    methods: extrinsic (distinct_on: method) {
+      method
+    }
+
+    calls: extrinsic (distinct_on: section) {
+      section
+    }
+  }
+`;

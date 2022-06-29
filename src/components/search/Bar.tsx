@@ -33,13 +33,13 @@ const SearchBlocks: FC = () => {
       optionValidator={validators.blocks}
       errorSearchCallback={(v: string, err: unknown) => {
         console.error(err);
-        enqueueSnackbar(`problem searching block with ${v}`, { variant: 'error' });
+        enqueueSnackbar(`Problem searching block with ${v}`, { variant: 'error' });
       }}
       successSearchCallback={(v: string, data: { block?: { number: number; hash: string } }) => {
         if (data.block?.number) {
           history.push(`/blocks/${data.block.number}`);
         } else {
-          enqueueSnackbar(`no block found with number ${v}`, { variant: 'warning' });
+          enqueueSnackbar(`No block found with number ${v}`, { variant: 'warning' });
         }
       }}
     />
@@ -52,7 +52,7 @@ const SearchExtrinsics: FC = () => {
   return (
     <GenericSearchInput
       messageLoader={(value: string) => `Querying Extrinsic ${value}`}
-      placeholder='Search by Extrinsic Hash (insert an hexadecimal string)'
+      placeholder='Search by Extrinsic Hash (insert a hexadecimal string)'
       document={FIND_EXTRINSIC_BY_HASH}
       variables={(v: string) => ({
         where: {
@@ -67,11 +67,11 @@ const SearchExtrinsics: FC = () => {
         if (data.extrinsic?.at(0)?.hash) {
           history.push(`/extrinsics/${data.extrinsic[0].blockNumber}-${data.extrinsic[0].index}`);
         } else {
-          enqueueSnackbar(`no extrinsic found for hash ${v}`, { variant: 'error' });
+          enqueueSnackbar(`No extrinsic found for hash ${v}`, { variant: 'error' });
         }
       }}
       errorSearchCallback={(v: string, err: unknown) => {
-        enqueueSnackbar(`problem searching extrinsic with key ${v}`, { variant: 'warning' });
+        enqueueSnackbar(`Problem searching extrinsic with key ${v}`, { variant: 'warning' });
         console.error(err);
       }}
     />
@@ -87,7 +87,7 @@ const SearchAccount: FC = () => {
       if (data.account?.id) {
         history.push(`/accounts/${data.account.id}`);
       } else {
-        enqueueSnackbar(`no account found for the address ${v}`, { variant: 'error' });
+        enqueueSnackbar(`No account found for the address ${v}`, { variant: 'error' });
       }
     },
     [enqueueSnackbar, history]
@@ -95,7 +95,7 @@ const SearchAccount: FC = () => {
 
   const onError = useCallback(
     (v: string, err: unknown) => {
-      enqueueSnackbar(`problem searching account with address ${v}`, { variant: 'warning' });
+      enqueueSnackbar(`Problem searching account with address ${v}`, { variant: 'warning' });
       console.error(err);
     },
     [enqueueSnackbar]

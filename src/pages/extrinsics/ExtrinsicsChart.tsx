@@ -28,9 +28,6 @@ const HistoryChart: FC = () => {
     [data?.extrinsic]
   );
 
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify(variables));
-
   return (
     <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
       <IntervalControls interval={interval} setInterval={setInterval} loading={loading} />

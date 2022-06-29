@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import { useQuery } from '@apollo/client';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
-import { Address, Hash } from '../../components/ChainId';
+import Address from '../../components/Hash/XXNetworkAddress';
+import Hash from '../../components/Hash';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TablePagination from '../../components/Tables/TablePagination';
@@ -11,13 +12,15 @@ import TimeAgoComponent from '../../components/TimeAgo';
 import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListBlockOrdered, LIST_BLOCK_ORDERED } from '../../schemas/blocks.schema';
 import { HashColumnWithTooltip } from '../../components/Tooltip';
+import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
+import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 
 const ROWS_PER_PAGE = 25;
 
 const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
     <Link to={`/blocks/${block.number}`}>{block.number}</Link>,
-    <BlockStatusIcon status={block.number > block.numberFinalized ? 'pending' : 'successful'} />,
+    <BlockStatusIcon status={block.finalized ? 'successful' : 'pending'} />,
     block.currentEra,
     <TimeAgoComponent date={block.timestamp} />,
     <Link to='#'>{block.totalExtrinsics}</Link>,
@@ -25,28 +28,39 @@ const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
       truncated
       value={block.author}
       name={block.authorName}
-      link={`/blocks/${block.number}/producer/${block.author}`}
-      disableAvatar
+      url={`/blocks/${block.number}/producer/${block.author}`}
     />,
     <HashColumnWithTooltip hash={block.hash}>
-      <Hash truncated value={block.hash} link={`/blocks/${block.number}`} />
+      <Hash truncated value={block.hash} url={`/blocks/${block.number}`} />
     </HashColumnWithTooltip>
   ]);
 };
 
-const headers = BaseLineCellsWrapper([
-  'block',
-  'status',
-  'era',
-  'time',
-  'extrinsics',
-  'block producer',
-  'block hash'
-]);
-
 const BlocksTable: FC = () => {
+  const [range, setRange] = useState<Range>({
+    from: null,
+    to: null
+  });
+
+  const [statusFilter, setStatusFilter] = useState<boolean | null>(null);
+
+  console.log(statusFilter);
+
+  const headers = useMemo(() => BaseLineCellsWrapper([
+    'block',
+    <BooleanFilter
+      label='Status'
+      onChange={setStatusFilter}
+      toggleLabel={(v) => v ? 'Success' : 'Pending' }
+      value={statusFilter} />,
+    'era',
+    <DateRangeFilter onChange={setRange} value={range} />,
+    'extrinsics',
+    'block producer',
+    'block hash'
+  ]), [range, statusFilter]);
+
   const {
-    cursorField: blockNumber,
     limit,
     makeOnPageChange,
     offset,
@@ -57,13 +71,22 @@ const BlocksTable: FC = () => {
     cursorField: 'number',
     rowsPerPage: ROWS_PER_PAGE
   });
+
   const variables = useMemo(
     () => ({
       limit,
       offset,
-      blockNumber
+      where: {
+        ...(statusFilter !== null && ({
+          finalized: { _eq: statusFilter }
+        })),
+        timestamp: {
+          ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
+          ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
+        },
+      }
     }),
-    [blockNumber, limit, offset]
+    [limit, offset, range.from, range.to, statusFilter]
   );
 
   const { data, loading } = useQuery<ListBlockOrdered>(LIST_BLOCK_ORDERED, {

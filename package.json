@@ -4,13 +4,18 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.5.10",
+    "@date-io/dayjs": "^2.14.0",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.4.2",
     "@mui/lab": "^5.0.0-alpha.74",
     "@mui/material": "^5.4.2",
+    "@mui/x-date-pickers": "^5.0.0-alpha.6",
     "@polkadot/keyring": "^8.7.1",
     "@polkadot/util": "^8.7.1",
+    "@sentry/react": "^7.2.0",
+    "@sentry/tracing": "^7.2.0",
+    "apollo-link-sentry": "^3.1.2",
     "base64url": "^3.0.1",
     "bn.js": "^5.2.0",
     "chart.js": "^3.7.1",
@@ -57,7 +62,7 @@
   },
   "jest": {
     "transformIgnorePatterns": [
-      "node_modules/(?!@polkadot/util)"
+      "node_modules/(?!@polkadot)"
     ]
   },
   "devDependencies": {

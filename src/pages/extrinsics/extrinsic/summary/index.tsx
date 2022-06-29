@@ -2,7 +2,8 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import { Divider, Stack } from '@mui/material';
 import React, { FC } from 'react';
 import BlockStatusIcon from '../../../../components/block/BlockStatusIcon';
-import { Address, Hash } from '../../../../components/ChainId';
+import Address from '../../../../components/Hash/XXNetworkAddress';
+import Hash from '../../../../components/Hash';
 import Link from '../../../../components/Link';
 import {
   SummaryContainer,
@@ -54,7 +55,7 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
         <SummaryHeader>Extrinsic Hash</SummaryHeader>
         <SummaryValue>
           <WithCopy value={extrinsic.hash}>
-            <Hash value={extrinsic.hash} />
+            <Hash truncated='lgDown' value={extrinsic.hash} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
