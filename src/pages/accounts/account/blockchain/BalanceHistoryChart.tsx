@@ -2,8 +2,8 @@ import type { Account } from '../../../../schemas/accounts.schema';
 import type { TooltipFormatterContextObject } from 'highcharts';
 import type { DataPoint } from '../../../../components/charts/highcharts';
 
-import React, { FC, useMemo, useState } from 'react';
-import { Box, FormControl, MenuItem,  Select, Typography } from '@mui/material';
+import React, { FC, useCallback, useMemo, useState } from 'react';
+import { Box, FormControl, MenuItem,  Select, SelectChangeEvent, Typography } from '@mui/material';
 import StepChart from '../../../../components/charts/highcharts/StepChart';
 import { Transfer } from '../../../../schemas/transfers.schema';
 import { formatBalance } from '../../../../components/FormatBalance/formatter';
@@ -54,7 +54,8 @@ type Props = {
 const BalanceHistory: FC<Props>  = (props) => {
   const [timeframe, setTimeframe] = useState(BLOCKS_IN_A_MONTH);
   const balanceHistory = useMemo(() => computeBalanceHistory(props, timeframe), [props, timeframe]);
-
+  const onChange = useCallback(({ target }: SelectChangeEvent<number>) => setTimeframe(Number(target.value)), []);
+  
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', pr: 2, mb: 1 }}>
@@ -65,7 +66,7 @@ const BalanceHistory: FC<Props>  = (props) => {
             id='timeframe-select'
             value={timeframe}
             label='Timeframe'
-            onChange={({ target }) => setTimeframe(Number(target.value))}
+            onChange={onChange}
           >
             {Object.entries(timeframes).map(([label, time]) => (
               <MenuItem value={time}>{label}</MenuItem>
