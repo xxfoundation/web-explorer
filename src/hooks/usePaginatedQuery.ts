@@ -15,8 +15,8 @@ const usePaginatedQuery = <TData extends TotalOfItems>(
   const queryOptions = {
     ...options,
     variables: {
-    limit,
-    offset,
+      limit,
+      offset,
       ...options.variables,
     }
   } as QueryHookOptions;
