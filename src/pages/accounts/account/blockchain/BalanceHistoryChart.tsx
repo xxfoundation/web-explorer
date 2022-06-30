@@ -57,7 +57,7 @@ const BalanceHistory: FC<Props>  = (props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', pr: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', pr: 2, mb: 1 }}>
         <Typography sx={{ mt: 0.4 }}>Balance (XX)</Typography>
         <FormControl variant='standard'>
           <Select
