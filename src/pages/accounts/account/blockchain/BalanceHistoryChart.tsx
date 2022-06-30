@@ -3,7 +3,7 @@ import type { TooltipFormatterContextObject } from 'highcharts';
 import type { DataPoint } from '../../../../components/charts/highcharts';
 
 import React, { FC, useMemo, useState } from 'react';
-import { Box, FormControl, MenuItem,  Select } from '@mui/material';
+import { Box, FormControl, MenuItem,  Select, Typography } from '@mui/material';
 import StepChart from '../../../../components/charts/highcharts/StepChart';
 import { Transfer } from '../../../../schemas/transfers.schema';
 import { formatBalance } from '../../../../components/FormatBalance/formatter';
@@ -57,8 +57,9 @@ const BalanceHistory: FC<Props>  = (props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', pr: 2, mb: -2 }}>
-        <FormControl variant='standard' sx={{ mb: 2, float: 'right' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', pr: 2 }}>
+        <Typography sx={{ mt: 0.4 }}>Balance (XX)</Typography>
+        <FormControl variant='standard'>
           <Select
             labelId='timeframe-label'
             id='timeframe-select'
@@ -75,11 +76,10 @@ const BalanceHistory: FC<Props>  = (props) => {
       <StepChart
         seriesName='TOTAL BALANCE'
         xName='Block'
-        yName='Balance (XX)'
         data={balanceHistory}
         tooltipFormatter={amountByEraTooltip}
         labelFormatters={{
-          yAxis: (ctx) => formatBalance(ctx.value?.toString() ?? 0, { withUnit: ' XX' })
+          yAxis: (ctx) => formatBalance(ctx.value?.toString() ?? 0, { withUnit: ' XX', precision: 0 })
         }}
       />
     </>
