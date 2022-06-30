@@ -6,14 +6,14 @@ import Highcharts, {
   TooltipFormatterCallbackFunction
 } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { theme } from '../../../themes/default';
+import { useTheme } from '@mui/material';
 
 type Props = {
   title?: string;
   data: DataPoint[];
   seriesName: string;
-  xName: string;
-  yName: string;
+  xName?: string;
+  yName?: string;
   labelFormatters?: {
     xAxis?: AxisLabelsFormatterCallbackFunction;
     yAxis?: AxisLabelsFormatterCallbackFunction;
@@ -30,9 +30,10 @@ const StepChart: FC<Props> = ({
   xName,
   yName
 }) => {
+  const theme = useTheme();
   const options: Options = {
     colors: ['#00C4FF'],
-    chart: { zoomType: 'x' },
+    chart: { marginLeft: 50, zoomType: 'x' },
     credits: { enabled: false },
     legend: { enabled: false },
     tooltip: {
@@ -65,20 +66,21 @@ const StepChart: FC<Props> = ({
     },
     yAxis: {
       gridLineWidth: 0,
+      tickWidth: 1,
+      tickLength: 4,
       title: {
         style: { fontWeight: 'bold', color: theme.palette.grey[600] },
         text: yName,
         rotation: 0,
         align: 'high',
         y: 0,
-        x: 10
+        x: -20
       },
       labels: {
-        style: { color: theme.palette.grey[600] },
+        style: { color: theme.palette.grey[600], width: 50 },
         align: 'left',
-        y: 30,
-        x: -40,
-        formatter: labelFormatters?.yAxis
+        x: -45,
+        formatter: labelFormatters?.yAxis,
       },
       offset: 5
     },
@@ -87,8 +89,8 @@ const StepChart: FC<Props> = ({
         style: { fontWeight: 'bold', color: theme.palette.grey[400] },
         text: xName,
         align: 'low',
-        x: -70,
-        y: -20
+        x: -50,
+        y: -19
       },
       labels: {
         formatter: labelFormatters?.xAxis,
@@ -100,6 +102,7 @@ const StepChart: FC<Props> = ({
     },
     title: { text: title }
   };
+
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 };
 
