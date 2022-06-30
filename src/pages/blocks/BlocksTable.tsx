@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useQuery } from '@apollo/client';
 import React, { FC, useMemo, useState } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
@@ -43,8 +42,6 @@ const BlocksTable: FC = () => {
   });
 
   const [statusFilter, setStatusFilter] = useState<boolean | null>(null);
-
-  console.log(statusFilter);
 
   const headers = useMemo(() => BaseLineCellsWrapper([
     'block',
