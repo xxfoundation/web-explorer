@@ -1,21 +1,12 @@
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Box, Button, Stack, styled, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import React, { FC, ReactNode, useCallback, useMemo } from 'react';
+import RoundedButton from '../../../../components/buttons/Rounded';
 import { SummaryEntry, SummaryHeader, SummaryValue } from '../../../../components/Summary';
 import { useToggle } from '../../../../hooks';
 import useCopyClipboard from '../../../../hooks/useCopyToClibboard';
 import { GetExtrinsicByPK } from '../../../../schemas/extrinsics.schema';
 import { theme } from '../../../../themes/default';
-
-const RoundedButton = styled(Button)(({}) => {
-  return {
-    borderRadius: '30px',
-    fontSize: '12px',
-    fontWeight: 500,
-    letterSpacing: 1,
-    color: 'white'
-  };
-});
 
 const callbackCopyMessage = (value: ReactNode) => {
   return (

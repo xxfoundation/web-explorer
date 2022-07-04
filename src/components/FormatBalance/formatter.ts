@@ -3,7 +3,7 @@ import { SiDef, ToBn } from '@polkadot/util/types';
 import { SI, SI_MID } from '@polkadot/util/format/si';
 import BN from 'bn.js';
 
-const defaultDecimals = 0;
+const defaultDecimals = 9;
 
 interface Options {
   precision?: number;

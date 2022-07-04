@@ -16,7 +16,7 @@ const HistoryChart: FC = () => {
   const [interval, setInterval] = useState<TimeInterval>('1h');
   const variables = useMemo(() => {
     return {
-      orderBy: [{ timestamp: 'asc' }],
+      orderBy: [{ timestamp: 'desc' }],
       where: { timestamp: { _gte: intervalToTimestamp(interval) } }
     };
   }, [interval]);
