@@ -1,25 +1,25 @@
 import type { EraPointsHistory } from './types';
 
-import React, { FC, useMemo, useCallback, useState } from 'react';
+import React, { FC, useMemo, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
+import { TableStyled } from '../../components/Tables/TableContainer.styled';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import Link from '../../components/Link';
-import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
-import TablePagination from '../../components/Tables/TablePagination';
 import { GET_BLOCKS_BY_BP, GetBlocksByBP } from '../../schemas/blocks.schema';
 import { usePagination, useToggle } from '../../hooks';
+import Error from '../../components/Error';
 
-const headers = BaseLineCellsWrapper([
+const headers = [
   'Era',
   'Start Block',
   'End Block',
   'Reward Points',
   'Blocks Produced'
-]);
+];
 
 type EraPoints = {
   era: number;
@@ -43,7 +43,6 @@ const EraRow: FC<{ points: EraPoints }> = ({ points }) => {
     [expanded, points.blocksProduced?.length]
   );
 
-  
   return (
     <>
       <TableRow>
@@ -60,7 +59,7 @@ const EraRow: FC<{ points: EraPoints }> = ({ points }) => {
           {points.rewarded}
         </TableCell>
         <TableCell>
-          <Button variant='text' endIcon={endIcon} onClick={toggle}>
+          <Button disabled={points.blocksProduced.length === 0} variant='text' endIcon={endIcon} onClick={toggle}>
             {points.blocksProduced.length}
           </Button>
         </TableCell>
@@ -68,7 +67,9 @@ const EraRow: FC<{ points: EraPoints }> = ({ points }) => {
       {expanded && (
         <TableRow>
           <TableCell colSpan={5}>
-            {points.blocksProduced.map((block) => <BlockLink block={block} />).join(',')}
+            {points.blocksProduced
+              .map<React.ReactNode>((block) => <BlockLink key={block} block={block} />)
+              .reduce((prev, curr) => [prev, ', ', curr])}
           </TableCell>
         </TableRow>
       )}
@@ -82,9 +83,8 @@ type Props = { producerId: string; eraPointsHistory: EraPointsHistory };
 
 const ErasTable: FC<Props> = ({ eraPointsHistory, producerId }) => {
   const pagination = usePagination({ rowsPerPage: 10 });
-  const { paginate } = pagination;
+  const { paginate, setCount } = pagination;
 
-  // Query Data
   const variables = useMemo(() => {
     return {
       orderBy: [{ block_number: 'desc' }],
@@ -124,16 +124,29 @@ const ErasTable: FC<Props> = ({ eraPointsHistory, producerId }) => {
     return paginate(eraPoints);
   }, [eraPoints, paginate]);
 
+  const count = eraPointsHistory.length ?? 0;
+
+  useEffect(() => {
+    setCount(count);
+  }, [count, setCount])
+
+  if (loading) return <TableSkeleton rows={pagination.rowsPerPage} cells={headers.length} footer />;
+
   return (
-    <TableContainer>
-      <Table>
+    <TableStyled>
+      <Table size='small'>
         <TableHead>
-          <TableRow></TableRow>
+          <TableRow>
+            {headers.map((header) => <TableCell key={header}>{header}</TableCell>)}
+          </TableRow>
         </TableHead>
-        <TableBody>{paginated.map((points) => <EraRow points={points} />)}</TableBody>
+        <TableBody>
+          {error && <TableRow><TableCell colSpan={headers.length}><Error type='data-unavailable' /></TableCell></TableRow>}
+          {paginated.map((points) => <EraRow key={points.era} points={points} />)}
+        </TableBody>
       </Table>
       {pagination.controls}
-    </TableContainer>
+    </TableStyled>
   )
 };
 
