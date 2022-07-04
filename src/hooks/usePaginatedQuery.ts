@@ -5,11 +5,14 @@ import { TotalOfItems } from '../schemas/types';
 import usePagination, { PaginationOptions } from '../hooks/usePagination';
 import { useEffect } from 'react';
 
+type UsePaginatedQuery<TData> = QueryResult<TData, OperationVariables>
+  & { pagination: ReturnType<typeof usePagination> }
+
 const usePaginatedQuery = <TData extends TotalOfItems>(
   query: DocumentNode | TypedDocumentNode<TData, OperationVariables>,
   options: QueryHookOptions<TData, OperationVariables>,
   paginationOptions?: PaginationOptions
-): QueryResult<TData, OperationVariables> & { pagination: ReturnType<typeof usePagination> } => {
+):  UsePaginatedQuery<TData> => {
   const pagination = usePagination(paginationOptions);
   const { limit, offset, setCount } = pagination;
   const queryOptions = {
