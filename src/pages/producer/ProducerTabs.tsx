@@ -1,3 +1,5 @@
+import type { EraPointsHistory } from './types';
+
 import React, { useMemo } from 'react';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
@@ -7,7 +9,7 @@ import NominatorsTable from './NominatorsTable';
 const ProducerTabs: React.FC<{
   producerId: string;
   eras: number;
-  eraPointsHistory: string;
+  eraPointsHistory: EraPointsHistory;
   nominators: number;
   nominations: string;
 }> = ({ eraPointsHistory, eras, nominations, nominators, producerId }) => {

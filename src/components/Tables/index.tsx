@@ -44,6 +44,7 @@ export const BaselineTable: FC<Props> = ({ loading, error, headers, rows, rowsPe
       <TableRow><TableCell colSpan={headers.length}><Error type='data-unavailable' /></TableCell></TableRow>
     ) : rows.map((row, index) => {
       return (
+
         <TableRow key={index}>
           {row.map(({ key, props, value }, cellIndex) => {
             return (

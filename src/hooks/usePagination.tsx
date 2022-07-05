@@ -10,6 +10,7 @@ type PaginationResult = {
   controls: React.ReactNode,
   rowsPerPage: number;
   page: number;
+  paginate: <T,>(items: Array<T>) => Array<T>;
   setCount: (c: number) => void;
   limit: number;
   offset: number;
@@ -42,10 +43,16 @@ function usePagination(options: PaginationOptions = { rowsPerPage: 20 }): Pagina
     />
   ), [onChange, onRowsPerPageChange, page, options.rowsPerPageOptions, rowsPerPage, count]);
 
+  const paginate = useCallback<PaginationResult['paginate']>(
+    (items) => items.slice(page * rowsPerPage, (page + 1) * rowsPerPage),
+    [page, rowsPerPage]
+  );
+  
   return {
     controls,
     rowsPerPage,
     page,
+    paginate,
     setCount,
     limit: rowsPerPage,
     offset: page * rowsPerPage
