@@ -1,3 +1,4 @@
+import type { EraPointsHistory } from '../pages/producer/types';
 import { gql } from '@apollo/client';
 
 export type CommonFieldsRankingFragment = {
@@ -20,7 +21,7 @@ export type CommonFieldsRankingFragment = {
 
   // tabs
   nominations: string;
-  eraPointsHistory: string;
+  eraPointsHistory: EraPointsHistory;
 };
 
 export type GetAccountRanking = {
