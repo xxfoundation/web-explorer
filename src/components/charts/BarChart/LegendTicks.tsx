@@ -12,13 +12,9 @@ const Container = styled('div')({
   flexGrow: 1
 });
 
-
-const LegendTicks: FC<{ ticks: number[]; inverse?: boolean } & JSX.IntrinsicElements['div']> = ({
-  inverse,
-  ticks,
-  ...rest
-}) => {
-
+const LegendTicks: FC<
+  { ticks: number[]; inverse?: boolean; isCurrency?: boolean } & JSX.IntrinsicElements['div']
+> = ({ inverse, isCurrency, ticks, ...rest }) => {
   return (
     <Container className={inverse ? 'inversed' : ''} {...rest}>
       {ticks
@@ -26,12 +22,12 @@ const LegendTicks: FC<{ ticks: number[]; inverse?: boolean } & JSX.IntrinsicElem
         .reverse()
         .map((tick) => (
           <Typography variant='h4' key={tick}>
-            {processUnit(tick)}
+            {isCurrency ? processUnit(tick / 1e9) : processUnit(tick)}
           </Typography>
         ))}
       <span></span>
     </Container>
   );
-}
+};
 
 export default LegendTicks;
