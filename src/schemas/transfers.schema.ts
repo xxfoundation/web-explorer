@@ -41,7 +41,7 @@ export type Transfer = {
 };
 
 export const TRANSFER_FRAGMENT = gql`
-  fragment transference_common_fields on transfer {
+  fragment transfer_common_fields on transfer {
     blockNumber: block_number
     index: extrinsic_index
     hash
@@ -74,7 +74,20 @@ export const LIST_TRANSFERS_ORDERED = gql`
       }
     }
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
-      ...transference_common_fields
+      ...transfer_common_fields
+      id
+      timestamp
+      source
+      destination
+    }
+  }
+`;
+
+export const LIST_WHALE_TRANSFERS = gql`
+  ${TRANSFER_FRAGMENT}
+  query ListWhaleTransfers {
+    transfers: whale_alert {
+      ...transfer_common_fields
       id
       timestamp
       source
@@ -100,7 +113,7 @@ export const GET_TRANSFER_BY_PK = gql`
   ${TRANSFER_FRAGMENT}
   query GetTransferByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
     transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
-      ...transference_common_fields
+      ...transfer_common_fields
       sender: account {
         address: account_id
         identityDisplay:identity_display
@@ -153,7 +166,7 @@ export const GET_TRANSFERS_BY_ACCOUNT_ID = gql`
         { source:{ _eq: $accountId } }
       ]
     }) {
-      ...transference_common_fields
+      ...transfer_common_fields
     }
   }
 `

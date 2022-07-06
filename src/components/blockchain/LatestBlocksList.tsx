@@ -60,7 +60,7 @@ const LatestBlocksList = () => {
 
   return (
     <DefaultTile
-      header='Latest Blocks'
+      header='Blocks'
       hasDivider={true}
       linkName={'SEE ALL'}
       linkAddress={'/blocks'}
