@@ -3,6 +3,8 @@ import React from 'react';
 import ChainInfo from '../../components/blockchain/ChainInfo';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import TokenStatus from './TokenStatus';
+import LatestInfo from './LatestInfo';
+import WhaleAlert from './WhaleAlert';
 
 const Blockchain = () => {
   return (
@@ -10,6 +12,8 @@ const Blockchain = () => {
       <Breadcrumb />
       <ChainInfo />
       <TokenStatus />
+      <LatestInfo />
+      <WhaleAlert />
     </Container>
   );
 };
