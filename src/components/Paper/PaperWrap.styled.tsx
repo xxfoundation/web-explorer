@@ -7,7 +7,7 @@ export default styled(Paper)(({ theme }) => ({
   boxShadow: theme.boxShadow,
   border: theme.borders?.light,
   borderRadius: (theme.shape.borderRadius as number) * 3,
-  padding: '3rem',
+  padding: theme.spacing(6),
   [theme.breakpoints.down('md')]: {
     padding: '1.5rem'
   },

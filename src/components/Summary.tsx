@@ -1,18 +1,13 @@
 import React, { FC } from 'react';
 import {
   styled,
-  Divider,
   Paper,
   Table,
   TableCell as MuiCell,
   TableBody,
   TableRow as SummaryEntry,
   Skeleton,
-  Stack,
-  Tooltip
 } from '@mui/material';
-import CopyButton from './buttons/CopyButton';
-import Ellipsis from './Ellipsis';
 
 const PaperStyled = styled(Paper)({
   overflow: 'hidden',
@@ -73,20 +68,6 @@ export const SummaryHeader = styled(SummaryValue)(({ theme }) => ({
   textTransform: 'uppercase'
 }));
 
-export const WithCopy: FC<{ value: string, tooltip?: boolean }> = ({ children, tooltip, value }) => (
-  <Stack direction='row' flexWrap='nowrap' alignItems='center'>
-    {tooltip ? (
-      <Tooltip title={value} arrow placement='top'>
-        <Ellipsis>{children}</Ellipsis>
-      </Tooltip>
-    ) : (
-      <Ellipsis>{children}</Ellipsis>
-    )}
-    <Divider orientation='vertical' sx={{ mr: 2, ml: 2, height: 19, display: 'inline-block' }} />
-    <CopyButton style={{ display: 'inline-block' }} value={value} />
-  </Stack>
-);
-
 export const SummaryLoader: FC<{ number: number }> = ({ number }) => {
   return (
     <SummaryContainer>
@@ -105,3 +86,5 @@ export const SummaryLoader: FC<{ number: number }> = ({ number }) => {
     </SummaryContainer>
   );
 };
+
+export { default as WithCopy } from './WithCopy';

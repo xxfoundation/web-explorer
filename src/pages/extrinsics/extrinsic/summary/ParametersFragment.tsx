@@ -4,7 +4,7 @@ import React, { FC, ReactNode, useCallback, useMemo } from 'react';
 import RoundedButton from '../../../../components/buttons/Rounded';
 import { SummaryEntry, SummaryHeader, SummaryValue } from '../../../../components/Summary';
 import { useToggle } from '../../../../hooks';
-import useCopyClipboard from '../../../../hooks/useCopyToClibboard';
+import useCopyClipboard from '../../../../hooks/useCopyToClipboard';
 import { GetExtrinsicByPK } from '../../../../schemas/extrinsics.schema';
 import { theme } from '../../../../themes/default';
 
