@@ -28,24 +28,18 @@ type BarSeriesProps = {
 const BarSeries: FC<BarSeriesProps> = ({ inverse }) => {
   const context = useBarchartContext();
   const info = inverse ? context.infoB : context.infoA;
-  
+
   return (
     <Stack sx={{ mt: inverse ? 0 : 2 }} style={{ flexGrow: 1 }} direction='row'>
       <LegendLabelContainer>
-        {info?.label && (
-          <VerticalTextStyled variant='subheader4'>
-            {info?.label}
-          </VerticalTextStyled>
-        )}
+        {info?.label && <VerticalTextStyled variant='subheader4'>{info?.label}</VerticalTextStyled>}
       </LegendLabelContainer>
       <LegendTicksContainer>
-        <LegendTicks
-          ticks={info?.ticks ?? []}
-          inverse={inverse} />
+        <LegendTicks ticks={info?.ticks ?? []} inverse={inverse} isCurrency={info?.isCurrency} />
       </LegendTicksContainer>
       <Bars inverse={inverse} />
     </Stack>
-  )
-}
+  );
+};
 
 export default BarSeries;

@@ -15,6 +15,7 @@ const EXTRINSIC_FRAGMENT = gql`
     args
     argsDef: args_def
     doc
+    errorMsg: error_message
   }
 `
 
@@ -33,6 +34,7 @@ export type Extrinsic = {
   args: Array<string | number>;
   argsDef: Record<string, string>;
   doc: string[];
+  errorMsg: string;
 }
 
 export type FindExtrinsicByHashType = {

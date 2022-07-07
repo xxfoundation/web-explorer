@@ -17,6 +17,7 @@ export type Economics = {
   staked: string;
   treasury: string;
   unbonding: string;
+  liquid: string;
   vesting: string;
 }
 
@@ -43,6 +44,7 @@ export const LISTEN_FOR_ECONOMICS = gql`
       totalSupply: total_supply
       treasury
       unbonding
+      liquid
       vesting
     }
   }

@@ -10,6 +10,7 @@ import {
 import Error from '../Error';
 import React, { FC, useMemo } from 'react';
 import { TableContainer } from './TableContainer';
+import { TableSkeleton } from './TableSkeleton';
 
 export type BaselineCell = {
   value: number | string | JSX.Element;
@@ -17,13 +18,17 @@ export type BaselineCell = {
   key?: string | number;
 };
 
-export const BaselineTable: FC<{
+type Props = {
+  loading?: boolean;
   error?: boolean;
+  rowsPerPage?: number;
   headers: BaselineCell[];
   rows: BaselineCell[][];
-  footer?: JSX.Element;
+  footer?: JSX.Element | React.ReactNode;
   tableProps?: TableProps;
-}> = ({ error, headers, rows, footer, tableProps = {} }) => {
+}
+
+export const BaselineTable: FC<Props> = ({ loading, error, headers, rows, rowsPerPage = 20, footer, tableProps = {} }) => {
   const memoistHeaders = useMemo(() => {
     return headers.map(({ key, props, value }, index) => {
       return (
@@ -39,6 +44,7 @@ export const BaselineTable: FC<{
       <TableRow><TableCell colSpan={headers.length}><Error type='data-unavailable' /></TableCell></TableRow>
     ) : rows.map((row, index) => {
       return (
+
         <TableRow key={index}>
           {row.map(({ key, props, value }, cellIndex) => {
             return (
@@ -51,18 +57,19 @@ export const BaselineTable: FC<{
       );
     });
   }, [error, headers.length, rows]);
+
+  if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
+
   return (
-    <>
-      <TableContainer>
-        <Table {...tableProps}>
-          <TableHead>
-            <TableRow>{memoistHeaders}</TableRow>
-          </TableHead>
-          <TableBody>{memoizedRows}</TableBody>
-        </Table>
-        {footer}
-      </TableContainer>
-    </>
+    <TableContainer>
+      <Table {...tableProps}>
+        <TableHead>
+          <TableRow>{memoistHeaders}</TableRow>
+        </TableHead>
+        <TableBody>{memoizedRows}</TableBody>
+      </Table>
+      {footer}
+    </TableContainer>
   );
 };
 

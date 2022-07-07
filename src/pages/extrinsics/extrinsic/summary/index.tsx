@@ -1,5 +1,5 @@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { Divider, Stack } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import BlockStatusIcon from '../../../../components/block/BlockStatusIcon';
 import Address from '../../../../components/Hash/XXNetworkAddress';
@@ -47,9 +47,7 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>LifeTime</SummaryHeader>
-        <SummaryValue>
-          {extrinsic.lifetime || 'Immortal'}
-        </SummaryValue>
+        <SummaryValue>{extrinsic.lifetime || 'Immortal'}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Extrinsic Hash</SummaryHeader>
@@ -71,10 +69,22 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
         <SummaryValue>
           <Stack direction='row' spacing={1} alignItems='center'>
             <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />
-            &nbsp;{extrinsic.success ? 'Success' : 'Failure'}
+            &nbsp;&nbsp;{extrinsic.success ? 'Success' : 'Failure'}
           </Stack>
         </SummaryValue>
       </SummaryEntry>
+      {!extrinsic.success && (
+        <SummaryEntry>
+          <SummaryHeader>Failure Message</SummaryHeader>
+          <SummaryValue>
+            <WithCopy tooltip value={extrinsic.errorMsg}>
+              <Typography variant='code' sx={{ fontSize: 18 }} color='red'>
+                {extrinsic.errorMsg}
+              </Typography>
+            </WithCopy>
+          </SummaryValue>
+        </SummaryEntry>
+      )}
       <SummaryEntry>
         <SummaryHeader>
           <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />

@@ -214,11 +214,11 @@ const TotalIssuanceDonutChart = () => {
   );
 
   if (subscription.error) {
-    return <Error type='data-unavailable' />
+    return <Error type='data-unavailable' />;
   }
 
   if (subscription.loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
