@@ -38,10 +38,10 @@ const headers = [
   { value: 'Block' },
   { value: 'Time' },
   {
-    value: <Typography>To</Typography>
+    value: <Typography>From</Typography>
   },
   {
-    value: <Typography>From</Typography>
+    value: <Typography>To</Typography>
   },
   { value: 'Amount' },
   { value: 'Result' },

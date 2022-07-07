@@ -56,28 +56,28 @@ export const extractChartData = (economics?: Economics) => {
 
   const serieA: Data[] = [
     {
-      color: '#00A2D6',
-      label: DataLabels.Staked,
-      value: staked,
-      percentage: calculatePercentage(staked)
-    },
-    {
-      color: '#6F74FF',
+      color: '#13EEF9',
       label: DataLabels.Liquid,
       value: liquid,
       percentage: calculatePercentage(liquid)
+    },
+    {
+      color: '#00A2D6',
+      label: DataLabels.Vesting,
+      value: vesting,
+      percentage: calculatePercentage(vesting)
+    },
+    {
+      color: '#6F74FF',
+      label: DataLabels.Staked,
+      value: staked,
+      percentage: calculatePercentage(staked)
     },
     {
       color: '#59BD1C',
       label: DataLabels.Unbonding,
       value: unbonding,
       percentage: calculatePercentage(unbonding)
-    },
-    {
-      color: '#75BD37',
-      label: DataLabels.Vesting,
-      value: vesting,
-      percentage: calculatePercentage(vesting)
     }
   ];
 

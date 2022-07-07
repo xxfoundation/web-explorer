@@ -39,14 +39,14 @@ const TransferRow = (data: Transfer) => {
 };
 
 const headers = [
-  { value: 'Extrinsics id' },
+  { value: 'Extrinsic id' },
   { value: 'Block' },
   { value: 'Time' },
   {
-    value: <Typography>To</Typography>
+    value: <Typography>From</Typography>
   },
   {
-    value: <Typography>From</Typography>
+    value: <Typography>To</Typography>
   },
   { value: 'Amount' },
   { value: 'Result' },
@@ -92,7 +92,7 @@ const TransferTable: FC<{
     }
     return <></>;
   }, [data?.agg, data?.transfers, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  
+
   useEffect(() => {
     if (data?.agg && setCount) {
       setCount(data.agg.aggregate.count);

@@ -33,7 +33,11 @@ const DoubleSeries: FC = () => {
         variant='subheader4'
         style={{ whiteSpace: 'nowrap' }}
       >
-        {context.infoA?.isCurrency ? <FormatBalance value={count.toString()} /> : `${count} ${labelA}`}
+        {context.infoA?.isCurrency ? (
+          <FormatBalance value={count.toString()} />
+        ) : (
+          `${count} ${labelA}`
+        )}
       </Typography>
       &nbsp;|&nbsp;
       <Typography

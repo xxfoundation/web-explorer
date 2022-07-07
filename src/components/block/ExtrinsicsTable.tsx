@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import React, { FC, useMemo, useEffect, useState, useCallback } from 'react';
 import { EXTRINSICS_OF_BLOCK, ListExtrinsics, Extrinsic } from '../../schemas/extrinsics.schema';
 import Hash from '../Hash';
@@ -24,8 +24,10 @@ const rowsParser = (rowData: Extrinsic) => {
       showTooltip
     />,
     <TimeAgoComponent date={rowData.timestamp} />,
-    <CheckCircleOutlineIcon color='success' />,
-    <Link to='#'>{`${rowData.section} (${rowData.method})`}</Link>
+    <BlockStatusIcon status={rowData.success ? 'successful' : 'failed'} />,
+    <Link
+      to={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}
+    >{`${rowData.section} (${rowData.method})`}</Link>
   ]);
 };
 
