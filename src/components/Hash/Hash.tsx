@@ -107,7 +107,7 @@ const Hash: FC<Props> = ({
       <Typography
         fontFamily={'Roboto Mono'}
         color={isValid ? 'info' : 'red'}
-        sx={{ fontWeight: 400, wordBreak: 'break-all' }}
+        sx={{ fontWeight: 400 }}
         {...props}
       >
         {url ? <Link to={url}>{hash}</Link> : hash}

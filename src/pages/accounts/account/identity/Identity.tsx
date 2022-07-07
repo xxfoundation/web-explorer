@@ -25,10 +25,12 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
   ) : null;
 };
 
-
-const IdentityDesktop: FC<Props> = ({ account }) => {
+const blurb = `
+In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.
+`;
+const Identity: FC<Props> = ({ account }) => {
   const theme = useTheme();
-  const { blurb } = account.identity;
+  // const { blurb } = account.identity;
   const isValidator = account.roles.validator;
   const hasRiotOrWeb = account.identity.riotName ||  account.identity.web;
   const avatarSx = isValidator ? { width: 125, height: 125 } : { width: 30, height: 30 };
@@ -64,8 +66,8 @@ const IdentityDesktop: FC<Props> = ({ account }) => {
                   </Typography>
                 )}
               </Box>
-              <Box sx={{ alignSelf: { sm: blurb ? 'flex-end' : 'center' }}}>
-                <Socials sx={{ mb: 0 }} socials={account.identity} />
+              <Box sx={{ alignSelf: { sm: blurb ? 'flex-start' : 'center' }}}>
+                <Socials sx={{ mt: 1 }} socials={account.identity} />
               </Box>
             </Stack>
             {(hasRiotOrWeb || isValidator) && (
@@ -96,4 +98,4 @@ const IdentityDesktop: FC<Props> = ({ account }) => {
   );
 };
 
-export default IdentityDesktop;
+export default Identity;
