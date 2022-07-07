@@ -1,5 +1,5 @@
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { Divider, Stack } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import BlockStatusIcon from '../../../../components/block/BlockStatusIcon';
 import Address from '../../../../components/Hash/XXNetworkAddress';
@@ -77,8 +77,10 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
         <SummaryEntry>
           <SummaryHeader>Failure Message</SummaryHeader>
           <SummaryValue>
-            <WithCopy value={extrinsic.errorMsg}>
-              <Hash truncated='lgDown' value={extrinsic.errorMsg} />
+            <WithCopy tooltip value={extrinsic.errorMsg}>
+              <Typography variant='code' sx={{ fontSize: 18 }} color='red'>
+                {extrinsic.errorMsg}
+              </Typography>
             </WithCopy>
           </SummaryValue>
         </SummaryEntry>

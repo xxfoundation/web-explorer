@@ -8,7 +8,8 @@ import {
   TableBody,
   TableRow as SummaryEntry,
   Skeleton,
-  Stack
+  Stack,
+  Tooltip
 } from '@mui/material';
 import CopyButton from './buttons/CopyButton';
 import Ellipsis from './Ellipsis';
@@ -72,9 +73,15 @@ export const SummaryHeader = styled(SummaryValue)(({ theme }) => ({
   textTransform: 'uppercase'
 }));
 
-export const WithCopy: FC<{ value: string }> = ({ children, value }) => (
+export const WithCopy: FC<{ value: string, tooltip?: boolean }> = ({ children, tooltip, value }) => (
   <Stack direction='row' flexWrap='nowrap' alignItems='center'>
-    <Ellipsis>{children}</Ellipsis>
+    {tooltip ? (
+      <Tooltip title={value} arrow placement='top'>
+        <Ellipsis>{children}</Ellipsis>
+      </Tooltip>
+    ) : (
+      <Ellipsis>{children}</Ellipsis>
+    )}
     <Divider orientation='vertical' sx={{ mr: 2, ml: 2, height: 19, display: 'inline-block' }} />
     <CopyButton style={{ display: 'inline-block' }} value={value} />
   </Stack>
