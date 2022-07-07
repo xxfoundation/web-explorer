@@ -25,12 +25,9 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
   ) : null;
 };
 
-const blurb = `
-In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.
-`;
 const Identity: FC<Props> = ({ account }) => {
   const theme = useTheme();
-  // const { blurb } = account.identity;
+  const { blurb } = account.identity;
   const isValidator = account.roles.validator;
   const hasRiotOrWeb = account.identity.riotName ||  account.identity.web;
   const avatarSx = isValidator ? { width: 125, height: 125 } : { width: 30, height: 30 };
@@ -51,6 +48,11 @@ const Identity: FC<Props> = ({ account }) => {
           <Grid item md={12}>
             <Stack spacing={3} direction={{ sm: 'row', xs: 'column'}} sx={{ mb: 2 }} justifyContent='space-between'>
               <Box>
+                {account.identity.legal && (
+                  <Typography variant='h2' sx={{ mb: 2 }} >
+                    {account.identity.legal}
+                  </Typography>
+                )}
                 <WithCopy value={account.id}>
                   <Address
                     style={{ fontSize: 16 }}
@@ -66,8 +68,8 @@ const Identity: FC<Props> = ({ account }) => {
                   </Typography>
                 )}
               </Box>
-              <Box sx={{ alignSelf: { sm: blurb ? 'flex-start' : 'center' }}}>
-                <Socials sx={{ mt: 1 }} socials={account.identity} />
+              <Box>
+                <Socials sx={{ mt: account.identity.legal ? 2 : 0.75 }} socials={account.identity} />
               </Box>
             </Stack>
             {(hasRiotOrWeb || isValidator) && (
