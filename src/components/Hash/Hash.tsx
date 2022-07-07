@@ -1,11 +1,12 @@
 import type { FC } from 'react';
-import { Hidden, styled, TypographyProps } from '@mui/material';
+import { Hidden, styled, Breakpoint, TypographyProps } from '@mui/material';
 import type { Theme } from '../../themes/types';
 
 import React from 'react';
 import { Tooltip, Typography } from '@mui/material';
 import { isHex } from '@polkadot/util';
 import Link from '../Link';
+import useBreakpoint from '../../hooks/useBreakpoints';
 
 const DEFAULT_HASH_BITLENGTH = 256;
 const SHORT_STRING_OFFSET = 6;
@@ -17,12 +18,12 @@ export type Props = TypographyProps & {
   url?: string;
   showTooltip?: boolean;
   truncated?: boolean | Responsiveness;
-  offset?: number;
+  offset?: number | Partial<Record<Breakpoint, number>>;
   valid?: boolean;
   value: string;
 }
 
-const breakpoint = (theme: Theme, res: Responsiveness) => ({
+const breakpointToResponsiveness = (theme: Theme, res: Responsiveness) => ({
   xlDown: theme.breakpoints.down('xl'),
   lgDown: theme.breakpoints.down('lg'),
   mdDown: theme.breakpoints.down('md'),
@@ -39,7 +40,7 @@ const EllipsisOnEmpty = styled('span')<{ responsiveness: Responsiveness }>(({ re
   minWidth: '3ch',
   position: 'relative',
   backgroundColor: theme.palette.background.paper,
-  [breakpoint(theme, res)]: {
+  [breakpointToResponsiveness(theme, res)]: {
     '&:before': {
       content: '"..."',
     }
@@ -51,9 +52,14 @@ export const ResponsiveHash: FC<Pick<Props, 'offset' | 'truncated' | 'value'>> =
   truncated,
   value
 }) => {
-  const start = value.slice(0, offset);
-  const middle = value.slice(offset, value.length - offset);
-  const end = value.slice(value.length - offset);
+  const breakpoint = useBreakpoint();
+  const currentOffset = typeof offset === 'number'
+    ? offset
+    : ((breakpoint && offset[breakpoint]) ? offset[breakpoint] : SHORT_STRING_OFFSET) as number;
+
+  const start = value.slice(0, currentOffset);
+  const middle = value.slice(currentOffset, value.length - currentOffset);
+  const end = value.slice(value.length - currentOffset);
 
   if (typeof truncated === 'string') {
     const hiddenProps = { [truncated]: true };
@@ -101,7 +107,7 @@ const Hash: FC<Props> = ({
       <Typography
         fontFamily={'Roboto Mono'}
         color={isValid ? 'info' : 'red'}
-        sx={{ fontWeight: 400 }}
+        sx={{ fontWeight: 400, wordBreak: 'break-all' }}
         {...props}
       >
         {url ? <Link to={url}>{hash}</Link> : hash}

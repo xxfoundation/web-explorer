@@ -3,7 +3,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import { IconButton, IconButtonProps, Stack, Typography } from '@mui/material';
 import React, { ReactNode } from 'react';
-import useCopyClipboard from '../../hooks/useCopyToClibboard';
+import useCopyClipboard from '../../hooks/useCopyToClipboard';
 import { theme } from '../../themes/default';
 
 export const callbackCopyMessage = (value: ReactNode) => {

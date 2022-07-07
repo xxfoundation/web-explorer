@@ -1,4 +1,4 @@
-import { Link, Stack, styled } from '@mui/material';
+import { Link, Stack, StackProps, styled } from '@mui/material';
 import React from 'react';
 
 const images = require.context('../assets/images/socials/', true);
@@ -25,8 +25,8 @@ const SocialsImage = styled('img')({
   width: '0.75rem'
 });
 
-type Props = {
-  socials: Record<string, string | undefined>;
+type Props = StackProps & {
+  socials: Record<string, unknown>;
 };
 
 const urlMappers: Record<string, (a: string) => string> = {
@@ -37,29 +37,35 @@ const urlMappers: Record<string, (a: string) => string> = {
   discord: (code: string) => `https://discord.com/invite/${code}`
 };
 
-const Socials: React.FC<Props> = ({ socials }) => {
-  return (
-    <Stack direction='row' sx={{ mt: 2, mb: 2 }} spacing={1}>
-      {Object.entries(socials)
-        .filter(([, username]) => !!username)
-        .map(
-          ([social, username]) =>
-            images(`./${social}.svg`) &&
-            username && (
-              <SocialLink
-                key={`${social}-${username}`}
-                href={urlMappers[social]?.(username)}
-                rel='noopener'
-                target='_blank'
-              >
-                <SocialsLogo>
-                  <SocialsImage src={images(`./${social}.svg`)} />
-                </SocialsLogo>
-              </SocialLink>
-            )
-        )}
-    </Stack>
-  );
-};
+const possibleSocials = Object.keys(urlMappers);
+
+export const hasSocials = (obj: Record<string, unknown>) => {
+  return Object.keys(obj).some((k) => possibleSocials.includes(k))
+}
+
+const Socials: React.FC<Props> = ({ socials, ...props }) => (
+  <Stack direction='row' sx={{ mt: 2, mb: 2 }} spacing={1} {...props}>
+    {Object.entries(socials)
+      .filter(([social]) => possibleSocials.includes(social))
+      .filter(([, username]) => !!username)
+      .map(
+        ([social, username]) =>
+          images(`./${social}.svg`) &&
+          username && typeof username === 'string' && (
+            <SocialLink
+              key={`${social}-${username}`}
+              href={urlMappers[social]?.(username)}
+              rel='noopener'
+              target='_blank'
+            >
+              <SocialsLogo>
+                <SocialsImage src={images(`./${social}.svg`)} />
+              </SocialsLogo>
+            </SocialLink>
+          )
+      )}
+  </Stack>
+);
+
 
 export default Socials;

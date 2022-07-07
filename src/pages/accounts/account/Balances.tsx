@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import React, { FC } from 'react';
 import FormatBalance from '../../../components/FormatBalance';
-import PaperStyled, { Props as PaperStyledProps } from '../../../components/Paper/PaperWrap.styled';
 import { Account } from '../../../schemas/accounts.schema';
 import { theme } from '../../../themes/default';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
@@ -125,11 +124,9 @@ const LockedTooltipContent: FC<{ account: Account }> = ({ account }) => {
   );
 };
 
-const Balance: FC<PaperStyledProps & {
-  account: Account;
-}> = ({ account, ...props }) => {
+const Balance: FC<{ account: Account }> = ({ account }) => {
   return (
-    <PaperStyled {...props}>
+    <>
       <InfoCardRow>
         <Box width='110px' display='flex' alignItems={'center'} justifyContent='space-between'>
           <TypographyHeader>Total</TypographyHeader>
@@ -164,7 +161,7 @@ const Balance: FC<PaperStyledProps & {
           <FormatBalance value={account.reservedBalance.toString()} />
         </TypographyBody>
       </InfoCardRow>
-    </PaperStyled>
+    </>
   );
 };
 
