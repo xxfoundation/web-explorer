@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Typography } from '@mui/material';
@@ -6,18 +5,14 @@ import React, { FC, useMemo, useState } from 'react';
 
 import { theme } from '../../themes/default';
 import Address from '../../components/Hash/XXNetworkAddress';
-import Error from '../../components/Error';
 import FormatBalance from '../../components/FormatBalance';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
-import TablePagination from '../../components/Tables/TablePagination';
-import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import { CustomTooltip } from '../../components/Tooltip';
-import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
 import { HoldersRolesFilters, roleToLabelMap } from './HoldersRolesFilters';
+import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 
-const DEFAULT_ROWS_PER_PAGE = 20;
 
 type Filters = Record<string, boolean>;
 
@@ -122,7 +117,6 @@ const useHeaders = () => {
   };
 };
 
-
 const buildOrClause = (filters: Filters) => [
   filters.council && { role: { council: { _eq: true } } },
   filters.nominator && { role: { nominator: { _eq: true } } },
@@ -132,18 +126,6 @@ const buildOrClause = (filters: Filters) => [
 ].filter((v) => !!v);
 
 const HoldersTable: FC = () => {
-  const {
-    cursorField: timestamp,
-    limit,
-    makeOnPageChange,
-    offset,
-    onRowsPerPageChange,
-    page,
-    rowsPerPage
-  } = usePaginatorByCursor<ListAccounts['account'][0]>({
-    rowsPerPage: DEFAULT_ROWS_PER_PAGE,
-    cursorField: 'timestamp'
-  });
   const { filters, headers } = useHeaders();
   const hasFilters = !filters.all && Object.values(filters).some((v) => !!v);
 
@@ -151,11 +133,8 @@ const HoldersTable: FC = () => {
 
   const variables = useMemo(
     () => ({
-      limit,
-      offset,
       where: {
         _and: [
-          { timestamp: { _lte: timestamp } },
           hasFilters
             ? {
                 _or: orClause
@@ -165,44 +144,29 @@ const HoldersTable: FC = () => {
       },
       orderBy: [{ total_balance: 'desc' }]
     }),
-    [hasFilters, limit, offset, orClause, timestamp]
+    [hasFilters, orClause]
   );
 
-  const { data, error, loading } = useQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
+  const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
+  const { offset } = pagination;
   const rows = useMemo(
     () =>
       (data?.account || []).map((item, index) => accountToRow(item, index + 1 + offset, filters)),
     [data?.account, filters, offset]
   );
 
-  const footer = useMemo(() => {
-    if (data?.agg && data?.account && data.account.length) {
-      return (
-        <TablePagination
-          page={page}
-          count={data.agg.aggregate.count}
-          rowsPerPage={rowsPerPage}
-          onPageChange={makeOnPageChange(data.account[0])}
-          rowsPerPageOptions={[10, DEFAULT_ROWS_PER_PAGE, 30, 40, 50]}
-          onRowsPerPageChange={onRowsPerPageChange}
-        />
-      );
-    }
-    return <></>;
-  }, [data?.account, data?.agg, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
-
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
         Account Holders
       </Typography>
-      {loading ? (
-        <TableSkeleton cells={headers.length} rows={rowsPerPage} />
-      ) : error ? (
-        <Error type='data-unavailable' />
-      ) : (
-        <BaselineTable headers={headers} rows={rows} footer={footer} />
-      )}
+      <BaselineTable
+        error={!!error}
+        loading={loading}
+        headers={headers}
+        rows={rows}
+        rowsPerPage={pagination.rowsPerPage}
+        footer={pagination.controls} />
     </PaperStyled>
   );
 };

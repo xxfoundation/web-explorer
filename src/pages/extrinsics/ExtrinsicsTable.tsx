@@ -5,16 +5,12 @@ import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Hash from '../../components/Hash';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
-import TablePagination from '../../components/Tables/TablePagination';
-import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import TimeAgoComponent from '../../components/TimeAgo';
-import { usePaginatorByCursor } from '../../hooks/usePaginatiors';
 import { GetAvailableExtrinsicActions, GET_AVAILABLE_EXTRINSIC_ACTIONS, ListExtrinsics, LIST_EXTRINSICS } from '../../schemas/extrinsics.schema';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
-
-const ROWS_PER_PAGE = 20;
+import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 
 const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
   const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.index}`;
@@ -30,22 +26,9 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
   ]);
 };
 
-const HistoryTable: FC<{
+const ExtrinsicsTable: FC<{
   setTotalOfExtrinsics: (total?: number) => void;
 }> = (props) => {
-  const {
-    cursorField: id,
-    limit,
-    makeOnPageChange,
-    offset,
-    onRowsPerPageChange,
-    page,
-    rowsPerPage
-  } = usePaginatorByCursor<ListExtrinsics['extrinsics'][0]>({
-    cursorField: 'id',
-    rowsPerPage: ROWS_PER_PAGE
-  });
-
   const [range, setRange] = useState<Range>({
     from: null,
     to: null
@@ -83,8 +66,6 @@ const HistoryTable: FC<{
 
   const variables = useMemo(
     () => ({
-      limit,
-      offset,
       orderBy: [{ id: 'desc' }],
       where: {
         ...(resultFilter !== null && ({
@@ -94,52 +75,37 @@ const HistoryTable: FC<{
           ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
           ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
         },
-        id: { _lte: id },
         ...(methodsFilter && methodsFilter.length > 0 && ({ method: { _in: methodsFilter }})),
         ...(callsFilter && callsFilter.length > 0 && ({ section: { _in: callsFilter }}))
       }
     }),
     [
       callsFilter,
-      id,
-      limit,
       methodsFilter,
-      offset,
       range.from,
       range.to,
       resultFilter
     ]
   );
 
-  const { data, error, loading } = useQuery<ListExtrinsics>(LIST_EXTRINSICS, { variables });
+  const { data, error, loading, pagination } = usePaginatedQuery<ListExtrinsics>(LIST_EXTRINSICS, { variables });
 
   const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
 
   useEffect(() => {
-    if (data?.agg && !id) {
+    if (data?.agg) {
       props.setTotalOfExtrinsics(data.agg.aggregate.count);
     }
   });
 
-  const footer = useMemo(() => {
-    if (data?.agg && data?.extrinsics && data.extrinsics.length) {
-      return (
-        <TablePagination
-          page={page}
-          count={data.agg.aggregate.count}
-          rowsPerPage={rowsPerPage}
-          onPageChange={makeOnPageChange(data.extrinsics[0])}
-          rowsPerPageOptions={[ROWS_PER_PAGE, 30, 40, 50]}
-          onRowsPerPageChange={onRowsPerPageChange}
-        />
-      );
-    }
-    return <></>;
-  }, [data?.agg, data?.extrinsics, makeOnPageChange, onRowsPerPageChange, page, rowsPerPage]);
-
-  if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
-
-  return <BaselineTable error={!!error} headers={headers} rows={rows} footer={footer} />;
+  return (
+    <BaselineTable
+      error={!!error}
+      loading={loading}
+      headers={headers}
+      rowsPerPage={pagination.rowsPerPage}
+      rows={rows} footer={pagination.controls} />
+  );
 };
 
-export default HistoryTable;
+export default ExtrinsicsTable;
