@@ -62,7 +62,7 @@ export const groupCountByInterval = (
 };
 
 export const extractInfo = (
-  {  isCurrency, label, magnitudes, timestamps }: SeriesData,
+  { isCurrency, label, magnitudes, timestamps }: SeriesData,
   interval: TimeInterval,
   numberOfTicks = NUMBER_OF_TICKS
 ): SeriesMetadata => {

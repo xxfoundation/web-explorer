@@ -19,27 +19,35 @@ const TranfersChart: FC = () => {
       where: { timestamp: { _gte: intervalToTimestamp(interval) } }
     };
   }, [interval]);
-  const { data, loading } = useSubscription<{ transfer: { timestamp: number, amount: number }[] }>(
+  const { data, loading } = useSubscription<{ transfer: { timestamp: number; amount: number }[] }>(
     LISTEN_FOR_TRANSFERS_TIMESTAMPS,
     { variables }
   );
 
-  const series = useMemo<[SeriesData, SeriesData]>(() => [{
-    timestamps: (data?.transfer || []).map((t) => t.timestamp),
-    magnitudes: (data?.transfer || []).map((t) => t.amount),
-    isCurrency: true,
-    label: 'xx'
-  }, {
-    timestamps: (data?.transfer || []).map((t) => t.timestamp),
-    label: 'transfers'
-  }], [data?.transfer]);
+  const series = useMemo<[SeriesData, SeriesData]>(
+    () => [
+      {
+        timestamps: (data?.transfer || []).map((t) => t.timestamp),
+        magnitudes: (data?.transfer || []).map((t) => t.amount),
+        isCurrency: true,
+        label: 'xx'
+      },
+      {
+        timestamps: (data?.transfer || []).map((t) => t.timestamp),
+        label: 'transfers'
+      }
+    ],
+    [data?.transfer]
+  );
 
   return (
-    <Box style={{
-      overflowX: 'auto',
-      overflowY: 'hidden',
-      scrollBehavior: 'smooth'
-    }}>
+    <Box
+      style={{
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        scrollBehavior: 'smooth'
+      }}
+    >
       <IntervalControls interval={interval} setInterval={setInterval} loading={loading} />
       {loading || !(data?.transfer || []).length ? (
         <Box
@@ -53,10 +61,7 @@ const TranfersChart: FC = () => {
           {loading ? <CircularProgress /> : <Error type='data-unavailable' />}
         </Box>
       ) : (
-        <BarChart
-          series={series}
-          interval={interval}
-        />
+        <BarChart series={series} interval={interval} />
       )}
     </Box>
   );

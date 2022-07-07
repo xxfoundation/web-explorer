@@ -47,9 +47,7 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>LifeTime</SummaryHeader>
-        <SummaryValue>
-          {extrinsic.lifetime || 'Immortal'}
-        </SummaryValue>
+        <SummaryValue>{extrinsic.lifetime || 'Immortal'}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Extrinsic Hash</SummaryHeader>
@@ -71,10 +69,20 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
         <SummaryValue>
           <Stack direction='row' spacing={1} alignItems='center'>
             <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />
-            &nbsp;{extrinsic.success ? 'Success' : 'Failure'}
+            &nbsp;&nbsp;{extrinsic.success ? 'Success' : 'Failure'}
           </Stack>
         </SummaryValue>
       </SummaryEntry>
+      {!extrinsic.success && (
+        <SummaryEntry>
+          <SummaryHeader>Failure Message</SummaryHeader>
+          <SummaryValue>
+            <WithCopy value={extrinsic.errorMsg}>
+              <Hash truncated='lgDown' value={extrinsic.errorMsg} />
+            </WithCopy>
+          </SummaryValue>
+        </SummaryEntry>
+      )}
       <SummaryEntry>
         <SummaryHeader>
           <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />

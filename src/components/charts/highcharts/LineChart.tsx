@@ -16,8 +16,8 @@ const calculateMaximums = (data: DataPoint[]) => {
   const minX = Math.min(...xItems);
 
   return {
-    minX: minX * 0.9,
-    maxX: maxX * 1.1
+    minX: minX * 0.98,
+    maxX: maxX * 1.02
   };
 };
 

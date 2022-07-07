@@ -54,7 +54,7 @@ const SeriesInfoLine: FC<CustomData> = (props) => {
       </Grid>
       <Grid item xs={5} marginTop={margin.top}>
         <LegendEl>
-          <FormatBalance value={props.value.toString()} precision={3} />
+          <FormatBalance value={props.value.toString()} />
         </LegendEl>
       </Grid>
       <Grid item xs={2} marginTop={margin.top}>
