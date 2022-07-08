@@ -26,6 +26,7 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
     <>{extrinsic.section}</>
   ]);
 };
+
 type Props = {
   setTotalOfExtrinsics: (total?: number) => void;
 }
@@ -67,7 +68,7 @@ const ExtrinsicsTable: FC<Props> = (props) => {
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ id: 'desc' }],
+      orderBy: [{ block_number: 'desc' }, { extrinsic_index: 'asc' }],
       where: {
         ...(resultFilter !== null && ({
           success: { _eq: resultFilter }
