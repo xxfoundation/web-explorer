@@ -26,9 +26,11 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
   ]);
 };
 
-const ExtrinsicsTable: FC<{
+type Props = {
   setTotalOfExtrinsics: (total?: number) => void;
-}> = (props) => {
+}
+
+const ExtrinsicsTable: FC<Props> = (props) => {
   const [range, setRange] = useState<Range>({
     from: null,
     to: null
@@ -66,7 +68,7 @@ const ExtrinsicsTable: FC<{
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ id: 'desc' }],
+      orderBy: [{ block_number: 'desc' }, { extrinsic_index: 'asc' }],
       where: {
         ...(resultFilter !== null && ({
           success: { _eq: resultFilter }
