@@ -16,10 +16,9 @@ const rowsParser = (extrinsic: Extrinsic) => {
       {extrinsic.blockNumber}-{extrinsic.extrinsicIndex}
     </Link>,
     <Hash
-      value={extrinsic.hash}
       truncated
+      value={extrinsic.hash}
       url={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`}
-      showTooltip
     />,
     <TimeAgoComponent date={extrinsic.timestamp} />,
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
@@ -33,7 +32,7 @@ const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 
 
 type Props = {
   where: Record<string, unknown>;
-}
+};
 
 const BlockExtrinsics: FC<Props> = ({ where }) => {
   const pagination = usePagination({ rowsPerPage: ROWS_PER_PAGE });
@@ -64,7 +63,8 @@ const BlockExtrinsics: FC<Props> = ({ where }) => {
       headers={headers}
       rowsPerPage={pagination.rowsPerPage}
       rows={rows}
-      footer={pagination.controls} />
+      footer={pagination.controls}
+    />
   );
 };
 
