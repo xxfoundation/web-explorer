@@ -1,6 +1,5 @@
-import { Stack, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@mui/material';
-import CopyButton from './buttons/CopyButton';
-import React, { FC } from 'react';
+import { styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
+import React from 'react';
 
 export const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -9,23 +8,6 @@ export const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps)
     maxWidth: 500
   }
 });
-
-export const HashColumnWithTooltip: FC<{ hash: string }> = ({ children, hash }) => {
-  return (
-    <CustomWidthTooltip
-      title={
-        <Stack direction={'row'} spacing={1} alignItems={'center'}>
-          <Typography variant='body5'>{hash}</Typography>
-          <CopyButton value={hash} />
-        </Stack>
-      }
-      placement='left'
-      arrow
-    >
-      <span>{children}</span>
-    </CustomWidthTooltip>
-  );
-};
 
 export const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />

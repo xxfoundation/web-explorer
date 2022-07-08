@@ -12,7 +12,6 @@ import {
   WithCopy
 } from '../../components/Summary';
 import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
-import { HashColumnWithTooltip } from '../../components/Tooltip';
 import Ellipsis from '../../components/Ellipsis';
 
 const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
@@ -31,9 +30,7 @@ const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ en
             </Hidden>
             <Grid item xs={9} md={9}>
               <Ellipsis>
-                <HashColumnWithTooltip hash={value}>
-                  <Hash showTooltip={false} truncated value={value} offset={10} />
-                </HashColumnWithTooltip>
+                <Hash truncated value={value} offset={10} />
               </Ellipsis>
             </Grid>
           </Fragment>
@@ -57,11 +54,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Stash</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.stashAddress}>
-            <Address
-              truncated='lgDown'
-              name={name}
-              value={ranking.stashAddress}
-            />
+            <Address truncated='lgDown' name={name} value={ranking.stashAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -69,9 +62,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Controller</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.controllerAddress}>
-            <Address
-              truncated='lgDown'
-              value={ranking.controllerAddress} />
+            <Address truncated='lgDown' value={ranking.controllerAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -79,9 +70,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Reward</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.rewardsAddress}>
-            <Address
-              truncated='lgDown'
-              value={ranking.rewardsAddress} />
+            <Address truncated='lgDown' value={ranking.rewardsAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
