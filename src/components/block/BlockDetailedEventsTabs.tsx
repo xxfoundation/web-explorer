@@ -8,10 +8,12 @@ import TabsWithPanels, { TabText } from '../Tabs';
 import EventsTable from './EventsTable';
 import ExtrinsicsTable from './ExtrinsicsTable';
 
-const BlockDetailedEventsTabs: React.FC<{
+type Props = {
   blockNumber?: number;
   loading: boolean;
-}> = ({ blockNumber, loading }) => {
+}
+
+const BlockDetailedEventsTabs: React.FC<Props> = ({ blockNumber, loading }) => {
   const [extrinsicsCount, setExtrinsicsCount] = useState<number>();
   const [eventCount, setEventCount] = useState<number>();
   const query = useQuery<GetBlockCounts>(GET_BLOCK_COUNTS, { variables: { blockNumber }});
