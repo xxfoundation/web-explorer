@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useQuery } from '@apollo/client';
 import { Skeleton } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
