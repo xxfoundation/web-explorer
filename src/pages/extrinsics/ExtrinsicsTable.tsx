@@ -13,10 +13,11 @@ import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRang
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 
 const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
-  const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.index}`;
-  
+  const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`;
+  // eslint-disable-next-line no-console
+  console.log(extrinsic);
   return BaseLineCellsWrapper([
-    <Link to={linkToExtrinsic}>{`${extrinsic.blockNumber}-${extrinsic.index}`}</Link>,
+    <Link to={linkToExtrinsic}>{`${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`}</Link>,
     <Link to={`/blocks/${extrinsic.blockNumber}`}>{extrinsic.blockNumber}</Link>,
     <Hash truncated value={extrinsic.hash} url={linkToExtrinsic} showTooltip />,
     <TimeAgoComponent date={extrinsic.timestamp} />,
@@ -29,7 +30,6 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
 type Props = {
   setTotalOfExtrinsics: (total?: number) => void;
 }
-
 const ExtrinsicsTable: FC<Props> = (props) => {
   const [range, setRange] = useState<Range>({
     from: null,
