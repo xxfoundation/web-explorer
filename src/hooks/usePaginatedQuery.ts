@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { DocumentNode, TypedDocumentNode, QueryHookOptions, QueryResult, OperationVariables } from '@apollo/client';
 import { useQuery } from '@apollo/client';
 import { TotalOfItems } from '../schemas/types';
@@ -7,6 +6,7 @@ import { useEffect } from 'react';
 
 type UsePaginatedQuery<TData> = QueryResult<TData, OperationVariables>
   & { pagination: ReturnType<typeof usePagination> }
+
 
 const usePaginatedQuery = <TData extends TotalOfItems>(
   query: DocumentNode | TypedDocumentNode<TData, OperationVariables>,

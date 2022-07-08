@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import TablePagination from '../components/Tables/TablePagination';
 
 export type PaginationOptions = {
-  rowsPerPage: number;
+  rowsPerPage?: number;
   rowsPerPageOptions?: number[];
 };
 
@@ -16,9 +16,9 @@ type PaginationResult = {
   offset: number;
 };
 
-function usePagination(options: PaginationOptions = { rowsPerPage: 20 }): PaginationResult {
+function usePagination(options?: PaginationOptions): PaginationResult {
   const [count, setCount] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(options.rowsPerPage);
+  const [rowsPerPage, setRowsPerPage] = useState(options?.rowsPerPage ?? 20);
   const [page, setPage] = useState(0);
   const onRowsPerPageChange = useCallback(({ target: { value } }) => {
     setRowsPerPage(parseInt(value));
@@ -38,10 +38,10 @@ function usePagination(options: PaginationOptions = { rowsPerPage: 20 }): Pagina
       count={count}
       rowsPerPage={rowsPerPage}
       onPageChange={onChange}
-      rowsPerPageOptions={options.rowsPerPageOptions || [10, 20, 30, 40, 50]}
+      rowsPerPageOptions={options?.rowsPerPageOptions || [10, 20, 30, 40, 50]}
       onRowsPerPageChange={onRowsPerPageChange}
     />
-  ), [onChange, onRowsPerPageChange, page, options.rowsPerPageOptions, rowsPerPage, count]);
+  ), [onChange, onRowsPerPageChange, page, options?.rowsPerPageOptions, rowsPerPage, count]);
 
   const paginate = useCallback<PaginationResult['paginate']>(
     (items) => items.slice(page * rowsPerPage, (page + 1) * rowsPerPage),
