@@ -12,33 +12,36 @@ const NewAccountsChart = () => {
   const { data, loading } = useSubscription<NewAccounts>(LISTEN_FOR_NEW_ACCOUNTS);
   const chartData = useMemo(() => {
     let points: DataPoint[] = [];
+    let auxEra = 0;
+
     (data?.newAccount || []).forEach((elem) => {
-      const idx = points.findIndex((era) => era[0] === elem.block.era);
+      // Initialize to 0 eras not in the data list
+      // data list ordered by era desc
+      for (let i = auxEra; i >= elem.block.era; i--) {
+        points.push([i, 0]);
+      }
+
+      // Count number of accounts on that era
+      const idx = points.findIndex((tuple) => tuple[0] === elem.block.era);
       if (idx !== -1) {
         points[idx][1] += 1;
-      } else {
-        points.push([elem.block.era, 1]);
       }
+
+      // Save last counted era
+      auxEra = elem.block.era - 1;
     });
+
+    // Restrict displayed points to NUM_LAST_ERAS
     points = points.slice(0, NUM_LAST_ERAS) as DataPoint[];
-    const range = points[0]
-      ? {
-          minX: points[points.length - 1][0] - 2,
-          maxX: points[0][0] + 2
-        }
-      : undefined;
-    return { points, range };
+    return { points };
   }, [data?.newAccount]);
+
   return (
     <DefaultTile header='new accounts' height='400px'>
-      {loading || chartData.range === undefined ? (
+      {loading || !chartData.points ? (
         <Loader />
       ) : (
-        <LineChart
-          tooltipFormatter={amountByEraTooltip}
-          data={chartData.points}
-          x={chartData.range}
-        />
+        <LineChart tooltipFormatter={amountByEraTooltip} data={chartData.points} />
       )}
     </DefaultTile>
   );
