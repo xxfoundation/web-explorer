@@ -10,22 +10,22 @@ import { usePagination } from '../../hooks';
 
 const ROWS_PER_PAGE = 5;
 
-const rowsParser = (rowData: Extrinsic) => {
+const rowsParser = (extrinsic: Extrinsic) => {
   return BaseLineCellsWrapper([
-    <Link to={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}>
-      {rowData.blockNumber}-{rowData.index}
+    <Link to={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`}>
+      {extrinsic.blockNumber}-{extrinsic.extrinsicIndex}
     </Link>,
     <Hash
-      value={rowData.hash}
+      value={extrinsic.hash}
       truncated
-      url={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}
+      url={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`}
       showTooltip
     />,
-    <TimeAgoComponent date={rowData.timestamp} />,
-    <BlockStatusIcon status={rowData.success ? 'successful' : 'failed'} />,
+    <TimeAgoComponent date={extrinsic.timestamp} />,
+    <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
     <Link
-      to={`/extrinsics/${rowData.blockNumber}-${rowData.index}`}
-    >{`${rowData.section} (${rowData.method})`}</Link>
+      to={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`}
+    >{`${extrinsic.section} (${extrinsic.method})`}</Link>
   ]);
 };
 

@@ -23,7 +23,6 @@ const SummaryFragment: FC<Props> = (variables) => {
   if (loading)
     return (
       <>
-        
       </>
     );
   if (!data?.transfer) return <></>;
