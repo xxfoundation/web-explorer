@@ -1,5 +1,8 @@
+/* eslint-disable no-console */
+import { useQuery } from '@apollo/client';
 import { Skeleton } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { GetBlockCounts, GET_BLOCK_COUNTS } from '../../schemas/blocks.schema';
 import PaperStyled from '../Paper/PaperWrap.styled';
 import { TableSkeleton } from '../Tables/TableSkeleton';
 import TabsWithPanels, { TabText } from '../Tabs';
@@ -7,17 +10,28 @@ import EventsTable from './EventsTable';
 import ExtrinsicsTable from './ExtrinsicsTable';
 
 const BlockDetailedEventsTabs: React.FC<{
-  events?: number;
-  extrinsics?: number;
   blockNumber?: number;
   loading: boolean;
-}> = ({ blockNumber, events, extrinsics, loading }) => {
+}> = ({ blockNumber, loading }) => {
+  const [extrinsicsCount, setExtrinsicsCount] = useState<number>();
+  const [eventCount, setEventCount] = useState<number>();
+  const query = useQuery<GetBlockCounts>(GET_BLOCK_COUNTS, { variables: { blockNumber }});
+
+  useEffect(() => {
+    setExtrinsicsCount(query.data?.extrinsics.aggregate.count);
+    setEventCount(query.data?.events.aggregate.count);
+  }, [
+    query.data?.extrinsics.aggregate.count,
+    query.data?.events.aggregate.count
+  ]);
+
   const panels = useMemo(() => {
     const where = {
       block_number: {
         _eq: blockNumber
       }
     };
+
     return loading
       ? [
           {
@@ -31,15 +45,16 @@ const BlockDetailedEventsTabs: React.FC<{
         ]
       : [
           {
-            label: <TabText message='extrinsics' count={extrinsics} />,
+            label: <TabText message='extrinsics' count={extrinsicsCount} />,
             content: <ExtrinsicsTable where={where} />
           },
           {
-            label: <TabText message='events' count={events} />,
+            label: <TabText message='events' count={eventCount} />,
             content: <EventsTable where={where} />
           }
         ];
-  }, [blockNumber, events, extrinsics, loading]);
+  }, [blockNumber, eventCount, extrinsicsCount, loading]);
+
   return (
     <PaperStyled>
       <TabsWithPanels panels={panels} tabsLabel='block event tabs' />

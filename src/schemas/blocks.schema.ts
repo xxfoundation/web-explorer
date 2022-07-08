@@ -113,3 +113,32 @@ export const GET_BLOCKS_BY_BP = gql`
     }
   }
 `;
+
+export type GetBlockCounts = {
+  extrinsics: {
+    aggregate: {
+      count: number
+    }
+  },
+  events: {
+    aggregate: {
+      count: number
+    }
+  }
+}
+
+export const GET_BLOCK_COUNTS = gql`
+  query GetBlockCounts($blockNumber: bigint!) {
+    events: event_aggregate(where: {block_number: {_eq: $blockNumber}}) {
+      aggregate {
+        count
+      }
+    }
+    
+    extrinsics: extrinsic_aggregate(where: {block_number: {_eq: $blockNumber}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`

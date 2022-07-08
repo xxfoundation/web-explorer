@@ -73,6 +73,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
       signer
       method
     }
+    
     agg: extrinsic_aggregate(where: $where) {
       aggregate {
         count
