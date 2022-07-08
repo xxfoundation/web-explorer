@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Extrinsics from './Extrinsics';
-import ExtrinsicId from './_extrinsicId';
+import ExtrinsicId from './_extrinsicIdOrHash';
 
 const ExtrinsicsRouter = () => {
   const { path } = useRouteMatch();
@@ -10,7 +10,7 @@ const ExtrinsicsRouter = () => {
       <Route exact path={path}>
         <Extrinsics />
       </Route>
-      <Route path={`${path}/:extrinsicId`}>
+      <Route path={`${path}/:extrinsicIdOrHash`}>
         <ExtrinsicId />
       </Route>
     </Switch>

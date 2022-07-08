@@ -1,6 +1,9 @@
+import type { Extrinsic } from '../../../../schemas/extrinsics.schema';
+
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
+
 import BlockStatusIcon from '../../../../components/block/BlockStatusIcon';
 import Address from '../../../../components/Hash/XXNetworkAddress';
 import Hash from '../../../../components/Hash';
@@ -13,19 +16,16 @@ import {
   WithCopy
 } from '../../../../components/Summary';
 import TimeAgo from '../../../../components/TimeAgo';
-import { GetExtrinsicByPK } from '../../../../schemas/extrinsics.schema';
 import ModuleCalls from '../ModuleCalls';
 import ParametersFragment from './ParametersFragment';
 import SummaryFragment from './TransferFragment';
 
-type Extrinsic = GetExtrinsicByPK['extrinsic'];
 
 type Props = {
   extrinsic: Extrinsic;
-  extrinsicId: { blockNumber: number; extrinsicIndex: number };
 };
 
-const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
+const Summary: FC<Props> = ({ extrinsic }) => {
   return (
     <SummaryContainer>
       <SummaryEntry>
@@ -37,10 +37,10 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
       <SummaryEntry>
         <SummaryHeader>Block</SummaryHeader>
         <SummaryValue>
-          <Link to={`/blocks/${extrinsicId.blockNumber}`}>
+          <Link to={`/blocks/${extrinsic.blockNumber}`}>
             <Stack direction='row' spacing={1} alignItems='center'>
               <CheckCircleOutlineOutlinedIcon color='success' />
-              &nbsp;{extrinsicId.blockNumber}
+              &nbsp;{extrinsic.blockNumber}
             </Stack>
           </Link>
         </SummaryValue>
@@ -63,7 +63,7 @@ const Summary: FC<Props> = ({ extrinsic, extrinsicId }) => {
           <ModuleCalls module={extrinsic.section} call={extrinsic.method} doc={extrinsic.doc} />
         </SummaryValue>
       </SummaryEntry>
-      <SummaryFragment {...extrinsicId} />
+      <SummaryFragment {...extrinsic} />
       <SummaryEntry>
         <SummaryHeader>Result</SummaryHeader>
         <SummaryValue>

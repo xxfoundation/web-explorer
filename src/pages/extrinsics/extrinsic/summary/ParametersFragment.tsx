@@ -1,11 +1,13 @@
+import type { Extrinsic } from '../../../../schemas/extrinsics.schema';
+
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Box, Stack, Typography } from '@mui/material';
 import React, { FC, ReactNode, useCallback, useMemo } from 'react';
+
 import RoundedButton from '../../../../components/buttons/Rounded';
 import { SummaryEntry, SummaryHeader, SummaryValue } from '../../../../components/Summary';
 import { useToggle } from '../../../../hooks';
 import useCopyClipboard from '../../../../hooks/useCopyToClipboard';
-import { GetExtrinsicByPK } from '../../../../schemas/extrinsics.schema';
 import { theme } from '../../../../themes/default';
 
 const callbackCopyMessage = (value: ReactNode) => {
@@ -61,7 +63,7 @@ const ParamTile: FC<{ label: string; value: unknown, type?: string }> = ({ label
   );
 };
 
-type Params = Pick<GetExtrinsicByPK['extrinsic'], 'args' | 'argsDef'>;
+type Params = Pick<Extrinsic, 'args' | 'argsDef'>;
 
 const ParametersFragment: FC<Params> = ({ args, argsDef }) => {
   const staticCopy = useCopyClipboard()[1];
@@ -77,6 +79,7 @@ const ParametersFragment: FC<Params> = ({ args, argsDef }) => {
       )),
     [args, argsDef]
   );
+  
   return (
     <SummaryEntry>
       <SummaryHeader>

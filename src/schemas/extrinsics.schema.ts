@@ -4,7 +4,7 @@ import { TotalOfItems } from './types';
 const EXTRINSIC_FRAGMENT = gql`
   fragment extrinsicFragment on extrinsic {
     blockNumber: block_number
-    index: extrinsic_index
+    extrinsicIndex: extrinsic_index
     hash
     method
     section
@@ -22,7 +22,7 @@ const EXTRINSIC_FRAGMENT = gql`
 export type Extrinsic = {
   id: number;
   blockNumber: number;
-  index: number;
+  extrinsicIndex: number;
   hash: string;
   lifetime?: string | number;
   timestamp: number;
@@ -49,7 +49,7 @@ export type FindExtrinsicByHashType = {
 
 export const FIND_EXTRINSIC_BY_HASH = gql`
   query FindExtrinsicByHash($where: extrinsic_bool_exp) {
-    extrinsic: extrinsic(where: $where) {
+    extrinsic(where: $where) {
       blockNumber: block_number
       index: extrinsic_index
       hash
@@ -64,7 +64,7 @@ export const EXTRINSICS_OF_BLOCK = gql`
   ) {
     extrinsics: extrinsic(order_by: $orderBy, where: $where) {
       id
-      index: extrinsic_index
+      extrinsicIndex: extrinsic_index
       blockNumber: block_number
       hash
       timestamp
@@ -107,14 +107,14 @@ export const LIST_EXTRINSICS = gql`
 `;
 
 
-export type GetExtrinsicByPK = {
-  extrinsic: Extrinsic;
+export type GetExtrinsicWhere = {
+  extrinsic: Extrinsic[];
 };
 
-export const GET_EXTRINSIC_BY_PK = gql`
+export const GET_EXTRINSIC_WHERE = gql`
   ${EXTRINSIC_FRAGMENT}
-  query GetExtrinsicByPk($blockNumber: bigint!, $extrinsicIndex: Int!) {
-    extrinsic: extrinsic_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
+  query GetExtrinsicByPk($where: extrinsic_bool_exp) {
+    extrinsic (where: $where) {
       ...extrinsicFragment
     }
   }
