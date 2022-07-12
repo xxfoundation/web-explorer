@@ -50,7 +50,7 @@ export const computeBalanceHistory = (
       [] as DataPoint[]
     );
 
-  return [[fromEra, history[0][1]], ...history];
+  return [[fromEra, history[0]?.[1]], ...history];
 };
 
 type Props = {
