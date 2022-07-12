@@ -1,6 +1,7 @@
 import { mount } from 'enzyme';
 import MockDate from 'mockdate';
 import React from 'react';
+
 import Bar from '../Bar';
 import BarChart from '../BarChart';
 import BarDivider from '../BarDivider';

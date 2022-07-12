@@ -11,11 +11,13 @@ import { formatBalance } from '../../../../components/FormatBalance/formatter';
 const BLOCKS_IN_A_MONTH = 432000;
 const BLOCKS_IN_A_WEEK = BLOCKS_IN_A_MONTH / 4;
 const BLOCKS_IN_A_DAY = BLOCKS_IN_A_MONTH / 30;
+const BLOCKS_ALL_TIME = Number.MAX_VALUE;
 
 const timeframes: Record<string, number> = {
   Month: BLOCKS_IN_A_MONTH,
   Week: BLOCKS_IN_A_WEEK,
-  Day: BLOCKS_IN_A_DAY
+  Day: BLOCKS_IN_A_DAY,
+  All: BLOCKS_ALL_TIME
 };
 
 function amountByEraTooltip(this: TooltipFormatterContextObject) {
@@ -27,7 +29,7 @@ const byBlockNumber = (a: Transfer, b: Transfer) => b.blockNumber - a.blockNumbe
 const bySuccess = (t: Transfer) => t.success;
 const filterBlockHeight = (fromBlock: number) => (t: Transfer) => t.blockNumber > fromBlock;
 
-const computeBalanceHistory = (
+export const computeBalanceHistory = (
   { account, transfers = [] }: Props,
   timeframe: number
 ): DataPoint[] => {
@@ -39,7 +41,7 @@ const computeBalanceHistory = (
     .sort(byBlockNumber)
     .reduce(
       (dataPoints, transfer) => {
-        const first = dataPoints[0];
+        const first = dataPoints[0] || [account.blockHeight, account.totalBalance];
         const newPoint: DataPoint =
           transfer.source === account.id
             ? [transfer.blockNumber, first[1] - transfer.amount]
@@ -47,7 +49,7 @@ const computeBalanceHistory = (
 
         return [newPoint].concat(dataPoints);
       },
-      [[account.blockHeight, account.totalBalance]] as DataPoint[]
+      [] as DataPoint[]
     );
 
   return [[fromBlock, history[0][1]], ...history];
