@@ -106,11 +106,11 @@ export const GET_RANKED_ACCOUNTS = gql`
   }
 `;
 
-export type LatestEraQuery = {
+export type LatestRankingEraQuery = {
   ranking: { era: number }[]
 }
 
-export const GET_LATEST_ERA = gql`
+export const GET_LATEST_RANKING_ERA = gql`
   query GetRankedAccounts {
     ranking(limit: 1) {
       era

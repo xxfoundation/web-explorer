@@ -8,11 +8,11 @@ const messages: Record<ErrorType, string> = {
   'general': 'Something went wrong...'
 }
 
-const Error: FC<{ type?: ErrorType, error?: boolean }> = ({ children, error, type = 'data-unavailable' }) => (
+const Error: FC<{ type?: ErrorType, message?: string; error?: boolean }> = ({ children, error, message, type = 'data-unavailable' }) => (
   <>
     {
       error === undefined || !!error
-        ? <Typography color='red'>{messages[type]}</Typography>
+        ? <Typography color='red'>{message || messages[type]}</Typography>
         : children
     }
   </>

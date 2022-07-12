@@ -10,9 +10,9 @@ import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
 import {
   GET_RANKED_ACCOUNTS,
-  GET_LATEST_ERA,
+  GET_LATEST_RANKING_ERA,
   ActiveCountsQuery,
-  LatestEraQuery,
+  LatestRankingEraQuery,
   RankedAccountsQuery,
   RankedAccount,
   GET_ACTIVE_COUNTS
@@ -73,7 +73,7 @@ const ValidatorsTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<ValidatorFilter>('current');
-  const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
+  const latestEraQuery = useQuery<LatestRankingEraQuery>(GET_LATEST_RANKING_ERA);
   const latestEra = latestEraQuery.data?.ranking?.[0].era;
   const countsQuery = useQuery<ActiveCountsQuery>(GET_ACTIVE_COUNTS, { variables: { era: latestEra }, skip: !latestEra });
   const variables = useMemo(

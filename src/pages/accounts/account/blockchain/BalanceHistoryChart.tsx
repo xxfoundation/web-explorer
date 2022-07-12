@@ -8,15 +8,13 @@ import { Box, FormControl, MenuItem, Select, SelectChangeEvent, Typography } fro
 import StepChart from '../../../../components/charts/highcharts/StepChart';
 import { formatBalance } from '../../../../components/FormatBalance/formatter';
 
-const ERAS_IN_A_MONTH = 3 * 30;
+const ERAS_IN_A_MONTH = 30;
 const ERAS_IN_A_WEEK = ERAS_IN_A_MONTH / 4;
-const ERAS_IN_A_DAY = ERAS_IN_A_MONTH / 30;
 const ERAS_ALL_TIME = Number.MAX_VALUE;
 
 const timeframes: Record<string, number> = {
   Month: ERAS_IN_A_MONTH,
   Week: ERAS_IN_A_WEEK,
-  Day: ERAS_IN_A_DAY,
   All: ERAS_ALL_TIME
 };
 
