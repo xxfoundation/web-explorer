@@ -40,6 +40,8 @@ export type Transfer = {
   timestamp: string;
 };
 
+export type TransferWithEra = Transfer & { block: { activeEra: number } };
+
 export const TRANSFER_FRAGMENT = gql`
   fragment transfer_common_fields on transfer {
     blockNumber: block_number
@@ -154,7 +156,7 @@ export const LISTEN_FOR_TRANSFERS_TIMESTAMPS = gql`
 `;
 
 export type GetTransferByAccountId = {
-  transfers: Transfer[];
+  transfers: TransferWithEra[];
 };
 
 export const GET_TRANSFERS_BY_ACCOUNT_ID = gql`
@@ -167,6 +169,9 @@ export const GET_TRANSFERS_BY_ACCOUNT_ID = gql`
       ]
     }) {
       ...transfer_common_fields
+      block {
+        activeEra: active_era
+      }
     }
   }
 `

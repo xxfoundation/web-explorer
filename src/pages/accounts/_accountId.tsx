@@ -17,14 +17,18 @@ import Summary from '../producer/Summary';
 import { useToggle } from '../../hooks';
 import BalanceHistory from './account/blockchain/BalanceHistoryChart';
 import { GetTransferByAccountId, GET_TRANSFERS_BY_ACCOUNT_ID } from '../../schemas/transfers.schema';
+import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/ranking.schema';
 
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
-  const { data, loading } = useFetchRankingAccountInfo(accountId);
+  const accountQuery = useFetchRankingAccountInfo(accountId);
   const transfersQuery = useQuery<GetTransferByAccountId>(GET_TRANSFERS_BY_ACCOUNT_ID, { variables: { accountId } })
+  const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const [expanded, { toggle }] = useToggle(false);
-  
-  if (loading || transfersQuery.loading) {
+
+  const loading = accountQuery.loading || transfersQuery.loading || latestEraQuery.loading;
+
+  if (loading) {
     return (
       <Container sx={{ my: 5 }}>
         <Typography maxWidth={'100px'}>
@@ -43,39 +47,43 @@ const AccountId: FC = ({}) => {
       </Container>
     );
   }
+  
+  const account = accountQuery.data?.account;
+  const latestEra = latestEraQuery.data?.ranking[0];
 
-  if (!data?.account) return <NotFound message='Account Not Found' />;
+  if (!account) return <NotFound message='Account Not Found' />;
 
-  const ranking = data?.ranking && data?.ranking[0];
+
+  const ranking = accountQuery.data?.ranking && accountQuery.data?.ranking[0];
   const identity = ranking?.identity && JSON.parse(ranking?.identity);
 
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      {data.account.identity.display && (
+      {account.identity.display && (
         <Typography variant='h1'>
-          {data.account.identity.display}
+          {account.identity.display}
         </Typography>
       )}
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
-          <IdentityCard account={data.account} />
+          <IdentityCard account={account} />
         </Grid>
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
-            <Balances account={data.account}  />
+            <Balances account={account}  />
             <RoundedButton style={{ position: 'absolute', right: '2rem', bottom: '1.5rem'}} variant='contained' onClick={toggle}>
               {expanded ? 'Hide history' : 'Show history'}
             </RoundedButton>
           </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Info account={data.account} />
+          <Info account={account} />
         </Grid>
         {expanded && (
           <Grid item xs={12}>
             <PaperWrapStyled>
-              <BalanceHistory account={data.account} transfers={transfersQuery.data?.transfers} />
+              <BalanceHistory account={account} currentEra={latestEra?.era ?? 0} transfers={transfersQuery.data?.transfers} />
             </PaperWrapStyled>
           </Grid>
         )}
@@ -85,7 +93,7 @@ const AccountId: FC = ({}) => {
           </Grid>
         )}
         <Grid item xs={12}>
-          <BlockchainCard account={data.account} ranking={ranking} />
+          <BlockchainCard account={account} ranking={ranking} />
         </Grid>
       </Grid>
     </Container>
