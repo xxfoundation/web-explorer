@@ -19,7 +19,7 @@ import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 
 const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
   const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`;
-  // eslint-disable-next-line no-console
+
   return BaseLineCellsWrapper([
     <Link to={linkToExtrinsic}>{`${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`}</Link>,
     <Link to={`/blocks/${extrinsic.blockNumber}`}>{extrinsic.blockNumber}</Link>,
