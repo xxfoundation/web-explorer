@@ -1,5 +1,6 @@
-import { ApolloClient, HttpLink, from, split } from '@apollo/client';
+import { ApolloClient, ApolloLink, HttpLink, from, split } from '@apollo/client';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { RetryLink } from '@apollo/client/link/retry';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { OperationDefinitionNode } from 'graphql';
 import { createClient } from 'graphql-ws';
@@ -25,8 +26,13 @@ const apolloCache = new InMemoryCache({
 const graphqlHost = process.env.REACT_APP_BACKEND_HOST || 'localhost:8080';
 const httpLink = new HttpLink({ uri: `https://${graphqlHost}/v1/graphql` });
 const wsLink = new GraphQLWsLink(
-  createClient({ url: `wss://${graphqlHost}/v1/graphql`, disablePong: true })
+  createClient({
+    retryAttempts: 3,
+    url: `wss://${graphqlHost}/v1/graphql`,
+    disablePong: true
+  })
 );
+const retryLink = new RetryLink();
 
 const links = split(
   ({ query }) => {
@@ -34,7 +40,7 @@ const links = split(
     return kind === 'OperationDefinition' && operation === 'subscription';
   },
   wsLink,
-  httpLink,
+  ApolloLink.from([retryLink, httpLink]),
 );
 
 export const client = new ApolloClient({
