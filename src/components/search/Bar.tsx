@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import React, { FC, useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { GetAccountByAddressType, GET_ACCOUNT_BY_PK } from '../../schemas/accounts.schema';
-import { GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
+import { GET_BLOCK_BY_BLOCK_NUMBER } from '../../schemas/blocks.schema';
 import { FindExtrinsicByHashType, FIND_EXTRINSIC_BY_HASH } from '../../schemas/extrinsics.schema';
 import { Bar, SelectItem, SelectOption } from './Bar.styles';
 import { GenericSearchInput } from './SearchInputGroup';
@@ -27,7 +27,7 @@ const SearchBlocks: FC = () => {
     <GenericSearchInput
       placeholder='Search by Block Number (insert an integer)'
       messageLoader={(value: string) => `Querying Block Number ${value}`}
-      document={GET_BLOCK_BY_PK}
+      document={GET_BLOCK_BY_BLOCK_NUMBER}
       variables={(v: string) => ({ blockNumber: Number(v) })}
       option='block'
       optionValidator={validators.blocks}
