@@ -22,7 +22,7 @@ const timeframes: Record<string, number> = {
 
 function amountByEraTooltip(this: TooltipFormatterContextObject) {
   const result = formatBalance(this.y?.toString() ?? 0, { withUnit: ' XX' });
-  return `Block: ${this.x}<br /><b>${this.series.name} ${result}</b>`;
+  return `Era: ${this.x}<br /><b>${this.series.name} ${result}</b>`;
 }
 
 const byBlockNumber = (a: Transfer, b: Transfer) => b.blockNumber - a.blockNumber;
