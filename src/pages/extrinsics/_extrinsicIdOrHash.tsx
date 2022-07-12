@@ -2,6 +2,8 @@ import { useQuery } from '@apollo/client';
 import { Box, Container, Skeleton, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { isHex } from '@polkadot/util';
+
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
@@ -9,7 +11,6 @@ import { GetExtrinsicWhere, GET_EXTRINSIC_WHERE } from '../../schemas/extrinsics
 import NotFound from '../NotFound';
 import ExtrinsicEventsTabs from './extrinsic/ExtrinsicEventsTabs';
 import Summary from './extrinsic/summary';
-import { isHex } from '@polkadot/util';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 

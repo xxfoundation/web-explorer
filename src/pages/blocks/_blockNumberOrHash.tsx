@@ -3,14 +3,18 @@ import React, { useCallback } from 'react';
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
 import Hidden from '@mui/material/Hidden';
 import { useHistory, useParams } from 'react-router-dom';
+import { isHex } from '@polkadot/util';
+
 import { BlockNav } from '../../components/block/Block.styled';
 import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
 import BlockSummary from '../../components/block/BlockSummary';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BackAndForwardArrows from '../../components/buttons/BackAndForwardArrows';
 import Link from '../../components/Link';
-import { GetBlockByPK, GET_BLOCK_BY_PK } from '../../schemas/blocks.schema';
+import { GetBlockByHash, GetBlockByPK, GET_BLOCK_BY_HASH, GET_BLOCK_BY_BLOCK_NUMBER } from '../../schemas/blocks.schema';
 import NotFound from '../NotFound';
+import Error from '../../components/Error';
+import Loading from '../../components/Loading';
 
 const useArrowButtonsOptions = (number: number) => {
   const history = useHistory();
@@ -29,9 +33,9 @@ const useArrowButtonsOptions = (number: number) => {
     [history]
   );
 
-  const nextBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_PK, variables(number + 1));
+  const nextBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, variables(number + 1));
   
-  const previousBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_PK, variables(number - 1));
+  const previousBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, variables(number - 1));
   
   return { next: buttonProps(nextBlockQuery), previous: buttonProps(previousBlockQuery) };
 };
@@ -57,24 +61,44 @@ const BlockSummaryHeader: React.FC<{
 };
 
 const Block = () => {
-  const { number } = useParams<{ number: string }>();
-  const blockNumber = Number(number);
-  const { data, loading } = useQuery<GetBlockByPK>(GET_BLOCK_BY_PK, {
+  const { numberOrHash } = useParams<{ numberOrHash: string }>();
+  const isHash = isHex(numberOrHash);
+  const blockNumber = !isHash && Number(numberOrHash);
+  const blockHash = isHash && numberOrHash;
+
+  const numberQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, {
+    skip: isHash,
     variables: { blockNumber }
   });
+  const hashQuery = useQuery<GetBlockByHash>(GET_BLOCK_BY_HASH, {
+    skip: !isHash,
+    variables: { blockHash }
+  });
+  const loading = numberQuery.loading || hashQuery.loading;
+  const error = numberQuery.error || hashQuery.error;
 
-  if (!loading && !data?.block && !data?.block?.number) {
+  const block = hashQuery.data?.block[0] || numberQuery.data?.block;
+
+  if (loading) {
+    return <Loading />
+  }
+  
+  if (!loading && !error && !block) {
     return <NotFound />;
+  }
+
+  if (!block || (!loading && error)) {
+    return <Error />
   }
 
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <BlockSummaryHeader blockNumber={blockNumber} />
-      <BlockSummary block={data?.block} />
+      <BlockSummaryHeader blockNumber={block.number} />
+      <BlockSummary block={block} />
       <Box sx={{ mt: 2 }}>
         <BlockDetailedEventsTabs
-          blockNumber={blockNumber}
+          blockNumber={block.number}
           loading={loading}
         />
       </Box>
