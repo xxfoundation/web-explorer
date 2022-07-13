@@ -1,21 +1,18 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { Button, Popover } from '@mui/material';
 import React, { FC, useMemo, useRef } from 'react';
 import { useToggle } from '../hooks';
 
-
-
-export const Dropdown: FC<{
-  buttonLabel: string | React.ReactNode
+export const DropdownFilter: FC<{
+  buttonLabel: string | React.ReactNode;
 }> = ({ buttonLabel, children }) => {
   const [open, { toggle, toggleOff: close }] = useToggle();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const endIcon = useMemo(
-    () => (open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />),
-    [open]
-  );
+  const endIcon = useMemo(() => (open ? <FilterAltIcon /> : <FilterAltOutlinedIcon />), [open]);
 
   return (
     <>
@@ -37,4 +34,4 @@ export const Dropdown: FC<{
   );
 };
 
-export default Dropdown;
+export default DropdownFilter;
