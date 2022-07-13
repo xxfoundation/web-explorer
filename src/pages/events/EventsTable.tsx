@@ -79,7 +79,7 @@ const HistoryTable = () => {
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ block_number: 'desc', event_index: 'asc' }],
+      orderBy: [{ block_number: 'desc' }, { event_index: 'asc' }],
       where: {
         timestamp: {
           ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
