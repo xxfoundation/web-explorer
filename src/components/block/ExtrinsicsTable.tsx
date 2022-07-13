@@ -8,7 +8,7 @@ import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
 import TimeAgoComponent from '../TimeAgo';
 import { usePagination } from '../../hooks';
 
-const ROWS_PER_PAGE = 5;
+const ROWS_PER_PAGE = 10;
 
 const rowsParser = (extrinsic: Extrinsic) => {
   return BaseLineCellsWrapper([
