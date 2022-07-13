@@ -60,7 +60,7 @@ const BlockchainCard: FC<{
           {
             label: (
               <TabText
-                message='Transfers'
+                message={'Transfers'}
                 count={transferCount === undefined ? '' : transferCount}
               />
             ),

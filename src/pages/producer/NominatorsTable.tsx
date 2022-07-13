@@ -18,7 +18,7 @@ const EraStake = (nominator: NominatorsOfAccount) => {
   ]);
 };
 
-const DEFAULT_ROWS_PER_PAGE = 5;
+const DEFAULT_ROWS_PER_PAGE = 10;
 const headers = BaseLineCellsWrapper(['Account', 'Stake', 'Share']);
 
 const paginate = (
@@ -64,7 +64,7 @@ const NominatorsTable: FC<{ nominations: string }> = ({ nominations }) => {
     }
     return <></>;
   }, [accountNominators, onPageChange, onRowsPerPageChange, page, rowsPerPage]);
-  
+
   return <BaselineTable headers={headers} rows={rows} footer={footer} />;
 };
 

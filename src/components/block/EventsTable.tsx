@@ -6,15 +6,15 @@ import { BaselineCell, BaselineTable } from '../Tables';
 import TimeAgoComponent from '../TimeAgo';
 import { usePagination } from '../../hooks';
 
-const ROWS_PER_PAGE = 5;
+const ROWS_PER_PAGE = 10;
 
 const props: TableCellProps = { align: 'left' };
 
-const rowsParser = ({ blockNumber, index, method, section, timestamp }: Event): BaselineCell[] => {
+const rowsParser = ({ blockNumber, call, index, module, timestamp }: Event): BaselineCell[] => {
   return [
     { value: `${blockNumber}-${index}`, props },
     { value: <TimeAgoComponent date={timestamp} /> },
-    { value: `${section} (${method})` }
+    { value: `${module} (${call})` }
   ];
 };
 
@@ -22,7 +22,7 @@ const headers = [{ value: 'event id', props }, { value: 'time' }, { value: 'acti
 
 type Props = {
   setCount?: (count: number) => void;
-  where: Record<string, unknown>
+  where: Record<string, unknown>;
 };
 
 const EventsTable: FC<Props> = ({ setCount = () => {}, where }) => {
@@ -56,7 +56,8 @@ const EventsTable: FC<Props> = ({ setCount = () => {}, where }) => {
       headers={headers}
       rowsPerPage={pagination.rowsPerPage}
       rows={rows}
-      footer={pagination.controls} />
+      footer={pagination.controls}
+    />
   );
 };
 

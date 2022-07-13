@@ -21,7 +21,7 @@ const crumbRoutes: Record<string, React.FC<ParamsType>> = {
 };
 
 const crumbSplats: Record<string, React.FC<ParamsType>> = {
-  'number:2': () => (
+  'numberOrHash:2': () => (
     <CustomLink to='/blocks' underline='hover'>
       Blocks
     </CustomLink>
@@ -41,9 +41,9 @@ const crumbSplats: Record<string, React.FC<ParamsType>> = {
       Accounts
     </CustomLink>
   ),
-  'producerId:4': ({ params: { number } }) => (
-    <CustomLink to={`/blocks/${number}`} underline='hover'>
-      Block #{`${number.toString()}`}
+  'producerId:4': ({ params: { numberOrHash } }) => (
+    <CustomLink to={`/blocks/${numberOrHash}`} underline='hover'>
+      Block #{`${numberOrHash.toString()}`}
     </CustomLink>
   )
 };

@@ -6,8 +6,8 @@ const EXTRINSIC_FRAGMENT = gql`
     blockNumber: block_number
     extrinsicIndex: extrinsic_index
     hash
-    method
-    section
+    module
+    call
     success
     timestamp
     isSigned: is_signed
@@ -26,8 +26,8 @@ export type Extrinsic = {
   hash: string;
   lifetime?: string | number;
   timestamp: number;
-  method: string;
-  section: string;
+  module: string;
+  call: string;
   success: boolean;
   signer?: string;
   isSigned: boolean;
@@ -69,9 +69,9 @@ export const EXTRINSICS_OF_BLOCK = gql`
       hash
       timestamp
       success
-      section
+      call
       signer
-      method
+      module
     }
     
     agg: extrinsic_aggregate(where: $where) {
@@ -153,18 +153,18 @@ export const GET_EXTRINSICS_BY_SIGNER = gql`
 `;
 
 export type GetAvailableExtrinsicActions = {
-  methods: { method: string }[];
-  calls: { section: string }[];
+  modules: { module: string }[];
+  calls: { call: string }[];
 }
 
 export const GET_AVAILABLE_EXTRINSIC_ACTIONS = gql`
-  query GetAvailableMethods {
-    methods: extrinsic (distinct_on: method) {
-      method
+  query GetAvailableModules {
+    modules: extrinsic (distinct_on: module) {
+      module
     }
 
-    calls: extrinsic (distinct_on: section) {
-      section
+    calls: extrinsic (distinct_on: call) {
+      call
     }
   }
 `;

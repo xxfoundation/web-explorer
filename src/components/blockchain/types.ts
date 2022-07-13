@@ -1,5 +1,5 @@
-import BN  from 'bn.js';
-import type { Block } from  '../../schemas/blocks.schema';
+import BN from 'bn.js';
+import type { Block } from '../../schemas/blocks.schema';
 export type { Block } from '../../schemas/blocks.schema'
 
 export type ChainData = {
@@ -29,8 +29,8 @@ export type Transfer = {
   destination: string;
   amount: string;
   fee_amount: number;
-  section: string;
-  method: string;
+  module: string;
+  call: string;
   success: boolean;
   timestamp: number;
 };

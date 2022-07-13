@@ -18,8 +18,8 @@ export const LISTEN_FOR_TRANSFERS_ORDERED = gql`
       destination
       amount
       fee_amount
-      section
-      method
+      module
+      call
       success
       timestamp
     }
@@ -34,8 +34,8 @@ export type Transfer = {
   destination: string;
   amount: number;
   feeAmount: number;
-  section: string;
-  method: string;
+  module: string;
+  call: string;
   success: boolean;
   timestamp: string;
 };
@@ -49,8 +49,8 @@ export const TRANSFER_FRAGMENT = gql`
     destination
     amount
     feeAmount: fee_amount
-    section
-    method
+    module
+    call
     success
     timestamp
   }

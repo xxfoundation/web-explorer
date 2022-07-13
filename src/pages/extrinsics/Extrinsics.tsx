@@ -1,4 +1,5 @@
-import { Box, Button, Container, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Container, Stack, Tooltip, Typography } from '@mui/material';
+import FunctionsIcon from '@mui/icons-material/Functions';
 import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
@@ -39,13 +40,12 @@ const HistoryPage = () => {
             fontWeight={700}
             color={theme.palette.grey[600]}
           >
-            <Button color='inherit' disabled>
-              Filter all
-            </Button>
-            <Typography>|</Typography>
-            <Tooltip title='the total of extrinsics' placement='top' arrow>
-              <Typography>{totalOfExtrinsics}</Typography>
-            </Tooltip>
+            <div style={{ margin: '0 0 1em 0', display: 'inline-flex' }}>
+              <FunctionsIcon />
+              <Tooltip title='Total Number of Extrinsics' placement='top' arrow>
+                <Typography>= {totalOfExtrinsics}</Typography>
+              </Tooltip>
+            </div>
           </Stack>
         )}
         <span hidden>filters placeholder</span>

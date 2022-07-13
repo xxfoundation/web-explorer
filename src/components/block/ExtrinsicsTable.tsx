@@ -8,7 +8,7 @@ import { BaseLineCellsWrapper, BaselineTable } from '../Tables';
 import TimeAgoComponent from '../TimeAgo';
 import { usePagination } from '../../hooks';
 
-const ROWS_PER_PAGE = 5;
+const ROWS_PER_PAGE = 10;
 
 const rowsParser = (extrinsic: Extrinsic) => {
   return BaseLineCellsWrapper([
@@ -24,7 +24,7 @@ const rowsParser = (extrinsic: Extrinsic) => {
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
     <Link
       to={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`}
-    >{`${extrinsic.section} (${extrinsic.method})`}</Link>
+    >{`${extrinsic.module} (${extrinsic.call})`}</Link>
   ]);
 };
 
