@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Button, Stack, TableCellProps, Tooltip, Typography } from '@mui/material';
+import { Stack, TableCellProps, Tooltip, Typography } from '@mui/material';
+import FunctionsIcon from '@mui/icons-material/Functions';
 import React, { useMemo, useState } from 'react';
 import Link from '../../components/Link';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
@@ -111,13 +112,12 @@ const HistoryTable = () => {
           fontWeight={700}
           color={theme.palette.grey[600]}
         >
-          <Button color='inherit' disabled>
-            Filter all
-          </Button>
-          <Typography>|</Typography>
-          <Tooltip title='the total of events' placement='top' arrow>
-            <Typography>{data.agg.aggregate.count}</Typography>
-          </Tooltip>
+          <div style={{ margin: '0 0 1em 0', display: 'inline-flex' }}>
+            <FunctionsIcon />
+            <Tooltip title='Total Number of Events' placement='top' arrow>
+              <Typography>= {data.agg.aggregate.count}</Typography>
+            </Tooltip>
+          </div>
         </Stack>
       )}
       <BaselineTable
