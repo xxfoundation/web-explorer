@@ -150,7 +150,7 @@ export type NewAccounts = {
 
 export const LISTEN_FOR_NEW_ACCOUNTS = gql`
   subscription ListenForNewAccounts {
-    newAccount: event(where: {module: {_eq: "NewAccount"}}, order_by: {block: {active_era: desc}}) {
+    newAccount: event(where: {call: {_eq: "NewAccount"}}, order_by: {block: {active_era: desc}}) {
       accounts: data
       block {
         era: active_era
