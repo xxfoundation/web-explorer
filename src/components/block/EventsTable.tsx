@@ -10,11 +10,11 @@ const ROWS_PER_PAGE = 10;
 
 const props: TableCellProps = { align: 'left' };
 
-const rowsParser = ({ blockNumber, index, method, section, timestamp }: Event): BaselineCell[] => {
+const rowsParser = ({ blockNumber, call, index, module, timestamp }: Event): BaselineCell[] => {
   return [
     { value: `${blockNumber}-${index}`, props },
     { value: <TimeAgoComponent date={timestamp} /> },
-    { value: `${section} (${method})` }
+    { value: `${module} (${call})` }
   ];
 };
 

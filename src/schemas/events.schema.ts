@@ -5,8 +5,8 @@ export type Event = {
   blockNumber: number;
   index: number;
   id: number;
-  method: string;
-  section: string;
+  module: string;
+  call: string;
   timestamp: string;
 };
 
@@ -23,9 +23,9 @@ export const EVENTS_OF_BLOCK = gql`
     events: event(order_by: $orderBy, where: $where) {
       blockNumber: block_number
       index: event_index
-      method
+      module
+      call
       id
-      section
       timestamp
     }
   }
@@ -50,27 +50,27 @@ export const LIST_EVENTS = gql`
     events: event(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       blockNumber: block_number
       index: event_index
-      method
+      module
+      call
       id
-      section
       timestamp
     }
   }
 `;
 
 export type GetAvailableEventActions = {
-  methods: { method: string }[];
-  calls: { section: string }[];
+  modules: { module: string }[];
+  calls: { call: string }[];
 }
 
 export const GET_AVAILABLE_EVENT_ACTIONS = gql`
-  query GetAvailableMethods {
-    methods: event (distinct_on: method) {
-      method
+  query GetAvailableModules {
+    modules: event (distinct_on: module) {
+      module
     }
 
-    calls: event (distinct_on: section) {
-      section
+    calls: event (distinct_on: call) {
+      call
     }
   }
 `;

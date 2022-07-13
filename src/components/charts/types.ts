@@ -46,8 +46,8 @@ export type Transfer = {
   destination: string;
   amount: number;
   fee_amount: number;
-  section: string;
-  method: string;
+  module: string;
+  call: string;
   success: boolean;
   timestamp: number;
 };

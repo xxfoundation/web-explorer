@@ -1,5 +1,14 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
-import { useTheme, Badge, Button, Checkbox, Input, FormControlLabel, Stack, FormControl } from '@mui/material';
+import {
+  useTheme,
+  Badge,
+  Button,
+  Checkbox,
+  Input,
+  FormControlLabel,
+  Stack,
+  FormControl
+} from '@mui/material';
 
 import Dropdown from '../../Dropdown';
 import { arrayCompare } from '../../utils';
@@ -9,55 +18,54 @@ type Props = {
   value?: string[];
   onChange: (v?: string[]) => void;
   availableValues?: string[];
-}
+};
 
 const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onChange, value }) => {
   const theme = useTheme();
   const [localValues, setLocalValues] = useState<string[] | undefined>(value);
   const toggleValue = useCallback(
-    (method: string) => setLocalValues(
-      (currentMethods) => currentMethods?.includes(method)
-        ? currentMethods?.filter((meth) => meth !== method) 
-        : currentMethods?.concat(method).sort((a, b) => a.localeCompare(b))
-    ),
+    (module: string) =>
+      setLocalValues((currentModules) =>
+        currentModules?.includes(module)
+          ? currentModules?.filter((meth) => meth !== module)
+          : currentModules?.concat(module).sort((a, b) => a.localeCompare(b))
+      ),
     []
   );
 
   const [valuesFilter, setValuesFilter] = useState('');
 
-  const toggleFilter = useCallback(
-    () => {
-      setLocalValues((m) => m !== undefined ? undefined : [])
-    },
-    []
-  );
+  const toggleFilter = useCallback(() => {
+    setLocalValues((m) => (m !== undefined ? undefined : []));
+  }, []);
 
   const reset = useCallback(() => setLocalValues([]), []);
   const applyChanges = useCallback(() => onChange(localValues), [localValues, onChange]);
-  const canApplyChanges = localValues !== value|| !arrayCompare(localValues, value);
-  
+  const canApplyChanges = localValues !== value || !arrayCompare(localValues, value);
+
   const availableValues = useMemo(
-    () => available?.filter(
-        (v) => v.toLocaleLowerCase()
-          .match(valuesFilter.toLocaleLowerCase())
-      ).sort(
-        (a, b) => (localValues?.includes(a) ? 0 : 1) - (localValues?.includes(b) ? 0 : 1)
-      ),
+    () =>
+      available
+        ?.filter((v) => v.toLocaleLowerCase().match(valuesFilter.toLocaleLowerCase()))
+        .sort((a, b) => (localValues?.includes(a) ? 0 : 1) - (localValues?.includes(b) ? 0 : 1)),
     [available, localValues, valuesFilter]
-  )
+  );
 
   return (
-    <Dropdown buttonLabel={
-      <>
-        {buttonLabel}
-        &nbsp;
-        {localValues !== undefined && localValues.length > 0 && <>
-          <Badge color='primary' sx={{ pl: 1 }} badgeContent={localValues.length} />
+    <Dropdown
+      buttonLabel={
+        <>
+          {buttonLabel}
           &nbsp;
+          {localValues !== undefined && localValues.length > 0 && (
+            <>
+              <Badge color='primary' sx={{ pl: 1 }} badgeContent={localValues.length} />
+              &nbsp;
+            </>
+          )}
         </>
-        }
-      </>
-    }>
+      }
+    >
       <Stack padding={2}>
         <FormControlLabel
           sx={{
@@ -66,17 +74,10 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
               fontSize: '14px',
               fontWeight: 400,
               color:
-                localValues !== undefined
-                  ? theme.palette.primary.main
-                  : theme.palette.grey[600]
+                localValues !== undefined ? theme.palette.primary.main : theme.palette.grey[600]
             }
           }}
-          control={
-            <Checkbox
-              checked={localValues !== undefined}
-              onChange={toggleFilter}
-            />
-          }
+          control={<Checkbox checked={localValues !== undefined} onChange={toggleFilter} />}
           label={'Enable'}
         />
         {localValues !== undefined && (
@@ -98,10 +99,9 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
                     span: {
                       fontSize: '14px',
                       fontWeight: 400,
-                      color:
-                        localValues.includes(val)
-                          ? theme.palette.primary.main
-                          : theme.palette.grey[600]
+                      color: localValues.includes(val)
+                        ? theme.palette.primary.main
+                        : theme.palette.grey[600]
                     }
                   }}
                   control={
@@ -116,10 +116,7 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
             </Stack>
           </Stack>
         )}
-        <Stack
-          direction={'row'}
-          marginTop={'12px'}
-          justifyContent={'space-evenly'}>
+        <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
           <Button
             disabled={!canApplyChanges}
             variant='contained'
@@ -152,7 +149,7 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
         </Stack>
       </Stack>
     </Dropdown>
-  )
-}
+  );
+};
 
 export default ValuesFilter;

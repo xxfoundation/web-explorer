@@ -26,8 +26,8 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
     <Hash truncated value={extrinsic.hash} url={linkToExtrinsic} showTooltip />,
     <TimeAgoComponent date={extrinsic.timestamp} />,
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
-    <>{extrinsic.method}</>,
-    <>{extrinsic.section}</>
+    <>{extrinsic.module}</>,
+    <>{extrinsic.call}</>
   ]);
 };
 
@@ -44,15 +44,15 @@ const ExtrinsicsTable: FC<Props> = (props) => {
 
   const actionsQuery = useQuery<GetAvailableExtrinsicActions>(GET_AVAILABLE_EXTRINSIC_ACTIONS);
 
-  const [methodsFilter, setMethodsFilter] = useState<string[]>();
-  const availableMethods = useMemo(
-    () => actionsQuery.data?.methods.map((m) => m.method),
+  const [modulesFilter, setModulesFilter] = useState<string[]>();
+  const availableModules = useMemo(
+    () => actionsQuery.data?.modules.map((m) => m.module),
     [actionsQuery.data]
   );
 
   const [callsFilter, setCallsFilter] = useState<string[]>();
   const availableCalls = useMemo(
-    () => actionsQuery.data?.calls.map((c) => c.section),
+    () => actionsQuery.data?.calls.map((c) => c.call),
     [actionsQuery.data]
   );
 
@@ -70,10 +70,10 @@ const ExtrinsicsTable: FC<Props> = (props) => {
           value={resultFilter}
         />,
         <ValuesFilter
-          availableValues={availableMethods}
-          buttonLabel='Method'
-          onChange={setMethodsFilter}
-          value={methodsFilter}
+          availableValues={availableModules}
+          buttonLabel='Module'
+          onChange={setModulesFilter}
+          value={modulesFilter}
         />,
         <ValuesFilter
           availableValues={availableCalls}
@@ -82,7 +82,7 @@ const ExtrinsicsTable: FC<Props> = (props) => {
           value={callsFilter}
         />
       ]),
-    [availableCalls, availableMethods, callsFilter, methodsFilter, range, resultFilter]
+    [availableCalls, availableModules, callsFilter, modulesFilter, range, resultFilter]
   );
 
   const variables = useMemo(
@@ -96,11 +96,11 @@ const ExtrinsicsTable: FC<Props> = (props) => {
           ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
           ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
         },
-        ...(methodsFilter && methodsFilter.length > 0 && { method: { _in: methodsFilter } }),
-        ...(callsFilter && callsFilter.length > 0 && { section: { _in: callsFilter } })
+        ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } }),
+        ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } })
       }
     }),
-    [callsFilter, methodsFilter, range.from, range.to, resultFilter]
+    [callsFilter, modulesFilter, range.from, range.to, resultFilter]
   );
 
   const { data, error, loading, pagination } = usePaginatedQuery<ListExtrinsics>(LIST_EXTRINSICS, {

@@ -20,7 +20,6 @@ import ModuleCalls from '../ModuleCalls';
 import ParametersFragment from './ParametersFragment';
 import SummaryFragment from './TransferFragment';
 
-
 type Props = {
   extrinsic: Extrinsic;
 };
@@ -60,7 +59,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
       <SummaryEntry>
         <SummaryHeader>Module/Call</SummaryHeader>
         <SummaryValue>
-          <ModuleCalls module={extrinsic.section} call={extrinsic.method} doc={extrinsic.doc} />
+          <ModuleCalls module={extrinsic.module} call={extrinsic.call} doc={extrinsic.doc} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryFragment {...extrinsic} />

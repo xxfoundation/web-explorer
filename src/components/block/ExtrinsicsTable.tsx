@@ -24,7 +24,7 @@ const rowsParser = (extrinsic: Extrinsic) => {
     <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />,
     <Link
       to={`/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`}
-    >{`${extrinsic.section} (${extrinsic.method})`}</Link>
+    >{`${extrinsic.module} (${extrinsic.call})`}</Link>
   ]);
 };
 

@@ -150,7 +150,7 @@ export type NewAccounts = {
 
 export const LISTEN_FOR_NEW_ACCOUNTS = gql`
   subscription ListenForNewAccounts {
-    newAccount: event(where: {method: {_eq: "NewAccount"}}, order_by: {block: {active_era: desc}}) {
+    newAccount: event(where: {module: {_eq: "NewAccount"}}, order_by: {block: {active_era: desc}}) {
       accounts: data
       block {
         era: active_era
@@ -184,14 +184,3 @@ query GetExtrinsicCounts ($accountId: String) {
   }
 }
 `
-
-// export const GET_WHEN_CREATED = gql`
-// query ListenForNewAccounts {
-//   newAccount: event(where: { method: { _eq: "NewAccount" }, _and: { data: { _like: "%6a6MUC3cr5922vEAVQdDmYqFonVQoEkJrJwj5TkA68dwi5V6%" } } }, order_by: { block: { active_era: desc } }) {
-//     accounts: data
-//     block {
-//       era: active_era
-//     }
-//     timestamp
-//   }
-// }`;
