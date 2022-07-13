@@ -5,6 +5,7 @@ import type { DataPoint } from '../../../../components/charts/highcharts';
 
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+
 import StepChart from '../../../../components/charts/highcharts/StepChart';
 import { formatBalance } from '../../../../components/FormatBalance/formatter';
 
@@ -23,34 +24,54 @@ function amountByEraTooltip(this: TooltipFormatterContextObject) {
   return `Era: ${this.x}<br /><b>${this.series.name} ${result}</b>`;
 }
 
-const byBlockNumber = (a: Transfer, b: Transfer) => b.blockNumber - a.blockNumber;
+const byBlockNumber = (a: Transfer, b: Transfer) => a.blockNumber - b.blockNumber;
 const bySuccess = (t: Transfer) => t.success;
-const filterByEra = (era: number) => (t: TransferWithEra) => t.block.activeEra > era;
+const filterByEra = (history: DataPoint[], fromEra: number) => {
+  const index = history.findIndex((point) => point[0] >= fromEra);
+  const sliced = history.slice(index);
+
+  if (sliced[0][0] !== fromEra) {
+    sliced.unshift([fromEra, history[index - 1]?.[1]]);
+  }
+  
+  return sliced;
+};
 
 export const computeBalanceHistory = (
   { account, currentEra, transfers = [] }: Props,
-  timeframe: number,
+  timeframeInEras: number,
 ): DataPoint[] => {
-  const fromEra = Math.max(currentEra - timeframe, 0);
+  const fromEra = Math.max(currentEra - timeframeInEras, 0);
+  // uncomment when I have better ways to reconstruct initial balance
+  // const initialBalance = transfers.reduce(
+  //   (acc, transfer) => transfer.source === account.id
+  //     ? acc + transfer.amount
+  //     : acc - transfer.amount,
+  //   account.totalBalance
+  // );
+  const initialBalance = 0;
 
   const history = transfers
     .filter(bySuccess)
-    .filter(filterByEra(fromEra))
     .sort(byBlockNumber)
     .reduce(
       (dataPoints, transfer) => {
-        const first = dataPoints[0] || [currentEra, account.totalBalance];
+        const last = dataPoints[dataPoints.length - 1];
         const newPoint: DataPoint =
           transfer.source === account.id
-            ? [transfer.block.activeEra, first[1] - transfer.amount]
-            : [transfer.block.activeEra, first[1] + transfer.amount];
+            ? [transfer.block.activeEra, last[1] - transfer.amount]
+            : [transfer.block.activeEra, last[1] + transfer.amount];
 
-        return [newPoint].concat(dataPoints);
+        return last[0] === newPoint[0]
+          ? dataPoints.slice(0, dataPoints.length - 1).concat([newPoint])
+          : dataPoints.concat([newPoint]);
       },
-      [] as DataPoint[]
+      [[0, initialBalance]] as DataPoint[]
     );
 
-  return [[fromEra, history[0]?.[1]], ...history];
+  const filtered = filterByEra(history, fromEra);
+
+  return [...filtered, [currentEra, account.totalBalance]];
 };
 
 type Props = {
@@ -61,7 +82,10 @@ type Props = {
 
 const BalanceHistory: FC<Props> = (props) => {
   const [timeframe, setTimeframe] = useState(ERAS_IN_A_MONTH);
-  const balanceHistory = useMemo(() => computeBalanceHistory(props, timeframe), [props, timeframe]);
+  const balanceHistory = useMemo(
+    () => computeBalanceHistory(props, timeframe),
+    [props, timeframe]
+  );
   const onChange = useCallback(
     ({ target }: SelectChangeEvent<number>) => setTimeframe(Number(target.value)),
     []
@@ -70,7 +94,7 @@ const BalanceHistory: FC<Props> = (props) => {
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', pr: 2, mb: 1 }}>
-        <Typography sx={{ mt: 0.4 }}>Balance (XX)</Typography>
+        <Typography sx={{ mt: 0.4 }}>Tranfer History (XX)</Typography>
         <FormControl variant='standard'>
           <Select
             labelId='timeframe-label'
