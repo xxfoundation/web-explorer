@@ -1,5 +1,5 @@
 import { useSubscription } from '@apollo/client';
-import { styled, Table, TableBody, TableCell, TableRow, Typography } from '@mui/material';
+import { styled, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import useNewnessTracker, { WithNew } from '../../hooks/useNewnessTracker';
 import { LISTEN_FOR_TRANSFERS_ORDERED } from '../../schemas/transfers.schema';
@@ -26,11 +26,20 @@ const Header = styled(Typography)(({ theme }) => ({
   color: theme.palette.grey[600]
 }));
 
+const PaddinglessRow = styled(TableRow)({
+  '& td:first-child': {
+    paddingLeft: 0
+  },
+  '& td:last-child': {
+    paddingRight: 0
+  },
+});
+
 const TransferRow: FC<WithNew<Transfer>> = (props) => {
   return (
     <>
-      <TableRow>
-        <TableCell colSpan={4}>
+      <PaddinglessRow>
+        <TableCell colSpan={3} sx={{ paddingLeft: 0 }}>
           <Header fontWeight={700}>
             EXTRINSIC&nbsp;
             <Link to={`/extrinsics/${props.blockNumber}-${props.extrinsicIndex}`} underline='hover'>
@@ -38,9 +47,9 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             </Link>
           </Header>
         </TableCell>
-      </TableRow>
-      <TableRow>
-        <BorderlessCell sx={{ borderBottom: 'none '}}>
+      </PaddinglessRow>
+      <PaddinglessRow>
+        <BorderlessCell sx={{ borderBottom: 'none', paddingLeft: 0 }}>
           <Header>
             From
           </Header>
@@ -55,17 +64,12 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
           />
         </BorderlessCell>
         <BorderlessCell>
-          <Header>
-            Time
-          </Header>
-        </BorderlessCell>
-        <BorderlessCell>
           <Typography variant='body3' sx={{ whiteSpace: 'nowrap' }}>
             <TimeAgo date={props.timestamp} />
           </Typography>
         </BorderlessCell>
-      </TableRow>
-      <TableRow>
+      </PaddinglessRow>
+      <PaddinglessRow>
         <BorderlessCell>
           <Header>
             to
@@ -81,16 +85,11 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
           />
         </BorderlessCell>
         <BorderlessCell>
-          <Header>
-            Amount
-          </Header>
-        </BorderlessCell>
-        <BorderlessCell>
           <Typography variant='body3'>
             <FormatBalance value={props.amount} />
           </Typography>
         </BorderlessCell>
-      </TableRow>
+      </PaddinglessRow>
       <TableRow><BorderlessCell></BorderlessCell><BorderlessCell></BorderlessCell><BorderlessCell></BorderlessCell></TableRow>
     </>
   );
@@ -109,13 +108,15 @@ const LatestTransfersList = () => {
       linkName={'SEE ALL'}
       linkAddress={'/blocks'}
       height={500}>
-        <Table size={!loading ? 'small': undefined}  sx={{ mx: -2 }}>
-          <TableBody>
-            {loading && <SkeletonRows rows={10} columns={4} />}
-            {error && <TableRow><TableCell colSpan={3}><Error /></TableCell></TableRow>}
-            {transfers?.map((tx) => <TransferRow {...tx} key={tx.hash} />)}
-          </TableBody>
-        </Table>
+        <TableContainer>
+          <Table size={!loading ? 'small': undefined}>
+            <TableBody>
+              {loading && <SkeletonRows rows={10} columns={3} />}
+              {error && <TableRow><TableCell colSpan={3}><Error /></TableCell></TableRow>}
+              {transfers?.map((tx) => <TransferRow {...tx} key={tx.hash} />)}
+            </TableBody>
+          </Table>
+        </TableContainer>
     </DefaultTile>
   );
 };

@@ -33,7 +33,7 @@ const DefaultTile: FC<Props> = ({
           alignItems='center'
           spacing={2}
           sx={{
-            mb: hasDivider ? 8 : 0,
+            mb: 4,
             pt: 6,
             px: { xs: 3, md: 6 }
           }}
@@ -51,7 +51,7 @@ const DefaultTile: FC<Props> = ({
 
     <Box
       sx={{
-        my: 4,
+        mb: 4,
         px: { xs: 3, md: 6 },
         overflow: 'auto',
         height
