@@ -16,6 +16,8 @@ interface StyledTabsProps {
 const StyledTabs = styled((props: StyledTabsProps) => (
   <Tabs {...props} TabIndicatorProps={{ children: <span className='MuiTabs-indicatorSpan' /> }} />
 ))({
+  marginLeft: -16,
+  marginRight: -16,
   p: {
     fontSize: '13px',
     fontWeight: '700'
