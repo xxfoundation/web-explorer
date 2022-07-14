@@ -7,6 +7,12 @@ export const TableStyled = styled(TableContainer)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     padding: 0
   },
+  '& td:first-child, & th:first-child': {
+    paddingLeft: 0
+  },
+  '& td:last-child, & th:first-child': {
+    paddingRight: 0
+  },
   '.MuiTableHead-root': {
     textTransform: 'uppercase'
   },
