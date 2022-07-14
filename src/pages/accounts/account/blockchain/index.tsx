@@ -77,7 +77,7 @@ const BlockchainCard: FC<Props> = ({ account, ranking }) => {
             content: <>
               <Box sx={{ textAlign: 'right', mt: -4.5 }}>
                 <AddressFilter
-                  label={<FilterList />}
+                  label={'Filters '}
                   address={account.id}
                   value={filters}
                   onChange={setFilters} />
