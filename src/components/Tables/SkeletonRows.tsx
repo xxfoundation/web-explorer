@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { TableCell, TableRow, Skeleton } from '@mui/material';
 
-const SkeletonRows: FC<{ rows: number, cells: number }> = (props) => {
+const SkeletonRows: FC<{ rows: number, columns: number }> = (props) => {
   const rows = Array.from(Array(props.rows).keys());
-  const cells =  Array.from(Array(props.cells).keys());
+  const cells =  Array.from(Array(props.columns).keys());
 
   return <>
     {rows.map((row) => (
