@@ -45,7 +45,7 @@ const DefaultTile: FC<Props> = ({
             </Link>
           )}
         </Stack>
-        {hasDivider && <Divider sx={{ mx: { xs: 3, md: 6 } }} />}
+        {hasDivider && <Divider sx={{ mx: { xs: 3, md: 6 }, mb: 2 }} />}
       </>
     )}
 
