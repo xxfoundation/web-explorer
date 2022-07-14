@@ -18,7 +18,6 @@ import TransferTable from '../../../transfers/TransfersTable';
 import ErasTable from '../../../producer/ErasTable';
 import NominatorsTable from '../../../producer/NominatorsTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
-import { FilterList } from '@mui/icons-material';
 
 type Props = {
   account: Account;
