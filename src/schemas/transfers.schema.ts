@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import { TotalOfItems } from './types';
 
 export const TRANSFER_KEYS_FRAGMENT = gql`
   fragment transfer_key on transfer {
@@ -58,7 +57,7 @@ export const TRANSFER_FRAGMENT = gql`
 
 export type GetTransfersByBlock = {
   transfers: (Transfer & { id: number })[];
-} & TotalOfItems;
+};
 
 export const LIST_TRANSFERS_ORDERED = gql`
   ${TRANSFER_FRAGMENT}
@@ -68,11 +67,6 @@ export const LIST_TRANSFERS_ORDERED = gql`
     $offset: Int
     $where: transfer_bool_exp
   ) {
-    agg: transfer_aggregate(where: $where) {
-      aggregate {
-        count
-      }
-    }
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       ...transfer_common_fields
       id
