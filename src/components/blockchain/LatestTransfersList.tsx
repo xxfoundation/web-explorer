@@ -1,5 +1,5 @@
 import { useSubscription } from '@apollo/client';
-import { styled, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material';
+import { TableBody, TableRow, TableCell, TableContainer, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import useNewnessTracker, { WithNew } from '../../hooks/useNewnessTracker';
 import { LISTEN_FOR_TRANSFERS_ORDERED } from '../../schemas/transfers.schema';
@@ -11,34 +11,15 @@ import TimeAgo from '../TimeAgo';
 import type { ListOfTransfers, Transfer } from './types';
 import Error from '../Error';
 import SkeletonRows from '../Tables/SkeletonRows';
+import { Table } from '../Tables/TableContainer.styled';
+import { Header, BorderlessCell } from './LatestList.styled';
 
 const PAGE_LIMIT = 8;
-
-const BorderlessCell = styled(TableCell)({
-  borderBottom: 'none',
-});
-
-const Header = styled(Typography)(({ theme }) => ({
-  verticalAlign: 'middle',
-  ...theme.typography.body2,
-  fontWeight: 500,
-  textTransform: 'uppercase',
-  color: theme.palette.grey[600]
-}));
-
-const PaddinglessRow = styled(TableRow)({
-  '& td:first-child': {
-    paddingLeft: 0
-  },
-  '& td:last-child': {
-    paddingRight: 0
-  },
-});
 
 const TransferRow: FC<WithNew<Transfer>> = (props) => {
   return (
     <>
-      <PaddinglessRow>
+      <TableRow>
         <TableCell colSpan={3} sx={{ paddingLeft: 0 }}>
           <Header fontWeight={700}>
             EXTRINSIC&nbsp;
@@ -47,8 +28,8 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             </Link>
           </Header>
         </TableCell>
-      </PaddinglessRow>
-      <PaddinglessRow>
+      </TableRow>
+      <TableRow>
         <BorderlessCell sx={{ borderBottom: 'none', paddingLeft: 0 }}>
           <Header>
             From
@@ -68,8 +49,8 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             <TimeAgo date={props.timestamp} />
           </Typography>
         </BorderlessCell>
-      </PaddinglessRow>
-      <PaddinglessRow>
+      </TableRow>
+      <TableRow>
         <BorderlessCell>
           <Header>
             to
@@ -89,8 +70,8 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             <FormatBalance value={props.amount} />
           </Typography>
         </BorderlessCell>
-      </PaddinglessRow>
-      <TableRow><BorderlessCell></BorderlessCell><BorderlessCell></BorderlessCell><BorderlessCell></BorderlessCell></TableRow>
+      </TableRow>
+      <TableRow><BorderlessCell colSpan={3} /></TableRow>
     </>
   );
 };
@@ -104,7 +85,7 @@ const LatestTransfersList = () => {
 
   return (
     <DefaultTile
-      header={'Transfers'} 
+      header={'Transfers'}
       linkName={'SEE ALL'}
       linkAddress={'/blocks'}
       height={500}>
