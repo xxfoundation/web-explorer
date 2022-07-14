@@ -1,5 +1,8 @@
+import type { AddressFilters } from '../../components/Tables/filters/AddressFilter';
+
 import { Typography } from '@mui/material';
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo } from 'react';
+
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
@@ -12,7 +15,8 @@ import {
   LIST_TRANSFERS_ORDERED,
   Transfer
 } from '../../schemas/transfers.schema';
-import usePaginatedQuery from '../../hooks/usePaginatedQuery';
+import { useQuery } from '@apollo/client';
+import { usePagination } from '../../hooks';
 
 
 const TransferRow = (data: Transfer) => {
@@ -48,10 +52,13 @@ const headers = [
   { value: 'Hash' }
 ];
 
-const TransferTable: FC<{
+type Props = {
+  filters?: AddressFilters
   where?: Record<string, unknown>;
   setCount?: Dispatch<SetStateAction<number | undefined>>;
-}> = ({ where = {}, setCount: setCount }) => {
+}
+
+const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) => {
   const variables = useMemo(
     () => ({
       orderBy: [{ timestamp: 'desc' }],
@@ -60,14 +67,32 @@ const TransferTable: FC<{
     [where]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
+  const { data, error, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
     variables
   });
+
+  const pagination = usePagination();
+  const { paginate, setCount: setPaginationCount } = pagination;
+
+  const transfers = useMemo(
+    () => {
+      return (data?.transfers || [])
+        .filter((t) => !filters?.from || t.source === filters?.from)
+        .filter((t) => !filters?.to || t.destination === filters?.to);
+
+    },
+    [data?.transfers, filters?.from, filters?.to]
+  );
+
   useEffect(() => {
-    if (data?.agg && setCount) {
-      setCount(data.agg.aggregate.count);
-    }
-  }, [data?.agg, setCount]);
+    setCount(transfers.length);
+    setPaginationCount(transfers.length);
+  }, [setCount, setPaginationCount, transfers.length]);
+
+  const paginated = useMemo(
+    () => paginate(transfers),
+    [paginate, transfers]
+  );
 
   return (
     <BaselineTable
@@ -75,7 +100,7 @@ const TransferTable: FC<{
       loading={loading}
       headers={headers}
       rowsPerPage={pagination.rowsPerPage}
-      rows={(data?.transfers || []).map(TransferRow)}
+      rows={paginated.map(TransferRow)}
       footer={pagination.controls}
     />
   );
