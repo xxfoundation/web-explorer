@@ -146,3 +146,16 @@ export const GET_BLOCK_COUNTS = gql`
     }
   }
 `
+
+export type SearchBlocks = {
+  blocks: Block[]
+}
+
+export const SEARCH_BLOCKS = gql`
+  ${BLOCK_KEYS_FRAGMENT}
+  query SearchBlocks($hash: String, $blockNumber: bigint) {
+    blocks: block (where: { _or: [{ block_number: { _eq: $blockNumber }, { hash: { _eq: $hash }}] }) {
+      ...blocks
+    }
+  }
+`

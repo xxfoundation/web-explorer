@@ -23,6 +23,7 @@ const dividerSxProps: SxProps = {
 const SearchBlocks: FC = () => {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+
   return (
     <GenericSearchInput
       placeholder='Search by Block Number (insert an integer)'
@@ -115,42 +116,13 @@ const SearchAccount: FC = () => {
   );
 };
 
-const useSearchInputGroupFactory = (option: SearchTypes) => {
-  if (option === 'blocks') {
-    return <SearchBlocks />;
-  }
-  if (option === 'extrinsic') {
-    return <SearchExtrinsics />;
-  }
-  if (option === 'accounts') {
-    return <SearchAccount />;
-  }
-  return <></>;
-};
-
 const SearchBar = () => {
   const [option, setOption] = useState<SearchTypes>('blocks');
   const handleChange = useCallback(({ target: { value } }) => setOption(value), [setOption]);
-  const input = useSearchInputGroupFactory(option);
 
   return (
     <Bar component={'form'}>
       <Grid container alignItems='center'>
-        <Grid item xs='auto' sx={{ mr: { xs: 1, sm: 3 } }}>
-          <FormControl variant='standard'>
-            <SelectOption
-              value={option}
-              onChange={handleChange}
-              displayEmpty
-              inputProps={{ 'aria-label': 'Without label' }}
-              IconComponent={KeyboardArrowDownIcon}
-            >
-              <SelectItem value={'blocks'}>Block <Hidden mdDown>Number</Hidden></SelectItem>
-              <SelectItem value={'extrinsic'}>Extrinsic <Hidden mdDown>Hash</Hidden></SelectItem>
-              <SelectItem value={'accounts'}>Account <Hidden mdDown>Address</Hidden></SelectItem>
-            </SelectOption>
-          </FormControl>
-        </Grid>
         <Grid item xs='auto' sx={{ mr: { xs: 0, sm: 3 }, position: 'relative', height: 22 }}>
           <Divider orientation='vertical' sx={dividerSxProps} />
         </Grid>

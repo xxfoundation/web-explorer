@@ -47,7 +47,6 @@ export const SelectItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 export const SearchInput = styled(Input)(({ theme }) => ({
-
   [theme.breakpoints.down('sm')]: {
     fontSize: 12,
   },

@@ -183,4 +183,17 @@ query GetExtrinsicCounts ($accountId: String) {
     }
   }
 }
-`
+`;
+
+export type SearchAccounts = {
+  accounts: Account[]
+}
+
+export const SEARCH_ACCOUNTS = gql`
+  ${ACCOUNT_BY_PK_FRAGMENT}
+  query MyQuery($search: String) {
+    accounts: account(where: {_or: [{account_id: {_like: $search}}, {identity_display: {_ilike: $search}}]}) {
+      ...account
+    }
+  }
+`;

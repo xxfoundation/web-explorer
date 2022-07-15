@@ -57,6 +57,32 @@ export const FIND_EXTRINSIC_BY_HASH = gql`
   }
 `;
 
+export type GetExtrinsicByHash = {
+  extrinsic: Extrinsic[]
+};
+
+export const GET_EXTRINSIC_BY_HASH = gql`
+  ${EXTRINSIC_FRAGMENT}
+  query FindExtrinsicByHash($hash: String!) {
+    extrinsic(where: { hash: {_eq: $hash }}) {
+      ...extrinsicFragment
+    }
+  }
+`;
+
+export type GetExtrinsicByBNAndIndex = {
+  extrinsic: Extrinsic[];
+}
+
+export const GET_EXTRINSIC_BY_BN_AND_INDEX = gql`
+  ${EXTRINSIC_FRAGMENT}
+  query FindExtrinsicByHash($blockNumber: bigint!, $extrinsicIndex: Int!) {
+    extrinsic(where: { block_number: {_eq: $blockNumber: }, extrinsic_index: {_eq: $extrinsicIndex }}) {
+      ...extrinsicFragment
+    }
+  }
+`
+
 export const EXTRINSICS_OF_BLOCK = gql`
   query ListExtrinsicOfBlock(
     $orderBy: [extrinsic_order_by!]

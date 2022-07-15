@@ -1,67 +1,29 @@
-import { OperationVariables, TypedDocumentNode, useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, Grid, InputAdornment } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useSnackbar } from 'notistack';
 import React, { useCallback, useMemo, useState } from 'react';
+import { Account, SearchAccounts, SEARCH_ACCOUNTS } from '../../schemas/accounts.schema';
+import { Block, GetBlockByHash, GetBlockByPK, GET_BLOCK_BY_BLOCK_NUMBER, GET_BLOCK_BY_HASH } from '../../schemas/blocks.schema';
+import { Extrinsic, GetExtrinsicByHash, GetExtrinsicByBNAndIndex, GET_EXTRINSIC_BY_BN_AND_INDEX, GET_EXTRINSIC_BY_HASH } from '../../schemas/extrinsics.schema';
 import { SearchButton, SearchInput } from './Bar.styles';
 
-interface IProps<T> {
-  document: TypedDocumentNode;
-  placeholder: string;
-  messageLoader: (v: string) => string;
-  variables: (v: string) => OperationVariables;
-  successSearchCallback: (v: string, res: T) => void;
-  errorSearchCallback: (v: string, err: unknown) => void;
-  optionValidator: (v: string) => boolean;
-  option: string;
+type SearchResults = {
+  blocks?: Block[];
+  extrinsics?: Extrinsic[];
+  accounts?: Account[];
 }
 
-export const GenericSearchInput = <T extends object>({
-  document,
-  errorSearchCallback,
-  messageLoader: messageLoader,
-  option,
-  optionValidator,
-  placeholder,
-  successSearchCallback,
-  variables
-}: IProps<T>) => {
-  const { enqueueSnackbar } = useSnackbar();
-  const [executeQuery, { loading }] = useLazyQuery<T>(document);
+export const GenericSearchInput = () => {
+  const [result, setResult] = useState<SearchResults>({});
+  const [executeAccountSearch, searchAccounts] = useLazyQuery<SearchAccounts>(SEARCH_ACCOUNTS);
+  const [executeBlockSearchByHash, searchBlocksByHash] = useLazyQuery<GetBlockByHash>(GET_BLOCK_BY_HASH);
+  const [executeBlockSearchByNumber, searchBlocksByNumber] = useLazyQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER);
+  const [executeExtrinsicSearch, searchExtrinsicsByPK] = useLazyQuery<GetExtrinsicByBNAndIndex>(GET_EXTRINSIC_BY_BN_AND_INDEX);
+  const [executeExtrinsicSearchByHash, searchExtrinsicsByHash] = useLazyQuery<GetExtrinsicByHash>(GET_EXTRINSIC_BY_HASH);
   const [searchInput, setSearchInput] = useState('');
 
-  const validator = useCallback(
-    (value: string) => {
-      if (optionValidator(String(value))) {
-        return true;
-      }
-      const msg = value ? `${option} is not valid` : 'Search is empty';
-      enqueueSnackbar(msg, { variant: 'error' });
-      return false;
-    },
-    [enqueueSnackbar, option, optionValidator]
-  );
-
-  const submitSearch = useCallback(() => {
-    if (validator(searchInput)) {
-      executeQuery({ variables: variables(searchInput) })
-        .then(({ data, error }) => {
-          if (error) {
-            errorSearchCallback(searchInput, error);
-          } else if (data) {
-            successSearchCallback(searchInput, data);
-            setSearchInput('');
-          }
-        })
-        .catch((err) => {
-          errorSearchCallback(searchInput, err);
-        })
-        .finally(() => {
-          setSearchInput('');
-        });
-    }
-  }, [validator, searchInput, executeQuery, variables, errorSearchCallback, successSearchCallback]);
+  const submitSearch = useCallback(() => {}, [])
 
   const searchInputOnChange = useCallback(
     ({ target: { value } }) => setSearchInput(value),
