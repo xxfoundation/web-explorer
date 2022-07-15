@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import React, { FC } from 'react';
 import { Account } from '../../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../../schemas/ranking.schema';
+import { CommonFieldsRankingFragment } from '../../../../../schemas/staking.schema';
 import Commission from './Commission';
 import ElectedSelfStake from './ElectedSelfStake';
 import EraPoints from './EraPoints';

@@ -11,7 +11,7 @@ import {
   SummaryValue,
   WithCopy
 } from '../../components/Summary';
-import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
+import { CommonFieldsRankingFragment } from '../../schemas/staking.schema';
 import Ellipsis from '../../components/Ellipsis';
 
 const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {

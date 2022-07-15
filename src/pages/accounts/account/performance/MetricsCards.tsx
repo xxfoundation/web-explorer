@@ -3,7 +3,7 @@ import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import { Account } from '../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
+import { CommonFieldsRankingFragment } from '../../../../schemas/staking.schema';
 import { theme } from '../../../../themes/default';
 import { MetricScores, MetricsType } from '../../types';
 import MetricTooltip from './MetricTooltip';

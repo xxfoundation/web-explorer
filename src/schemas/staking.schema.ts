@@ -53,20 +53,24 @@ export const GET_ACCOUNT_RANKING = gql`
   }
 `;
 
-export type RankedAccount = {
+export type Nominators = {
+  accountId: string;
+  stake: string;
+  share: string;
+}
+
+export type ValidatorAccount = {
   addressId: string;
-  rank: number;
-  name: string;
   location: string;
   cmixId: string;
-  nominators: number;
+  nominators: Nominators[];
   ownStake: string;
   totalStake: string;
   otherStake: string;
 };
 
-export type RankedAccountsQuery = {
-  validators: RankedAccount[];
+export type ValidatorAccountsQuery = {
+  validators: ValidatorAccount[];
 };
 
 export type ActiveCountsQuery = {
@@ -76,13 +80,13 @@ export type ActiveCountsQuery = {
 
 export const GET_ACTIVE_COUNTS = gql`
   query ActiveCounts($era: Int!) {
-    active: ranking_aggregate(where: { active: { _eq: true }, era: { _eq: $era }}) {
+    active: validator_stats_aggregate(where: { era: { _eq: $era }}) {
       aggregate {
         count
       }
     }
 
-    waiting: ranking_aggregate(where: {active: {_eq: false}, era: { _eq: $era }}) {
+    waiting: waiting_aggregate {
       aggregate {
         count
       }
@@ -90,11 +94,9 @@ export const GET_ACTIVE_COUNTS = gql`
   }
 `
 
-export const GET_RANKED_ACCOUNTS = gql`
-  query GetRankedAccounts($limit: Int!, $offset: Int!, $where: ranking_bool_exp) {
-    validators: ranking(limit: $limit, offset: $offset, where: $where, distinct_on: [era, rank], order_by:{ era: desc, rank:asc }) {
-      rank
-      name
+export const GET_CURRENT_VALIDATORS = gql`
+  query GetCurrentValidators($limit: Int!, $offset: Int!, $where: validator_stats_bool_exp) {
+    validators: validator_stats(limit: $limit, offset: $offset, where: $where, order_by: { total_stake: desc }) {
       nominators
       location
       cmixId: cmix_id
@@ -106,13 +108,25 @@ export const GET_RANKED_ACCOUNTS = gql`
   }
 `;
 
+export const GET_WAITING_LIST = gql`
+  query GetWaitingList {
+    validators: waiting(order_by: { self_stake: desc }) {
+      nominators
+      location
+      cmixId: cmix_id
+      ownStake: self_stake
+      addressId: stash_address
+    }
+  }
+`;
+
 export type LatestEraQuery = {
-  ranking: { era: number }[]
+  validatorStats: { era: number }[]
 }
 
 export const GET_LATEST_ERA = gql`
   query GetRankedAccounts {
-    ranking(limit: 1) {
+    validatorStats: validator_stats(limit: 1, order_by: {era: desc}) {
       era
     }
   }

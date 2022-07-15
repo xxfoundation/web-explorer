@@ -4,7 +4,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { SummaryLoader } from '../../components/Summary';
-import { GetAccountRanking, GET_ACCOUNT_RANKING } from '../../schemas/ranking.schema';
+import { GetAccountRanking, GET_ACCOUNT_RANKING } from '../../schemas/staking.schema';
 import Error from '../../components/Error';
 import NotFound from '../NotFound';
 import ProducerTabs from './ProducerTabs';
@@ -53,9 +53,7 @@ const BlockProducer = () => {
         Block Producer
       </Typography>
       <Typography variant='h2' color='grey.700' sx={{ mb: 5 }}>
-        {identity.display || (
-          <ResponsiveHash truncated='lgDown' value={ranking.stashAddress} />
-        )}
+        {identity.display || <ResponsiveHash truncated='lgDown' value={ranking.stashAddress} />}
       </Typography>
       <Summary ranking={ranking} name={identity.display} />
       <Box sx={{ mt: 2 }}>

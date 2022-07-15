@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { GetAccountByAddressType, GET_ACCOUNT_BY_PK } from '../schemas/accounts.schema';
-import { GET_ACCOUNT_RANKING } from '../schemas/ranking.schema';
+import { GET_ACCOUNT_RANKING } from '../schemas/staking.schema';
 
 const useFetchRankingAccountInfo = (
   accountId: string

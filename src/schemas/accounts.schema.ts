@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { CommonFieldsRankingFragment } from './ranking.schema';
+import { CommonFieldsRankingFragment } from './staking.schema';
 import { TotalOfItems } from './types';
 
 export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit' | 'special';

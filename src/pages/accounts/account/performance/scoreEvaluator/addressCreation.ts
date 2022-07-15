@@ -1,5 +1,5 @@
 import { Account } from '../../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../../schemas/ranking.schema';
+import { CommonFieldsRankingFragment } from '../../../../../schemas/staking.schema';
 import { MetricScores } from '../../../types';
 
 const baseMessage = (blockNumber: number, seniority: string) =>

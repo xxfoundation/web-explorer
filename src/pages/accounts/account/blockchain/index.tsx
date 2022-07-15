@@ -13,7 +13,7 @@ import {
   GET_EXTRINSIC_COUNTS,
   GetExtrinsicCounts
 } from '../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
+import { CommonFieldsRankingFragment } from '../../../../schemas/staking.schema';
 import TransferTable from '../../../transfers/TransfersTable';
 import ErasTable from '../../../producer/ErasTable';
 import NominatorsTable from '../../../producer/NominatorsTable';
@@ -22,8 +22,7 @@ import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
 type Props = {
   account: Account;
   ranking: CommonFieldsRankingFragment | undefined;
-}
-
+};
 
 const BlockchainCard: FC<Props> = ({ account, ranking }) => {
   const [filters, setFilters] = useState<AddressFilters>({});
@@ -73,16 +72,19 @@ const BlockchainCard: FC<Props> = ({ account, ranking }) => {
                 count={transferCount === undefined ? '' : transferCount}
               />
             ),
-            content: <>
-              <Box sx={{ textAlign: 'right', mt: -4.5 }}>
-                <AddressFilter
-                  label={'Filters '}
-                  address={account.id}
-                  value={filters}
-                  onChange={setFilters} />
-              </Box>
-              <TransferTable filters={filters} where={transferWhereClause} />
-            </>
+            content: (
+              <>
+                <Box sx={{ textAlign: 'right', mt: -4.5 }}>
+                  <AddressFilter
+                    label={'Filters '}
+                    address={account.id}
+                    value={filters}
+                    onChange={setFilters}
+                  />
+                </Box>
+                <TransferTable filters={filters} where={transferWhereClause} />
+              </>
+            )
           }
         ];
     if (!loading && account.roles.validator && ranking !== undefined) {
@@ -97,7 +99,15 @@ const BlockchainCard: FC<Props> = ({ account, ranking }) => {
     }
 
     return tabs;
-  }, [account.id, account.roles.validator, loading, extrinsicCount, transferCount, filters, ranking]);
+  }, [
+    account.id,
+    account.roles.validator,
+    loading,
+    extrinsicCount,
+    transferCount,
+    filters,
+    ranking
+  ]);
 
   return (
     <PaperStyled>
