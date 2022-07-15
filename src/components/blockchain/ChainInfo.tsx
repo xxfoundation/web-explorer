@@ -58,9 +58,9 @@ const ChainInfo = () => {
 
   const {
     accounts,
+    activeEra,
     activeValidatorCount,
     blocks,
-    currentEra,
     nominatorCount,
     transfers,
     validatorSet
@@ -79,7 +79,7 @@ const ChainInfo = () => {
       </Typography>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
         <ChainInfoCard title='Finalized Blocks' value={blocks} path='/blocks' />
-        <ChainInfoCard title='Active Era' value={currentEra} />
+        <ChainInfoCard title='Active Era' value={activeEra} />
         <ChainInfoCard title='Transfers' value={transfers} path='/transfers' />
         <ChainInfoCard title='Account Holders' value={accounts} path='/accounts' />
         <ChainInfoCard
