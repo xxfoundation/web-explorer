@@ -5,14 +5,23 @@ import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
 import ErasTable from './ErasTable';
 import NominatorsTable from './NominatorsTable';
+import { Nominator } from '../../schemas/accounts.schema';
 
-const ProducerTabs: React.FC<{
+type Props = {
   producerId: string;
   eras: number;
   eraPointsHistory: EraPointsHistory;
   nominators: number;
-  nominations: string;
-}> = ({ eraPointsHistory, eras, nominations, nominators, producerId }) => {
+  nominations:  Nominator[];
+};
+
+const ProducerTabs: React.FC<Props> = ({
+  eraPointsHistory,
+  eras,
+  nominations,
+  nominators,
+  producerId
+}) => {
   const panels = useMemo(() => {
     return [
       {

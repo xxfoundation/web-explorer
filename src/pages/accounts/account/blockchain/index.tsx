@@ -8,23 +8,35 @@ import TabsWithPanels, { TabText } from '../../../../components/Tabs';
 import {
   Account,
   GET_EXTRINSIC_COUNTS,
-  GetExtrinsicCounts
+  GetExtrinsicCounts,
+  GetValidatorStats,
+  GET_VALIDATOR_STATS
 } from '../../../../schemas/accounts.schema';
 import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
 import TransferTable from '../../../transfers/TransfersTable';
-import ErasTable from '../../../producer/ErasTable';
+import ValidatorStats from '../staking/ValidatorStatsList';
 import NominatorsTable from '../../../producer/NominatorsTable';
+import { GetBlocksByBP, GET_BLOCKS_BY_BP } from '../../../../schemas/blocks.schema';
 
-const BlockchainCard: FC<{
+type Props = {
   account: Account;
   ranking: CommonFieldsRankingFragment | undefined;
-}> = ({ account, ranking }) => {
+};
+
+const BlockchainCard: FC<Props> = ({ account, ranking }) => {
   const { data, loading } = useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
     variables: { accountId: account.id }
   });
 
+  const validatorStatsQuery = useQuery<GetValidatorStats>(GET_VALIDATOR_STATS, { variables: { address: account.id } })
+  const blocksProducedQuery = useQuery<GetBlocksByBP, { producerId: string }>(
+    GET_BLOCKS_BY_BP,
+    { variables: { producerId: account.id } }
+  )
   const extrinsicCount = data?.extrinsicCount.aggregate.count;
   const transferCount = data?.transferCount.aggregate.count;
+  const statsCount = validatorStatsQuery.data?.aggregates.aggregate.count;
+  const nominators = validatorStatsQuery.data?.stats[0]?.nominators;
 
   const panels = useMemo(() => {
     const transferWhereClause = {
@@ -67,19 +79,25 @@ const BlockchainCard: FC<{
             content: <TransferTable where={transferWhereClause} />
           }
         ];
+        
     if (!loading && account.roles.validator && ranking !== undefined) {
       tabs.push({
-        label: <TabText message='nominators' count={ranking.nominators} />,
-        content: <NominatorsTable nominations={ranking.nominations} />
+        label: <TabText message='nominators' count={nominators?.length} />,
+        content: <NominatorsTable nominations={nominators} />
       });
       tabs.push({
-        label: <TabText message='eras' count={ranking.activeEras} />,
-        content: <ErasTable producerId={account.id} eraPointsHistory={ranking.eraPointsHistory} />
+        label: <TabText message='Validator Stats' count={statsCount} />,
+        content: (
+          <ValidatorStats
+            blocks={blocksProducedQuery.data?.blocks}
+            error={!!validatorStatsQuery.error || !!blocksProducedQuery.error}
+            stats={validatorStatsQuery.data?.stats} />
+        )
       });
     }
 
     return tabs;
-  }, [account, loading, extrinsicCount, transferCount, ranking]);
+  }, [account.id, account.roles.validator, loading, extrinsicCount, transferCount, ranking, nominators, statsCount, blocksProducedQuery.data?.blocks, blocksProducedQuery.error, validatorStatsQuery.error, validatorStatsQuery.data?.stats]);
 
   return (
     <PaperStyled>

@@ -9,7 +9,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { TableStyled } from '../../components/Tables/TableContainer.styled';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import Link from '../../components/Link';
-import { GET_BLOCKS_BY_BP, GetBlocksByBP } from '../../schemas/blocks.schema';
+import { GET_BLOCKS_WHERE, GetBlocksWhere } from '../../schemas/blocks.schema';
 import { usePagination, useToggle } from '../../hooks';
 import Error from '../../components/Error';
 
@@ -95,7 +95,7 @@ const ErasTable: FC<Props> = ({ eraPointsHistory, producerId }) => {
     };
   }, [producerId]);
 
-  const { data, error, loading } = useQuery<GetBlocksByBP>(GET_BLOCKS_BY_BP, { variables });
+  const { data, error, loading } = useQuery<GetBlocksWhere>(GET_BLOCKS_WHERE, { variables });
 
   const eraPointsHistorySorted = useMemo(
     () => eraPointsHistory

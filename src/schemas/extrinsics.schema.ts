@@ -132,6 +132,19 @@ export const LISTEN_FOR_EXTRINSICS_TIMESTAMPS = gql`
   }
 `;
 
+
+
+export const GET_EXTRINSICS_TIMESTAMPS = gql`
+  query ListenForExtrinsicsTimestamps(
+    $orderBy: [extrinsic_order_by!]
+    $where: extrinsic_bool_exp
+  ) {
+    extrinsic(order_by: $orderBy, where: $where) {
+      timestamp
+    }
+  }
+`;
+
 export type GetExtrinsicsBySigner = {
   extrinsics: Extrinsic[];
   count: { aggregate: { count: number } };

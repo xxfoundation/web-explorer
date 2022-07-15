@@ -4,7 +4,7 @@ import { TotalOfItems } from './types';
 export type Block = {
   numberFinalized: number;
   number: number;
-  currentEra: string;
+  currentEra: number;
   finalized: boolean;
   hash: string;
   parentHash: string;
@@ -102,20 +102,33 @@ export const GET_BLOCK_BY_HASH = gql`
   }
 `;
 
-export type GetBlocksByBP = {
+export type GetBlocksWhere = {
   blocks: {
     number: number;
     currentEra: number;
   }[];
 };
 
-export const GET_BLOCKS_BY_BP = gql`
+export const GET_BLOCKS_WHERE = gql`
   query ListBlocksOrdered($where: block_bool_exp) {
     blocks: block(where: $where) {
       number: block_number
       currentEra: active_era
     }
   }
+`;
+
+export type GetBlocksByBP = {
+  blocks: Block[];
+};
+
+export const GET_BLOCKS_BY_BP = gql`
+${BLOCK_KEYS_FRAGMENT}
+query GetBlocksByProducer($producerId: String!) {
+  blocks: block(where: { block_author: { _eq: $producerId }, finalized: {_eq: true}}, order_by: { block_number: desc }) {
+    ...blocks
+  }
+}
 `;
 
 export type GetBlockCounts = {

@@ -1,5 +1,6 @@
 import type { EraPointsHistory } from '../pages/producer/types';
 import { gql } from '@apollo/client';
+import { Nominator } from './accounts.schema';
 
 export type CommonFieldsRankingFragment = {
   era: number;
@@ -20,7 +21,7 @@ export type CommonFieldsRankingFragment = {
   sessionKeys: string;
 
   // tabs
-  nominations: string;
+  nominations: Nominator[];
   eraPointsHistory: EraPointsHistory;
 };
 

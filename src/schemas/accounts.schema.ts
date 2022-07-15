@@ -97,7 +97,7 @@ export const GET_ACCOUNT_BY_PK = gql`
   }
 `;
 
-export type ListAccounts = {
+export type ListAccounts = TotalOfItems & {
   account: {
     address: string;
     identity: Record<string, string>;
@@ -107,7 +107,7 @@ export type ListAccounts = {
     nonce: number;
     roles: Record<Roles, boolean | string>;
   }[];
-} & TotalOfItems;
+};
 
 export const LIST_ACCOUNTS = gql`
   query ListAccounts(
@@ -184,3 +184,65 @@ query GetExtrinsicCounts ($accountId: String) {
   }
 }
 `
+export type Nominator = {
+  account_id: string;
+  stake: string;
+  share: string;
+}
+
+export type ValidatorStats = {
+  era: number;
+  stashAddress: string;
+  rewardsAddress: string;
+  commission: number;
+  selfStake: number;
+  otherStake: number;
+  totalStake: number;
+  nominators: Array<Nominator>;
+  sessionKeys: string | null;
+  cmixId: string | null;
+  location: string | null;
+  points: number | null;
+  relativePerformance: number | null;
+  reward: number | null;
+}
+
+const VALIDATOR_STATS_FRAGMENT = gql`
+  fragment validatorStatsFragment on validator_stats {
+    cmixId: cmix_id
+    commission
+    era
+    location
+    nominators
+    otherStake: other_stake
+    points
+    relativePerformance: relative_performance
+    reward
+    rewardsAddress: rewards_address
+    selfStake: self_stake
+    sessionKeys: session_keys
+    stashAddress: stash_address
+    timestamp
+    totalStake: total_stake
+  }
+`;
+
+export type GetValidatorStats = {
+  aggregates: { aggregate: { count: number } }
+  stats: ValidatorStats[]
+}
+
+export const GET_VALIDATOR_STATS = gql`
+  ${VALIDATOR_STATS_FRAGMENT}
+  query GetValidatorStatsCount ($address: String!) {
+    aggregates: validator_stats_aggregate(where: { stash_address: { _eq: $address }}) {
+      aggregate {
+        count
+      }
+    }
+
+    stats: validator_stats(where: { stash_address: { _eq: $address } }, order_by: { era: desc }) {
+      ...validatorStatsFragment
+    }
+  }
+`;
