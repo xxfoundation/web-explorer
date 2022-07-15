@@ -1,7 +1,7 @@
-import { Divider, Hidden, Grid, Typography } from '@mui/material';
+import { Divider, Hidden, Grid } from '@mui/material';
 import React, { FC, Fragment, useMemo } from 'react';
 import Address from '../../components/Hash/XXNetworkAddress';
-import Hash from '../../components/Hash';
+import Hash, { Props as HashProps } from '../../components/Hash';
 import CmixAddress from '../../components/Hash/CmixAddress';
 import FormatBalance from '../../components/FormatBalance';
 import {
@@ -48,13 +48,20 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
     return `${parsedLocation.city}, ${parsedLocation.country}`;
   }, [ranking.location]);
   const sessionEntries = useMemo(() => JSON.parse(ranking.sessionKeys), [ranking.sessionKeys]);
+  
+  const addressProps: Partial<HashProps> = {
+    sx: { fontSize: 14, fontWeight: 400 },
+    offset: { xs: 6, sm: 12 },
+    truncated: 'mdDown'
+  };
+
   return (
     <SummaryContainer>
       <SummaryEntry>
         <SummaryHeader>Stash</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.stashAddress}>
-            <Address truncated='lgDown' name={name} value={ranking.stashAddress} />
+            <Address {...addressProps} name={name} value={ranking.stashAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -62,7 +69,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Controller</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.controllerAddress}>
-            <Address truncated='lgDown' value={ranking.controllerAddress} />
+            <Address {...addressProps} value={ranking.controllerAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -70,7 +77,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Reward</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.rewardsAddress}>
-            <Address truncated='lgDown' value={ranking.rewardsAddress} />
+            <Address  {...addressProps} value={ranking.rewardsAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -78,50 +85,44 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
         <SummaryHeader>Cmix ID</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.cmixId}>
-            <CmixAddress truncated='mdDown' value={ranking.cmixId} />
+            <CmixAddress {...addressProps} value={ranking.cmixId} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Location</SummaryHeader>
         <SummaryValue>
-          <Typography>{location}</Typography>
+          {location}
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Own Stake</SummaryHeader>
         <SummaryValue>
-          <Typography>
-            <FormatBalance value={ranking.selfStake.toString()} />
-          </Typography>
+          <FormatBalance value={ranking.selfStake.toString()} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Other Stake</SummaryHeader>
         <SummaryValue>
-          <Typography>
-            <FormatBalance value={ranking.otherStake.toString()} />
-          </Typography>
+          <FormatBalance value={ranking.otherStake.toString()} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Total Stake</SummaryHeader>
         <SummaryValue>
-          <Typography>
-            <FormatBalance value={ranking.totalStake.toString()} />
-          </Typography>
+          <FormatBalance value={ranking.totalStake.toString()} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Nominators</SummaryHeader>
         <SummaryValue>
-          <Typography>{ranking.nominators}</Typography>
+          {ranking.nominators}
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Commission</SummaryHeader>
         <SummaryValue>
-          <Typography>{ranking.commission}</Typography>
+          {ranking.commission}
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>

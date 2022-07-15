@@ -1,7 +1,19 @@
-import { TableContainer } from '@mui/material';
+import { Table as MuiTable, TableContainer } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+const paddinglessCells = {
+  '& td:first-child, & th:first-child': {
+    paddingLeft: 0
+  },
+  '& td:last-child, & th:first-child': {
+    paddingRight: 0
+  },
+};
+
+export const Table = styled(MuiTable)(paddinglessCells);
+
 export const TableStyled = styled(TableContainer)(({ theme }) => ({
+  ...paddinglessCells,
   padding: 0,
   margin: 0,
   [theme.breakpoints.down('sm')]: {

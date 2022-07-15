@@ -1,16 +1,21 @@
+import type { Block, ListBlocks } from './types';
+
 import { useSubscription } from '@apollo/client';
-import { Box, Grid, Typography } from '@mui/material';
+import { TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material';
 import React, { FC } from 'react';
+
 import useNewnessTracker, { WithNew } from '../../hooks/useNewnessTracker';
 import { LISTEN_FOR_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
 import BlockStatusIcon from '../block/BlockStatusIcon';
 import DefaultTile from '../DefaultTile';
 import Link from '../Link';
+import SkeletonRows from '../Tables/SkeletonRows';
+import { Table } from '../Tables/TableContainer.styled';
 import TimeAgo from '../TimeAgo';
-import { ListSkeleton } from './ListSkeleton';
-import type { Block, ListBlocks } from './types';
+import Error from '../Error';
+import { BorderlessCell, Header } from './LatestList.styled';
 
-const PAGE_LIMIT = 8;
+const PAGE_LIMIT = 10;
 
 const BlockRow: FC<WithNew<Block>> = ({
   finalized,
@@ -19,58 +24,69 @@ const BlockRow: FC<WithNew<Block>> = ({
   totalEvents,
   totalExtrinsics
 }) => (
-  <Box sx={{ mb: 4 }}>
-    <Grid container>
-      <Grid item xs>
-        <Link to={`/blocks/${number}`} underline='hover' variant='body2'>
-          {number}
-        </Link>
-      </Grid>
-      <Grid item xs='auto'>
-        <BlockStatusIcon status={finalized ? 'successful' : 'pending'} />
-      </Grid>
-    </Grid>
-    <Grid container sx={{ mt: 1 }}>
-      <Grid item xs>
+  <>
+    <TableRow>
+      <TableCell colSpan={4}>
+        <Header>
+          Block&nbsp;
+          <Link to={`/blocks/${number}`} underline='hover' variant='body2'>
+            #{number}
+          </Link>
+        </Header>
+      </TableCell>
+    </TableRow>
+    <TableRow>
+      <BorderlessCell>
         <Link to={'/extrinsics'} underline='hover' variant='body3'>
           {totalExtrinsics} extrinsics
         </Link>{' '}
-        <Typography variant='body3' component='span'>
-          |
-        </Typography>{' '}
+      </BorderlessCell>
+      <BorderlessCell>
         <Link to={'/events'} underline='hover' variant='body3'>
           {totalEvents} events
         </Link>
-      </Grid>
-      <Grid item xs='auto'>
-        <Typography variant='body2'>
+      </BorderlessCell>
+      <BorderlessCell>
+        <BlockStatusIcon status={finalized ? 'successful' : 'pending'} />
+      </BorderlessCell>
+      <BorderlessCell>
+        <Typography variant='body3' sx={{ whiteSpace: 'nowrap' }}>
           <TimeAgo date={timestamp} />
         </Typography>
-      </Grid>
-    </Grid>
-  </Box>
+      </BorderlessCell>
+    </TableRow>
+    <TableRow>
+      <BorderlessCell colSpan={4} />
+    </TableRow>
+  </>
 );
 
 const LatestBlocksList = () => {
-  const { data, loading } = useSubscription<ListBlocks>(LISTEN_FOR_BLOCKS_ORDERED, {
+  const { data, error, loading } = useSubscription<ListBlocks>(LISTEN_FOR_BLOCKS_ORDERED, {
     variables: { limit: PAGE_LIMIT }
   });
 
   const tracked = useNewnessTracker(data?.blocks, 'hash');
 
   return (
-    <DefaultTile
-      header='Blocks'
-      hasDivider={true}
-      linkName={'SEE ALL'}
-      linkAddress={'/blocks'}
-      height={500}
-    >
-      {loading ? (
-        <ListSkeleton number={PAGE_LIMIT} />
-      ) : (
-        tracked?.map((block) => <BlockRow {...block} key={block.hash} />)
-      )}
+    <DefaultTile header={'Blocks'} linkName={'SEE ALL'} linkAddress={'/blocks'} height={500}>
+      <TableContainer>
+        <Table size={!loading ? 'small' : undefined}>
+          <TableBody>
+            {loading && <SkeletonRows rows={10} columns={4} />}
+            {error && (
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Error />
+                </TableCell>
+              </TableRow>
+            )}
+            {tracked?.map((block) => (
+              <BlockRow {...block} key={block.number} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </DefaultTile>
   );
 };

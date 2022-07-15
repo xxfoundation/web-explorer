@@ -6,20 +6,23 @@ import Tag from '../../../components/Tags/Tag';
 import TimeAgoComponent from '../../../components/TimeAgo';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
-const Summary: FC<{ createdDate: number; nonce: number; roles: string[] }> = ({
-  createdDate,
-  nonce,
-  roles
-}) => {
-  const rolesTags = useMemo(() => {
-    return roles.map((role, index) => (
+type Props = {
+  createdDate: number;
+  nonce: number;
+  roles: string[]
+};
+
+const Summary: FC<Props> = ({ createdDate, nonce, roles }) => {
+  const rolesTags = useMemo(() => roles.map((role, index) => (
       <Tag key={role} filled sx={{ marginLeft: index !== 0 ? '8px' : '0' }}>
         <Typography fontSize={'12px'} fontWeight={400}>
           {role}
         </Typography>
       </Tag>
-    ));
-  }, [roles]);
+    )),
+    [roles]
+  );
+
   return (
     <PaperStyled>
       <InfoCardRow sx={{ paddingY: '4px' }}>

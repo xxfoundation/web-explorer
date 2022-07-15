@@ -3,7 +3,7 @@ import React, { FC, useMemo } from 'react';
 import { BaseLineCellsWrapper, BaselineTable } from '.';
 import genSkeletons from '../genSkeletons';
 
-export const TableSkeleton: FC<{ rows: number; cells: number; footer?: boolean }> = ({
+export const TableSkeleton: FC<{ rows: number; cells: number; footer?: boolean, header?: boolean }> = ({
   cells,
   footer,
   rows

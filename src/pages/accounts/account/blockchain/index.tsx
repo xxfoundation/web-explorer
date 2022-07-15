@@ -1,6 +1,9 @@
+import type { AddressFilters } from '../../../../components/Tables/filters/AddressFilter';
+
 import { useQuery } from '@apollo/client';
-import { Typography, Skeleton } from '@mui/material';
-import React, { FC, useMemo } from 'react';
+import { Box, Typography, Skeleton } from '@mui/material';
+import React, { FC, useMemo, useState } from 'react';
+
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import ExtrinsicsTable from '../../../../components/block/ExtrinsicsTable';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
@@ -16,14 +19,17 @@ import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema'
 import TransferTable from '../../../transfers/TransfersTable';
 import ValidatorStats from '../staking/ValidatorStatsList';
 import NominatorsTable from '../../../producer/NominatorsTable';
+import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
 import { GetBlocksByBP, GET_BLOCKS_BY_BP } from '../../../../schemas/blocks.schema';
 
 type Props = {
   account: Account;
   ranking: CommonFieldsRankingFragment | undefined;
-};
+}
+
 
 const BlockchainCard: FC<Props> = ({ account, ranking }) => {
+  const [filters, setFilters] = useState<AddressFilters>({});
   const { data, loading } = useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
     variables: { accountId: account.id }
   });
@@ -42,6 +48,7 @@ const BlockchainCard: FC<Props> = ({ account, ranking }) => {
     const transferWhereClause = {
       _or: [{ destination: { _eq: account.id } }, { source: { _eq: account.id } }]
     };
+
     const where = {
       signer: {
         _eq: account.id
@@ -76,7 +83,16 @@ const BlockchainCard: FC<Props> = ({ account, ranking }) => {
                 count={transferCount === undefined ? '' : transferCount}
               />
             ),
-            content: <TransferTable where={transferWhereClause} />
+            content: <>
+              <Box sx={{ textAlign: 'right', mt: -4.5 }}>
+                <AddressFilter
+                  label={'Filters '}
+                  address={account.id}
+                  value={filters}
+                  onChange={setFilters} />
+              </Box>
+              <TransferTable filters={filters} where={transferWhereClause} />
+            </>
           }
         ];
         
@@ -97,7 +113,7 @@ const BlockchainCard: FC<Props> = ({ account, ranking }) => {
     }
 
     return tabs;
-  }, [account.id, account.roles.validator, loading, extrinsicCount, transferCount, ranking, nominators, statsCount, blocksProducedQuery.data?.blocks, blocksProducedQuery.error, validatorStatsQuery.error, validatorStatsQuery.data?.stats]);
+  }, [account.id, account.roles.validator, loading, extrinsicCount, transferCount, filters, ranking, nominators, statsCount, blocksProducedQuery.data?.blocks, blocksProducedQuery.error, validatorStatsQuery.error, validatorStatsQuery.data?.stats]);
 
   return (
     <PaperStyled>

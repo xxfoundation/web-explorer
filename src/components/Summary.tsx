@@ -17,6 +17,7 @@ const PaperStyled = styled(Paper)({
 const TableStyled = styled(Table)(({ theme }) => ({
   tableLayout: 'fixed',
   borderCollapse: 'collapse',
+  
   '& tr:first-child td': {
     [theme.breakpoints.up('md')]: {
       paddingTop: '4rem'
@@ -47,13 +48,18 @@ export { TableRow as SummaryEntry } from '@mui/material';
 
 export const SummaryValue = styled(MuiCell)(({ theme }) => ({
   ...theme.typography.body1,
+  paddingTop: '0.75rem',
+  paddingBottom: '0.75rem',
+  fontSize: 14,
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.grey[500],
   [theme.breakpoints.up('sm')]: {
-    paddingLeft: '2rem',
-    paddingRight: '2rem'
+    paddingLeft: '1.5rem',
+    paddingRight: '1.5rem'
   },
   [theme.breakpoints.up('md')]: {
-    paddingLeft: '4rem',
-    paddingRight: '4rem'
+    paddingLeft: '3rem',
+    paddingRight: '3rem'
   },
   border: 'none',
   fontWeight: 400
@@ -62,7 +68,7 @@ export const SummaryValue = styled(MuiCell)(({ theme }) => ({
 export const SummaryHeader = styled(SummaryValue)(({ theme }) => ({
   width: '6rem',
   color: theme.palette.grey[700],
-  fontWeight: 500,
+  fontWeight: 700,
   backgroundColor: theme.palette.grey[100],
   borderRight: `1px solid  ${theme.palette.grey[200]}`,
   textTransform: 'uppercase'
