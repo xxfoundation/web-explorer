@@ -1,5 +1,5 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
-import { useSubscription } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
 import { BN } from '@polkadot/util';
 import { camelCase } from 'lodash';
@@ -50,7 +50,7 @@ const processMetrics = (data?: Metric[]) =>
 
 const ChainInfo = () => {
   const metricsSubscription = useSubscription<EraMetrics>(LISTEN_FOR_ERA_METRICS);
-  const economicsSubscription = useSubscription<EconomicsSubscription>(LISTEN_FOR_ECONOMICS);
+  const economicsQuery = useQuery<EconomicsSubscription>(LISTEN_FOR_ECONOMICS);
   const data = useMemo(
     () => processMetrics(metricsSubscription.data?.metrics),
     [metricsSubscription.data?.metrics]
@@ -60,15 +60,16 @@ const ChainInfo = () => {
     accounts,
     activeValidatorCount,
     blocks,
-    currentEra,
+    // currentEra,
     nominatorCount,
     transfers,
     validatorSet
   } = data;
 
-  const { inflationRate, totalIssuance } = economicsSubscription.data?.economics[0] ?? {};
+  const { activeEra, inflationRate, totalIssuance } = economicsQuery.data?.economics[0] ?? {};
+  const currEra = activeEra ? activeEra + 1 : '';
 
-  if (metricsSubscription.error || economicsSubscription.error) {
+  if (metricsSubscription.error || economicsQuery.error) {
     return <Error type='data-unavailable' />;
   }
 
@@ -79,7 +80,7 @@ const ChainInfo = () => {
       </Typography>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
         <ChainInfoCard title='Finalized Blocks' value={blocks} path='/blocks' />
-        <ChainInfoCard title='Active Era' value={currentEra} />
+        <ChainInfoCard title='Active Era' value={currEra} />
         <ChainInfoCard title='Transfers' value={transfers} path='/transfers' />
         <ChainInfoCard title='Account Holders' value={accounts} path='/accounts' />
         <ChainInfoCard

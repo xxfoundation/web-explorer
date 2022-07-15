@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import BarChart from '../../components/charts/BarChart/BarChart';
@@ -20,7 +20,7 @@ const HistoryChart: FC = () => {
       where: { timestamp: { _gte: intervalToTimestamp(interval) } }
     };
   }, [interval]);
-  const { data, loading } = useSubscription<Response>(LISTEN_FOR_EXTRINSICS_TIMESTAMPS, {
+  const { data, loading } = useQuery<Response>(LISTEN_FOR_EXTRINSICS_TIMESTAMPS, {
     variables
   });
   const timestamps = useMemo(

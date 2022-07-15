@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import React, { useMemo } from 'react';
 import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
@@ -9,7 +9,7 @@ import Loader from './Loader';
 const NUM_LAST_ERAS = 60;
 
 const NewAccountsChart = () => {
-  const { data, loading } = useSubscription<NewAccounts>(LISTEN_FOR_NEW_ACCOUNTS);
+  const { data, loading } = useQuery<NewAccounts>(LISTEN_FOR_NEW_ACCOUNTS);
   const chartData = useMemo(() => {
     let points: DataPoint[] = [];
     let auxEra = 0;

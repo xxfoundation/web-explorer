@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { Economics } from '../../schemas/economics.schema';
 import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types';
 
-import { useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import React, { useRef, useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Box, Grid, Stack, Typography } from '@mui/material';
@@ -191,7 +191,7 @@ const extractChartData = (economics?: Economics) => {
 };
 
 const TotalIssuanceDonutChart = () => {
-  const subscription = useSubscription<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
+  const subscription = useQuery<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
   const economics = subscription.data?.economics[0];
 
   const chartRef = useRef<ChartJSOrUndefined<'doughnut', Data[]>>(null);
