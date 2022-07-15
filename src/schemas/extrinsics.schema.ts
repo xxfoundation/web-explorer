@@ -121,8 +121,8 @@ export const GET_EXTRINSIC_WHERE = gql`
   }
 `;
 
-export const LISTEN_FOR_EXTRINSICS_TIMESTAMPS = gql`
-  subscription ListenForExtrinsicsTimestamps(
+export const GET_EXTRINSICS_TIMESTAMPS = gql`
+  query ListenForExtrinsicsTimestamps(
     $orderBy: [extrinsic_order_by!]
     $where: extrinsic_bool_exp
   ) {

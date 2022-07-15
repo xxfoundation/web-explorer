@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import React, { useMemo } from 'react';
 import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
@@ -12,10 +12,12 @@ import Loader from './Loader';
 const NUM_LAST_ERAS = 60;
 
 const TransactionsChart = () => {
-  const { data, loading } = useSubscription<ListenForEraTransactions>(LISTEN_FOR_ERA_TRANSACTIONS);
+  const { data, loading } = useQuery<ListenForEraTransactions>(LISTEN_FOR_ERA_TRANSACTIONS);
+  console.warn(data);
   const chartData: DataPoint[] = useMemo(
     () =>
       (data?.eraTransactions || [])
+        .slice()
         .sort((a, b) => a.era - b.era)
         .map((item) => [item.era, item.transactions], [data?.eraTransactions])
         .slice(-NUM_LAST_ERAS) as DataPoint[],

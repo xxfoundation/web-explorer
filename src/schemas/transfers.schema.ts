@@ -127,7 +127,7 @@ export type ListenForEraTransactions = {
 };
 
 export const LISTEN_FOR_ERA_TRANSACTIONS = gql`
-  subscription ListenForEraTransactions {
+  query ListenForEraTransactions {
     eraTransactions: era_transactions {
       era
       transactions
@@ -135,8 +135,8 @@ export const LISTEN_FOR_ERA_TRANSACTIONS = gql`
   }
 `;
 
-export const LISTEN_FOR_TRANSFERS_TIMESTAMPS = gql`
-  subscription ListenForTransfersTimestamps(
+export const GET_TRANSFERS_TIMESTAMPS = gql`
+  query ListenForTransfersTimestamps(
     $orderBy: [transfer_order_by!]
     $where: transfer_bool_exp
   ) {
