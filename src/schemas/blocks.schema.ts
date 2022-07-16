@@ -1,6 +1,12 @@
 import { gql } from '@apollo/client';
 import { TotalOfItems } from './types';
 
+export type AuthorName = {
+  identity: {
+    display: string;
+  }
+}
+
 export type Block = {
   numberFinalized: number;
   number: number;
@@ -11,7 +17,7 @@ export type Block = {
   stateRoot: string;
   extrinsicsRoot: string;
   author: string;
-  authorName: string;
+  authorName: AuthorName[];
   timestamp: number;
   specVersion: number;
   totalEvents: number;
@@ -28,11 +34,15 @@ export const BLOCK_KEYS_FRAGMENT = gql`
     stateRoot: state_root
     extrinsicsRoot: extrinsics_root
     author: block_author
-    authorName: block_author_name
     timestamp
     specVersion: spec_version
     totalEvents: total_events
     totalExtrinsics: total_extrinsics
+    authorName: account {
+      identity {
+        display: display
+      }
+    }
   }
 `;
 

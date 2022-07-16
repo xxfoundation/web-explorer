@@ -9,12 +9,10 @@ const identityFields: IdentityFieldsType[] = [
   'email',
   'judgements',
   'legal',
-  'other',
-  'parent',
   'twitter',
   'web',
   'blurb',
-  'riotName'
+  'riot'
 ];
 
 const baseMessage = (value: string) => `Validator ${value} information on his identity`;

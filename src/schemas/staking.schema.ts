@@ -1,27 +1,31 @@
 import type { EraPointsHistory } from '../pages/producer/types';
 import { gql } from '@apollo/client';
 
+export type Nominators = {
+  accountId: string;
+  stake: string;
+  share: string;
+}
+
 export type CommonFieldsRankingFragment = {
   era: number;
-  identity: string;
   activeEras: number;
 
   // summary  
   stashAddress: string;
-  controllerAddress: string;
+  // controllerAddress: string;
   rewardsAddress: string;
   cmixId: string;
   location: string;
   selfStake: number;
   otherStake: number;
   totalStake: number;
-  nominators: number;
   commission: string;
   sessionKeys: string;
 
   // tabs
-  nominations: string;
-  eraPointsHistory: EraPointsHistory;
+  nominations: Nominators[];
+  points: number;
 };
 
 export type GetAccountRanking = {
@@ -30,34 +34,25 @@ export type GetAccountRanking = {
 
 export const GET_ACCOUNT_RANKING = gql`
   query GetAccountRanking($where: ranking_bool_exp!) {
-    ranking: ranking(where: $where) {
+    ranking: validator_stats(where: $where) {
       era
-      identity
-      activeEras: active_eras
+      activeEras: era
       
       stashAddress: stash_address
-      controllerAddress: controller_address
       rewardsAddress: rewards_address
       cmixId: cmix_id
       location    
       selfStake: self_stake
       otherStake: other_stake
       totalStake: total_stake
-      nominators
       commission
       sessionKeys: session_keys
 
-      nominations
-      eraPointsHistory: era_points_history
+      nominators
+      points
     }
   }
 `;
-
-export type Nominators = {
-  accountId: string;
-  stake: string;
-  share: string;
-}
 
 export type ValidatorAccount = {
   addressId: string;

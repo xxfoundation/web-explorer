@@ -16,14 +16,19 @@ import Summary from '../producer/Summary';
 
 import { useToggle } from '../../hooks';
 import BalanceHistory from './account/blockchain/BalanceHistoryChart';
-import { GetTransferByAccountId, GET_TRANSFERS_BY_ACCOUNT_ID } from '../../schemas/transfers.schema';
+import {
+  GetTransferByAccountId,
+  GET_TRANSFERS_BY_ACCOUNT_ID
+} from '../../schemas/transfers.schema';
 
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
   const { data, loading } = useFetchRankingAccountInfo(accountId);
-  const transfersQuery = useQuery<GetTransferByAccountId>(GET_TRANSFERS_BY_ACCOUNT_ID, { variables: { accountId } })
+  const transfersQuery = useQuery<GetTransferByAccountId>(GET_TRANSFERS_BY_ACCOUNT_ID, {
+    variables: { accountId }
+  });
   const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
-  const [validatorInfoExpanded, { toggle: toggleValidatorInfo}] = useToggle(false);
+  const [validatorInfoExpanded, { toggle: toggleValidatorInfo }] = useToggle(false);
 
   if (loading || transfersQuery.loading) {
     return (
@@ -48,15 +53,12 @@ const AccountId: FC = ({}) => {
   if (!data?.account) return <NotFound message='Account Not Found' />;
 
   const ranking = data?.ranking && data?.ranking[0];
-  const identity = ranking?.identity && JSON.parse(ranking?.identity);
 
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      {data.account.identity.display && (
-        <Typography variant='h1'>
-          {data.account.identity.display}
-        </Typography>
+      {data.account.identity?.display && (
+        <Typography variant='h1'>{data.account.identity?.display}</Typography>
       )}
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
@@ -64,11 +66,12 @@ const AccountId: FC = ({}) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
-            <Balances account={data.account}  />
+            <Balances account={data.account} />
             <RoundedButton
-              style={{ position: 'absolute', right: '2rem', bottom: '1.5rem'}}
+              style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
               variant='contained'
-              onClick={toggleHistory}>
+              onClick={toggleHistory}
+            >
               {historyExpanded ? 'Hide history' : 'Show history'}
             </RoundedButton>
           </PaperWrapStyled>
@@ -78,9 +81,10 @@ const AccountId: FC = ({}) => {
             <Info account={data.account} />
             {data.account.roles.validator && (
               <RoundedButton
-                style={{ position: 'absolute', right: '2rem', bottom: '1.5rem'}}
+                style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
                 variant='contained'
-                onClick={toggleValidatorInfo}>
+                onClick={toggleValidatorInfo}
+              >
                 {validatorInfoExpanded ? 'Hide validator info' : 'Show validator info'}
               </RoundedButton>
             )}
@@ -95,7 +99,7 @@ const AccountId: FC = ({}) => {
         )}
         {ranking && validatorInfoExpanded && (
           <Grid item xs={12}>
-            <Summary ranking={ranking} name={identity.display} />
+            <Summary ranking={ranking} name={data.account.identity?.display} />
           </Grid>
         )}
         <Grid item xs={12}>

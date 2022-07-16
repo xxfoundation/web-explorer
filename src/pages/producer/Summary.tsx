@@ -40,7 +40,10 @@ const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ en
   );
 };
 
-const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ name, ranking }) => {
+const Summary: FC<{ ranking: CommonFieldsRankingFragment; name?: string }> = ({
+  name,
+  ranking
+}) => {
   const location = useMemo(() => {
     const parsedLocation: { city: string; country: string; geoBin: string } = JSON.parse(
       ranking.location
@@ -48,7 +51,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
     return `${parsedLocation.city}, ${parsedLocation.country}`;
   }, [ranking.location]);
   const sessionEntries = useMemo(() => JSON.parse(ranking.sessionKeys), [ranking.sessionKeys]);
-  
+
   const addressProps: Partial<HashProps> = {
     sx: { fontSize: 14, fontWeight: 400 },
     offset: { xs: 6, sm: 12 },
@@ -65,19 +68,19 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
-      <SummaryEntry>
+      {/* <SummaryEntry>
         <SummaryHeader>Controller</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.controllerAddress}>
             <Address {...addressProps} value={ranking.controllerAddress} />
           </WithCopy>
         </SummaryValue>
-      </SummaryEntry>
+      </SummaryEntry> */}
       <SummaryEntry>
         <SummaryHeader>Reward</SummaryHeader>
         <SummaryValue>
           <WithCopy value={ranking.rewardsAddress}>
-            <Address  {...addressProps} value={ranking.rewardsAddress} />
+            <Address {...addressProps} value={ranking.rewardsAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
@@ -91,9 +94,7 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Location</SummaryHeader>
-        <SummaryValue>
-          {location}
-        </SummaryValue>
+        <SummaryValue>{location}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Own Stake</SummaryHeader>
@@ -115,15 +116,11 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Nominators</SummaryHeader>
-        <SummaryValue>
-          {ranking.nominators}
-        </SummaryValue>
+        <SummaryValue>{ranking.nominations.length}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Commission</SummaryHeader>
-        <SummaryValue>
-          {ranking.commission}
-        </SummaryValue>
+        <SummaryValue>{ranking.commission}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Session Key</SummaryHeader>

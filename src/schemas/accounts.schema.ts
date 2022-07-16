@@ -10,15 +10,37 @@ export type Identity = {
   email?: string;
   judgements?: Judgements[];
   legal?: string;
-  other?: unknown;
-  parent?: string;
+  riot?: string;
+  blurb?: string;
   twitter?: string;
   web?: string;
-  blurb?: string;
-
-  // FIXME madeup field
-  riotName?: string;
+  verified?: boolean;
 };
+
+export const GET_FULL_IDENTITY = gql`
+  query GetFullIdentity($where: identity_bool_exp) {
+    identity(where: $where) {
+      display
+      display_parent
+      email
+      judgements
+      legal
+      riot
+      blurb
+      twitter
+      web
+      verified
+    }
+  }
+`
+
+export const GET_DISPLAY_IDENTITY = gql`
+  query GetDisplayIdentity($where: identity_bool_exp) {
+    identity(where: where) {
+      display
+    }
+  }
+`
 
 type Judgements =
   | 'Unknown'
@@ -33,9 +55,6 @@ export type Account = {
   whenCreated: number;
   controllerAddress: string;
   blockHeight: number;
-  identity: Identity; // TODO change database structure to a json type
-  identityDisplay: string;
-  identityDisplayParent: string;
   nonce: number;
   timestamp: number;
 
@@ -49,6 +68,7 @@ export type Account = {
   unbondingBalance: number;
   vestingBalance: number;
 
+  identity: Identity;
   roles: Record<Roles, boolean>;
 };
 
@@ -63,9 +83,6 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
     controllerAddress: controller_address
     whenCreated: when_created
     blockHeight: block_height
-    identity
-    identityDisplay: identity_display
-    identityDisplayParent: identity_display_parent
     nonce
     timestamp
     roles: role {
@@ -74,6 +91,17 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
       techcommit
       validator
       special
+    }
+    identity {
+      blurb
+      display
+      display_parent
+      email
+      legal
+      riot
+      twitter
+      web
+      verified
     }
 
     lockedBalance: locked_balance
@@ -100,12 +128,12 @@ export const GET_ACCOUNT_BY_PK = gql`
 export type ListAccounts = {
   account: {
     address: string;
-    identity: Record<string, string>;
     timestamp: number;
     totalBalance: number;
     lockedBalance: number;
     nonce: number;
     roles: Record<Roles, boolean | string>;
+    identity: Identity;
   }[];
 } & TotalOfItems;
 
@@ -121,7 +149,6 @@ export const LIST_ACCOUNTS = gql`
       timestamp
       totalBalance: total_balance
       lockedBalance: locked_balance
-      identity
       nonce
       roles: role {
         council
@@ -129,6 +156,9 @@ export const LIST_ACCOUNTS = gql`
         techcommit
         validator
         special
+      }
+      identity: identity {
+        display
       }
     }
     agg: account_aggregate(where: $where) {

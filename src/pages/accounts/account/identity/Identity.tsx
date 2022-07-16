@@ -29,27 +29,28 @@ const Identity: FC<Props> = ({ account }) => {
   const theme = useTheme();
   const { blurb } = account.identity;
   const isValidator = account.roles.validator;
-  const hasRiotOrWeb = account.identity.riotName ||  account.identity.web;
+  const hasRiotOrWeb = account.identity.riot || account.identity.web;
   const avatarSx = isValidator ? { width: 125, height: 125 } : { width: 30, height: 30 };
 
   return (
     <Grid spacing={3} container>
       {isValidator && (
         <Grid item md={2} sx={{ mb: 2, pr: 2 }}>
-          <Avatar
-            src=''
-            alt='avatar placeholder'
-            sx={avatarSx}
-          />
+          <Avatar src='' alt='avatar placeholder' sx={avatarSx} />
         </Grid>
-      )} 
+      )}
       <Grid item md={isValidator ? 10 : 12} xs={12}>
         <Grid item container md={12} alignItems={'end'}>
           <Grid item md={12}>
-            <Stack spacing={3} direction={{ sm: 'row', xs: 'column'}} sx={{ mb: 2 }} justifyContent='space-between'>
+            <Stack
+              spacing={3}
+              direction={{ sm: 'row', xs: 'column' }}
+              sx={{ mb: 2 }}
+              justifyContent='space-between'
+            >
               <Box>
                 {account.identity.legal && (
-                  <Typography variant='h2' sx={{ mb: 2 }} >
+                  <Typography variant='h2' sx={{ mb: 2 }}>
                     {account.identity.legal}
                   </Typography>
                 )}
@@ -60,21 +61,29 @@ const Identity: FC<Props> = ({ account }) => {
                     offset={{ sm: 16, xs: 8 }}
                     disableUrl
                     disableAvatar={isValidator}
-                    value={account.id} />
+                    value={account.id}
+                  />
                 </WithCopy>
-                {blurb &&  (
-                  <Typography sx={{ mt: 2 }} fontSize={'16px'} fontWeight={'400'} color={theme.palette.grey[500]} component={'p'}>
+                {blurb && (
+                  <Typography
+                    sx={{ mt: 2 }}
+                    fontSize={'16px'}
+                    fontWeight={'400'}
+                    color={theme.palette.grey[500]}
+                    component={'p'}
+                  >
                     {blurb}
                   </Typography>
                 )}
               </Box>
               <Box>
-                <Socials sx={{ mt: account.identity.legal ? 2 : 0.75 }} socials={account.identity} />
+                <Socials
+                  sx={{ mt: account.identity.legal ? 2 : 0.75 }}
+                  socials={account.identity}
+                />
               </Box>
             </Stack>
-            {(hasRiotOrWeb || isValidator) && (
-              <Divider sx={{ width: '100%', mt: 2 }} />
-            )}
+            {(hasRiotOrWeb || isValidator) && <Divider sx={{ width: '100%', mt: 2 }} />}
           </Grid>
         </Grid>
         <Grid item container md={12}>
@@ -86,12 +95,8 @@ const Identity: FC<Props> = ({ account }) => {
               </Grid>
             )}
             <Grid item md={4} sm={12} xs={12}>
-              {account.identity.riotName && (
-                <TextWithLabel label='riot' text={account.identity.riotName} />
-              )}
-              {account.identity.web && (
-                <TextWithLabel label='web' text={account.identity.web} />
-              )}
+              {account.identity.riot && <TextWithLabel label='riot' text={account.identity.riot} />}
+              {account.identity.web && <TextWithLabel label='web' text={account.identity.web} />}
             </Grid>
           </Grid>
         </Grid>

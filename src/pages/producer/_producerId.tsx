@@ -56,15 +56,14 @@ const BlockProducer = () => {
         {identity.display || <ResponsiveHash truncated='lgDown' value={ranking.stashAddress} />}
       </Typography>
       <Summary ranking={ranking} name={identity.display} />
-      <Box sx={{ mt: 2 }}>
+      {/* <Box sx={{ mt: 2 }}>
         <ProducerTabs
           producerId={ranking.stashAddress}
           eras={ranking.activeEras}
-          eraPointsHistory={ranking.eraPointsHistory}
-          nominators={ranking.nominators}
+          eraPointsHistory={ranking.points}
           nominations={ranking.nominations}
         />
-      </Box>
+      </Box> */}
     </Container>
   );
 };
