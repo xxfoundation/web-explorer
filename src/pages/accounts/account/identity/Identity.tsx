@@ -27,9 +27,8 @@ const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => 
 
 const Identity: FC<Props> = ({ account }) => {
   const theme = useTheme();
-  const { blurb } = account.identity;
   const isValidator = account.roles.validator;
-  const hasRiotOrWeb = account.identity.riot || account.identity.web;
+  const hasRiotOrWeb = account.identity?.riot || account.identity?.web;
   const avatarSx = isValidator ? { width: 125, height: 125 } : { width: 30, height: 30 };
 
   return (
@@ -49,9 +48,9 @@ const Identity: FC<Props> = ({ account }) => {
               justifyContent='space-between'
             >
               <Box>
-                {account.identity.legal && (
+                {account.identity?.legal && (
                   <Typography variant='h2' sx={{ mb: 2 }}>
-                    {account.identity.legal}
+                    {account.identity?.legal}
                   </Typography>
                 )}
                 <WithCopy value={account.id}>
@@ -64,7 +63,7 @@ const Identity: FC<Props> = ({ account }) => {
                     value={account.id}
                   />
                 </WithCopy>
-                {blurb && (
+                {account.identity?.blurb && (
                   <Typography
                     sx={{ mt: 2 }}
                     fontSize={'16px'}
@@ -72,13 +71,13 @@ const Identity: FC<Props> = ({ account }) => {
                     color={theme.palette.grey[500]}
                     component={'p'}
                   >
-                    {blurb}
+                    {account.identity?.blurb}
                   </Typography>
                 )}
               </Box>
               <Box>
                 <Socials
-                  sx={{ mt: account.identity.legal ? 2 : 0.75 }}
+                  sx={{ mt: account.identity?.legal ? 2 : 0.75 }}
                   socials={account.identity}
                 />
               </Box>
@@ -95,8 +94,10 @@ const Identity: FC<Props> = ({ account }) => {
               </Grid>
             )}
             <Grid item md={4} sm={12} xs={12}>
-              {account.identity.riot && <TextWithLabel label='riot' text={account.identity.riot} />}
-              {account.identity.web && <TextWithLabel label='web' text={account.identity.web} />}
+              {account.identity?.riot && (
+                <TextWithLabel label='riot' text={account.identity?.riot} />
+              )}
+              {account.identity?.web && <TextWithLabel label='web' text={account.identity?.web} />}
             </Grid>
           </Grid>
         </Grid>

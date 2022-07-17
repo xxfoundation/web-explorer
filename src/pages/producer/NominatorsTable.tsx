@@ -8,8 +8,8 @@ import { usePagination } from '../../hooks';
 
 const EraStake = (nominator: Nominator) => {
   return BaseLineCellsWrapper([
-    <XXNetworkAddress truncated='mdDown' value={nominator.accountId} />,
-    <FormatBalance value={nominator.stake.toString()} />,
+    <XXNetworkAddress truncated='mdDown' value={nominator.account_id} />,
+    <FormatBalance value={nominator.stake} />,
     `${nominator.share}%`
   ]);
 };

@@ -6,7 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { isHex } from '@polkadot/util';
 
 import { BlockNav } from '../../components/block/Block.styled';
-import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
+import BlockDetailedTabs from '../../components/block/BlockDetailedTabs';
 import BlockSummary from '../../components/block/BlockSummary';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BackAndForwardArrows from '../../components/buttons/BackAndForwardArrows';
@@ -20,7 +20,6 @@ import {
 import NotFound from '../NotFound';
 import Error from '../../components/Error';
 import Loading from '../../components/Loading';
-// import { GET_DISPLAY_IDENTITY, Identity } from '../../schemas/accounts.schema';
 
 const useArrowButtonsOptions = (number: number) => {
   const history = useHistory();
@@ -108,7 +107,7 @@ const Block = () => {
       <BlockSummaryHeader blockNumber={block.number} />
       <BlockSummary block={block} />
       <Box sx={{ mt: 2 }}>
-        <BlockDetailedEventsTabs blockNumber={block.number} loading={loading} />
+        <BlockDetailedTabs blockNumber={block.number} loading={loading} />
       </Box>
     </Container>
   );

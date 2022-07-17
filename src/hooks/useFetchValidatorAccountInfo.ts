@@ -9,16 +9,7 @@ const useFetchValidatorAccountInfo = (
     variables: { accountId }
   });
   const validatorStatsResult = useQuery<Omit<GetAccountByAddressType, 'account'>>(
-    GET_VALIDATOR_STATS,
-    {
-      variables: {
-        where: {
-          stash_address: {
-            _eq: accountId
-          }
-        }
-      }
-    }
+    GET_VALIDATOR_STATS, { variables: { accountId } }
   );
 
   if (accountResult.loading || validatorStatsResult.loading) {
@@ -29,7 +20,8 @@ const useFetchValidatorAccountInfo = (
     loading: false,
     data: {
       account: accountResult.data?.account,
-      validator: validatorStatsResult.data?.validator
+      aggregates: validatorStatsResult.data?.aggregates,
+      stats: validatorStatsResult.data?.stats
     }
   };
 };

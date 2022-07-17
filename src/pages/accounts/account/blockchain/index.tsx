@@ -22,10 +22,10 @@ import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.sch
 
 type Props = {
   account: Account;
-  validatorStats?: GetValidatorStats;
+  validator?: GetValidatorStats;
 };
 
-const BlockchainCard: FC<Props> = ({ account, validatorStats }) => {
+const BlockchainCard: FC<Props> = ({ account, validator }) => {
   const [filters, setFilters] = useState<AddressFilters>({});
   const { data, loading } = useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
     variables: { accountId: account.id }
@@ -40,12 +40,12 @@ const BlockchainCard: FC<Props> = ({ account, validatorStats }) => {
       }
     };
   }, [account.id]);
-  const blocksProducedQuery = useQuery<ProducedBlocks[]>(GET_BLOCKS_BY_BP, { variables });
+  const blocksProducedQuery = useQuery<ProducedBlocks>(GET_BLOCKS_BY_BP, { variables });
 
   const extrinsicCount = data?.extrinsicCount.aggregate.count;
   const transferCount = data?.transferCount.aggregate.count;
-  const statsCount = validatorStats?.aggregates.aggregate.count;
-  const nominators = validatorStats?.stats[0]?.nominators;
+  const statsCount = validator?.aggregates.aggregate.count;
+  const nominators = validator?.stats[0]?.nominators;
 
   const panels = useMemo(() => {
     const transferWhereClause = {
@@ -102,7 +102,7 @@ const BlockchainCard: FC<Props> = ({ account, validatorStats }) => {
           }
         ];
 
-    if (!loading && account.roles.validator && validatorStats !== undefined) {
+    if (!loading && account.roles.validator && validator !== undefined) {
       tabs.push({
         label: <TabText message='nominators' count={nominators?.length} />,
         content: <NominatorsTable nominators={nominators} />
@@ -111,9 +111,9 @@ const BlockchainCard: FC<Props> = ({ account, validatorStats }) => {
         label: <TabText message='Validator Stats' count={statsCount} />,
         content: (
           <ValidatorStatsTable
-            blocks={blocksProducedQuery.data}
+            producedBlocks={blocksProducedQuery.data}
             error={!!blocksProducedQuery.error}
-            stats={validatorStats?.stats}
+            stats={validator?.stats}
           />
         )
       });
@@ -131,7 +131,7 @@ const BlockchainCard: FC<Props> = ({ account, validatorStats }) => {
     statsCount,
     blocksProducedQuery.data,
     blocksProducedQuery.error,
-    validatorStats
+    validator
   ]);
 
   return (

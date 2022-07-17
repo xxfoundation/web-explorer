@@ -7,13 +7,18 @@ import ValidatorStatsTable from '../accounts/account/staking/ValidatorStatsTable
 import { ProducedBlocks } from '../../schemas/blocks.schema';
 
 type Props = {
-  blocks?: ProducedBlocks[];
+  producedBlocks?: ProducedBlocks;
   validatorStats?: ValidatorStats[];
   validatorStatsCount?: number;
   error: boolean;
 };
 
-const ProducerTabs: React.FC<Props> = ({ blocks, error, validatorStats, validatorStatsCount }) => {
+const ProducerTabs: React.FC<Props> = ({
+  error,
+  producedBlocks,
+  validatorStats,
+  validatorStatsCount
+}) => {
   const panels = useMemo(() => {
     return [
       {
@@ -27,10 +32,16 @@ const ProducerTabs: React.FC<Props> = ({ blocks, error, validatorStats, validato
       },
       {
         label: <TabText message='Validator Stats' count={validatorStatsCount} />,
-        content: <ValidatorStatsTable blocks={blocks} error={error} stats={validatorStats} />
+        content: (
+          <ValidatorStatsTable
+            producedBlocks={producedBlocks}
+            error={error}
+            stats={validatorStats}
+          />
+        )
       }
     ];
-  }, [validatorStatsCount, blocks, error, validatorStats]);
+  }, [validatorStatsCount, producedBlocks, error, validatorStats]);
   return (
     <PaperStyled>
       <TabsWithPanels panels={panels} tabsLabel='producers tables tabs' />

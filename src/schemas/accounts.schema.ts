@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { GetValidatorStats } from './staking.schema';
+import { ValidatorStats } from './staking.schema';
 import { TotalOfItems } from './types';
 
 /* ---------------------------- General Variables --------------------------- */
@@ -81,7 +81,8 @@ export type Account = {
 
 export type GetAccountByAddressType = {
   account: Account;
-  validator?: GetValidatorStats;
+  aggregates: { aggregate: { count: number } };
+  stats: ValidatorStats[];
 };
 
 export const ACCOUNT_BY_PK_FRAGMENT = gql`

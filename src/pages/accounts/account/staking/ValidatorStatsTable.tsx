@@ -36,14 +36,14 @@ const headers = [
 const BlockLink = ({ block }: { block?: number }) =>
   block ? <Link to={`/blocks/${block}`}>{block}</Link> : <Typography>N/A</Typography>;
 
-const ValidatorStatsRow: FC<{ stats: ValidatorStats; blocks?: ProducedBlocks[] }> = ({
-  blocks,
+const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBlocks }> = ({
+  producedBlocks,
   stats
 }) => {
   const [expanded, { toggle }] = useToggle();
   const blocksProduced = useMemo(
-    () => blocks?.filter((b) => b.currentEra === stats.era).map((b) => b.number),
-    [blocks, stats.era]
+    () => producedBlocks?.blocks.filter((b) => b.currentEra === stats.era).map((b) => b.number),
+    [producedBlocks, stats.era]
   );
 
   const endIcon = useMemo(
@@ -105,9 +105,9 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; blocks?: ProducedBlocks[] }
   );
 };
 
-type Props = { error: boolean; stats?: ValidatorStats[]; blocks?: ProducedBlocks[] };
+type Props = { error: boolean; stats?: ValidatorStats[]; producedBlocks?: ProducedBlocks };
 
-const ValidatorStatsTable: FC<Props> = ({ blocks, error, stats }) => {
+const ValidatorStatsTable: FC<Props> = ({ error, producedBlocks, stats }) => {
   const pagination = usePagination({ rowsPerPage: 10 });
   const { paginate, setCount } = pagination;
 
@@ -140,7 +140,7 @@ const ValidatorStatsTable: FC<Props> = ({ blocks, error, stats }) => {
             </TableRow>
           )}
           {paginated.map((s) => (
-            <ValidatorStatsRow key={s.era} stats={s} blocks={blocks} />
+            <ValidatorStatsRow key={s.era} stats={s} producedBlocks={producedBlocks} />
           ))}
         </TableBody>
       </Table>

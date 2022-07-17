@@ -1,6 +1,9 @@
 import { gql } from '@apollo/client';
 import { TotalOfItems } from './types';
 
+/* -------------------------------------------------------------------------- */
+/*                             Extrinsic Fragment                             */
+/* -------------------------------------------------------------------------- */
 const EXTRINSIC_FRAGMENT = gql`
   fragment extrinsicFragment on extrinsic {
     blockNumber: block_number
@@ -37,6 +40,9 @@ export type Extrinsic = {
   errorMsg: string;
 }
 
+/* -------------------------------------------------------------------------- */
+/*                         Search Bar > Find Extrinsic                        */
+/* -------------------------------------------------------------------------- */
 export type FindExtrinsicByHashType = {
   extrinsic?: [
     {
@@ -57,6 +63,9 @@ export const FIND_EXTRINSIC_BY_HASH = gql`
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                           Get Extrinsics of Block                          */
+/* -------------------------------------------------------------------------- */
 export const EXTRINSICS_OF_BLOCK = gql`
   query ListExtrinsicOfBlock(
     $orderBy: [extrinsic_order_by!]
@@ -82,7 +91,9 @@ export const EXTRINSICS_OF_BLOCK = gql`
   }
 `;
 
-
+/* -------------------------------------------------------------------------- */
+/*                              Extrinsics Table                              */
+/* -------------------------------------------------------------------------- */
 export type ListExtrinsics = {
   extrinsics: Extrinsic[];
 } & TotalOfItems;
@@ -107,7 +118,23 @@ export const LIST_EXTRINSICS = gql`
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                            Extrinsics Bar Chart                            */
+/* -------------------------------------------------------------------------- */
+export const GET_EXTRINSICS_TIMESTAMPS = gql`
+  query ListenForExtrinsicsTimestamps(
+    $orderBy: [extrinsic_order_by!]
+    $where: extrinsic_bool_exp
+  ) {
+    extrinsic(order_by: $orderBy, where: $where) {
+      timestamp
+    }
+  }
+`;
 
+/* -------------------------------------------------------------------------- */
+/*                          Get a Specific Extrinsic                          */
+/* -------------------------------------------------------------------------- */
 export type GetExtrinsicWhere = {
   extrinsic: Extrinsic[];
 };
@@ -121,37 +148,9 @@ export const GET_EXTRINSIC_WHERE = gql`
   }
 `;
 
-export const GET_EXTRINSICS_TIMESTAMPS = gql`
-  query ListenForExtrinsicsTimestamps(
-    $orderBy: [extrinsic_order_by!]
-    $where: extrinsic_bool_exp
-  ) {
-    extrinsic(order_by: $orderBy, where: $where) {
-      timestamp
-    }
-  }
-`;
-
-export type GetExtrinsicsBySigner = {
-  extrinsics: Extrinsic[];
-  count: { aggregate: { count: number } };
-};
-
-export const GET_EXTRINSICS_BY_SIGNER = gql`
-  ${EXTRINSIC_FRAGMENT}
-  query GetExtrinsicsBySigner($signer: String, $limit: Int) {
-    extrinsics: extrinsic(where: { signer: { _eq: $signer } }, limit: $limit, order_by: { extrinsic_index: asc }) {
-      ...extrinsicFragment
-    }
-  
-    count: extrinsic_aggregate(where: { signer: { _eq: $signer } }) {
-      aggregate {
-        count
-      }
-    }
-  }
-`;
-
+/* -------------------------------------------------------------------------- */
+/*                         Get available Module / Call                        */
+/* -------------------------------------------------------------------------- */
 export type GetAvailableExtrinsicActions = {
   modules: { module: string }[];
   calls: { call: string }[];

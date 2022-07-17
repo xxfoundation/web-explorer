@@ -41,12 +41,22 @@ const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ en
   );
 };
 
+const locationString = (geoBin: string, city: string, country: string) => {
+  let str = (geoBin && `[${geoBin}] `) || '';
+  str = str.concat(city && `${city}`, country && (city ? `, ${country}` : `${country}`));
+  return str;
+};
+
 const Summary: FC<{ info?: ValidatorStats }> = ({ info }) => {
   const location = useMemo(() => {
     const parsedLocation: { city: string; country: string; geoBin: string } = JSON.parse(
       info?.location || ''
     );
-    return `${parsedLocation.city}, ${parsedLocation.country}`;
+    const isEmpty = Object.entries(parsedLocation).every((x) => x.at(1) === null || x.at(1) === '');
+    console.warn(parsedLocation);
+    return !isEmpty
+      ? locationString(parsedLocation.geoBin, parsedLocation.city, parsedLocation.country)
+      : ' - ';
   }, [info?.location]);
   const sessionEntries = useMemo(() => JSON.parse(info?.sessionKeys || ''), [info?.sessionKeys]);
 

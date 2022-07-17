@@ -14,11 +14,8 @@ import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../schemas/blocks.schema';
 
 const BlockProducer = () => {
   const { producerId } = useParams<{ producerId: string }>();
-  console.warn(producerId);
   const validatorQuery = useQuery<GetValidatorStats>(GET_VALIDATOR_STATS, {
-    variables: {
-      where: { stash_address: { _eq: producerId } }
-    }
+    variables: { accountId: producerId }
   });
   const variables = useMemo(() => {
     return {
@@ -29,13 +26,13 @@ const BlockProducer = () => {
       }
     };
   }, [producerId]);
-  const producedBlocksQuery = useQuery<ProducedBlocks[]>(GET_BLOCKS_BY_BP, { variables });
+  const producedBlocksQuery = useQuery<ProducedBlocks>(GET_BLOCKS_BY_BP, { variables });
 
   const validatorStats = validatorQuery.data?.stats;
   const validatorStatsCount = validatorQuery.data?.aggregates.aggregate.count;
   const validatorInfo = validatorQuery.data?.stats && validatorQuery.data?.stats[0];
 
-  if (validatorQuery.loading && producedBlocksQuery.loading) {
+  if (validatorQuery.loading || producedBlocksQuery.loading) {
     return (
       <Container sx={{ my: 5 }}>
         <Skeleton />
@@ -55,7 +52,7 @@ const BlockProducer = () => {
     );
   }
 
-  if (!validatorStats || !validatorStats[0]?.stashAddress) {
+  if (!validatorQuery?.data) {
     return <NotFound message='Producer Not Found' />;
   }
 
@@ -71,7 +68,7 @@ const BlockProducer = () => {
       <Summary info={validatorInfo} />
       <Box sx={{ mt: 2 }}>
         <ProducerTabs
-          blocks={producedBlocksQuery.data}
+          producedBlocks={producedBlocksQuery.data}
           validatorStats={validatorStats}
           validatorStatsCount={validatorStatsCount}
           error={!!validatorQuery.error || !!producedBlocksQuery.error}

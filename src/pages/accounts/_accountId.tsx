@@ -52,7 +52,11 @@ const AccountId: FC = ({}) => {
 
   if (!data?.account) return <NotFound message='Account Not Found' />;
 
-  const validatorInfo = data?.validator?.stats && data?.validator.stats[0];
+  const validatorInfo = data?.stats && data?.stats[0];
+  const validatorStats =
+    data?.aggregates && data?.stats
+      ? { aggregates: data?.aggregates, stats: data?.stats }
+      : undefined;
 
   return (
     <Container sx={{ my: 5 }}>
@@ -103,7 +107,7 @@ const AccountId: FC = ({}) => {
           </Grid>
         )}
         <Grid item xs={12}>
-          <BlockchainCard account={data.account} validatorStats={data?.validator} />
+          <BlockchainCard account={data.account} validator={validatorStats} />
         </Grid>
       </Grid>
     </Container>
