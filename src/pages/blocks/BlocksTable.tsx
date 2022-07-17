@@ -21,7 +21,7 @@ const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
     <Address
       truncated
       value={block.author}
-      name={block.authorName}
+      name={block.authorName[0].identity?.display}
       url={`/blocks/${block.number}/producer/${block.author}`}
     />,
     <Hash truncated value={block.hash} url={`/blocks/${block.number}`} />

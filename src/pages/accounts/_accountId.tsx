@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import RoundedButton from '../../components/buttons/Rounded';
-import useFetchRankingAccountInfo from '../../hooks/useFetchRankingAccountInfo';
+import useFetchValidatorAccountInfo from '../../hooks/useFetchValidatorAccountInfo';
 import NotFound from '../NotFound';
 import Balances from './account/Balances';
 import BlockchainCard from './account/blockchain';
@@ -23,7 +23,7 @@ import {
 
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
-  const { data, loading } = useFetchRankingAccountInfo(accountId);
+  const { data, loading } = useFetchValidatorAccountInfo(accountId);
   const transfersQuery = useQuery<GetTransferByAccountId>(GET_TRANSFERS_BY_ACCOUNT_ID, {
     variables: { accountId }
   });
@@ -52,7 +52,7 @@ const AccountId: FC = ({}) => {
 
   if (!data?.account) return <NotFound message='Account Not Found' />;
 
-  const ranking = data?.ranking && data?.ranking[0];
+  const validatorInfo = data?.validator?.stats && data?.validator.stats[0];
 
   return (
     <Container sx={{ my: 5 }}>
@@ -97,13 +97,13 @@ const AccountId: FC = ({}) => {
             </PaperWrapStyled>
           </Grid>
         )}
-        {ranking && validatorInfoExpanded && (
+        {validatorInfo && validatorInfoExpanded && (
           <Grid item xs={12}>
-            <Summary ranking={ranking} name={data.account.identity?.display} />
+            <Summary info={validatorInfo} />
           </Grid>
         )}
         <Grid item xs={12}>
-          <BlockchainCard account={data.account} ranking={ranking} />
+          <BlockchainCard account={data.account} validatorStats={data?.validator} />
         </Grid>
       </Grid>
     </Container>

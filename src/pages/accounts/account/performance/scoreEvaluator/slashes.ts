@@ -1,10 +1,10 @@
 import { Account } from '../../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../../schemas/staking.schema';
+import { ValidatorStats } from '../../../../../schemas/staking.schema';
 import { MetricScores } from '../../../types';
 
 const getSlashesScore = ({ }: {
   account: Account;
-  ranking: CommonFieldsRankingFragment;
+  stats: ValidatorStats;
 }): [MetricScores, string] => {
   // if (latestSlashes > 0 || holderSlashes > 1) {
   //   return ['very bad', 'Slashes more than once'];

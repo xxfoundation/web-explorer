@@ -10,7 +10,7 @@ export type AuthorName = {
 export type Block = {
   numberFinalized: number;
   number: number;
-  currentEra: string;
+  currentEra: number;
   finalized: boolean;
   hash: string;
   parentHash: string;
@@ -65,7 +65,7 @@ export type ListBlockOrdered = {
     timestamp: number;
     totalExtrinsics: number;
     author: string;
-    authorName: string;
+    authorName: AuthorName[];
   }[];
 } & TotalOfItems;
 
@@ -112,15 +112,12 @@ export const GET_BLOCK_BY_HASH = gql`
   }
 `;
 
-export type GetBlocksByBP = {
-  blocks: {
-    number: number;
-    currentEra: number;
-  }[];
+export type ProducedBlocks = {
+  number: number;
+  currentEra: number;
 };
-
 export const GET_BLOCKS_BY_BP = gql`
-  query ListBlocksOrdered($where: block_bool_exp) {
+  query GetBlocksByProducer($where: block_bool_exp) {
     blocks: block(where: $where) {
       number: block_number
       currentEra: active_era

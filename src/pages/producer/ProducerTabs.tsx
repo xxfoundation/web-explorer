@@ -1,30 +1,36 @@
-import type { EraPointsHistory } from './types';
-
 import React, { useMemo } from 'react';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../components/Tabs';
-import ErasTable from './ErasTable';
 import NominatorsTable from './NominatorsTable';
+import { ValidatorStats } from '../../schemas/staking.schema';
+import ValidatorStatsTable from '../accounts/account/staking/ValidatorStatsTable';
+import { ProducedBlocks } from '../../schemas/blocks.schema';
 
-const ProducerTabs: React.FC<{
-  producerId: string;
-  eras: number;
-  eraPointsHistory: EraPointsHistory;
-  nominators: number;
-  nominations: string;
-}> = ({ eraPointsHistory, eras, nominations, nominators, producerId }) => {
+type Props = {
+  blocks?: ProducedBlocks[];
+  validatorStats?: ValidatorStats[];
+  validatorStatsCount?: number;
+  error: boolean;
+};
+
+const ProducerTabs: React.FC<Props> = ({ blocks, error, validatorStats, validatorStatsCount }) => {
   const panels = useMemo(() => {
     return [
       {
-        label: <TabText message='nominators' count={nominators} />,
-        content: <NominatorsTable nominations={nominations} />
+        label: (
+          <TabText
+            message='nominators'
+            count={validatorStats && validatorStats[0].nominators?.length}
+          />
+        ),
+        content: <NominatorsTable nominators={validatorStats && validatorStats[0].nominators} />
       },
       {
-        label: <TabText message='eras' count={eras} />,
-        content: <ErasTable producerId={producerId} eraPointsHistory={eraPointsHistory} />
+        label: <TabText message='Validator Stats' count={validatorStatsCount} />,
+        content: <ValidatorStatsTable blocks={blocks} error={error} stats={validatorStats} />
       }
     ];
-  }, [eras, nominations, nominators, producerId, eraPointsHistory]);
+  }, [validatorStatsCount, blocks, error, validatorStats]);
   return (
     <PaperStyled>
       <TabsWithPanels panels={panels} tabsLabel='producers tables tabs' />

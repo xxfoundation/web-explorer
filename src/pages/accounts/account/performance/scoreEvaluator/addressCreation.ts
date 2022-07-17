@@ -1,5 +1,5 @@
 import { Account } from '../../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../../schemas/staking.schema';
+import { ValidatorStats } from '../../../../../schemas/staking.schema';
 import { MetricScores } from '../../../types';
 
 const baseMessage = (blockNumber: number, seniority: string) =>
@@ -7,9 +7,9 @@ const baseMessage = (blockNumber: number, seniority: string) =>
 
 const getaAddressCreationScore = (props: {
   account: Account;
-  ranking: CommonFieldsRankingFragment;
+  stats: ValidatorStats;
 }): [MetricScores, string] => {
-  const validatorTime = props.ranking.activeEras;
+  const validatorTime = props.stats.era;
   if (validatorTime >= 365) {
     return ['very good', baseMessage(props.account.blockHeight, 'a veteran')];
   }

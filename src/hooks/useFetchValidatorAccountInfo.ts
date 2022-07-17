@@ -1,15 +1,15 @@
 import { useQuery } from '@apollo/client';
 import { GetAccountByAddressType, GET_ACCOUNT_BY_PK } from '../schemas/accounts.schema';
-import { GET_ACCOUNT_RANKING } from '../schemas/staking.schema';
+import { GET_VALIDATOR_STATS } from '../schemas/staking.schema';
 
-const useFetchRankingAccountInfo = (
+const useFetchValidatorAccountInfo = (
   accountId: string
 ): { loading: boolean; data?: Partial<GetAccountByAddressType> } => {
-  const accountResult = useQuery<Omit<GetAccountByAddressType, 'ranking'>>(GET_ACCOUNT_BY_PK, {
+  const accountResult = useQuery<Omit<GetAccountByAddressType, 'validator'>>(GET_ACCOUNT_BY_PK, {
     variables: { accountId }
   });
-  const accountRankingResult = useQuery<Omit<GetAccountByAddressType, 'account'>>(
-    GET_ACCOUNT_RANKING,
+  const validatorStatsResult = useQuery<Omit<GetAccountByAddressType, 'account'>>(
+    GET_VALIDATOR_STATS,
     {
       variables: {
         where: {
@@ -21,7 +21,7 @@ const useFetchRankingAccountInfo = (
     }
   );
 
-  if (accountResult.loading || accountRankingResult.loading) {
+  if (accountResult.loading || validatorStatsResult.loading) {
     return { loading: true };
   }
 
@@ -29,9 +29,9 @@ const useFetchRankingAccountInfo = (
     loading: false,
     data: {
       account: accountResult.data?.account,
-      ranking: accountRankingResult.data?.ranking
+      validator: validatorStatsResult.data?.validator
     }
   };
 };
 
-export default useFetchRankingAccountInfo;
+export default useFetchValidatorAccountInfo;

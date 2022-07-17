@@ -1,9 +1,21 @@
 import { gql } from '@apollo/client';
-import { CommonFieldsRankingFragment } from './staking.schema';
+import { GetValidatorStats } from './staking.schema';
 import { TotalOfItems } from './types';
 
+/* ---------------------------- General Variables --------------------------- */
 export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit' | 'special';
 
+type Judgements =
+  | 'Unknown'
+  | 'Reasonable'
+  | 'Known Good'
+  | 'Out of Date'
+  | 'Low Quality'
+  | 'Erroneous';
+
+/* -------------------------------------------------------------------------- */
+/*                                  Identity                                  */
+/* -------------------------------------------------------------------------- */
 export type Identity = {
   display?: string;
   displayParent?: string;
@@ -42,14 +54,9 @@ export const GET_DISPLAY_IDENTITY = gql`
   }
 `
 
-type Judgements =
-  | 'Unknown'
-  | 'Reasonable'
-  | 'Known Good'
-  | 'Out of Date'
-  | 'Low Quality'
-  | 'Erroneous';
-
+/* -------------------------------------------------------------------------- */
+/*                           Account Individual Page                          */
+/* -------------------------------------------------------------------------- */
 export type Account = {
   id: string;
   whenCreated: number;
@@ -74,13 +81,12 @@ export type Account = {
 
 export type GetAccountByAddressType = {
   account: Account;
-  ranking?: CommonFieldsRankingFragment[];
+  validator?: GetValidatorStats;
 };
 
 export const ACCOUNT_BY_PK_FRAGMENT = gql`
   fragment account on account {
     id: account_id
-    controllerAddress: controller_address
     whenCreated: when_created
     blockHeight: block_height
     nonce
@@ -125,7 +131,10 @@ export const GET_ACCOUNT_BY_PK = gql`
   }
 `;
 
-export type ListAccounts = {
+/* -------------------------------------------------------------------------- */
+/*                        Account Page > Holders Table                        */
+/* -------------------------------------------------------------------------- */
+export type ListAccounts = TotalOfItems & {
   account: {
     address: string;
     timestamp: number;
@@ -135,7 +144,7 @@ export type ListAccounts = {
     roles: Record<Roles, boolean | string>;
     identity: Identity;
   }[];
-} & TotalOfItems;
+};
 
 export const LIST_ACCOUNTS = gql`
   query ListAccounts(
@@ -169,6 +178,9 @@ export const LIST_ACCOUNTS = gql`
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                             New Accounts Chart                             */
+/* -------------------------------------------------------------------------- */
 export type NewAccounts = {
   newAccount: {
     accounts: string;
@@ -189,6 +201,9 @@ export const LISTEN_FOR_NEW_ACCOUNTS = gql`
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                     Extrincs and Transfers Tab Counters                    */
+/* -------------------------------------------------------------------------- */
 export type GetExtrinsicCounts = {
   extrinsicCount: { aggregate: { count: number } };
   transferCount: { aggregate: { count: number } };
@@ -202,7 +217,7 @@ query GetExtrinsicCounts ($accountId: String) {
     }
   }
 
-  transferCount:   transfer_aggregate(where: {
+  transferCount: transfer_aggregate(where: {
     _or: [
       { destination:  { _eq: $accountId } },
       { source:{ _eq: $accountId } }

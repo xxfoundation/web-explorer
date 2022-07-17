@@ -1,25 +1,41 @@
 import { useQuery } from '@apollo/client';
 import { Box, Container, Skeleton, Typography } from '@mui/material';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { SummaryLoader } from '../../components/Summary';
-import { GetAccountRanking, GET_ACCOUNT_RANKING } from '../../schemas/staking.schema';
+import { GetValidatorStats, GET_VALIDATOR_STATS } from '../../schemas/staking.schema';
 import Error from '../../components/Error';
 import NotFound from '../NotFound';
-import ProducerTabs from './ProducerTabs';
 import Summary from './Summary';
 import { ResponsiveHash } from '../../components/Hash/Hash';
+import ProducerTabs from './ProducerTabs';
+import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../schemas/blocks.schema';
 
 const BlockProducer = () => {
   const { producerId } = useParams<{ producerId: string }>();
-  const { data, error, loading } = useQuery<GetAccountRanking>(GET_ACCOUNT_RANKING, {
+  console.warn(producerId);
+  const validatorQuery = useQuery<GetValidatorStats>(GET_VALIDATOR_STATS, {
     variables: {
       where: { stash_address: { _eq: producerId } }
     }
   });
+  const variables = useMemo(() => {
+    return {
+      orderBy: [{ block_number: 'desc' }],
+      where: {
+        block_author: { _eq: producerId },
+        finalized: { _eq: true }
+      }
+    };
+  }, [producerId]);
+  const producedBlocksQuery = useQuery<ProducedBlocks[]>(GET_BLOCKS_BY_BP, { variables });
 
-  if (loading) {
+  const validatorStats = validatorQuery.data?.stats;
+  const validatorStatsCount = validatorQuery.data?.aggregates.aggregate.count;
+  const validatorInfo = validatorQuery.data?.stats && validatorQuery.data?.stats[0];
+
+  if (validatorQuery.loading && producedBlocksQuery.loading) {
     return (
       <Container sx={{ my: 5 }}>
         <Skeleton />
@@ -29,22 +45,19 @@ const BlockProducer = () => {
     );
   }
 
-  if (error) {
+  if (validatorQuery.error || producedBlocksQuery.error) {
     return (
       <Container sx={{ my: 5 }}>
         <Typography variant='h1' maxWidth={'400px'} sx={{ mb: 5 }}>
-          <Error type='data-unavailable' />
+          <Error type='data-unavailable' />;
         </Typography>
       </Container>
     );
   }
 
-  if (!data?.ranking || !data.ranking[0]?.stashAddress) {
+  if (!validatorStats || !validatorStats[0]?.stashAddress) {
     return <NotFound message='Producer Not Found' />;
   }
-
-  const ranking = data.ranking[0];
-  const identity = JSON.parse(ranking.identity);
 
   return (
     <Container sx={{ my: 5 }}>
@@ -53,17 +66,17 @@ const BlockProducer = () => {
         Block Producer
       </Typography>
       <Typography variant='h2' color='grey.700' sx={{ mb: 5 }}>
-        {identity.display || <ResponsiveHash truncated='lgDown' value={ranking.stashAddress} />}
+        <ResponsiveHash truncated='lgDown' value={producerId} />
       </Typography>
-      <Summary ranking={ranking} name={identity.display} />
-      {/* <Box sx={{ mt: 2 }}>
+      <Summary info={validatorInfo} />
+      <Box sx={{ mt: 2 }}>
         <ProducerTabs
-          producerId={ranking.stashAddress}
-          eras={ranking.activeEras}
-          eraPointsHistory={ranking.points}
-          nominations={ranking.nominations}
+          blocks={producedBlocksQuery.data}
+          validatorStats={validatorStats}
+          validatorStatsCount={validatorStatsCount}
+          error={!!validatorQuery.error || !!producedBlocksQuery.error}
         />
-      </Box> */}
+      </Box>
     </Container>
   );
 };

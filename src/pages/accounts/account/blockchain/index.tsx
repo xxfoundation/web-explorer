@@ -13,25 +13,39 @@ import {
   GET_EXTRINSIC_COUNTS,
   GetExtrinsicCounts
 } from '../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../schemas/staking.schema';
+import { GetValidatorStats } from '../../../../schemas/staking.schema';
 import TransferTable from '../../../transfers/TransfersTable';
-import ErasTable from '../../../producer/ErasTable';
+import ValidatorStatsTable from '../staking/ValidatorStatsTable';
 import NominatorsTable from '../../../producer/NominatorsTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
+import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.schema';
 
 type Props = {
   account: Account;
-  ranking: CommonFieldsRankingFragment | undefined;
+  validatorStats?: GetValidatorStats;
 };
 
-const BlockchainCard: FC<Props> = ({ account, ranking }) => {
+const BlockchainCard: FC<Props> = ({ account, validatorStats }) => {
   const [filters, setFilters] = useState<AddressFilters>({});
   const { data, loading } = useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
     variables: { accountId: account.id }
   });
 
+  const variables = useMemo(() => {
+    return {
+      orderBy: [{ block_number: 'desc' }],
+      where: {
+        block_author: { _eq: account.id },
+        finalized: { _eq: true }
+      }
+    };
+  }, [account.id]);
+  const blocksProducedQuery = useQuery<ProducedBlocks[]>(GET_BLOCKS_BY_BP, { variables });
+
   const extrinsicCount = data?.extrinsicCount.aggregate.count;
   const transferCount = data?.transferCount.aggregate.count;
+  const statsCount = validatorStats?.aggregates.aggregate.count;
+  const nominators = validatorStats?.stats[0]?.nominators;
 
   const panels = useMemo(() => {
     const transferWhereClause = {
@@ -87,14 +101,21 @@ const BlockchainCard: FC<Props> = ({ account, ranking }) => {
             )
           }
         ];
-    if (!loading && account.roles.validator && ranking !== undefined) {
+
+    if (!loading && account.roles.validator && validatorStats !== undefined) {
       tabs.push({
-        label: <TabText message='nominators' count={ranking.nominators} />,
-        content: <NominatorsTable nominations={ranking.nominations} />
+        label: <TabText message='nominators' count={nominators?.length} />,
+        content: <NominatorsTable nominators={nominators} />
       });
       tabs.push({
-        label: <TabText message='eras' count={ranking.activeEras} />,
-        content: <ErasTable producerId={account.id} eraPointsHistory={ranking.eraPointsHistory} />
+        label: <TabText message='Validator Stats' count={statsCount} />,
+        content: (
+          <ValidatorStatsTable
+            blocks={blocksProducedQuery.data}
+            error={!!blocksProducedQuery.error}
+            stats={validatorStats?.stats}
+          />
+        )
       });
     }
 
@@ -106,7 +127,11 @@ const BlockchainCard: FC<Props> = ({ account, ranking }) => {
     extrinsicCount,
     transferCount,
     filters,
-    ranking
+    nominators,
+    statsCount,
+    blocksProducedQuery.data,
+    blocksProducedQuery.error,
+    validatorStats
   ]);
 
   return (

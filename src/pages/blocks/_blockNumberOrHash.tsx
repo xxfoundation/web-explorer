@@ -1,5 +1,5 @@
 import { OperationVariables, QueryResult, useQuery } from '@apollo/client';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
 import Hidden from '@mui/material/Hidden';
 import { useHistory, useParams } from 'react-router-dom';

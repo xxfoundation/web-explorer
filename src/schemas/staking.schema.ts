@@ -1,64 +1,34 @@
-import type { EraPointsHistory } from '../pages/producer/types';
 import { gql } from '@apollo/client';
 
-export type Nominators = {
+/* ------------------------------ General Types ----------------------------- */
+export type Nominator = {
   accountId: string;
   stake: string;
   share: string;
 }
 
-export type CommonFieldsRankingFragment = {
-  era: number;
-  activeEras: number;
+/* -------------------------------------------------------------------------- */
+/*                       Staking Page > Validators Table                      */
+/* -------------------------------------------------------------------------- */
 
-  // summary  
-  stashAddress: string;
-  // controllerAddress: string;
-  rewardsAddress: string;
-  cmixId: string;
-  location: string;
-  selfStake: number;
-  otherStake: number;
-  totalStake: number;
-  commission: string;
-  sessionKeys: string;
+export type LatestEraQuery = {
+  validatorStats: { era: number }[]
+}
 
-  // tabs
-  nominations: Nominators[];
-  points: number;
-};
-
-export type GetAccountRanking = {
-  ranking: CommonFieldsRankingFragment[];
-};
-
-export const GET_ACCOUNT_RANKING = gql`
-  query GetAccountRanking($where: ranking_bool_exp!) {
-    ranking: validator_stats(where: $where) {
+export const GET_LATEST_ERA = gql`
+  query GetRankedAccounts {
+    validatorStats: validator_stats(limit: 1, order_by: {era: desc}) {
       era
-      activeEras: era
-      
-      stashAddress: stash_address
-      rewardsAddress: rewards_address
-      cmixId: cmix_id
-      location    
-      selfStake: self_stake
-      otherStake: other_stake
-      totalStake: total_stake
-      commission
-      sessionKeys: session_keys
-
-      nominators
-      points
     }
   }
 `;
+/* ------------------------------------ - ----------------------------------- */
 
 export type ValidatorAccount = {
   addressId: string;
   location: string;
   cmixId: string;
-  nominators: Nominators[];
+  nominators: Nominator[];
   ownStake: string;
   totalStake: string;
   otherStake: string;
@@ -115,14 +85,72 @@ export const GET_WAITING_LIST = gql`
   }
 `;
 
-export type LatestEraQuery = {
-  validatorStats: { era: number }[]
+/* -------------------------------------------------------------------------- */
+/*                        Account Page > Validator Info                       */
+/* -------------------------------------------------------------------------- */
+
+export type ValidatorStats = {
+  era: number;
+  stashAddress: string;
+  rewardsAddress: string;
+  commission: number;
+  selfStake: number;
+  otherStake: number;
+  totalStake: number;
+  nominators: Nominator[];
+  sessionKeys: string | null;
+  cmixId: string | null;
+  location: string | null;
+  points: number | null;
+  relativePerformance: number | null;
+  reward: number | null;
 }
 
-export const GET_LATEST_ERA = gql`
-  query GetRankedAccounts {
-    validatorStats: validator_stats(limit: 1, order_by: {era: desc}) {
-      era
+const VALIDATOR_STATS_FRAGMENT = gql`
+  fragment validatorStatsFragment on validator_stats {
+    cmixId: cmix_id
+    commission
+    era
+    location
+    nominators
+    otherStake: other_stake
+    points
+    relativePerformance: relative_performance
+    reward
+    rewardsAddress: rewards_address
+    selfStake: self_stake
+    sessionKeys: session_keys
+    stashAddress: stash_address
+    timestamp
+    totalStake: total_stake
+  }
+`;
+
+export type GetValidatorStats = {
+  aggregates: { aggregate: { count: number } }
+  stats: ValidatorStats[]
+}
+
+export const GET_VALIDATOR_STATS = gql`
+  ${VALIDATOR_STATS_FRAGMENT}
+  query GetValidatorStats ($address: String!) {
+    aggregates: validator_stats_aggregate(where: { stash_address: { _eq: $address }}) {
+      aggregate {
+        count
+      }
+    }
+
+    stats: validator_stats(where: { stash_address: { _eq: $address } }, order_by: { era: desc }) {
+      ...validatorStatsFragment
     }
   }
 `;
+
+export const GET_VALIDATOR_INFO = gql`
+  ${VALIDATOR_STATS_FRAGMENT}
+  query GetValidatorInfo ($address: String!) {
+    stats: validator_stats(where: { stash_address: { _eq: $address } }, order_by: { era: desc }, limit: 1) {
+      ...validatorStatsFragment
+    }
+  }
+`
