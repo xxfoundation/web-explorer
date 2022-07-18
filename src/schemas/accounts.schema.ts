@@ -211,22 +211,51 @@ export type GetExtrinsicCounts = {
 }
 
 export const GET_EXTRINSIC_COUNTS = gql`
-query GetExtrinsicCounts ($accountId: String) {
-  extrinsicCount: extrinsic_aggregate(where: { signer: { _eq: $accountId } }) {
-    aggregate {
-      count
+  query GetExtrinsicCounts ($accountId: String) {
+    extrinsicCount: extrinsic_aggregate(where: { signer: { _eq: $accountId } }) {
+      aggregate {
+        count
+      }
     }
-  }
 
-  transferCount: transfer_aggregate(where: {
-    _or: [
-      { destination:  { _eq: $accountId } },
-      { source:{ _eq: $accountId } }
-    ]
-  }) {
-    aggregate {
-      count
+    transferCount: transfer_aggregate(where: {
+      _or: [
+        { destination:  { _eq: $accountId } },
+        { source:{ _eq: $accountId } }
+      ]
+    }) {
+      aggregate {
+        count
+      }
     }
   }
+`
+
+/* -------------------------------------------------------------------------- */
+/*                               Balance History                              */
+/* -------------------------------------------------------------------------- */
+export type BalanceHistory = {
+  era: number;
+  totalBalance: number;
+  // transferrableBalance: number;
+  // reservedBalance: number;
+  // lockedBalance: number;
+  // bondedBalance: number;
+  // unbondingBalance: number;
+  // vestingBalance: number;
+  // councilBalance: number;
+  // democracyBalance: number;
 }
+
+export type GetBalanceHistory = {
+  history: BalanceHistory[];
+}
+
+export const GET_BALANCE_HISTORY_BY_ID = gql`
+  query GetBalanceHistoryByPk($accountId: String!) {
+    history: balance_history(where: {account_id: {_eq: $accountId}}, order_by: {era: asc}) {
+      era
+      totalBalance: total_balance
+    }
+  }
 `

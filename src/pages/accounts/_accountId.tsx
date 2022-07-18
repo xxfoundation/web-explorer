@@ -15,22 +15,18 @@ import AccountDetails from './account/AccountDetails';
 import ValidatorInfo from './account/ValidatorInfo';
 
 import { useToggle } from '../../hooks';
-// import BalanceHistory from './account/BalanceHistoryChart';
-import {
-  GetTransferByAccountId,
-  GET_TRANSFERS_BY_ACCOUNT_ID
-} from '../../schemas/transfers.schema';
+import BalanceHistoryChart from './account/BalanceHistoryChart';
+import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
+  const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const { data, loading } = useFetchValidatorAccountInfo(accountId);
-  const transfersQuery = useQuery<GetTransferByAccountId>(GET_TRANSFERS_BY_ACCOUNT_ID, {
-    variables: { accountId }
-  });
-  // const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
+  const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
   const [validatorInfoExpanded, { toggle: toggleValidatorInfo }] = useToggle(false);
+  const currEra = latestEraQuery?.data?.validatorStats[0].era;
 
-  if (loading || transfersQuery.loading) {
+  if (loading || latestEraQuery.loading) {
     return (
       <Container sx={{ my: 5 }}>
         <Typography maxWidth={'100px'}>
@@ -71,13 +67,13 @@ const AccountId: FC = ({}) => {
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
             <Balances account={data.account} />
-            {/* <RoundedButton
-              style={{ position: 'absolute', right: '2rem', bottom: '1.5rem'}}
+            <RoundedButton
+              style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
               variant='contained'
               onClick={toggleHistory}
             >
               {historyExpanded ? 'Hide history' : 'Show history'}
-            </RoundedButton> */}
+            </RoundedButton>
           </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -94,13 +90,13 @@ const AccountId: FC = ({}) => {
             )}
           </PaperWrapStyled>
         </Grid>
-        {/* {historyExpanded && (
+        {historyExpanded && currEra && (
           <Grid item xs={12}>
             <PaperWrapStyled>
-              <BalanceHistory account={data.account} transfers={transfersQuery.data?.transfers} />
+              <BalanceHistoryChart accountId={data.account.id} era={currEra} />
             </PaperWrapStyled>
           </Grid>
-        )} */}
+        )}
         {validatorInfo && validatorInfoExpanded && (
           <Grid item xs={12}>
             <ValidatorInfo info={validatorInfo} />
