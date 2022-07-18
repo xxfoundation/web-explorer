@@ -12,7 +12,7 @@ const StakingCard: FC<{ account: Account; roles: Roles[] }> = ({ roles }) => {
   const panels = useMemo(() => {
     const cachedPanels = [
       {
-        label: <Typography>rewards \& slashes</Typography>,
+        label: <Typography>rewards & slashes</Typography>,
         content: <RewardStashTable />
       },
       {

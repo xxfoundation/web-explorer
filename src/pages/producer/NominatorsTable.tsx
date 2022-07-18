@@ -10,7 +10,7 @@ const EraStake = (nominator: Nominator) => {
   return BaseLineCellsWrapper([
     <XXNetworkAddress truncated='mdDown' value={nominator.account_id} />,
     <FormatBalance value={nominator.stake} />,
-    `${nominator.share}%`
+    `${parseFloat(nominator.share).toFixed(2)}%`
   ]);
 };
 

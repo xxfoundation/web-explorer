@@ -45,7 +45,9 @@ const BlockchainCard: FC<Props> = ({ account, validator }) => {
   const extrinsicCount = data?.extrinsicCount.aggregate.count;
   const transferCount = data?.transferCount.aggregate.count;
   const statsCount = validator?.aggregates.aggregate.count;
-  const nominators = validator?.stats[0]?.nominators;
+  const nominators = validator?.stats[0]?.nominators
+    ?.slice()
+    .sort((a, b) => parseFloat(b.share) - parseFloat(a.share));
 
   const panels = useMemo(() => {
     const transferWhereClause = {
