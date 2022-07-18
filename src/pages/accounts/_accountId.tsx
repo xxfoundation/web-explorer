@@ -11,11 +11,11 @@ import NotFound from '../NotFound';
 import Balances from './account/Balances';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
-import Info from './account/Info';
-import Summary from '../producer/Summary';
+import AccountDetails from './account/AccountDetails';
+import ValidatorInfo from './account/ValidatorInfo';
 
 import { useToggle } from '../../hooks';
-import BalanceHistory from './account/blockchain/BalanceHistoryChart';
+import BalanceHistory from './account/BalanceHistoryChart';
 import {
   GetTransferByAccountId,
   GET_TRANSFERS_BY_ACCOUNT_ID
@@ -82,7 +82,7 @@ const AccountId: FC = ({}) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
-            <Info account={data.account} />
+            <AccountDetails account={data.account} />
             {data.account.roles.validator && (
               <RoundedButton
                 style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
@@ -103,7 +103,7 @@ const AccountId: FC = ({}) => {
         )}
         {validatorInfo && validatorInfoExpanded && (
           <Grid item xs={12}>
-            <Summary info={validatorInfo} />
+            <ValidatorInfo info={validatorInfo} />
           </Grid>
         )}
         <Grid item xs={12}>

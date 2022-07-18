@@ -16,7 +16,7 @@ import {
 import { GetValidatorStats } from '../../../../schemas/staking.schema';
 import TransferTable from '../../../transfers/TransfersTable';
 import ValidatorStatsTable from '../staking/ValidatorStatsTable';
-import NominatorsTable from '../../../producer/NominatorsTable';
+import NominatorsTable from '../staking/NominatorsTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
 import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.schema';
 

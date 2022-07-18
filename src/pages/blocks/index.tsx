@@ -1,7 +1,8 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import BlockProducer from '../producer/_producerId';
+import AccountId from '../accounts/_accountId';
+// import BlockProducer from '../producer/_producerId';
 import BlocksPage from './BlocksPage';
 import Block from './_blockNumberOrHash';
 
@@ -28,8 +29,9 @@ const BlockRouter = () => {
       <Route exact path={path}>
         <Block />
       </Route>
-      <Route path={`${path}/producer/:producerId`}>
-        <BlockProducer />
+      <Route path={`${path}/producer/:accountId`}>
+        {/* <BlockProducer /> */}
+        <AccountId />
       </Route>
       <Route path={`${path}/version/:version`}>
         <VersionRouter />

@@ -1,10 +1,10 @@
-import type { Nominator } from '../../schemas/staking.schema';
+import type { Nominator } from '../../../../schemas/staking.schema';
 
 import React, { FC, useEffect, useMemo } from 'react';
-import FormatBalance from '../../components/FormatBalance';
-import XXNetworkAddress from '../../components/Hash/XXNetworkAddress';
-import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
-import { usePagination } from '../../hooks';
+import FormatBalance from '../../../../components/FormatBalance';
+import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
+import { BaseLineCellsWrapper, BaselineTable } from '../../../../components/Tables';
+import { usePagination } from '../../../../hooks';
 
 const EraStake = (nominator: Nominator) => {
   return BaseLineCellsWrapper([

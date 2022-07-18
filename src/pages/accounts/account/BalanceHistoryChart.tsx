@@ -1,12 +1,12 @@
-import type { Account } from '../../../../schemas/accounts.schema';
+import type { Account } from '../../../schemas/accounts.schema';
 import type { TooltipFormatterContextObject } from 'highcharts';
-import type { DataPoint } from '../../../../components/charts/highcharts';
+import type { DataPoint } from '../../../components/charts/highcharts';
 
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
-import StepChart from '../../../../components/charts/highcharts/StepChart';
-import { Transfer } from '../../../../schemas/transfers.schema';
-import { formatBalance } from '../../../../components/FormatBalance/formatter';
+import StepChart from '../../../components/charts/highcharts/StepChart';
+import { Transfer } from '../../../schemas/transfers.schema';
+import { formatBalance } from '../../../components/FormatBalance/formatter';
 
 const BLOCKS_IN_A_MONTH = 432000;
 const BLOCKS_IN_A_WEEK = BLOCKS_IN_A_MONTH / 4;

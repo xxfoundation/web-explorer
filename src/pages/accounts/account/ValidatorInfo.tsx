@@ -1,19 +1,19 @@
 import { Divider, Hidden, Grid, Container, Typography } from '@mui/material';
 import React, { FC, Fragment, useMemo } from 'react';
-import Address from '../../components/Hash/XXNetworkAddress';
-import Hash, { Props as HashProps } from '../../components/Hash';
-import CmixAddress from '../../components/Hash/CmixAddress';
-import FormatBalance from '../../components/FormatBalance';
+import Address from '../../../components/Hash/XXNetworkAddress';
+import Hash, { Props as HashProps } from '../../../components/Hash';
+import CmixAddress from '../../../components/Hash/CmixAddress';
+import FormatBalance from '../../../components/FormatBalance';
 import {
   SummaryContainer,
   SummaryHeader,
   SummaryEntry,
   SummaryValue,
   WithCopy
-} from '../../components/Summary';
-import { ValidatorStats } from '../../schemas/staking.schema';
-import Ellipsis from '../../components/Ellipsis';
-import Error from '../../components/Error';
+} from '../../../components/Summary';
+import { ValidatorStats } from '../../../schemas/staking.schema';
+import Ellipsis from '../../../components/Ellipsis';
+import Error from '../../../components/Error';
 
 const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
   return (
@@ -47,13 +47,12 @@ const locationString = (geoBin: string, city: string, country: string) => {
   return str;
 };
 
-const Summary: FC<{ info?: ValidatorStats }> = ({ info }) => {
+const ValidatorInfo: FC<{ info?: ValidatorStats }> = ({ info }) => {
   const location = useMemo(() => {
     const parsedLocation: { city: string; country: string; geoBin: string } = JSON.parse(
       info?.location || ''
     );
     const isEmpty = Object.entries(parsedLocation).every((x) => x.at(1) === null || x.at(1) === '');
-    console.warn(parsedLocation);
     return !isEmpty
       ? locationString(parsedLocation.geoBin, parsedLocation.city, parsedLocation.country)
       : ' - ';
@@ -150,4 +149,4 @@ const Summary: FC<{ info?: ValidatorStats }> = ({ info }) => {
   );
 };
 
-export default Summary;
+export default ValidatorInfo;
