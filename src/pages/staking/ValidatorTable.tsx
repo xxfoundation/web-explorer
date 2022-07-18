@@ -28,6 +28,7 @@ const ROWS_PER_PAGE = 20;
 const ValidatorRow: FC<ValidatorAccount> = ({
   addressId,
   cmixId,
+  commission,
   location,
   nominators,
   ownStake,
@@ -60,6 +61,9 @@ const ValidatorRow: FC<ValidatorAccount> = ({
           <FormatBalance value={totalStake} />
         </TableCell>
       )}
+      <TableCell>
+        <Typography>{commission.toFixed(2)} %</Typography>
+      </TableCell>
       <TableCell>
         <Typography variant='code'>
           <CmixAddress truncated value={cmixId} />
@@ -134,6 +138,7 @@ const ValidatorsTable = () => {
               <TableCell>Location</TableCell>
               <TableCell>Own Stake</TableCell>
               {filter !== 'waiting' && <TableCell>Total Stake</TableCell>}
+              <TableCell>Commission</TableCell>
               <TableCell>Cmix ID</TableCell>
               <TableCell>Nominators</TableCell>
             </TableRow>

@@ -91,6 +91,7 @@ export type ValidatorAccount = {
   ownStake: string;
   totalStake: string;
   otherStake: string;
+  commission: number;
 };
 
 export type ValidatorAccountsQuery = {
@@ -100,13 +101,14 @@ export type ValidatorAccountsQuery = {
 export const GET_CURRENT_VALIDATORS = gql`
   query GetCurrentValidators($limit: Int!, $offset: Int!, $where: validator_stats_bool_exp) {
     validators: validator_stats(limit: $limit, offset: $offset, where: $where, order_by: { total_stake: desc }) {
-      nominators
-      location
-      cmixId: cmix_id
-      ownStake: self_stake
-      totalStake: total_stake
-      otherStake: other_stake
       addressId: stash_address
+      location
+      ownStake: self_stake
+      otherStake: other_stake
+      totalStake: total_stake
+      commission
+      cmixId: cmix_id
+      nominators
     }
   }
 `;
@@ -114,11 +116,12 @@ export const GET_CURRENT_VALIDATORS = gql`
 export const GET_WAITING_LIST = gql`
   query GetWaitingList {
     validators: waiting(order_by: { self_stake: desc }) {
-      nominators
-      location
-      cmixId: cmix_id
-      ownStake: self_stake
       addressId: stash_address
+      location
+      ownStake: self_stake
+      commission
+      cmixId: cmix_id
+      nominators
     }
   }
 `;

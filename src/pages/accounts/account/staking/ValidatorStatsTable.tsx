@@ -63,7 +63,7 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
       <TableRow>
         <TableCell>{stats.era}</TableCell>
         <TableCell>{stats.points ?? 'N/A'}</TableCell>
-        <TableCell>{stats.commission} %</TableCell>
+        <TableCell>{stats.commission.toFixed(2)} %</TableCell>
         <TableCell>
           <FormatBalance value={stats.selfStake.toString()} />
         </TableCell>
