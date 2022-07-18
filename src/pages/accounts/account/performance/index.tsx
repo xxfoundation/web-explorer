@@ -2,13 +2,13 @@ import { Box, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import TabsWithPanels from '../../../../components/Tabs';
 import { Account } from '../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
+import { ValidatorStats } from '../../../../schemas/staking.schema';
 import Charts from './charts';
 import MetricCards from './MetricsCards';
 
 const PerformanceCard: FC<{
   account: Account;
-  ranking: CommonFieldsRankingFragment;
+  stats: ValidatorStats;
 }> = (props) => {
   const panels = useMemo(() => {
     if (!props.account.roles.validator) return [];

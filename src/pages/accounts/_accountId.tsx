@@ -6,16 +6,16 @@ import { useQuery } from '@apollo/client';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import RoundedButton from '../../components/buttons/Rounded';
-import useFetchRankingAccountInfo from '../../hooks/useFetchRankingAccountInfo';
+import useFetchValidatorAccountInfo from '../../hooks/useFetchValidatorAccountInfo';
 import NotFound from '../NotFound';
 import Balances from './account/Balances';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
-import Info from './account/Info';
-import Summary from '../producer/Summary';
+import AccountDetails from './account/AccountDetails';
+import ValidatorInfo from './account/ValidatorInfo';
 
 import { useToggle } from '../../hooks';
-// import BalanceHistory from './account/blockchain/BalanceHistoryChart';
+// import BalanceHistory from './account/BalanceHistoryChart';
 import {
   GetTransferByAccountId,
   GET_TRANSFERS_BY_ACCOUNT_ID
@@ -23,7 +23,7 @@ import {
 
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
-  const { data, loading } = useFetchRankingAccountInfo(accountId);
+  const { data, loading } = useFetchValidatorAccountInfo(accountId);
   const transfersQuery = useQuery<GetTransferByAccountId>(GET_TRANSFERS_BY_ACCOUNT_ID, {
     variables: { accountId }
   });
@@ -52,14 +52,17 @@ const AccountId: FC = ({}) => {
 
   if (!data?.account) return <NotFound message='Account Not Found' />;
 
-  const ranking = data?.ranking && data?.ranking[0];
-  const identity = ranking?.identity && JSON.parse(ranking?.identity);
+  const validatorInfo = data?.stats && data?.stats[0];
+  const validatorStats =
+    data?.aggregates && data?.stats
+      ? { aggregates: data?.aggregates, stats: data?.stats }
+      : undefined;
 
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      {data.account.identity.display && (
-        <Typography variant='h1'>{data.account.identity.display}</Typography>
+      {data.account.identity?.display && (
+        <Typography variant='h1'>{data.account.identity?.display}</Typography>
       )}
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
@@ -71,14 +74,15 @@ const AccountId: FC = ({}) => {
             {/* <RoundedButton
               style={{ position: 'absolute', right: '2rem', bottom: '1.5rem'}}
               variant='contained'
-              onClick={toggleHistory}>
+              onClick={toggleHistory}
+            >
               {historyExpanded ? 'Hide history' : 'Show history'}
             </RoundedButton> */}
           </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
-            <Info account={data.account} />
+            <AccountDetails account={data.account} />
             {data.account.roles.validator && (
               <RoundedButton
                 style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
@@ -97,13 +101,13 @@ const AccountId: FC = ({}) => {
             </PaperWrapStyled>
           </Grid>
         )} */}
-        {ranking && validatorInfoExpanded && (
+        {validatorInfo && validatorInfoExpanded && (
           <Grid item xs={12}>
-            <Summary ranking={ranking} name={identity.display} />
+            <ValidatorInfo info={validatorInfo} />
           </Grid>
         )}
         <Grid item xs={12}>
-          <BlockchainCard account={data.account} ranking={ranking} />
+          <BlockchainCard account={data.account} validator={validatorStats} />
         </Grid>
       </Grid>
     </Container>

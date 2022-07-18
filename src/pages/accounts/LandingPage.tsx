@@ -1,6 +1,6 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import NewAccounts from '../../components/charts/highcharts/NewAccountsLineChart';
+import NewAccountsChart from '../../components/charts/highcharts/NewAccountsLineChart';
 import HoldersTable from './HoldersTable';
 import Summary from './Summary';
 
@@ -15,7 +15,7 @@ const LandingPage: FC = () => {
           <Summary />
         </Grid>
         <Grid item xs={12}>
-          <NewAccounts />
+          <NewAccountsChart />
         </Grid>
         <Grid item xs={12} md={12}>
           <HoldersTable />

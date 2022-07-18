@@ -9,7 +9,7 @@ import IntervalControls, {
   intervalToTimestamp
 } from '../../components/charts/BarChart/IntervalControls';
 import Error from '../../components/Error';
-import { LISTEN_FOR_TRANSFERS_TIMESTAMPS } from '../../schemas/transfers.schema';
+import { GET_TRANSFERS_TIMESTAMPS } from '../../schemas/transfers.schema';
 
 const TranfersChart: FC = () => {
   const [interval, setInterval] = useState<TimeInterval>('1h');
@@ -20,7 +20,7 @@ const TranfersChart: FC = () => {
     };
   }, [interval]);
   const { data, loading } = useQuery<{ transfer: { timestamp: number; amount: number }[] }>(
-    LISTEN_FOR_TRANSFERS_TIMESTAMPS,
+    GET_TRANSFERS_TIMESTAMPS,
     { variables }
   );
 

@@ -13,26 +13,41 @@ import {
   GET_EXTRINSIC_COUNTS,
   GetExtrinsicCounts
 } from '../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
+import { GetValidatorStats } from '../../../../schemas/staking.schema';
 import TransferTable from '../../../transfers/TransfersTable';
-import ErasTable from '../../../producer/ErasTable';
-import NominatorsTable from '../../../producer/NominatorsTable';
+import ValidatorStatsTable from '../staking/ValidatorStatsTable';
+import NominatorsTable from '../staking/NominatorsTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
+import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.schema';
 
 type Props = {
   account: Account;
-  ranking: CommonFieldsRankingFragment | undefined;
-}
+  validator?: GetValidatorStats;
+};
 
-
-const BlockchainCard: FC<Props> = ({ account, ranking }) => {
+const BlockchainCard: FC<Props> = ({ account, validator }) => {
   const [filters, setFilters] = useState<AddressFilters>({});
   const { data, loading } = useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
     variables: { accountId: account.id }
   });
 
+  const variables = useMemo(() => {
+    return {
+      orderBy: [{ block_number: 'desc' }],
+      where: {
+        block_author: { _eq: account.id },
+        finalized: { _eq: true }
+      }
+    };
+  }, [account.id]);
+  const blocksProducedQuery = useQuery<ProducedBlocks>(GET_BLOCKS_BY_BP, { variables });
+
   const extrinsicCount = data?.extrinsicCount.aggregate.count;
   const transferCount = data?.transferCount.aggregate.count;
+  const statsCount = validator?.aggregates.aggregate.count;
+  const nominators = validator?.stats[0]?.nominators
+    ?.slice()
+    .sort((a, b) => parseFloat(b.share) - parseFloat(a.share));
 
   const panels = useMemo(() => {
     const transferWhereClause = {
@@ -73,31 +88,53 @@ const BlockchainCard: FC<Props> = ({ account, ranking }) => {
                 count={transferCount === undefined ? '' : transferCount}
               />
             ),
-            content: <>
-              <Box sx={{ textAlign: 'right', mt: -4.5 }}>
-                <AddressFilter
-                  label={'Filters '}
-                  address={account.id}
-                  value={filters}
-                  onChange={setFilters} />
-              </Box>
-              <TransferTable filters={filters} where={transferWhereClause} />
-            </>
+            content: (
+              <>
+                <Box sx={{ textAlign: 'right', mt: -4.5 }}>
+                  <AddressFilter
+                    label={'Filters '}
+                    address={account.id}
+                    value={filters}
+                    onChange={setFilters}
+                  />
+                </Box>
+                <TransferTable filters={filters} where={transferWhereClause} />
+              </>
+            )
           }
         ];
-    if (!loading && account.roles.validator && ranking !== undefined) {
+
+    if (!loading && account.roles.validator && validator !== undefined) {
       tabs.push({
-        label: <TabText message='nominators' count={ranking.nominators} />,
-        content: <NominatorsTable nominations={ranking.nominations} />
+        label: <TabText message='nominators' count={nominators?.length} />,
+        content: <NominatorsTable nominators={nominators} />
       });
       tabs.push({
-        label: <TabText message='eras' count={ranking.activeEras} />,
-        content: <ErasTable producerId={account.id} eraPointsHistory={ranking.eraPointsHistory} />
+        label: <TabText message='Validator Stats' count={statsCount} />,
+        content: (
+          <ValidatorStatsTable
+            producedBlocks={blocksProducedQuery.data}
+            error={!!blocksProducedQuery.error}
+            stats={validator?.stats}
+          />
+        )
       });
     }
 
     return tabs;
-  }, [account.id, account.roles.validator, loading, extrinsicCount, transferCount, filters, ranking]);
+  }, [
+    account.id,
+    account.roles.validator,
+    loading,
+    extrinsicCount,
+    transferCount,
+    filters,
+    nominators,
+    statsCount,
+    blocksProducedQuery.data,
+    blocksProducedQuery.error,
+    validator
+  ]);
 
   return (
     <PaperStyled>

@@ -56,18 +56,8 @@ const ChainInfo = () => {
     [metricsSubscription.data?.metrics]
   );
 
-  const {
-    accounts,
-    activeValidatorCount,
-    blocks,
-    // currentEra,
-    nominatorCount,
-    transfers,
-    validatorSet
-  } = data;
-
+  const { accounts, activeValidatorCount, blocks, nominatorCount, transfers, validatorSet } = data;
   const { activeEra, inflationRate, totalIssuance } = economicsQuery.data?.economics[0] ?? {};
-  const currEra = activeEra ? activeEra + 1 : '';
 
   if (metricsSubscription.error || economicsQuery.error) {
     return <Error type='data-unavailable' />;
@@ -80,7 +70,7 @@ const ChainInfo = () => {
       </Typography>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
         <ChainInfoCard title='Finalized Blocks' value={blocks} path='/blocks' />
-        <ChainInfoCard title='Active Era' value={currEra} />
+        <ChainInfoCard title='Active Era' value={activeEra} />
         <ChainInfoCard title='Transfers' value={transfers} path='/transfers' />
         <ChainInfoCard title='Account Holders' value={accounts} path='/accounts' />
         <ChainInfoCard

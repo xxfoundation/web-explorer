@@ -6,12 +6,17 @@ import { useHistory, useParams } from 'react-router-dom';
 import { isHex } from '@polkadot/util';
 
 import { BlockNav } from '../../components/block/Block.styled';
-import BlockDetailedEventsTabs from '../../components/block/BlockDetailedEventsTabs';
+import BlockDetailedTabs from '../../components/block/BlockDetailedTabs';
 import BlockSummary from '../../components/block/BlockSummary';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import BackAndForwardArrows from '../../components/buttons/BackAndForwardArrows';
 import Link from '../../components/Link';
-import { GetBlockByHash, GetBlockByPK, GET_BLOCK_BY_HASH, GET_BLOCK_BY_BLOCK_NUMBER } from '../../schemas/blocks.schema';
+import {
+  GetBlockByHash,
+  GetBlockByPK,
+  GET_BLOCK_BY_HASH,
+  GET_BLOCK_BY_BLOCK_NUMBER
+} from '../../schemas/blocks.schema';
 import NotFound from '../NotFound';
 import Error from '../../components/Error';
 import Loading from '../../components/Loading';
@@ -34,9 +39,12 @@ const useArrowButtonsOptions = (number: number) => {
   );
 
   const nextBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, variables(number + 1));
-  
-  const previousBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, variables(number - 1));
-  
+
+  const previousBlockQuery = useQuery<GetBlockByPK>(
+    GET_BLOCK_BY_BLOCK_NUMBER,
+    variables(number - 1)
+  );
+
   return { next: buttonProps(nextBlockQuery), previous: buttonProps(previousBlockQuery) };
 };
 
@@ -46,7 +54,9 @@ const BlockSummaryHeader: React.FC<{
   const arrowsOptions = useArrowButtonsOptions(blockNumber);
   return (
     <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
-      <Typography variant='h1' style={{ whiteSpace: 'break-spaces' }}>Block No. {blockNumber}</Typography>
+      <Typography variant='h1' style={{ whiteSpace: 'break-spaces' }}>
+        Block No. {blockNumber}
+      </Typography>
       <BlockNav direction={'row'} alignItems={'center'} spacing={2}>
         <Hidden mdDown>
           <Link to='/blocks'>
@@ -80,15 +90,15 @@ const Block = () => {
   const block = hashQuery.data?.block[0] || numberQuery.data?.block;
 
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
-  
+
   if (!loading && !error && !block) {
     return <NotFound />;
   }
 
   if (!block || (!loading && error)) {
-    return <Error />
+    return <Error />;
   }
 
   return (
@@ -97,10 +107,7 @@ const Block = () => {
       <BlockSummaryHeader blockNumber={block.number} />
       <BlockSummary block={block} />
       <Box sx={{ mt: 2 }}>
-        <BlockDetailedEventsTabs
-          blockNumber={block.number}
-          loading={loading}
-        />
+        <BlockDetailedTabs blockNumber={block.number} loading={loading} />
       </Box>
     </Container>
   );

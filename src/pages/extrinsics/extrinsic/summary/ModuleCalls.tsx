@@ -12,8 +12,8 @@ import {
 import { HtmlRenderer, Parser } from 'commonmark';
 import parse from 'html-react-parser';
 import React, { FC, useMemo } from 'react';
-import Tag from '../../../components/Tags/Tag';
-import { theme } from '../../../themes/default';
+import Tag from '../../../../components/Tags/Tag';
+import { theme } from '../../../../themes/default';
 
 const reader = new Parser();
 const writer = new HtmlRenderer();
@@ -50,7 +50,14 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({
     let markdownDoc = '';
     try {
       const parsed = reader.parse(doc.join('\r\n'));
-      markdownDoc = writer.render(parsed);
+      markdownDoc = writer
+        .render(parsed)
+        .replace(/<a\b[^>]*>/g, '<u>')
+        .replace(/<\/a>/g, '</u>')
+        .replace(/<weight\b[^>]*>/g, '<b>Weight:</b>')
+        .replace(/\#<\/weight>/g, '')
+        .replace(/<h1\b[^>]*>/g, '<p>')
+        .replace(/<\/h1>/g, '</p>');
     } catch (err) {
       console.error((err as Error).message);
     }

@@ -1,11 +1,11 @@
 import { Account } from '../../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../../schemas/ranking.schema';
+import { ValidatorStats } from '../../../../../schemas/staking.schema';
 import { MetricScores, MetricsType } from '../../../types';
 import getaAddressCreationScore from './addressCreation';
 import getIdentityScore from './identity';
 import getSlashesScore from './slashes';
 
-const scoreEvaluator = (props: { account: Account; ranking: CommonFieldsRankingFragment }): Partial<Record<MetricsType, [MetricScores, string]>> => {
+const scoreEvaluator = (props: { account: Account; stats: ValidatorStats }): Partial<Record<MetricsType, [MetricScores, string]>> => {
   return {
     identity: getIdentityScore(props.account),
     'address creation': getaAddressCreationScore(props),

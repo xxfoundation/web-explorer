@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
-import { NewAccountsChart, TransactionsChart } from '../../components/charts';
+import { NewAccountsChart, TransfersLineChart } from '../../components/charts';
 import LatestBlocksList from '../../components/blockchain/LatestBlocksList';
 import LatestTransfersList from '../../components/blockchain/LatestTransfersList';
 
@@ -18,7 +18,7 @@ const LatestInfo = () => {
           <LatestTransfersList />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TransactionsChart />
+          <TransfersLineChart />
         </Grid>
         <Grid item xs={12} md={6}>
           <NewAccountsChart />

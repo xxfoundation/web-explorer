@@ -5,7 +5,7 @@ import TimeAgoComponent from '../../../components/TimeAgo';
 import { Account } from '../../../schemas/accounts.schema';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
-const Info: FC<{ account: Account }> = ({ account }) => {
+const AccountDetails: FC<{ account: Account }> = ({ account }) => {
   const rolesTags = useMemo(() => {
     return Object.entries(account.roles)
       .filter(
@@ -45,4 +45,4 @@ const Info: FC<{ account: Account }> = ({ account }) => {
   );
 };
 
-export default Info;
+export default AccountDetails;

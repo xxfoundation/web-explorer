@@ -26,7 +26,7 @@ const SocialsImage = styled('img')({
 });
 
 type Props = StackProps & {
-  socials: Record<string, unknown>;
+  socials?: Record<string, unknown>;
 };
 
 const urlMappers: Record<string, (a: string) => string> = {
@@ -40,32 +40,33 @@ const urlMappers: Record<string, (a: string) => string> = {
 const possibleSocials = Object.keys(urlMappers);
 
 export const hasSocials = (obj: Record<string, unknown>) => {
-  return Object.keys(obj).some((k) => possibleSocials.includes(k))
-}
+  return Object.keys(obj).some((k) => possibleSocials.includes(k));
+};
 
 const Socials: React.FC<Props> = ({ socials, ...props }) => (
   <Stack direction='row' sx={{ mt: 2, mb: 2 }} spacing={1} {...props}>
-    {Object.entries(socials)
-      .filter(([social]) => possibleSocials.includes(social))
-      .filter(([, username]) => !!username)
-      .map(
-        ([social, username]) =>
-          images(`./${social}.svg`) &&
-          username && typeof username === 'string' && (
-            <SocialLink
-              key={`${social}-${username}`}
-              href={urlMappers[social]?.(username)}
-              rel='noopener'
-              target='_blank'
-            >
-              <SocialsLogo>
-                <SocialsImage src={images(`./${social}.svg`)} />
-              </SocialsLogo>
-            </SocialLink>
-          )
-      )}
+    {socials &&
+      Object.entries(socials)
+        .filter(([social]) => possibleSocials.includes(social))
+        .filter(([, username]) => !!username)
+        .map(
+          ([social, username]) =>
+            images(`./${social}.svg`) &&
+            username &&
+            typeof username === 'string' && (
+              <SocialLink
+                key={`${social}-${username}`}
+                href={urlMappers[social]?.(username)}
+                rel='noopener'
+                target='_blank'
+              >
+                <SocialsLogo>
+                  <SocialsImage src={images(`./${social}.svg`)} />
+                </SocialsLogo>
+              </SocialLink>
+            )
+        )}
   </Stack>
 );
-
 
 export default Socials;

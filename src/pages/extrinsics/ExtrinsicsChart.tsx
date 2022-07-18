@@ -6,7 +6,7 @@ import IntervalControls, {
   intervalToTimestamp
 } from '../../components/charts/BarChart/IntervalControls';
 import { TimeInterval } from '../../components/charts/BarChart/types';
-import { LISTEN_FOR_EXTRINSICS_TIMESTAMPS } from '../../schemas/extrinsics.schema';
+import { GET_EXTRINSICS_TIMESTAMPS } from '../../schemas/extrinsics.schema';
 
 type Response = {
   extrinsic: { timestamp: number }[];
@@ -20,7 +20,7 @@ const HistoryChart: FC = () => {
       where: { timestamp: { _gte: intervalToTimestamp(interval) } }
     };
   }, [interval]);
-  const { data, loading } = useQuery<Response>(LISTEN_FOR_EXTRINSICS_TIMESTAMPS, {
+  const { data, loading } = useQuery<Response>(GET_EXTRINSICS_TIMESTAMPS, {
     variables
   });
   const timestamps = useMemo(
