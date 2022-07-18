@@ -53,8 +53,11 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({
       markdownDoc = writer
         .render(parsed)
         .replace(/<a\b[^>]*>/g, '<u>')
-        .replace(/<\/a>/g, '</u>');
-      console.warn(markdownDoc);
+        .replace(/<\/a>/g, '</u>')
+        .replace(/<weight\b[^>]*>/g, '<b>Weight:</b>')
+        .replace(/\#<\/weight>/g, '')
+        .replace(/<h1\b[^>]*>/g, '<p>')
+        .replace(/<\/h1>/g, '</p>');
     } catch (err) {
       console.error((err as Error).message);
     }
