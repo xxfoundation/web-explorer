@@ -15,7 +15,7 @@ import AccountDetails from './account/AccountDetails';
 import ValidatorInfo from './account/ValidatorInfo';
 
 import { useToggle } from '../../hooks';
-import BalanceHistory from './account/BalanceHistoryChart';
+// import BalanceHistory from './account/BalanceHistoryChart';
 import {
   GetTransferByAccountId,
   GET_TRANSFERS_BY_ACCOUNT_ID
@@ -27,7 +27,7 @@ const AccountId: FC = ({}) => {
   const transfersQuery = useQuery<GetTransferByAccountId>(GET_TRANSFERS_BY_ACCOUNT_ID, {
     variables: { accountId }
   });
-  const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
+  // const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
   const [validatorInfoExpanded, { toggle: toggleValidatorInfo }] = useToggle(false);
 
   if (loading || transfersQuery.loading) {
@@ -71,13 +71,13 @@ const AccountId: FC = ({}) => {
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
             <Balances account={data.account} />
-            <RoundedButton
-              style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
+            {/* <RoundedButton
+              style={{ position: 'absolute', right: '2rem', bottom: '1.5rem'}}
               variant='contained'
               onClick={toggleHistory}
             >
               {historyExpanded ? 'Hide history' : 'Show history'}
-            </RoundedButton>
+            </RoundedButton> */}
           </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -94,13 +94,13 @@ const AccountId: FC = ({}) => {
             )}
           </PaperWrapStyled>
         </Grid>
-        {historyExpanded && (
+        {/* {historyExpanded && (
           <Grid item xs={12}>
             <PaperWrapStyled>
               <BalanceHistory account={data.account} transfers={transfersQuery.data?.transfers} />
             </PaperWrapStyled>
           </Grid>
-        )}
+        )} */}
         {validatorInfo && validatorInfoExpanded && (
           <Grid item xs={12}>
             <ValidatorInfo info={validatorInfo} />

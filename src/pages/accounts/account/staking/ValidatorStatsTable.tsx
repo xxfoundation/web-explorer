@@ -34,7 +34,7 @@ const headers = [
 ];
 
 const BlockLink = ({ block }: { block?: number }) =>
-  block ? <Link to={`/blocks/${block}`}>{block}</Link> : <Typography>N/A</Typography>;
+  block ? <Link to={`/blocks/${block}`}>{block}</Link> : <Typography>-</Typography>;
 
 const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBlocks }> = ({
   producedBlocks,
@@ -42,7 +42,11 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
 }) => {
   const [expanded, { toggle }] = useToggle();
   const blocksProduced = useMemo(
-    () => producedBlocks?.blocks.filter((b) => b.currentEra === stats.era).map((b) => b.number),
+    () =>
+      producedBlocks?.blocks
+        .filter((b) => b.currentEra === stats.era)
+        .sort((a, b) => b.number - a.number)
+        .map((b) => b.number),
     [producedBlocks, stats.era]
   );
 
@@ -62,7 +66,7 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
     <>
       <TableRow>
         <TableCell>{stats.era}</TableCell>
-        <TableCell>{stats.points ?? 'N/A'}</TableCell>
+        <TableCell>{stats.points ?? '-'}</TableCell>
         <TableCell>{stats.commission.toFixed(2)} %</TableCell>
         <TableCell>
           <FormatBalance value={stats.selfStake.toString()} />
@@ -74,12 +78,10 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
           <FormatBalance value={stats.totalStake.toString()} />
         </TableCell>
         <TableCell>
-          {stats.relativePerformance !== null
-            ? (stats.relativePerformance * 100)?.toFixed(2)
-            : 'N/A'}
+          {stats.relativePerformance !== null ? (stats.relativePerformance * 100)?.toFixed(2) : '-'}
         </TableCell>
         <TableCell>
-          {stats.reward !== null ? <FormatBalance value={stats.reward.toString()} /> : 'N/A'}
+          {stats.reward !== null ? <FormatBalance value={stats.reward.toString()} /> : '-'}
         </TableCell>
         <TableCell>
           <Button

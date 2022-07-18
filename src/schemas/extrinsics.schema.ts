@@ -122,7 +122,7 @@ export const LIST_EXTRINSICS = gql`
 /*                            Extrinsics Bar Chart                            */
 /* -------------------------------------------------------------------------- */
 export const GET_EXTRINSICS_TIMESTAMPS = gql`
-  query ListenForExtrinsicsTimestamps(
+  query GetExtrinsicsTimestamps(
     $orderBy: [extrinsic_order_by!]
     $where: extrinsic_bool_exp
   ) {

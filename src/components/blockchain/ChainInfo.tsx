@@ -1,5 +1,5 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
-import { useSubscription } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
 import { BN } from '@polkadot/util';
 import { camelCase } from 'lodash';
@@ -50,25 +50,16 @@ const processMetrics = (data?: Metric[]) =>
 
 const ChainInfo = () => {
   const metricsSubscription = useSubscription<EraMetrics>(LISTEN_FOR_ERA_METRICS);
-  const economicsSubscription = useSubscription<EconomicsSubscription>(LISTEN_FOR_ECONOMICS);
+  const economicsQuery = useQuery<EconomicsSubscription>(LISTEN_FOR_ECONOMICS);
   const data = useMemo(
     () => processMetrics(metricsSubscription.data?.metrics),
     [metricsSubscription.data?.metrics]
   );
 
-  const {
-    accounts,
-    activeEra,
-    activeValidatorCount,
-    blocks,
-    nominatorCount,
-    transfers,
-    validatorSet
-  } = data;
+  const { accounts, activeValidatorCount, blocks, nominatorCount, transfers, validatorSet } = data;
+  const { activeEra, inflationRate, totalIssuance } = economicsQuery.data?.economics[0] ?? {};
 
-  const { inflationRate, totalIssuance } = economicsSubscription.data?.economics[0] ?? {};
-
-  if (metricsSubscription.error || economicsSubscription.error) {
+  if (metricsSubscription.error || economicsQuery.error) {
     return <Error type='data-unavailable' />;
   }
 

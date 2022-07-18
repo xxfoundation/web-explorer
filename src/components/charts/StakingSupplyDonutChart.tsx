@@ -5,7 +5,7 @@ import { Economics, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema'
 
 import { Doughnut } from 'react-chartjs-2';
 import { Box, Stack, Typography } from '@mui/material';
-import { useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { mapValues, pick } from 'lodash';
 import BN from 'bn.js';
 
@@ -103,7 +103,7 @@ export const extractChartData = (economics?: Economics) => {
 type Options = ChartProps<'doughnut'>['options'];
 
 const StakingSupplyDonutChart: FC = () => {
-  const subscription = useSubscription<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
+  const subscription = useQuery<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
   const economics = subscription.data?.economics[0];
   const chartRef = useRef<ChartJSOrUndefined<'doughnut', Data[]>>(null);
   const customTooltip = useCustomTooltip(chartRef);
