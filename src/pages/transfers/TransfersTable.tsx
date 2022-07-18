@@ -1,14 +1,14 @@
 import type { AddressFilters } from '../../components/Tables/filters/AddressFilter';
 
 import { Typography } from '@mui/material';
-import React, { Dispatch, FC, SetStateAction, useEffect, useMemo } from 'react';
+import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
 
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
-import { BaselineTable } from '../../components/Tables';
+import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TimeAgo from '../../components/TimeAgo';
 import {
   GetTransfersByBlock,
@@ -17,12 +17,11 @@ import {
 } from '../../schemas/transfers.schema';
 import { useQuery } from '@apollo/client';
 import { usePagination } from '../../hooks';
-
+import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
   return [
-    { value: <Link to={extrinsicIdLink}>{`${data.blockNumber}-${data.index}`}</Link> },
     { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
     { value: <TimeAgo date={data.timestamp} /> },
     {
@@ -37,34 +36,47 @@ const TransferRow = (data: Transfer) => {
   ];
 };
 
-const headers = [
-  { value: 'Extrinsic id' },
-  { value: 'Block' },
-  { value: 'Time' },
-  {
-    value: <Typography>From</Typography>
-  },
-  {
-    value: <Typography>To</Typography>
-  },
-  { value: 'Amount' },
-  { value: 'Result' },
-  { value: 'Hash' }
-];
-
 type Props = {
-  filters?: AddressFilters
+  filters?: AddressFilters;
   where?: Record<string, unknown>;
   setCount?: Dispatch<SetStateAction<number | undefined>>;
-}
+};
 
 const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) => {
+  const [statusFilter, setStatusFilter] = useState<boolean | null>(null);
+  const whereWithFilters = useMemo(
+    () =>
+      statusFilter !== null && {
+        success: { _eq: statusFilter }
+      },
+    [statusFilter]
+  );
+  const whereConcat = Object.assign({}, where, whereWithFilters);
   const variables = useMemo(
     () => ({
       orderBy: [{ timestamp: 'desc' }],
-      where
+      where: whereConcat
     }),
-    [where]
+    [whereConcat]
+  );
+
+  const headers = useMemo(
+    () =>
+      BaseLineCellsWrapper([
+        'Block',
+        'Time',
+        <Typography>From</Typography>,
+        <Typography>To</Typography>,
+        'Amount',
+        <BooleanFilter
+          label='Result'
+          onChange={setStatusFilter}
+          toggleLabel={(v) => (v ? 'Successful' : 'Failed')}
+          value={statusFilter}
+        />,
+        'Hash'
+      ]),
+    [statusFilter]
   );
 
   const { data, error, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
@@ -74,25 +86,18 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   const pagination = usePagination();
   const { paginate, setCount: setPaginationCount } = pagination;
 
-  const transfers = useMemo(
-    () => {
-      return (data?.transfers || [])
-        .filter((t) => !filters?.from || t.source === filters?.from)
-        .filter((t) => !filters?.to || t.destination === filters?.to);
-
-    },
-    [data?.transfers, filters?.from, filters?.to]
-  );
+  const transfers = useMemo(() => {
+    return (data?.transfers || [])
+      .filter((t) => !filters?.from || t.source === filters?.from)
+      .filter((t) => !filters?.to || t.destination === filters?.to);
+  }, [data?.transfers, filters?.from, filters?.to]);
 
   useEffect(() => {
     setCount(transfers.length);
     setPaginationCount(transfers.length);
   }, [setCount, setPaginationCount, transfers.length]);
 
-  const paginated = useMemo(
-    () => paginate(transfers),
-    [paginate, transfers]
-  );
+  const paginated = useMemo(() => paginate(transfers), [paginate, transfers]);
 
   return (
     <BaselineTable
