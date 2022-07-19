@@ -5,6 +5,7 @@ import { Box, CircularProgress } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 // import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import BarChart from '../../components/charts/BarChart/BarChart';
+import { convertTimestamps } from '../../components/charts/BarChart/utils';
 import IntervalControls, {
   intervalToTimestamp
 } from '../../components/charts/BarChart/IntervalControls';
@@ -24,20 +25,35 @@ const TranfersChart: FC = () => {
     { variables }
   );
 
+  const amounts = useMemo(() => convertTimestamps(
+      (data?.transfer || []).map((t) => t.timestamp),
+      interval,
+      (data?.transfer || []).map((t) => t.amount)
+    ),
+    [data?.transfer, interval]
+  );
+
+  const counts = useMemo(() => convertTimestamps(
+      (data?.transfer || []).map((t) => t.timestamp),
+      interval,
+    ),
+    [data?.transfer, interval]
+  );
+
   const series = useMemo<[SeriesData, SeriesData]>(
     () => [
       {
-        timestamps: (data?.transfer || []).map((t) => t.timestamp),
-        magnitudes: (data?.transfer || []).map((t) => t.amount),
+        data: amounts,
         isCurrency: true,
         label: 'xx'
       },
       {
         timestamps: (data?.transfer || []).map((t) => t.timestamp),
-        label: 'transfers'
+        label: 'transfers',
+        data: counts
       }
     ],
-    [data?.transfer]
+    [amounts, counts, data?.transfer]
   );
 
   return (

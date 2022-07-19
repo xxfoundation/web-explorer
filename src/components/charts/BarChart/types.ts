@@ -1,11 +1,10 @@
 export type TimeInterval = '1h' | '6h' | '1d';
-export type TimestampCounts = Record<string, number>;
 
 export type LabelledSeries = [string, [string, number][]][];
 
 export type SeriesMetadata = {
+  data?: [string, number][];
   label?: string;
-  counts: TimestampCounts;
   maxY: number;
   interval: TimeInterval;
   tickSize: number;
@@ -16,7 +15,7 @@ export type SeriesMetadata = {
 }
 
 export type SeriesData = {
-  timestamps: number[];
+  data?: [string, number][];
   label?: string;
   magnitudes?: number[];
   isCurrency?: boolean;

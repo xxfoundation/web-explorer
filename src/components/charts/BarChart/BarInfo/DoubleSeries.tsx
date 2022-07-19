@@ -7,19 +7,18 @@ import BarInformation from './BarInformation';
 
 const DoubleSeries: FC = () => {
   const context = useBarchartContext();
-  const timestamp = context.timestamp.value;
+  const [selected, count] = context.selected.value ?? ['', 0];
   const interval = context.interval;
-  const count = context.infoA?.counts?.[timestamp] ?? 0;
 
   const labelA = context.infoA?.label;
   const timeFormat = interval?.includes('h') ? 'YYYY.MM.DD | h:mm A (UTC)' : 'YYYY.MM.DD';
 
   const formatted = useMemo(
-    () => dayjs.utc(parseInt(timestamp, 10)).format(timeFormat),
-    [timeFormat, timestamp]
+    () => dayjs.utc(selected).format(timeFormat),
+    [timeFormat, selected]
   );
 
-  const countB = context.infoB?.counts?.[timestamp] ?? 0;
+  const countB = context.infoB?.data?.find((d) => d[0] === selected)?.[1];
   const labelB = context.infoB?.label;
 
   return (

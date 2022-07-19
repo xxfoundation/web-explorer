@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Box } from '@mui/material';
 
 import Bar from './Bar';
@@ -8,6 +8,8 @@ import { useBarchartContext } from './BarChartContext';
 
 const Bars: FC<{ inverse?: boolean }> = ({ inverse }) => {
   const context = useBarchartContext();
+  
+  
   const info = inverse ? context.infoB : context.infoA;
   const grouped = info?.grouped;
 
@@ -20,12 +22,12 @@ const Bars: FC<{ inverse?: boolean }> = ({ inverse }) => {
               {divider}
             </BarDivider>
           )}
-          {bars.map(([timestamp, value], valueIndex) => (
+          {bars.map(([label, value], valueIndex) => (
             <Bar
-              active={timestamp === context.timestamp.value}
-              onClick={context.timestamp.makeSetter(timestamp)}
-              onMouseEnter={context.timestamp.makeSetter(timestamp)}
-              key={`${divider}-${timestamp}`}
+              active={label === context.selected.value?.[0]}
+              onClick={context.selected.makeSetter([label, value])}
+              onMouseEnter={context.selected.makeSetter([label, value])}
+              key={`${divider}-${label}`}
               percent={value / (info?.maxY ?? 1) * 100}
               index={valueIndex}
               inverse={inverse}

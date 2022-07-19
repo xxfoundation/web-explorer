@@ -27,7 +27,6 @@ type Props = {
   ranking: CommonFieldsRankingFragment | undefined;
 }
 
-
 const BlockchainCard: FC<Props> = ({ account, ranking }) => {
   const [filters, setFilters] = useState<AddressFilters>({});
   const { data, loading } = useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {

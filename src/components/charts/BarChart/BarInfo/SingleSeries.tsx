@@ -8,11 +8,10 @@ const timeFormat = 'YYYY.MM.DD';
 
 const SingleSeries: FC = () => {
   const context = useBarchartContext();
-  const timestamp = context.timestamp.value;
-  const count = context.infoA?.counts?.[timestamp] ?? 0;
+  const [selected, count] = context.selected.value ?? ['', 0];
   const label = context.infoA?.label;
-  const formatted = useMemo(() => dayjs.utc(parseInt(timestamp, 10)).format(timeFormat), [timestamp])
-
+  const formatted = useMemo(() => dayjs.utc(selected).format(timeFormat), [selected])
+  
   return (
     <BarInformation>
       <Typography variant='body4' style={{ whiteSpace: 'nowrap' }}>

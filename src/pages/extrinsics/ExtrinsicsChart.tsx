@@ -1,16 +1,19 @@
-import { useSubscription } from '@apollo/client';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { DocumentNode, useQuery, useSubscription } from '@apollo/client';
+import { Box, CircularProgress } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import BarChart from '../../components/charts/BarChart/BarChart';
 import IntervalControls, {
   intervalToTimestamp
 } from '../../components/charts/BarChart/IntervalControls';
 import { TimeInterval } from '../../components/charts/BarChart/types';
-import { LISTEN_FOR_EXTRINSICS_TIMESTAMPS } from '../../schemas/extrinsics.schema';
+import Error from '../../components/Error';
+import { GetExtrinsicCounts, GET_DAILY_EXTRINSIC_COUNTS, GET_HOURLY_EXTRINSIC_COUNTS, GET_SIX_HOUR_EXTRINSIC_COUNTS, LISTEN_FOR_EXTRINSICS_TIMESTAMPS } from '../../schemas/extrinsics.schema';
 
-type Response = {
-  extrinsic: { timestamp: number }[];
-};
+const intervalQueryMap: Record<TimeInterval, DocumentNode> = {
+ '1d': GET_DAILY_EXTRINSIC_COUNTS,
+ '6h': GET_SIX_HOUR_EXTRINSIC_COUNTS,
+ '1h': GET_HOURLY_EXTRINSIC_COUNTS
+}
 
 const HistoryChart: FC = () => {
   const [interval, setInterval] = useState<TimeInterval>('1h');
@@ -21,25 +24,30 @@ const HistoryChart: FC = () => {
     };
   }, [interval]);
 
-  const { data, loading } = useSubscription<Response>(LISTEN_FOR_EXTRINSICS_TIMESTAMPS, {
+  const { data, error, loading } = useQuery<GetExtrinsicCounts>(intervalQueryMap[interval], {
     variables
   });
-  const timestamps = useMemo(
-    () => (data?.extrinsic || []).map(({ timestamp }) => timestamp),
-    [data?.extrinsic]
+  
+  const counts = useMemo<[string, number][] | undefined>(
+    () => data?.counts.map((d) => [d.timestamp, d.count]),
+    [data]
   );
 
+  // eslint-disable-next-line no-console
+  console.log(error);
+  
   return (
     <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
       <IntervalControls interval={interval} setInterval={setInterval} loading={loading} />
-      {loading || !timestamps.length ? (
+      {loading || error || counts?.length === 0 ? (
         <Box
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '250px' }}
         >
-          {loading ? <CircularProgress /> : <Typography>no extrinsics in this range</Typography>}
+          {(error || counts?.length === 0)  && <Error />}
+          {loading && <CircularProgress />}
         </Box>
       ) : (
-        <BarChart series={{ timestamps, label: 'Extrinsic' }} interval={interval} />
+        <BarChart series={{ data: counts, label: 'Extrinsic' }} interval={interval} />
       )}
     </Box>
   );
