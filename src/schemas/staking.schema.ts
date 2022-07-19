@@ -56,7 +56,7 @@ export type LatestEraQuery = {
 }
 
 export const GET_LATEST_ERA = gql`
-  query GetRankedAccounts {
+  query GetLatestEra {
     validatorStats: validator_stats(limit: 1, order_by: {era: desc}) {
       era
     }

@@ -56,8 +56,16 @@ const ChainInfo = () => {
     [metricsSubscription.data?.metrics]
   );
 
-  const { accounts, activeValidatorCount, blocks, nominatorCount, transfers, validatorSet } = data;
-  const { activeEra, inflationRate, totalIssuance } = economicsQuery.data?.economics[0] ?? {};
+  const {
+    accounts,
+    activeEra,
+    activeValidatorCount,
+    blocks,
+    nominatorCount,
+    transfers,
+    validatorSet
+  } = data;
+  const { inflationRate, totalIssuance } = economicsQuery.data?.economics[0] ?? {};
 
   if (metricsSubscription.error || economicsQuery.error) {
     return <Error type='data-unavailable' />;

@@ -202,6 +202,26 @@ export const LISTEN_FOR_NEW_ACCOUNTS = gql`
   }
 `;
 
+export type CreatedEras = {
+  account: {
+    era: number;
+  }[];
+  history: {
+    latestEra: number;
+  }[];
+}
+
+export const GET_WHEN_CREATED_ERAS = gql`
+  query ListenForNewAccounts {
+    account {
+      era: when_created_era
+    }
+    history: balance_history(order_by: {era: desc}, limit: 1) {
+      latestEra: era
+    }
+  }
+`;
+
 /* -------------------------------------------------------------------------- */
 /*                     Extrincs and Transfers Tab Counters                    */
 /* -------------------------------------------------------------------------- */
