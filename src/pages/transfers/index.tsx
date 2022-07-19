@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { theme } from '../../themes/default';
-import TranfersChart from './TransfersChart';
+import TranfersChart from './TransfersBarChart';
 import TransferTable from './TransfersTable';
 
 const TransfersPage = () => {
