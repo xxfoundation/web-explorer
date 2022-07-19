@@ -21,7 +21,7 @@ function amountByEraTooltip(this: TooltipFormatterContextObject) {
   return `Era: ${this.x}<br /><b>${this.series.name} ${result}</b>`;
 }
 
-const filterEra = (fromEra: number) => (b: BalanceHistory) => b.era > fromEra;
+const filterEra = (fromEra: number) => (b: BalanceHistory) => b.era >= fromEra;
 
 const computeBalanceHistory = (
   era: number,
