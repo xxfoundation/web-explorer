@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import ProgressBar from './ProgressBar';
 import StakingSupplyDonutChart from '../../components/charts/StakingSupplyDonutChart';
-import { useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 import Loading from '../../components/Loading';
 import { BN, BN_MILLION } from '@polkadot/util';
@@ -40,9 +40,9 @@ const getStakedReturn = (economics: Economics): number => {
 };
 
 const StakingMetrics = () => {
-  const subscription = useSubscription<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
-  const economics = subscription.data?.economics[0];
-  const loading = subscription.loading;
+  const query = useQuery<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
+  const economics = query.data?.economics[0];
+  const loading = query.loading;
 
   const metrics = useMemo(() => extractMetrics(economics), [economics]);
   const avgStakedReturn = economics ? getStakedReturn(economics).toFixed(2) : 'N/D';

@@ -5,7 +5,7 @@ import { TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui
 import React, { FC } from 'react';
 
 import useNewnessTracker, { WithNew } from '../../hooks/useNewnessTracker';
-import { LISTEN_FOR_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
+import { LISTEN_FOR_LATEST_BLOCKS } from '../../schemas/blocks.schema';
 import BlockStatusIcon from '../block/BlockStatusIcon';
 import DefaultTile from '../DefaultTile';
 import Link from '../Link';
@@ -62,7 +62,7 @@ const BlockRow: FC<WithNew<Block>> = ({
 );
 
 const LatestBlocksList = () => {
-  const { data, error, loading } = useSubscription<ListBlocks>(LISTEN_FOR_BLOCKS_ORDERED, {
+  const { data, error, loading } = useSubscription<ListBlocks>(LISTEN_FOR_LATEST_BLOCKS, {
     variables: { limit: PAGE_LIMIT }
   });
 

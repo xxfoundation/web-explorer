@@ -24,7 +24,9 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
     [block?.timestamp]
   );
 
-  return !block ? <SummaryLoader number={9} /> : (
+  return !block ? (
+    <SummaryLoader number={9} />
+  ) : (
     <SummaryContainer>
       <SummaryEntry>
         <SummaryHeader>Time</SummaryHeader>
@@ -82,8 +84,8 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
             {block ? (
               <WithCopy value={block.author}>
                 <Address
-                   truncated='mdDown'
-                  name={block.authorName}
+                  truncated='mdDown'
+                  name={block?.authorName[0].identity?.display}
                   value={block.author}
                   url={`/blocks/${block.number}/producer/${block.author}`}
                 />

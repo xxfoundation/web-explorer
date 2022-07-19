@@ -16,9 +16,9 @@ import {
   WithCopy
 } from '../../../../components/Summary';
 import TimeAgo from '../../../../components/TimeAgo';
-import ModuleCalls from '../ModuleCalls';
+import ModuleCalls from './ModuleCalls';
 import ParametersFragment from './ParametersFragment';
-import SummaryFragment from './TransferFragment';
+import TransferFragment from './TransferFragment';
 
 type Props = {
   extrinsic: Extrinsic;
@@ -62,7 +62,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
           <ModuleCalls module={extrinsic.module} call={extrinsic.call} doc={extrinsic.doc} />
         </SummaryValue>
       </SummaryEntry>
-      <SummaryFragment {...extrinsic} />
+      <TransferFragment {...extrinsic} />
       <SummaryEntry>
         <SummaryHeader>Result</SummaryHeader>
         <SummaryValue>

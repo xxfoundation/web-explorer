@@ -1,18 +1,19 @@
-import { Divider, Hidden, Grid } from '@mui/material';
+import { Divider, Hidden, Grid, Container, Typography } from '@mui/material';
 import React, { FC, Fragment, useMemo } from 'react';
-import Address from '../../components/Hash/XXNetworkAddress';
-import Hash, { Props as HashProps } from '../../components/Hash';
-import CmixAddress from '../../components/Hash/CmixAddress';
-import FormatBalance from '../../components/FormatBalance';
+import Address from '../../../components/Hash/XXNetworkAddress';
+import Hash, { Props as HashProps } from '../../../components/Hash';
+import CmixAddress from '../../../components/Hash/CmixAddress';
+import FormatBalance from '../../../components/FormatBalance';
 import {
   SummaryContainer,
   SummaryHeader,
   SummaryEntry,
   SummaryValue,
   WithCopy
-} from '../../components/Summary';
-import { CommonFieldsRankingFragment } from '../../schemas/ranking.schema';
-import Ellipsis from '../../components/Ellipsis';
+} from '../../../components/Summary';
+import { ValidatorStats } from '../../../schemas/staking.schema';
+import Ellipsis from '../../../components/Ellipsis';
+import Error from '../../../components/Error';
 
 const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
   return (
@@ -40,15 +41,34 @@ const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ en
   );
 };
 
-const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ name, ranking }) => {
+const locationString = (geoBin: string, city: string, country: string) => {
+  let str = (geoBin && `[${geoBin}] `) || '';
+  str = str.concat(city && `${city}`, country && (city ? `, ${country}` : `${country}`));
+  return str;
+};
+
+const ValidatorInfo: FC<{ info?: ValidatorStats }> = ({ info }) => {
   const location = useMemo(() => {
     const parsedLocation: { city: string; country: string; geoBin: string } = JSON.parse(
-      ranking.location
+      info?.location || ''
     );
-    return `${parsedLocation.city}, ${parsedLocation.country}`;
-  }, [ranking.location]);
-  const sessionEntries = useMemo(() => JSON.parse(ranking.sessionKeys), [ranking.sessionKeys]);
-  
+    const isEmpty = Object.entries(parsedLocation).every((x) => x.at(1) === null || x.at(1) === '');
+    return !isEmpty
+      ? locationString(parsedLocation.geoBin, parsedLocation.city, parsedLocation.country)
+      : ' - ';
+  }, [info?.location]);
+  const sessionEntries = useMemo(() => JSON.parse(info?.sessionKeys || ''), [info?.sessionKeys]);
+
+  if (!info) {
+    return (
+      <Container sx={{ my: 5 }}>
+        <Typography variant='h1' maxWidth={'400px'} sx={{ mb: 5 }}>
+          <Error type='data-unavailable' />;
+        </Typography>
+      </Container>
+    );
+  }
+
   const addressProps: Partial<HashProps> = {
     sx: { fontSize: 14, fontWeight: 400 },
     offset: { xs: 6, sm: 12 },
@@ -57,73 +77,67 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
 
   return (
     <SummaryContainer>
-      <SummaryEntry>
+      {/* <SummaryEntry>
         <SummaryHeader>Stash</SummaryHeader>
         <SummaryValue>
-          <WithCopy value={ranking.stashAddress}>
-            <Address {...addressProps} name={name} value={ranking.stashAddress} />
+          <WithCopy value={info.stashAddress}>
+            <Address {...addressProps} name={name} value={info.stashAddress} />
           </WithCopy>
         </SummaryValue>
-      </SummaryEntry>
-      <SummaryEntry>
+      </SummaryEntry> */}
+      {/* <SummaryEntry>
         <SummaryHeader>Controller</SummaryHeader>
         <SummaryValue>
-          <WithCopy value={ranking.controllerAddress}>
-            <Address {...addressProps} value={ranking.controllerAddress} />
+          <WithCopy value={info.controllerAddress}>
+            <Address {...addressProps} value={info.controllerAddress} />
           </WithCopy>
         </SummaryValue>
-      </SummaryEntry>
+      </SummaryEntry> */}
       <SummaryEntry>
         <SummaryHeader>Reward</SummaryHeader>
         <SummaryValue>
-          <WithCopy value={ranking.rewardsAddress}>
-            <Address  {...addressProps} value={ranking.rewardsAddress} />
+          <WithCopy value={info.rewardsAddress}>
+            <Address {...addressProps} value={info.rewardsAddress} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Cmix ID</SummaryHeader>
         <SummaryValue>
-          <WithCopy value={ranking.cmixId}>
-            <CmixAddress {...addressProps} value={ranking.cmixId} />
+          <WithCopy value={info.cmixId || ''}>
+            <CmixAddress {...addressProps} value={info.cmixId || ''} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Location</SummaryHeader>
-        <SummaryValue>
-          {location}
-        </SummaryValue>
+        <SummaryValue>{location}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Own Stake</SummaryHeader>
         <SummaryValue>
-          <FormatBalance value={ranking.selfStake.toString()} />
+          <FormatBalance value={info.selfStake.toString()} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Other Stake</SummaryHeader>
         <SummaryValue>
-          <FormatBalance value={ranking.otherStake.toString()} />
+          <FormatBalance value={info.otherStake.toString()} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Total Stake</SummaryHeader>
         <SummaryValue>
-          <FormatBalance value={ranking.totalStake.toString()} />
+          <FormatBalance value={info.totalStake.toString()} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Nominators</SummaryHeader>
-        <SummaryValue>
-          {ranking.nominators}
-        </SummaryValue>
+        <SummaryValue>{info.nominators.length}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Commission</SummaryHeader>
-        <SummaryValue>
-          {ranking.commission}
-        </SummaryValue>
+        <SummaryValue>{info.commission}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Session Key</SummaryHeader>
@@ -135,4 +149,4 @@ const Summary: FC<{ ranking: CommonFieldsRankingFragment; name: string }> = ({ n
   );
 };
 
-export default Summary;
+export default ValidatorInfo;

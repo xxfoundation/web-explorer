@@ -37,9 +37,6 @@ const HistoryChart: FC = () => {
     () => data?.counts.map((d) => [d.timestamp, d.count]),
     [data]
   );
-
-  // eslint-disable-next-line no-console
-  console.log(error);
   
   return (
     <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>

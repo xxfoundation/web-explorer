@@ -6,12 +6,12 @@ import Hash from '../../components/Hash';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
-import { ListBlockOrdered, LIST_BLOCK_ORDERED } from '../../schemas/blocks.schema';
+import { ListOfBlocksOrdered, LIST_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 
-const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
+const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
     <Link to={`/blocks/${block.number}`}>{block.number}</Link>,
     <BlockStatusIcon status={block.finalized ? 'successful' : 'pending'} />,
@@ -21,7 +21,7 @@ const rowParser = (block: ListBlockOrdered['blocks'][0]): BaselineCell[] => {
     <Address
       truncated
       value={block.author}
-      name={block.authorName}
+      name={block.authorName[0].identity?.display}
       url={`/blocks/${block.number}/producer/${block.author}`}
     />,
     <Hash truncated value={block.hash} url={`/blocks/${block.number}`} />
@@ -70,8 +70,8 @@ const BlocksTable: FC = () => {
     [range.from, range.to, statusFilter]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListBlockOrdered>(
-    LIST_BLOCK_ORDERED,
+  const { data, error, loading, pagination } = usePaginatedQuery<ListOfBlocksOrdered>(
+    LIST_BLOCKS_ORDERED,
     {
       variables
     }

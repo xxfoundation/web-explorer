@@ -3,19 +3,17 @@ import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/mate
 import React, { useCallback, useMemo, useState } from 'react';
 import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
-import { CreatedEras, GET_WHEN_CREATED_ERAS } from '../../../schemas/accounts.schema';
+import { ListenForEraTransfers, LISTEN_FOR_ERA_TRANSFERS } from '../../../schemas/transfers.schema';
 import DefaultTile from '../../DefaultTile';
 import Loader from './Loader';
 
 const ERAS_IN_A_QUARTER = 90;
 const ERAS_IN_A_MONTH = 30;
 
-const NewAccountsChart = () => {
-  const { data, loading } = useQuery<CreatedEras>(GET_WHEN_CREATED_ERAS);
-  const newAccounts = data?.account;
-  const latestEra = data?.history[0].latestEra || 999;
+const TransfersLineChart = () => {
+  const { data, loading } = useQuery<ListenForEraTransfers>(LISTEN_FOR_ERA_TRANSFERS);
   const timeframes: Record<string, number> = {
-    All: latestEra,
+    All: 0,
     Quarter: ERAS_IN_A_QUARTER,
     Month: ERAS_IN_A_MONTH
   };
@@ -24,29 +22,18 @@ const NewAccountsChart = () => {
     ({ target }: SelectChangeEvent<number>) => setTimeframe(Number(target.value)),
     []
   );
-
-  const eraRange: { start: number; end: number } = useMemo(() => {
-    return { start: Math.max(latestEra - timeframe, 0), end: latestEra };
-  }, [latestEra, timeframe]);
-
-  const chartData = useMemo(() => {
-    const counter: { [era: number]: number } = {};
-    newAccounts?.forEach(({ era }) => {
-      counter[era] = (counter[era] || 0) + 1;
-    });
-
-    // Initialize to 0 eras with no new accounts
-    for (let i = latestEra; i >= 0; i--) {
-      if (!Object.keys(counter).includes(i.toString())) {
-        counter[i] = 0;
-      }
-    }
-    return Object.entries(counter).map(([k, v]) => [parseInt(k), v] as DataPoint);
-  }, [latestEra, newAccounts]);
-
+  const chartData: DataPoint[] = useMemo(
+    () =>
+      (data?.eraTransfers || [])
+        .slice()
+        .sort((a, b) => a.era - b.era)
+        .map((item) => [item.era, item.transfers], [data?.eraTransfers])
+        .slice(-timeframe) as DataPoint[],
+    [data?.eraTransfers, timeframe]
+  );
   return (
-    <DefaultTile header='new accounts' height='435px'>
-      {loading || !chartData || !latestEra ? (
+    <DefaultTile header='Transfers' height='435px'>
+      {loading ? (
         <Loader />
       ) : (
         <>
@@ -67,14 +54,11 @@ const NewAccountsChart = () => {
               </Select>
             </FormControl>
           </Box>
-          <LineChart
-            tooltipFormatter={amountByEraTooltip}
-            data={chartData.slice(eraRange.start, eraRange.end)}
-          />
+          <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} />
         </>
       )}
     </DefaultTile>
   );
 };
 
-export default NewAccountsChart;
+export default TransfersLineChart;

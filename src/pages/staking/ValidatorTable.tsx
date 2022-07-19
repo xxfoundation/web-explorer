@@ -9,14 +9,15 @@ import Loading from '../../components/Loading';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
 import {
-  GET_RANKED_ACCOUNTS,
+  GET_CURRENT_VALIDATORS,
   GET_LATEST_ERA,
   ActiveCountsQuery,
   LatestEraQuery,
-  RankedAccountsQuery,
-  RankedAccount,
-  GET_ACTIVE_COUNTS
-} from '../../schemas/ranking.schema';
+  ValidatorAccountsQuery,
+  ValidatorAccount,
+  GET_ACTIVE_COUNTS,
+  GET_WAITING_LIST
+} from '../../schemas/staking.schema';
 import ValidatorTableControls, {
   ValidatorFilter,
   ValidatorFilterLabels
@@ -24,14 +25,13 @@ import ValidatorTableControls, {
 
 const ROWS_PER_PAGE = 20;
 
-const ValidatorRow: FC<RankedAccount> = ({
+const ValidatorRow: FC<ValidatorAccount> = ({
   addressId,
   cmixId,
+  commission,
   location,
-  name,
   nominators,
   ownStake,
-  rank,
   totalStake
 }) => {
   const validatorLink = `/accounts/${addressId}`;
@@ -46,25 +46,30 @@ const ValidatorRow: FC<RankedAccount> = ({
 
   return (
     <TableRow key={addressId}>
+      {/* <TableCell>
+        <Typography variant='h4'>{}</Typography>
+      </TableCell> */}
       <TableCell>
-        <Typography variant='h4'>{rank}</Typography>
-      </TableCell>
-      <TableCell>
-        <Address name={name} value={addressId} url={validatorLink} truncated />
+        <Address value={addressId} url={validatorLink} truncated />
       </TableCell>
       <TableCell>{parsed}</TableCell>
       <TableCell>
         <FormatBalance value={ownStake} />
       </TableCell>
+      {totalStake && (
+        <TableCell>
+          <FormatBalance value={totalStake} />
+        </TableCell>
+      )}
       <TableCell>
-        <FormatBalance value={totalStake} />
+        <Typography>{commission.toFixed(2)} %</Typography>
       </TableCell>
       <TableCell>
         <Typography variant='code'>
           <CmixAddress truncated value={cmixId} />
         </Typography>
       </TableCell>
-      <TableCell>{nominators}</TableCell>
+      <TableCell>{nominators.length}</TableCell>
     </TableRow>
   );
 };
@@ -74,18 +79,26 @@ const ValidatorsTable = () => {
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<ValidatorFilter>('current');
   const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
-  const latestEra = latestEraQuery.data?.ranking?.[0].era;
-  const countsQuery = useQuery<ActiveCountsQuery>(GET_ACTIVE_COUNTS, { variables: { era: latestEra }, skip: !latestEra });
+  const latestEra = latestEraQuery.data?.validatorStats?.[0].era;
+  const countsQuery = useQuery<ActiveCountsQuery>(GET_ACTIVE_COUNTS, {
+    variables: { era: latestEra },
+    skip: !latestEra
+  });
   const variables = useMemo(
     () => ({
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      where: { active: { _eq: filter === 'current' }, era: { _eq: latestEra } }
+      where: { era: { _eq: latestEra } }
     }),
-    [filter, latestEra, page, rowsPerPage]
+    [latestEra, page, rowsPerPage]
   );
-  const rankingQuery = useQuery<RankedAccountsQuery>(GET_RANKED_ACCOUNTS, { variables, skip: !latestEra });
-  const validators = rankingQuery.data?.validators;
+  const validatorsQuery = useQuery<ValidatorAccountsQuery>(GET_CURRENT_VALIDATORS, {
+    variables,
+    skip: !latestEra
+  });
+  const waitingQuery = useQuery<ValidatorAccountsQuery>(GET_WAITING_LIST);
+  const validators = validatorsQuery.data?.validators;
+  const waitingList = waitingQuery.data?.validators;
   const activeCount = countsQuery.data?.active.aggregate.count;
   const waitingCount = countsQuery.data?.waiting.aggregate.count;
   const count = filter === 'current' ? activeCount : waitingCount;
@@ -106,7 +119,7 @@ const ValidatorsTable = () => {
     [activeCount, waitingCount]
   );
 
-  const error = latestEraQuery.error || rankingQuery.error;
+  const error = latestEraQuery.error || validatorsQuery.error;
 
   return (
     <Stack spacing={3}>
@@ -120,11 +133,12 @@ const ValidatorsTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Rank</TableCell>
+              {/* <TableCell>Rank</TableCell> */}
               <TableCell>Validator</TableCell>
               <TableCell>Location</TableCell>
               <TableCell>Own Stake</TableCell>
-              <TableCell>Total Stake</TableCell>
+              {filter !== 'waiting' && <TableCell>Total Stake</TableCell>}
+              <TableCell>Commission</TableCell>
               <TableCell>Cmix ID</TableCell>
               <TableCell>Nominators</TableCell>
             </TableRow>
@@ -132,14 +146,20 @@ const ValidatorsTable = () => {
           <TableBody>
             <TableRow>
               <TableCell colSpan={7}>
-                {!rankingQuery.loading && (error) && (
-                  <Error type='data-unavailable' />
-                )}
-                {rankingQuery.loading && <Loading />}
+                {!validatorsQuery.loading && error && <Error type='data-unavailable' />}
+                {validatorsQuery.loading && <Loading />}
               </TableCell>
             </TableRow>
-            {validators ? (
-              validators.map((validator) => (
+            {filter !== 'waiting' ? (
+              validators ? (
+                validators.map((validator) => (
+                  <ValidatorRow key={validator.addressId} {...validator} />
+                ))
+              ) : (
+                <TableRow></TableRow>
+              )
+            ) : waitingList ? (
+              waitingList.map((validator) => (
                 <ValidatorRow key={validator.addressId} {...validator} />
               ))
             ) : (

@@ -1,6 +1,6 @@
 import type { SeriesData, TimeInterval } from '../../components/charts/BarChart/types';
 
-import { useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Box, CircularProgress } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 // import DownloadDataButton from '../../components/buttons/DownloadDataButton';
@@ -10,7 +10,7 @@ import IntervalControls, {
   intervalToTimestamp
 } from '../../components/charts/BarChart/IntervalControls';
 import Error from '../../components/Error';
-import { LISTEN_FOR_TRANSFERS_TIMESTAMPS } from '../../schemas/transfers.schema';
+import { GET_TRANSFERS_TIMESTAMPS } from '../../schemas/transfers.schema';
 
 const TranfersChart: FC = () => {
   const [interval, setInterval] = useState<TimeInterval>('1h');
@@ -20,8 +20,8 @@ const TranfersChart: FC = () => {
       where: { timestamp: { _gte: intervalToTimestamp(interval) } }
     };
   }, [interval]);
-  const { data, loading } = useSubscription<{ transfer: { timestamp: number; amount: number }[] }>(
-    LISTEN_FOR_TRANSFERS_TIMESTAMPS,
+  const { data, loading } = useQuery<{ transfer: { timestamp: number; amount: number }[] }>(
+    GET_TRANSFERS_TIMESTAMPS,
     { variables }
   );
 

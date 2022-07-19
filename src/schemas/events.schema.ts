@@ -1,6 +1,10 @@
 import { gql } from '@apollo/client';
 import { TotalOfItems } from './types';
 
+
+/* -------------------------------------------------------------------------- */
+/*                            Get Events of a Block                           */
+/* -------------------------------------------------------------------------- */
 export type Event = {
   blockNumber: number;
   index: number;
@@ -31,6 +35,9 @@ export const EVENTS_OF_BLOCK = gql`
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                                Events Table                                */
+/* -------------------------------------------------------------------------- */
 export type ListEvents = {
   events: Event[];
 } & TotalOfItems;
@@ -58,13 +65,16 @@ export const LIST_EVENTS = gql`
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                         Get available Module / Call                        */
+/* -------------------------------------------------------------------------- */
 export type GetAvailableEventActions = {
   modules: { module: string }[];
   calls: { call: string }[];
 }
 
 export const GET_AVAILABLE_EVENT_ACTIONS = gql`
-  query GetAvailableModules {
+  query GetAvailableEventActions {
     modules: event (distinct_on: module) {
       module
     }
