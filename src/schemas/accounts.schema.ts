@@ -267,51 +267,12 @@ export type BalanceHistory = {
   // democracyBalance: number;
 }
 
-export type Nominator = {
-  account_id: string;
-  stake: string;
-  share: string;
-}
-
-const VALIDATOR_STATS_FRAGMENT = gql`
-  fragment validatorStatsFragment on validator_stats {
-    cmixId: cmix_id
-    commission
-    era
-    location
-    nominators
-    otherStake: other_stake
-    points
-    relativePerformance: relative_performance
-    reward
-    rewardsAddress: rewards_address
-    selfStake: self_stake
-    sessionKeys: session_keys
-    stashAddress: stash_address
-    timestamp
-    totalStake: total_stake
-  }
-`;
 
 export type GetValidatorStats = {
   aggregates: { aggregate: { count: number } }
   stats: ValidatorStats[]
 }
 
-export const GET_VALIDATOR_STATS = gql`
-  ${VALIDATOR_STATS_FRAGMENT}
-  query GetValidatorStatsCount ($address: String!) {
-    aggregates: validator_stats_aggregate(where: { stash_address: { _eq: $address }}) {
-      aggregate {
-        count
-      }
-    }
-
-    stats: validator_stats(where: { stash_address: { _eq: $address } }, order_by: { era: desc }) {
-      ...validatorStatsFragment
-    }
-  }
-`;
 
 export type GetBalanceHistory = {
   history: BalanceHistory[];
