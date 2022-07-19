@@ -7,14 +7,14 @@ import { ListenForEraTransfers, LISTEN_FOR_ERA_TRANSFERS } from '../../../schema
 import DefaultTile from '../../DefaultTile';
 import Loader from './Loader';
 
-const ERAS_IN_A_SEMESTER = 180;
+const ERAS_IN_A_QUARTER = 90;
 const ERAS_IN_A_MONTH = 30;
 
 const TransfersLineChart = () => {
   const { data, loading } = useQuery<ListenForEraTransfers>(LISTEN_FOR_ERA_TRANSFERS);
   const timeframes: Record<string, number> = {
     All: 0,
-    Semester: ERAS_IN_A_SEMESTER,
+    Quarter: ERAS_IN_A_QUARTER,
     Month: ERAS_IN_A_MONTH
   };
   const [timeframe, setTimeframe] = useState(ERAS_IN_A_MONTH);

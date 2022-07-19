@@ -7,16 +7,16 @@ import { CreatedEras, GET_WHEN_CREATED_ERAS } from '../../../schemas/accounts.sc
 import DefaultTile from '../../DefaultTile';
 import Loader from './Loader';
 
-const ERAS_IN_A_SEMESTER = 180;
+const ERAS_IN_A_QUARTER = 90;
 const ERAS_IN_A_MONTH = 30;
 
 const NewAccountsChart = () => {
   const { data, loading } = useQuery<CreatedEras>(GET_WHEN_CREATED_ERAS);
   const newAccounts = data?.account;
-  const latestEra = data?.history[0].latestEra || 99999;
+  const latestEra = data?.history[0].latestEra || 999;
   const timeframes: Record<string, number> = {
     All: latestEra,
-    Semester: ERAS_IN_A_SEMESTER,
+    Quarter: ERAS_IN_A_QUARTER,
     Month: ERAS_IN_A_MONTH
   };
   const [timeframe, setTimeframe] = useState(ERAS_IN_A_MONTH);
@@ -36,13 +36,13 @@ const NewAccountsChart = () => {
     });
 
     // Initialize to 0 eras with no new accounts
-    for (let i = eraRange.end; i >= 0; i--) {
+    for (let i = latestEra; i >= 0; i--) {
       if (!Object.keys(counter).includes(i.toString())) {
         counter[i] = 0;
       }
     }
     return Object.entries(counter).map(([k, v]) => [parseInt(k), v] as DataPoint);
-  }, [eraRange, newAccounts]);
+  }, [latestEra, newAccounts]);
 
   return (
     <DefaultTile header='new accounts' height='435px'>

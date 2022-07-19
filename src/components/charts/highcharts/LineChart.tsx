@@ -16,8 +16,8 @@ const calculateMaximums = (data: DataPoint[]) => {
   const minX = Math.min(...xItems);
 
   return {
-    minX: minX * 0.98,
-    maxX: maxX * 1.02
+    minX: minX * 0.995,
+    maxX: maxX * 1.005
   };
 };
 
@@ -68,7 +68,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, 
         labels: { y: 20, formatter: labelFormatters?.xAxis },
         tickWidth: 1,
         // TODO tickPixelInterval: pixelIntervalX, create a parameter to control this better
-        offset: 20,
+        offset: 10,
         min: minX,
         max: maxX,
         margin: 50
