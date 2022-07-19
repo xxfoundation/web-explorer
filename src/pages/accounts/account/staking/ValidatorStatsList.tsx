@@ -1,4 +1,4 @@
-import type { ValidatorStats } from '../../../../schemas/accounts.schema';
+import type { ValidatorStats } from '../../../../schemas/staking.schema';
 import type { Block } from '../../../../schemas/blocks.schema';
 
 import React, { FC, useMemo, useEffect } from 'react';
