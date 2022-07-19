@@ -13,12 +13,12 @@ import {
   GET_EXTRINSIC_COUNTS,
   GetExtrinsicCounts
 } from '../../../../schemas/accounts.schema';
-import { GetValidatorStats } from '../../../../schemas/staking.schema';
 import TransferTable from '../../../transfers/TransfersTable';
-import ValidatorStatsTable from '../staking/ValidatorStatsTable';
 import NominatorsTable from '../staking/NominatorsTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
 import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.schema';
+import ValidatorStatsTable from '../staking/ValidatorStatsTable';
+import { GetValidatorStats } from '../../../../schemas/staking.schema';
 
 type Props = {
   account: Account;
