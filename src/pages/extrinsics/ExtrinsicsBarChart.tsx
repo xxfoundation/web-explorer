@@ -15,12 +15,12 @@ import {
 } from '../../schemas/extrinsics.schema';
 
 const intervalQueryMap: Record<TimeInterval, DocumentNode> = {
- '1d': GET_DAILY_EXTRINSIC_COUNTS,
- '6h': GET_SIX_HOUR_EXTRINSIC_COUNTS,
- '1h': GET_HOURLY_EXTRINSIC_COUNTS
-}
+  '1d': GET_DAILY_EXTRINSIC_COUNTS,
+  '6h': GET_SIX_HOUR_EXTRINSIC_COUNTS,
+  '1h': GET_HOURLY_EXTRINSIC_COUNTS
+};
 
-const HistoryChart: FC = () => {
+const ExtrinsicsBatChart: FC = () => {
   const [interval, setInterval] = useState<TimeInterval>('1h');
   const variables = useMemo(() => {
     return {
@@ -32,12 +32,12 @@ const HistoryChart: FC = () => {
   const { data, error, loading } = useQuery<GetExtrinsicCounts>(intervalQueryMap[interval], {
     variables
   });
-  
+
   const counts = useMemo<[string, number][] | undefined>(
     () => data?.counts.map((d) => [d.timestamp, d.count]),
     [data]
   );
-  
+
   return (
     <Box style={{ overflowX: 'auto', overflowY: 'hidden', scrollBehavior: 'smooth' }}>
       <IntervalControls interval={interval} setInterval={setInterval} loading={loading} />
@@ -45,7 +45,7 @@ const HistoryChart: FC = () => {
         <Box
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '250px' }}
         >
-          {(error || counts?.length === 0)  && <Error />}
+          {(error || counts?.length === 0) && <Error />}
           {loading && <CircularProgress />}
         </Box>
       ) : (
@@ -55,4 +55,4 @@ const HistoryChart: FC = () => {
   );
 };
 
-export default HistoryChart;
+export default ExtrinsicsBatChart;

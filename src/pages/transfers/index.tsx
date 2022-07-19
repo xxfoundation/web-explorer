@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { theme } from '../../themes/default';
-import TranfersChart from './TransfersBarChart';
+import TransfersBarChart from './TransfersBarChart';
 import TransferTable from './TransfersTable';
 
 const TransfersPage = () => {
@@ -23,7 +23,7 @@ const TransfersPage = () => {
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled>
-          <TranfersChart />
+          <TransfersBarChart />
         </PaperStyled>
       </Box>
       <PaperStyled>
