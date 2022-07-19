@@ -1,59 +1,65 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { SeriesData, SeriesMetadata, TimeInterval } from './types';
-import { convertToNearestTimestamp, extractInfo } from './utils';
+import { extractInfo } from './utils';
+
+type Value = [string, number] | undefined;
 
 type SelectedIntervalContextType = {
-  timestamp: {
-    value: string;
-    makeSetter: (value: string) => () => void;
+  selected: {
+    value: Value;
+    makeSetter: (value: Value) => () => void;
   };
   interval: TimeInterval;
   infoA?: SeriesMetadata;
   infoB?: SeriesMetadata;
-  timestamps: number[];
+  data: SeriesData['data'];
 };
 
 const SelectedIntervalContext = createContext<SelectedIntervalContextType>({
-  timestamp: { value: '', makeSetter: () => () => {} },
+  selected: { value: ['', 0], makeSetter: () => () => {} },
   interval: '1h',
-  timestamps: []
+  data: []
 });
 
 export const useBarchartContext = () => useContext(SelectedIntervalContext);
 
 export const Provider: React.FC<{
-  timestamps: number[];
+  data?: [string, number][];
   interval: TimeInterval;
   seriesA: SeriesData;
   seriesB?: SeriesData;
 }> = ({
   children,
+  data = [],
   interval,
   seriesA,
   seriesB,
-  timestamps,
 }) => {
-  const [timestamp, setTimestamp] = useState<string>('');
-  const makeTimestampSetter = useCallback((t: string) => () => setTimestamp(t), []);
+  const [selected, setSelected] = useState<[string, number]>();
+  const makeTimestampSetter = useCallback((v: Value) => () => setSelected(v), []);
 
-  const value = useMemo<SelectedIntervalContextType>(
+  
+  const infoA = useMemo(() => extractInfo(seriesA, interval), [interval, seriesA]);
+  const infoB = useMemo(() => seriesB && extractInfo(seriesB, interval), [interval, seriesB]);
+  
+  const context = useMemo<SelectedIntervalContextType>(
     () => ({
-      timestamp: { value: timestamp.toString(), makeSetter: makeTimestampSetter },
-      infoA: extractInfo(seriesA, interval),
-      infoB: seriesB && extractInfo(seriesB, interval),
-      timestamps,
+      selected: { value: selected, makeSetter: makeTimestampSetter },
+      data,
+      infoA,
+      infoB,
       interval
     }),
-    [interval, makeTimestampSetter, seriesA, seriesB, timestamp, timestamps]
+    [selected, makeTimestampSetter, data, infoA, infoB, interval]
   );
 
   useEffect(() => {
-    if (timestamp === '' && timestamps.length > 0) {
-      setTimestamp(convertToNearestTimestamp(timestamps[0], interval).toString());
+    if (selected === undefined && data.length > 0) {
+      setSelected(data[0]);
     }
-  }, [interval, timestamp, timestamps]);
+  }, [data, interval, selected]);
 
   return (
-    <SelectedIntervalContext.Provider value={value}>{children}</SelectedIntervalContext.Provider>
+    <SelectedIntervalContext.Provider value={context}>{children}</SelectedIntervalContext.Provider>
   );
 };

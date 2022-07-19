@@ -267,6 +267,7 @@ export type BalanceHistory = {
   // democracyBalance: number;
 }
 
+
 export type GetBalanceHistory = {
   history: BalanceHistory[];
 }

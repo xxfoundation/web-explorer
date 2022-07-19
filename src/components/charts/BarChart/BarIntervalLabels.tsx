@@ -33,7 +33,7 @@ const BarIntervalLabels = () => {
   const barInfoFormat = interval.includes('h') ? 'HH' : 'DD';
 
   const formatter = useCallback(
-    (timestamp: string) => dayjs.utc(parseInt(timestamp)).format(barInfoFormat),
+    (timestamp: string) => dayjs.utc(timestamp).format(barInfoFormat),
     [barInfoFormat]
   );
 
@@ -44,9 +44,9 @@ const BarIntervalLabels = () => {
       {context.infoA?.grouped.map(([label, counts]) => (
         <React.Fragment key={label}>
           <DividerSpacer />
-          {counts.map(([t], index) => (
-            <IntervalLabel key={t} onMouseEnter={context.timestamp.makeSetter(t)}>
-              {index % 2 === 1 ? formatter(t) : null}
+          {counts.map((v, index) => (
+            <IntervalLabel key={v[0]} onMouseEnter={context.selected.makeSetter(v)}>
+              {index % 2 === 1 ? formatter(v[0]) : null}
             </IntervalLabel>
           ))}
         </React.Fragment>

@@ -167,3 +167,37 @@ export const GET_AVAILABLE_EXTRINSIC_ACTIONS = gql`
     }
   }
 `;
+
+/* -------------------------------------------------------------------------- */
+/*                         Get extrinsic counts                               */
+/* -------------------------------------------------------------------------- */
+export type GetExtrinsicCounts = {
+  counts: { count: number, timestamp: string }[]
+}
+
+export const GET_HOURLY_EXTRINSIC_COUNTS = gql`
+  query GetHourlyExtrinsicCounts {
+    counts: hourly_extrinsic_counts {
+      count
+      timestamp: interval_start
+    }
+  }
+`;
+
+export const GET_DAILY_EXTRINSIC_COUNTS = gql`
+  query GetHourlyExtrinsicCounts {
+    counts: daily_extrinsic_counts {
+      count
+      timestamp: interval_start
+    }
+  }
+`;
+
+export const GET_SIX_HOUR_EXTRINSIC_COUNTS = gql`
+  query GetSixHourExtrinsicCounts {
+    counts: six_hour_extrinsic_counts {
+      count
+      timestamp: interval_start
+    }
+  }
+` 

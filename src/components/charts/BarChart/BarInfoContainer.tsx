@@ -15,13 +15,13 @@ const BarInfoContainer = () => {
     <Stack direction='row' sx={{ mb: 2 }}>
       <LabelSpacer />
       <LegendSpacer />
-      {context.infoA?.grouped.map(([label, counts]) => (
+      {context.infoA?.grouped.map(([label, values]) => (
         <React.Fragment key={label}>
           <DividerSpacer />
-          {counts.map(([t]) => (
+          {values.map(([t]) => (
               <BarSpacer
                 key={t} sx={{ height: '4rem', position: 'relative' }}>
-                {context.timestamp.value === t && (
+                {context.selected.value?.[0] === t && (
                   <>
                     <VerticalDivider
                       style={{ position: 'absolute', bottom: 0, height: hasNegatives ? '9rem' : '4rem' }}
