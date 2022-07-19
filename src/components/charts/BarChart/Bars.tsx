@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { Box } from '@mui/material';
 
 import Bar from './Bar';
