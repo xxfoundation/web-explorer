@@ -268,12 +268,6 @@ export type BalanceHistory = {
 }
 
 
-export type GetValidatorStats = {
-  aggregates: { aggregate: { count: number } }
-  stats: ValidatorStats[]
-}
-
-
 export type GetBalanceHistory = {
   history: BalanceHistory[];
 }
