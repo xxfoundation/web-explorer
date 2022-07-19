@@ -22,19 +22,23 @@ import ValidatorTableControls, {
   ValidatorFilter,
   ValidatorFilterLabels
 } from './ValidatorTableControls';
+import { TabText } from '../../components/Tabs';
 
 const ROWS_PER_PAGE = 20;
 
-const ValidatorRow: FC<ValidatorAccount> = ({
+const ValidatorRow: FC<ValidatorAccount & { index: number }> = ({
   addressId,
   cmixId,
   commission,
+  index,
   location,
+  name,
   nominators,
   ownStake,
   totalStake
 }) => {
   const validatorLink = `/accounts/${addressId}`;
+  const identityDisplay = name && name[0] && name[0].display;
   let parsed;
 
   try {
@@ -46,11 +50,11 @@ const ValidatorRow: FC<ValidatorAccount> = ({
 
   return (
     <TableRow key={addressId}>
-      {/* <TableCell>
-        <Typography variant='h4'>{}</Typography>
-      </TableCell> */}
       <TableCell>
-        <Address value={addressId} url={validatorLink} truncated />
+        <Typography variant='h4'>{index}</Typography>
+      </TableCell>
+      <TableCell>
+        <Address value={addressId} name={identityDisplay} url={validatorLink} truncated />
       </TableCell>
       <TableCell>{parsed}</TableCell>
       <TableCell>
@@ -105,15 +109,9 @@ const ValidatorsTable = () => {
 
   const labels: ValidatorFilterLabels = useMemo(
     () => ({
-      current: (
-        <>
-          <strong>Current</strong> {activeCount !== undefined && `| ${activeCount}`}
-        </>
-      ),
+      current: <TabText message={'Current'} count={activeCount === undefined ? '' : activeCount} />,
       waiting: (
-        <>
-          <strong>Waiting</strong> {waitingCount !== undefined && `| ${waitingCount}`}
-        </>
+        <TabText message={'Waiting'} count={waitingCount === undefined ? '' : waitingCount} />
       )
     }),
     [activeCount, waitingCount]
@@ -123,8 +121,8 @@ const ValidatorsTable = () => {
 
   return (
     <Stack spacing={3}>
-      <Stack sx={{ mb: 3 }} spacing={2}>
-        <Typography variant='h2' sx={{ fontWeight: 500 }}>
+      <Stack sx={{ mb: 2, ml: -1.5 }} spacing={2}>
+        <Typography variant='h2' sx={{ ml: 1.5, fontWeight: 500 }}>
           Validator
         </Typography>
         <ValidatorTableControls labels={labels} selected={filter} onSelect={setFilter} />
@@ -133,7 +131,7 @@ const ValidatorsTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              {/* <TableCell>Rank</TableCell> */}
+              <TableCell>#</TableCell>
               <TableCell>Validator</TableCell>
               <TableCell>Location</TableCell>
               <TableCell>Own Stake</TableCell>
@@ -152,15 +150,15 @@ const ValidatorsTable = () => {
             </TableRow>
             {filter !== 'waiting' ? (
               validators ? (
-                validators.map((validator) => (
-                  <ValidatorRow key={validator.addressId} {...validator} />
+                validators.map((validator, index) => (
+                  <ValidatorRow key={validator.addressId} index={index + 1} {...validator} />
                 ))
               ) : (
                 <TableRow></TableRow>
               )
             ) : waitingList ? (
-              waitingList.map((validator) => (
-                <ValidatorRow key={validator.addressId} {...validator} />
+              waitingList.map((validator, index) => (
+                <ValidatorRow key={validator.addressId} index={index + 1} {...validator} />
               ))
             ) : (
               <TableRow></TableRow>

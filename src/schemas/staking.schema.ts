@@ -92,6 +92,9 @@ export type ValidatorAccount = {
   totalStake: string;
   otherStake: string;
   commission: number;
+  name: {
+    display: string;
+  }[];
 };
 
 export type ValidatorAccountsQuery = {
@@ -109,6 +112,9 @@ export const GET_CURRENT_VALIDATORS = gql`
       commission
       cmixId: cmix_id
       nominators
+      name: identity {
+        display
+      }
     }
   }
 `;
@@ -122,6 +128,9 @@ export const GET_WAITING_LIST = gql`
       commission
       cmixId: cmix_id
       nominators
+      name: identity {
+        display
+      }
     }
   }
 `;
