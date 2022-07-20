@@ -172,4 +172,25 @@ export const GET_BLOCK_COUNTS = gql`
       }
     }
   }
-`
+`;
+
+/* -------------------------------------------------------------------------- */
+/*                    Latest Finalized Block Subscription                     */
+/* -------------------------------------------------------------------------- */
+export type FinalizedBlockCount = {
+  block: {
+    aggregate: {
+      count: number
+    }
+  }
+}
+
+export const LISTEN_FINALIZE_BLOCK_COUNT = gql`
+  subscription MyQuery {
+    block: block_aggregate(where: {finalized: {_eq: true}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;

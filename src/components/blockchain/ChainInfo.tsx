@@ -5,6 +5,7 @@ import { BN } from '@polkadot/util';
 import { camelCase } from 'lodash';
 
 import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
+import { FinalizedBlockCount, LISTEN_FINALIZE_BLOCK_COUNT } from '../../schemas/blocks.schema'
 import { ChainInfoLink, Data, Item } from './ChainInfo.styles';
 import { InfoOutlined } from '@mui/icons-material';
 import FormatBalance from '../FormatBalance';
@@ -16,7 +17,7 @@ import { CustomTooltip } from '../Tooltip';
 const ChainInfoCard: FC<{
   title: string;
   tooltip?: string;
-  value: string | BN | React.ReactNode;
+  value?: BN | React.ReactNode;
   path?: string;
 }> = ({ path, title, tooltip, value }) => {
   return (
@@ -50,6 +51,7 @@ const processMetrics = (data?: Metric[]) =>
 
 const ChainInfo = () => {
   const metricsSubscription = useSubscription<EraMetrics>(LISTEN_FOR_ERA_METRICS);
+  const finalizedBlocks = useSubscription<FinalizedBlockCount>(LISTEN_FINALIZE_BLOCK_COUNT);
   const economicsQuery = useQuery<EconomicsSubscription>(LISTEN_FOR_ECONOMICS);
   const data = useMemo(
     () => processMetrics(metricsSubscription.data?.metrics),
@@ -60,12 +62,12 @@ const ChainInfo = () => {
     accounts,
     activeEra,
     activeValidatorCount,
-    blocks,
     nominatorCount,
     transfers,
     validatorSet
   } = data;
   const { inflationRate, totalIssuance } = economicsQuery.data?.economics[0] ?? {};
+  const blocks = finalizedBlocks.data?.block.aggregate.count;
 
   if (metricsSubscription.error || economicsQuery.error) {
     return <Error type='data-unavailable' />;
