@@ -31,13 +31,14 @@ const NewAccountsChart = () => {
 
   const chartData = useMemo(() => {
     const counter: { [era: number]: number } = {};
+
     newAccounts?.forEach(({ era }) => {
       counter[era] = (counter[era] || 0) + 1;
     });
 
     // Initialize to 0 eras with no new accounts
     for (let i = latestEra; i >= 0; i--) {
-      if (!Object.keys(counter).includes(i.toString())) {
+      if (!(i in counter)) {
         counter[i] = 0;
       }
     }
