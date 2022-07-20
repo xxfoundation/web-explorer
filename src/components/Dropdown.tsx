@@ -16,7 +16,12 @@ export const DropdownFilter: FC<{
 
   return (
     <>
-      <Button ref={buttonRef} color={'inherit'} endIcon={endIcon} onClick={toggle}>
+      <Button
+        sx={{ mx: -1 }}
+        ref={buttonRef}
+        color={'inherit'}
+        endIcon={endIcon}
+        onClick={toggle}>
         {buttonLabel}
       </Button>
       {children && (
