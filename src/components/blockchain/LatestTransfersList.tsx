@@ -1,3 +1,5 @@
+import type { ListOfTransfers, Transfer } from '../../schemas/transfers.schema';
+
 import { useSubscription } from '@apollo/client';
 import { TableBody, TableRow, TableCell, TableContainer, Typography } from '@mui/material';
 import React, { FC } from 'react';
@@ -8,7 +10,6 @@ import DefaultTile from '../DefaultTile';
 import FormatBalance from '../FormatBalance';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
-import type { ListOfTransfers, Transfer } from './types';
 import Error from '../Error';
 import SkeletonRows from '../Tables/SkeletonRows';
 import { Table } from '../Tables/TableContainer.styled';
@@ -23,8 +24,8 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
         <TableCell colSpan={3} sx={{ paddingLeft: 0 }}>
           <Header fontWeight={700}>
             EXTRINSIC&nbsp;
-            <Link to={`/extrinsics/${props.blockNumber}-${props.extrinsicIndex}`} underline='hover'>
-              #{`${props.blockNumber}-${props.extrinsicIndex}`}
+            <Link to={`/extrinsics/${props.blockNumber}-${props.index}`} underline='hover'>
+              #{`${props.blockNumber}-${props.index}`}
             </Link>
           </Header>
         </TableCell>
@@ -40,6 +41,7 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             offset={4}
             sx={{ fontSize: 14, fontWeight: 400 }}
             value={props.source}
+            name={props.sourceAccount.identity?.display}
             url={`/accounts/${props.source}`}
             truncated
           />
@@ -61,13 +63,14 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             offset={4}
             sx={{ fontSize: 14, fontWeight: 400 }}
             value={props.destination}
+            name={props.destinationAccount.identity?.display}
             url={`/accounts/${props.destination}`}
             truncated
           />
         </BorderlessCell>
         <BorderlessCell>
           <Typography variant='body3'>
-            <FormatBalance value={props.amount} />
+            <FormatBalance value={props.amount.toString()} />
           </Typography>
         </BorderlessCell>
       </TableRow>
@@ -87,7 +90,7 @@ const LatestTransfersList = () => {
     <DefaultTile
       header={'Transfers'}
       linkName={'SEE ALL'}
-      linkAddress={'/blocks'}
+      linkAddress={'/transfers'}
       height={500}>
         <TableContainer>
           <Table size={!loading ? 'small': undefined}>

@@ -77,27 +77,14 @@ const ValidatorInfo: FC<{ info?: ValidatorStats }> = ({ info }) => {
 
   return (
     <SummaryContainer>
-      {/* <SummaryEntry>
-        <SummaryHeader>Stash</SummaryHeader>
-        <SummaryValue>
-          <WithCopy value={info.stashAddress}>
-            <Address {...addressProps} name={name} value={info.stashAddress} />
-          </WithCopy>
-        </SummaryValue>
-      </SummaryEntry> */}
-      {/* <SummaryEntry>
-        <SummaryHeader>Controller</SummaryHeader>
-        <SummaryValue>
-          <WithCopy value={info.controllerAddress}>
-            <Address {...addressProps} value={info.controllerAddress} />
-          </WithCopy>
-        </SummaryValue>
-      </SummaryEntry> */}
       <SummaryEntry>
         <SummaryHeader>Reward</SummaryHeader>
         <SummaryValue>
           <WithCopy value={info.rewardsAddress}>
-            <Address {...addressProps} value={info.rewardsAddress} />
+            <Address
+              {...addressProps}
+              value={info.rewardsAddress}
+              name={info.rewardsAccount.identity?.display} />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>

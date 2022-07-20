@@ -22,6 +22,12 @@ export type Transfer = {
   call: string;
   success: boolean;
   timestamp: string;
+  destinationAccount: {
+    identity: null | { display: string }
+  },
+  sourceAccount: {
+    identity: null | { display: string }
+  }
 };
 
 export const TRANSFER_FRAGMENT = gql`
@@ -37,26 +43,31 @@ export const TRANSFER_FRAGMENT = gql`
     call
     success
     timestamp
+    destinationAccount:accountByDestination {
+      identity {
+        display
+      }
+    }
+    sourceAccount: account {
+      identity {
+        display
+      }
+    }
   }
 `;
 
 /* -------------------------------------------------------------------------- */
 /*                               Transfers Table                              */
 /* -------------------------------------------------------------------------- */
+export type ListOfTransfers = {
+  transfers: Transfer[];
+};
+
 export const LISTEN_FOR_TRANSFERS_ORDERED = gql`
-  ${TRANSFER_KEYS_FRAGMENT}
+  ${TRANSFER_FRAGMENT}
   subscription ListenForTransfersOrdered($limit: Int) {
     transfers: transfer(order_by: { block_number: desc }, limit: $limit) {
-      ...transfer_key
-      hash
-      source
-      destination
-      amount
-      fee_amount
-      module
-      call
-      success
-      timestamp
+      ...transfer_common_fields
     }
   }
 `;

@@ -25,10 +25,22 @@ const TransferRow = (data: Transfer) => {
     { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
     { value: <TimeAgo date={data.timestamp} /> },
     {
-      value: <Address value={data.source} url={`/accounts/${data.source}`} truncated />
+      value: (
+        <Address
+          name={data.sourceAccount.identity?.display}
+          value={data.source}
+          url={`/accounts/${data.source}`}
+          truncated />
+      )
     },
     {
-      value: <Address value={data.destination} url={`/accounts/${data.destination}`} truncated />
+      value: (
+        <Address
+          value={data.destination}
+          name={data.destinationAccount.identity?.display}
+          url={`/accounts/${data.destination}`}
+          truncated />
+      )
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
     { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },

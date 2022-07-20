@@ -60,7 +60,7 @@ export const GET_DISPLAY_IDENTITY = gql`
 export type Account = {
   id: string;
   whenCreated: number;
-  controllerAddress: string;
+  controllerAddress?: string;
   blockHeight: number;
   nonce: number;
   timestamp: number;

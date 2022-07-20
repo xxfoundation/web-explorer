@@ -25,6 +25,9 @@ export type ValidatorStats = {
   points: number | null;
   relativePerformance: number | null;
   reward: number | null;
+  rewardsAccount: {
+    identity: null | { display: string }
+  };
 }
 
 const VALIDATOR_STATS_FRAGMENT = gql`
@@ -39,6 +42,11 @@ const VALIDATOR_STATS_FRAGMENT = gql`
     relativePerformance: relative_performance
     reward
     rewardsAddress: rewards_address
+    rewardsAccount {
+      identity {
+        display
+      }
+    }
     selfStake: self_stake
     sessionKeys: session_keys
     stashAddress: stash_address
