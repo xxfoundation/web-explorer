@@ -121,7 +121,13 @@ const Hash: FC<Props> = ({
         sx={{ fontWeight: 400 }}
         {...props}
       >
-        {url ? <Link to={url}>{hash}</Link> : hash}
+        {url ? (
+          <Link to={url} rel='noopener' target='_blank'>
+            {hash}
+          </Link>
+        ) : (
+          hash
+        )}
       </Typography>
     </CustomWidthTooltip>
   );

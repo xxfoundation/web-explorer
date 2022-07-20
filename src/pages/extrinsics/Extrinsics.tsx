@@ -19,7 +19,7 @@ const HistoryPage = () => {
         direction={'row'}
         sx={{ mb: 5 }}
       >
-        <Typography variant='h1'>Extrinsic History</Typography>
+        <Typography variant='h1'>Extrinsics</Typography>
         {/* <DownloadDataButton onClick={() => {}} disabled>
           Download data
         </DownloadDataButton> */}

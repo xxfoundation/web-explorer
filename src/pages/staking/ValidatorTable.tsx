@@ -151,14 +151,22 @@ const ValidatorsTable = () => {
             {filter !== 'waiting' ? (
               validators ? (
                 validators.map((validator, index) => (
-                  <ValidatorRow key={validator.addressId} index={index + 1} {...validator} />
+                  <ValidatorRow
+                    key={validator.addressId}
+                    index={index + 1 + page * rowsPerPage}
+                    {...validator}
+                  />
                 ))
               ) : (
                 <TableRow></TableRow>
               )
             ) : waitingList ? (
               waitingList.map((validator, index) => (
-                <ValidatorRow key={validator.addressId} index={index + 1} {...validator} />
+                <ValidatorRow
+                  key={validator.addressId}
+                  index={index + 1 + page * rowsPerPage}
+                  {...validator}
+                />
               ))
             ) : (
               <TableRow></TableRow>

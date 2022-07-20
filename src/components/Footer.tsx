@@ -75,12 +75,13 @@ const Footer = () => {
                 xx Network does not distribute, offer, solicit sales of, or sell any xx coins in any
                 state or jurisdiction in which such a distribution, offer, solicitation or sale
                 would be unlawful prior to registration or qualification under the securities laws
-                of any such state or jurisdiction. Copyright © 2022{' '}
-                <Link href='##' color='inherit'>
-                  xx labs SEZC
-                </Link>{' '}
-                |{' '}
-                <Link href='##' color='inherit'>
+                of any such state or jurisdiction. Copyright © 2022 xx labs SEZC |{' '}
+                <Link
+                  href='https://xx.network/privacy-policy'
+                  color='inherit'
+                  rel='noopener'
+                  target='_blank'
+                >
                   Privacy Policy & Term of Use
                 </Link>
               </Typography>
