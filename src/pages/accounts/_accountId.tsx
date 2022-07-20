@@ -49,6 +49,7 @@ const AccountId: FC = ({}) => {
   if (!data?.account) return <NotFound message='Account Not Found' />;
 
   const validatorInfo = data?.stats && data?.stats[0];
+  console.warn(validatorInfo);
   const validatorStats =
     data?.aggregates && data?.stats
       ? { aggregates: data?.aggregates, stats: data?.stats }
