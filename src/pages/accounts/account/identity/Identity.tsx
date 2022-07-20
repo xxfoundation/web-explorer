@@ -7,8 +7,6 @@ import Socials from '../../../../components/Socials';
 
 type Props = { account: Account };
 
-const { log } = console;
-
 const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => {
   return text ? (
     <>
@@ -33,7 +31,6 @@ const Identity: FC<Props> = ({ account }) => {
   const hasRiotOrWeb = account.identity?.riot || account.identity?.web;
   const avatarSx = isValidator ? { width: 125, height: 125 } : { width: 30, height: 30 };
   
-  log(account);
   return (
     <Grid spacing={3} container>
       {isValidator && (
