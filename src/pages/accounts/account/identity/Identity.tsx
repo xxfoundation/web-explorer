@@ -30,7 +30,7 @@ const Identity: FC<Props> = ({ account }) => {
   const isValidator = account.roles.validator;
   const hasRiotOrWeb = account.identity?.riot || account.identity?.web;
   const avatarSx = isValidator ? { width: 125, height: 125 } : { width: 30, height: 30 };
-
+  
   return (
     <Grid spacing={3} container>
       {isValidator && (
@@ -89,8 +89,31 @@ const Identity: FC<Props> = ({ account }) => {
           <Grid item container md={12} spacing={{ md: 3 }}>
             {isValidator && (
               <Grid item md={8} sm={12} xs={12}>
-                <TextWithLabel label='stash' text={account.id} />
-                <TextWithLabel label='controller' text={account.controllerAddress} />
+                <Typography variant='h4' marginTop={'20px'} marginBottom={'5px'}>
+                  Stash
+                </Typography>
+                <Address
+                  sx={{ fontSize: 12, fontWeight: 400 }}
+                  truncated='smDown'
+                  offset={{ xs: 16 }}
+                  disableAvatar
+                  value={account.id}
+                />
+                {account.controllerAddress && (
+                  <>
+                    <Typography variant='h4' marginTop={'20px'} marginBottom={'5px'}>
+                      Controller
+                    </Typography>
+                    <Address
+                      sx={{ fontSize: 12, fontWeight: 400 }}
+                      truncated='smDown'
+                      offset={{ xs: 16 }}
+                      disableAvatar
+                      value={account.controllerAddress}
+                    />
+                  </>
+                )}
+                
               </Grid>
             )}
             <Grid item md={4} sm={12} xs={12}>

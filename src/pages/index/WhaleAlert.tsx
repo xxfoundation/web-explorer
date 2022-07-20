@@ -19,14 +19,27 @@ import {
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
+  
   return [
     { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
     { value: <TimeAgo date={data.timestamp} /> },
     {
-      value: <Address value={data.source} url={`/accounts/${data.source}`} truncated />
+      value: (
+        <Address
+          value={data.source}
+          name={data.sourceAccount.identity?.display}
+          url={`/accounts/${data.source}`}
+          truncated />
+      )
     },
     {
-      value: <Address value={data.destination} url={`/accounts/${data.destination}`} truncated />
+      value: (
+        <Address
+          name={data.destinationAccount.identity?.display}
+          value={data.destination}
+          url={`/accounts/${data.destination}`}
+          truncated />
+      )
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
     { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },

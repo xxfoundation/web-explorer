@@ -49,15 +49,23 @@ const locationString = (geoBin: string, city: string, country: string) => {
 
 const ValidatorInfo: FC<{ info?: ValidatorStats }> = ({ info }) => {
   const location = useMemo(() => {
+    if (!info?.location) {
+      return ' - ';
+    }
     const parsedLocation: { city: string; country: string; geoBin: string } = JSON.parse(
-      info?.location || ''
+      info?.location
     );
     const isEmpty = Object.entries(parsedLocation).every((x) => x.at(1) === null || x.at(1) === '');
+
     return !isEmpty
       ? locationString(parsedLocation.geoBin, parsedLocation.city, parsedLocation.country)
       : ' - ';
   }, [info?.location]);
-  const sessionEntries = useMemo(() => JSON.parse(info?.sessionKeys || ''), [info?.sessionKeys]);
+
+  const sessionEntries = useMemo(
+    () => info?.sessionKeys && JSON.parse(info?.sessionKeys),
+    [info?.sessionKeys]
+  );
 
   if (!info) {
     return (
@@ -77,38 +85,28 @@ const ValidatorInfo: FC<{ info?: ValidatorStats }> = ({ info }) => {
 
   return (
     <SummaryContainer>
-      {/* <SummaryEntry>
-        <SummaryHeader>Stash</SummaryHeader>
-        <SummaryValue>
-          <WithCopy value={info.stashAddress}>
-            <Address {...addressProps} name={name} value={info.stashAddress} />
-          </WithCopy>
-        </SummaryValue>
-      </SummaryEntry> */}
-      {/* <SummaryEntry>
-        <SummaryHeader>Controller</SummaryHeader>
-        <SummaryValue>
-          <WithCopy value={info.controllerAddress}>
-            <Address {...addressProps} value={info.controllerAddress} />
-          </WithCopy>
-        </SummaryValue>
-      </SummaryEntry> */}
       <SummaryEntry>
         <SummaryHeader>Reward</SummaryHeader>
         <SummaryValue>
           <WithCopy value={info.rewardsAddress}>
-            <Address {...addressProps} value={info.rewardsAddress} />
+            <Address
+              {...addressProps}
+              value={info.rewardsAddress}
+              name={info.rewardsAccount.identity?.display}
+            />
           </WithCopy>
         </SummaryValue>
       </SummaryEntry>
-      <SummaryEntry>
-        <SummaryHeader>Cmix ID</SummaryHeader>
-        <SummaryValue>
-          <WithCopy value={info.cmixId || ''}>
-            <CmixAddress {...addressProps} value={info.cmixId || ''} />
-          </WithCopy>
-        </SummaryValue>
-      </SummaryEntry>
+      {info.cmixId && (
+        <SummaryEntry>
+          <SummaryHeader>Cmix ID</SummaryHeader>
+          <SummaryValue>
+            <WithCopy value={info.cmixId || ''}>
+              <CmixAddress {...addressProps} value={info.cmixId || ''} />
+            </WithCopy>
+          </SummaryValue>
+        </SummaryEntry>
+      )}
       <SummaryEntry>
         <SummaryHeader>Location</SummaryHeader>
         <SummaryValue>{location}</SummaryValue>
@@ -139,12 +137,14 @@ const ValidatorInfo: FC<{ info?: ValidatorStats }> = ({ info }) => {
         <SummaryHeader>Commission</SummaryHeader>
         <SummaryValue>{info.commission}</SummaryValue>
       </SummaryEntry>
-      <SummaryEntry>
-        <SummaryHeader>Session Key</SummaryHeader>
-        <SummaryValue>
-          <SessionKeyValues entries={sessionEntries} />
-        </SummaryValue>
-      </SummaryEntry>
+      {sessionEntries && (
+        <SummaryEntry>
+          <SummaryHeader>Session Key</SummaryHeader>
+          <SummaryValue>
+            <SessionKeyValues entries={sessionEntries} />
+          </SummaryValue>
+        </SummaryEntry>
+      )}
     </SummaryContainer>
   );
 };

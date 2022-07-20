@@ -98,8 +98,6 @@ const HistoryTable = () => {
   });
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
 
-  // eslint-disable-next-line no-console
-  console.log(error);
   return (
     <>
       {data?.agg.aggregate.count !== undefined && (

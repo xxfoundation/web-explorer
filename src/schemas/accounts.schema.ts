@@ -60,7 +60,7 @@ export const GET_DISPLAY_IDENTITY = gql`
 export type Account = {
   id: string;
   whenCreated: number;
-  controllerAddress: string;
+  controllerAddress?: string;
   blockHeight: number;
   nonce: number;
   timestamp: number;
@@ -88,6 +88,7 @@ export type GetAccountByAddressType = {
 export const ACCOUNT_BY_PK_FRAGMENT = gql`
   fragment account on account {
     id: account_id
+    controllerAddress: controller_address
     whenCreated: when_created
     blockHeight: block_height
     nonce
