@@ -15,10 +15,25 @@ export type Identity = {
   twitter?: string;
   web?: string;
   blurb?: string;
-
-  // FIXME madeup field
   riotName?: string;
 };
+
+export const IDENTITY_FRAGMENT = gql`
+  fragment identity on identity {
+    display
+    displayParent: display_parent
+    email
+    judgements
+    legal
+    other
+    parent
+    twitter
+    web
+    blurb
+    riotName
+  }
+`;
+
 
 type Judgements =
   | 'Unknown'
@@ -33,12 +48,9 @@ export type Account = {
   whenCreated: number;
   controllerAddress: string;
   blockHeight: number;
-  identity: Identity; // TODO change database structure to a json type
-  identityDisplay: string;
-  identityDisplayParent: string;
+  identity: Identity;
   nonce: number;
   timestamp: number;
-
   lockedBalance: number;
   reservedBalance: number;
   totalBalance: number;
@@ -48,7 +60,6 @@ export type Account = {
   transferrableBalance: number;
   unbondingBalance: number;
   vestingBalance: number;
-
   roles: Record<Roles, boolean>;
 };
 
@@ -58,14 +69,15 @@ export type GetAccountByAddressType = {
 };
 
 export const ACCOUNT_BY_PK_FRAGMENT = gql`
+  ${IDENTITY_FRAGMENT}
   fragment account on account {
     id: account_id
     controllerAddress: controller_address
     whenCreated: when_created
     blockHeight: block_height
-    identity
-    identityDisplay: identity_display
-    identityDisplayParent: identity_display_parent
+    identity {
+      ...identity
+    }
     nonce
     timestamp
     roles: role {
@@ -100,7 +112,7 @@ export const GET_ACCOUNT_BY_PK = gql`
 export type ListAccounts = {
   account: {
     address: string;
-    identity: Record<string, string>;
+    identity: Identity | null;
     timestamp: number;
     totalBalance: number;
     lockedBalance: number;
@@ -110,6 +122,7 @@ export type ListAccounts = {
 } & TotalOfItems;
 
 export const LIST_ACCOUNTS = gql`
+  ${ACCOUNT_BY_PK_FRAGMENT}
   query ListAccounts(
     $orderBy: [account_order_by!]
     $offset: Int
@@ -117,19 +130,7 @@ export const LIST_ACCOUNTS = gql`
     $where: account_bool_exp
   ) {
     account: account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
-      address: account_id
-      timestamp
-      totalBalance: total_balance
-      lockedBalance: locked_balance
-      identity
-      nonce
-      roles: role {
-        council
-        nominator
-        techcommit
-        validator
-        special
-      }
+      ...account
     }
     agg: account_aggregate(where: $where) {
       aggregate {
@@ -191,8 +192,8 @@ export type SearchAccounts = {
 
 export const SEARCH_ACCOUNTS = gql`
   ${ACCOUNT_BY_PK_FRAGMENT}
-  query MyQuery($search: String) {
-    accounts: account(where: {_or: [{account_id: {_like: $search}}, {identity_display: {_ilike: $search}}]}) {
+  query SearchAccounts($search: String) {
+    accounts: account(where: {_or: [{account_id: {_like: $search }}, { identity: { display: { _ilike: $search } } }]}) {
       ...account
     }
   }

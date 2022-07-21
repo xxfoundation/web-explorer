@@ -76,8 +76,8 @@ export type GetExtrinsicByBNAndIndex = {
 
 export const GET_EXTRINSIC_BY_BN_AND_INDEX = gql`
   ${EXTRINSIC_FRAGMENT}
-  query FindExtrinsicByHash($blockNumber: bigint!, $extrinsicIndex: Int!) {
-    extrinsic(where: { block_number: {_eq: $blockNumber: }, extrinsic_index: {_eq: $extrinsicIndex }}) {
+  query FindExtrinsicByBNAndIndex($blockNumber: bigint!, $extrinsicIndex: Int!) {
+    extrinsic(where: { block_number: {_eq: $blockNumber }, extrinsic_index: {_eq: $extrinsicIndex } }) {
       ...extrinsicFragment
     }
   }
@@ -107,7 +107,6 @@ export const EXTRINSICS_OF_BLOCK = gql`
     }
   }
 `;
-
 
 export type ListExtrinsics = {
   extrinsics: Extrinsic[];

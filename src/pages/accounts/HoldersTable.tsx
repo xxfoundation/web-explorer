@@ -70,7 +70,13 @@ const accountToRow = (
   return [
     { value: rank, props: rankProps },
     {
-      value: <Address truncated name={item.identity.display} value={item.address} url={accountLink} />
+      value: (
+        <Address
+          truncated
+          name={item.identity?.display}
+          value={item.address}
+          url={accountLink} />
+      )
     },
     { value: item.nonce },
     {
