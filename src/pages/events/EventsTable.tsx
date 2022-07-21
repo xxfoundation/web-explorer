@@ -1,5 +1,12 @@
 import { useQuery } from '@apollo/client';
-import { Stack, TableCellProps, Tooltip, Typography } from '@mui/material';
+import {
+  Checkbox,
+  FormControlLabel,
+  Stack,
+  TableCellProps,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import React, { useMemo, useState } from 'react';
 import Link from '../../components/Link';
@@ -35,6 +42,7 @@ const HistoryTable = () => {
     to: null
   });
 
+  const [withExtrinsicSuccess, setWithExtrinsicSuccess] = useState<boolean>(false);
   const actionsQuery = useQuery<GetAvailableEventActions>(GET_AVAILABLE_EVENT_ACTIONS);
 
   const [modulesFilter, setModulesFilter] = useState<string[]>();
@@ -87,10 +95,11 @@ const HistoryTable = () => {
           ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
         },
         ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } }),
-        ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } })
+        ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } }),
+        ...(!withExtrinsicSuccess && { call: { _neq: 'ExtrinsicSuccess' } })
       }
     }),
-    [callsFilter, modulesFilter, range.from, range.to]
+    [callsFilter, modulesFilter, range.from, range.to, withExtrinsicSuccess]
   );
 
   const { data, error, loading, pagination } = usePaginatedQuery<ListEvents>(LIST_EVENTS, {
@@ -103,6 +112,8 @@ const HistoryTable = () => {
       {data?.agg.aggregate.count !== undefined && (
         <Stack
           direction='row'
+          display='flex'
+          justifyContent='space-between'
           alignItems='center'
           spacing={2}
           marginBottom='18px'
@@ -116,6 +127,15 @@ const HistoryTable = () => {
               <Typography>= {data.agg.aggregate.count}</Typography>
             </Tooltip>
           </div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={withExtrinsicSuccess}
+                onChange={() => setWithExtrinsicSuccess(!withExtrinsicSuccess)}
+              />
+            }
+            label={'system(ExtrinsicSuccess)'}
+          />
         </Stack>
       )}
       <BaselineTable
