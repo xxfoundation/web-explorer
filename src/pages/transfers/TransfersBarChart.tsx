@@ -1,43 +1,63 @@
 import type { SeriesData, TimeInterval } from '../../components/charts/BarChart/types';
 
-import { useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Box, CircularProgress } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 // import DownloadDataButton from '../../components/buttons/DownloadDataButton';
 import BarChart from '../../components/charts/BarChart/BarChart';
+import { convertTimestamps } from '../../components/charts/BarChart/utils';
 import IntervalControls, {
   intervalToTimestamp
 } from '../../components/charts/BarChart/IntervalControls';
 import Error from '../../components/Error';
-import { LISTEN_FOR_TRANSFERS_TIMESTAMPS } from '../../schemas/transfers.schema';
+import { GET_TRANSFERS_TIMESTAMPS } from '../../schemas/transfers.schema';
 
-const TranfersChart: FC = () => {
+const TranfersBarChart: FC = () => {
   const [interval, setInterval] = useState<TimeInterval>('1h');
   const variables = useMemo(() => {
     return {
-      orderBy: [{ timestamp: 'asc' }],
+      orderBy: [{ timestamp: 'desc' }],
       where: { timestamp: { _gte: intervalToTimestamp(interval) } }
     };
   }, [interval]);
-  const { data, loading } = useSubscription<{ transfer: { timestamp: number; amount: number }[] }>(
-    LISTEN_FOR_TRANSFERS_TIMESTAMPS,
+  const { data, loading } = useQuery<{ transfer: { timestamp: number; amount: number }[] }>(
+    GET_TRANSFERS_TIMESTAMPS,
     { variables }
+  );
+
+  const amounts = useMemo(
+    () =>
+      convertTimestamps(
+        (data?.transfer || []).map((t) => t.timestamp),
+        interval,
+        (data?.transfer || []).map((t) => t.amount)
+      ),
+    [data?.transfer, interval]
+  );
+
+  const counts = useMemo(
+    () =>
+      convertTimestamps(
+        (data?.transfer || []).map((t) => t.timestamp),
+        interval
+      ),
+    [data?.transfer, interval]
   );
 
   const series = useMemo<[SeriesData, SeriesData]>(
     () => [
       {
-        timestamps: (data?.transfer || []).map((t) => t.timestamp),
-        magnitudes: (data?.transfer || []).map((t) => t.amount),
+        data: amounts,
         isCurrency: true,
         label: 'xx'
       },
       {
         timestamps: (data?.transfer || []).map((t) => t.timestamp),
-        label: 'transfers'
+        label: 'transfers',
+        data: counts
       }
     ],
-    [data?.transfer]
+    [amounts, counts, data?.transfer]
   );
 
   return (
@@ -67,4 +87,4 @@ const TranfersChart: FC = () => {
   );
 };
 
-export default TranfersChart;
+export default TranfersBarChart;

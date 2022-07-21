@@ -1,7 +1,14 @@
-/* eslint-disable no-console */
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { MobileDateTimePicker } from '@mui/x-date-pickers';
-import { Button, Checkbox, FormControl, FormControlLabel, Stack, TextField, useTheme } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Stack,
+  TextField,
+  useTheme
+} from '@mui/material';
 import { useToggle } from '../hooks';
 import dayjs, { Dayjs } from 'dayjs';
 import { useSnackbar } from 'notistack';
@@ -13,23 +20,27 @@ const defaultTo = dayjs.utc();
 export type Range = {
   from: string | null;
   to: string | null;
-}
+};
 
 export type Props = {
   value?: Range;
   onChange: (range: Range) => void;
   maximumRange?: number;
-}
+};
 
 const THREE_MONTHS_IN_SECONDS = 7890000000;
 
-const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maximumRange = THREE_MONTHS_IN_SECONDS }) => {
+const DateRange: FC<Props> = ({
+  onChange,
+  value = { from: null, to: null },
+  maximumRange = THREE_MONTHS_IN_SECONDS
+}) => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const [from, setFrom] = useState<string | null>(value.from);
   const [to, setTo] = useState<string | null>(value.to);
   const [fromEnabled, { toggle: toggleFrom, toggleOff: disableFrom }] = useToggle(!!from);
-  const [toEnabled, { toggle: toggleTo,  toggleOff: disableTo }] = useToggle(!!to);
+  const [toEnabled, { toggle: toggleTo, toggleOff: disableTo }] = useToggle(!!to);
 
   const applyChanges = useCallback(() => {
     onChange({ from, to });
@@ -42,43 +53,46 @@ const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maxi
     disableTo();
   }, [disableFrom, disableTo]);
 
-  const validateRange = useCallback((keyChanged: keyof Range, r: Range) => {
-    let newRange = r;
-    const timeThatToIsBehindOfFrom = dayjs.utc(r.from).diff(r.to).valueOf() ?? 0;
+  const validateRange = useCallback(
+    (keyChanged: keyof Range, r: Range) => {
+      let newRange = r;
+      const timeThatToIsBehindOfFrom = dayjs.utc(r.from).diff(r.to).valueOf() ?? 0;
 
-    if (timeThatToIsBehindOfFrom > 0) {
-      enqueueSnackbar(
-        'You can\'t travel back in time',
-        { variant: 'error' }
-      );
-      
-      newRange = keyChanged === 'from' ? {
-        ...r,
-        from: r.to
-      } : { ...r, to: r.from };
-    }
+      if (timeThatToIsBehindOfFrom > 0) {
+        enqueueSnackbar('You cannot travel back in time', { variant: 'error' });
 
-    const differenceOverMax = dayjs.utc(r.to).diff(r.from).valueOf() - maximumRange;
-    if (differenceOverMax > 0) {
-      enqueueSnackbar(
-        `Date range is over maximum of ${dayjs.duration(maximumRange).humanize()}`,
-        { variant: 'error' }
-      );
-      if (keyChanged === 'to') {
-        newRange = {
-          ...r,
-          to: dayjs.utc(dayjs.utc(r.to).valueOf() - differenceOverMax).toISOString()
-        }
-      } else {
-        newRange = {
-          ...r,
-          from:  dayjs.utc(dayjs.utc(r.from).valueOf() + differenceOverMax).toISOString()
+        newRange =
+          keyChanged === 'from'
+            ? {
+                ...r,
+                from: r.to
+              }
+            : { ...r, to: r.from };
+      }
+
+      const differenceOverMax = dayjs.utc(r.to).diff(r.from).valueOf() - maximumRange;
+      if (differenceOverMax > 0) {
+        enqueueSnackbar(
+          `Date range is over maximum of ${dayjs.duration(maximumRange).humanize()}`,
+          { variant: 'error' }
+        );
+        if (keyChanged === 'to') {
+          newRange = {
+            ...r,
+            to: dayjs.utc(dayjs.utc(r.to).valueOf() - differenceOverMax).toISOString()
+          };
+        } else {
+          newRange = {
+            ...r,
+            from: dayjs.utc(dayjs.utc(r.from).valueOf() + differenceOverMax).toISOString()
+          };
         }
       }
-    }
 
-    return newRange;
-  }, [enqueueSnackbar, maximumRange]);
+      return newRange;
+    },
+    [enqueueSnackbar, maximumRange]
+  );
 
   const validatedOnChange = useCallback(
     (k: keyof Range, r: Range) => {
@@ -92,45 +106,45 @@ const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maxi
     [validateRange]
   );
 
-  const fromChanged = useCallback((f: Dayjs | null) => {
-    validatedOnChange('from', {
-      ...value,
-      from: f?.toISOString() ?? null,
-    });
-  }, [value, validatedOnChange]);
+  const fromChanged = useCallback(
+    (f: Dayjs | null) => {
+      validatedOnChange('from', {
+        ...value,
+        from: f?.toISOString() ?? null
+      });
+    },
+    [value, validatedOnChange]
+  );
 
-  const toChanged = useCallback((t: Dayjs | null) => {
+  const toChanged = useCallback(
+    (t: Dayjs | null) => {
       validatedOnChange('to', {
-      ...value,
-      to: t?.toISOString() ?? null,
-    })
-  }, [validatedOnChange, value]);
-
-  useEffect(
-    () => {
-      if (fromEnabled && from === null) {
-        fromChanged(defaultFrom);
-      }
-
-      if (!fromEnabled && from !== null) {
-        fromChanged(null);
-      }
+        ...value,
+        to: t?.toISOString() ?? null
+      });
     },
-    [fromChanged, fromEnabled, from]
+    [validatedOnChange, value]
   );
 
-  useEffect(
-    () => {
-      if (toEnabled && to === null) {
-        toChanged(defaultTo);
-      }
-      
-      if (!toEnabled && to !== null) {
-        toChanged(null);
-      }
-    },
-    [to, toChanged, toEnabled]
-  );
+  useEffect(() => {
+    if (fromEnabled && from === null) {
+      fromChanged(defaultFrom);
+    }
+
+    if (!fromEnabled && from !== null) {
+      fromChanged(null);
+    }
+  }, [fromChanged, fromEnabled, from]);
+
+  useEffect(() => {
+    if (toEnabled && to === null) {
+      toChanged(defaultTo);
+    }
+
+    if (!toEnabled && to !== null) {
+      toChanged(null);
+    }
+  }, [to, toChanged, toEnabled]);
 
   const canApplyChanges = value.from !== from || value.to !== to;
 
@@ -142,25 +156,14 @@ const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maxi
           span: {
             fontSize: '14px',
             fontWeight: 400,
-            color:
-              fromEnabled
-                ? theme.palette.primary.main
-                : theme.palette.grey[600]
+            color: fromEnabled ? theme.palette.primary.main : theme.palette.grey[600]
           }
         }}
-        control={
-          <Checkbox
-            checked={fromEnabled}
-            onChange={toggleFrom}
-          />
-        }
+        control={<Checkbox checked={fromEnabled} onChange={toggleFrom} />}
         label={'From'}
       />
       {fromEnabled && (
-        <FormControl
-        sx={{ mb: 1.5 }}
-          component='div'
-        >
+        <FormControl sx={{ mb: 1.5 }} component='div'>
           <MobileDateTimePicker
             disableFuture
             label={'From (UTC)'}
@@ -169,7 +172,6 @@ const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maxi
             renderInput={(params) => <TextField {...params} />}
           />
         </FormControl>
-        
       )}
       <FormControlLabel
         sx={{
@@ -177,18 +179,10 @@ const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maxi
           span: {
             fontSize: '14px',
             fontWeight: 400,
-            color:
-              toEnabled
-                ? theme.palette.primary.main
-                : theme.palette.grey[600]
+            color: toEnabled ? theme.palette.primary.main : theme.palette.grey[600]
           }
         }}
-        control={
-          <Checkbox
-            checked={toEnabled}
-            onChange={toggleTo}
-          />
-        }
+        control={<Checkbox checked={toEnabled} onChange={toggleTo} />}
         label={'To'}
       />
 
@@ -201,10 +195,7 @@ const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maxi
           renderInput={(params) => <TextField {...params} />}
         />
       )}
-      <Stack
-        direction={'row'}
-        marginTop={'12px'}
-        justifyContent={'space-evenly'}>
+      <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
         <Button
           disabled={!canApplyChanges}
           variant='contained'
@@ -236,7 +227,7 @@ const DateRange: FC<Props> = ({ onChange, value = { from: null, to: null }, maxi
         </Button>
       </Stack>
     </Stack>
-  )
-}
+  );
+};
 
 export default DateRange;

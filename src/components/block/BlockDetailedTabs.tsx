@@ -11,20 +11,17 @@ import ExtrinsicsTable from './ExtrinsicsTable';
 type Props = {
   blockNumber?: number;
   loading: boolean;
-}
+};
 
-const BlockDetailedEventsTabs: React.FC<Props> = ({ blockNumber, loading }) => {
+const BlockDetailedTabs: React.FC<Props> = ({ blockNumber, loading }) => {
   const [extrinsicsCount, setExtrinsicsCount] = useState<number>();
   const [eventCount, setEventCount] = useState<number>();
-  const query = useQuery<GetBlockCounts>(GET_BLOCK_COUNTS, { variables: { blockNumber }});
+  const query = useQuery<GetBlockCounts>(GET_BLOCK_COUNTS, { variables: { blockNumber } });
 
   useEffect(() => {
     setExtrinsicsCount(query.data?.extrinsics.aggregate.count);
     setEventCount(query.data?.events.aggregate.count);
-  }, [
-    query.data?.extrinsics.aggregate.count,
-    query.data?.events.aggregate.count
-  ]);
+  }, [query.data?.extrinsics.aggregate.count, query.data?.events.aggregate.count]);
 
   const panels = useMemo(() => {
     const where = {
@@ -63,4 +60,4 @@ const BlockDetailedEventsTabs: React.FC<Props> = ({ blockNumber, loading }) => {
   );
 };
 
-export default BlockDetailedEventsTabs;
+export default BlockDetailedTabs;

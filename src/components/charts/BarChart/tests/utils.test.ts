@@ -1,32 +1,32 @@
 import * as utils from '../utils';
 import { tenMinCounts, hourCounts, fourHourCounts } from './timestamps';
 
-describe(`${utils.getCountsByTimestamp.name} at 1h intervals`, () => {
+describe(`${utils.convertTimestamps.name} at 1h intervals`, () => {
   it('Should count 1h intervals correctly', () => {
-    const counts = utils.getCountsByTimestamp(tenMinCounts, '1h');
-    expect(counts[tenMinCounts[0]]).toBe(6);
-    expect(counts[tenMinCounts[6]]).toBe(6);
+    const counts = utils.convertTimestamps(tenMinCounts, '1h');
+    expect(counts[0][1]).toBe(6);
+    expect(counts[1][1]).toBe(6);
     expect(Object.values(counts).length).toBe(2);
   });
 });
 
-describe(`${utils.getCountsByTimestamp.name} at 6h intervals`, () => {
+describe(`${utils.convertTimestamps.name} at 6h intervals`, () => {
   it('Should count 6h intervals correctly', () => {
-    const counts = utils.getCountsByTimestamp(hourCounts, '6h');
-    expect(counts[hourCounts[0]]).toBe(6);
-    expect(counts[hourCounts[6]]).toBe(6);
-    expect(counts[hourCounts[12]]).toBe(4);
+    const counts = utils.convertTimestamps(hourCounts, '6h');
+    expect(counts[0][1]).toBe(6);
+    expect(counts[1][1]).toBe(6);
+    expect(counts[2][1]).toBe(4);
     expect(Object.values(counts).length).toBe(3);
   });
 });
 
-describe(`${utils.getCountsByTimestamp.name} at 1d intervals`, () => {
+describe(`${utils.convertTimestamps.name} at 1d intervals`, () => {
   it('Should count 1d intervals correctly', () => {
-    const counts = utils.getCountsByTimestamp(fourHourCounts, '1d');
-    expect(counts[fourHourCounts[0]]).toBe(6);
-    expect(counts[fourHourCounts[6]]).toBe(6);
-    expect(counts[fourHourCounts[12]]).toBe(6);
-    expect(counts[fourHourCounts[18]]).toBe(2);
+    const counts = utils.convertTimestamps(fourHourCounts, '1d');
+    expect(counts[0][1]).toBe(6);
+    expect(counts[1][1]).toBe(6);
+    expect(counts[2][1]).toBe(6);
+    expect(counts[3][1]).toBe(2);
     expect(Object.values(counts).length).toBe(4);
   });
 });

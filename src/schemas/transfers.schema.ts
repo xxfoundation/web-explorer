@@ -1,28 +1,12 @@
 import { gql } from '@apollo/client';
-import { TotalOfItems } from './types';
 
+/* -------------------------------------------------------------------------- */
+/*                             Transfers Fragments                            */
+/* -------------------------------------------------------------------------- */
 export const TRANSFER_KEYS_FRAGMENT = gql`
   fragment transfer_key on transfer {
     blockNumber: block_number
     extrinsicIndex: extrinsic_index
-  }
-`;
-
-export const LISTEN_FOR_TRANSFERS_ORDERED = gql`
-  ${TRANSFER_KEYS_FRAGMENT}
-  subscription ListenForTransfersOrdered($limit: Int) {
-    transfers: transfer(order_by: { block_number: desc }, limit: $limit) {
-      ...transfer_key
-      hash
-      source
-      destination
-      amount
-      fee_amount
-      module
-      call
-      success
-      timestamp
-    }
   }
 `;
 
@@ -38,6 +22,12 @@ export type Transfer = {
   call: string;
   success: boolean;
   timestamp: string;
+  destinationAccount: {
+    identity: null | { display: string }
+  },
+  sourceAccount: {
+    identity: null | { display: string }
+  }
 };
 
 export const TRANSFER_FRAGMENT = gql`
@@ -53,49 +43,53 @@ export const TRANSFER_FRAGMENT = gql`
     call
     success
     timestamp
-  }
-`;
-
-export type GetTransfersByBlock = {
-  transfers: (Transfer & { id: number })[];
-} & TotalOfItems;
-
-export const LIST_TRANSFERS_ORDERED = gql`
-  ${TRANSFER_FRAGMENT}
-  query ListTransfersOrdered(
-    $orderBy: [transfer_order_by!]
-    $limit: Int
-    $offset: Int
-    $where: transfer_bool_exp
-  ) {
-    agg: transfer_aggregate(where: $where) {
-      aggregate {
-        count
+    destinationAccount:accountByDestination {
+      identity {
+        display
       }
     }
-    transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
-      ...transfer_common_fields
-      id
-      timestamp
-      source
-      destination
+    sourceAccount: account {
+      identity {
+        display
+      }
     }
   }
 `;
 
-export const LIST_WHALE_TRANSFERS = gql`
+/* -------------------------------------------------------------------------- */
+/*                               Transfers Table                              */
+/* -------------------------------------------------------------------------- */
+export type ListOfTransfers = {
+  transfers: Transfer[];
+};
+
+export const LISTEN_FOR_TRANSFERS_ORDERED = gql`
   ${TRANSFER_FRAGMENT}
-  query ListWhaleTransfers {
-    transfers: whale_alert {
+  subscription ListenForTransfersOrdered($limit: Int) {
+    transfers: transfer(order_by: { block_number: desc }, limit: $limit) {
       ...transfer_common_fields
-      id
-      timestamp
-      source
-      destination
     }
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                             Transfers Bar Chart                            */
+/* -------------------------------------------------------------------------- */
+export const GET_TRANSFERS_TIMESTAMPS = gql`
+  query ListenForTransfersTimestamps(
+    $orderBy: [transfer_order_by!]
+    $where: transfer_bool_exp
+  ) {
+    transfer(order_by: $orderBy, where: $where) {
+      timestamp
+      amount
+    }
+  }
+`;
+
+/* -------------------------------------------------------------------------- */
+/*                        Get Transfers by Primary Keys                       */
+/* -------------------------------------------------------------------------- */
 export type GetTransferByPK = {
   transfer: Transfer & {
     sender: {
@@ -126,33 +120,34 @@ export const GET_TRANSFER_BY_PK = gql`
   }
 `;
 
-type EraByTransaction = { era: number; transactions: number };
-
-export type ListenForEraTransactions = {
-  eraTransactions: EraByTransaction[];
+/* -------------------------------------------------------------------------- */
+/*                           Get Transfers of Block                           */
+/* -------------------------------------------------------------------------- */
+export type GetTransfersByBlock = {
+  transfers: (Transfer & { id: number })[];
 };
 
-export const LISTEN_FOR_ERA_TRANSACTIONS = gql`
-  subscription ListenForEraTransactions {
-    eraTransactions: era_transactions {
-      era
-      transactions
-    }
-  }
-`;
-
-export const LISTEN_FOR_TRANSFERS_TIMESTAMPS = gql`
-  subscription ListenForTransfersTimestamps(
+export const LIST_TRANSFERS_ORDERED = gql`
+  ${TRANSFER_FRAGMENT}
+  query ListTransfersOrdered(
     $orderBy: [transfer_order_by!]
+    $limit: Int
+    $offset: Int
     $where: transfer_bool_exp
   ) {
-    transfer(order_by: $orderBy, where: $where) {
+    transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+      ...transfer_common_fields
+      id
       timestamp
-      amount
+      source
+      destination
     }
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                         Get Transfer of Account ID                         */
+/* -------------------------------------------------------------------------- */
 export type GetTransferByAccountId = {
   transfers: Transfer[];
 };
@@ -170,3 +165,37 @@ export const GET_TRANSFERS_BY_ACCOUNT_ID = gql`
     }
   }
 `
+
+/* -------------------------------------------------------------------------- */
+/*                                 Whale Alert                                */
+/* -------------------------------------------------------------------------- */
+export const LIST_WHALE_TRANSFERS = gql`
+  ${TRANSFER_FRAGMENT}
+  query ListWhaleTransfers {
+    transfers: whale_alert {
+      ...transfer_common_fields
+      id
+      timestamp
+      source
+      destination
+    }
+  }
+`;
+
+/* -------------------------------------------------------------------------- */
+/*                            Transfers Line Chart                            */
+/* -------------------------------------------------------------------------- */
+type EraByTransfer = { era: number; transfers: number };
+
+export type ListenForEraTransfers = {
+  eraTransfers: EraByTransfer[];
+};
+
+export const LISTEN_FOR_ERA_TRANSFERS = gql`
+  query ListenForEraTransfers {
+    eraTransfers: era_transfers {
+      era
+      transfers
+    }
+  }
+`;

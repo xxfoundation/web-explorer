@@ -3,7 +3,7 @@ import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 import { Account } from '../../../../schemas/accounts.schema';
-import { CommonFieldsRankingFragment } from '../../../../schemas/ranking.schema';
+import { ValidatorStats } from '../../../../schemas/staking.schema';
 import { theme } from '../../../../themes/default';
 import { MetricScores, MetricsType } from '../../types';
 import MetricTooltip from './MetricTooltip';
@@ -60,7 +60,7 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
   );
 };
 
-const MetricCards: FC<{ account: Account; ranking: CommonFieldsRankingFragment }> = (props) => {
+const MetricCards: FC<{ account: Account; stats: ValidatorStats }> = (props) => {
   const scoreTiles = useMemo(() => {
     return Object.entries(scoreEvaluator(props)).map(([metric, [score, description]], index) => (
       <Grid item xs={12} md={6} key={index}>

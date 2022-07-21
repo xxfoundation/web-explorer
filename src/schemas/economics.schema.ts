@@ -26,7 +26,7 @@ export type EconomicsSubscription = {
 }
 
 export const LISTEN_FOR_ECONOMICS = gql`
-  subscription ListenForEconomics {
+  query ListenForEconomics {
     economics(limit: 1, order_by: {active_era: desc}) {
       activeEra: active_era
       bridge

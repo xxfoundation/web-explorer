@@ -58,6 +58,7 @@ export type Props = {
 }
 
 const BarComponent: FC<Props & JSX.IntrinsicElements['div']> = ({ active, index = 1, inverse, of = 1, percent = 0, ...rest }) => {
+
   return (
     <Bar {...rest} className={`bar ${active ? 'active' : ''} ${inverse ? 'inversed' : ''}`}>
       <Progress
@@ -69,5 +70,10 @@ const BarComponent: FC<Props & JSX.IntrinsicElements['div']> = ({ active, index 
   );
 }
 
-
-export default BarComponent;
+export default React.memo(BarComponent, (prev, next) => 
+  prev.active === next.active
+  && prev.percent === next.percent
+  && prev.index === next.index
+  && prev.inverse === next.inverse
+  && prev.of === next.of
+);

@@ -26,16 +26,16 @@ const BarChartContainer: FC<BarChartContainerProps> = ({ interval, series }) => 
   const hasTwo = hasTwoSeries(series);
   const seriesA = hasTwo ? series[0] : series;
   const seriesB = hasTwo ? series[1] : undefined;
-  const timestamps =
-    !seriesB?.timestamps || seriesA.timestamps.length > (seriesB.timestamps.length ?? 0)
-      ? seriesA.timestamps
-      : seriesB?.timestamps;
+  const data =
+    !seriesB?.data || (seriesA.data?.length ?? 0) > (seriesB.data.length ?? 0)
+      ? seriesA.data
+      : seriesB?.data;
 
   return (
     <Provider
       seriesA={seriesA}
       seriesB={seriesB}
-      timestamps={timestamps}
+      data={data}
       interval={interval}>
       <>
         <ChartContainer sx={{ minHeight: hasTwo ? '22rem' : '16rem' }}>

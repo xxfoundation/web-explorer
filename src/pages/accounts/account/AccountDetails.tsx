@@ -1,12 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import PaperStyled from '../../../components/Paper/PaperWrap.styled';
 import Tag from '../../../components/Tags/Tag';
 import TimeAgoComponent from '../../../components/TimeAgo';
 import { Account } from '../../../schemas/accounts.schema';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
 
-const Info: FC<{ account: Account }> = ({ account }) => {
+const AccountDetails: FC<{ account: Account }> = ({ account }) => {
   const rolesTags = useMemo(() => {
     return Object.entries(account.roles)
       .filter(
@@ -22,7 +21,7 @@ const Info: FC<{ account: Account }> = ({ account }) => {
       ));
   }, [account.roles]);
   return (
-    <PaperStyled>
+    <>
       <InfoCardRow>
         <TypographyHeader sx={{ width: '110px' }}>created</TypographyHeader>
         <Typography fontWeight='100'>|</Typography>
@@ -42,8 +41,8 @@ const Info: FC<{ account: Account }> = ({ account }) => {
           {rolesTags.length ? rolesTags : <Typography fontWeight='100'>N/A</Typography>}
         </Box>
       </InfoCardRow>
-    </PaperStyled>
+    </>
   );
 };
 
-export default Info;
+export default AccountDetails;

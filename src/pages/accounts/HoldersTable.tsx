@@ -13,12 +13,12 @@ import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
 import { HoldersRolesFilters, roleToLabelMap } from './HoldersRolesFilters';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 
-
 type Filters = Record<string, boolean>;
 
 const RolesTooltipContent: FC<{ roles: string[] }> = ({ roles }) => {
   const labels = useMemo(
-    () => roles.slice(1).map((role, index) => <span key={index}>{roleToLabelMap[role] ?? role}</span>),
+    () =>
+      roles.slice(1).map((role, index) => <span key={index}>{roleToLabelMap[role] ?? role}</span>),
     [roles]
   );
   return (
@@ -106,9 +106,7 @@ const useHeaders = () => {
       { value: 'account' },
       { value: 'transactions' },
       {
-        value: (
-          <HoldersRolesFilters onChange={setFilters} filters={filters} />
-        ),
+        value: <HoldersRolesFilters onChange={setFilters} filters={filters} />,
         props: { colSpan: 2 }
       },
       { value: 'locked balance' },
@@ -123,13 +121,14 @@ const useHeaders = () => {
   };
 };
 
-const buildOrClause = (filters: Filters) => [
-  filters.council && { role: { council: { _eq: true } } },
-  filters.nominator && { role: { nominator: { _eq: true } } },
-  filters.techcommit && { role: { techcommit: { _eq: true } } },
-  filters.validator && { role: { validator: { _eq: true } } },
-  filters.special && { role: { special: { _neq: 'null' } } }
-].filter((v) => !!v);
+const buildOrClause = (filters: Filters) =>
+  [
+    filters.council && { role: { council: { _eq: true } } },
+    filters.nominator && { role: { nominator: { _eq: true } } },
+    filters.techcommit && { role: { techcommit: { _eq: true } } },
+    filters.validator && { role: { validator: { _eq: true } } },
+    filters.special && { role: { special: { _neq: 'null' } } }
+  ].filter((v) => !!v);
 
 const HoldersTable: FC = () => {
   const { filters, headers } = useHeaders();
@@ -153,7 +152,9 @@ const HoldersTable: FC = () => {
     [hasFilters, orClause]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, { variables });
+  const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {
+    variables
+  });
   const { offset } = pagination;
   const rows = useMemo(
     () =>
@@ -172,7 +173,8 @@ const HoldersTable: FC = () => {
         headers={headers}
         rows={rows}
         rowsPerPage={pagination.rowsPerPage}
-        footer={pagination.controls} />
+        footer={pagination.controls}
+      />
     </PaperStyled>
   );
 };

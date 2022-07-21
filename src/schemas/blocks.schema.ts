@@ -1,17 +1,27 @@
 import { gql } from '@apollo/client';
 import { TotalOfItems } from './types';
 
+/* ---------------------------- General Variables --------------------------- */
+export type AuthorName = {
+  identity: {
+    display: string;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               Block Fragment                               */
+/* -------------------------------------------------------------------------- */
 export type Block = {
   numberFinalized: number;
   number: number;
-  currentEra: string;
+  currentEra: number;
   finalized: boolean;
   hash: string;
   parentHash: string;
   stateRoot: string;
   extrinsicsRoot: string;
   author: string;
-  authorName: string;
+  authorName: AuthorName[];
   timestamp: number;
   specVersion: number;
   totalEvents: number;
@@ -28,24 +38,35 @@ export const BLOCK_KEYS_FRAGMENT = gql`
     stateRoot: state_root
     extrinsicsRoot: extrinsics_root
     author: block_author
-    authorName: block_author_name
     timestamp
     specVersion: spec_version
     totalEvents: total_events
     totalExtrinsics: total_extrinsics
+    authorName: account {
+      identity {
+        display: display
+      }
+    }
   }
 `;
 
-export const LISTEN_FOR_BLOCKS_ORDERED = gql`
+/* -------------------------------------------------------------------------- */
+/*                       Subscription for Latest Blocks                       */
+/* -------------------------------------------------------------------------- */
+
+export const LISTEN_FOR_LATEST_BLOCKS = gql`
   ${BLOCK_KEYS_FRAGMENT}
-  subscription ListenForBlocksOrdered($limit: Int) {
+  subscription ListenForLatestBlocks($limit: Int) {
     blocks: block(order_by: { block_number: desc }, limit: $limit) {
       ...blocks
     }
   }
 `;
 
-export type ListBlockOrdered = {
+/* -------------------------------------------------------------------------- */
+/*                                Blocks Table                                */
+/* -------------------------------------------------------------------------- */
+export type ListOfBlocksOrdered = {
   blocks: {
     hash: string;
     number: number;
@@ -55,11 +76,11 @@ export type ListBlockOrdered = {
     timestamp: number;
     totalExtrinsics: number;
     author: string;
-    authorName: string;
+    authorName: AuthorName[];
   }[];
 } & TotalOfItems;
 
-export const LIST_BLOCK_ORDERED = gql`
+export const LIST_BLOCKS_ORDERED = gql`
   ${BLOCK_KEYS_FRAGMENT}
   query ListBlocksOrdered($limit: Int, $offset: Int = 0, $where: block_bool_exp) {
     agg: block_aggregate(where: $where) {
@@ -74,7 +95,9 @@ export const LIST_BLOCK_ORDERED = gql`
   }
 `;
 
-
+/* -------------------------------------------------------------------------- */
+/*                          Get Blocks by Identifiers                         */
+/* -------------------------------------------------------------------------- */
 export type GetBlockByPK = {
   block: Block;
 };
@@ -92,7 +115,6 @@ export type GetBlockByHash = {
   block: Block[];
 }
 
-
 export const GET_BLOCK_BY_HASH = gql`
   ${BLOCK_KEYS_FRAGMENT}
   query GetBlockByHash($blockHash: String!) {
@@ -102,15 +124,17 @@ export const GET_BLOCK_BY_HASH = gql`
   }
 `;
 
-export type GetBlocksByBP = {
+/* -------------------------------------------------------------------------- */
+/*                        Get Blocks By Block Producer                        */
+/* -------------------------------------------------------------------------- */
+export type ProducedBlocks = {
   blocks: {
     number: number;
     currentEra: number;
   }[];
 };
-
 export const GET_BLOCKS_BY_BP = gql`
-  query ListBlocksOrdered($where: block_bool_exp) {
+  query GetBlocksByProducer($where: block_bool_exp) {
     blocks: block(where: $where) {
       number: block_number
       currentEra: active_era
@@ -118,6 +142,9 @@ export const GET_BLOCKS_BY_BP = gql`
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                             Block Detailed Tabs                            */
+/* -------------------------------------------------------------------------- */
 export type GetBlockCounts = {
   extrinsics: {
     aggregate: {
@@ -146,6 +173,9 @@ export const GET_BLOCK_COUNTS = gql`
     }
   }
 `
+/* -------------------------------------------------------------------------- */
+/*                            Search Blocks                                   */
+/* -------------------------------------------------------------------------- */
 
 export type SearchBlocks = {
   blocks: Block[]
@@ -161,4 +191,25 @@ export const SEARCH_BLOCKS = gql`
       ...blocks
     }
   }
-`
+`;
+
+/* -------------------------------------------------------------------------- */
+/*                    Latest Finalized Block Subscription                     */
+/* -------------------------------------------------------------------------- */
+export type FinalizedBlockCount = {
+  block: {
+    aggregate: {
+      count: number
+    }
+  }
+}
+
+export const LISTEN_FINALIZE_BLOCK_COUNT = gql`
+  subscription MyQuery {
+    block: block_aggregate(where: {finalized: {_eq: true}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { theme } from '../../themes/default';
-import HistoryChart from './ExtrinsicsChart';
+import ExtrinsicsBarChart from './ExtrinsicsBarChart';
 import ExtrinsicsTable from './ExtrinsicsTable';
 
 const HistoryPage = () => {
@@ -19,14 +19,14 @@ const HistoryPage = () => {
         direction={'row'}
         sx={{ mb: 5 }}
       >
-        <Typography variant='h1'>Extrinsic History</Typography>
+        <Typography variant='h1'>Extrinsics</Typography>
         {/* <DownloadDataButton onClick={() => {}} disabled>
           Download data
         </DownloadDataButton> */}
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled>
-          <HistoryChart />
+          <ExtrinsicsBarChart />
         </PaperStyled>
       </Box>
       <PaperStyled>

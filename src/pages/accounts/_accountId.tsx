@@ -6,25 +6,27 @@ import { useQuery } from '@apollo/client';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import RoundedButton from '../../components/buttons/Rounded';
-import useFetchRankingAccountInfo from '../../hooks/useFetchRankingAccountInfo';
+import useFetchValidatorAccountInfo from '../../hooks/useFetchValidatorAccountInfo';
 import NotFound from '../NotFound';
 import Balances from './account/Balances';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
-import Info from './account/Info';
-import Summary from '../producer/Summary';
+import AccountDetails from './account/AccountDetails';
+import ValidatorInfo from './account/ValidatorInfo';
 
 import { useToggle } from '../../hooks';
-import BalanceHistory from './account/blockchain/BalanceHistoryChart';
-import { GetTransferByAccountId, GET_TRANSFERS_BY_ACCOUNT_ID } from '../../schemas/transfers.schema';
+import BalanceHistoryChart from './account/BalanceHistoryChart';
+import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 
 const AccountId: FC = ({}) => {
   const { accountId } = useParams<{ accountId: string }>();
-  const { data, loading } = useFetchRankingAccountInfo(accountId);
-  const transfersQuery = useQuery<GetTransferByAccountId>(GET_TRANSFERS_BY_ACCOUNT_ID, { variables: { accountId } })
-  const [expanded, { toggle }] = useToggle(false);
-  
-  if (loading || transfersQuery.loading) {
+  const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
+  const { data, loading } = useFetchValidatorAccountInfo(accountId);
+  const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
+  const [validatorInfoExpanded, { toggle: toggleValidatorInfo }] = useToggle(false);
+  const currEra = latestEraQuery?.data?.validatorStats[0].era;
+
+  if (loading || latestEraQuery.loading) {
     return (
       <Container sx={{ my: 5 }}>
         <Typography maxWidth={'100px'}>
@@ -46,16 +48,18 @@ const AccountId: FC = ({}) => {
 
   if (!data?.account) return <NotFound message='Account Not Found' />;
 
-  const ranking = data?.ranking && data?.ranking[0];
-  const identity = ranking?.identity && JSON.parse(ranking?.identity);
+  const validatorInfo = data?.stats && data?.stats[0];
+  console.warn(validatorInfo);
+  const validatorStats =
+    data?.aggregates && data?.stats
+      ? { aggregates: data?.aggregates, stats: data?.stats }
+      : undefined;
 
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      {data.account.identity.display && (
-        <Typography variant='h1'>
-          {data.account.identity.display}
-        </Typography>
+      {data.account.identity?.display && (
+        <Typography variant='h1'>{data.account.identity?.display}</Typography>
       )}
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
@@ -63,29 +67,44 @@ const AccountId: FC = ({}) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
-            <Balances account={data.account}  />
-            <RoundedButton style={{ position: 'absolute', right: '2rem', bottom: '1.5rem'}} variant='contained' onClick={toggle}>
-              {expanded ? 'Hide history' : 'Show history'}
+            <Balances account={data.account} />
+            <RoundedButton
+              style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
+              variant='contained'
+              onClick={toggleHistory}
+            >
+              {historyExpanded ? 'Hide history' : 'Show history'}
             </RoundedButton>
           </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Info account={data.account} />
+          <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
+            <AccountDetails account={data.account} />
+            {data.account.roles.validator && (
+              <RoundedButton
+                style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
+                variant='contained'
+                onClick={toggleValidatorInfo}
+              >
+                {validatorInfoExpanded ? 'Hide validator info' : 'Show validator info'}
+              </RoundedButton>
+            )}
+          </PaperWrapStyled>
         </Grid>
-        {expanded && (
+        {historyExpanded && currEra && (
           <Grid item xs={12}>
             <PaperWrapStyled>
-              <BalanceHistory account={data.account} transfers={transfersQuery.data?.transfers} />
+              <BalanceHistoryChart accountId={data.account.id} era={currEra} />
             </PaperWrapStyled>
           </Grid>
         )}
-        {ranking && (
+        {validatorInfo && validatorInfoExpanded && (
           <Grid item xs={12}>
-            <Summary ranking={ranking} name={identity.display} />
+            <ValidatorInfo info={validatorInfo} />
           </Grid>
         )}
         <Grid item xs={12}>
-          <BlockchainCard account={data.account} ranking={ranking} />
+          <BlockchainCard account={data.account} validator={validatorStats} />
         </Grid>
       </Grid>
     </Container>

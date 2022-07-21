@@ -1,8 +1,22 @@
 import { gql } from '@apollo/client';
-import { CommonFieldsRankingFragment } from './ranking.schema';
+import { ValidatorStats } from './staking.schema';
 import { TotalOfItems } from './types';
 
+/* ---------------------------- General Variables --------------------------- */
 export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit' | 'special';
+
+
+/* -------------------------------------------------------------------------- */
+/*                                  Identity                                  */
+/* -------------------------------------------------------------------------- */
+type Judgements =
+  | 'Unknown'
+  | 'Reasonable'
+  | 'Known Good'
+  | 'Out of Date'
+  | 'Low Quality'
+  | 'Erroneous';
+
 
 export type Identity = {
   display?: string;
@@ -10,12 +24,12 @@ export type Identity = {
   email?: string;
   judgements?: Judgements[];
   legal?: string;
-  other?: unknown;
-  parent?: string;
+  riot?: string;
+  blurb?: string;
   twitter?: string;
   web?: string;
-  blurb?: string;
   riotName?: string;
+  verified?: boolean;
 };
 
 export const IDENTITY_FRAGMENT = gql`
@@ -31,22 +45,36 @@ export const IDENTITY_FRAGMENT = gql`
     web
     blurb
     riotName
+    verified
   }
 `;
 
 
-type Judgements =
-  | 'Unknown'
-  | 'Reasonable'
-  | 'Known Good'
-  | 'Out of Date'
-  | 'Low Quality'
-  | 'Erroneous';
 
+export const GET_FULL_IDENTITY = gql`
+  ${IDENTITY_FRAGMENT}
+  query GetFullIdentity($where: identity_bool_exp) {
+    identity(where: $where) {
+      ...identity
+    }
+  }
+`
+
+export const GET_DISPLAY_IDENTITY = gql`
+  query GetDisplayIdentity($where: identity_bool_exp) {
+    identity(where: where) {
+      display
+    }
+  }
+`
+
+/* -------------------------------------------------------------------------- */
+/*                           Account Individual Page                          */
+/* -------------------------------------------------------------------------- */
 export type Account = {
   id: string;
   whenCreated: number;
-  controllerAddress: string;
+  controllerAddress?: string;
   blockHeight: number;
   identity: Identity;
   nonce: number;
@@ -65,7 +93,8 @@ export type Account = {
 
 export type GetAccountByAddressType = {
   account: Account;
-  ranking?: CommonFieldsRankingFragment[];
+  aggregates: { aggregate: { count: number } };
+  stats: ValidatorStats[];
 };
 
 export const ACCOUNT_BY_PK_FRAGMENT = gql`
@@ -87,7 +116,6 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
       validator
       special
     }
-
     lockedBalance: locked_balance
     reservedBalance: reserved_balance
     totalBalance: total_balance
@@ -109,7 +137,10 @@ export const GET_ACCOUNT_BY_PK = gql`
   }
 `;
 
-export type ListAccounts = {
+/* -------------------------------------------------------------------------- */
+/*                        Account Page > Holders Table                        */
+/* -------------------------------------------------------------------------- */
+export type ListAccounts = TotalOfItems & {
   account: {
     address: string;
     identity: Identity | null;
@@ -119,7 +150,7 @@ export type ListAccounts = {
     nonce: number;
     roles: Record<Roles, boolean | string>;
   }[];
-} & TotalOfItems;
+};
 
 export const LIST_ACCOUNTS = gql`
   ${ACCOUNT_BY_PK_FRAGMENT}
@@ -140,6 +171,9 @@ export const LIST_ACCOUNTS = gql`
   }
 `;
 
+/* -------------------------------------------------------------------------- */
+/*                             New Accounts Chart                             */
+/* -------------------------------------------------------------------------- */
 export type NewAccounts = {
   newAccount: {
     accounts: string;
@@ -150,7 +184,7 @@ export type NewAccounts = {
 }
 
 export const LISTEN_FOR_NEW_ACCOUNTS = gql`
-  subscription ListenForNewAccounts {
+  query ListenForNewAccounts {
     newAccount: event(where: {call: {_eq: "NewAccount"}}, order_by: {block: {active_era: desc}}) {
       accounts: data
       block {
@@ -160,31 +194,70 @@ export const LISTEN_FOR_NEW_ACCOUNTS = gql`
   }
 `;
 
+export type CreatedEras = {
+  account: {
+    era: number;
+  }[];
+  history: {
+    latestEra: number;
+  }[];
+}
+
+export const GET_WHEN_CREATED_ERAS = gql`
+  query ListenForNewAccounts {
+    account {
+      era: when_created_era
+    }
+    history: balance_history(order_by: {era: desc}, limit: 1) {
+      latestEra: era
+    }
+  }
+`;
+
+/* -------------------------------------------------------------------------- */
+/*                     Extrincs and Transfers Tab Counters                    */
+/* -------------------------------------------------------------------------- */
 export type GetExtrinsicCounts = {
   extrinsicCount: { aggregate: { count: number } };
   transferCount: { aggregate: { count: number } };
 }
 
 export const GET_EXTRINSIC_COUNTS = gql`
-query GetExtrinsicCounts ($accountId: String) {
-  extrinsicCount: extrinsic_aggregate(where: { signer: { _eq: $accountId } }) {
-    aggregate {
-      count
+  query GetExtrinsicCounts ($accountId: String) {
+    extrinsicCount: extrinsic_aggregate(where: { signer: { _eq: $accountId } }) {
+      aggregate {
+        count
+      }
     }
-  }
 
-  transferCount:   transfer_aggregate(where: {
-    _or: [
-      { destination:  { _eq: $accountId } },
-      { source:{ _eq: $accountId } }
-    ]
-  }) {
-    aggregate {
-      count
+    transferCount: transfer_aggregate(where: {
+      _or: [
+        { destination:  { _eq: $accountId } },
+        { source:{ _eq: $accountId } }
+      ]
+    }) {
+      aggregate {
+        count
+      }
     }
   }
+`
+
+/* -------------------------------------------------------------------------- */
+/*                               Balance History                              */
+/* -------------------------------------------------------------------------- */
+export type BalanceHistory = {
+  era: number;
+  totalBalance: number;
+  // transferrableBalance: number;
+  // reservedBalance: number;
+  // lockedBalance: number;
+  // bondedBalance: number;
+  // unbondingBalance: number;
+  // vestingBalance: number;
+  // councilBalance: number;
+  // democracyBalance: number;
 }
-`;
 
 export type SearchAccounts = {
   accounts: Account[]
@@ -198,3 +271,16 @@ export const SEARCH_ACCOUNTS = gql`
     }
   }
 `;
+
+export type GetBalanceHistory = {
+  history: BalanceHistory[];
+}
+
+export const GET_BALANCE_HISTORY_BY_ID = gql`
+  query GetBalanceHistoryByPk($accountId: String!) {
+    history: balance_history(where: {account_id: {_eq: $accountId}}, order_by: {era: asc}) {
+      era
+      totalBalance: total_balance
+    }
+  }
+`
