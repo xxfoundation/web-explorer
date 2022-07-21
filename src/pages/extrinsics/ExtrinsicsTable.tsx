@@ -33,6 +33,7 @@ const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCel
 
 type Props = {
   setTotalOfExtrinsics: (total?: number) => void;
+  withTimestampEvents: boolean;
 };
 const ExtrinsicsTable: FC<Props> = (props) => {
   const [range, setRange] = useState<Range>({
@@ -97,10 +98,11 @@ const ExtrinsicsTable: FC<Props> = (props) => {
           ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
         },
         ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } }),
-        ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } })
+        ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } }),
+        ...(!props.withTimestampEvents && { module: { _neq: 'timestamp' } })
       }
     }),
-    [callsFilter, modulesFilter, range.from, range.to, resultFilter]
+    [callsFilter, modulesFilter, range.from, range.to, resultFilter, props.withTimestampEvents]
   );
 
   const { data, error, loading, pagination } = usePaginatedQuery<ListExtrinsics>(LIST_EXTRINSICS, {
