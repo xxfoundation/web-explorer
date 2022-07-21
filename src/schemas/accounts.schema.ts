@@ -19,33 +19,30 @@ type Judgements =
 
 
 export type Identity = {
+  blurb?: string;
   display?: string;
   displayParent?: string;
   email?: string;
   judgements?: Judgements[];
   legal?: string;
   riot?: string;
-  blurb?: string;
   twitter?: string;
-  web?: string;
-  riotName?: string;
   verified?: boolean;
+  web?: string;
 };
 
 export const IDENTITY_FRAGMENT = gql`
   fragment identity on identity {
+    blurb
     display
     displayParent: display_parent
     email
     judgements
     legal
-    other
-    parent
+    riot
     twitter
-    web
-    blurb
-    riotName
     verified
+    web
   }
 `;
 

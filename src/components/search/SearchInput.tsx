@@ -46,7 +46,7 @@ const GenericSearchInput: FC<Props> = ({ loading, search }) => {
               <InputAdornment position='start'>
                 {loading
                   ? <CircularProgress size={20} color='inherit' />
-                  : <SearchIcon />}
+                  : <SearchIcon sx={{ ml: 1 }} />}
               </InputAdornment>
             }
           />

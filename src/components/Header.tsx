@@ -9,11 +9,12 @@ import { GridContainer, Root } from './Header.styled';
 import Link from './Link';
 import DesktopNav from './menus/Main';
 import MobileNav from './menus/Mobile';
-import SearchBar from './search/Bar';
+import SearchBar from './search/SearchBar';
 
 const Header = () => {
   const { pathname } = useLocation();
   const theme = createTheme(getDesignTokens(pathname === '/' ? 'light' : 'dark'));
+  
   return (
     <ThemeProvider theme={theme}>
       <Root>

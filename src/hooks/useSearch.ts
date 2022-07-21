@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
-import { isHex } from '@polkadot/util';
 
 import { Account, SearchAccounts, SEARCH_ACCOUNTS } from '../schemas/accounts.schema';
 import { Block, GetBlockByHash, GetBlockByPK, GET_BLOCK_BY_BLOCK_NUMBER, GET_BLOCK_BY_HASH } from '../schemas/blocks.schema';
 import { Extrinsic, GetExtrinsicByHash, GetExtrinsicByBNAndIndex, GET_EXTRINSIC_BY_BN_AND_INDEX, GET_EXTRINSIC_BY_HASH } from '../schemas/extrinsics.schema';
-import { isValidXXNetworkAddress } from '../utils';
+import { validateExtrinsicHash, validateBlockHash } from '../utils';
 
 export type SearchResults = {
   blocks?: Block[];
@@ -16,11 +15,13 @@ export type SearchResults = {
 export type UseSearch = {
   results: SearchResults;
   loading: boolean;
+  error?: string;
   search: (input: string) => void;
 }
 
 const useSearch = (): UseSearch => {
   const [results, setResults] = useState<SearchResults>({});
+  const [error, setError] = useState<string>();
   
   const [executeAccountSearch, searchAccounts] = useLazyQuery<SearchAccounts>(SEARCH_ACCOUNTS);
   const [executeBlockSearchByHash, searchBlocksByHash] = useLazyQuery<GetBlockByHash>(GET_BLOCK_BY_HASH);
@@ -28,34 +29,87 @@ const useSearch = (): UseSearch => {
   const [executeExtrinsicSearch, searchExtrinsicsByPK] = useLazyQuery<GetExtrinsicByBNAndIndex>(GET_EXTRINSIC_BY_BN_AND_INDEX);
   const [executeExtrinsicSearchByHash, searchExtrinsicsByHash] = useLazyQuery<GetExtrinsicByHash>(GET_EXTRINSIC_BY_HASH);
 
-  const loading = [
+  const queries = useMemo(() => [
     searchAccounts,
     searchBlocksByHash,
     searchBlocksByNumber,
     searchExtrinsicsByPK,
     searchExtrinsicsByHash
-  ].some((q) => q.loading);
+  ], [
+    searchAccounts,
+    searchBlocksByHash,
+    searchBlocksByNumber,
+    searchExtrinsicsByPK,
+    searchExtrinsicsByHash
+  ]);
 
+  const loading = useMemo(
+    () => queries.some((q) => q.loading),
+    [queries]
+  );
 
-  const search = useCallback((input: string) => {
+  const errors = useMemo(
+    () => queries.filter((q) => !!q.error).map((q) => q.error),
+    [queries]
+  );
+
+  const search = useCallback(async (input: string) => {
     setResults({});
-    if (Number.isInteger(input)) {
-      executeBlockSearchByNumber({ variables: { blockNumber: input } });
+    setError(undefined);
+
+    const promises = [];
+
+    const accounts: Account[] = [];
+    const blocks: Block[] = [];
+    const extrinsics: Extrinsic[] = [];
+
+    if (input && Number.isInteger(Number(input))) {
+      promises.push(
+        executeBlockSearchByNumber({ variables: { blockNumber: input } })
+          .then((result) => result.data && blocks.push(result.data.block))
+      );
     }
 
-    if (isValidXXNetworkAddress(input)) {
-      executeAccountSearch({ variables: { search: input } });
+    if (input) {
+      promises.push(
+        executeAccountSearch({ variables: { search: input } })
+          .then((result) => result.data && accounts.push(...result.data.accounts))
+      );
     }
 
-    if (/^\d+\-\d+$/.test(input)) {
+    if (input && /^\d+\-\d+$/.test(input)) {
       const [blockNumber, extrinsicIndex] = input.split('-');
-      executeExtrinsicSearch({ variables: { blockNumber, extrinsicIndex } });
+      promises.push(
+        executeExtrinsicSearch({ variables: { blockNumber, extrinsicIndex } })
+          .then((result) => result.data && extrinsics.push(...result.data.extrinsic))
+      );
     }
 
-    if (isHex(input)) {
-      executeExtrinsicSearchByHash({ variables: { hash: input }});
-      executeBlockSearchByHash({ variables: { hash: input } });
+    if (input && validateExtrinsicHash(input)) {
+      promises.push(
+        executeExtrinsicSearchByHash({ variables: { hash: input }})
+          .then((result) => result.data && extrinsics.push(...result.data.extrinsic)),
+      );
     }
+
+    if (input && validateBlockHash(input)) {
+      promises.push(
+        executeBlockSearchByHash({ variables: { hash: input } })
+          .then((result) => result.data && blocks.push(...result.data.block))
+      )
+    }
+
+    await Promise.all(promises);
+
+    if (accounts.length === 0 && blocks.length === 0 && extrinsics.length === 0) {
+      setError('Sorry, we couldn\'t find anything for that.');
+    }
+
+    setResults({
+      accounts,
+      blocks,
+      extrinsics,
+    })
   }, [
     executeAccountSearch,
     executeBlockSearchByHash,
@@ -65,30 +119,13 @@ const useSearch = (): UseSearch => {
   ]);
 
   useEffect(() => {
-    const accounts = searchAccounts.data?.accounts ?? [];
-    const blocks = [
-      ...(searchBlocksByHash.data?.block ?? []),
-      ...(searchBlocksByNumber.data?.block ? [searchBlocksByNumber.data?.block] : [])
-    ];
-    const extrinsics = [
-      ...(searchExtrinsicsByPK.data?.extrinsic ?? []),
-      ...(searchExtrinsicsByHash?.data?.extrinsic ?? [])
-    ];
-
-    setResults({
-      accounts,
-      blocks,
-      extrinsics
-    });
-  }, [
-    searchAccounts.data?.accounts,
-    searchBlocksByHash.data?.block,
-    searchBlocksByNumber.data?.block,
-    searchExtrinsicsByHash?.data?.extrinsic,
-    searchExtrinsicsByPK.data?.extrinsic
-  ]);
+    if (errors.length > 0) {
+      setError('Data currently unavailable');
+    }
+  }, [errors]);
 
   return {
+    error,
     loading,
     results,
     search,
