@@ -13,14 +13,15 @@ export type SearchResults = {
 }
 
 export type UseSearch = {
-  results: SearchResults;
-  loading: boolean;
+  dismiss: () => void;
   error?: string;
+  loading: boolean;
+  results?: SearchResults;
   search: (input: string) => void;
 }
 
 const useSearch = (): UseSearch => {
-  const [results, setResults] = useState<SearchResults>({});
+  const [results, setResults] = useState<SearchResults>();
   const [error, setError] = useState<string>();
   
   const [executeAccountSearch, searchAccounts] = useLazyQuery<SearchAccounts>(SEARCH_ACCOUNTS);
@@ -54,7 +55,7 @@ const useSearch = (): UseSearch => {
   );
 
   const search = useCallback(async (input: string) => {
-    setResults({});
+    setResults(undefined);
     setError(undefined);
 
     const promises = [];
@@ -103,13 +104,14 @@ const useSearch = (): UseSearch => {
 
     if (accounts.length === 0 && blocks.length === 0 && extrinsics.length === 0) {
       setError('Sorry, we couldn\'t find anything for that.');
+    } else {
+      setResults({
+        accounts,
+        blocks,
+        extrinsics,
+      });
     }
 
-    setResults({
-      accounts,
-      blocks,
-      extrinsics,
-    })
   }, [
     executeAccountSearch,
     executeBlockSearchByHash,
@@ -124,7 +126,12 @@ const useSearch = (): UseSearch => {
     }
   }, [errors]);
 
+  const dismiss = useCallback(() => {
+    setResults(undefined);
+  }, [])
+
   return {
+    dismiss,
     error,
     loading,
     results,
