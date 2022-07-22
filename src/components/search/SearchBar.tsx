@@ -1,10 +1,9 @@
 
-import { Container, Grid, useTheme} from '@mui/material';
+import { Grid, useTheme} from '@mui/material';
 import React from 'react';
 import { useToggle } from '../../hooks';
 import useSearch from '../../hooks/useSearch';
 import Dimmer from '../Dimmer';
-import Error from '../Error';
 import { Bar } from './Bar.styles';
 import DisplaySearchResults from './DisplayResults';
 import SearchInput from './SearchInput';
@@ -26,13 +25,11 @@ const SearchBar = () => {
           />
         </Grid>
       </Bar>
-      {error && (
-        <Container sx={{ mt: 3 }}>
-          <Error color='darkorange' message={error} />
-        </Container>
-      )}
       {results && (
-        <DisplaySearchResults dismiss={dismiss} results={results} />
+        <DisplaySearchResults
+          dismiss={dismiss}
+          error={error}
+          results={results} />
       )}
     </div>
   );

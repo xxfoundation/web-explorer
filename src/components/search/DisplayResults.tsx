@@ -5,13 +5,15 @@ import Address from '../Hash/XXNetworkAddress';
 import React, { FC } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import Link from '../Link';
+import Error from '../Error';
 
 type Props = {
+  error?: string;
   results: SearchResults;
   dismiss: () => void;
 }
 
-const DisplaySearchResults: FC<Props> = ({ dismiss, results }) => {
+const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
   const hasAccounts = !!results.accounts?.length && results.accounts.length > 0;
   const hasBlocks = !!results.blocks?.length && results.blocks.length > 0;
   const hasExtrinsics = !!results.extrinsics?.length && results.extrinsics.length > 0;
@@ -21,6 +23,9 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, results }) => {
       <Button sx={{ position: 'absolute', top: '1rem', right: '1rem' }} onClick={dismiss}>
         <CloseIcon />
       </Button>
+      {error && (
+        <Error color='darkorange' message={error} />
+      )}
       <Typography variant='h5' sx={{ fontSize: 26, fontWeight: 500, mb: 2 }}>
         Search Results
       </Typography>

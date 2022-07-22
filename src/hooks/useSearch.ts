@@ -128,6 +128,7 @@ const useSearch = (): UseSearch => {
 
   const dismiss = useCallback(() => {
     setResults(undefined);
+    setError(undefined);
   }, [])
 
   return {
