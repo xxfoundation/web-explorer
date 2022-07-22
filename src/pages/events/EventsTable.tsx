@@ -86,6 +86,17 @@ const HistoryTable = () => {
     [availableCalls, availableModules, callsFilter, modulesFilter, range]
   );
 
+  const callVariable = useMemo(() => {
+    const conditions = [];
+    if (!withExtrinsicSuccess) {
+      conditions.push({ call: { _neq: 'ExtrinsicSuccess' } });
+    }
+    if (callsFilter && callsFilter.length > 0) {
+      conditions.push({ call: { _in: callsFilter } });
+    }
+    return conditions;
+  }, [withExtrinsicSuccess, callsFilter]);
+
   const variables = useMemo(
     () => ({
       orderBy: [{ block_number: 'desc' }, { event_index: 'asc' }],
@@ -94,12 +105,13 @@ const HistoryTable = () => {
           ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
           ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
         },
-        ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } }),
-        ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } }),
-        ...(!withExtrinsicSuccess && { call: { _neq: 'ExtrinsicSuccess' } })
+        // ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } }),
+        // ...(!withExtrinsicSuccess && { call: { _neq: 'ExtrinsicSuccess' } })
+        ...{ _and: callVariable },
+        ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } })
       }
     }),
-    [callsFilter, modulesFilter, range.from, range.to, withExtrinsicSuccess]
+    [callVariable, modulesFilter, range.from, range.to]
   );
 
   const { data, error, loading, pagination } = usePaginatedQuery<ListEvents>(LIST_EVENTS, {
