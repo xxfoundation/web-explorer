@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <ThemeProvider theme={theme}>
       <Root>
-        <Container sx={{ mt: '2em' }}>
+        <Container sx={{ mt: { sm: '2.5em', xs: '7em' } }}>
           <GridContainer container>
             <Grid item xs='auto' sx={{ display: { sm: 'none', xs: 'block' } }}>
               <MobileNav />
