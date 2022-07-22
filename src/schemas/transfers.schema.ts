@@ -94,11 +94,15 @@ export type GetTransferByPK = {
   transfer: Transfer & {
     sender: {
       address: string;
-      identityDisplay: string;
+      identity: {
+        display: string;
+      }
     };
     receiver: {
       address: string;
-      identityDisplay: string;
+      identity: {
+        display: string;
+      }
     };
   };
 };
@@ -110,11 +114,15 @@ export const GET_TRANSFER_BY_PK = gql`
       ...transfer_common_fields
       sender: account {
         address: account_id
-        identityDisplay:identity_display
+        identity {
+          display
+        }
       }
       receiver: accountByDestination {
         address: account_id
-        identityDisplay:identity_display
+        identity {
+          display
+        }
       }
     }
   }
