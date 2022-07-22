@@ -12,13 +12,7 @@ type Props = HashProps & {
   disableUrl?: boolean;
 };
 
-const Address: FC<Props> = ({
-  avatar,
-  disableAvatar,
-  disableUrl,
-  name,
-  ...hashProps
-}) => {
+const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, ...hashProps }) => {
   const avatarIcon = useMemo(() => {
     return name ? (
       <Tooltip
@@ -37,20 +31,22 @@ const Address: FC<Props> = ({
   }, [name, avatar]);
 
   const isValid = isValidXXNetworkAddress(hashProps.value);
-  const url = !disableUrl ? (hashProps.url || `/accounts/${hashProps.value}`) : undefined;
+  const url = !disableUrl ? hashProps.url || `/accounts/${hashProps.value}` : undefined;
 
   return (
     <Stack direction={'row'} alignItems='center'>
       {!disableAvatar && avatarIcon}
-      {name ? <Link to={url}>{name}</Link> : (
+      {name ? (
+        <Link to={url}>{name}</Link>
+      ) : (
         <Hash
           {...hashProps}
           url={url}
-          valid={hashProps.valid === undefined ? isValid : hashProps.valid} />
+          valid={hashProps.valid === undefined ? isValid : hashProps.valid}
+        />
       )}
-      
     </Stack>
-  )
+  );
 };
 
 export default Address;

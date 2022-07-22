@@ -14,11 +14,13 @@ import { Table } from '../Tables/TableContainer.styled';
 import TimeAgo from '../TimeAgo';
 import Error from '../Error';
 import { BorderlessCell, Header } from './LatestList.styled';
+import Hash from '../Hash';
 
 const PAGE_LIMIT = 10;
 
 const BlockRow: FC<WithNew<Block>> = ({
   finalized,
+  hash,
   number,
   timestamp,
   totalEvents,
@@ -28,10 +30,24 @@ const BlockRow: FC<WithNew<Block>> = ({
     <TableRow>
       <TableCell colSpan={4}>
         <Header>
-          Block&nbsp;
-          <Link to={`/blocks/${number}`} underline='hover' variant='body2'>
-            #{number}
-          </Link>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>
+              Block&nbsp;
+              <Link to={`/blocks/${number}`} underline='hover' variant='body2'>
+                #{number}
+              </Link>
+            </div>
+            <Hash
+              truncated
+              value={hash}
+              url={`/blocks/${hash}`}
+              sx={{
+                fontSize: 14,
+                fontWeight: 400,
+                textTransform: 'lowercase'
+              }}
+            />
+          </div>
         </Header>
       </TableCell>
     </TableRow>
