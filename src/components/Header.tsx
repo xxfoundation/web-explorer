@@ -17,14 +17,18 @@ const Header = () => {
   return (
     <ThemeProvider theme={theme}>
       <Root>
-        <Container>
+        <Container sx={{ mt: '2em' }}>
           <GridContainer container>
             <Grid item xs='auto' sx={{ display: { sm: 'none', xs: 'block' } }}>
               <MobileNav />
             </Grid>
             <Grid item xs>
               <Link to='/'>
-                {pathname === '/' ? <img src={logoColor} alt='xx network' /> : <img src={logoWhite} alt='xx network' />}
+                {pathname === '/' ? (
+                  <img src={logoColor} alt='xx network' />
+                ) : (
+                  <img src={logoWhite} alt='xx network' />
+                )}
               </Link>
             </Grid>
             <Grid item xs='auto' sx={{ display: { sm: 'block', xs: 'none' } }}>
