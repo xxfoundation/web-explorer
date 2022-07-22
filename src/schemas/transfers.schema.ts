@@ -43,7 +43,7 @@ export const TRANSFER_FRAGMENT = gql`
     call
     success
     timestamp
-    destinationAccount:accountByDestination {
+    destinationAccount: accountByDestination {
       identity {
         display
       }
