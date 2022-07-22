@@ -44,7 +44,6 @@ const BlockRow: FC<WithNew<Block>> = ({
               sx={{
                 fontSize: 14,
                 fontWeight: 400,
-                fontFamily: 'Roboto',
                 textTransform: 'lowercase'
               }}
             />
