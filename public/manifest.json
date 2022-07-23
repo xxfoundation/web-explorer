@@ -1,6 +1,6 @@
 {
-  "short_name": "xxscan",
-  "name": "xx network web app to display in chain data",
+  "short_name": "xxexplorer",
+  "name": "xx network web app to display on chain data",
   "icons": [
     {
       "src": "favicon.ico",
