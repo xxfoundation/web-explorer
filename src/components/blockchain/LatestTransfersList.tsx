@@ -14,6 +14,7 @@ import Error from '../Error';
 import SkeletonRows from '../Tables/SkeletonRows';
 import { Table } from '../Tables/TableContainer.styled';
 import { Header, BorderlessCell } from './LatestList.styled';
+import Hash from '../Hash';
 
 const PAGE_LIMIT = 8;
 
@@ -23,18 +24,30 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
       <TableRow>
         <TableCell colSpan={3} sx={{ paddingLeft: 0 }}>
           <Header fontWeight={700}>
-            EXTRINSIC&nbsp;
-            <Link to={`/extrinsics/${props.blockNumber}-${props.index}`} underline='hover'>
-              #{`${props.blockNumber}-${props.index}`}
-            </Link>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                EXTRINSIC&nbsp;
+                <Link to={`/extrinsics/${props.blockNumber}-${props.index}`} underline='hover'>
+                  #{`${props.blockNumber}-${props.index}`}
+                </Link>
+              </div>
+              <Hash
+                truncated
+                value={props.hash}
+                url={`/extrinsics/${props.hash}`}
+                sx={{
+                  fontSize: 14,
+                  fontWeight: 400,
+                  textTransform: 'lowercase'
+                }}
+              />
+            </div>
           </Header>
         </TableCell>
       </TableRow>
       <TableRow>
         <BorderlessCell sx={{ borderBottom: 'none', paddingLeft: 0 }}>
-          <Header>
-            From
-          </Header>
+          <Header>From</Header>
         </BorderlessCell>
         <BorderlessCell>
           <Address
@@ -54,9 +67,7 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
       </TableRow>
       <TableRow>
         <BorderlessCell>
-          <Header>
-            to
-          </Header>
+          <Header>to</Header>
         </BorderlessCell>
         <BorderlessCell>
           <Address
@@ -74,7 +85,9 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
           </Typography>
         </BorderlessCell>
       </TableRow>
-      <TableRow><BorderlessCell colSpan={3} /></TableRow>
+      <TableRow>
+        <BorderlessCell colSpan={3} />
+      </TableRow>
     </>
   );
 };
@@ -87,20 +100,24 @@ const LatestTransfersList = () => {
   const transfers = useNewnessTracker(data?.transfers, 'hash');
 
   return (
-    <DefaultTile
-      header={'Transfers'}
-      linkName={'SEE ALL'}
-      linkAddress={'/transfers'}
-      height={500}>
-        <TableContainer>
-          <Table size={!loading ? 'small': undefined}>
-            <TableBody>
-              {loading && <SkeletonRows rows={10} columns={3} />}
-              {error && <TableRow><TableCell colSpan={3}><Error /></TableCell></TableRow>}
-              {transfers?.map((tx) => <TransferRow {...tx} key={tx.hash} />)}
-            </TableBody>
-          </Table>
-        </TableContainer>
+    <DefaultTile header={'Transfers'} linkName={'SEE ALL'} linkAddress={'/transfers'} height={500}>
+      <TableContainer>
+        <Table size={!loading ? 'small' : undefined}>
+          <TableBody>
+            {loading && <SkeletonRows rows={10} columns={3} />}
+            {error && (
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Error />
+                </TableCell>
+              </TableRow>
+            )}
+            {transfers?.map((tx) => (
+              <TransferRow {...tx} key={tx.hash} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </DefaultTile>
   );
 };
