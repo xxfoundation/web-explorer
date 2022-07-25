@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Transfer Utility</title>
+</head>
+<body>
+  <script>
+    const entries = Object.entries(localStorage);
+    const event = { type: 'localStorageTransfer',  entries };
+    const MIGRATING_TO = 'https://wallet-staging.xx.network';
+    window.parent.postMessage(JSON.stringify(event), MIGRATING_TO);
+  </script>
+</body>
+</html>
