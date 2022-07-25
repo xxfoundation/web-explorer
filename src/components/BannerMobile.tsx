@@ -22,7 +22,7 @@ export default function BannerMobile() {
       <ThemeProvider theme={theme}>
         <Button
           component={Link}
-          to='https://explorer.xx.network'
+          to='https://wallet-staging.xx.network'
           variant='contained'
           color='primary'
           fontSize='8px'
