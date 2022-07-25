@@ -1,0 +1,74 @@
+import { useQuery } from '@apollo/client';
+import { Typography } from '@mui/material';
+import React, { FC } from 'react';
+import Address from '../../../../components/Hash/XXNetworkAddress';
+import FormatBalance from '../../../../components/FormatBalance';
+import {
+  SummaryEntry,
+  SummaryHeader,
+  SummaryValue,
+  WithCopy
+} from '../../../../components/Summary';
+import { GetTransferByPK, GET_TRANSFER_BY_PK } from '../../../../schemas/transfers.schema';
+
+type Props = { blockNumber: number; extrinsicIndex: number };
+
+const AddressesHandler: FC<{
+  address: string;
+  identity?: string;
+}> = ({ address, identity: identityDisplay }) => {
+  if (identityDisplay) {
+    return <Address value={address} name={identityDisplay} url={`/accounts/${address}`} />;
+  }
+  return <Address value={address} url={`/accounts/${address}`} />;
+};
+
+const TransferFragment: FC<Props> = (variables) => {
+  const { data, loading } = useQuery<GetTransferByPK>(GET_TRANSFER_BY_PK, { variables });
+  if (loading) return <></>;
+  if (!data?.transfer) return <></>;
+  return (
+    <>
+      <SummaryEntry>
+        <SummaryHeader>Sender</SummaryHeader>
+        <SummaryValue>
+          <WithCopy value={data.transfer.sender.address}>
+            <AddressesHandler
+              address={data.transfer.sender.address}
+              identity={data.transfer.sender.identity?.display}
+            />
+          </WithCopy>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Destination</SummaryHeader>
+        <SummaryValue>
+          <WithCopy value={data.transfer.receiver.address}>
+            <AddressesHandler
+              address={data.transfer.receiver.address}
+              identity={data.transfer.receiver.identity?.display}
+            />
+          </WithCopy>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Value</SummaryHeader>
+        <SummaryValue>
+          <Typography>
+            <FormatBalance value={data.transfer.amount.toString()} />
+          </Typography>
+        </SummaryValue>
+      </SummaryEntry>
+      <SummaryEntry>
+        <SummaryHeader>Fee</SummaryHeader>
+        <SummaryValue>
+          <Typography>
+            <FormatBalance value={data.transfer.feeAmount.toString()} />
+          </Typography>
+        </SummaryValue>
+      </SummaryEntry>
+    </>
+  );
+};
+
+export default TransferFragment;
