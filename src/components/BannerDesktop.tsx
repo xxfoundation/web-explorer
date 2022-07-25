@@ -22,7 +22,7 @@ export default function BannerDesktop() {
       <ThemeProvider theme={theme}>
         <Button
           component={Link}
-          to='https://wallet-staging.xx.network'
+          to='https://wallet.xx.network'
           variant='contained'
           color='primary'
           fontSize='12px'
