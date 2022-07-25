@@ -6,7 +6,7 @@ export const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
     primary: {
       ...(mode === 'light'
         ? {
-            main: '#7A7A7A',
+            main: '#00A2D6',
             light: '#EAEAEA',
             dark: '#3D3D3D',
             contrastText: '#00A2D6'
@@ -30,9 +30,12 @@ export const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
       A100: '#FFFFFF', // A100 -> A000
       A700: '#7A7A7A',
     },
-    text: {
+    text: mode === 'light' ? {
       primary: '#7A7A7A', // menu link color
       secondary: '#00A2D6' // menu link hover
+    } : {
+      primary: '#FFFFFF',
+      secondary: '#FFFFFF'
     }
   },
   shape: {

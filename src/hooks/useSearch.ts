@@ -64,7 +64,7 @@ const useSearch = (): UseSearch => {
     const blocks: Block[] = [];
     const extrinsics: Extrinsic[] = [];
 
-    if (input && Number.isInteger(Number(input))) {
+    if (input && /^\d+$/.test(input)) {
       promises.push(
         executeBlockSearchByNumber({ variables: { blockNumber: input } })
           .then((result) => result.data && blocks.push(result.data.block))
@@ -122,6 +122,7 @@ const useSearch = (): UseSearch => {
 
   useEffect(() => {
     if (errors.length > 0) {
+      errors.forEach((e) => console.error(e?.message));
       setError('Data currently unavailable');
     }
   }, [errors]);

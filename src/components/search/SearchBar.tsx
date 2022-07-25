@@ -25,7 +25,7 @@ const SearchBar = () => {
           />
         </Grid>
       </Bar>
-      {results && (
+      {(results || error) && (
         <DisplaySearchResults
           dismiss={dismiss}
           error={error}

@@ -117,8 +117,8 @@ export type GetBlockByHash = {
 
 export const GET_BLOCK_BY_HASH = gql`
   ${BLOCK_KEYS_FRAGMENT}
-  query GetBlockByHash($blockHash: String!) {
-    block (where: { block_hash: { _eq: $blockHash }}, limit: 1) {
+  query GetBlockByHash($hash: String!) {
+    block (where: { block_hash: { _eq: $hash }}, limit: 1) {
       ...blocks
     }
   }
