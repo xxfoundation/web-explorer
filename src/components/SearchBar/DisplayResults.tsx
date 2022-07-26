@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import Address from '../Hash/XXNetworkAddress';
 import React, { FC } from 'react';
-import { styled, Box, Button, Typography } from '@mui/material';
+import { styled, useTheme, Box, Button, Stack, Typography } from '@mui/material';
 import Link from '../Link';
 import Error from '../Error';
 
@@ -20,13 +20,20 @@ const ResultContainer = styled(Box)(({ theme }) => ({
 }));
 
 const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
+  const theme = useTheme();
   const hasAccounts = !!results?.accounts?.length && results.accounts.length > 0;
   const hasBlocks = !!results?.blocks?.length && results.blocks.length > 0;
   const hasExtrinsics = !!results?.extrinsics?.length && results.extrinsics.length > 0;
 
   return (
     <ResultContainer>
-      <Button sx={{ position: 'absolute', top: '1rem', right: '1rem' }} onClick={dismiss}>
+      <Button
+        sx={{
+          color: theme.palette.mode === 'light' ? undefined : 'white',
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem'
+        }} onClick={dismiss}>
         <CloseIcon />
       </Button>
 
@@ -35,13 +42,13 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
       )}
 
       {results && (
-        <>
+        <Stack spacing={4}>
           <Typography variant='h5' sx={{ fontSize: 26, fontWeight: 500, mb: 2 }}>
             Search Results
           </Typography>
           {hasAccounts && (
-            <>
-              <Typography variant='h5' sx={{ fontSize: 22, mb: 1 }}>
+            <Stack spacing={2}>
+              <Typography variant='h5' sx={{ fontSize: 22 }}>
                 Accounts
               </Typography>
               {results.accounts?.map((acct) => (
@@ -51,11 +58,11 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
                   value={acct.id}
                   name={acct.identity?.display} />
               ))}
-            </>
+            </Stack>
           )}
           {hasBlocks && (
-            <>
-              <Typography variant='h5' sx={{ fontSize: 22, mb: 1 }}>
+            <Stack spacing={2}>
+              <Typography variant='h5' sx={{ fontSize: 22 }}>
                 Blocks
               </Typography>
               {results.blocks?.map((block) => (
@@ -66,11 +73,11 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
                     Block #{block.number}
                 </Link>
               ))}
-            </>
+            </Stack>
           )}
           {hasExtrinsics && (
-            <>
-              <Typography variant='h5' sx={{ fontSize: 22, mb: 1 }}>
+            <Stack spacing={2}>
+              <Typography variant='h5' sx={{ fontSize: 22 }}>
                 Extrinsics
               </Typography>
               {results.extrinsics?.map((e) => (
@@ -80,9 +87,9 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
                     Extrinsic #{e.blockNumber}-{e.extrinsicIndex}
                 </Link>
               ))}
-            </>
+            </Stack>
           )}
-        </>
+        </Stack>
       )}
       
     </ResultContainer>

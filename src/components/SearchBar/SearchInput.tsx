@@ -24,7 +24,6 @@ const GenericSearchInput: FC<Props> = ({ loading, search }) => {
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
-      event.preventDefault();
       if (event.key === 'Enter') {
         submitSearch();
       }
@@ -39,6 +38,7 @@ const GenericSearchInput: FC<Props> = ({ loading, search }) => {
           <SearchInput
             placeholder={'Search'}
             disabled={loading}
+            inputProps={{ minLength: 2 }}
             onChange={searchInputOnChange}
             value={searchInput}
             disableUnderline
