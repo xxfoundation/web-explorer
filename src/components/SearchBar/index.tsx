@@ -13,7 +13,7 @@ const SearchBar = () => {
  
   return (
     <div style={{ position: 'relative', color }}>
-      <Bar component={'form'}>
+      <Bar>
         <Grid container alignItems='center'>
           <SearchInput
             loading={loading}

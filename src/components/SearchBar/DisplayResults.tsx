@@ -76,7 +76,9 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
               {results.extrinsics?.map((e) => (
                 <Link
                   key={e.hash}
-                  to={`/extrinsics/${e.hash}`}>Extrinsic #{e.blockNumber}-{e.extrinsicIndex}</Link>
+                  to={`/extrinsics/${e.hash}`}>
+                    Extrinsic #{e.blockNumber}-{e.extrinsicIndex}
+                </Link>
               ))}
             </>
           )}

@@ -24,6 +24,7 @@ const GenericSearchInput: FC<Props> = ({ loading, search }) => {
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
+      event.preventDefault();
       if (event.key === 'Enter') {
         submitSearch();
       }
