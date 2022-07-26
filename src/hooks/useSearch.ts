@@ -23,6 +23,7 @@ export type UseSearch = {
 const useSearch = (): UseSearch => {
   const [results, setResults] = useState<SearchResults>();
   const [error, setError] = useState<string>();
+  const [loading, setLoading] = useState(false);
   
   const [executeAccountSearch, searchAccounts] = useLazyQuery<SearchAccounts>(SEARCH_ACCOUNTS);
   const [executeBlockSearchByHash, searchBlocksByHash] = useLazyQuery<GetBlockByHash>(GET_BLOCK_BY_HASH);
@@ -44,11 +45,6 @@ const useSearch = (): UseSearch => {
     searchExtrinsicsByHash
   ]);
 
-  const loading = useMemo(
-    () => queries.some((q) => q.loading),
-    [queries]
-  );
-
   const errors = useMemo(
     () => queries.filter((q) => !!q.error).map((q) => q.error),
     [queries]
@@ -58,6 +54,7 @@ const useSearch = (): UseSearch => {
     if (input.length < 2) {
       return setError('Search needs to be a minimum of 2 characters.');
     }
+    setLoading(true);
     setResults(undefined);
     setError(undefined);
 
@@ -114,7 +111,7 @@ const useSearch = (): UseSearch => {
         extrinsics,
       });
     }
-
+    setLoading(false);
   }, [
     executeAccountSearch,
     executeBlockSearchByHash,
