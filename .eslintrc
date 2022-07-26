@@ -32,17 +32,7 @@
     "@typescript-eslint/indent": "off",
     "function-paren-newline": "off",
     "quotes": ["error", "single"],
-    "jsx-quotes": ["error", "prefer-single"],
-    "unused-imports/no-unused-imports": "error",
-    "unused-imports/no-unused-vars": [
-      "warn",
-      {
-        "vars": "all",
-        "varsIgnorePattern": "^_",
-        "args": "after-used",
-        "argsIgnorePattern": "^_"
-      }
-    ]
+    "jsx-quotes": ["error", "prefer-single"]
   },
   "settings": {
     "import/extensions": [".js", ".ts", ".tsx"],

@@ -86,7 +86,7 @@ const Identity: FC<Props> = ({ account }) => {
           </Grid>
         </Grid>
         <Grid item container md={12}>
-          <Grid item container md={12} spacing={{ md: 3 }}>
+          <Grid item container md={12} spacing={3}>
             {isValidator && (
               <Grid item md={8} sm={12} xs={12}>
                 <Typography variant='h4' marginTop={'20px'} marginBottom={'5px'}>
