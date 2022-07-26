@@ -44,7 +44,7 @@ export const TRANSFER_FRAGMENT = gql`
     call
     success
     timestamp
-    destinationAccount:accountByDestination {
+    destinationAccount: accountByDestination {
       identity {
         display
       }
@@ -95,11 +95,15 @@ export type GetTransferByPK = {
   transfer: Transfer & {
     sender: {
       address: string;
-      identityDisplay: string;
+      identity: {
+        display: string;
+      }
     };
     receiver: {
       address: string;
-      identityDisplay: string;
+      identity: {
+        display: string;
+      }
     };
   };
 };

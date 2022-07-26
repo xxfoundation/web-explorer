@@ -35,7 +35,7 @@ const TransferFragment: FC<Props> = (variables) => {
           <WithCopy value={data.transfer.sender.address}>
             <AddressesHandler
               address={data.transfer.sender.address}
-              identity={data.transfer.sender.identityDisplay}
+              identity={data.transfer.sender.identity?.display}
             />
           </WithCopy>
         </SummaryValue>
@@ -46,7 +46,7 @@ const TransferFragment: FC<Props> = (variables) => {
           <WithCopy value={data.transfer.receiver.address}>
             <AddressesHandler
               address={data.transfer.receiver.address}
-              identity={data.transfer.receiver.identityDisplay}
+              identity={data.transfer.receiver.identity?.display}
             />
           </WithCopy>
         </SummaryValue>

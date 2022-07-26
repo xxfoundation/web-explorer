@@ -13,10 +13,7 @@ const DoubleSeries: FC = () => {
   const labelA = context.infoA?.label;
   const timeFormat = interval?.includes('h') ? 'YYYY.MM.DD | h:mm A (UTC)' : 'YYYY.MM.DD';
 
-  const formatted = useMemo(
-    () => dayjs.utc(selected).format(timeFormat),
-    [timeFormat, selected]
-  );
+  const formatted = useMemo(() => dayjs.utc(selected).format(timeFormat), [timeFormat, selected]);
 
   const countB = context.infoB?.data?.find((d) => d[0] === selected)?.[1];
   const labelB = context.infoB?.label;

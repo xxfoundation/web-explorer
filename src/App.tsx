@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -57,6 +58,6 @@ const App = () => {
       </ThemeProvider>
     </Router>
   );
-}
+};
 
-export default App;
+export default Sentry.withProfiler(App);

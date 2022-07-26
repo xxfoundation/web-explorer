@@ -1,4 +1,12 @@
-import { Box, Container, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  Stack,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
@@ -9,6 +17,7 @@ import ExtrinsicsTable from './ExtrinsicsTable';
 
 const HistoryPage = () => {
   const [totalOfExtrinsics, setTotalOfExtrinsics] = useState<number>();
+  const [withTimestampEvents, setWithTimestampEvents] = useState<boolean>(false);
 
   return (
     <Container sx={{ my: 5 }}>
@@ -33,6 +42,8 @@ const HistoryPage = () => {
         {totalOfExtrinsics !== undefined && (
           <Stack
             direction='row'
+            display='flex'
+            justifyContent='space-between'
             alignItems='center'
             spacing={2}
             marginBottom='18px'
@@ -46,10 +57,24 @@ const HistoryPage = () => {
                 <Typography>= {totalOfExtrinsics}</Typography>
               </Tooltip>
             </div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={withTimestampEvents}
+                  onChange={() => {
+                    setWithTimestampEvents(!withTimestampEvents);
+                  }}
+                />
+              }
+              label={'set(timestamp)'}
+            />
           </Stack>
         )}
         <span hidden>filters placeholder</span>
-        <ExtrinsicsTable setTotalOfExtrinsics={setTotalOfExtrinsics} />
+        <ExtrinsicsTable
+          setTotalOfExtrinsics={setTotalOfExtrinsics}
+          withTimestampEvents={withTimestampEvents}
+        />
       </PaperStyled>
     </Container>
   );

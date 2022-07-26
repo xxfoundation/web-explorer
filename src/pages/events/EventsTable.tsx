@@ -1,5 +1,12 @@
 import { useQuery } from '@apollo/client';
-import { Stack, TableCellProps, Tooltip, Typography } from '@mui/material';
+import {
+  Checkbox,
+  FormControlLabel,
+  Stack,
+  TableCellProps,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import React, { useMemo, useState } from 'react';
 import Link from '../../components/Link';
@@ -35,6 +42,7 @@ const HistoryTable = () => {
     to: null
   });
 
+  const [withExtrinsicSuccess, setWithExtrinsicSuccess] = useState<boolean>(false);
   const actionsQuery = useQuery<GetAvailableEventActions>(GET_AVAILABLE_EVENT_ACTIONS);
 
   const [modulesFilter, setModulesFilter] = useState<string[]>();
@@ -78,6 +86,17 @@ const HistoryTable = () => {
     [availableCalls, availableModules, callsFilter, modulesFilter, range]
   );
 
+  const callVariable = useMemo(() => {
+    const conditions = [];
+    if (!withExtrinsicSuccess) {
+      conditions.push({ call: { _neq: 'ExtrinsicSuccess' } });
+    }
+    if (callsFilter && callsFilter.length > 0) {
+      conditions.push({ call: { _in: callsFilter } });
+    }
+    return conditions;
+  }, [withExtrinsicSuccess, callsFilter]);
+
   const variables = useMemo(
     () => ({
       orderBy: [{ block_number: 'desc' }, { event_index: 'asc' }],
@@ -86,11 +105,13 @@ const HistoryTable = () => {
           ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
           ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
         },
-        ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } }),
-        ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } })
+        // ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } }),
+        // ...(!withExtrinsicSuccess && { call: { _neq: 'ExtrinsicSuccess' } })
+        ...{ _and: callVariable },
+        ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } })
       }
     }),
-    [callsFilter, modulesFilter, range.from, range.to]
+    [callVariable, modulesFilter, range.from, range.to]
   );
 
   const { data, error, loading, pagination } = usePaginatedQuery<ListEvents>(LIST_EVENTS, {
@@ -103,6 +124,8 @@ const HistoryTable = () => {
       {data?.agg.aggregate.count !== undefined && (
         <Stack
           direction='row'
+          display='flex'
+          justifyContent='space-between'
           alignItems='center'
           spacing={2}
           marginBottom='18px'
@@ -116,6 +139,15 @@ const HistoryTable = () => {
               <Typography>= {data.agg.aggregate.count}</Typography>
             </Tooltip>
           </div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={withExtrinsicSuccess}
+                onChange={() => setWithExtrinsicSuccess(!withExtrinsicSuccess)}
+              />
+            }
+            label={'system(ExtrinsicSuccess)'}
+          />
         </Stack>
       )}
       <BaselineTable
