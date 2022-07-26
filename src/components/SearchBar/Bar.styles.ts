@@ -47,5 +47,7 @@ export const SearchButton = styled(Button)(({ theme }) => ({
   background: 'none',
   paddingLeft: theme.spacing(4),
   paddingRight: theme.spacing(4),
-  color: theme.palette.primary.contrastText
+  color: theme.palette.mode === 'light'
+    ? theme.palette.grey[700]
+    : theme.palette.grey[100],
 }));

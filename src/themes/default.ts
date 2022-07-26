@@ -16,7 +16,7 @@ const palette = {
     main: '#59BD1C'
   },
   text: {
-    primary: '#4f4f4f'
+    primary: '#4f4f4f',
   },
   grey: {
     50: '#FFFFFF',

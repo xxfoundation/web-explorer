@@ -85,7 +85,13 @@ export type Account = {
   transferrableBalance: number;
   unbondingBalance: number;
   vestingBalance: number;
-  roles: Record<Roles, boolean>;
+  roles: {
+    council: boolean;
+    nominator: boolean;
+    special: string;
+    techcommit: boolean;
+    validator: boolean;
+  };
 };
 
 export type GetAccountByAddressType = {
@@ -138,15 +144,7 @@ export const GET_ACCOUNT_BY_PK = gql`
 /*                        Account Page > Holders Table                        */
 /* -------------------------------------------------------------------------- */
 export type ListAccounts = TotalOfItems & {
-  account: {
-    address: string;
-    identity: Identity | null;
-    timestamp: number;
-    totalBalance: number;
-    lockedBalance: number;
-    nonce: number;
-    roles: Record<Roles, boolean | string>;
-  }[];
+  account: Account[];
 };
 
 export const LIST_ACCOUNTS = gql`
