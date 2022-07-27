@@ -17,7 +17,7 @@ export default function BannerMobile() {
     >
       <Typography variant='body2' sx={{ p: '1em', pr: '1em' }}>
         If you want to interact with the <b>xx network blockchain</b> use our web based wallet app
-        (formally known as the explorer)
+        (formerly known as the explorer)
       </Typography>
       <ThemeProvider theme={theme}>
         <Button
