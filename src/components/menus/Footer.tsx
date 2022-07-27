@@ -39,8 +39,8 @@ const FooterMenu = () => {
         >
           Developers
         </ListLink>
-        <ListLink to='https://explorer.xx.network' underline='hover' rel='noopener' target='_blank'>
-          Explorer
+        <ListLink to='https://wallet.xx.network' underline='hover' rel='noopener' target='_blank'>
+          xx wallet
         </ListLink>
         <ListLink
           to='https://dashboard.xx.network'
