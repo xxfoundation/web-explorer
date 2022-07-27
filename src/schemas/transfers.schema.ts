@@ -50,7 +50,6 @@ export const TRANSFER_FRAGMENT = gql`
       }
     }
     sourceAccount: account {
-      id
       identity {
         display
       }
