@@ -97,7 +97,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryEntry>
           <SummaryHeader>Signer</SummaryHeader>
           <SummaryValue>
-            <Address value={extrinsic.signer} />
+            <Address name={extrinsic.signerAccount?.identity?.display} value={extrinsic.signer} />
           </SummaryValue>
         </SummaryEntry>
       )}

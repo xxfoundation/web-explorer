@@ -14,7 +14,7 @@ export const MenuButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   fontWeight: 400,
   fontSize: 14,
-  color: theme.palette.primary.dark,
+  color: theme.palette.text.primary,
   '&:hover': {
     background: 'none',
     '&:before': {
@@ -22,7 +22,7 @@ export const MenuButton = styled(Button)(({ theme }) => ({
       display: 'block',
       height: 1,
       width: 20,
-      background: theme.palette.primary.dark,
+      background: theme.palette.text.secondary,
       position: 'absolute',
       top: 0,
       left: 6

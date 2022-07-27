@@ -20,3 +20,4 @@ export const isValidXXNetworkAddress = (address: string): boolean => {
 const EXTRINSIC_HASH_BIT_LENGTH = 256;
 
 export const validateExtrinsicHash = (value: string) => isHex(value, EXTRINSIC_HASH_BIT_LENGTH);
+export const validateBlockHash = validateExtrinsicHash;

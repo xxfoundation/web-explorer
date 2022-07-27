@@ -54,12 +54,6 @@ const BlockchainCard: FC<Props> = ({ account, validator }) => {
       _or: [{ destination: { _eq: account.id } }, { source: { _eq: account.id } }]
     };
 
-    const where = {
-      signer: {
-        _eq: account.id
-      }
-    };
-
     const tabs = loading
       ? [
           {
@@ -79,7 +73,7 @@ const BlockchainCard: FC<Props> = ({ account, validator }) => {
                 count={extrinsicCount === undefined ? '' : extrinsicCount}
               />
             ),
-            content: <ExtrinsicsTable where={where} />
+            content: <ExtrinsicsTable accountId={account.id} />
           },
           {
             label: (

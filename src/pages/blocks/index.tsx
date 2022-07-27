@@ -30,7 +30,6 @@ const BlockRouter = () => {
         <Block />
       </Route>
       <Route path={`${path}/producer/:accountId`}>
-        {/* <BlockProducer /> */}
         <AccountId />
       </Route>
       <Route path={`${path}/version/:version`}>

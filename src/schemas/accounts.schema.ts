@@ -5,6 +5,10 @@ import { TotalOfItems } from './types';
 /* ---------------------------- General Variables --------------------------- */
 export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit' | 'special';
 
+
+/* -------------------------------------------------------------------------- */
+/*                                  Identity                                  */
+/* -------------------------------------------------------------------------- */
 type Judgements =
   | 'Unknown'
   | 'Reasonable'
@@ -13,35 +17,42 @@ type Judgements =
   | 'Low Quality'
   | 'Erroneous';
 
-/* -------------------------------------------------------------------------- */
-/*                                  Identity                                  */
-/* -------------------------------------------------------------------------- */
+
 export type Identity = {
+  blurb?: string;
   display?: string;
   displayParent?: string;
   email?: string;
   judgements?: Judgements[];
   legal?: string;
   riot?: string;
-  blurb?: string;
   twitter?: string;
-  web?: string;
   verified?: boolean;
+  web?: string;
 };
 
+export const IDENTITY_FRAGMENT = gql`
+  fragment identity on identity {
+    blurb
+    display
+    displayParent: display_parent
+    email
+    judgements
+    legal
+    riot
+    twitter
+    verified
+    web
+  }
+`;
+
+
+
 export const GET_FULL_IDENTITY = gql`
+  ${IDENTITY_FRAGMENT}
   query GetFullIdentity($where: identity_bool_exp) {
     identity(where: $where) {
-      display
-      display_parent
-      email
-      judgements
-      legal
-      riot
-      blurb
-      twitter
-      web
-      verified
+      ...identity
     }
   }
 `
@@ -62,9 +73,9 @@ export type Account = {
   whenCreated: number;
   controllerAddress?: string;
   blockHeight: number;
+  identity: Identity;
   nonce: number;
   timestamp: number;
-
   lockedBalance: number;
   reservedBalance: number;
   totalBalance: number;
@@ -74,9 +85,13 @@ export type Account = {
   transferrableBalance: number;
   unbondingBalance: number;
   vestingBalance: number;
-
-  identity: Identity;
-  roles: Record<Roles, boolean>;
+  roles: {
+    council: boolean;
+    nominator: boolean;
+    special: string;
+    techcommit: boolean;
+    validator: boolean;
+  };
 };
 
 export type GetAccountByAddressType = {
@@ -85,12 +100,16 @@ export type GetAccountByAddressType = {
   stats: ValidatorStats[];
 };
 
-export const ACCOUNT_BY_PK_FRAGMENT = gql`
+export const ACCOUNT_FRAGMENT = gql`
+  ${IDENTITY_FRAGMENT}
   fragment account on account {
     id: account_id
     controllerAddress: controller_address
     whenCreated: when_created
     blockHeight: block_height
+    identity {
+      ...identity
+    }
     nonce
     timestamp
     roles: role {
@@ -100,18 +119,6 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
       validator
       special
     }
-    identity {
-      blurb
-      display
-      display_parent
-      email
-      legal
-      riot
-      twitter
-      web
-      verified
-    }
-
     lockedBalance: locked_balance
     reservedBalance: reserved_balance
     totalBalance: total_balance
@@ -125,7 +132,7 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
 `;
 
 export const GET_ACCOUNT_BY_PK = gql`
-  ${ACCOUNT_BY_PK_FRAGMENT}
+  ${ACCOUNT_FRAGMENT}
   query GetAccountByPK($accountId: String!) {
     account: account_by_pk(account_id: $accountId) {
       ...account
@@ -137,15 +144,7 @@ export const GET_ACCOUNT_BY_PK = gql`
 /*                        Account Page > Holders Table                        */
 /* -------------------------------------------------------------------------- */
 export type ListAccounts = TotalOfItems & {
-  account: {
-    address: string;
-    timestamp: number;
-    totalBalance: number;
-    lockedBalance: number;
-    nonce: number;
-    roles: Record<Roles, boolean | string>;
-    identity: Identity;
-  }[];
+  account: Account[];
 };
 
 export const LIST_ACCOUNTS = gql`
@@ -156,7 +155,7 @@ export const LIST_ACCOUNTS = gql`
     $where: account_bool_exp
   ) {
     account: account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
-      address: account_id
+      id: account_id
       timestamp
       totalBalance: total_balance
       lockedBalance: locked_balance
@@ -268,6 +267,18 @@ export type BalanceHistory = {
   // democracyBalance: number;
 }
 
+export type SearchAccounts = {
+  accounts: Account[]
+}
+
+export const SEARCH_ACCOUNTS = gql`
+  ${ACCOUNT_FRAGMENT}
+  query SearchAccounts($search: String) {
+    accounts: account(where: {_or: [{account_id: {_like: $search }}, { identity: { display: { _ilike: $search } } }]}) {
+      ...account
+    }
+  }
+`;
 
 export type GetBalanceHistory = {
   history: BalanceHistory[];

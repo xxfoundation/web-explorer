@@ -1,10 +1,5 @@
 import { createTheme } from '@mui/material/styles';
 
-// TODO themes folder should contain variables that change
-// the colors app wide, not change defaults for specific components.
-// this needs to be addressed
-
-// use theme in case we want to use dark mode later
 export const theme = createTheme({
   palette: {
     mode: 'light',

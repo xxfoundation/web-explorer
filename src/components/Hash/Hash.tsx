@@ -122,7 +122,7 @@ const Hash: FC<Props> = ({
         {...props}
       >
         {url ? (
-          <Link to={url} rel='noopener' target='_blank'>
+          <Link to={url} rel='noopener'>
             {hash}
           </Link>
         ) : (

@@ -64,14 +64,20 @@ const accountToRow = (
     .filter(([key]) => key !== '__typename')
     .filter(([, value]) => !!value)
     .sort(([roleA], [roleB]) => (filters[roleB] ? 1 : 0) - (filters[roleA] ? 1 : 0))
-    .map(([role, value]): string => (role === 'special' ? (value as string) : role));
-  const accountLink = `accounts/${item.address}`;
+    .map(([role, value]): string => (
+      role === 'special' && typeof value === 'string') ? value : role
+    );
+  const accountLink = `accounts/${item.id}`;
 
   return [
     { value: rank, props: rankProps },
     {
       value: (
-        <Address truncated name={item.identity?.display} value={item.address} url={accountLink} />
+        <Address
+          truncated
+          name={item.identity?.display}
+          value={item.id}
+          url={accountLink} />
       )
     },
     { value: item.nonce },
@@ -126,7 +132,7 @@ const buildOrClause = (filters: Filters) =>
     filters.special && { role: { special: { _neq: 'null' } } }
   ].filter((v) => !!v);
 
-const HoldersTable: FC = () => {
+const AccountsTable: FC = () => {
   const { filters, headers } = useHeaders();
   const hasFilters = !filters.all && Object.values(filters).some((v) => !!v);
 
@@ -175,4 +181,4 @@ const HoldersTable: FC = () => {
   );
 };
 
-export default HoldersTable;
+export default AccountsTable;

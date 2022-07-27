@@ -18,8 +18,8 @@ import { useToggle } from '../../hooks';
 import BalanceHistoryChart from './account/BalanceHistoryChart';
 import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 
-const AccountId: FC = ({}) => {
-  const { accountId } = useParams<{ accountId: string }>();
+const AccountId: FC = () => {
+  const { accountId } = useParams<{ accountId?: string }>();
   const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const { data, loading } = useFetchValidatorAccountInfo(accountId);
   const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
