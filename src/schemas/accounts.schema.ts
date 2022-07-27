@@ -100,7 +100,7 @@ export type GetAccountByAddressType = {
   stats: ValidatorStats[];
 };
 
-export const ACCOUNT_BY_PK_FRAGMENT = gql`
+export const ACCOUNT_FRAGMENT = gql`
   ${IDENTITY_FRAGMENT}
   fragment account on account {
     id: account_id
@@ -132,7 +132,7 @@ export const ACCOUNT_BY_PK_FRAGMENT = gql`
 `;
 
 export const GET_ACCOUNT_BY_PK = gql`
-  ${ACCOUNT_BY_PK_FRAGMENT}
+  ${ACCOUNT_FRAGMENT}
   query GetAccountByPK($accountId: String!) {
     account: account_by_pk(account_id: $accountId) {
       ...account
@@ -148,7 +148,7 @@ export type ListAccounts = TotalOfItems & {
 };
 
 export const LIST_ACCOUNTS = gql`
-  ${ACCOUNT_BY_PK_FRAGMENT}
+  ${ACCOUNT_FRAGMENT}
   query ListAccounts(
     $orderBy: [account_order_by!]
     $offset: Int
@@ -259,7 +259,7 @@ export type SearchAccounts = {
 }
 
 export const SEARCH_ACCOUNTS = gql`
-  ${ACCOUNT_BY_PK_FRAGMENT}
+  ${ACCOUNT_FRAGMENT}
   query SearchAccounts($search: String) {
     accounts: account(where: {_or: [{account_id: {_like: $search }}, { identity: { display: { _ilike: $search } } }]}) {
       ...account

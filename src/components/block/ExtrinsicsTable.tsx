@@ -31,20 +31,26 @@ const rowsParser = (extrinsic: Extrinsic) => {
 const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
 
 type Props = {
-  where: Record<string, unknown>;
+  accountId?: string
+  blockNumber?: number
 };
 
-const BlockExtrinsics: FC<Props> = ({ where }) => {
+const ExtrinsicsTable: FC<Props> = ({ accountId, blockNumber }) => {
   const pagination = usePagination({ rowsPerPage: ROWS_PER_PAGE });
   const { paginate, setCount: setPaginationCount } = pagination;
 
   const variables = useMemo(() => {
     return {
       orderBy: [{ timestamp: 'desc' }],
-      where
+      where: {
+        ...(accountId && { signer: { _eq: accountId } }),
+        ...(blockNumber && { block_number: { _eq: blockNumber } })
+      }
     };
-  }, [where]);
+  }, [accountId, blockNumber]);
+
   const { data, error, loading } = useQuery<ListExtrinsics>(EXTRINSICS_OF_BLOCK, { variables });
+
 
   const rows = useMemo(() => {
     return paginate(data?.extrinsics || []).map(rowsParser);
@@ -68,4 +74,4 @@ const BlockExtrinsics: FC<Props> = ({ where }) => {
   );
 };
 
-export default BlockExtrinsics;
+export default ExtrinsicsTable;

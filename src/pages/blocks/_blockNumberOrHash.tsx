@@ -82,7 +82,7 @@ const Block = () => {
   });
   const hashQuery = useQuery<GetBlockByHash>(GET_BLOCK_BY_HASH, {
     skip: !isHash,
-    variables: { blockHash }
+    variables: { hash: blockHash }
   });
   const loading = numberQuery.loading || hashQuery.loading;
   const error = numberQuery.error || hashQuery.error;
@@ -98,7 +98,9 @@ const Block = () => {
   }
 
   if (!block || (!loading && error)) {
-    return <Error />;
+    // eslint-disable-next-line no-console
+    console.log(error);
+    return <Container sx={{ my: 5 }}><Error /></Container>;
   }
 
   return (

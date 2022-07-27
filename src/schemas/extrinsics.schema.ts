@@ -15,6 +15,11 @@ const EXTRINSIC_FRAGMENT = gql`
     timestamp
     isSigned: is_signed
     signer
+    signerAccount {
+      identity {
+        display
+      }
+    }
     args
     argsDef: args_def
     doc
@@ -33,6 +38,11 @@ export type Extrinsic = {
   call: string;
   success: boolean;
   signer?: string;
+  signerAccount: null | {
+    identity: null | {
+      display: string
+    }
+  },
   isSigned: boolean;
   args: Array<string | number>;
   argsDef: Record<string, string>;
@@ -93,20 +103,13 @@ export const GET_EXTRINSIC_BY_BN_AND_INDEX = gql`
 /*                           Get Extrinsics of Block                          */
 /* -------------------------------------------------------------------------- */
 export const EXTRINSICS_OF_BLOCK = gql`
+  ${EXTRINSIC_FRAGMENT}
   query ListExtrinsicOfBlock(
     $orderBy: [extrinsic_order_by!]
     $where: extrinsic_bool_exp
   ) {
     extrinsics: extrinsic(order_by: $orderBy, where: $where) {
-      id
-      extrinsicIndex: extrinsic_index
-      blockNumber: block_number
-      hash
-      timestamp
-      success
-      call
-      signer
-      module
+      ...extrinsicFragment
     }
     
     agg: extrinsic_aggregate(where: $where) {

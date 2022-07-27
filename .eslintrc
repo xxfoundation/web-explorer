@@ -11,8 +11,7 @@
     "import",
     "simple-import-sort",
     "import-newlines",
-    "sort-destructure-keys",
-    "unused-imports"
+    "sort-destructure-keys"
   ],
   "extends": ["airbnb-typescript", "plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
@@ -32,11 +31,7 @@
     "@typescript-eslint/indent": "off",
     "function-paren-newline": "off",
     "quotes": ["error", "single"],
-    "jsx-quotes": ["error", "prefer-single"],
-    "unused-imports/no-unused-imports": "error",
-    "unused-imports/no-unused-vars": [
-      "off"
-    ]
+    "jsx-quotes": ["error", "prefer-single"]
   },
   "settings": {
     "import/extensions": [".js", ".ts", ".tsx"],
