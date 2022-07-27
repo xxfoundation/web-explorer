@@ -23,11 +23,11 @@ import FormatBalance from '../../../../components/FormatBalance';
 
 const headers = [
   'Era',
-  'Points',
   'Commission',
   'Own Stake',
   'Other Stake',
   'Total Stake',
+  'Points',
   'Relative Performance',
   'Rewards',
   'Blocks Produced'
@@ -66,7 +66,6 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
     <>
       <TableRow>
         <TableCell>{stats.era}</TableCell>
-        <TableCell>{stats.points ?? '-'}</TableCell>
         <TableCell>{stats.commission.toFixed(2)} %</TableCell>
         <TableCell>
           <FormatBalance value={stats.selfStake.toString()} />
@@ -77,6 +76,7 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
         <TableCell>
           <FormatBalance value={stats.totalStake.toString()} />
         </TableCell>
+        <TableCell>{stats.points ?? '-'}</TableCell>
         <TableCell>
           {stats.relativePerformance !== null ? (stats.relativePerformance * 100)?.toFixed(2) : '-'}
         </TableCell>

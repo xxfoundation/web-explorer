@@ -7,20 +7,26 @@ import Socials from '../../../../components/Socials';
 
 type Props = { account: Account };
 
-const TextWithLabel: FC<{ label: string; text: string }> = ({ label, text }) => {
+const TextWithLabel: FC<{ label: string; text: string; url?: string }> = ({ label, text, url }) => {
   return text ? (
     <>
-      <Typography variant='h4' marginTop={'20px'} marginBottom={'5px'}>
+      <Typography variant='h4' marginTop={'18.5px'} marginBottom={'3px'}>
         {label}
       </Typography>
-      <Link
-        href={'#'}
-        fontSize={'13px'}
-        underline='none'
-        sx={{ overflowX: 'hidden', wordBreak: 'break-all', width: '100%' }}
-      >
-        {text}
-      </Link>
+      {url ? (
+        <Link
+          href={url}
+          fontSize={'13px'}
+          underline='none'
+          sx={{ overflowX: 'hidden', wordBreak: 'break-all', width: '100%' }}
+        >
+          {text}
+        </Link>
+      ) : (
+        <Typography variant='body3' fontSize={'13px'}>
+          {text}
+        </Typography>
+      )}
     </>
   ) : null;
 };
@@ -30,7 +36,7 @@ const Identity: FC<Props> = ({ account }) => {
   const isValidator = account.roles.validator;
   const hasRiotOrWeb = account.identity?.riot || account.identity?.web;
   const avatarSx = isValidator ? { width: 125, height: 125 } : { width: 30, height: 30 };
-  
+
   return (
     <Grid spacing={3} container>
       {isValidator && (
@@ -113,14 +119,19 @@ const Identity: FC<Props> = ({ account }) => {
                     />
                   </>
                 )}
-                
               </Grid>
             )}
             <Grid item md={4} sm={12} xs={12}>
               {account.identity?.riot && (
                 <TextWithLabel label='riot' text={account.identity?.riot} />
               )}
-              {account.identity?.web && <TextWithLabel label='web' text={account.identity?.web} />}
+              {account.identity?.web && (
+                <TextWithLabel
+                  label='web'
+                  text={account.identity?.web}
+                  url={account.identity?.web}
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>
