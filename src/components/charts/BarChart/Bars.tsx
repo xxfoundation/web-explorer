@@ -9,7 +9,6 @@ import { useBarchartContext } from './BarChartContext';
 const Bars: FC<{ inverse?: boolean }> = ({ inverse }) => {
   const context = useBarchartContext();
   
-  
   const info = inverse ? context.infoB : context.infoA;
   const grouped = info?.grouped;
 
