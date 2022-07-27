@@ -5,7 +5,7 @@ import { BN } from '@polkadot/util';
 import { camelCase } from 'lodash';
 
 import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
-import { FinalizedBlockCount, LISTEN_FINALIZE_BLOCK_COUNT } from '../../schemas/blocks.schema'
+import { FinalizedBlockCount, LISTEN_FINALIZE_BLOCK_COUNT } from '../../schemas/blocks.schema';
 import { ChainInfoLink, Data, Item } from './ChainInfo.styles';
 import { InfoOutlined } from '@mui/icons-material';
 import FormatBalance from '../FormatBalance';
@@ -58,14 +58,8 @@ const ChainInfo = () => {
     [metricsSubscription.data?.metrics]
   );
 
-  const {
-    accounts,
-    activeEra,
-    activeValidatorCount,
-    nominatorCount,
-    transfers,
-    validatorSet
-  } = data;
+  const { accounts, activeEra, activeValidatorCount, nominatorCount, transfers, validatorSet } =
+    data;
   const { inflationRate, totalIssuance } = economicsQuery.data?.economics[0] ?? {};
   const blocks = finalizedBlocks.data?.block.aggregate.count;
 
@@ -97,9 +91,9 @@ const ChainInfo = () => {
           value={activeValidatorCount && validatorSet && `${activeValidatorCount}/${validatorSet}`}
         />
         <ChainInfoCard
-          title='Inflation Rate'
+          title='Circulating AGR'
           tooltip={
-            'Defined by the annual percentage increase of the circulating supply given by the distribution of staking reward.'
+            'Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
           }
           value={inflationRate && `${inflationRate}%`}
         />
