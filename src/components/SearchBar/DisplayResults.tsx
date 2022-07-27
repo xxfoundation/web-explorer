@@ -11,15 +11,15 @@ type Props = {
   error?: string;
   results?: SearchResults;
   dismiss: () => void;
-}
+};
 
 const ResultContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   marginBottom: theme.spacing(-5),
-  position: 'relative' 
+  position: 'relative'
 }));
 
-const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
+const DisplaySearchResults: FC<Props> = ({ dismiss, error, results }) => {
   const theme = useTheme();
   const hasAccounts = !!results?.accounts?.length && results.accounts.length > 0;
   const hasBlocks = !!results?.blocks?.length && results.blocks.length > 0;
@@ -33,17 +33,17 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
           position: 'absolute',
           top: '1rem',
           right: '1rem'
-        }} onClick={dismiss}>
+        }}
+        onClick={dismiss}
+      >
         <CloseIcon />
       </Button>
 
-      {error && (
-        <Error color='darkorange' message={error} />
-      )}
+      {error && <Error color='darkorange' message={error} />}
 
       {results && (
-        <Stack spacing={4}>
-          <Typography variant='h5' sx={{ fontSize: 26, fontWeight: 500, mb: 2 }}>
+        <Stack spacing={3}>
+          <Typography variant='h5' sx={{ fontSize: 26, fontWeight: 500, mb: 0 }}>
             Search Results
           </Typography>
           {hasAccounts && (
@@ -56,7 +56,8 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
                   key={acct.id}
                   onClick={dismiss}
                   value={acct.id}
-                  name={acct.identity?.display} />
+                  name={acct.identity?.display}
+                />
               ))}
             </Stack>
           )}
@@ -66,11 +67,8 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
                 Blocks
               </Typography>
               {results.blocks?.map((block) => (
-                <Link
-                  key={block.number}
-                  onClick={dismiss}
-                  to={`/blocks/${block.number}`}>
-                    Block #{block.number}
+                <Link key={block.number} onClick={dismiss} to={`/blocks/${block.number}`}>
+                  Block #{block.number} . {block.hash}
                 </Link>
               ))}
             </Stack>
@@ -81,19 +79,16 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error,  results }) => {
                 Extrinsics
               </Typography>
               {results.extrinsics?.map((e) => (
-                <Link
-                  key={e.hash}
-                  to={`/extrinsics/${e.hash}`}>
-                    Extrinsic #{e.blockNumber}-{e.extrinsicIndex}
+                <Link key={e.hash} to={`/extrinsics/${e.hash}`}>
+                  Extrinsic #{e.blockNumber}-{e.extrinsicIndex} . {e.hash}
                 </Link>
               ))}
             </Stack>
           )}
         </Stack>
       )}
-      
     </ResultContainer>
-  )
-}
+  );
+};
 
 export default DisplaySearchResults;

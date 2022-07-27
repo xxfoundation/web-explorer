@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import { ACCOUNT_FRAGMENT } from './accounts.schema';
 
 /* -------------------------------------------------------------------------- */
 /*                             Transfers Fragments                            */
@@ -97,7 +96,6 @@ export type GetTransferByPK = {
 
 export const GET_TRANSFER_BY_PK = gql`
   ${TRANSFER_FRAGMENT}
-  ${ACCOUNT_FRAGMENT}
   query GetTransferByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
     transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
       ...transfer_common_fields

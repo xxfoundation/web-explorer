@@ -148,7 +148,6 @@ export type ListAccounts = TotalOfItems & {
 };
 
 export const LIST_ACCOUNTS = gql`
-  ${ACCOUNT_FRAGMENT}
   query ListAccounts(
     $orderBy: [account_order_by!]
     $offset: Int
@@ -156,7 +155,21 @@ export const LIST_ACCOUNTS = gql`
     $where: account_bool_exp
   ) {
     account: account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
-      ...account
+      id: account_id
+      timestamp
+      totalBalance: total_balance
+      lockedBalance: locked_balance
+      nonce
+      roles: role {
+        council
+        nominator
+        techcommit
+        validator
+        special
+      }
+      identity: identity {
+        display
+      }
     }
     agg: account_aggregate(where: $where) {
       aggregate {
