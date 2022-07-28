@@ -14,40 +14,20 @@ import {
   GetExtrinsicCounts
 } from '../../../../schemas/accounts.schema';
 import TransferTable from '../../../transfers/TransfersTable';
-import NominatorsTable from '../staking/NominatorsTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
-import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.schema';
-import ValidatorStatsTable from '../staking/ValidatorStatsTable';
-import { GetValidatorStats } from '../../../../schemas/staking.schema';
 
 type Props = {
   account: Account;
-  validator?: GetValidatorStats;
 };
 
-const BlockchainCard: FC<Props> = ({ account, validator }) => {
+const BlockchainCard: FC<Props> = ({ account }) => {
   const [filters, setFilters] = useState<AddressFilters>({});
   const { data, loading } = useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
     variables: { accountId: account.id }
   });
 
-  const variables = useMemo(() => {
-    return {
-      orderBy: [{ block_number: 'desc' }],
-      where: {
-        block_author: { _eq: account.id },
-        finalized: { _eq: true }
-      }
-    };
-  }, [account.id]);
-  const blocksProducedQuery = useQuery<ProducedBlocks>(GET_BLOCKS_BY_BP, { variables });
-
   const extrinsicCount = data?.extrinsicCount.aggregate.count;
   const transferCount = data?.transferCount.aggregate.count;
-  const statsCount = validator?.aggregates.aggregate.count;
-  const nominators = validator?.stats[0]?.nominators
-    ?.slice()
-    .sort((a, b) => parseFloat(b.share) - parseFloat(a.share));
 
   const panels = useMemo(() => {
     const transferWhereClause = {
@@ -98,37 +78,8 @@ const BlockchainCard: FC<Props> = ({ account, validator }) => {
           }
         ];
 
-    if (!loading && account.roles.validator && validator !== undefined) {
-      tabs.push({
-        label: <TabText message='nominators' count={nominators?.length} />,
-        content: <NominatorsTable nominators={nominators} />
-      });
-      tabs.push({
-        label: <TabText message='Validator Stats' count={statsCount} />,
-        content: (
-          <ValidatorStatsTable
-            producedBlocks={blocksProducedQuery.data}
-            error={!!blocksProducedQuery.error}
-            stats={validator?.stats}
-          />
-        )
-      });
-    }
-
     return tabs;
-  }, [
-    account.id,
-    account.roles.validator,
-    loading,
-    extrinsicCount,
-    transferCount,
-    filters,
-    nominators,
-    statsCount,
-    blocksProducedQuery.data,
-    blocksProducedQuery.error,
-    validator
-  ]);
+  }, [account.id, loading, extrinsicCount, transferCount, filters]);
 
   return (
     <PaperStyled>

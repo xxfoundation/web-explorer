@@ -50,7 +50,7 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
         <SummaryValue>{block?.currentEra}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Hash</SummaryHeader>
+        <SummaryHeader>Block Hash</SummaryHeader>
         <SummaryValue>
           <WithCopy value={block.hash}>
             <Hash truncated='lgDown' value={block.hash} />

@@ -117,7 +117,7 @@ const LockedTooltipContent: FC<{ account: Account }> = ({ account }) => {
       </TooltipBody>
       <TooltipFooter>
         <Typography component={'p'} fontSize='10px' fontWeight={400} letterSpacing='1px'>
-          The stash can be locked by Bond, Democracy, Election, Vesting at the same time.{' '}
+          Tokens can be locked by Bond, Vesting, Democracy, Council at the same time.
         </Typography>
       </TooltipFooter>
     </>
