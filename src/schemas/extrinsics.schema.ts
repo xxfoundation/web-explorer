@@ -32,7 +32,6 @@ export type Extrinsic = {
   blockNumber: number;
   extrinsicIndex: number;
   hash: string;
-  lifetime?: string | number;
   timestamp: number;
   module: string;
   call: string;
