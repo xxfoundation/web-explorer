@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, TypographyProps } from '@mui/material';
 
 type ErrorType = 'data-unavailable' | 'general';
 
@@ -8,11 +8,17 @@ const messages: Record<ErrorType, string> = {
   'general': 'Something went wrong...'
 }
 
-const Error: FC<{ type?: ErrorType, error?: boolean }> = ({ children, error, type = 'data-unavailable' }) => (
+type Props = TypographyProps & {
+  message?: string;
+  type?: ErrorType;
+  error?: boolean;
+}
+
+const Error: FC<Props> = ({ children, error, message, type = 'data-unavailable', ...rest }) => (
   <>
     {
       error === undefined || !!error
-        ? <Typography color='red'>{messages[type]}</Typography>
+        ? <Typography {...rest}>{message || messages[type]}</Typography>
         : children
     }
   </>

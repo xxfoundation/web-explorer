@@ -17,8 +17,8 @@ const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
     <BlockStatusIcon status={block.finalized ? 'successful' : 'pending'} />,
     block.currentEra,
     <TimeAgoComponent date={block.timestamp} />,
-    <Link to='#'>{block.totalExtrinsics}</Link>,
-    <>{!block.author ? 'Unknown' : <Address
+    block.totalExtrinsics,
+    <>{!block.author ? 'Genesis' : <Address
       truncated
       value={block.author}
       name={block.authorName[0]?.identity?.display}

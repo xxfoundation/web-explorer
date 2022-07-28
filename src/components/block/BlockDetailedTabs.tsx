@@ -44,7 +44,7 @@ const BlockDetailedTabs: React.FC<Props> = ({ blockNumber, loading }) => {
       : [
           {
             label: <TabText message='extrinsics' count={extrinsicsCount} />,
-            content: <ExtrinsicsTable where={where} />
+            content: <ExtrinsicsTable blockNumber={blockNumber} />
           },
           {
             label: <TabText message='events' count={eventCount} />,

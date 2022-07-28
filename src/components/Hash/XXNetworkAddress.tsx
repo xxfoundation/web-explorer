@@ -1,5 +1,5 @@
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { Avatar, Stack, Tooltip, Typography } from '@mui/material';
+import { styled, Avatar, Stack, Tooltip, Typography } from '@mui/material';
 import Hash, { Props as HashProps } from '.';
 import React, { FC, useMemo } from 'react';
 import { isValidXXNetworkAddress } from '../../utils';
@@ -11,6 +11,10 @@ type Props = HashProps & {
   disableAvatar?: boolean;
   disableUrl?: boolean;
 };
+
+const CustomAvatar = styled(Avatar)(() => ({
+  color: 'white'
+}));
 
 const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, ...hashProps }) => {
   const avatarIcon = useMemo(() => {
@@ -26,7 +30,9 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, ...hashPr
         <RemoveCircleIcon sx={{ mr: 1 }} />
       </Tooltip>
     ) : (
-      <Avatar sx={{ width: 25, height: 25, mr: 1 }} src={avatar} alt={name} />
+      <CustomAvatar
+        sx={{ width: 25, height: 25, mr: 1 }}
+        src={avatar} alt={name} />
     );
   }, [name, avatar]);
 

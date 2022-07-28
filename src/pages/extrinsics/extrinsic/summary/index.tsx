@@ -45,10 +45,6 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>LifeTime</SummaryHeader>
-        <SummaryValue>{extrinsic.lifetime || 'Immortal'}</SummaryValue>
-      </SummaryEntry>
-      <SummaryEntry>
         <SummaryHeader>Extrinsic Hash</SummaryHeader>
         <SummaryValue>
           <WithCopy value={extrinsic.hash}>
@@ -97,7 +93,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryEntry>
           <SummaryHeader>Signer</SummaryHeader>
           <SummaryValue>
-            <Address value={extrinsic.signer} />
+            <Address name={extrinsic.signerAccount?.identity?.display} value={extrinsic.signer} />
           </SummaryValue>
         </SummaryEntry>
       )}

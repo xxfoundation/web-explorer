@@ -91,20 +91,7 @@ export const GET_TRANSFERS_TIMESTAMPS = gql`
 /*                        Get Transfers by Primary Keys                       */
 /* -------------------------------------------------------------------------- */
 export type GetTransferByPK = {
-  transfer: Transfer & {
-    sender: {
-      address: string;
-      identity: {
-        display: string;
-      }
-    };
-    receiver: {
-      address: string;
-      identity: {
-        display: string;
-      }
-    };
-  };
+  transfer: Transfer;
 };
 
 export const GET_TRANSFER_BY_PK = gql`
@@ -112,18 +99,6 @@ export const GET_TRANSFER_BY_PK = gql`
   query GetTransferByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
     transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
       ...transfer_common_fields
-      sender: account {
-        address: account_id
-        identity {
-          display
-        }
-      }
-      receiver: accountByDestination {
-        address: account_id
-        identity {
-          display
-        }
-      }
     }
   }
 `;
@@ -145,10 +120,6 @@ export const LIST_TRANSFERS_ORDERED = gql`
   ) {
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       ...transfer_common_fields
-      id
-      timestamp
-      source
-      destination
     }
   }
 `;
@@ -182,10 +153,6 @@ export const LIST_WHALE_TRANSFERS = gql`
   query ListWhaleTransfers {
     transfers: whale_alert {
       ...transfer_common_fields
-      id
-      timestamp
-      source
-      destination
     }
   }
 `;

@@ -15,6 +15,11 @@ const EXTRINSIC_FRAGMENT = gql`
     timestamp
     isSigned: is_signed
     signer
+    signerAccount {
+      identity {
+        display
+      }
+    }
     args
     argsDef: args_def
     doc
@@ -27,12 +32,16 @@ export type Extrinsic = {
   blockNumber: number;
   extrinsicIndex: number;
   hash: string;
-  lifetime?: string | number;
   timestamp: number;
   module: string;
   call: string;
   success: boolean;
   signer?: string;
+  signerAccount: null | {
+    identity: null | {
+      display: string
+    }
+  },
   isSigned: boolean;
   args: Array<string | number>;
   argsDef: Record<string, string>;
@@ -63,24 +72,43 @@ export const FIND_EXTRINSIC_BY_HASH = gql`
   }
 `;
 
+export type GetExtrinsicByHash = {
+  extrinsic: Extrinsic[]
+};
+
+export const GET_EXTRINSIC_BY_HASH = gql`
+  ${EXTRINSIC_FRAGMENT}
+  query FindExtrinsicByHash($hash: String!) {
+    extrinsic(where: { hash: {_eq: $hash }}) {
+      ...extrinsicFragment
+    }
+  }
+`;
+
+export type GetExtrinsicByBNAndIndex = {
+  extrinsic: Extrinsic[];
+}
+
+export const GET_EXTRINSIC_BY_BN_AND_INDEX = gql`
+  ${EXTRINSIC_FRAGMENT}
+  query FindExtrinsicByBNAndIndex($blockNumber: bigint!, $extrinsicIndex: Int!) {
+    extrinsic(where: { block_number: {_eq: $blockNumber }, extrinsic_index: {_eq: $extrinsicIndex } }) {
+      ...extrinsicFragment
+    }
+  }
+`
+
 /* -------------------------------------------------------------------------- */
 /*                           Get Extrinsics of Block                          */
 /* -------------------------------------------------------------------------- */
 export const EXTRINSICS_OF_BLOCK = gql`
+  ${EXTRINSIC_FRAGMENT}
   query ListExtrinsicOfBlock(
     $orderBy: [extrinsic_order_by!]
     $where: extrinsic_bool_exp
   ) {
     extrinsics: extrinsic(order_by: $orderBy, where: $where) {
-      id
-      extrinsicIndex: extrinsic_index
-      blockNumber: block_number
-      hash
-      timestamp
-      success
-      call
-      signer
-      module
+      ...extrinsicFragment
     }
     
     agg: extrinsic_aggregate(where: $where) {

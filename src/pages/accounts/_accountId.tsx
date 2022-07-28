@@ -12,14 +12,14 @@ import Balances from './account/Balances';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
 import AccountDetails from './account/AccountDetails';
-import ValidatorInfo from './account/ValidatorInfo';
 
 import { useToggle } from '../../hooks';
 import BalanceHistoryChart from './account/BalanceHistoryChart';
 import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
+import StakingCard from './account/staking';
 
-const AccountId: FC = ({}) => {
-  const { accountId } = useParams<{ accountId: string }>();
+const AccountId: FC = () => {
+  const { accountId } = useParams<{ accountId?: string }>();
   const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const { data, loading } = useFetchValidatorAccountInfo(accountId);
   const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
@@ -47,10 +47,8 @@ const AccountId: FC = ({}) => {
   }
 
   if (!data?.account) return <NotFound message='Account Not Found' />;
-
-  const validatorInfo = data?.stats && data?.stats[0];
-
-  const validatorStats =
+  const account = data?.account;
+  const validator =
     data?.aggregates && data?.stats
       ? { aggregates: data?.aggregates, stats: data?.stats }
       : undefined;
@@ -58,8 +56,8 @@ const AccountId: FC = ({}) => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      {data.account.identity?.display && (
-        <Typography variant='h1'>{data.account.identity?.display}</Typography>
+      {account.identity?.display && (
+        <Typography variant='h1'>{account.identity?.display}</Typography>
       )}
       <Grid container spacing={3} marginTop='5px'>
         <Grid item xs={12}>
@@ -80,7 +78,7 @@ const AccountId: FC = ({}) => {
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
             <AccountDetails account={data.account} />
-            {data.account.roles.validator && (
+            {account.roles.validator && (
               <RoundedButton
                 style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
                 variant='contained'
@@ -94,17 +92,17 @@ const AccountId: FC = ({}) => {
         {historyExpanded && currEra && (
           <Grid item xs={12}>
             <PaperWrapStyled>
-              <BalanceHistoryChart accountId={data.account.id} era={currEra} />
+              <BalanceHistoryChart accountId={account.id} era={currEra} />
             </PaperWrapStyled>
           </Grid>
         )}
-        {validatorInfo && validatorInfoExpanded && (
+        {validatorInfoExpanded && account.roles.validator && validator !== undefined && (
           <Grid item xs={12}>
-            <ValidatorInfo info={validatorInfo} />
+            <StakingCard accountId={account.id} validator={validator} />
           </Grid>
         )}
         <Grid item xs={12}>
-          <BlockchainCard account={data.account} validator={validatorStats} />
+          <BlockchainCard account={data.account} />
         </Grid>
       </Grid>
     </Container>
