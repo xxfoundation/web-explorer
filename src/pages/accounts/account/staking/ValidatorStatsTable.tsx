@@ -9,6 +9,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
   Typography
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -21,16 +22,44 @@ import { usePagination, useToggle } from '../../../../hooks';
 import Error from '../../../../components/Error';
 import FormatBalance from '../../../../components/FormatBalance';
 
+const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
+  return tooltip ? (
+    <Tooltip title={tooltip}>
+      <Typography variant='h4'>{header}</Typography>
+    </Tooltip>
+  ) : (
+    <Typography variant='h4'>{header}</Typography>
+  );
+};
+
+const commissionTooltip = 'Portion of rewards the validator takes to cover operating costs.';
+
+const pointsTooltip = (
+  <>
+    For authering a block: 130 points
+    <br />
+    Per completed cmix round: 10 points
+    <br />
+    Per failed cmix realtime round: -20 points
+  </>
+);
+
+const rewardsTooltip =
+  'Total amount of xx earned by the validator in that era. Validator will take his commission (%) out of the total and the remainder is split among the nominators and himself according to their stake.';
+
+const relativePerformanceTooltip =
+  'Comparison with best performing validator of the era. [own_points / max_points]';
+
 const headers = [
-  'Era',
-  'Commission',
-  'Own Stake',
-  'Other Stake',
-  'Total Stake',
-  'Points',
-  'Relative Performance',
-  'Rewards',
-  'Blocks Produced'
+  tableHeader('Era'),
+  tableHeader('Commission', commissionTooltip),
+  tableHeader('Own Stake'),
+  tableHeader('Other Stake'),
+  tableHeader('Total Stake'),
+  tableHeader('Points', pointsTooltip),
+  tableHeader('Relative Performance', relativePerformanceTooltip),
+  tableHeader('Rewards', rewardsTooltip),
+  tableHeader('Blocks Produced')
 ];
 
 const BlockLink = ({ block }: { block?: number }) =>
@@ -128,8 +157,8 @@ const ValidatorStatsTable: FC<Props> = ({ error, producedBlocks, stats }) => {
       <Table>
         <TableHead>
           <TableRow>
-            {headers.map((header) => (
-              <TableCell key={header}>{header}</TableCell>
+            {headers.map((header, index) => (
+              <TableCell key={index}>{header}</TableCell>
             ))}
           </TableRow>
         </TableHead>
