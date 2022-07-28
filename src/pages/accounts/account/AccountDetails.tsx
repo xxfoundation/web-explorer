@@ -30,7 +30,10 @@ const AccountDetails: FC<{ account: Account }> = ({ account }) => {
         </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
-        <Tooltip title='Corresponds to the number of interactions that this account had with the chain (number of extrinsics).'>
+        <Tooltip
+          title='Corresponds to the number of interactions that this account had with the chain (number of extrinsics).'
+          arrow
+        >
           <TypographyHeader sx={{ width: '110px' }}>nonce</TypographyHeader>
         </Tooltip>
         <Typography fontWeight='100'>|</Typography>

@@ -53,13 +53,19 @@ const StakingMetrics = () => {
         <Loading loading={loading}>
           <Box>
             <Typography variant='h6'>Average Return</Typography>
-            <Tooltip title='Network overall staking return. Calculated from the current staked ratio, current ideal interest and inflation parameters.'>
+            <Tooltip
+              title='Network overall staking return. Calculated from the current staked ratio, current ideal interest and inflation parameters.'
+              arrow
+            >
               <Typography variant='h3'>{avgStakedReturn}%</Typography>
             </Tooltip>
           </Box>
           <Box>
             <Typography variant='h6'>Circulating AGR</Typography>
-            <Tooltip title='Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'>
+            <Tooltip
+              title='Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
+              arrow
+            >
               <Typography variant='h3'>{economics?.inflationRate}%</Typography>
             </Tooltip>
           </Box>
@@ -76,7 +82,10 @@ const StakingMetrics = () => {
           </Box>
           <Box>
             <Stack direction='row' sx={{ mb: 1 }} style={{ justifyContent: 'space-between' }}>
-              <Tooltip title='An Era (24h) is composed by 3 Epochs (8h). An Epoch sets the periods where important actions can take place on chain during an era, like the election of the next validator set which starts before the last epoch.'>
+              <Tooltip
+                title='An Era (24h) is composed by 3 Epochs (8h). An Epoch sets the periods where important actions can take place on chain during an era, like the election of the next validator set which starts before the last epoch.'
+                arrow
+              >
                 <Typography variant='h6'>
                   EPOCH #{metrics.era}-{metrics.epoch}
                 </Typography>

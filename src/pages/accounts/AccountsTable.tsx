@@ -102,7 +102,10 @@ const useHeaders = () => {
       { value: 'account' },
       {
         value: (
-          <Tooltip title='An Extrinsic is defined by any action that is performed by an user of the xx network blockchain.'>
+          <Tooltip
+            title='An Extrinsic is defined by any action that is performed by an user of the xx network blockchain.'
+            arrow
+          >
             <Typography variant='h4'>extrinsics</Typography>
           </Tooltip>
         )

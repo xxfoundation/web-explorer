@@ -25,7 +25,7 @@ import { useQuery } from '@apollo/client';
 
 const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
   return tooltip ? (
-    <Tooltip title={tooltip}>
+    <Tooltip title={tooltip} arrow>
       <Typography variant='h4'>{header}</Typography>
     </Tooltip>
   ) : (
@@ -37,7 +37,7 @@ const commissionTooltip = 'Portion of rewards the validator takes to cover opera
 
 const pointsTooltip = (
   <>
-    For authering a block: 130 points
+    For authoring a block: 130 points
     <br />
     Per completed cmix round: 10 points
     <br />
