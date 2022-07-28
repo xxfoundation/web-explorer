@@ -50,11 +50,10 @@ const NominatorsTable: FC<{
     `${totalNominatorsShare.toFixed(2)}%`
   ]);
 
-  if (nominatorsFooter) {
+  if (nominatorsFooter && paginated?.length) {
     paginated?.push(BaseLineCellsWrapper([<Divider />, <Divider />, <Divider />]));
     paginated?.push(nominatorsFooter);
   }
-  console.warn(paginated);
 
   return (
     <BaselineTable

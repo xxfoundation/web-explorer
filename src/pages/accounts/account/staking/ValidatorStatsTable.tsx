@@ -1,5 +1,5 @@
 import type { ValidatorStats } from '../../../../schemas/staking.schema';
-import type { ProducedBlocks } from '../../../../schemas/blocks.schema';
+import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.schema';
 
 import React, { FC, useMemo, useEffect } from 'react';
 import {
@@ -21,6 +21,7 @@ import Link from '../../../../components/Link';
 import { usePagination, useToggle } from '../../../../hooks';
 import Error from '../../../../components/Error';
 import FormatBalance from '../../../../components/FormatBalance';
+import { useQuery } from '@apollo/client';
 
 const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
   return tooltip ? (
@@ -136,9 +137,21 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
   );
 };
 
-type Props = { error: boolean; stats?: ValidatorStats[]; producedBlocks?: ProducedBlocks };
+type Props = { accountId?: string; stats?: ValidatorStats[] };
 
-const ValidatorStatsTable: FC<Props> = ({ error, producedBlocks, stats }) => {
+const ValidatorStatsTable: FC<Props> = ({ accountId, stats }) => {
+  const variables = useMemo(() => {
+    return {
+      orderBy: [{ block_number: 'desc' }],
+      where: {
+        block_author: { _eq: accountId },
+        finalized: { _eq: true }
+      }
+    };
+  }, [accountId]);
+  const blocksProducedQuery = useQuery<ProducedBlocks>(GET_BLOCKS_BY_BP, { variables });
+  const producedBlocks = blocksProducedQuery.data;
+
   const pagination = usePagination({ rowsPerPage: 10 });
   const { paginate, setCount } = pagination;
 
@@ -148,10 +161,13 @@ const ValidatorStatsTable: FC<Props> = ({ error, producedBlocks, stats }) => {
 
   const paginated = useMemo(() => stats && paginate(stats), [paginate, stats]);
 
-  if (paginated === undefined) {
+  if (paginated === undefined || blocksProducedQuery.loading) {
     return <TableSkeleton rows={pagination.rowsPerPage} cells={headers.length} footer />;
   }
 
+  if (blocksProducedQuery.error) {
+    return <Error type='data-unavailable' />;
+  }
   return (
     <TableStyled>
       <Table>
@@ -163,13 +179,6 @@ const ValidatorStatsTable: FC<Props> = ({ error, producedBlocks, stats }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {error && (
-            <TableRow>
-              <TableCell colSpan={headers.length}>
-                <Error type='data-unavailable' />
-              </TableCell>
-            </TableRow>
-          )}
           {paginated.map((s) => (
             <ValidatorStatsRow key={s.era} stats={s} producedBlocks={producedBlocks} />
           ))}
