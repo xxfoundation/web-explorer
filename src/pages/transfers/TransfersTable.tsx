@@ -63,7 +63,10 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
       },
     [statusFilter]
   );
-  const whereConcat = Object.assign({}, where, whereWithFilters);
+  const whereConcat = useMemo(
+    () => Object.assign({}, where, whereWithFilters),
+    [where, whereWithFilters]
+  );
   const variables = useMemo(
     () => ({
       orderBy: [{ timestamp: 'desc' }],
@@ -96,7 +99,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   });
 
   const pagination = usePagination();
-  const { paginate, setCount: setPaginationCount } = pagination;
+  const { paginate, reset, setCount: setPaginationCount } = pagination;
 
   const transfers = useMemo(() => {
     return (data?.transfers || [])
@@ -108,6 +111,10 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
     setCount(transfers.length);
     setPaginationCount(transfers.length);
   }, [setCount, setPaginationCount, transfers.length]);
+
+  useEffect(() => {
+    reset();
+  }, [filters, reset, statusFilter]);
 
   const paginated = useMemo(() => paginate(transfers), [paginate, transfers]);
 
