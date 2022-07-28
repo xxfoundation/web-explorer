@@ -127,6 +127,11 @@ const ExtrinsicsTable: FC<Props> = (props) => {
     }
   });
 
+  const { reset } = pagination;
+  useEffect(() => {
+    reset();
+  }, [range, callsFilter, moduleVariable, reset, resultFilter]);
+
   return (
     <BaselineTable
       error={!!error}

@@ -8,7 +8,7 @@ import {
   Typography
 } from '@mui/material';
 import FunctionsIcon from '@mui/icons-material/Functions';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from '../../components/Link';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
@@ -105,8 +105,6 @@ const HistoryTable = () => {
           ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
           ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
         },
-        // ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } }),
-        // ...(!withExtrinsicSuccess && { call: { _neq: 'ExtrinsicSuccess' } })
         ...{ _and: callVariable },
         ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } })
       }
@@ -117,6 +115,11 @@ const HistoryTable = () => {
   const { data, error, loading, pagination } = usePaginatedQuery<ListEvents>(LIST_EVENTS, {
     variables
   });
+
+  const { reset } = pagination;
+  useEffect(() => {
+    reset();
+  }, [range, modulesFilter, withExtrinsicSuccess, callsFilter, reset])
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
 
   return (

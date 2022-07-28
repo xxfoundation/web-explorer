@@ -85,7 +85,7 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
               <WithCopy value={block.author}>
                 <Address
                   truncated='mdDown'
-                  name={block?.authorName[0].identity?.display}
+                  name={block?.authorName[0]?.identity?.display}
                   value={block.author}
                   url={`/blocks/${block.number}/producer/${block.author}`}
                 />

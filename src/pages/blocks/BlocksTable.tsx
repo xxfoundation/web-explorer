@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -18,12 +18,12 @@ const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
     block.currentEra,
     <TimeAgoComponent date={block.timestamp} />,
     block.totalExtrinsics,
-    <Address
+    <>{!block.author ? 'Genesis' : <Address
       truncated
       value={block.author}
-      name={block.authorName[0].identity?.display}
+      name={block.authorName[0]?.identity?.display}
       url={`/blocks/${block.number}/producer/${block.author}`}
-    />,
+    />}</>,
     <Hash truncated value={block.hash} url={`/blocks/${block.number}`} />
   ]);
 };
@@ -76,6 +76,12 @@ const BlocksTable: FC = () => {
       variables
     }
   );
+
+  const { reset } = pagination;
+
+  useEffect(() => {
+    reset();
+  }, [reset, range, statusFilter])
 
   const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
 
