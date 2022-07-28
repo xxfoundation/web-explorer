@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 import Tag from '../../../components/Tags/Tag';
 import TimeAgoComponent from '../../../components/TimeAgo';
@@ -30,7 +30,9 @@ const AccountDetails: FC<{ account: Account }> = ({ account }) => {
         </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
-        <TypographyHeader sx={{ width: '110px' }}>nonce</TypographyHeader>
+        <Tooltip title='Corresponds to the number of interactions that this account had with the chain (number of extrinsics).'>
+          <TypographyHeader sx={{ width: '110px' }}>nonce</TypographyHeader>
+        </Tooltip>
         <Typography fontWeight='100'>|</Typography>
         <TypographyBody>{account.nonce}</TypographyBody>
       </InfoCardRow>
