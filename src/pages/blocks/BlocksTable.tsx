@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -10,6 +10,7 @@ import { ListOfBlocksOrdered, LIST_BLOCKS_ORDERED } from '../../schemas/blocks.s
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
+import useSessionStorage from '../../hooks/useSessionState';
 
 const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
@@ -29,12 +30,12 @@ const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
 };
 
 const BlocksTable: FC = () => {
-  const [range, setRange] = useState<Range>({
+  const [range, setRange] = useSessionStorage<Range>('blocks.range', {
     from: null,
     to: null
   });
 
-  const [statusFilter, setStatusFilter] = useState<boolean | null>(null);
+  const [statusFilter, setStatusFilter] = useSessionStorage<boolean | null>('blocks.status', null);
 
   const headers = useMemo(
     () =>
@@ -52,7 +53,7 @@ const BlocksTable: FC = () => {
         'block producer',
         'block hash'
       ]),
-    [range, statusFilter]
+    [range, setRange, setStatusFilter, statusFilter]
   );
 
   const variables = useMemo(

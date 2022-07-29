@@ -8,7 +8,7 @@ import {
   Typography
 } from '@mui/material';
 import FunctionsIcon from '@mui/icons-material/Functions';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Link from '../../components/Link';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
@@ -23,6 +23,7 @@ import { theme } from '../../themes/default';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
+import useSessionStorage from '../../hooks/useSessionState';
 
 const props: TableCellProps = { align: 'left' };
 
@@ -36,22 +37,22 @@ const rowsParser = ({ blockNumber, call, index, module, timestamp }: Event): Bas
   ];
 };
 
-const HistoryTable = () => {
-  const [range, setRange] = useState<Range>({
+const EventsTable = () => {
+  const [range, setRange] = useSessionStorage<Range>('events.range', {
     from: null,
     to: null
   });
 
-  const [withExtrinsicSuccess, setWithExtrinsicSuccess] = useState<boolean>(false);
+  const [withExtrinsicSuccess, setWithExtrinsicSuccess] = useSessionStorage<boolean>('events.success', false);
   const actionsQuery = useQuery<GetAvailableEventActions>(GET_AVAILABLE_EVENT_ACTIONS);
 
-  const [modulesFilter, setModulesFilter] = useState<string[]>();
+  const [modulesFilter, setModulesFilter] = useSessionStorage<string[] | undefined>('events.modules', undefined);
   const availableModules = useMemo(
     () => actionsQuery.data?.modules.map((m) => m.module),
     [actionsQuery.data]
   );
 
-  const [callsFilter, setCallsFilter] = useState<string[]>();
+  const [callsFilter, setCallsFilter] = useSessionStorage<string[] | undefined>('events.calls', undefined);
   const availableCalls = useMemo(
     () => actionsQuery.data?.calls.map((c) => c.call),
     [actionsQuery.data]
@@ -83,7 +84,16 @@ const HistoryTable = () => {
         )
       }
     ],
-    [availableCalls, availableModules, callsFilter, modulesFilter, range]
+    [
+      availableCalls,
+      availableModules,
+      callsFilter,
+      modulesFilter,
+      range,
+      setCallsFilter,
+      setModulesFilter,
+      setRange
+    ]
   );
 
   const callVariable = useMemo(() => {
@@ -119,7 +129,8 @@ const HistoryTable = () => {
   const { reset } = pagination;
   useEffect(() => {
     reset();
-  }, [range, modulesFilter, withExtrinsicSuccess, callsFilter, reset])
+  }, [range, modulesFilter, withExtrinsicSuccess, callsFilter, reset]);
+
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
 
   return (
@@ -165,4 +176,4 @@ const HistoryTable = () => {
   );
 };
 
-export default HistoryTable;
+export default EventsTable;
