@@ -55,7 +55,7 @@ const ValidatorInfo: FC<{ info?: ValidatorStats }> = ({ info }) => {
     const parsedLocation: { city: string; country: string; geoBin: string } = JSON.parse(
       info?.location
     );
-    const isEmpty = Object.entries(parsedLocation).every((x) => x.at(1) === null || x.at(1) === '');
+    const isEmpty = Object.entries(parsedLocation).every((x) => x[1] === null || x[1] === '');
 
     return !isEmpty
       ? locationString(parsedLocation.geoBin, parsedLocation.city, parsedLocation.country)
