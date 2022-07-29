@@ -44,13 +44,27 @@ const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
 };
 
 const BlocksTable: FC = () => {
+  /* ----------------------- Initialize State Variables ----------------------- */
   const [range, setRange] = useSessionState<Range>('blocks.range', {
     from: null,
     to: null
   });
-
   const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('blocks.status', null);
 
+  /* --------------------- Initialize Dependent Variables --------------------- */
+  const where = useMemo(() => {
+    return {
+      ...(statusFilter !== null && {
+        finalized: { _eq: statusFilter }
+      }),
+      timestamp: {
+        ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
+        ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
+      }
+    };
+  }, [range.from, range.to, statusFilter]);
+
+  /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo(
     () =>
       BaseLineCellsWrapper([
@@ -70,18 +84,7 @@ const BlocksTable: FC = () => {
     [range, setRange, setStatusFilter, statusFilter]
   );
 
-  const where = useMemo(() => {
-    return {
-      ...(statusFilter !== null && {
-        finalized: { _eq: statusFilter }
-      }),
-      timestamp: {
-        ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
-        ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
-      }
-    };
-  }, [range.from, range.to, statusFilter]);
-
+  /* ------------------------- Main Query - Get Blocks ------------------------ */
   const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListOfBlocksOrdered>(
     LIST_BLOCKS_ORDERED,
     {
@@ -90,17 +93,16 @@ const BlocksTable: FC = () => {
       }
     }
   );
+  const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
 
+  /* ---------------------------- Setup Pagination ---------------------------- */
   const { reset } = pagination;
-
   useEffect(() => {
     reset();
   }, [reset, range, statusFilter]);
 
-  const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
-
+  /* ----------------------------- Refresh Button ----------------------------- */
   const [latestBlock, setLatestBlock] = useState<number>();
-
   useEffect(() => {
     setLatestBlock(data?.blocks[0]?.number);
   }, [data?.blocks]);
@@ -114,9 +116,9 @@ const BlocksTable: FC = () => {
       }
     }
   );
-
   const blocksSinceFetch = blocksSinceLastFetch?.data?.blocks?.aggregate?.count;
 
+  /* ----------------------------- Build Component ---------------------------- */
   return (
     <>
       <Box sx={{ textAlign: 'right' }}>

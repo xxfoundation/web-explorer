@@ -24,34 +24,27 @@ import useSessionState from '../../hooks/useSessionState';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
-  return [
-    { value: data.block.era },
-    { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
-    { value: <TimeAgo date={data.timestamp} /> },
-    {
-      value: (
-        <Address
-          name={data.sourceAccount.identity?.display}
-          value={data.source}
-          url={`/accounts/${data.source}`}
-          truncated
-        />
-      )
-    },
-    {
-      value: (
-        <Address
-          value={data.destination}
-          name={data.destinationAccount.identity?.display}
-          url={`/accounts/${data.destination}`}
-          truncated
-        />
-      )
-    },
-    { value: <FormatBalance value={data.amount.toString()} /> },
-    { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
-    { value: <Hash truncated value={data.hash} url={extrinsicIdLink} showTooltip /> }
-  ];
+
+  return BaseLineCellsWrapper([
+    <>{data.block.era}</>,
+    <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link>,
+    <TimeAgo date={data.timestamp} />,
+    <Address
+      name={data.sourceAccount.identity?.display}
+      value={data.source}
+      url={`/accounts/${data.source}`}
+      truncated
+    />,
+    <Address
+      value={data.destination}
+      name={data.destinationAccount.identity?.display}
+      url={`/accounts/${data.destination}`}
+      truncated
+    />,
+    <FormatBalance value={data.amount.toString()} />,
+    <BlockStatusIcon status={data.success ? 'successful' : 'failed'} />,
+    <Hash truncated value={data.hash} url={extrinsicIdLink} showTooltip />
+  ]);
 };
 
 type Props = {
@@ -61,7 +54,10 @@ type Props = {
 };
 
 const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) => {
+  /* ----------------------- Initialize State Variables ----------------------- */
   const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('transfers.status', null);
+
+  /* --------------------- Initialize Dependent Variables --------------------- */
   const whereWithFilters = useMemo(
     () =>
       statusFilter !== null && {
@@ -81,6 +77,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
     [whereConcat]
   );
 
+  /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo(
     () =>
       BaseLineCellsWrapper([
@@ -101,6 +98,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
     [setStatusFilter, statusFilter]
   );
 
+  /* ----------------------- Main Query - Get Transfers ----------------------- */
   const { data, error, loading, pagination, refetch } = usePaginatedQuery<GetTransfersByBlock>(
     LIST_TRANSFERS_ORDERED,
     {
@@ -108,14 +106,16 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
     }
   );
 
-  const { paginate, reset } = pagination;
-
+  /* ------------------ Process response according to filters ----------------- */
   const transfers = useMemo(() => {
     return (data?.transfers || [])
       .filter((t) => !filters?.from || t.source === filters?.from)
       .filter((t) => !filters?.to || t.destination === filters?.to);
   }, [data?.transfers, filters?.from, filters?.to]);
+  const rows = useMemo(() => (transfers || []).map(TransferRow), [transfers]);
 
+  /* ---------------------------- Setup Pagination ---------------------------- */
+  const { reset } = pagination;
   useEffect(() => {
     setCount(pagination.count);
   }, [pagination.count, setCount]);
@@ -124,10 +124,8 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
     reset();
   }, [filters, reset, statusFilter]);
 
-  const paginated = useMemo(() => paginate(transfers), [paginate, transfers]);
-
+  /* ----------------------------- Refresh Button ----------------------------- */
   const [latestTransferBlock, setLatestTransferBlock] = useState<number>();
-
   useEffect(() => {
     setLatestTransferBlock(data?.transfers[0]?.blockNumber);
   }, [data?.transfers]);
@@ -141,9 +139,9 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
       }
     }
   );
-
   const transfersSinceFetch = transfersSinceBlock?.data?.transfers?.aggregate?.count;
 
+  /* ----------------------------- Build Component ---------------------------- */
   return (
     <>
       <Box sx={{ textAlign: 'right' }}>
@@ -154,7 +152,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
         loading={loading}
         headers={headers}
         rowsPerPage={pagination.rowsPerPage}
-        rows={paginated.map(TransferRow)}
+        rows={rows}
         footer={pagination.controls}
       />
     </>
