@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { TotalOfItems } from './types';
 
 /* -------------------------------------------------------------------------- */
 /*                             Transfers Fragments                            */
@@ -106,7 +107,7 @@ export const GET_TRANSFER_BY_PK = gql`
 /* -------------------------------------------------------------------------- */
 /*                           Get Transfers of Block                           */
 /* -------------------------------------------------------------------------- */
-export type GetTransfersByBlock = {
+export type GetTransfersByBlock = TotalOfItems & {
   transfers: (Transfer & { id: number })[];
 };
 
@@ -120,6 +121,12 @@ export const LIST_TRANSFERS_ORDERED = gql`
   ) {
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       ...transfer_common_fields
+    }
+    
+    agg: transfer_aggregate(where: $where) {
+      aggregate {
+        count
+      }
     }
   }
 `;
@@ -171,6 +178,30 @@ export const LISTEN_FOR_ERA_TRANSFERS = gql`
     eraTransfers: era_transfers {
       era
       transfers
+    }
+  }
+`;
+
+
+/* -------------------------------------------------------------------------- */
+/*                            Transfers since block                           */
+/* -------------------------------------------------------------------------- */
+
+
+export type SubscribeTransfersSinceBlock = {
+  transfers: {
+    aggregate: {
+      count: number;
+    }
+  }
+};
+
+export const SUBSCRIBE_TRANSFERS_SINCE_BLOCK = gql`
+  subscription TransfersSinceBlock ($blockNumber: bigint!) {
+    transfers: transfer_aggregate(where: {block_number: {_gt: $blockNumber }}) {
+      aggregate {
+        count
+      }
     }
   }
 `;

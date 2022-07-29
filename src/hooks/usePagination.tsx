@@ -8,10 +8,11 @@ export type PaginationOptions = {
 
 type PaginationResult = {
   controls: React.ReactNode,
-  rowsPerPage: number;
+  count: number;
   page: number;
   paginate: <T,>(items: Array<T>) => Array<T>;
   reset: () => void;
+  rowsPerPage: number;
   setCount: (c: number) => void;
   limit: number;
   offset: number;
@@ -56,6 +57,7 @@ function usePagination(options?: PaginationOptions): PaginationResult {
   
   return {
     controls,
+    count,
     rowsPerPage,
     page,
     paginate,

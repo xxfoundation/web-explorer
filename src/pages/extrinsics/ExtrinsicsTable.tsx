@@ -1,16 +1,20 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
+import { Box } from '@mui/material';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Hash from '../../components/Hash';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
+import RefreshButton from '../../components/buttons/Refresh';
 import {
   GetAvailableExtrinsicActions,
   GET_AVAILABLE_EXTRINSIC_ACTIONS,
   ListExtrinsics,
-  LIST_EXTRINSICS
+  LIST_EXTRINSICS,
+  SubscribeExtrinsicsSinceBlock,
+  SUBSCRIBE_EXTRINSICS_SINCE_BLOCK
 } from '../../schemas/extrinsics.schema';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
@@ -115,7 +119,7 @@ const ExtrinsicsTable: FC<Props> = (props) => {
     [resultFilter, range.from, range.to, moduleVariable, callsFilter]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListExtrinsics>(LIST_EXTRINSICS, {
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListExtrinsics>(LIST_EXTRINSICS, {
     variables
   });
 
@@ -132,15 +136,38 @@ const ExtrinsicsTable: FC<Props> = (props) => {
     reset();
   }, [range, callsFilter, moduleVariable, reset, resultFilter]);
 
+  const [latestExtrinsicBlock, setLatestExtrinsicBlock] = useState<number>();
+
+  useEffect(() => {
+    setLatestExtrinsicBlock(data?.extrinsics[0]?.blockNumber);
+  }, [data?.extrinsics]);
+
+  const extrinsicsSinceLastFetch = useSubscription<SubscribeExtrinsicsSinceBlock>(SUBSCRIBE_EXTRINSICS_SINCE_BLOCK, {
+    skip: latestExtrinsicBlock === undefined,
+    variables: { 
+      blockNumber: latestExtrinsicBlock
+    }
+  });
+
+  const blocksSinceFetch = extrinsicsSinceLastFetch?.data?.extrinsics?.aggregate?.count;
+
   return (
-    <BaselineTable
-      error={!!error}
-      loading={loading}
-      headers={headers}
-      rowsPerPage={pagination.rowsPerPage}
-      rows={rows}
-      footer={pagination.controls}
-    />
+    <>
+      <Box sx={{ textAlign: 'right' }}>
+        {data?.extrinsics && <RefreshButton
+          countSince={blocksSinceFetch}
+          refetch={refetch}
+        />}
+      </Box>
+      <BaselineTable
+        error={!!error}
+        loading={loading}
+        headers={headers}
+        rowsPerPage={pagination.rowsPerPage}
+        rows={rows}
+        footer={pagination.controls}
+      />
+    </>
   );
 };
 

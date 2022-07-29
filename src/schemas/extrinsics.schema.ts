@@ -228,4 +228,26 @@ export const GET_SIX_HOUR_EXTRINSIC_COUNTS = gql`
       timestamp: interval_start
     }
   }
-` 
+`
+
+/* -------------------------------------------------------------------------- */
+/*                         Subscription to new ext                            */
+/* -------------------------------------------------------------------------- */
+
+export type SubscribeExtrinsicsSinceBlock = {
+  extrinsics: {
+    aggregate: {
+      count: number;
+    }
+  }
+};
+
+export const SUBSCRIBE_EXTRINSICS_SINCE_BLOCK = gql`
+  subscription ExtrinsicSinceBlock ($blockNumber: bigint!) {
+    extrinsics: extrinsic_aggregate(where: {block_number: {_gt: $blockNumber }}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;

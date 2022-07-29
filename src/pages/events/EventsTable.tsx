@@ -1,5 +1,6 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import {
+  Box,
   Checkbox,
   FormControlLabel,
   Stack,
@@ -12,12 +13,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from '../../components/Link';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
+import RefreshButton from '../../components/buttons/Refresh';
 import {
   Event,
   GetAvailableEventActions,
   GET_AVAILABLE_EVENT_ACTIONS,
   ListEvents,
-  LIST_EVENTS
+  LIST_EVENTS,
+  SubscribeEventsSinceBlock,
+  SUBSCRIBE_EVENTS_SINCE_BLOCK
 } from '../../schemas/events.schema';
 import { theme } from '../../themes/default';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
@@ -112,7 +116,7 @@ const HistoryTable = () => {
     [callVariable, modulesFilter, range.from, range.to]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListEvents>(LIST_EVENTS, {
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListEvents>(LIST_EVENTS, {
     variables
   });
 
@@ -121,6 +125,21 @@ const HistoryTable = () => {
     reset();
   }, [range, modulesFilter, withExtrinsicSuccess, callsFilter, reset])
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
+
+  const [latestBlock, setLatestBlock] = useState<number>();
+
+  useEffect(() => {
+    setLatestBlock(data?.events[0]?.blockNumber);
+  }, [data?.events]);
+
+  const eventsSinceLastFetch = useSubscription<SubscribeEventsSinceBlock>(SUBSCRIBE_EVENTS_SINCE_BLOCK, {
+    skip: latestBlock === undefined,
+    variables: { 
+      blockNumber: latestBlock
+    }
+  });
+
+  const eventsSinceFetch = eventsSinceLastFetch?.data?.events?.aggregate?.count;
 
   return (
     <>
@@ -153,6 +172,12 @@ const HistoryTable = () => {
           />
         </Stack>
       )}
+      <Box sx={{ textAlign: 'right' }}>
+        {data?.events && <RefreshButton
+          countSince={eventsSinceFetch}
+          refetch={refetch}
+        />}
+      </Box>
       <BaselineTable
         error={!!error}
         loading={loading}

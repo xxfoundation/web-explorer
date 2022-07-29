@@ -96,6 +96,27 @@ export const LIST_BLOCKS_ORDERED = gql`
 `;
 
 /* -------------------------------------------------------------------------- */
+/*                              New Blocks Count                              */
+/* -------------------------------------------------------------------------- */
+export type SubscribeBlocksSinceBlock = {
+  blocks: {
+    aggregate: {
+      count: number;
+    }
+  }
+};
+
+export const SUBSCRIBE_BLOCKS_SINCE_BLOCK = gql`
+  subscription MyQuery ($blockNumber: bigint!) {
+    blocks: block_aggregate(where: {block_number: {_gt: $blockNumber}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`
+
+/* -------------------------------------------------------------------------- */
 /*                          Get Blocks by Identifiers                         */
 /* -------------------------------------------------------------------------- */
 export type GetBlockByPK = {

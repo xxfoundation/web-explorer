@@ -6,10 +6,13 @@ import Hash from '../../components/Hash';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
-import { ListOfBlocksOrdered, LIST_BLOCKS_ORDERED } from '../../schemas/blocks.schema';
+import { ListOfBlocksOrdered, LIST_BLOCKS_ORDERED, SubscribeBlocksSinceBlock, SUBSCRIBE_BLOCKS_SINCE_BLOCK } from '../../schemas/blocks.schema';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
+import { useSubscription } from '@apollo/client';
+import RefreshButton from '../../components/buttons/Refresh';
+import { Box } from '@mui/material';
 
 const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
@@ -70,7 +73,7 @@ const BlocksTable: FC = () => {
     [range.from, range.to, statusFilter]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListOfBlocksOrdered>(
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListOfBlocksOrdered>(
     LIST_BLOCKS_ORDERED,
     {
       variables
@@ -81,19 +84,42 @@ const BlocksTable: FC = () => {
 
   useEffect(() => {
     reset();
-  }, [reset, range, statusFilter])
+  }, [reset, range, statusFilter]);
 
   const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
 
+  const [latestBlock, setLatestBlock] = useState<number>();
+
+  useEffect(() => {
+    setLatestBlock(data?.blocks[0]?.number);
+  }, [data?.blocks]);
+
+  const blocksSinceLastFetch = useSubscription<SubscribeBlocksSinceBlock>(SUBSCRIBE_BLOCKS_SINCE_BLOCK, {
+    skip: latestBlock === undefined,
+    variables: { 
+      blockNumber: latestBlock
+    }
+  });
+
+  const blocksSinceFetch = blocksSinceLastFetch?.data?.blocks?.aggregate?.count;
+
   return (
-    <BaselineTable
-      error={!!error}
-      loading={loading}
-      headers={headers}
-      rows={rows}
-      rowsPerPage={pagination.rowsPerPage}
-      footer={pagination.controls}
-    />
+    <>
+      <Box sx={{ textAlign: 'right' }}>
+        {data?.blocks && <RefreshButton
+          countSince={blocksSinceFetch}
+          refetch={refetch}
+        />}
+      </Box>
+      <BaselineTable
+        error={!!error}
+        loading={loading}
+        headers={headers}
+        rows={rows}
+        rowsPerPage={pagination.rowsPerPage}
+        footer={pagination.controls}
+      />
+    </>
   );
 };
 
