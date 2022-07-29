@@ -7,7 +7,7 @@ import { MenuButton } from './menu.styles';
 export default function DesktopNav() {
   return (
     <Box sx={{ mt: -2.75 }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} wrap='nowrap'>
         <Grid item xs>
           <BlockchainMenu />
         </Grid>
