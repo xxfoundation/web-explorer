@@ -11,6 +11,7 @@ type PaginationResult = {
   rowsPerPage: number;
   page: number;
   paginate: <T,>(items: Array<T>) => Array<T>;
+  reset: () => void;
   setCount: (c: number) => void;
   limit: number;
   offset: number;
@@ -20,10 +21,15 @@ function usePagination(options?: PaginationOptions): PaginationResult {
   const [count, setCount] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(options?.rowsPerPage ?? 20);
   const [page, setPage] = useState(0);
+
   const onRowsPerPageChange = useCallback(({ target: { value } }) => {
     setRowsPerPage(parseInt(value));
     setPage(0);
   }, []);
+
+  const reset = useCallback(() => {
+    setPage(0);
+  }, [])
   
   const onChange = useCallback(
     (_: unknown, number: number) => {
@@ -54,6 +60,7 @@ function usePagination(options?: PaginationOptions): PaginationResult {
     page,
     paginate,
     setCount,
+    reset,
     limit: rowsPerPage,
     offset: page * rowsPerPage
   };

@@ -1,5 +1,5 @@
 import type { ValidatorStats } from '../../../../schemas/staking.schema';
-import type { ProducedBlocks } from '../../../../schemas/blocks.schema';
+import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.schema';
 
 import React, { FC, useMemo, useEffect } from 'react';
 import {
@@ -9,6 +9,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
   Typography
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -20,17 +21,46 @@ import Link from '../../../../components/Link';
 import { usePagination, useToggle } from '../../../../hooks';
 import Error from '../../../../components/Error';
 import FormatBalance from '../../../../components/FormatBalance';
+import { useQuery } from '@apollo/client';
+
+const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
+  return tooltip ? (
+    <Tooltip title={tooltip} arrow>
+      <Typography variant='h4'>{header}</Typography>
+    </Tooltip>
+  ) : (
+    <Typography variant='h4'>{header}</Typography>
+  );
+};
+
+const commissionTooltip = 'Portion of rewards the validator takes to cover operating costs.';
+
+const pointsTooltip = (
+  <>
+    For authoring a block: 130 points
+    <br />
+    Per completed cmix round: 10 points
+    <br />
+    Per failed cmix realtime round: -20 points
+  </>
+);
+
+const rewardsTooltip =
+  'Total amount of xx earned by the validator in that era. Validator will take his commission (%) out of the total and the remainder is split among the nominators and himself according to their stake.';
+
+const relativePerformanceTooltip =
+  'Comparison with best performing validator of the era. [own_points / max_points]';
 
 const headers = [
-  'Era',
-  'Points',
-  'Commission',
-  'Own Stake',
-  'Other Stake',
-  'Total Stake',
-  'Relative Performance',
-  'Rewards',
-  'Blocks Produced'
+  tableHeader('Era'),
+  tableHeader('Commission', commissionTooltip),
+  tableHeader('Own Stake'),
+  tableHeader('Other Stake'),
+  tableHeader('Total Stake'),
+  tableHeader('Points', pointsTooltip),
+  tableHeader('Relative Performance', relativePerformanceTooltip),
+  tableHeader('Rewards', rewardsTooltip),
+  tableHeader('Blocks Produced')
 ];
 
 const BlockLink = ({ block }: { block?: number }) =>
@@ -66,7 +96,6 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
     <>
       <TableRow>
         <TableCell>{stats.era}</TableCell>
-        <TableCell>{stats.points ?? '-'}</TableCell>
         <TableCell>{stats.commission.toFixed(2)} %</TableCell>
         <TableCell>
           <FormatBalance value={stats.selfStake.toString()} />
@@ -77,6 +106,7 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
         <TableCell>
           <FormatBalance value={stats.totalStake.toString()} />
         </TableCell>
+        <TableCell>{stats.points ?? '-'}</TableCell>
         <TableCell>
           {stats.relativePerformance !== null ? (stats.relativePerformance * 100)?.toFixed(2) : '-'}
         </TableCell>
@@ -107,9 +137,21 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
   );
 };
 
-type Props = { error: boolean; stats?: ValidatorStats[]; producedBlocks?: ProducedBlocks };
+type Props = { accountId?: string; stats?: ValidatorStats[] };
 
-const ValidatorStatsTable: FC<Props> = ({ error, producedBlocks, stats }) => {
+const ValidatorStatsTable: FC<Props> = ({ accountId, stats }) => {
+  const variables = useMemo(() => {
+    return {
+      orderBy: [{ block_number: 'desc' }],
+      where: {
+        block_author: { _eq: accountId },
+        finalized: { _eq: true }
+      }
+    };
+  }, [accountId]);
+  const blocksProducedQuery = useQuery<ProducedBlocks>(GET_BLOCKS_BY_BP, { variables });
+  const producedBlocks = blocksProducedQuery.data;
+
   const pagination = usePagination({ rowsPerPage: 10 });
   const { paginate, setCount } = pagination;
 
@@ -119,28 +161,24 @@ const ValidatorStatsTable: FC<Props> = ({ error, producedBlocks, stats }) => {
 
   const paginated = useMemo(() => stats && paginate(stats), [paginate, stats]);
 
-  if (paginated === undefined) {
+  if (paginated === undefined || blocksProducedQuery.loading) {
     return <TableSkeleton rows={pagination.rowsPerPage} cells={headers.length} footer />;
   }
 
+  if (blocksProducedQuery.error) {
+    return <Error type='data-unavailable' />;
+  }
   return (
     <TableStyled>
       <Table>
         <TableHead>
           <TableRow>
-            {headers.map((header) => (
-              <TableCell key={header}>{header}</TableCell>
+            {headers.map((header, index) => (
+              <TableCell key={index}>{header}</TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {error && (
-            <TableRow>
-              <TableCell colSpan={headers.length}>
-                <Error type='data-unavailable' />
-              </TableCell>
-            </TableRow>
-          )}
           {paginated.map((s) => (
             <ValidatorStatsRow key={s.era} stats={s} producedBlocks={producedBlocks} />
           ))}

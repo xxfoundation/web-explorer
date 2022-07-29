@@ -60,9 +60,9 @@ const ExtrinsicsTable: FC<Props> = (props) => {
   const headers = useMemo(
     () =>
       BaseLineCellsWrapper([
-        'Extrinsics id',
+        'Extrinsic id',
         'Block',
-        'Extrinsics hash',
+        'Extrinsic hash',
         <DateRangeFilter onChange={setRange} value={range} />,
         <BooleanFilter
           label='Result'
@@ -126,6 +126,11 @@ const ExtrinsicsTable: FC<Props> = (props) => {
       props.setTotalOfExtrinsics(data.agg.aggregate.count);
     }
   });
+
+  const { reset } = pagination;
+  useEffect(() => {
+    reset();
+  }, [range, callsFilter, moduleVariable, reset, resultFilter]);
 
   return (
     <BaselineTable
