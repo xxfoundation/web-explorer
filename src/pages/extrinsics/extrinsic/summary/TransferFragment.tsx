@@ -50,14 +50,6 @@ const TransferFragment: FC<Props> = (variables) => {
           </Typography>
         </SummaryValue>
       </SummaryEntry>
-      <SummaryEntry>
-        <SummaryHeader>Fee</SummaryHeader>
-        <SummaryValue>
-          <Typography>
-            <FormatBalance value={data.transfer.feeAmount.toString()} />
-          </Typography>
-        </SummaryValue>
-      </SummaryEntry>
     </>
   );
 };

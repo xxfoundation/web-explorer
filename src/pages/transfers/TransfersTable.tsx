@@ -1,9 +1,8 @@
 import type { AddressFilters } from '../../components/Tables/filters/AddressFilter';
 
 import { Box, Typography } from '@mui/material';
-import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { useSubscription } from '@apollo/client';
-
+import React, { Dispatch, FC, SetStateAction, useEffect, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
@@ -21,10 +20,12 @@ import {
 } from '../../schemas/transfers.schema';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
+import useSessionState from '../../hooks/useSessionState';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
   return [
+    { value: data.block.era },
     { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
     { value: <TimeAgo date={data.timestamp} /> },
     {
@@ -33,7 +34,8 @@ const TransferRow = (data: Transfer) => {
           name={data.sourceAccount.identity?.display}
           value={data.source}
           url={`/accounts/${data.source}`}
-          truncated />
+          truncated
+        />
       )
     },
     {
@@ -42,7 +44,8 @@ const TransferRow = (data: Transfer) => {
           value={data.destination}
           name={data.destinationAccount.identity?.display}
           url={`/accounts/${data.destination}`}
-          truncated />
+          truncated
+        />
       )
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
@@ -58,7 +61,7 @@ type Props = {
 };
 
 const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) => {
-  const [statusFilter, setStatusFilter] = useState<boolean | null>(null);
+  const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('transfers.status', null);
   const whereWithFilters = useMemo(
     () =>
       statusFilter !== null && {
@@ -81,10 +84,11 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   const headers = useMemo(
     () =>
       BaseLineCellsWrapper([
+        'Era',
         'Block',
         'Time',
-        <Typography>From</Typography>,
-        <Typography>To</Typography>,
+        'From',
+        'To',
         'Amount',
         <BooleanFilter
           label='Result'
@@ -94,7 +98,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
         />,
         'Hash'
       ]),
-    [statusFilter]
+    [setStatusFilter, statusFilter]
   );
 
   const { data, error, loading, pagination, refetch  } = usePaginatedQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {

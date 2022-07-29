@@ -1,7 +1,7 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Tooltip, Typography } from '@mui/material';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import { theme } from '../../themes/default';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -12,6 +12,7 @@ import { CustomTooltip } from '../../components/Tooltip';
 import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
 import { HoldersRolesFilters, roleToLabelMap } from './HoldersRolesFilters';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
+import useSessionState from '../../hooks/useSessionState';
 
 type Filters = Record<string, boolean>;
 
@@ -94,7 +95,7 @@ const accountToRow = (
 };
 
 const useHeaders = () => {
-  const [filters, setFilters] = useState<Filters>({});
+  const [filters, setFilters] = useSessionState<Filters>('accounts.filters', {});
 
   const headers = useMemo(
     () => [
@@ -117,7 +118,7 @@ const useHeaders = () => {
       { value: 'locked balance' },
       { value: 'total balance' }
     ],
-    [filters]
+    [filters, setFilters]
   );
 
   return {

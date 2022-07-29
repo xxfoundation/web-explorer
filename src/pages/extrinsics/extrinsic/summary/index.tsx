@@ -18,7 +18,7 @@ import {
 import TimeAgo from '../../../../components/TimeAgo';
 import ModuleCalls from './ModuleCalls';
 import ParametersFragment from './ParametersFragment';
-import TransferFragment from './TransferFragment';
+import FormatBalance from '../../../../components/FormatBalance';
 
 type Props = {
   extrinsic: Extrinsic;
@@ -58,7 +58,6 @@ const Summary: FC<Props> = ({ extrinsic }) => {
           <ModuleCalls module={extrinsic.module} call={extrinsic.call} doc={extrinsic.doc} />
         </SummaryValue>
       </SummaryEntry>
-      <TransferFragment {...extrinsic} />
       <SummaryEntry>
         <SummaryHeader>Result</SummaryHeader>
         <SummaryValue>
@@ -77,6 +76,16 @@ const Summary: FC<Props> = ({ extrinsic }) => {
                 {extrinsic.errorMsg}
               </Typography>
             </WithCopy>
+          </SummaryValue>
+        </SummaryEntry>
+      )}
+      {extrinsic.fee && (
+        <SummaryEntry>
+          <SummaryHeader>Fee</SummaryHeader>
+          <SummaryValue>
+            <Typography>
+              <FormatBalance precision={4} value={JSON.parse(extrinsic.fee).partialFee} />
+            </Typography>
           </SummaryValue>
         </SummaryEntry>
       )}

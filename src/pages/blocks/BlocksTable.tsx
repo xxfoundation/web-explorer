@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -13,6 +13,7 @@ import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import { useSubscription } from '@apollo/client';
 import RefreshButton from '../../components/buttons/Refresh';
 import { Box } from '@mui/material';
+import useSessionState from '../../hooks/useSessionState';
 
 const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
@@ -21,23 +22,29 @@ const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
     block.currentEra,
     <TimeAgoComponent date={block.timestamp} />,
     block.totalExtrinsics,
-    <>{!block.author ? 'Genesis' : <Address
-      truncated
-      value={block.author}
-      name={block.authorName[0]?.identity?.display}
-      url={`/blocks/${block.number}/producer/${block.author}`}
-    />}</>,
+    <>
+      {!block.author ? (
+        'Genesis'
+      ) : (
+        <Address
+          truncated
+          value={block.author}
+          name={block.authorName[0]?.identity?.display}
+          url={`/blocks/${block.number}/producer/${block.author}`}
+        />
+      )}
+    </>,
     <Hash truncated value={block.hash} url={`/blocks/${block.number}`} />
   ]);
 };
 
 const BlocksTable: FC = () => {
-  const [range, setRange] = useState<Range>({
+  const [range, setRange] = useSessionState<Range>('blocks.range', {
     from: null,
     to: null
   });
 
-  const [statusFilter, setStatusFilter] = useState<boolean | null>(null);
+  const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('blocks.status', null);
 
   const headers = useMemo(
     () =>
@@ -55,7 +62,7 @@ const BlocksTable: FC = () => {
         'block producer',
         'block hash'
       ]),
-    [range, statusFilter]
+    [range, setRange, setStatusFilter, statusFilter]
   );
 
   const variables = useMemo(
