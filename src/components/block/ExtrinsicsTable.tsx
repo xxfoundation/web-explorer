@@ -31,8 +31,8 @@ const rowsParser = (extrinsic: Extrinsic) => {
 const headers = BaseLineCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
 
 type Props = {
-  accountId?: string
-  blockNumber?: number
+  accountId?: string;
+  blockNumber?: number;
 };
 
 const ExtrinsicsTable: FC<Props> = ({ accountId, blockNumber }) => {
@@ -50,7 +50,6 @@ const ExtrinsicsTable: FC<Props> = ({ accountId, blockNumber }) => {
   }, [accountId, blockNumber]);
 
   const { data, error, loading } = useQuery<ListExtrinsics>(EXTRINSICS_OF_BLOCK, { variables });
-
 
   const rows = useMemo(() => {
     return paginate(data?.extrinsics || []).map(rowsParser);

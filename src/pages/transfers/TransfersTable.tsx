@@ -16,7 +16,7 @@ import {
 import { useQuery } from '@apollo/client';
 import { usePagination } from '../../hooks';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
-import useSessionStorage from '../../hooks/useSessionState';
+import useSessionState from '../../hooks/useSessionState';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
@@ -57,7 +57,7 @@ type Props = {
 };
 
 const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) => {
-  const [statusFilter, setStatusFilter] = useSessionStorage<boolean | null>('transfers.status', null);
+  const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('transfers.status', null);
   const whereWithFilters = useMemo(
     () =>
       statusFilter !== null && {

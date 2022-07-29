@@ -23,7 +23,7 @@ import { theme } from '../../themes/default';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
-import useSessionStorage from '../../hooks/useSessionState';
+import useSessionState from '../../hooks/useSessionState';
 
 const props: TableCellProps = { align: 'left' };
 
@@ -38,21 +38,30 @@ const rowsParser = ({ blockNumber, call, index, module, timestamp }: Event): Bas
 };
 
 const EventsTable = () => {
-  const [range, setRange] = useSessionStorage<Range>('events.range', {
+  const [range, setRange] = useSessionState<Range>('events.range', {
     from: null,
     to: null
   });
 
-  const [withExtrinsicSuccess, setWithExtrinsicSuccess] = useSessionStorage<boolean>('events.success', false);
+  const [withExtrinsicSuccess, setWithExtrinsicSuccess] = useSessionState<boolean>(
+    'events.success',
+    false
+  );
   const actionsQuery = useQuery<GetAvailableEventActions>(GET_AVAILABLE_EVENT_ACTIONS);
 
-  const [modulesFilter, setModulesFilter] = useSessionStorage<string[] | undefined>('events.modules', undefined);
+  const [modulesFilter, setModulesFilter] = useSessionState<string[] | undefined>(
+    'events.modules',
+    undefined
+  );
   const availableModules = useMemo(
     () => actionsQuery.data?.modules.map((m) => m.module),
     [actionsQuery.data]
   );
 
-  const [callsFilter, setCallsFilter] = useSessionStorage<string[] | undefined>('events.calls', undefined);
+  const [callsFilter, setCallsFilter] = useSessionState<string[] | undefined>(
+    'events.calls',
+    undefined
+  );
   const availableCalls = useMemo(
     () => actionsQuery.data?.calls.map((c) => c.call),
     [actionsQuery.data]

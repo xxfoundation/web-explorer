@@ -16,7 +16,7 @@ import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
-import useSessionStorage from '../../hooks/useSessionState';
+import useSessionState from '../../hooks/useSessionState';
 
 const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
   const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`;
@@ -37,22 +37,31 @@ type Props = {
   withTimestampEvents: boolean;
 };
 const ExtrinsicsTable: FC<Props> = (props) => {
-  const [range, setRange] = useSessionStorage<Range>('extrinsics.range', {
+  const [range, setRange] = useSessionState<Range>('extrinsics.range', {
     from: null,
     to: null
   });
 
-  const [resultFilter, setResultFilter] = useSessionStorage<boolean | null>('extrinsics.result', null);
+  const [resultFilter, setResultFilter] = useSessionState<boolean | null>(
+    'extrinsics.result',
+    null
+  );
 
   const actionsQuery = useQuery<GetAvailableExtrinsicActions>(GET_AVAILABLE_EXTRINSIC_ACTIONS);
 
-  const [modulesFilter, setModulesFilter] = useSessionStorage<string[] | undefined>('extrinsics.modules', undefined);
+  const [modulesFilter, setModulesFilter] = useSessionState<string[] | undefined>(
+    'extrinsics.modules',
+    undefined
+  );
   const availableModules = useMemo(
     () => actionsQuery.data?.modules.map((m) => m.module),
     [actionsQuery.data]
   );
 
-  const [callsFilter, setCallsFilter] = useSessionStorage<string[] | undefined>('extrinsics.calls', undefined);
+  const [callsFilter, setCallsFilter] = useSessionState<string[] | undefined>(
+    'extrinsics.calls',
+    undefined
+  );
   const availableCalls = useMemo(
     () => actionsQuery.data?.calls.map((c) => c.call),
     [actionsQuery.data]
