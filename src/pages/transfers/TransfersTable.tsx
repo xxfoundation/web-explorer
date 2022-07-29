@@ -1,6 +1,8 @@
 import type { AddressFilters } from '../../components/Tables/filters/AddressFilter';
 
-import React, { Dispatch, FC, SetStateAction, useEffect, useMemo } from 'react';
+import { Box } from '@mui/material';
+import { useSubscription } from '@apollo/client';
+import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
@@ -8,14 +10,16 @@ import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TimeAgo from '../../components/TimeAgo';
+import RefreshButton from '../../components/buttons/Refresh';
 import {
   GetTransfersByBlock,
   LIST_TRANSFERS_ORDERED,
+  SubscribeTransfersSinceBlock,
+  SUBSCRIBE_TRANSFERS_SINCE_BLOCK,
   Transfer
 } from '../../schemas/transfers.schema';
-import { useQuery } from '@apollo/client';
-import { usePagination } from '../../hooks';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
+import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
 
 const TransferRow = (data: Transfer) => {
@@ -97,12 +101,14 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
     [setStatusFilter, statusFilter]
   );
 
-  const { data, error, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
-    variables
-  });
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<GetTransfersByBlock>(
+    LIST_TRANSFERS_ORDERED,
+    {
+      variables
+    }
+  );
 
-  const pagination = usePagination();
-  const { paginate, reset, setCount: setPaginationCount } = pagination;
+  const { paginate, reset } = pagination;
 
   const transfers = useMemo(() => {
     return (data?.transfers || [])
@@ -111,9 +117,8 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   }, [data?.transfers, filters?.from, filters?.to]);
 
   useEffect(() => {
-    setCount(transfers.length);
-    setPaginationCount(transfers.length);
-  }, [setCount, setPaginationCount, transfers.length]);
+    setCount(pagination.count);
+  }, [pagination.count, setCount]);
 
   useEffect(() => {
     reset();
@@ -121,15 +126,38 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
 
   const paginated = useMemo(() => paginate(transfers), [paginate, transfers]);
 
+  const [latestTransferBlock, setLatestTransferBlock] = useState<number>();
+
+  useEffect(() => {
+    setLatestTransferBlock(data?.transfers[0]?.blockNumber);
+  }, [data?.transfers]);
+
+  const transfersSinceBlock = useSubscription<SubscribeTransfersSinceBlock>(
+    SUBSCRIBE_TRANSFERS_SINCE_BLOCK,
+    {
+      skip: latestTransferBlock === undefined,
+      variables: {
+        where: { whereConcat, ...{ block_number: { _gt: latestTransferBlock } } }
+      }
+    }
+  );
+
+  const transfersSinceFetch = transfersSinceBlock?.data?.transfers?.aggregate?.count;
+
   return (
-    <BaselineTable
-      error={!!error}
-      loading={loading}
-      headers={headers}
-      rowsPerPage={pagination.rowsPerPage}
-      rows={paginated.map(TransferRow)}
-      footer={pagination.controls}
-    />
+    <>
+      <Box sx={{ textAlign: 'right' }}>
+        {data?.transfers && <RefreshButton countSince={transfersSinceFetch} refetch={refetch} />}
+      </Box>
+      <BaselineTable
+        error={!!error}
+        loading={loading}
+        headers={headers}
+        rowsPerPage={pagination.rowsPerPage}
+        rows={paginated.map(TransferRow)}
+        footer={pagination.controls}
+      />
+    </>
   );
 };
 

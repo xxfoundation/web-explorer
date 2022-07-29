@@ -17,6 +17,7 @@ const usePaginatedQuery = <TData extends TotalOfItems>(
   const { limit, offset, setCount } = pagination;
   const queryOptions = {
     ...options,
+    fetchPolicy: 'network-only',
     variables: {
       limit,
       offset,

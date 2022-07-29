@@ -1,5 +1,6 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import {
+  Box,
   Checkbox,
   FormControlLabel,
   Stack,
@@ -8,16 +9,19 @@ import {
   Typography
 } from '@mui/material';
 import FunctionsIcon from '@mui/icons-material/Functions';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from '../../components/Link';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
+import RefreshButton from '../../components/buttons/Refresh';
 import {
   Event,
   GetAvailableEventActions,
   GET_AVAILABLE_EVENT_ACTIONS,
   ListEvents,
-  LIST_EVENTS
+  LIST_EVENTS,
+  SubscribeEventsSinceBlock,
+  SUBSCRIBE_EVENTS_SINCE_BLOCK
 } from '../../schemas/events.schema';
 import { theme } from '../../themes/default';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
@@ -116,22 +120,26 @@ const EventsTable = () => {
     return conditions;
   }, [withExtrinsicSuccess, callsFilter]);
 
+  const where = useMemo(() => {
+    return {
+      timestamp: {
+        ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
+        ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
+      },
+      ...{ _and: callVariable },
+      ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } })
+    };
+  }, [range.from, range.to, callVariable, modulesFilter]);
+
   const variables = useMemo(
     () => ({
       orderBy: [{ block_number: 'desc' }, { event_index: 'asc' }],
-      where: {
-        timestamp: {
-          ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
-          ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
-        },
-        ...{ _and: callVariable },
-        ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } })
-      }
+      where: where
     }),
-    [callVariable, modulesFilter, range.from, range.to]
+    [where]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListEvents>(LIST_EVENTS, {
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListEvents>(LIST_EVENTS, {
     variables
   });
 
@@ -141,6 +149,29 @@ const EventsTable = () => {
   }, [range, modulesFilter, withExtrinsicSuccess, callsFilter, reset]);
 
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
+
+  const [latestEventBlock, setLatestEventBlock] = useState<number>();
+
+  useEffect(() => {
+    setLatestEventBlock(data?.events[0]?.blockNumber);
+  }, [data?.events]);
+
+  const subscribeVariables = useMemo(
+    () => ({
+      where: { ...where, ...{ block_number: { _gt: latestEventBlock } } }
+    }),
+    [latestEventBlock, where]
+  );
+
+  const eventsSinceLastFetch = useSubscription<SubscribeEventsSinceBlock>(
+    SUBSCRIBE_EVENTS_SINCE_BLOCK,
+    {
+      skip: latestEventBlock === undefined,
+      variables: subscribeVariables
+    }
+  );
+
+  const eventsSinceFetch = eventsSinceLastFetch?.data?.events?.aggregate?.count;
 
   return (
     <>
@@ -173,6 +204,9 @@ const EventsTable = () => {
           />
         </Stack>
       )}
+      <Box sx={{ textAlign: 'right' }}>
+        {data?.events && <RefreshButton countSince={eventsSinceFetch} refetch={refetch} />}
+      </Box>
       <BaselineTable
         error={!!error}
         loading={loading}

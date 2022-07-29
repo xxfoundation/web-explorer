@@ -1,16 +1,20 @@
-import { useQuery } from '@apollo/client';
-import React, { FC, useEffect, useMemo } from 'react';
+import { useQuery, useSubscription } from '@apollo/client';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
+import { Box } from '@mui/material';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Hash from '../../components/Hash';
 import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
+import RefreshButton from '../../components/buttons/Refresh';
 import {
   GetAvailableExtrinsicActions,
   GET_AVAILABLE_EXTRINSIC_ACTIONS,
   ListExtrinsics,
-  LIST_EXTRINSICS
+  LIST_EXTRINSICS,
+  SubscribeExtrinsicsSinceBlock,
+  SUBSCRIBE_EXTRINSICS_SINCE_BLOCK
 } from '../../schemas/extrinsics.schema';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
@@ -62,6 +66,9 @@ const ExtrinsicsTable: FC<Props> = (props) => {
     'extrinsics.calls',
     undefined
   );
+
+  const [latestExtrinsicBlock, setLatestExtrinsicBlock] = useState<number>();
+
   const availableCalls = useMemo(
     () => actionsQuery.data?.calls.map((c) => c.call),
     [actionsQuery.data]
@@ -118,29 +125,52 @@ const ExtrinsicsTable: FC<Props> = (props) => {
     return conditions;
   }, [props.withTimestampEvents, modulesFilter]);
 
+  const where = useMemo(() => {
+    return {
+      ...(resultFilter !== null && {
+        success: { _eq: resultFilter }
+      }),
+      timestamp: {
+        ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
+        ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
+      },
+      ...{ _and: moduleVariable },
+      ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } })
+    };
+  }, [resultFilter, range.from, range.to, moduleVariable, callsFilter]);
+
   const variables = useMemo(
     () => ({
       orderBy: [{ block_number: 'desc' }, { extrinsic_index: 'asc' }],
-      where: {
-        ...(resultFilter !== null && {
-          success: { _eq: resultFilter }
-        }),
-        timestamp: {
-          ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
-          ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
-        },
-        ...{ _and: moduleVariable },
-        ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } })
-      }
+      where: where
     }),
-    [resultFilter, range.from, range.to, moduleVariable, callsFilter]
+    [where]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListExtrinsics>(LIST_EXTRINSICS, {
-    variables
-  });
+  const subscribeVariables = useMemo(
+    () => ({
+      where: { ...where, ...{ block_number: { _gt: latestExtrinsicBlock } } }
+    }),
+    [latestExtrinsicBlock, where]
+  );
 
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListExtrinsics>(
+    LIST_EXTRINSICS,
+    {
+      variables
+    }
+  );
   const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
+
+  const extrinsicsSinceLastFetch = useSubscription<SubscribeExtrinsicsSinceBlock>(
+    SUBSCRIBE_EXTRINSICS_SINCE_BLOCK,
+    {
+      skip: latestExtrinsicBlock === undefined,
+      variables: subscribeVariables
+    }
+  );
+
+  const blocksSinceFetch = extrinsicsSinceLastFetch?.data?.extrinsics?.aggregate?.count;
 
   useEffect(() => {
     if (data?.agg) {
@@ -153,15 +183,24 @@ const ExtrinsicsTable: FC<Props> = (props) => {
     reset();
   }, [range, callsFilter, moduleVariable, reset, resultFilter]);
 
+  useEffect(() => {
+    setLatestExtrinsicBlock(data?.extrinsics[0]?.blockNumber);
+  }, [data?.extrinsics]);
+
   return (
-    <BaselineTable
-      error={!!error}
-      loading={loading}
-      headers={headers}
-      rowsPerPage={pagination.rowsPerPage}
-      rows={rows}
-      footer={pagination.controls}
-    />
+    <>
+      <Box sx={{ textAlign: 'right' }}>
+        {data?.extrinsics && <RefreshButton countSince={blocksSinceFetch} refetch={refetch} />}
+      </Box>
+      <BaselineTable
+        error={!!error}
+        loading={loading}
+        headers={headers}
+        rowsPerPage={pagination.rowsPerPage}
+        rows={rows}
+        footer={pagination.controls}
+      />
+    </>
   );
 };
 
