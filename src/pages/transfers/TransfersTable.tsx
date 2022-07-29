@@ -1,7 +1,6 @@
 import type { AddressFilters } from '../../components/Tables/filters/AddressFilter';
 
-import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
-
+import React, { Dispatch, FC, SetStateAction, useEffect, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
@@ -17,6 +16,7 @@ import {
 import { useQuery } from '@apollo/client';
 import { usePagination } from '../../hooks';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
+import useSessionState from '../../hooks/useSessionState';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
@@ -57,7 +57,7 @@ type Props = {
 };
 
 const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) => {
-  const [statusFilter, setStatusFilter] = useState<boolean | null>(null);
+  const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('transfers.status', null);
   const whereWithFilters = useMemo(
     () =>
       statusFilter !== null && {
@@ -94,7 +94,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
         />,
         'Hash'
       ]),
-    [statusFilter]
+    [setStatusFilter, statusFilter]
   );
 
   const { data, error, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {

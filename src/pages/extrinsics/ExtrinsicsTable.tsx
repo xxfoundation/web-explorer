@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Hash from '../../components/Hash';
@@ -16,6 +16,7 @@ import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
+import useSessionState from '../../hooks/useSessionState';
 
 const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
   const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`;
@@ -36,22 +37,31 @@ type Props = {
   withTimestampEvents: boolean;
 };
 const ExtrinsicsTable: FC<Props> = (props) => {
-  const [range, setRange] = useState<Range>({
+  const [range, setRange] = useSessionState<Range>('extrinsics.range', {
     from: null,
     to: null
   });
 
-  const [resultFilter, setResultFilter] = useState<boolean | null>(null);
+  const [resultFilter, setResultFilter] = useSessionState<boolean | null>(
+    'extrinsics.result',
+    null
+  );
 
   const actionsQuery = useQuery<GetAvailableExtrinsicActions>(GET_AVAILABLE_EXTRINSIC_ACTIONS);
 
-  const [modulesFilter, setModulesFilter] = useState<string[]>();
+  const [modulesFilter, setModulesFilter] = useSessionState<string[] | undefined>(
+    'extrinsics.modules',
+    undefined
+  );
   const availableModules = useMemo(
     () => actionsQuery.data?.modules.map((m) => m.module),
     [actionsQuery.data]
   );
 
-  const [callsFilter, setCallsFilter] = useState<string[]>();
+  const [callsFilter, setCallsFilter] = useSessionState<string[] | undefined>(
+    'extrinsics.calls',
+    undefined
+  );
   const availableCalls = useMemo(
     () => actionsQuery.data?.calls.map((c) => c.call),
     [actionsQuery.data]
@@ -83,7 +93,18 @@ const ExtrinsicsTable: FC<Props> = (props) => {
           value={callsFilter}
         />
       ]),
-    [availableCalls, availableModules, callsFilter, modulesFilter, range, resultFilter]
+    [
+      availableCalls,
+      availableModules,
+      callsFilter,
+      modulesFilter,
+      range,
+      resultFilter,
+      setCallsFilter,
+      setModulesFilter,
+      setRange,
+      setResultFilter
+    ]
   );
 
   const moduleVariable = useMemo(() => {
