@@ -28,6 +28,9 @@ export type Transfer = {
   sourceAccount: {
     identity: null | { display: string }
   }
+  block: {
+    era: number;
+  }
 };
 
 export const TRANSFER_FRAGMENT = gql`
@@ -35,23 +38,26 @@ export const TRANSFER_FRAGMENT = gql`
     blockNumber: block_number
     index: extrinsic_index
     hash
-    source
-    destination
-    amount
-    feeAmount: fee_amount
     module
     call
     success
     timestamp
+    source
+    destination
+    amount
+    feeAmount: fee_amount
+    sourceAccount: account {
+      identity {
+        display
+      }
+    }
     destinationAccount: accountByDestination {
       identity {
         display
       }
     }
-    sourceAccount: account {
-      identity {
-        display
-      }
+    block {
+      era: active_era
     }
   }
 `;
@@ -98,7 +104,19 @@ export const GET_TRANSFER_BY_PK = gql`
   ${TRANSFER_FRAGMENT}
   query GetTransferByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
     transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
-      ...transfer_common_fields
+      amount
+      source
+      destination
+      sourceAccount: account {
+        identity {
+          display
+        }
+      }
+      destinationAccount: accountByDestination {
+        identity {
+          display
+        }
+      }
     }
   }
 `;

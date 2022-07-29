@@ -1,8 +1,6 @@
 import type { AddressFilters } from '../../components/Tables/filters/AddressFilter';
 
-import { Typography } from '@mui/material';
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo } from 'react';
-
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
@@ -23,6 +21,7 @@ import useSessionStorage from '../../hooks/useSessionState';
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
   return [
+    { value: data.block.era },
     { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
     { value: <TimeAgo date={data.timestamp} /> },
     {
@@ -31,7 +30,8 @@ const TransferRow = (data: Transfer) => {
           name={data.sourceAccount.identity?.display}
           value={data.source}
           url={`/accounts/${data.source}`}
-          truncated />
+          truncated
+        />
       )
     },
     {
@@ -40,7 +40,8 @@ const TransferRow = (data: Transfer) => {
           value={data.destination}
           name={data.destinationAccount.identity?.display}
           url={`/accounts/${data.destination}`}
-          truncated />
+          truncated
+        />
       )
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
@@ -79,10 +80,11 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   const headers = useMemo(
     () =>
       BaseLineCellsWrapper([
+        'Era',
         'Block',
         'Time',
-        <Typography>From</Typography>,
-        <Typography>To</Typography>,
+        'From',
+        'To',
         'Amount',
         <BooleanFilter
           label='Result'
