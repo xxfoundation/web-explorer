@@ -2,14 +2,17 @@ import React, { FC, useMemo, useState } from 'react';
 import EventsTable from '../../../components/block/EventsTable';
 import PaperWrapStyled from '../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../components/Tabs';
+import TransferTable from '../../transfers/TransfersTable';
 
-const ExtrinsicEventsTabs: FC<{ blockNumber: number; index: number }> = ({
+const ExtrinsicTabs: FC<{ blockNumber: number; index: number; transferCount?: number }> = ({
   blockNumber,
-  index
+  index,
+  transferCount
 }) => {
   const [eventCount, setEventCount] = useState<number>();
+  // const [transferCount, setTransferCount] = useState<number>();
   const panels = useMemo(() => {
-    return [
+    const tabs = [
       {
         label: <TabText message='events' count={eventCount === undefined ? '' : eventCount} />,
         content: (
@@ -25,7 +28,22 @@ const ExtrinsicEventsTabs: FC<{ blockNumber: number; index: number }> = ({
         )
       }
     ];
-  }, [blockNumber, eventCount, index]);
+
+    if (transferCount) {
+      tabs.push({
+        label: <TabText message='transfers' count={transferCount} />,
+        content: (
+          <TransferTable
+            where={{
+              _and: [{ block_number: { _eq: blockNumber } }, { extrinsic_index: { _eq: index } }]
+            }}
+          />
+        )
+      });
+    }
+
+    return tabs;
+  }, [blockNumber, eventCount, index, transferCount]);
 
   return (
     <PaperWrapStyled>
@@ -34,4 +52,4 @@ const ExtrinsicEventsTabs: FC<{ blockNumber: number; index: number }> = ({
   );
 };
 
-export default ExtrinsicEventsTabs;
+export default ExtrinsicTabs;
