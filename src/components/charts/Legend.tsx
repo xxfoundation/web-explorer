@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Divider, Stack } from '@mui/material';
 import React, { FC } from 'react';
 
 import LegendItem from './LegendItem';
@@ -14,11 +14,20 @@ type Props = {
 
 const Legend: FC<Props> = ({ data }) => (
   <Stack spacing={{ xs: 0.5, sm: 0.5 }}>
-    {data.map(({ color, label }) => (
-      <LegendItem key={`${color}-${label}`} color={color}>
-        {label}
-      </LegendItem>
-    ))}
+    {data.map(({ color, label }) =>
+      label.includes('Stakeable') ? (
+        <>
+          <Divider />
+          <LegendItem key={`${color}-${label}`} color={color}>
+            {label}
+          </LegendItem>
+        </>
+      ) : (
+        <LegendItem key={`${color}-${label}`} color={color}>
+          {label}
+        </LegendItem>
+      )
+    )}
   </Stack>
 );
 
