@@ -1,9 +1,3 @@
-# Glossary
-
-Created: July 28, 2022 4:40 PM
-Last Edited Time: July 29, 2022 2:00 PM
-Type: Wiki
-
 # General Concepts
 
 ### Nominated Proof of Stake
@@ -29,9 +23,9 @@ These projects have all implemented NPoS in different ways, but they all share t
 
 - **_Extrinsics_**
 
-  - State changes that come from the outside world, i.e. they are not part of the system itself. Extrinsics can take two forms, `inherents` and `transactions`.
+  - State changes that come from the outside world, i.e. they are not part of the system itself. Extrinsics can take two forms, _inherents_ and _transactions_.
     - **_Inherents_**
-      - Extrinsics that are "inherently true." Inherents are not gossiped on the network and are put into blocks by the block author. They are not provably true the way that the desire to send funds is, therefore they do not carry a signature. A blockchain's runtime must have rules for validating inherents. For example, timestamps are inherents. They are validated by being within some margin that each validator deems reasonable.
+      - Extrinsics that are "inherently true" Inherents are not gossiped on the network and are put into blocks by the block author. They are not provably true the way that the desire to send funds is, therefore they do not carry a signature. A blockchain's runtime must have rules for validating inherents. For example, timestamps are inherents. They are validated by being within some margin that each validator deems reasonable.
     - **_Transaction_**
       - An extrinsic that is signed. Transactions are gossiped on the network and incur a transaction fee. Transactions are "provably true", unlike inherents. For example, one can prove that Alice wants to send funds to Bob by the fact that she signed a transfer-funds message with her private key.
   - Composed by **_Events_**
@@ -73,7 +67,7 @@ These projects have all implemented NPoS in different ways, but they all share t
   - **bonded** - funds frozen in exchange of some benefit
     - **_stake_** - staked funds either by nominating or validating
     - **_voting_** - funds only unlocked according to vote conviction and/or election closure
-      - **democracy** \*\*- funds used to vote for referenda (can be used for transaction fees)
+      - **democracy** - funds used to vote for referenda (can be used for transaction fees)
       - **council** - funds used to vote for a council member
 - **_reserved_** - funds used to save data on chain, like the following:
   - setup your **identity**

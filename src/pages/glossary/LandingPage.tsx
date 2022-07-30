@@ -1,7 +1,8 @@
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Grid, styled, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-// eslint-disable-next-line import/extensions
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore TS6133
 import markdownDoc from './glossary.md';
 const LandingPage: FC = () => {
   const [content, setContent] = useState<string>('');
