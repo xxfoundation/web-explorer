@@ -84,3 +84,24 @@ export const GET_AVAILABLE_EVENT_ACTIONS = gql`
     }
   }
 `;
+
+/* -------------------------------------------------------------------------- */
+/*                           Events since block                               */
+/* -------------------------------------------------------------------------- */
+export type SubscribeEventsSinceBlock = {
+  events: {
+    aggregate: {
+      count: number;
+    }
+  }
+}
+
+export const SUBSCRIBE_EVENTS_SINCE_BLOCK = gql`
+  subscription EventsSinceBlock ($where: event_bool_exp) {
+    events: event_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`

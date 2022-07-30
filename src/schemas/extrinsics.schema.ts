@@ -24,6 +24,7 @@ const EXTRINSIC_FRAGMENT = gql`
     argsDef: args_def
     doc
     errorMsg: error_message
+    fee: fee_info
   }
 `
 
@@ -47,6 +48,7 @@ export type Extrinsic = {
   argsDef: Record<string, string>;
   doc: string[];
   errorMsg: string;
+  fee: string | null;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -165,13 +167,18 @@ export const GET_EXTRINSICS_TIMESTAMPS = gql`
 /* -------------------------------------------------------------------------- */
 export type GetExtrinsicWhere = {
   extrinsic: Extrinsic[];
-};
+} & TotalOfItems;
 
 export const GET_EXTRINSIC_WHERE = gql`
   ${EXTRINSIC_FRAGMENT}
-  query GetExtrinsicByPk($where: extrinsic_bool_exp) {
-    extrinsic (where: $where) {
+  query GetExtrinsicByPk($where1: extrinsic_bool_exp, $where2: transfer_bool_exp) {
+    extrinsic (where: $where1) {
       ...extrinsicFragment
+    }
+    agg: transfer_aggregate(where: $where2) {
+      aggregate {
+        count
+      }
     }
   }
 `;
@@ -228,4 +235,26 @@ export const GET_SIX_HOUR_EXTRINSIC_COUNTS = gql`
       timestamp: interval_start
     }
   }
-` 
+`
+
+/* -------------------------------------------------------------------------- */
+/*                         Subscription to new ext                            */
+/* -------------------------------------------------------------------------- */
+
+export type SubscribeExtrinsicsSinceBlock = {
+  extrinsics: {
+    aggregate: {
+      count: number;
+    }
+  }
+};
+
+export const SUBSCRIBE_EXTRINSICS_SINCE_BLOCK = gql`
+  subscription ExtrinsicSinceBlock ($where: extrinsic_bool_exp) {
+    extrinsics: extrinsic_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;

@@ -155,7 +155,7 @@ const extractChartData = (economics?: Economics) => {
       percentage: calculatePercentage(stakeableSupply)
     },
     {
-      color: '#EAEAEA',
+      color: '#FFFFFF',
       label: DataLabels.StakeableSupplyOther,
       value: other,
       percentage: calculatePercentage(other),

@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { TotalOfItems } from './types';
 
 /* -------------------------------------------------------------------------- */
 /*                             Transfers Fragments                            */
@@ -28,6 +29,9 @@ export type Transfer = {
   sourceAccount: {
     identity: null | { display: string }
   }
+  block: {
+    era: number;
+  }
 };
 
 export const TRANSFER_FRAGMENT = gql`
@@ -35,23 +39,26 @@ export const TRANSFER_FRAGMENT = gql`
     blockNumber: block_number
     index: extrinsic_index
     hash
-    source
-    destination
-    amount
-    feeAmount: fee_amount
     module
     call
     success
     timestamp
+    source
+    destination
+    amount
+    feeAmount: fee_amount
+    sourceAccount: account {
+      identity {
+        display
+      }
+    }
     destinationAccount: accountByDestination {
       identity {
         display
       }
     }
-    sourceAccount: account {
-      identity {
-        display
-      }
+    block {
+      era: active_era
     }
   }
 `;
@@ -98,7 +105,19 @@ export const GET_TRANSFER_BY_PK = gql`
   ${TRANSFER_FRAGMENT}
   query GetTransferByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
     transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
-      ...transfer_common_fields
+      amount
+      source
+      destination
+      sourceAccount: account {
+        identity {
+          display
+        }
+      }
+      destinationAccount: accountByDestination {
+        identity {
+          display
+        }
+      }
     }
   }
 `;
@@ -106,7 +125,7 @@ export const GET_TRANSFER_BY_PK = gql`
 /* -------------------------------------------------------------------------- */
 /*                           Get Transfers of Block                           */
 /* -------------------------------------------------------------------------- */
-export type GetTransfersByBlock = {
+export type GetTransfersByBlock = TotalOfItems & {
   transfers: (Transfer & { id: number })[];
 };
 
@@ -120,6 +139,12 @@ export const LIST_TRANSFERS_ORDERED = gql`
   ) {
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
       ...transfer_common_fields
+    }
+    
+    agg: transfer_aggregate(where: $where) {
+      aggregate {
+        count
+      }
     }
   }
 `;
@@ -171,6 +196,30 @@ export const LISTEN_FOR_ERA_TRANSFERS = gql`
     eraTransfers: era_transfers {
       era
       transfers
+    }
+  }
+`;
+
+
+/* -------------------------------------------------------------------------- */
+/*                            Transfers since block                           */
+/* -------------------------------------------------------------------------- */
+
+
+export type SubscribeTransfersSinceBlock = {
+  transfers: {
+    aggregate: {
+      count: number;
+    }
+  }
+};
+
+export const SUBSCRIBE_TRANSFERS_SINCE_BLOCK = gql`
+  subscription TransfersSinceBlock ($where: transfer_bool_exp) {
+    transfers: transfer_aggregate(where: $where) {
+      aggregate {
+        count
+      }
     }
   }
 `;

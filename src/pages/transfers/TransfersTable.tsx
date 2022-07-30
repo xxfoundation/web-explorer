@@ -1,8 +1,8 @@
 import type { AddressFilters } from '../../components/Tables/filters/AddressFilter';
 
-import { Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import { useSubscription } from '@apollo/client';
 import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
-
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
@@ -10,42 +10,41 @@ import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
 import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
 import TimeAgo from '../../components/TimeAgo';
+import RefreshButton from '../../components/buttons/Refresh';
 import {
   GetTransfersByBlock,
   LIST_TRANSFERS_ORDERED,
+  SubscribeTransfersSinceBlock,
+  SUBSCRIBE_TRANSFERS_SINCE_BLOCK,
   Transfer
 } from '../../schemas/transfers.schema';
-import { useQuery } from '@apollo/client';
-import { usePagination } from '../../hooks';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
+import usePaginatedQuery from '../../hooks/usePaginatedQuery';
+import useSessionState from '../../hooks/useSessionState';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
-  return [
-    { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
-    { value: <TimeAgo date={data.timestamp} /> },
-    {
-      value: (
-        <Address
-          name={data.sourceAccount.identity?.display}
-          value={data.source}
-          url={`/accounts/${data.source}`}
-          truncated />
-      )
-    },
-    {
-      value: (
-        <Address
-          value={data.destination}
-          name={data.destinationAccount.identity?.display}
-          url={`/accounts/${data.destination}`}
-          truncated />
-      )
-    },
-    { value: <FormatBalance value={data.amount.toString()} /> },
-    { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
-    { value: <Hash truncated value={data.hash} url={extrinsicIdLink} showTooltip /> }
-  ];
+
+  return BaseLineCellsWrapper([
+    <>{data.block.era}</>,
+    <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link>,
+    <TimeAgo date={data.timestamp} />,
+    <Address
+      name={data.sourceAccount.identity?.display}
+      value={data.source}
+      url={`/accounts/${data.source}`}
+      truncated
+    />,
+    <Address
+      value={data.destination}
+      name={data.destinationAccount.identity?.display}
+      url={`/accounts/${data.destination}`}
+      truncated
+    />,
+    <FormatBalance value={data.amount.toString()} />,
+    <BlockStatusIcon status={data.success ? 'successful' : 'failed'} />,
+    <Hash truncated value={data.hash} url={extrinsicIdLink} showTooltip />
+  ]);
 };
 
 type Props = {
@@ -55,7 +54,10 @@ type Props = {
 };
 
 const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) => {
-  const [statusFilter, setStatusFilter] = useState<boolean | null>(null);
+  /* ----------------------- Initialize State Variables ----------------------- */
+  const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('transfers.status', null);
+
+  /* --------------------- Initialize Dependent Variables --------------------- */
   const whereWithFilters = useMemo(
     () =>
       statusFilter !== null && {
@@ -75,13 +77,15 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
     [whereConcat]
   );
 
+  /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo(
     () =>
       BaseLineCellsWrapper([
+        'Era',
         'Block',
         'Time',
-        <Typography>From</Typography>,
-        <Typography>To</Typography>,
+        'From',
+        'To',
         'Amount',
         <BooleanFilter
           label='Result'
@@ -91,42 +95,67 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
         />,
         'Hash'
       ]),
-    [statusFilter]
+    [setStatusFilter, statusFilter]
   );
 
-  const { data, error, loading } = useQuery<GetTransfersByBlock>(LIST_TRANSFERS_ORDERED, {
-    variables
-  });
+  /* ----------------------- Main Query - Get Transfers ----------------------- */
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<GetTransfersByBlock>(
+    LIST_TRANSFERS_ORDERED,
+    {
+      variables
+    }
+  );
 
-  const pagination = usePagination();
-  const { paginate, reset, setCount: setPaginationCount } = pagination;
-
+  /* ------------------ Process response according to filters ----------------- */
   const transfers = useMemo(() => {
     return (data?.transfers || [])
       .filter((t) => !filters?.from || t.source === filters?.from)
       .filter((t) => !filters?.to || t.destination === filters?.to);
   }, [data?.transfers, filters?.from, filters?.to]);
+  const rows = useMemo(() => (transfers || []).map(TransferRow), [transfers]);
 
+  /* ---------------------------- Setup Pagination ---------------------------- */
+  const { reset } = pagination;
   useEffect(() => {
-    setCount(transfers.length);
-    setPaginationCount(transfers.length);
-  }, [setCount, setPaginationCount, transfers.length]);
+    setCount(pagination.count);
+  }, [pagination.count, setCount]);
 
   useEffect(() => {
     reset();
   }, [filters, reset, statusFilter]);
 
-  const paginated = useMemo(() => paginate(transfers), [paginate, transfers]);
+  /* ----------------------------- Refresh Button ----------------------------- */
+  const [latestTransferBlock, setLatestTransferBlock] = useState<number>();
+  useEffect(() => {
+    setLatestTransferBlock(data?.transfers[0]?.blockNumber);
+  }, [data?.transfers]);
 
+  const transfersSinceBlock = useSubscription<SubscribeTransfersSinceBlock>(
+    SUBSCRIBE_TRANSFERS_SINCE_BLOCK,
+    {
+      skip: latestTransferBlock === undefined,
+      variables: {
+        where: { whereConcat, ...{ block_number: { _gt: latestTransferBlock } } }
+      }
+    }
+  );
+  const transfersSinceFetch = transfersSinceBlock?.data?.transfers?.aggregate?.count;
+
+  /* ----------------------------- Build Component ---------------------------- */
   return (
-    <BaselineTable
-      error={!!error}
-      loading={loading}
-      headers={headers}
-      rowsPerPage={pagination.rowsPerPage}
-      rows={paginated.map(TransferRow)}
-      footer={pagination.controls}
-    />
+    <>
+      <Box sx={{ textAlign: 'right' }}>
+        {data?.transfers && <RefreshButton countSince={transfersSinceFetch} refetch={refetch} />}
+      </Box>
+      <BaselineTable
+        error={!!error}
+        loading={loading}
+        headers={headers}
+        rowsPerPage={pagination.rowsPerPage}
+        rows={rows}
+        footer={pagination.controls}
+      />
+    </>
   );
 };
 
