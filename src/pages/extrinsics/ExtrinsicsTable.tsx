@@ -1,5 +1,5 @@
 import { useQuery, useSubscription } from '@apollo/client';
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { Box } from '@mui/material';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
@@ -41,6 +41,10 @@ type Props = {
   withTimestampEvents: boolean;
 };
 const ExtrinsicsTable: FC<Props> = (props) => {
+  /* ----------------- Query Available Extrinsic Module/Calls ----------------- */
+  const actionsQuery = useQuery<GetAvailableExtrinsicActions>(GET_AVAILABLE_EXTRINSIC_ACTIONS);
+
+  /* ----------------------- Initialize State Variables ----------------------- */
   const [range, setRange] = useSessionState<Range>('extrinsics.range', {
     from: null,
     to: null
@@ -51,26 +55,61 @@ const ExtrinsicsTable: FC<Props> = (props) => {
     null
   );
 
-  const actionsQuery = useQuery<GetAvailableExtrinsicActions>(GET_AVAILABLE_EXTRINSIC_ACTIONS);
-
   const [modulesFilter, setModulesFilter] = useSessionState<string[] | undefined>(
     'extrinsics.modules',
     undefined
-  );
-  const availableModules = useMemo(
-    () => actionsQuery.data?.modules.map((m) => m.module),
-    [actionsQuery.data]
   );
 
   const [callsFilter, setCallsFilter] = useSessionState<string[] | undefined>(
     'extrinsics.calls',
     undefined
   );
+
+  /* --------------------- Initialize Dependent Variables --------------------- */
+  const availableModules = useMemo(
+    () => actionsQuery.data?.modules.map((m) => m.module),
+    [actionsQuery.data]
+  );
+
   const availableCalls = useMemo(
     () => actionsQuery.data?.calls.map((c) => c.call),
     [actionsQuery.data]
   );
 
+  const moduleVariable = useMemo(() => {
+    const conditions = [];
+    if (!props.withTimestampEvents) {
+      conditions.push({ module: { _neq: 'timestamp' } });
+    }
+    if (modulesFilter && modulesFilter.length > 0) {
+      conditions.push({ module: { _in: modulesFilter } });
+    }
+    return conditions;
+  }, [props.withTimestampEvents, modulesFilter]);
+
+  const where = useMemo(() => {
+    return {
+      ...(resultFilter !== null && {
+        success: { _eq: resultFilter }
+      }),
+      timestamp: {
+        ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
+        ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
+      },
+      ...{ _and: moduleVariable },
+      ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } })
+    };
+  }, [resultFilter, range.from, range.to, moduleVariable, callsFilter]);
+
+  const variables = useMemo(
+    () => ({
+      orderBy: [{ block_number: 'desc' }, { extrinsic_index: 'asc' }],
+      where: where
+    }),
+    [where]
+  );
+
+  /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo(
     () =>
       BaseLineCellsWrapper([
@@ -111,74 +150,54 @@ const ExtrinsicsTable: FC<Props> = (props) => {
     ]
   );
 
-  const moduleVariable = useMemo(() => {
-    const conditions = [];
-    if (!props.withTimestampEvents) {
-      conditions.push({ module: { _neq: 'timestamp' } });
+  /* ----------------------- Main Query - Get Extrinsics ---------------------- */
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListExtrinsics>(
+    LIST_EXTRINSICS,
+    {
+      variables
     }
-    if (modulesFilter && modulesFilter.length > 0) {
-      conditions.push({ module: { _in: modulesFilter } });
-    }
-    return conditions;
-  }, [props.withTimestampEvents, modulesFilter]);
-
-  const variables = useMemo(
-    () => ({
-      orderBy: [{ block_number: 'desc' }, { extrinsic_index: 'asc' }],
-      where: {
-        ...(resultFilter !== null && {
-          success: { _eq: resultFilter }
-        }),
-        timestamp: {
-          ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
-          ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
-        },
-        ...{ _and: moduleVariable },
-        ...(callsFilter && callsFilter.length > 0 && { call: { _in: callsFilter } })
-      }
-    }),
-    [resultFilter, range.from, range.to, moduleVariable, callsFilter]
   );
-
-  const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListExtrinsics>(LIST_EXTRINSICS, {
-    variables
-  });
-
   const rows = useMemo(() => (data?.extrinsics || []).map(extrinsicToRow), [data]);
 
+  /* ---------------------------- Setup Pagination ---------------------------- */
+  const { reset } = pagination;
+  useEffect(() => {
+    reset();
+  }, [range, callsFilter, moduleVariable, reset, resultFilter]);
+
+  /* ----------------------------- Refresh Button ----------------------------- */
+  const [latestExtrinsicBlock, setLatestExtrinsicBlock] = useState<number>();
+  useEffect(() => {
+    setLatestExtrinsicBlock(data?.extrinsics[0]?.blockNumber);
+  }, [data?.extrinsics]);
+
+  const subscribeVariables = useMemo(
+    () => ({
+      where: { ...where, ...{ block_number: { _gt: latestExtrinsicBlock } } }
+    }),
+    [latestExtrinsicBlock, where]
+  );
+  const extrinsicsSinceLastFetch = useSubscription<SubscribeExtrinsicsSinceBlock>(
+    SUBSCRIBE_EXTRINSICS_SINCE_BLOCK,
+    {
+      skip: latestExtrinsicBlock === undefined,
+      variables: subscribeVariables
+    }
+  );
+  const blocksSinceFetch = extrinsicsSinceLastFetch?.data?.extrinsics?.aggregate?.count;
+
+  /* ------------------------- Update External Counter ------------------------ */
   useEffect(() => {
     if (data?.agg) {
       props.setTotalOfExtrinsics(data.agg.aggregate.count);
     }
   });
 
-  const { reset } = pagination;
-  useEffect(() => {
-    reset();
-  }, [range, callsFilter, moduleVariable, reset, resultFilter]);
-
-  const [latestExtrinsicBlock, setLatestExtrinsicBlock] = useState<number>();
-
-  useEffect(() => {
-    setLatestExtrinsicBlock(data?.extrinsics[0]?.blockNumber);
-  }, [data?.extrinsics]);
-
-  const extrinsicsSinceLastFetch = useSubscription<SubscribeExtrinsicsSinceBlock>(SUBSCRIBE_EXTRINSICS_SINCE_BLOCK, {
-    skip: latestExtrinsicBlock === undefined,
-    variables: { 
-      blockNumber: latestExtrinsicBlock
-    }
-  });
-
-  const blocksSinceFetch = extrinsicsSinceLastFetch?.data?.extrinsics?.aggregate?.count;
-
+  /* ----------------------------- Build Component ---------------------------- */
   return (
     <>
       <Box sx={{ textAlign: 'right' }}>
-        {data?.extrinsics && <RefreshButton
-          countSince={blocksSinceFetch}
-          refetch={refetch}
-        />}
+        {data?.extrinsics && <RefreshButton countSince={blocksSinceFetch} refetch={refetch} />}
       </Box>
       <BaselineTable
         error={!!error}

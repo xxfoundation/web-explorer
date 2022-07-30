@@ -250,8 +250,8 @@ export type SubscribeExtrinsicsSinceBlock = {
 };
 
 export const SUBSCRIBE_EXTRINSICS_SINCE_BLOCK = gql`
-  subscription ExtrinsicSinceBlock ($blockNumber: bigint!) {
-    extrinsics: extrinsic_aggregate(where: {block_number: {_gt: $blockNumber }}) {
+  subscription ExtrinsicSinceBlock ($where: extrinsic_bool_exp) {
+    extrinsics: extrinsic_aggregate(where: $where) {
       aggregate {
         count
       }

@@ -9,7 +9,7 @@ import {
   Typography
 } from '@mui/material';
 import FunctionsIcon from '@mui/icons-material/Functions';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from '../../components/Link';
 import { BaselineCell, BaselineTable } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
@@ -42,6 +42,10 @@ const rowsParser = ({ blockNumber, call, index, module, timestamp }: Event): Bas
 };
 
 const EventsTable = () => {
+  /* ----------------- Query Available Extrinsic Module/Calls ----------------- */
+  const actionsQuery = useQuery<GetAvailableEventActions>(GET_AVAILABLE_EVENT_ACTIONS);
+
+  /* ----------------------- Initialize State Variables ----------------------- */
   const [range, setRange] = useSessionState<Range>('events.range', {
     from: null,
     to: null
@@ -51,26 +55,57 @@ const EventsTable = () => {
     'events.success',
     false
   );
-  const actionsQuery = useQuery<GetAvailableEventActions>(GET_AVAILABLE_EVENT_ACTIONS);
 
   const [modulesFilter, setModulesFilter] = useSessionState<string[] | undefined>(
     'events.modules',
     undefined
-  );
-  const availableModules = useMemo(
-    () => actionsQuery.data?.modules.map((m) => m.module),
-    [actionsQuery.data]
   );
 
   const [callsFilter, setCallsFilter] = useSessionState<string[] | undefined>(
     'events.calls',
     undefined
   );
+
+  /* --------------------- Initialize Dependent Variables --------------------- */
+  const availableModules = useMemo(
+    () => actionsQuery.data?.modules.map((m) => m.module),
+    [actionsQuery.data]
+  );
   const availableCalls = useMemo(
     () => actionsQuery.data?.calls.map((c) => c.call),
     [actionsQuery.data]
   );
+  const callVariable = useMemo(() => {
+    const conditions = [];
+    if (!withExtrinsicSuccess) {
+      conditions.push({ call: { _neq: 'ExtrinsicSuccess' } });
+    }
+    if (callsFilter && callsFilter.length > 0) {
+      conditions.push({ call: { _in: callsFilter } });
+    }
+    return conditions;
+  }, [withExtrinsicSuccess, callsFilter]);
 
+  const where = useMemo(() => {
+    return {
+      timestamp: {
+        ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
+        ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
+      },
+      ...{ _and: callVariable },
+      ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } })
+    };
+  }, [range.from, range.to, callVariable, modulesFilter]);
+
+  const variables = useMemo(
+    () => ({
+      orderBy: [{ block_number: 'desc' }, { event_index: 'asc' }],
+      where: where
+    }),
+    [where]
+  );
+
+  /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo(
     () => [
       { value: 'event id' },
@@ -109,58 +144,40 @@ const EventsTable = () => {
     ]
   );
 
-  const callVariable = useMemo(() => {
-    const conditions = [];
-    if (!withExtrinsicSuccess) {
-      conditions.push({ call: { _neq: 'ExtrinsicSuccess' } });
-    }
-    if (callsFilter && callsFilter.length > 0) {
-      conditions.push({ call: { _in: callsFilter } });
-    }
-    return conditions;
-  }, [withExtrinsicSuccess, callsFilter]);
-
-  const variables = useMemo(
-    () => ({
-      orderBy: [{ block_number: 'desc' }, { event_index: 'asc' }],
-      where: {
-        timestamp: {
-          ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
-          ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
-        },
-        ...{ _and: callVariable },
-        ...(modulesFilter && modulesFilter.length > 0 && { module: { _in: modulesFilter } })
-      }
-    }),
-    [callVariable, modulesFilter, range.from, range.to]
-  );
-
+  /* ------------------------- Main Query - Get Events ------------------------ */
   const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListEvents>(LIST_EVENTS, {
     variables
   });
+  const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
 
+  /* ---------------------------- Setup Pagination ---------------------------- */
   const { reset } = pagination;
   useEffect(() => {
     reset();
   }, [range, modulesFilter, withExtrinsicSuccess, callsFilter, reset]);
 
-  const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
-
-  const [latestBlock, setLatestBlock] = useState<number>();
-
+  /* ----------------------------- Refresh Button ----------------------------- */
+  const [latestEventBlock, setLatestEventBlock] = useState<number>();
   useEffect(() => {
-    setLatestBlock(data?.events[0]?.blockNumber);
+    setLatestEventBlock(data?.events[0]?.blockNumber);
   }, [data?.events]);
 
-  const eventsSinceLastFetch = useSubscription<SubscribeEventsSinceBlock>(SUBSCRIBE_EVENTS_SINCE_BLOCK, {
-    skip: latestBlock === undefined,
-    variables: { 
-      blockNumber: latestBlock
+  const subscribeVariables = useMemo(
+    () => ({
+      where: { ...where, ...{ block_number: { _gt: latestEventBlock } } }
+    }),
+    [latestEventBlock, where]
+  );
+  const eventsSinceLastFetch = useSubscription<SubscribeEventsSinceBlock>(
+    SUBSCRIBE_EVENTS_SINCE_BLOCK,
+    {
+      skip: latestEventBlock === undefined,
+      variables: subscribeVariables
     }
-  });
-
+  );
   const eventsSinceFetch = eventsSinceLastFetch?.data?.events?.aggregate?.count;
 
+  /* ----------------------------- Build Component ---------------------------- */
   return (
     <>
       {data?.agg.aggregate.count !== undefined && (
@@ -193,10 +210,7 @@ const EventsTable = () => {
         </Stack>
       )}
       <Box sx={{ textAlign: 'right' }}>
-        {data?.events && <RefreshButton
-          countSince={eventsSinceFetch}
-          refetch={refetch}
-        />}
+        {data?.events && <RefreshButton countSince={eventsSinceFetch} refetch={refetch} />}
       </Box>
       <BaselineTable
         error={!!error}

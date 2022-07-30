@@ -107,8 +107,8 @@ export type SubscribeBlocksSinceBlock = {
 };
 
 export const SUBSCRIBE_BLOCKS_SINCE_BLOCK = gql`
-  subscription MyQuery ($blockNumber: bigint!) {
-    blocks: block_aggregate(where: {block_number: {_gt: $blockNumber}}) {
+  subscription SubscribeToBlocksSinceBlock ($where: block_bool_exp) {
+    blocks: block_aggregate(where: $where) {
       aggregate {
         count
       }

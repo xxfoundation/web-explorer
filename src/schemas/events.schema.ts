@@ -97,8 +97,8 @@ export type SubscribeEventsSinceBlock = {
 }
 
 export const SUBSCRIBE_EVENTS_SINCE_BLOCK = gql`
-  subscription EventsSinceBlock ($blockNumber: bigint!) {
-    events: event_aggregate(where: {block_number: {_gt: $blockNumber }}) {
+  subscription EventsSinceBlock ($where: event_bool_exp) {
+    events: event_aggregate(where: $where) {
       aggregate {
         count
       }
