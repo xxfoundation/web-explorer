@@ -16,7 +16,7 @@ import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
-import useSessionStorage from '../../hooks/useSessionState';
+import useSessionStorage from '../../hooks/useSessionStorage';
 
 const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
   const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`;

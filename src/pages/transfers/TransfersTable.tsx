@@ -18,7 +18,7 @@ import {
 import { useQuery } from '@apollo/client';
 import { usePagination } from '../../hooks';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
-import useSessionStorage from '../../hooks/useSessionState';
+import useSessionStorage from '../../hooks/useSessionStorage';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;

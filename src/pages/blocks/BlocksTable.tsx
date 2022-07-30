@@ -10,7 +10,7 @@ import { ListOfBlocksOrdered, LIST_BLOCKS_ORDERED } from '../../schemas/blocks.s
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
-import useSessionStorage from '../../hooks/useSessionState';
+import useSessionStorage from '../../hooks/useSessionStorage';
 
 const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([

@@ -23,7 +23,7 @@ import { theme } from '../../themes/default';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
-import useSessionStorage from '../../hooks/useSessionState';
+import useSessionStorage from '../../hooks/useSessionStorage';
 
 const props: TableCellProps = { align: 'left' };
 
