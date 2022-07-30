@@ -61,7 +61,7 @@ Nominated proof of stake is a popular consensus algorithm among blockchain proje
   Vesting period refers to a period in which tokens sold in the pre-sale ICO stage and offered to partners and project team members as incentives for their contribution are prevented from being sold for a specific period. A vesting schedule is announced by the project to release these tokens at intervals throughout a given period.
 - **_Stakeable Supply_** is the amount of tokens available to be staked. **_Staked Supply_** is the amount of tokens staked in the network, both by validators and nominators. These affect the overall calculation of the _rewards_ that a validator will have per era.
 - **_Rewards Supply_** is the capped amount of tokens distributed among validators on a per era basis as _rewards_. Since these tokens are distributed without any vesting period, they will automatically increase the circulating supply.
-- **_Unbonding Tokens_** is the amount of tokens that were unbonded and remain in the unbonding period of 28 days that is required to have them passing from the _Staked Supply_ to the **_Liquid Supply_** - tokens available for any occasion - transfer, stake or vote.
+- **_Unbonding Tokens_** is the amount of tokens that were unbonded and remain in the unbonding period of 28 days. By the end of this period they will be part of the **_Liquid Supply_** - tokens fully available to transfer, stake or vote.
   \
   &nbsp;
   \
@@ -74,11 +74,11 @@ Nominated proof of stake is a popular consensus algorithm among blockchain proje
 **Locked** - funds locked for the following purposes:
 
 - **_vested_** - available funds to be unlocked (can be used for transaction fees)
-- **bonded** - funds frozen in exchange of some benefit
+- **_bonded_** - funds frozen in exchange of some benefit
   - **_staking_** - staked funds either by nominating or validating
   - **_voting_** - funds only unlocked according to vote conviction and/or election closure
-    - **democracy** - funds used to vote for referenda (can be used for transaction fees)
-    - **council** - funds used to vote for a council member
+    - **_democracy_** - funds used to vote for referenda (can be used for transaction fees)
+    - **_council_** - funds used to vote for a council member
 
 **Reserved** - funds used to save data on chain - example: setup your **identity,** create **assets**, make a **proposal**, **seconding** a proposal or proposing a **tip.**
 \
@@ -90,7 +90,7 @@ Nominated proof of stake is a popular consensus algorithm among blockchain proje
 
 - **_Staking_** your XX allows you to passively earn rewards for your help to secure the network. It is the process by which you can submit XX tokens in a bid to serve as a validator or nominator and get rewarded.
 - Staked tokens have a **28-day cooldown period when unstaked**, which means they can only be redeemed / withdrawn after that period.
-- The overall staking return in the network is calculated from the current staked ratio, current ideal interest and inflation parameters.
+- The **average staking return** in the network is calculated from the current staked ratio, current ideal interest and inflation parameters.
   If you wanna know more about it check our [xx Economics](https://xx.network/wp-content/uploads/2021/12/xx-economics-v1.2.pdf).
 - **_Slashing_** will happen if a validator misbehaves (e.g. goes offline, attacks the network, or runs modified software) in the network. They and their nominators will get slashed by **losing a percentage of their bonded/staked XX.** Any slashed XX will be added to the Treasury.
   - Validators are also “**_chilled”_** by the protocol when they commit a slashable offense. This removes them from the active set and disqualifies them from re-election in the next era. If the slashed amount is non-zero, chilling also removes all of the validator’s nominations.
