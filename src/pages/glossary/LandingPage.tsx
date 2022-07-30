@@ -1,9 +1,14 @@
-import { Container, Grid, styled, Typography } from '@mui/material';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Container, Grid, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+import gfm from 'remark-gfm';
+
 // @ts-ignore TS6133
 import markdownDoc from './glossary.md';
+// @ts-ignore TS6133
+import style from './style.css';
+
 const LandingPage: FC = () => {
   const [content, setContent] = useState<string>('');
 
@@ -21,8 +26,10 @@ const LandingPage: FC = () => {
         Glossary
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
-          <ReactMarkdown>{content}</ReactMarkdown>
+        <Grid item xs={12} md={12} lineHeight={1.5}>
+          <ReactMarkdown className={style.markdown} remarkPlugins={[gfm]}>
+            {content}
+          </ReactMarkdown>
         </Grid>
       </Grid>
     </Container>
