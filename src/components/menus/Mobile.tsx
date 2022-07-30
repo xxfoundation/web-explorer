@@ -104,6 +104,11 @@ export default function MobileNav() {
                   Accounts
                 </InternalLink>
               </Typography>
+              <Typography variant='h3' sx={{ mt: 2 }}>
+                <InternalLink to='/glossary' onClick={close}>
+                  Glossary
+                </InternalLink>
+              </Typography>
             </Box>
           </Box>
         </Box>
