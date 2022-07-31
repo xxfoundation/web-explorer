@@ -61,7 +61,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   const whereWithFilters = useMemo(
     () =>
       statusFilter !== null && {
-        success: { _eq: statusFilter }
+        extrinsic: { success: { _eq: statusFilter } }
       },
     [statusFilter]
   );
