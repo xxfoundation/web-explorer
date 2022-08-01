@@ -18,7 +18,7 @@ import {
 } from '../../schemas/transfers.schema';
 
 const TransferRow = (data: Transfer) => {
-  const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
+  const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.extrinsicIndex}`;
 
   return [
     { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },

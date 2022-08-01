@@ -27,8 +27,11 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
                 EXTRINSIC&nbsp;
-                <Link to={`/extrinsics/${props.blockNumber}-${props.index}`} underline='hover'>
-                  #{`${props.blockNumber}-${props.index}`}
+                <Link
+                  to={`/extrinsics/${props.blockNumber}-${props.extrinsicIndex}`}
+                  underline='hover'
+                >
+                  #{`${props.blockNumber}-${props.extrinsicIndex}`}
                 </Link>
               </div>
               <Hash

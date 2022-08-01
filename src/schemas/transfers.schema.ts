@@ -13,7 +13,7 @@ export const TRANSFER_KEYS_FRAGMENT = gql`
 
 export type Transfer = {
   blockNumber: number;
-  index: number;
+  extrinsicIndex: number;
   source: string;
   destination: string;
   amount: number;
