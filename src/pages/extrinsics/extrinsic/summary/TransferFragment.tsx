@@ -13,29 +13,20 @@ import { GetTransferByPK, GET_TRANSFER_BY_PK } from '../../../../schemas/transfe
 
 type Props = { blockNumber: number; extrinsicIndex: number };
 
-const AddressesHandler: FC<{
-  address: string;
-  identity?: string;
-}> = ({ address, identity: identityDisplay }) => {
-  if (identityDisplay) {
-    return <Address value={address} name={identityDisplay} url={`/accounts/${address}`} />;
-  }
-  return <Address value={address} url={`/accounts/${address}`} />;
-};
-
 const TransferFragment: FC<Props> = (variables) => {
   const { data, loading } = useQuery<GetTransferByPK>(GET_TRANSFER_BY_PK, { variables });
   if (loading) return <></>;
   if (!data?.transfer) return <></>;
+
   return (
     <>
       <SummaryEntry>
         <SummaryHeader>Sender</SummaryHeader>
         <SummaryValue>
-          <WithCopy value={data.transfer.sender.address}>
-            <AddressesHandler
-              address={data.transfer.sender.address}
-              identity={data.transfer.sender.identity?.display}
+          <WithCopy value={data.transfer.source}>
+            <Address
+              value={data.transfer.source}
+              name={data.transfer.sourceAccount.identity?.display}
             />
           </WithCopy>
         </SummaryValue>
@@ -43,10 +34,10 @@ const TransferFragment: FC<Props> = (variables) => {
       <SummaryEntry>
         <SummaryHeader>Destination</SummaryHeader>
         <SummaryValue>
-          <WithCopy value={data.transfer.receiver.address}>
-            <AddressesHandler
-              address={data.transfer.receiver.address}
-              identity={data.transfer.receiver.identity?.display}
+          <WithCopy value={data.transfer.destination}>
+            <Address
+              value={data.transfer.destination}
+              name={data.transfer.destinationAccount.identity?.display}
             />
           </WithCopy>
         </SummaryValue>
@@ -56,14 +47,6 @@ const TransferFragment: FC<Props> = (variables) => {
         <SummaryValue>
           <Typography>
             <FormatBalance value={data.transfer.amount.toString()} />
-          </Typography>
-        </SummaryValue>
-      </SummaryEntry>
-      <SummaryEntry>
-        <SummaryHeader>Fee</SummaryHeader>
-        <SummaryValue>
-          <Typography>
-            <FormatBalance value={data.transfer.feeAmount.toString()} />
           </Typography>
         </SummaryValue>
       </SummaryEntry>

@@ -8,9 +8,11 @@ export type PaginationOptions = {
 
 type PaginationResult = {
   controls: React.ReactNode,
-  rowsPerPage: number;
+  count: number;
   page: number;
   paginate: <T,>(items: Array<T>) => Array<T>;
+  reset: () => void;
+  rowsPerPage: number;
   setCount: (c: number) => void;
   limit: number;
   offset: number;
@@ -20,10 +22,15 @@ function usePagination(options?: PaginationOptions): PaginationResult {
   const [count, setCount] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(options?.rowsPerPage ?? 20);
   const [page, setPage] = useState(0);
+
   const onRowsPerPageChange = useCallback(({ target: { value } }) => {
     setRowsPerPage(parseInt(value));
     setPage(0);
   }, []);
+
+  const reset = useCallback(() => {
+    setPage(0);
+  }, [])
   
   const onChange = useCallback(
     (_: unknown, number: number) => {
@@ -50,10 +57,12 @@ function usePagination(options?: PaginationOptions): PaginationResult {
   
   return {
     controls,
+    count,
     rowsPerPage,
     page,
     paginate,
     setCount,
+    reset,
     limit: rowsPerPage,
     offset: page * rowsPerPage
   };

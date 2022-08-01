@@ -9,7 +9,7 @@ import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import { TableSkeleton } from '../../components/Tables/TableSkeleton';
 import { GetExtrinsicWhere, GET_EXTRINSIC_WHERE } from '../../schemas/extrinsics.schema';
 import NotFound from '../NotFound';
-import ExtrinsicEventsTabs from './extrinsic/ExtrinsicEventsTabs';
+import ExtrinsicTabs from './extrinsic/ExtrinsicTabs';
 import Summary from './extrinsic/summary';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
@@ -28,7 +28,7 @@ const ExtrinsicComponent = () => {
   );
 
   const { data, error, loading } = useQuery<GetExtrinsicWhere>(GET_EXTRINSIC_WHERE, {
-    variables: { where }
+    variables: { where1: where, where2: where }
   });
 
   if (!loading && !error && (!data || !data?.extrinsic[0])) {
@@ -66,9 +66,10 @@ const ExtrinsicComponent = () => {
           </PaperWrapStyled>
         ) : (
           extrinsic.hash && (
-            <ExtrinsicEventsTabs
+            <ExtrinsicTabs
               blockNumber={extrinsic.blockNumber}
               index={extrinsic.extrinsicIndex}
+              transferCount={data.agg.aggregate.count}
             />
           )
         )}

@@ -1,7 +1,7 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
-import { Divider, Stack, Typography } from '@mui/material';
-import React, { FC, useMemo, useState } from 'react';
+import { Divider, Stack, Tooltip, Typography } from '@mui/material';
+import React, { FC, useMemo } from 'react';
 
 import { theme } from '../../themes/default';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -12,6 +12,7 @@ import { CustomTooltip } from '../../components/Tooltip';
 import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
 import { HoldersRolesFilters, roleToLabelMap } from './HoldersRolesFilters';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
+import useSessionState from '../../hooks/useSessionState';
 
 type Filters = Record<string, boolean>;
 
@@ -64,15 +65,15 @@ const accountToRow = (
     .filter(([key]) => key !== '__typename')
     .filter(([, value]) => !!value)
     .sort(([roleA], [roleB]) => (filters[roleB] ? 1 : 0) - (filters[roleA] ? 1 : 0))
-    .map(([role, value]): string => (role === 'special' ? (value as string) : role));
-  const accountLink = `accounts/${item.address}`;
+    .map(([role, value]): string =>
+      role === 'special' && typeof value === 'string' ? value : role
+    );
+  const accountLink = `accounts/${item.id}`;
 
   return [
     { value: rank, props: rankProps },
     {
-      value: (
-        <Address truncated name={item.identity?.display} value={item.address} url={accountLink} />
-      )
+      value: <Address truncated name={item.identity?.display} value={item.id} url={accountLink} />
     },
     { value: item.nonce },
     {
@@ -94,13 +95,22 @@ const accountToRow = (
 };
 
 const useHeaders = () => {
-  const [filters, setFilters] = useState<Filters>({});
+  const [filters, setFilters] = useSessionState<Filters>('accounts.filters', {});
 
   const headers = useMemo(
     () => [
       { value: 'rank' },
       { value: 'account' },
-      { value: 'transactions' },
+      {
+        value: (
+          <Tooltip
+            title='An Extrinsic is defined by any action that is performed by an user of the xx network blockchain.'
+            arrow
+          >
+            <Typography variant='h4'>extrinsics</Typography>
+          </Tooltip>
+        )
+      },
       {
         value: <HoldersRolesFilters onChange={setFilters} filters={filters} />,
         props: { colSpan: 2 }
@@ -108,7 +118,7 @@ const useHeaders = () => {
       { value: 'locked balance' },
       { value: 'total balance' }
     ],
-    [filters]
+    [filters, setFilters]
   );
 
   return {
@@ -126,7 +136,7 @@ const buildOrClause = (filters: Filters) =>
     filters.special && { role: { special: { _neq: 'null' } } }
   ].filter((v) => !!v);
 
-const HoldersTable: FC = () => {
+const AccountsTable: FC = () => {
   const { filters, headers } = useHeaders();
   const hasFilters = !filters.all && Object.values(filters).some((v) => !!v);
 
@@ -175,4 +185,4 @@ const HoldersTable: FC = () => {
   );
 };
 
-export default HoldersTable;
+export default AccountsTable;

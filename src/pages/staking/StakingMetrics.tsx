@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Box, Divider, Stack, Tooltip, Typography } from '@mui/material';
 import ProgressBar from './ProgressBar';
 import StakingSupplyDonutChart from '../../components/charts/StakingSupplyDonutChart';
 import { useQuery } from '@apollo/client';
@@ -53,11 +53,21 @@ const StakingMetrics = () => {
         <Loading loading={loading}>
           <Box>
             <Typography variant='h6'>Average Return</Typography>
-            <Typography variant='h3'>{avgStakedReturn}%</Typography>
+            <Tooltip
+              title='Network overall staking return. Calculated from the current staked ratio, current ideal interest and inflation parameters.'
+              arrow
+            >
+              <Typography variant='h3'>{avgStakedReturn}%</Typography>
+            </Tooltip>
           </Box>
           <Box>
-            <Typography variant='h6'>Inflation Rate</Typography>
-            <Typography variant='h3'>{economics?.inflationRate}%</Typography>
+            <Typography variant='h6'>Circulating AGR</Typography>
+            <Tooltip
+              title='Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
+              arrow
+            >
+              <Typography variant='h3'>{economics?.inflationRate}%</Typography>
+            </Tooltip>
           </Box>
         </Loading>
       </Stack>
@@ -72,9 +82,14 @@ const StakingMetrics = () => {
           </Box>
           <Box>
             <Stack direction='row' sx={{ mb: 1 }} style={{ justifyContent: 'space-between' }}>
-              <Typography variant='h6'>
-                EPOCH #{metrics.era}-{metrics.epoch}
-              </Typography>
+              <Tooltip
+                title='An Era (24h) is composed by 3 Epochs (8h). An Epoch sets the periods where important actions can take place on chain during an era, like the election of the next validator set which starts before the last epoch.'
+                arrow
+              >
+                <Typography variant='h6'>
+                  EPOCH #{metrics.era}-{metrics.epoch}
+                </Typography>
+              </Tooltip>
             </Stack>
             <ProgressBar value={metrics.epochProgress} variant='determinate' />
           </Box>

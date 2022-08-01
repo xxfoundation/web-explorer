@@ -96,6 +96,27 @@ export const LIST_BLOCKS_ORDERED = gql`
 `;
 
 /* -------------------------------------------------------------------------- */
+/*                              New Blocks Count                              */
+/* -------------------------------------------------------------------------- */
+export type SubscribeBlocksSinceBlock = {
+  blocks: {
+    aggregate: {
+      count: number;
+    }
+  }
+};
+
+export const SUBSCRIBE_BLOCKS_SINCE_BLOCK = gql`
+  subscription MyQuery ($where: block_bool_exp) {
+    blocks: block_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+  }
+`
+
+/* -------------------------------------------------------------------------- */
 /*                          Get Blocks by Identifiers                         */
 /* -------------------------------------------------------------------------- */
 export type GetBlockByPK = {
@@ -117,8 +138,8 @@ export type GetBlockByHash = {
 
 export const GET_BLOCK_BY_HASH = gql`
   ${BLOCK_KEYS_FRAGMENT}
-  query GetBlockByHash($blockHash: String!) {
-    block (where: { block_hash: { _eq: $blockHash }}, limit: 1) {
+  query GetBlockByHash($hash: String!) {
+    block (where: { block_hash: { _eq: $hash }}, limit: 1) {
       ...blocks
     }
   }
@@ -170,6 +191,25 @@ export const GET_BLOCK_COUNTS = gql`
       aggregate {
         count
       }
+    }
+  }
+`
+/* -------------------------------------------------------------------------- */
+/*                            Search Blocks                                   */
+/* -------------------------------------------------------------------------- */
+
+export type SearchBlocks = {
+  blocks: Block[]
+}
+
+export const SEARCH_BLOCKS = gql`
+  ${BLOCK_KEYS_FRAGMENT}
+  query SearchBlocks($hash: String, $blockNumber: bigint) {
+    blocks: block (where: { _or: [
+      { block_number: { _eq: $blockNumber } },
+      { block_hash: { _eq: $hash } }
+    ] }) {
+      ...blocks
     }
   }
 `;

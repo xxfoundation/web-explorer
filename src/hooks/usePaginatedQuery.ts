@@ -17,6 +17,7 @@ const usePaginatedQuery = <TData extends TotalOfItems>(
   const { limit, offset, setCount } = pagination;
   const queryOptions = {
     ...options,
+    fetchPolicy: 'network-only',
     variables: {
       limit,
       offset,
@@ -27,7 +28,7 @@ const usePaginatedQuery = <TData extends TotalOfItems>(
   const result = useQuery<TData>(query, queryOptions);
   
   useEffect(() => {
-    if (result.data?.agg.aggregate.count) {
+    if (result.data?.agg.aggregate.count !== undefined) {
       setCount(Number(result.data?.agg.aggregate.count));
     }
   }, [setCount, result.data?.agg.aggregate.count]);

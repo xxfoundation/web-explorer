@@ -18,7 +18,7 @@ import {
 import TimeAgo from '../../../../components/TimeAgo';
 import ModuleCalls from './ModuleCalls';
 import ParametersFragment from './ParametersFragment';
-import TransferFragment from './TransferFragment';
+import FormatBalance from '../../../../components/FormatBalance';
 
 type Props = {
   extrinsic: Extrinsic;
@@ -45,10 +45,6 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>LifeTime</SummaryHeader>
-        <SummaryValue>{extrinsic.lifetime || 'Immortal'}</SummaryValue>
-      </SummaryEntry>
-      <SummaryEntry>
         <SummaryHeader>Extrinsic Hash</SummaryHeader>
         <SummaryValue>
           <WithCopy value={extrinsic.hash}>
@@ -62,7 +58,6 @@ const Summary: FC<Props> = ({ extrinsic }) => {
           <ModuleCalls module={extrinsic.module} call={extrinsic.call} doc={extrinsic.doc} />
         </SummaryValue>
       </SummaryEntry>
-      <TransferFragment {...extrinsic} />
       <SummaryEntry>
         <SummaryHeader>Result</SummaryHeader>
         <SummaryValue>
@@ -84,6 +79,16 @@ const Summary: FC<Props> = ({ extrinsic }) => {
           </SummaryValue>
         </SummaryEntry>
       )}
+      {extrinsic.fee && (
+        <SummaryEntry>
+          <SummaryHeader>Fee</SummaryHeader>
+          <SummaryValue>
+            <Typography>
+              <FormatBalance precision={4} value={JSON.parse(extrinsic.fee).partialFee} />
+            </Typography>
+          </SummaryValue>
+        </SummaryEntry>
+      )}
       <SummaryEntry>
         <SummaryHeader>
           <Divider variant='middle' orientation='horizontal' sx={{ width: '100%', p: 0, m: 0 }} />
@@ -97,7 +102,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryEntry>
           <SummaryHeader>Signer</SummaryHeader>
           <SummaryValue>
-            <Address value={extrinsic.signer} />
+            <Address name={extrinsic.signerAccount?.identity?.display} value={extrinsic.signer} />
           </SummaryValue>
         </SummaryEntry>
       )}

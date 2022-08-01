@@ -7,7 +7,7 @@ import BarInformation from './BarInformation';
 
 const DoubleSeries: FC = () => {
   const context = useBarchartContext();
-  const [selected, count] = context.selected.value ?? ['', 0];
+  const [selected] = context.selected.value ?? [''];
   const interval = context.interval;
 
   const labelA = context.infoA?.label;
@@ -15,6 +15,7 @@ const DoubleSeries: FC = () => {
 
   const formatted = useMemo(() => dayjs.utc(selected).format(timeFormat), [timeFormat, selected]);
 
+  const count = context.infoA?.data?.find((d) => d[0] === selected)?.[1];
   const countB = context.infoB?.data?.find((d) => d[0] === selected)?.[1];
   const labelB = context.infoB?.label;
 
@@ -30,7 +31,7 @@ const DoubleSeries: FC = () => {
         style={{ whiteSpace: 'nowrap' }}
       >
         {context.infoA?.isCurrency ? (
-          <FormatBalance value={count.toString()} />
+          <>{count && <FormatBalance value={count?.toString()} />}</>
         ) : (
           `${count} ${labelA}`
         )}
