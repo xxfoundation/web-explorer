@@ -8,7 +8,7 @@ type Props = {
   onClose: (value: string[]) => void;
 }
 
-const MNEMONIC_COUNT = 12;
+const MNEMONIC_COUNT = 24;
 const inputCount = Array.from(Array(MNEMONIC_COUNT).keys()).map((i) => i);
 
 const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
@@ -32,7 +32,10 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
   const mnemonicSetter = useCallback(
     (index: number) => (evt: React.ChangeEvent<HTMLInputElement>) => {
       const copy = mnemonic.slice();
-      copy[index] = evt.target.value;
+      const words = evt.target.value.split(' ');
+      words.forEach((word, i) => {
+        copy[index + i] = word;
+      });
       setMnemonic(copy);
     },
     [mnemonic]
@@ -51,7 +54,7 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
         )}
         <Grid container>
           {inputCount.map((i) => (
-            <Grid key={i} item xs={6} sm={4} >
+            <Grid key={i} item xs={4} sm={3} >
               <TextField
                 error={!isValid}
                 onChange={mnemonicSetter(i)}

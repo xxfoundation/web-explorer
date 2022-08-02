@@ -69,6 +69,13 @@ const VerticalTabs = () => {
     setStep((v) => Math.max(0, v - 1));
   }, []);
 
+  const onChange = useCallback((evt: React.SyntheticEvent, value: any) => {
+    const i = Number(value);
+    if (validSteps[i]) {
+      setStep(i);
+    }
+  }, [validSteps])
+
   const panelProps = useCallback((index: number): PanelProps => ({
     onNext: index < MAX_STEPS ? next : undefined,
     canNext: !!validSteps[index + 1],
@@ -88,6 +95,7 @@ const VerticalTabs = () => {
         orientation='vertical'
         value={step}
         aria-label='Simple Staking Stepper'
+        onChange={onChange}
         sx={{
           borderRight: 1,
           borderColor: 'divider',
