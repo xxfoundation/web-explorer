@@ -13,15 +13,10 @@ export const TRANSFER_KEYS_FRAGMENT = gql`
 
 export type Transfer = {
   blockNumber: number;
-  index: number;
-  hash: string;
+  extrinsicIndex: number;
   source: string;
   destination: string;
   amount: number;
-  feeAmount: number;
-  module: string;
-  call: string;
-  success: boolean;
   timestamp: string;
   destinationAccount: {
     identity: null | { display: string }
@@ -32,21 +27,20 @@ export type Transfer = {
   block: {
     era: number;
   }
+  extrinsic: {
+    hash: string;
+    success: boolean;
+  }
 };
 
 export const TRANSFER_FRAGMENT = gql`
   fragment transfer_common_fields on transfer {
     blockNumber: block_number
-    index: extrinsic_index
-    hash
-    module
-    call
-    success
-    timestamp
+    extrinsicIndex: extrinsic_index
     source
     destination
     amount
-    feeAmount: fee_amount
+    timestamp
     sourceAccount: account {
       identity {
         display
@@ -59,6 +53,10 @@ export const TRANSFER_FRAGMENT = gql`
     }
     block {
       era: active_era
+    }
+    extrinsic {
+      hash
+      success
     }
   }
 `;
@@ -90,34 +88,6 @@ export const GET_TRANSFERS_TIMESTAMPS = gql`
     transfer(order_by: $orderBy, where: $where) {
       timestamp
       amount
-    }
-  }
-`;
-
-/* -------------------------------------------------------------------------- */
-/*                        Get Transfers by Primary Keys                       */
-/* -------------------------------------------------------------------------- */
-export type GetTransferByPK = {
-  transfer: Transfer;
-};
-
-export const GET_TRANSFER_BY_PK = gql`
-  ${TRANSFER_FRAGMENT}
-  query GetTransferByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
-    transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
-      amount
-      source
-      destination
-      sourceAccount: account {
-        identity {
-          display
-        }
-      }
-      destinationAccount: accountByDestination {
-        identity {
-          display
-        }
-      }
     }
   }
 `;
