@@ -58,13 +58,19 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('transfers.status', null);
 
   /* --------------------- Initialize Dependent Variables --------------------- */
-  const whereWithFilters = useMemo(
-    () =>
-      statusFilter !== null && {
+  const whereWithFilters = useMemo(() => {
+    return {
+      ...(statusFilter !== null && {
         success: { _eq: statusFilter }
-      },
-    [statusFilter]
-  );
+      }),
+      ...(filters?.from && {
+        source: { _eq: filters?.from }
+      }),
+      ...(filters?.to && {
+        destination: { _eq: filters?.to }
+      })
+    };
+  }, [filters?.from, filters?.to, statusFilter]);
   const whereConcat = useMemo(
     () => Object.assign({}, where, whereWithFilters),
     [where, whereWithFilters]
@@ -105,14 +111,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
       variables
     }
   );
-
-  /* ------------------ Process response according to filters ----------------- */
-  const transfers = useMemo(() => {
-    return (data?.transfers || [])
-      .filter((t) => !filters?.from || t.source === filters?.from)
-      .filter((t) => !filters?.to || t.destination === filters?.to);
-  }, [data?.transfers, filters?.from, filters?.to]);
-  const rows = useMemo(() => (transfers || []).map(TransferRow), [transfers]);
+  const rows = useMemo(() => (data?.transfers || []).map(TransferRow), [data?.transfers]);
 
   /* ---------------------------- Setup Pagination ---------------------------- */
   const { reset } = pagination;
