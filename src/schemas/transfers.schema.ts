@@ -185,13 +185,8 @@ export type SubscribeTransfersSinceBlock = {
 };
 
 export const SUBSCRIBE_TRANSFERS_SINCE_BLOCK = gql`
-<<<<<<< HEAD
-  subscription TransfersSinceBlock ($blockNumber: bigint!) {
-    transfers: transfer_aggregate(where: {block_number: {_gt: $blockNumber }}) {
-=======
   subscription TransfersSinceBlock ($where: transfer_bool_exp) {
     transfers: transfer_aggregate(where: $where) {
->>>>>>> dev
       aggregate {
         count
       }
