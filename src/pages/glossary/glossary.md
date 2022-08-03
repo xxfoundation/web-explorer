@@ -49,7 +49,6 @@ NPoS is designed to incentivize good behaviour and punish bad behaviour. For exa
 - Blocks are produced in a chained manner, i.e., they always contain a reference to the parent block. This relationship is denoted using arrows, for example B1 is the parent of B2: B1 ← B2.
 - A block is considered **_finalized_** on average after having a chain of 2 blocks created that reference it. Example: considering the chain of blocks B1 ← B2 ← B3, B1 will be finalized after B3 is produced.
 - An **Era** is a period of **24 hours** during which there is a specific set of active validators. That same set cannot change while in an Era.
-- An **Epoch** is a period of **8 hours**, which means that there are 3 Epochs per Era. Epochs are a period of time only relevant to the consensus protocol, which are out of scope for this Glossary.
 
 \
 &nbsp;
@@ -85,7 +84,7 @@ NPoS is designed to incentivize good behaviour and punish bad behaviour. For exa
 - **democracy** - coins locked when voting for referenda (can be used for transaction fees)
 - **council** - coins locked when voting to elect a member to the **_Council_**
 
-**Reserved** - coins used to store data on chain - for example: setting an account **_identity_**, creating **_assets_**, **proposing** some action in **_Governance_**, or proposing a **_tip_**.
+**Reserved** - coins used to store data on chain - for example: setting an account **_identity_**, creating **_assets_**, making a **proposal** in **_Governance_**, or proposing a **_tip_**.
 
 \
 &nbsp;
@@ -126,4 +125,4 @@ In NPoS, the rewards for a given Era are split between all validators in the act
 
 ---
 
-> 📌 If you wanna know more about these and other concepts about xx network blockchain check our [high-level overview of the xx coin](https://xx.network/archive/xxcoin-tokenomics/).
+> 📌 If you want to learn more about the xx network blockchain, its tokenomics and use cases, check out our [high-level overview of the xx coin](https://xx.network/archive/xxcoin-tokenomics/).
