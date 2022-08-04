@@ -1,10 +1,14 @@
+import type { WithChildren } from '../types';
+
 import React, { FC } from 'react';
 import { Divider, Stack, Tooltip } from '@mui/material';
 
 import CopyButton from './buttons/CopyButton';
 import Ellipsis from './Ellipsis';
 
-export const WithCopy: FC<{ value: string, tooltip?: boolean }> = ({ children, tooltip, value }) => (
+type Props = WithChildren & { value: string, tooltip?: boolean };
+
+export const WithCopy: FC<Props> = ({ children, tooltip, value }) => (
   <Stack direction='row' flexWrap='nowrap' alignItems='center'>
     {tooltip ? (
       <Tooltip title={value} arrow placement='top'>

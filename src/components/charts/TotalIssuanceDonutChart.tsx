@@ -7,7 +7,7 @@ import React, { useRef, useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import { pick, mapValues } from 'lodash';
-import BN from 'bn.js';
+import { BN } from '@polkadot/util/bn';
 
 import Legend from './Legend';
 import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typographies';

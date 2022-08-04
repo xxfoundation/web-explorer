@@ -1,6 +1,8 @@
-import styled from '@emotion/styled';
+import type { WithChildren } from '../../../types';
+
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
+  styled,
   Box,
   Divider,
   Stack,
@@ -35,7 +37,7 @@ const TooltipFooter = styled(Box)(({}) => ({
   borderBottomRightRadius: 'inherit'
 }));
 
-const TooltipStack: FC = ({ children }) => {
+const TooltipStack: FC<WithChildren> = ({ children }) => {
   return (
     <Stack
       direction={'row'}
@@ -55,7 +57,7 @@ const TooltipStack: FC = ({ children }) => {
   );
 };
 
-const TooltipLineHeader: FC = ({ children }) => (
+const TooltipLineHeader: FC<WithChildren> = ({ children }) => (
   <Typography fontSize={'11px'} fontWeight={500} letterSpacing={'1px'} width={'80px'}>
     {children}
   </Typography>

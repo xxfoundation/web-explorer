@@ -5,7 +5,7 @@ type OnChangeType = (e: ChangeEvent<HTMLInputElement>) => void;
 const useInput = (initValue = '') => {
   const [value, setValue] = useState(initValue);
 
-  const handler = useCallback((e) => {
+  const handler = useCallback<OnChangeType>((e) => {
     setValue(e.target.value);
   }, []);
 

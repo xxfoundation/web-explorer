@@ -1,7 +1,8 @@
+import type { WithChildren } from '../../../types';
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 
-type Props = {
+type Props = WithChildren & {
   title?: string;
   loading?: boolean;
 };

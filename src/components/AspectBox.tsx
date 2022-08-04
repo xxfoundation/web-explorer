@@ -1,5 +1,9 @@
+
+import type { BoxProps } from '@mui/material';
+import type { WithChildren } from '../types';
+
 import React, { FC } from 'react';
-import { styled, Box, BoxProps } from '@mui/material';
+import { styled, Box } from '@mui/material';
 
 const Container = styled(Box)({
   position: 'relative'
@@ -18,7 +22,9 @@ const Padding = styled('div')<{ ratio: number }>(({ ratio }) => ({
   paddingBottom: (1 / ratio) * 100 + '%'
 }));
 
-const AspectBox: FC<BoxProps & { ratio: number }> = ({ children, ratio = 1, ...rest }) => {
+type AspectProps = WithChildren & BoxProps & { ratio: number };
+
+const AspectBox: FC<AspectProps> = ({ children, ratio = 1, ...rest }) => {
   return (
     <Container {...rest}>
       <Wrapper>{children}</Wrapper>

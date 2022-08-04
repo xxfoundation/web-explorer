@@ -1,7 +1,7 @@
 import { bnToBn, calcSi, formatDecimal, isBoolean } from '@polkadot/util';
 import { SiDef, ToBn } from '@polkadot/util/types';
 import { SI, SI_MID } from '@polkadot/util/format/si';
-import BN from 'bn.js';
+import { BN } from '@polkadot/util/bn';
 
 const defaultDecimals = 9;
 

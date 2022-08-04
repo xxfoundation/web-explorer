@@ -1,7 +1,11 @@
+import type { WithChildren } from '../types';
+
 import React, { FC } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 
-const Loading: FC<{ loading?: boolean }> = ({
+type Props = WithChildren & { loading?: boolean };
+
+const Loading: FC<Props> = ({
   children,
   loading
 }) => (

@@ -1,3 +1,4 @@
+import type { WithChildren } from '../../../../types';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
@@ -7,7 +8,9 @@ import React, { FC } from 'react';
 import { theme } from '../../../../themes/default';
 import { MetricScores } from '../../types';
 
-const HeaderStack: FC<{ color?: string }> = ({ children, color }) => {
+type HeaderStackProps = WithChildren & { color? : string };
+
+const HeaderStack: FC<HeaderStackProps> = ({ children, color }) => {
   return (
     <Stack direction={'row'} alignItems='center' color={color} spacing={1}>
       {children}

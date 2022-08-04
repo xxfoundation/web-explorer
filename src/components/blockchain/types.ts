@@ -1,4 +1,4 @@
-import BN from 'bn.js';
+import { BN } from '@polkadot/util/bn';
 
 import type { Block } from '../../schemas/blocks.schema';
 export type { Block } from '../../schemas/blocks.schema';

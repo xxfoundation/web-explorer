@@ -1,3 +1,5 @@
+import type { WithChildren } from '../../../types';
+
 import React, { FC } from 'react';
 import { Box, styled } from '@mui/material';
 
@@ -17,7 +19,7 @@ const Divider = styled(VerticalDivider)({
   paddingRight: '0.3rem'
 })
 
-const BarDividerBox: FC = ({ children }) => (
+const BarDividerBox: FC<WithChildren> = ({ children }) => (
   <DividerContainer>
     <Divider>
       {children}

@@ -1,3 +1,5 @@
+import './augment-types';
+
 import { ApolloProvider } from '@apollo/client';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -10,6 +12,7 @@ import reportWebVitals from './reportWebVitals';
 import SnackbarProvider from './SnackbarProvider';
 import BannerDesktop from './components/BannerDesktop';
 import BannerMobile from './components/BannerMobile';
+import { Api } from '@polkadot/react-api';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -17,7 +20,9 @@ ReactDOM.render(
       <BannerDesktop />
       <BannerMobile />
       <ApolloProvider client={apolloClient}>
-        <App />
+        <Api url={process.env.REACT_APP_API_URL}>
+          <App />
+        </Api>
       </ApolloProvider>
     </SnackbarProvider>
   </React.StrictMode>,

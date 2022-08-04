@@ -1,4 +1,5 @@
 import type { CustomPointOptions } from '../types';
+
 import { Grid } from '@mui/material';
 import Highcharts, { Options, PointOptionsObject, SeriesClickCallbackFunction } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -102,15 +103,15 @@ const PieChartWithLegend: FC<PieChartWithLegendProps> = ({
   const [anchorEl, setAnchorEl] = React.useState<Element>();
   const [pointOptions, setPointOptions] = React.useState<CustomPointOptions>();
 
-  const handleClick = useCallback(
+  const handleClick = useCallback<Highcharts.SeriesClickCallbackFunction>(
     ({ currentTarget, point: { options } }) => {
       if ((options as CustomPointOptions).custom.noClick) return;
-      setPointOptions(options);
+      setPointOptions(options as CustomPointOptions);
       if (currentTarget instanceof Element) {
         setAnchorEl(currentTarget);
       }
     },
-    [setPointOptions]
+    []
   );
 
   const onClose = useCallback(() => setAnchorEl(undefined), []);

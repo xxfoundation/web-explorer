@@ -1,7 +1,10 @@
 import * as Sentry from '@sentry/react';
 import { ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import './App.css';
 import './plugins';
 import SiteFooter from './components/Footer';
@@ -16,8 +19,6 @@ import Staking from './pages/staking';
 import StakingSimple from './pages/staking/simple';
 import Transfers from './pages/transfers';
 import { theme } from './themes/default';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const App = () => {
   return (

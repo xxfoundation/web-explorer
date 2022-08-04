@@ -1,3 +1,5 @@
+import type { WithChildren } from '../../types';
+
 import { styled, Box, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { StakingSupplyDonutChart, TotalIssuanceDonutChart } from '../../components/charts';
@@ -11,7 +13,7 @@ const ChartWrapContainer = styled(PaperWrap)(({ theme }) => ({
   }
 }));
 
-const ChartWrap: FC = ({ children }) => (
+const ChartWrap: FC<WithChildren> = ({ children }) => (
   <ChartWrapContainer>
     <AspectBox ratio={2 / 1}>{children}</AspectBox>
   </ChartWrapContainer>

@@ -1,18 +1,20 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
-import PaperWrap from '../../../components/Paper/PaperWrap.styled';
-import { Box, Tabs, Tab,TabProps, Stack } from '@mui/material';
+import type { WithChildren } from '../../../types';
 
+import React, { FC, useCallback, useMemo, useState } from 'react';
+import { Box, Tabs, Tab,TabProps, Stack } from '@mui/material';
+import { useAccounts } from '@polkadot/react-hooks';
+
+import PaperWrap from '../../../components/Paper/PaperWrap.styled';
 import ConnectWallet from './ConnectWallet';
 import WalletSelection from './WalletSelection';
-import useAccounts from '../../../hooks/useAccounts';
 import NavButtons, { NavProps } from './NavButtons';
 
-type PanelProps = NavProps & {
+type PanelProps = WithChildren & NavProps & {
   currentStep: number;
   step: number;
 }
 
-const Panel: FC<PanelProps & NavProps> = ({ children, currentStep, step, ...navProps }) => {
+const Panel: FC<PanelProps> = ({ children, currentStep, step, ...navProps }) => {
   return (
     <div
       style={{ flexGrow: 1 }}
