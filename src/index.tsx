@@ -1,6 +1,7 @@
 import './augment-types';
 
 import { ApolloProvider } from '@apollo/client';
+import { Api } from '@polkadot/react-api';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './dayjs';
@@ -12,7 +13,6 @@ import reportWebVitals from './reportWebVitals';
 import SnackbarProvider from './SnackbarProvider';
 import BannerDesktop from './components/BannerDesktop';
 import BannerMobile from './components/BannerMobile';
-import { Api } from '@polkadot/react-api';
 
 ReactDOM.render(
   <React.StrictMode>

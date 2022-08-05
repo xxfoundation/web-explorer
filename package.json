@@ -16,10 +16,6 @@
     "@polkadot/api": "^9.0.1",
     "@polkadot/api-contract": "^9.0.1",
     "@polkadot/keyring": "^10.1.2",
-    "@polkadot/react-api": "^0.39.1",
-    "@polkadot/react-components": "^0.39.1",
-    "@polkadot/react-hooks": "^0.39.1",
-    "@polkadot/react-signer": "^0.39.1",
     "@polkadot/typegen": "^9.0.1",
     "@polkadot/types": "^9.0.1",
     "@polkadot/ui-keyring": "^2.9.3",
@@ -61,7 +57,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
+    "test": "react-app-rewired test --transformIgnorePatterns \"node_modules/(?!@polkadot)\"",
     "eject": "react-scripts eject",
     "lint": "eslint src",
     "prepare": "husky install"
@@ -78,11 +74,6 @@
       "last 1 safari version"
     ]
   },
-  "jest": {
-    "transformIgnorePatterns": [
-      "node_modules/(?!@polkadot)"
-    ]
-  },
   "devDependencies": {
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
@@ -94,6 +85,7 @@
     "@types/commonmark": "^0.27.5",
     "@types/enzyme": "^3.10.11",
     "@types/lodash": "^4.14.181",
+    "@types/react-dom": "^18.0.6",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-timeago": "^4.1.3",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
@@ -114,6 +106,7 @@
     "prettier": "^2.2.1",
     "react-app-rewired": "^2.2.1",
     "stream-browserify": "^3.0.0",
-    "typescript": "^4.6.2"
+    "typescript": "^4.7.4",
+    "util": "^0.12.4"
   }
 }
