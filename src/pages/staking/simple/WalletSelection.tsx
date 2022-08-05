@@ -24,16 +24,16 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   const accounts = useAccounts();
   const { api } = useApi();
   const pagination = usePagination({ rowsPerPage: 10 });
-  const [balances, setBalances] = useState<PalletBalancesAccountData[]>();
-
+  const [balances, setBalances] = useState<BN[]>();
 
   useEffect(() => {
-    api?.query?.balances?.account.multi(accounts?.allAccounts)
-      .then(setBalances);
-  }, [api?.query?.balances, accounts?.allAccounts]);
+    api?.query?.system?.account.multi(accounts?.allAccounts)
+      .then((infos) => {
+        const b = infos.map((info) => info.data.free.add(info.data.reserved));
+        setBalances(b);
+      });
+  }, [accounts?.allAccounts, api?.query?.system?.account]);
 
-  // eslint-disable-next-line no-console
-  console.log(balances?.map((b) => b.reserved.toNumber()));
 
   return (
     <>
@@ -60,7 +60,7 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                     <Address value={acct} />
                   </TableCell>
                   <TableCell>
-                    <FormatBalance value={getTotal(balances[i])} />
+                    <FormatBalance value={balances[i]} />
                   </TableCell>
                 </TableRow>
               ))}

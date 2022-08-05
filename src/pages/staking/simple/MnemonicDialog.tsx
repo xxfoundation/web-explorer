@@ -24,7 +24,11 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
     const valid = mnemonicValidate(seed);
     setValid(valid);
     if (valid) {
-      keyring.addUri(seed)
+      // eslint-disable-next-line no-console
+      console.log(seed);
+      const things = keyring.addUri(seed);
+      // eslint-disable-next-line no-console
+      console.log(things);
       onClose(mnemonic);
     }
   };
