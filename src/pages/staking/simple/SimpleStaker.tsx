@@ -2,7 +2,7 @@ import type { WithChildren } from '../../../types';
 
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Box, Tabs, Tab,TabProps, Stack } from '@mui/material';
-import { useAccounts } from '@polkadot/react-hooks';
+import useAccounts from '../../../hooks/useAccounts';
 
 import PaperWrap from '../../../components/Paper/PaperWrap.styled';
 import ConnectWallet from './ConnectWallet';

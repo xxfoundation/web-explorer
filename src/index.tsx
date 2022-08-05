@@ -1,7 +1,6 @@
 import './augment-types';
 
 import { ApolloProvider } from '@apollo/client';
-import { Api } from '@polkadot/react-api';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './dayjs';
@@ -20,9 +19,7 @@ ReactDOM.render(
       <BannerDesktop />
       <BannerMobile />
       <ApolloProvider client={apolloClient}>
-        <Api url={process.env.REACT_APP_API_URL}>
-          <App />
-        </Api>
+        <App />
       </ApolloProvider>
     </SnackbarProvider>
   </React.StrictMode>,

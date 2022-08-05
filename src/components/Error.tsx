@@ -18,7 +18,7 @@ const Error: FC<Props> = ({ children, error, message, type = 'data-unavailable',
   <>
     {
       error === undefined || !!error
-        ? <Typography {...rest}>{message || messages[type]}</Typography>
+        ? <Typography color='red' {...rest}>{message || messages[type]}</Typography>
         : children
     }
   </>
