@@ -3,8 +3,10 @@ import { Alert, Button, Stack, Typography } from '@mui/material';
 import { useToggle } from '../../../hooks';
 import MnemonicDialog from './MnemonicDialog';
 import KeyfileDialog from './KeyfileDialog';
+import useAccounts from '../../../hooks/useAccounts';
 
 const ConnectWallet: FC = () => {
+  const accounts = useAccounts();
   const [mnemonicDialogOpen, mnemonicDialog] = useToggle();
   const [keyfileDialogOpen, keyfileDialog] = useToggle();
 
@@ -33,6 +35,11 @@ const ConnectWallet: FC = () => {
           Duis hendrerit nisi tortor, sed luctus nibh sagittis a.
           Mauris euismod ex a risus pharetra lacinia. 
         </Typography>
+        {accounts.hasAccounts && (
+          <Alert severity='success'>
+            Found {accounts.allAccounts.length} accounts.
+          </Alert>
+        )}
         <Stack spacing={5} direction={{ xs: 'column', sm: 'row' }}>
           <Stack spacing={1}>
             <Typography variant='h4'>

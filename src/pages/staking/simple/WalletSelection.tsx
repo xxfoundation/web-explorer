@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Typography, Stack, Table, TableCell, TableHead, TableBody, TableRow } from '@mui/material';
-import { PalletBalancesAccountData } from '@polkadot/types/lookup';
-import { BN, BN_ZERO } from '@polkadot/util';
+import type { BN } from '@polkadot/util';
+
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { Checkbox, Typography, Stack, Table, TableCell, TableHead, TableBody, TableRow } from '@mui/material';
 
 import useAccounts from '../../../hooks/useAccounts';
 import { TableStyled } from '../../../components/Tables/TableContainer.styled';
@@ -17,14 +17,16 @@ type Props = {
   onSelect: (addr: string) => void;
 }
 
-const getTotal = (balances?: PalletBalancesAccountData): BN =>
-  balances?.free.toBn().add(balances?.reserved.toBn()) || BN_ZERO;
-
 const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   const accounts = useAccounts();
   const { api } = useApi();
   const pagination = usePagination({ rowsPerPage: 10 });
   const [balances, setBalances] = useState<BN[]>();
+
+  const { setCount } = pagination;
+  useEffect(() => {
+    setCount(accounts.allAccounts.length);
+  }, [accounts.allAccounts.length, setCount])
 
   useEffect(() => {
     api?.query?.system?.account.multi(accounts?.allAccounts)
@@ -34,17 +36,23 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
       });
   }, [accounts?.allAccounts, api?.query?.system?.account]);
 
+  const handleCheckboxClick = useCallback((acct: string) => () => {
+    onSelect(acct);
+  }, [onSelect]);
+
+  const { paginate } = pagination;
+  const paginated = useMemo(() => paginate(accounts.allAccounts), [accounts, paginate])
 
   return (
-    <>
-      <Stack spacing={4}>
-        <Typography variant='h2'>
-          Select Wallet
-        </Typography>
-        {(!balances || !accounts) ? <Loading /> : (
-          <TableStyled>
-            <Table size='small'>
-              <TableHead>
+    <Stack spacing={4}>
+      <Typography variant='h2'>
+        Select Wallet
+      </Typography>
+      {(!balances || !accounts) ? <Loading /> : (
+        <TableStyled>
+          <Table size='small'>
+            <TableHead>
+              <TableRow>
                 <TableCell>
                   Account
                 </TableCell>
@@ -52,24 +60,30 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                   Balance
                 </TableCell>
                 <TableCell />
-              </TableHead>
-              <TableBody>
-              {accounts.allAccounts.map((acct, i) => (
-                <TableRow key={acct}>
-                  <TableCell>
-                    <Address value={acct} />
-                  </TableCell>
-                  <TableCell>
-                    <FormatBalance value={balances[i]} />
-                  </TableCell>
-                </TableRow>
-              ))}
-              </TableBody>
-            </Table>
-          </TableStyled>
-        )}
-      </Stack>
-    </>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            {paginated.map((acct, i) => (
+              <TableRow key={acct}>
+                <TableCell>
+                  <Address truncated='mdDown' value={acct} />
+                </TableCell>
+                <TableCell>
+                  <FormatBalance value={balances[i]} />
+                </TableCell>
+                <TableCell>
+                <Checkbox
+                  checked={selected === acct}
+                  onChange={handleCheckboxClick(acct)} />
+                </TableCell>
+              </TableRow>
+            ))}
+            </TableBody>
+          </Table>
+        </TableStyled>
+      )}
+      {pagination.controls}
+    </Stack>
   );
 }
 

@@ -134,8 +134,6 @@ const VerticalTabs = () => {
       <Panel {...panelProps(2)}>
         <ActionSelection onSelect={setSelectedStakingOption} />
       </Panel>
-      <Panel {...panelProps(3)}>Item Four</Panel>
-      <Panel {...panelProps(4)}>Item Five</Panel>
     </Stack>
   );
 };
