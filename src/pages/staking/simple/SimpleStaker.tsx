@@ -7,6 +7,7 @@ import ConnectWallet from './ConnectWallet';
 import WalletSelection from './WalletSelection';
 import NavButtons, { NavProps } from './NavButtons';
 import ActionSelection from './ActionSelection';
+import useAccounts from '../../../hooks/useAccounts';
 
 type PanelProps = WithChildren &
   NavProps & {
@@ -125,12 +126,14 @@ const VerticalTabs = () => {
         <Tab label='Step 05' {...tabProps(4)} />
       </Tabs>
       <Panel {...panelProps(0)}>
-        <ActionSelection onSelect={setSelectedStakingOption} />
+        <ConnectWallet />
       </Panel>
       <Panel {...panelProps(1)}>
         <WalletSelection onSelect={setSelectedAccount} selected={selectedAccount} />
       </Panel>
-      <Panel {...panelProps(2)}>Item Three</Panel>
+      <Panel {...panelProps(2)}>
+        <ActionSelection onSelect={setSelectedStakingOption} />
+      </Panel>
       <Panel {...panelProps(3)}>Item Four</Panel>
       <Panel {...panelProps(4)}>Item Five</Panel>
     </Stack>
