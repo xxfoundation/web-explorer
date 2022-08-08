@@ -41,7 +41,7 @@ const parseFile = async (file: File, setError: (error: string | null) => void): 
 const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
   const { api } = useApi();
   const [json, setJson] = useState<KeyringPair$Json | KeyringPairs$Json | null>(null);
-  const [isBusy, setIsBusy] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useInput('');
   const apiGenesisHash = useMemo(() => api?.genesisHash.toHex(), [api]);
@@ -64,8 +64,6 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
   );
 
   const accountCount = useMemo<number>(() => {
-    // eslint-disable-next-line no-console
-    console.log(json);
     if (!json) {
       return 0;
     }
@@ -98,7 +96,7 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
         return;
       }
       
-      setIsBusy(true);
+      setLoading(true);
       setTimeout((): void => {
         try {
           if (isKeyringPairs$Json(json)) {
@@ -107,11 +105,11 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
             keyring.restoreAccount(json, password);
           }
 
-          setIsBusy(false);
+          setLoading(false);
           onClose();
         } catch (err) {
           setError('Decoding failed, double check your password.')
-          setIsBusy(false);
+          setLoading(false);
         }
       }, 0);
     },
@@ -170,8 +168,8 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
           </Box>
         </Stack>
         <Box sx={{ textAlign: 'center' }}>
-          <Button onClick={onAdd} variant='contained'>
-            Import
+          <Button disabled={loading} onClick={onAdd} variant='contained'>
+            {loading ? 'Importing...' : 'Import'}
           </Button>
         </Box>
       </Stack>
