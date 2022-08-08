@@ -27,7 +27,6 @@ const isKeyringPairs$Json = (json: KeyringPair$Json | KeyringPairs$Json): json i
   return (json.encoding.content).includes('batch-pkcs8');
 }
 
-
 const parseFile = async (file: File, setError: (error: string | null) => void): Promise<KeyringPair$Json | KeyringPairs$Json | null> => {
   try {
     return (await parseJsonFile(file)) as KeyringPair$Json | KeyringPairs$Json;
