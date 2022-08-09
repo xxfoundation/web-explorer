@@ -116,13 +116,4 @@ NPoS is designed to incentivize good behaviour and punish bad behaviour. For exa
 
 ### **Reward Distribution**
 
-In NPoS, the rewards for a given Era are split between all validators in the active set according to their performance. From these rewards, the commission fee of the validator is deducted, to cover operating costs. The remaining rewards are distributed among the validator and its active nominators, proportional to their stake.
-
-\
-&nbsp;
-\
-&nbsp;
-
----
-
-> 📌 If you want to learn more about the xx network blockchain, its tokenomics and use cases, check out our [high-level overview of the xx coin](https://xx.network/archive/xxcoin-tokenomics/).
+In NPoS, the rewards for a given Era are split between all validators in the active set according to their performance. From these rewards, the commission fee of the validator is deducted, to cover operating costs. The remaining rewards are distributed among the validator and its active nominators, proportional to their stake. The presented example shows the case where a validator with a total stake of `200Kxx` gets a reward of `100xx` in a specific era and distributes them as follows:
