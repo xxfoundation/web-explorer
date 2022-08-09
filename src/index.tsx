@@ -1,5 +1,3 @@
-import './augment-types';
-
 import { ApolloProvider } from '@apollo/client';
 import React from 'react';
 import ReactDOM from 'react-dom';

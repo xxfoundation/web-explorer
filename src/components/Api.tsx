@@ -1,3 +1,5 @@
+import '../augment-types';
+
 import type { WithChildren } from '../types';
 
 import React, { FC, useEffect, useMemo, useState } from 'react';
@@ -9,6 +11,7 @@ import { Box, Typography } from '@mui/material';
 import ApiContext, { ApiContextType } from './ApiContext';
 import Error from '../components/Error';
 import Loading from '../components/Loading';
+import derives from '../custom-derives';
 
 const registry = new TypeRegistry();
 
@@ -22,6 +25,7 @@ const Api: FC<WithChildren> = ({ children }) => {
     if (!api) {
       const provider = new WsProvider(process.env.REACT_APP_API_URL);
       setApi(new ApiPromise({
+        derives,
         provider,
         registry
       }));
@@ -52,7 +56,7 @@ const Api: FC<WithChildren> = ({ children }) => {
 
   if (error) {
     return (
-      <Box sx={{ p: 5 }}>
+      <Box sx={{ p: 5, py: 10, textAlign: 'center' }}>
         <Error variant='body1' sx={{ fontSize: 24, pb: 5 }} message='Service currently unavailable' />
       </Box>
     );

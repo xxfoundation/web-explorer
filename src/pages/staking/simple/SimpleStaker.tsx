@@ -1,13 +1,15 @@
 import type { WithChildren } from '../../../types';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import PaperWrap from '../../../components/Paper/PaperWrap.styled';
 import { Box, Tabs, Tab, TabProps, Stack } from '@mui/material';
 
-import ConnectWallet from './ConnectWallet';
-import WalletSelection from './WalletSelection';
+import ActionSelection from './StakingOptionsPanel';
+import ConnectWallet from './ConnectWalletPanel';
+import WalletSelection from './WalletSelectionPanel';
+import AmountSelection from './AmountPanel';
 import NavButtons, { NavProps } from './NavButtons';
-import ActionSelection from './ActionSelection';
 import useAccounts from '../../../hooks/useAccounts';
+import { BN_ZERO } from '@polkadot/util';
 
 type PanelProps = WithChildren &
   NavProps & {
@@ -57,16 +59,20 @@ export type StakingOptions = 'stake' | 'unstake' | 'redeem';
 const VerticalTabs = () => {
   const accounts = useAccounts();
   const [selectedAccount, setSelectedAccount] = useState('');
-  const [selectedStakingOption, setSelectedStakingOption] = useState<StakingOptions>();
+  const [selectedStakingOption, setSelectedStakingOption] = useState<StakingOptions>('stake');
   const [step, setStep] = useState(0);
+  const [amount, setAmount] = useState(BN_ZERO);
+  const [amountIsValid, setAmountIsValid] = useState(false);
 
   const validSteps = useMemo<Record<number, boolean>>(
     () => ({
       0: true,
       1: accounts.hasAccounts,
-      2: !!selectedAccount
+      2: !!selectedAccount,
+      3: accounts.hasAccounts && !!selectedAccount && !!selectedStakingOption,
+      4: amountIsValid
     }),
-    [accounts.hasAccounts, selectedAccount]
+    [accounts.hasAccounts, amountIsValid, selectedAccount, selectedStakingOption]
   );
 
   const next = useCallback(() => {
@@ -77,7 +83,7 @@ const VerticalTabs = () => {
     setStep((v) => Math.max(0, v - 1));
   }, []);
 
-  const onChange = useCallback(
+  const onStepChange = useCallback(
     (evt: React.SyntheticEvent, value: any) => {
       const i = Number(value);
       if (validSteps[i]) {
@@ -99,19 +105,13 @@ const VerticalTabs = () => {
     [back, next, step, validSteps]
   );
 
-  useEffect(() => {
-    if (selectedStakingOption) {
-      next();
-    }
-  }, [next, selectedStakingOption]);
-
   return (
     <Stack direction='row' sx={{ bgcolor: 'background.paper' }}>
       <Tabs
         orientation='vertical'
         value={step}
         aria-label='Simple Staking Stepper'
-        onChange={onChange}
+        onChange={onStepChange}
         sx={{
           borderRight: 1,
           borderColor: 'divider',
@@ -133,6 +133,14 @@ const VerticalTabs = () => {
       </Panel>
       <Panel {...panelProps(2)}>
         <ActionSelection onSelect={setSelectedStakingOption} />
+      </Panel>
+      <Panel {...panelProps(3)}>
+        <AmountSelection
+          account={selectedAccount}
+          amount={amount}
+          option={selectedStakingOption}
+          setAmount={setAmount}
+          setAmountIsValid={setAmountIsValid} />
       </Panel>
     </Stack>
   );

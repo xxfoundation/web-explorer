@@ -26,10 +26,10 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   const { setCount } = pagination;
   useEffect(() => {
     setCount(accounts.allAccounts.length);
-  }, [accounts.allAccounts.length, setCount])
+  }, [accounts.allAccounts.length, setCount]);
 
   useEffect(() => {
-    api?.query?.system?.account.multi(accounts?.allAccounts)
+    api?.query.system.account.multi(accounts?.allAccounts)
       .then((infos) => {
         const b = infos.map((info) => info.data.free.add(info.data.reserved));
         setBalances(b);
@@ -49,40 +49,40 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
         Select Wallet
       </Typography>
       {(!balances || !accounts) ? <Loading /> : (
-        <TableStyled>
-          <Table size='small'>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  Account
-                </TableCell>
-                <TableCell>
-                  Balance
-                </TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            {paginated.map((acct, i) => (
-              <TableRow key={acct}>
-                <TableCell>
-                  <Address truncated='mdDown' value={acct} />
-                </TableCell>
-                <TableCell>
-                  <FormatBalance value={balances[i]} />
-                </TableCell>
-                <TableCell>
-                <Checkbox
-                  checked={selected === acct}
-                  onChange={handleCheckboxClick(acct)} />
-                </TableCell>
-              </TableRow>
-            ))}
-            </TableBody>
-          </Table>
-        </TableStyled>
+          <TableStyled>
+            <Table size='small'>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    Account
+                  </TableCell>
+                  <TableCell>
+                    Balance
+                  </TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+              {paginated.map((acct, i) => (
+                <TableRow key={acct}>
+                  <TableCell>
+                    <Address truncated='mdDown' value={acct} />
+                  </TableCell>
+                  <TableCell>
+                    <FormatBalance value={balances[i]} />
+                  </TableCell>
+                  <TableCell>
+                  <Checkbox
+                    checked={selected === acct}
+                    onChange={handleCheckboxClick(acct)} />
+                  </TableCell>
+                </TableRow>
+              ))}
+              </TableBody>
+            </Table>
+            {pagination.controls}
+          </TableStyled>
       )}
-      {pagination.controls}
     </Stack>
   );
 }
