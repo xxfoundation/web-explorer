@@ -1,5 +1,5 @@
 // @ts-check
-import '@polkadot/api-augment';
+import '../custom-types/src/interfaces/augment-api';
 import { ApiPromise } from '@polkadot/api';
 import { PalletStakingNominations, PalletStakingStakingLedger, PalletStakingValidatorPrefs } from '@polkadot/types/lookup';
 import { ElectedValidator, Voter, seqPhragmen } from './phragmen';
@@ -119,7 +119,7 @@ const buildVotersList = (chainData: ChainData, exclude: string): Voter[] => {
     });
     // Add validators self vote
     Object.keys(chainData.validators).forEach((valId) => {
-        const ledger = chainData.ledgers[chainData.controllers[valId]]
+        const ledger = chainData.ledgers[chainData.controllers[valId]];
         voters.push({
             nominatorId: valId,
             stake: ledger.active.toString(),
