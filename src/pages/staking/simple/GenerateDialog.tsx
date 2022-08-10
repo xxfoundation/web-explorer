@@ -12,14 +12,19 @@ type Props = {
 };
 
 const GenerateDialog: FC<Props> = ({ onClose, open }) => {
-  const [step, nextStep] = useStepper();
+  const [step, nextStep, , setStep] = useStepper();
   const [mnemonics, setMnemonics] = useState<string[]>(['', '']);
+  console.warn(step);
+  const onFinish = () => {
+    setStep(1);
+    onClose();
+  };
 
   return (
-    <Dialog onClose={onClose} open={open} maxWidth='sm'>
+    <Dialog onClose={onClose} open={open} maxWidth='lg'>
       {step === 1 && <Step1 onFinish={nextStep} setMnemonics={setMnemonics} />}
       {step === 2 && <Step2 mnemonics={mnemonics} onFinish={nextStep} />}
-      {step === 3 && <Step3 onFinish={onClose} standardMnemonic={mnemonics[0]} />}
+      {step === 3 && <Step3 onFinish={onFinish} standardMnemonic={mnemonics[0]} />}
     </Dialog>
   );
 };

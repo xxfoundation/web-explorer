@@ -1,33 +1,49 @@
-import React from 'react';
-// import { keyring } from '@polkadot/ui-keyring';
-import { Button, Typography } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import { keyring } from '@polkadot/ui-keyring';
+import { Button, Stack, Typography } from '@mui/material';
 
 interface Props {
-  className?: string;
   standardMnemonic: string;
   onFinish: () => void;
 }
 
-function Step3({ className = '', onFinish, standardMnemonic }: Props): React.ReactElement {
-  // const wallet = keyring.addUri(standardMnemonic);
+function Step3({ onFinish, standardMnemonic }: Props): React.ReactElement {
+  const [address, setAddress] = useState<string>('');
+
+  const addAccount = useCallback(() => {
+    const wallet = keyring.addUri(standardMnemonic);
+    setAddress(wallet.pair.address);
+  }, [standardMnemonic]);
 
   return (
-    <div className={className} style={{ margin: '1em', width: '95%' }}>
+    <Stack style={{ margin: '1em' }} spacing={2}>
       <Typography variant='h2'>Finish Wallet Setup</Typography>
       <p>Nicely done! You are now ready to use your wallet.</p>
-      <Typography variant='h3'>xx network blockchain address: {standardMnemonic}</Typography>
-      <p>
+      {!address && (
+        <Button onClick={addAccount} variant='contained'>
+          Add address to this Web App
+        </Button>
+      )}
+      {address && (
+        <Stack spacing={0}>
+          <Typography variant='body3'>
+            <b>xx network blockchain address</b>
+          </Typography>
+          <Typography variant='body3'>{address}</Typography>
+        </Stack>
+      )}
+      <Typography variant='body4'>
         To setup a hardware wallet:{' '}
         <a className='ml-1' href='https://xxnetwork.wiki/Ledger' rel='noreferrer' target='_blank'>
           https://xxnetwork.wiki/Ledger
         </a>
-      </p>
+      </Typography>
       <div style={{ textAlign: 'end' }}>
         <Button onClick={onFinish} variant='contained'>
           Done
         </Button>
       </div>
-    </div>
+    </Stack>
   );
 }
 

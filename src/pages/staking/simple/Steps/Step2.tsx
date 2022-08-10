@@ -1,12 +1,11 @@
-import { Button, TextField, styled } from '@mui/material';
+import { Button, TextField, styled, Typography, Stack } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 
 import useStepper from '../../../../hooks/useStepper';
 
-const NUM_CONFIRMATIONS = 5;
+const NUM_CONFIRMATIONS = 1;
 
 interface Props {
-  className?: string;
   mnemonics: string[];
   onFinish: () => void;
 }
@@ -79,39 +78,43 @@ const MnemonicGrid = ({ indexes, mnemonic, onValid }: MnemonicGridProps): React.
   );
 };
 
-function Step2({ className = '', mnemonics, onFinish }: Props): React.ReactElement {
-  const [step, nextStep] = useStepper();
+function Step2({ mnemonics, onFinish }: Props): React.ReactElement {
+  const [ready, setReady] = useState<boolean>(false);
   const standard = mnemonics[0].split(' ').map((elem) => elem);
   const quantum = mnemonics[1].split(' ').map((elem) => elem);
 
+  const onSetReady = useCallback(() => {
+    setReady(true);
+  }, []);
+
   return (
-    <div className={className} style={{ margin: '1em', width: '95%' }}>
-      <h2>Confirm Mnemonics</h2>
-      {step === 1 && (
-        <div style={{ margin: '1.5em 0' }}>
-          <p className='quantum'>
+    <Stack sx={{ margin: '1em' }} spacing={2}>
+      <Typography variant='h2'>Confirm Mnemonics</Typography>
+      {!ready && (
+        <Stack spacing={2}>
+          <Typography variant='h3'>
             <b>QUANTUM</b> mnemonic
-          </p>
+          </Typography>
           <MnemonicGrid
             indexes={getRandomSet(Array.from(Array(quantum.length).keys()), NUM_CONFIRMATIONS)}
             mnemonic={quantum}
-            onValid={nextStep}
+            onValid={onSetReady}
           />
-        </div>
+        </Stack>
       )}
-      {step === 2 && (
-        <div style={{ margin: '1.5em 0' }}>
-          <p className='standard'>
+      {ready && (
+        <Stack spacing={2}>
+          <Typography variant='h3'>
             <b>STANDARD</b> mnemonic
-          </p>
+          </Typography>
           <MnemonicGrid
             indexes={getRandomSet(Array.from(Array(standard.length).keys()), NUM_CONFIRMATIONS)}
             mnemonic={standard}
             onValid={onFinish}
           />
-        </div>
+        </Stack>
       )}
-    </div>
+    </Stack>
   );
 }
 
