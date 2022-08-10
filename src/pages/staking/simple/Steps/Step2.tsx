@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import useStepper from '../../../../hooks/useStepper';
 
-const NUM_CONFIRMATIONS = 1;
+const NUM_CONFIRMATIONS = 5;
 
 interface Props {
   className?: string;

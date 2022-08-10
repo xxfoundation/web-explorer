@@ -16,7 +16,7 @@ const GenerateDialog: FC<Props> = ({ onClose, open }) => {
   const [mnemonics, setMnemonics] = useState<string[]>(['', '']);
 
   return (
-    <Dialog onClose={onClose} open={open} fullWidth maxWidth='sm'>
+    <Dialog onClose={onClose} open={open} maxWidth='sm'>
       {step === 1 && <Step1 onFinish={nextStep} setMnemonics={setMnemonics} />}
       {step === 2 && <Step2 mnemonics={mnemonics} onFinish={nextStep} />}
       {step === 3 && <Step3 onFinish={onClose} standardMnemonic={mnemonics[0]} />}

@@ -3,20 +3,9 @@ import { styled } from '@mui/material/styles';
 
 // import { Button, Checkbox, MarkWarning } from '@polkadot/react-components';
 import { bip39Generate, generateSleeve, waitReady } from '@polkadot/wasm-crypto';
-import { Alert, Button, Checkbox, FormControlLabel } from '@mui/material';
+import { Alert, Button, Checkbox, FormControlLabel, Paper, Stack, Typography } from '@mui/material';
 import { theme } from '../../../../themes/default';
-
-const HighlightedValue = ({ value }: { value: string }): JSX.Element => (
-  <article
-    style={{
-      background: theme.palette.background.default,
-      borderLeft: '5px solid black',
-      borderStyle: 'outset'
-    }}
-  >
-    {value}
-  </article>
-);
+import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
 
 interface ElementProps {
   className?: string;
@@ -26,22 +15,20 @@ interface ElementProps {
 }
 
 const Element = ({ body, className = '', header, value }: ElementProps): JSX.Element => (
-  <article className={className} style={{ margin: '1em 0' }}>
-    <div style={{ marginBottom: '1em' }}>
-      <b>{header}</b>:
-    </div>
+  <PaperStyled sx={{ margin: '1em 0' }}>
+    <b>{header}</b>
     {body && <p style={{ color: 'black' }}>{body}</p>}
     <div style={{ display: 'flex', flexFlow: 'wrap' }}>
       {value &&
         value.split(' ').map((elem, index) => {
           return (
-            <>
-              <HighlightedValue key={index} value={`${index + 1}) `.concat(elem)} />
-            </>
+            <Alert icon={index + 1} key={index} sx={{ margin: '0.25em', alignItems: 'center' }}>
+              {elem}
+            </Alert>
           );
         })}
     </div>
-  </article>
+  </PaperStyled>
 );
 
 interface Props {
@@ -108,31 +95,34 @@ function Step1({ className = '', onFinish, setMnemonics }: Props): React.ReactEl
   }, [setMnemonics]);
 
   return (
-    <div className={className} style={{ margin: '1em', width: '95%' }}>
-      <div style={{ alignItems: 'baseline', display: 'flex', margin: '1em 0 1em 2.25em' }}>
-        {online ? <span>&#128994; &nbsp;</span> : <span>&#128308; &nbsp;</span>}
-        <p>You are {online ? 'Online' : 'Offline'}!</p>
-      </div>
+    <Stack direction='column' sx={{ margin: '1em', width: '95%' }} spacing={2}>
+      <Stack direction='row' sx={{ margin: '0.5em 1.25em 0' }} spacing={1.75}>
+        {online ? <span>&#128994;</span> : <span>&#128308;</span>}
+        <Typography variant='body2'>You are {online ? 'Online' : 'Offline'}!</Typography>
+      </Stack>
       <Alert severity='warning'>
         We advise you to turn off your internet connection and bluetooth until the end of the wallet
         generation process. This process runs completely on your browser, which means there is no
         need for internet connectivity. Furthermore, do not proceed if you think your browser might
         be compromised with malicious software.
       </Alert>
-      <div style={{ display: 'grid', margin: '1em 0 2em 2.25em', textAlign: 'left' }}>
-        <FormControlLabel
-          control={<Checkbox checked={ackOnlineRisk} onChange={toggleOnlineCheckbox} />}
-          label={
-            'I acknowledge that I have turned off internet connectivity, or that I understand the risks of remaining connected.'
-          }
-        />
-        <FormControlLabel
-          control={<Checkbox checked={ackBrowserRisk} onChange={toggleBrowserCheckbox} />}
-          label={
-            'I acknowledge that I am accessing this web page through a non compromised browser.'
-          }
-        />
-      </div>
+      <FormControlLabel
+        control={<Checkbox checked={ackOnlineRisk} onChange={toggleOnlineCheckbox} />}
+        label={
+          <Typography variant='body3' sx={{ lineHeight: '1.5', marginLeft: '0.5em' }}>
+            I acknowledge that I have turned off internet connectivity, or that I understand the
+            risks of remaining connected.
+          </Typography>
+        }
+      />
+      <FormControlLabel
+        control={<Checkbox checked={ackBrowserRisk} onChange={toggleBrowserCheckbox} />}
+        label={
+          <Typography variant='body3' sx={{ lineHeight: '1.5', marginLeft: '0.5em' }}>
+            I acknowledge that I am accessing this web page through a non compromised browser.
+          </Typography>
+        }
+      />
       <Button
         disabled={!ackOnlineRisk || !ackBrowserRisk}
         onClick={generateWallet}
@@ -156,7 +146,7 @@ function Step1({ className = '', onFinish, setMnemonics }: Props): React.ReactEl
           value={standardMnemonic}
         />
       )}
-      <div style={{ margin: '2em 1em' }}>
+      <div style={{ margin: '1em 1em' }}>
         <section className='mb-3'>
           <p>
             <strong>NOT RECOMMENDED</strong>
@@ -192,7 +182,7 @@ function Step1({ className = '', onFinish, setMnemonics }: Props): React.ReactEl
         </p>
       </div>
       {standardMnemonic && quantumMnemonic && (
-        <div style={{ marginTop: '3em', textAlign: 'right' }}>
+        <div style={{ textAlign: 'right' }}>
           <FormControlLabel
             control={<Checkbox checked={isMnemonicSaved} onChange={toggleMnemonicSaved} />}
             label={'I have saved both my mnemonics safely and named them correctly!'}
@@ -204,7 +194,7 @@ function Step1({ className = '', onFinish, setMnemonics }: Props): React.ReactEl
           Next
         </Button>
       </div>
-    </div>
+    </Stack>
   );
 }
 
