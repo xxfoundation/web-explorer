@@ -1,8 +1,6 @@
 import { Button, TextField, styled, Typography, Stack } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 
-import useStepper from '../../../../hooks/useStepper';
-
 const NUM_CONFIRMATIONS = 1;
 
 interface Props {
@@ -79,18 +77,18 @@ const MnemonicGrid = ({ indexes, mnemonic, onValid }: MnemonicGridProps): React.
 };
 
 function Step2({ mnemonics, onFinish }: Props): React.ReactElement {
-  const [ready, setReady] = useState<boolean>(false);
+  const [onStage2, setOnStage2] = useState<boolean>(false);
   const standard = mnemonics[0].split(' ').map((elem) => elem);
   const quantum = mnemonics[1].split(' ').map((elem) => elem);
 
   const onSetReady = useCallback(() => {
-    setReady(true);
+    setOnStage2(true);
   }, []);
 
   return (
     <Stack sx={{ margin: '1em' }} spacing={2}>
       <Typography variant='h2'>Confirm Mnemonics</Typography>
-      {!ready && (
+      {!onStage2 && (
         <Stack spacing={2}>
           <Typography variant='h3'>
             <b>QUANTUM</b> mnemonic
@@ -102,7 +100,7 @@ function Step2({ mnemonics, onFinish }: Props): React.ReactElement {
           />
         </Stack>
       )}
-      {ready && (
+      {onStage2 && (
         <Stack spacing={2}>
           <Typography variant='h3'>
             <b>STANDARD</b> mnemonic
