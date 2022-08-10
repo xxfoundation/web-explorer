@@ -20,10 +20,11 @@ const optionText = (title: string, body: string) => {
 };
 
 type Props = {
+  selected?: string;
   onSelect: (option: StakingOptions) => void;
 };
 
-const ActionSelection: FC<Props> = ({ onSelect }) => {
+const ActionSelection: FC<Props> = ({ onSelect, selected }) => {
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     onSelect(evt.target.value as StakingOptions);
   };
@@ -34,6 +35,7 @@ const ActionSelection: FC<Props> = ({ onSelect }) => {
         <Typography variant='h2'>Select one of the following options:</Typography>
         <FormControl>
           <RadioGroup
+            value={selected ?? ''}
             aria-labelledby='staking-options'
             defaultValue='stake'
             name='staking-options'

@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 import { Box, Button, Dialog, TextField, Grid, Stack, Typography, Alert } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { mnemonicValidate } from '@polkadot/util-crypto';
 import { keyring } from '@polkadot/ui-keyring';
 
@@ -43,6 +44,9 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
+      <Button variant='text' sx={{ position: 'absolute', top: 0, right: 0 }} onClick={handleClose}>
+        <Close />
+      </Button>
       <Stack spacing={3} sx={{ p: { md: 5, sm: 3, xs: 2 }}}>
         <Typography variant='h3'>
           Mnemonic Phrase

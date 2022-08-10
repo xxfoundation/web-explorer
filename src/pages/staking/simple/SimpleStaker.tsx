@@ -1,5 +1,5 @@
 import type { WithChildren } from '../../../types';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import PaperWrap from '../../../components/Paper/PaperWrap.styled';
 import { Box, Tabs, Tab, TabProps, Stack } from '@mui/material';
 
@@ -36,10 +36,11 @@ const Panel: FC<PanelProps> = ({ children, currentStep, step, ...navProps }) => 
   );
 };
 
-const tabProps = (index: number): TabProps => {
+const makeTabProps = (validSteps: Record<number, boolean>) => (index: number): TabProps => {
   return {
     id: `vertical-tab-${index}`,
     'aria-controls': `vertical-tabpanel-${index}`,
+    disabled: !validSteps[index],
     sx: {
       px: { sm: 3, md: 5 },
       backgroundColor: 'grey.100',
@@ -59,10 +60,16 @@ export type StakingOptions = 'stake' | 'unstake' | 'redeem';
 const VerticalTabs = () => {
   const accounts = useAccounts();
   const [selectedAccount, setSelectedAccount] = useState('');
-  const [selectedStakingOption, setSelectedStakingOption] = useState<StakingOptions>('stake');
+  const [selectedStakingOption, setSelectedStakingOption] = useState<StakingOptions>();
   const [step, setStep] = useState(0);
   const [amount, setAmount] = useState(BN_ZERO);
   const [amountIsValid, setAmountIsValid] = useState(false);
+
+  useEffect(() => {
+    if (selectedAccount && !accounts.allAccounts.includes(selectedAccount)) {
+      setSelectedAccount('');
+    }
+  }, [accounts.allAccounts, selectedAccount]);
 
   const validSteps = useMemo<Record<number, boolean>>(
     () => ({
@@ -84,7 +91,7 @@ const VerticalTabs = () => {
   }, []);
 
   const onStepChange = useCallback(
-    (evt: React.SyntheticEvent, value: any) => {
+    (evt: React.SyntheticEvent, value: number) => {
       const i = Number(value);
       if (validSteps[i]) {
         setStep(i);
@@ -104,6 +111,8 @@ const VerticalTabs = () => {
     }),
     [back, next, step, validSteps]
   );
+
+  const tabProps = useMemo(() => makeTabProps(validSteps), [validSteps]);
 
   return (
     <Stack direction='row' sx={{ bgcolor: 'background.paper' }}>
@@ -132,7 +141,7 @@ const VerticalTabs = () => {
         <WalletSelection onSelect={setSelectedAccount} selected={selectedAccount} />
       </Panel>
       <Panel {...panelProps(2)}>
-        <ActionSelection onSelect={setSelectedStakingOption} />
+        <ActionSelection selected={selectedStakingOption} onSelect={setSelectedStakingOption} />
       </Panel>
       <Panel {...panelProps(3)}>
         <AmountSelection

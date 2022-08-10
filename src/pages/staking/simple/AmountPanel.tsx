@@ -1,7 +1,7 @@
 import { BN, BN_TEN, BN_ZERO } from '@polkadot/util';
 import type { StakingOptions } from './SimpleStaker'
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Button, FormControl, FormHelperText, InputAdornment, OutlinedInput, Stack, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography, useTheme} from '@mui/material';
+import { Box, Button, FormControl, FormHelperText, InputAdornment, OutlinedInput, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography, useTheme } from '@mui/material';
 
 import { TableStyled } from '../../../components/Tables/TableContainer.styled';
 import useBalances from '../../../hooks/useBalances';
@@ -10,13 +10,6 @@ import useStakingInfo from '../../../hooks/useStakingInfo';
 import FormatBalance from '../../../components/FormatBalance';
 import Loading from '../../../components/Loading';
 
-type Props = {
-  option: StakingOptions;
-  amount?: BN;
-  setAmountIsValid: (valid: boolean) => void;
-  setAmount: (bn: BN) => void;
-  account: string;
-}
 
 const DECIMAL_POINTS = 9;
 const DECIMALS_POW = BN_TEN.pow(new BN(DECIMAL_POINTS));
@@ -31,6 +24,14 @@ const bnToStringDecimal = (bn: BN) => {
   const d = decimals?.replace(new RegExp(`0{1,${DECIMAL_POINTS}}$`), '');
 
   return `${integers}${d ? '.' : ''}${d}`;
+}
+
+type Props = {
+  option?: StakingOptions;
+  amount?: BN;
+  setAmountIsValid: (valid: boolean) => void;
+  setAmount: (bn: BN) => void;
+  account: string;
 }
 
 const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmount, setAmountIsValid }) => {
@@ -61,6 +62,7 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
   const stakedAmount = stakingInfo?.stakingLedger.active.toBn().add(amount) ?? BN_ZERO;
   const freeBalance = balances?.freeBalance.toBn() ?? BN_ZERO;
   const totalBalance = stakedAmount.add(freeBalance);
+  const redeemable = BN_ZERO;
 
   const setMax = useCallback(() => {
     setAmount(freeBalance);
@@ -87,7 +89,7 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
   return (
     <Stack spacing={4}>
       <Typography variant='h2'>
-        {title[option]}
+        {option && title[option]}
       </Typography>
       <Box>
         <Typography variant='h3' sx={{ mb: 2 }}>
@@ -105,7 +107,11 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
                     Active Stake
                   </TableCell>
                   <TableCell>
-                    Available to stake
+                    {option === 'redeem' ? (
+                      <>Available to stake</>
+                    ) : (
+                      <>Available to redeem</>
+                    )}
                   </TableCell>
                   <TableCell>
                     Total
@@ -121,7 +127,11 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
                     </TableCell>
                     <TableCell>
                       <Typography variant='body2'>
-                        <FormatBalance value={freeBalance} />
+                        {option === 'redeem' ? (
+                          <FormatBalance value={freeBalance} />
+                        ) : (
+                          <FormatBalance value={redeemable} />
+                        )}
                       </Typography>
                     </TableCell>
                     <TableCell>
@@ -133,29 +143,31 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
                 </TableBody>
             </Table>
           </TableStyled>
-          <Box>
-            <FormControl>
-              <OutlinedInput
-                error={error}
-                size='small'
-                value={amountString}
-                type='number'
-                onChange={onInputChange}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <Button onClick={setMax}>
-                      Max
-                    </Button>
-                  </InputAdornment>
-                }
-              />
-              {error && (
-                <FormHelperText sx={{ color: theme.palette.error.main }}>
-                  Amount is invalid
-                </FormHelperText>
-              )}
-            </FormControl>
-          </Box>
+          {option !== 'redeem' && (
+            <Box>
+              <FormControl>
+                <OutlinedInput
+                  error={error}
+                  size='small'
+                  value={amountString}
+                  type='number'
+                  onChange={onInputChange}
+                  endAdornment={
+                    <InputAdornment position='end'>
+                      <Button onClick={setMax}>
+                        Max
+                      </Button>
+                    </InputAdornment>
+                  }
+                />
+                {error && (
+                  <FormHelperText sx={{ color: theme.palette.error.main }}>
+                    Amount is invalid
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Box>
+          )}
         </Stack>
       </Loading>
     </Stack>

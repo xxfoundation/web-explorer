@@ -3,6 +3,7 @@ import type { KeyringPair$Json } from '@polkadot/keyring/types';
 
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Alert, Box, Button, Dialog, Stack, TextField, Typography } from '@mui/material';
+import { Close } from '@mui/icons-material';
 
 import { keyring } from '@polkadot/ui-keyring';
 
@@ -117,6 +118,9 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
+      <Button variant='text' sx={{ position: 'absolute', top: 0, right: 0 }} onClick={handleClose}>
+        <Close />
+      </Button>
       <Stack spacing={3} sx={{ p: { md: 5, sm: 3, xs: 2 } }}>
         <Typography variant='h3'>
           Upload Backup File

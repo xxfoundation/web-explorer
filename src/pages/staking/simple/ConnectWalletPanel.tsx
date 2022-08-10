@@ -1,5 +1,7 @@
 import React, { FC, useCallback } from 'react';
-import { Alert, Button, Stack, Typography } from '@mui/material';
+import { Alert, Button, Link, Stack, Typography } from '@mui/material';
+import { keyring } from '@polkadot/ui-keyring';
+
 import { useToggle } from '../../../hooks';
 import MnemonicDialog from './MnemonicDialog';
 import KeyfileDialog from './KeyfileDialog';
@@ -13,6 +15,15 @@ const ConnectWallet: FC = () => {
   const handleKeyfileClose = useCallback(() => {
     keyfileDialog.toggleOff();
   }, [keyfileDialog]);
+
+  const forget = useCallback(() => {
+    const confirmed = confirm(`Are you sure you want to delete ${accounts.allAccounts.length} accounts?`)
+    if (confirmed) {
+      accounts.allAccounts.forEach((acct) => {
+        keyring.forgetAccount(acct);
+      });
+    }
+  }, [accounts.allAccounts])
 
   return (
     <>
@@ -38,6 +49,9 @@ const ConnectWallet: FC = () => {
         {accounts.hasAccounts && (
           <Alert severity='success'>
             Found {accounts.allAccounts.length} accounts.
+            &nbsp;<Link onClick={forget} href='#' underline='hover'>
+              Forget?
+            </Link>
           </Alert>
         )}
         <Stack spacing={5} direction={{ xs: 'column', sm: 'row' }}>
