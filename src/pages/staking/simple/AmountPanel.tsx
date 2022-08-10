@@ -1,7 +1,22 @@
 import { BN, BN_TEN, BN_ZERO } from '@polkadot/util';
-import type { StakingOptions } from './SimpleStaker'
+import type { StakingOptions } from './SimpleStaker';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Button, FormControl, FormHelperText, InputAdornment, OutlinedInput, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  InputAdornment,
+  OutlinedInput,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+  useTheme
+} from '@mui/material';
 
 import { TableStyled } from '../../../components/Tables/TableContainer.styled';
 import useBalances from '../../../hooks/useBalances';
@@ -9,7 +24,6 @@ import Address from '../../../components/Hash/XXNetworkAddress';
 import useStakingInfo from '../../../hooks/useStakingInfo';
 import FormatBalance from '../../../components/FormatBalance';
 import Loading from '../../../components/Loading';
-
 
 const DECIMAL_POINTS = 9;
 const DECIMALS_POW = BN_TEN.pow(new BN(DECIMAL_POINTS));
@@ -24,7 +38,7 @@ const bnToStringDecimal = (bn: BN) => {
   const d = decimals?.replace(new RegExp(`0{1,${DECIMAL_POINTS}}$`), '');
 
   return `${integers}${d ? '.' : ''}${d}`;
-}
+};
 
 type Props = {
   option?: StakingOptions;
@@ -32,18 +46,22 @@ type Props = {
   setAmountIsValid: (valid: boolean) => void;
   setAmount: (bn: BN) => void;
   account: string;
-}
+};
 
-const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmount, setAmountIsValid }) => {
+const AmountSelection: FC<Props> = ({
+  account,
+  amount = BN_ZERO,
+  option,
+  setAmount,
+  setAmountIsValid
+}) => {
   const theme = useTheme();
   const balances = useBalances(account);
   const stakingInfo = useStakingInfo(account);
   const [inputTouched, setInputTouched] = useState(false);
 
-  const amountIsValid = useMemo(() => 
-    amount.gt(BN_ZERO) && amount.lte(
-      balances?.availableBalance ?? BN_ZERO
-    ),
+  const amountIsValid = useMemo(
+    () => amount.gt(BN_ZERO) && amount.lte(balances?.availableBalance ?? BN_ZERO),
     [amount, balances?.availableBalance]
   );
 
@@ -51,11 +69,14 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
     setAmountIsValid(amountIsValid);
   }, [amountIsValid, setAmountIsValid]);
 
-  const title = useMemo<Record<StakingOptions, string>>(() => ({
-    'redeem': 'Tokens to be redeemed',
-    'stake': 'Input amount to stake',
-    'unstake': 'Input amount to unstake'
-  }), []);
+  const title = useMemo<Record<StakingOptions, string>>(
+    () => ({
+      redeem: 'Tokens to be redeemed',
+      stake: 'Input amount to stake',
+      unstake: 'Input amount to unstake'
+    }),
+    []
+  );
 
   const loading = !balances || !stakingInfo;
 
@@ -68,29 +89,30 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
     setAmount(freeBalance);
   }, [freeBalance, setAmount]);
 
-  const onInputChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
-    setInputTouched(true);
-    const decimalPoints = evt.target.value.split('.')[1]?.length ?? 0;
-    const parsed = evt.target.value.replace(/\D/g, '');
+  const onInputChange = useCallback(
+    (evt: React.ChangeEvent<HTMLInputElement>) => {
+      setInputTouched(true);
+      const decimalPoints = evt.target.value.split('.')[1]?.length ?? 0;
+      const parsed = evt.target.value.replace(/\D/g, '');
 
-    setAmount(
-      new BN(parsed)
-        .mul(DECIMALS_POW)
-        .div(BN_TEN.pow(new BN(decimalPoints)))
-    );
-  }, [setAmount]);
+      setAmount(new BN(parsed).mul(DECIMALS_POW).div(BN_TEN.pow(new BN(decimalPoints))));
+    },
+    [setAmount]
+  );
 
-  const amountString = useMemo(() => bnToStringDecimal(amount ?? BN_ZERO), [amount])
+  const amountString = useMemo(() => bnToStringDecimal(amount ?? BN_ZERO), [amount]);
 
   const error = inputTouched && !amountIsValid;
 
-  const validationColor = freeBalance.lt(BN_ZERO) ? theme.palette.error.main : (amount.gt(BN_ZERO) ? theme.palette.success.main : undefined);
+  const validationColor = freeBalance.lt(BN_ZERO)
+    ? theme.palette.error.main
+    : amount.gt(BN_ZERO)
+    ? theme.palette.success.main
+    : undefined;
 
   return (
     <Stack spacing={4}>
-      <Typography variant='h2'>
-        {option && title[option]}
-      </Typography>
+      <Typography variant='h2'>{option && title[option]}</Typography>
       <Box>
         <Typography variant='h3' sx={{ mb: 2 }}>
           Account
@@ -103,44 +125,36 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell>Active Stake</TableCell>
                   <TableCell>
-                    Active Stake
+                    {option === 'redeem' ? <>Available to redeem</> : <>Available to stake</>}
                   </TableCell>
-                  <TableCell>
-                    {option === 'redeem' ? (
-                      <>Available to stake</>
-                    ) : (
-                      <>Available to redeem</>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    Total
-                  </TableCell>
+                  <TableCell>Total</TableCell>
                 </TableRow>
               </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <Typography sx={{ color: validationColor }} variant='body2'>
-                        <FormatBalance value={stakedAmount} />
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant='body2'>
-                        {option === 'redeem' ? (
-                          <FormatBalance value={freeBalance} />
-                        ) : (
-                          <FormatBalance value={redeemable} />
-                        )}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant='body2'>
-                        <FormatBalance value={totalBalance} />
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    <Typography sx={{ color: validationColor }} variant='body2'>
+                      <FormatBalance value={stakedAmount} />
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant='body2'>
+                      {option === 'redeem' ? (
+                        <FormatBalance value={freeBalance} />
+                      ) : (
+                        <FormatBalance value={redeemable} />
+                      )}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant='body2'>
+                      <FormatBalance value={totalBalance} />
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             </Table>
           </TableStyled>
           {option !== 'redeem' && (
@@ -154,9 +168,7 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
                   onChange={onInputChange}
                   endAdornment={
                     <InputAdornment position='end'>
-                      <Button onClick={setMax}>
-                        Max
-                      </Button>
+                      <Button onClick={setMax}>Max</Button>
                     </InputAdornment>
                   }
                 />
@@ -171,7 +183,7 @@ const AmountSelection: FC<Props> = ({ account, amount = BN_ZERO, option, setAmou
         </Stack>
       </Loading>
     </Stack>
-  )
-}
+  );
+};
 
 export default AmountSelection;

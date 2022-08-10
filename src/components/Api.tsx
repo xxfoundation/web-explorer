@@ -24,11 +24,13 @@ const Api: FC<WithChildren> = ({ children }) => {
   useEffect(() => {
     if (!api) {
       const provider = new WsProvider(process.env.REACT_APP_API_URL);
-      setApi(new ApiPromise({
-        derives,
-        provider,
-        registry
-      }));
+      setApi(
+        new ApiPromise({
+          derives,
+          provider,
+          registry
+        })
+      );
     }
   }, [api]);
 
@@ -38,7 +40,7 @@ const Api: FC<WithChildren> = ({ children }) => {
       api.on('connected', () => setConnected(true));
       api.on('error', (e) => setApiError(e));
       api.on('ready', () => {
-        setIsReady(true)
+        setIsReady(true);
         keyring.loadAll({
           genesisHash: api.genesisHash,
           ss58Format: 55
@@ -47,17 +49,24 @@ const Api: FC<WithChildren> = ({ children }) => {
     }
   }, [api]);
 
-  const context = useMemo<ApiContextType>(() => ({
-    api,
-    connected,
-    ready,
-    error
-  }), [api, connected, error, ready]);
+  const context = useMemo<ApiContextType>(
+    () => ({
+      api,
+      connected,
+      ready,
+      error
+    }),
+    [api, connected, error, ready]
+  );
 
   if (error) {
     return (
       <Box sx={{ p: 5, py: 10, textAlign: 'center' }}>
-        <Error variant='body1' sx={{ fontSize: 24, pb: 5 }} message='Service currently unavailable' />
+        <Error
+          variant='body1'
+          sx={{ fontSize: 24, pb: 5 }}
+          message='Service currently unavailable'
+        />
       </Box>
     );
   }
@@ -73,11 +82,7 @@ const Api: FC<WithChildren> = ({ children }) => {
     );
   }
 
-  return (
-    <ApiContext.Provider value={context}>
-      {children}
-    </ApiContext.Provider>
-  );
-}
+  return <ApiContext.Provider value={context}>{children}</ApiContext.Provider>;
+};
 
 export default Api;
