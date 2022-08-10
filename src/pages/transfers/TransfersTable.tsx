@@ -23,7 +23,7 @@ import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
 
 const TransferRow = (data: Transfer) => {
-  const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
+  const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.extrinsicIndex}`;
 
   return BaseLineCellsWrapper([
     <>{data.block.era}</>,
@@ -42,8 +42,8 @@ const TransferRow = (data: Transfer) => {
       truncated
     />,
     <FormatBalance value={data.amount.toString()} />,
-    <BlockStatusIcon status={data.success ? 'successful' : 'failed'} />,
-    <Hash truncated value={data.hash} url={extrinsicIdLink} showTooltip />
+    <BlockStatusIcon status={data.extrinsic.success ? 'successful' : 'failed'} />,
+    <Hash truncated value={data.extrinsic.hash} url={extrinsicIdLink} showTooltip />
   ]);
 };
 

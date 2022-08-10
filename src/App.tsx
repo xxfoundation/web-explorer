@@ -1,7 +1,10 @@
 import * as Sentry from '@sentry/react';
 import { ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import './App.css';
 import './plugins';
 import SiteFooter from './components/Footer';
@@ -14,10 +17,9 @@ import ExtrinsicsRouter from './pages/extrinsics';
 import BlockChain from './pages/index';
 import NotFound from './pages/NotFound';
 import Staking from './pages/staking';
+import StakingSimple from './pages/staking/simple';
 import Transfers from './pages/transfers';
 import { theme } from './themes/default';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const App = () => {
   return (
@@ -47,11 +49,14 @@ const App = () => {
             <Route path='/accounts'>
               <Accounts />
             </Route>
-            <Route path='/staking'>
+            <Route path='/staking' exact>
               <Staking />
             </Route>
             <Route path='/glossary'>
               <Glossary />
+            </Route>
+            <Route path='/staking/simple'>
+              <StakingSimple />
             </Route>
             <Route path='*'>
               <NotFound />

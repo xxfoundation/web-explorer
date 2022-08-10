@@ -27,14 +27,17 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
                 EXTRINSIC&nbsp;
-                <Link to={`/extrinsics/${props.blockNumber}-${props.index}`} underline='hover'>
-                  #{`${props.blockNumber}-${props.index}`}
+                <Link
+                  to={`/extrinsics/${props.blockNumber}-${props.extrinsicIndex}`}
+                  underline='hover'
+                >
+                  #{`${props.blockNumber}-${props.extrinsicIndex}`}
                 </Link>
               </div>
               <Hash
                 truncated
-                value={props.hash}
-                url={`/extrinsics/${props.hash}`}
+                value={props.extrinsic.hash}
+                url={`/extrinsics/${props.extrinsic.hash}`}
                 sx={{
                   fontSize: 14,
                   fontWeight: 400,
@@ -97,7 +100,7 @@ const LatestTransfersList = () => {
     variables: { limit: PAGE_LIMIT }
   });
 
-  const transfers = useNewnessTracker(data?.transfers, 'hash');
+  const transfers = useNewnessTracker(data?.transfers, 'extrinsic');
 
   return (
     <DefaultTile header={'Transfers'} linkName={'SEE ALL'} linkAddress={'/transfers'} height={500}>
@@ -113,7 +116,7 @@ const LatestTransfersList = () => {
               </TableRow>
             )}
             {transfers?.map((tx) => (
-              <TransferRow {...tx} key={tx.hash} />
+              <TransferRow {...tx} key={tx.extrinsic.hash} />
             ))}
           </TableBody>
         </Table>

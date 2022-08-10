@@ -12,7 +12,7 @@ export default function BannerMobile() {
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
-        backgroundColor: 'ActiveCaption'
+        backgroundColor: 'grey.800'
       }}
     >
       <Typography variant='body2' sx={{ p: '1em', pr: '1em' }}>

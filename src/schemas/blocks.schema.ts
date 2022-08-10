@@ -107,7 +107,7 @@ export type SubscribeBlocksSinceBlock = {
 };
 
 export const SUBSCRIBE_BLOCKS_SINCE_BLOCK = gql`
-  subscription MyQuery ($where: block_bool_exp) {
+  subscription SubscribeToBlocksSinceBlock ($where: block_bool_exp) {
     blocks: block_aggregate(where: $where) {
       aggregate {
         count

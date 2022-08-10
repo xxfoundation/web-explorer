@@ -7,7 +7,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { Box, Stack, Typography } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import { mapValues, pick } from 'lodash';
-import BN from 'bn.js';
+import { BN } from '@polkadot/util/bn';
 
 import Legend from './Legend';
 import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typographies';

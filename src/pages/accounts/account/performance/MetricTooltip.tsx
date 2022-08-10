@@ -1,3 +1,4 @@
+
 import {
   Box,
   Divider,
@@ -9,6 +10,7 @@ import {
 } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../../../../themes/default';
+import { WithChildren } from '../../../../types';
 import { MetricPopupProps } from '../../types';
 import { BadScore, GoodScore, NeutralScore, VeryBadScore, VeryGoodScore } from './ScoreIcons';
 
@@ -39,7 +41,7 @@ const ScoreDivider: FC = () => {
   );
 };
 
-const ScoreTypography: FC = ({ children }) => {
+const ScoreTypography: FC<WithChildren> = ({ children }) => {
   return (
     <Typography
       variant='body4'
@@ -52,7 +54,7 @@ const ScoreTypography: FC = ({ children }) => {
   );
 };
 
-const ScoreBox: FC = ({ children }) => {
+const ScoreBox: FC<WithChildren> = ({ children }) => {
   return (
     <Box mx={'3px'} my={'15px'}>
       {children}

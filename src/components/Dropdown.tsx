@@ -1,14 +1,15 @@
-// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { Button, Popover } from '@mui/material';
 import React, { FC, useMemo, useRef } from 'react';
 import { useToggle } from '../hooks';
+import { WithChildren } from '../types';
 
-export const DropdownFilter: FC<{
+type Props = WithChildren & {
   buttonLabel: string | React.ReactNode;
-}> = ({ buttonLabel, children }) => {
+}
+
+export const DropdownFilter: FC<Props> = ({ buttonLabel, children }) => {
   const [open, { toggle, toggleOff: close }] = useToggle();
   const buttonRef = useRef<HTMLButtonElement>(null);
 

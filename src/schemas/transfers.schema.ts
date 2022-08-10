@@ -13,15 +13,10 @@ export const TRANSFER_KEYS_FRAGMENT = gql`
 
 export type Transfer = {
   blockNumber: number;
-  index: number;
-  hash: string;
+  extrinsicIndex: number;
   source: string;
   destination: string;
   amount: number;
-  feeAmount: number;
-  module: string;
-  call: string;
-  success: boolean;
   timestamp: string;
   destinationAccount: {
     identity: null | { display: string }
@@ -32,11 +27,19 @@ export type Transfer = {
   block: {
     era: number;
   }
+<<<<<<< HEAD
+=======
+  extrinsic: {
+    hash: string;
+    success: boolean;
+  }
+>>>>>>> feat/staking-wallet
 };
 
 export const TRANSFER_FRAGMENT = gql`
   fragment transfer_common_fields on transfer {
     blockNumber: block_number
+<<<<<<< HEAD
     index: extrinsic_index
     hash
     module
@@ -47,6 +50,13 @@ export const TRANSFER_FRAGMENT = gql`
     destination
     amount
     feeAmount: fee_amount
+=======
+    extrinsicIndex: extrinsic_index
+    source
+    destination
+    amount
+    timestamp
+>>>>>>> feat/staking-wallet
     sourceAccount: account {
       identity {
         display
@@ -60,6 +70,13 @@ export const TRANSFER_FRAGMENT = gql`
     block {
       era: active_era
     }
+<<<<<<< HEAD
+=======
+    extrinsic {
+      hash
+      success
+    }
+>>>>>>> feat/staking-wallet
   }
 `;
 
@@ -95,6 +112,7 @@ export const GET_TRANSFERS_TIMESTAMPS = gql`
 `;
 
 /* -------------------------------------------------------------------------- */
+<<<<<<< HEAD
 /*                        Get Transfers by Primary Keys                       */
 /* -------------------------------------------------------------------------- */
 export type GetTransferByPK = {
@@ -123,6 +141,8 @@ export const GET_TRANSFER_BY_PK = gql`
 `;
 
 /* -------------------------------------------------------------------------- */
+=======
+>>>>>>> feat/staking-wallet
 /*                           Get Transfers of Block                           */
 /* -------------------------------------------------------------------------- */
 export type GetTransfersByBlock = TotalOfItems & {

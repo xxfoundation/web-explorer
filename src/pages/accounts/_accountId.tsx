@@ -16,7 +16,7 @@ import AccountDetails from './account/AccountDetails';
 import { useToggle } from '../../hooks';
 import BalanceHistoryChart from './account/BalanceHistoryChart';
 import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
-import StakingCard from './account/staking';
+import ValidatorInfo from './account/ValidatorInfo';
 
 const AccountId: FC = () => {
   const { accountId } = useParams<{ accountId?: string }>();
@@ -47,11 +47,13 @@ const AccountId: FC = () => {
   }
 
   if (!data?.account) return <NotFound message='Account Not Found' />;
+
   const account = data?.account;
   const validator =
     data?.aggregates && data?.stats
       ? { aggregates: data?.aggregates, stats: data?.stats }
       : undefined;
+  const stats = data?.stats;
 
   return (
     <Container sx={{ my: 5 }}>
@@ -64,7 +66,7 @@ const AccountId: FC = () => {
           <IdentityCard account={data.account} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
+          <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 8 } }}>
             <Balances account={data.account} />
             <RoundedButton
               style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
@@ -76,7 +78,7 @@ const AccountId: FC = () => {
           </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
+          <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 8 } }}>
             <AccountDetails account={data.account} />
             {account.roles.validator && (
               <RoundedButton
@@ -89,16 +91,19 @@ const AccountId: FC = () => {
             )}
           </PaperWrapStyled>
         </Grid>
+
+        {validatorInfoExpanded && account.roles.validator && validator !== undefined && (
+          <Grid item>
+            <Grid item xs={12}>
+              <ValidatorInfo info={stats?.[0]} />
+            </Grid>
+          </Grid>
+        )}
         {historyExpanded && currEra && (
           <Grid item xs={12}>
             <PaperWrapStyled>
               <BalanceHistoryChart accountId={account.id} era={currEra} />
             </PaperWrapStyled>
-          </Grid>
-        )}
-        {validatorInfoExpanded && account.roles.validator && validator !== undefined && (
-          <Grid item xs={12}>
-            <StakingCard accountId={account.id} validator={validator} />
           </Grid>
         )}
         <Grid item xs={12}>
