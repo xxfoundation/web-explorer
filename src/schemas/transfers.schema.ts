@@ -27,36 +27,20 @@ export type Transfer = {
   block: {
     era: number;
   }
-<<<<<<< HEAD
-=======
   extrinsic: {
     hash: string;
     success: boolean;
   }
->>>>>>> feat/staking-wallet
 };
 
 export const TRANSFER_FRAGMENT = gql`
   fragment transfer_common_fields on transfer {
     blockNumber: block_number
-<<<<<<< HEAD
-    index: extrinsic_index
-    hash
-    module
-    call
-    success
-    timestamp
-    source
-    destination
-    amount
-    feeAmount: fee_amount
-=======
     extrinsicIndex: extrinsic_index
     source
     destination
     amount
     timestamp
->>>>>>> feat/staking-wallet
     sourceAccount: account {
       identity {
         display
@@ -70,13 +54,10 @@ export const TRANSFER_FRAGMENT = gql`
     block {
       era: active_era
     }
-<<<<<<< HEAD
-=======
     extrinsic {
       hash
       success
     }
->>>>>>> feat/staking-wallet
   }
 `;
 
@@ -112,37 +93,6 @@ export const GET_TRANSFERS_TIMESTAMPS = gql`
 `;
 
 /* -------------------------------------------------------------------------- */
-<<<<<<< HEAD
-/*                        Get Transfers by Primary Keys                       */
-/* -------------------------------------------------------------------------- */
-export type GetTransferByPK = {
-  transfer: Transfer;
-};
-
-export const GET_TRANSFER_BY_PK = gql`
-  ${TRANSFER_FRAGMENT}
-  query GetTransferByPK($blockNumber: bigint!, $extrinsicIndex: Int!) {
-    transfer: transfer_by_pk(block_number: $blockNumber, extrinsic_index: $extrinsicIndex) {
-      amount
-      source
-      destination
-      sourceAccount: account {
-        identity {
-          display
-        }
-      }
-      destinationAccount: accountByDestination {
-        identity {
-          display
-        }
-      }
-    }
-  }
-`;
-
-/* -------------------------------------------------------------------------- */
-=======
->>>>>>> feat/staking-wallet
 /*                           Get Transfers of Block                           */
 /* -------------------------------------------------------------------------- */
 export type GetTransfersByBlock = TotalOfItems & {

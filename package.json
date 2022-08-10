@@ -86,8 +86,7 @@
   "resolutions": {
     "@polkadot/wasm-crypto": "file:./src/sleeve/wasm-crypto",
     "@polkadot/wasm-crypto-init": "file:./src/sleeve/wasm-crypto-init",
-    "@polkadot/wasm-crypto-wasm": "file:./src/sleeve/wasm-crypto-wasm",
-    "@polkadot/util-crypto": "^10.1.2"
+    "@polkadot/wasm-crypto-wasm": "file:./src/sleeve/wasm-crypto-wasm"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
