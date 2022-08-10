@@ -15,10 +15,12 @@ export type Economics = {
   sales: string;
   stakeableSupply: string;
   staked: string;
+  inactiveStaked: string;
   treasury: string;
   unbonding: string;
   liquid: string;
   vesting: string;
+  tmStaked: string;
 }
 
 export type EconomicsSubscription = {
@@ -39,6 +41,7 @@ export const LISTEN_FOR_ECONOMICS = gql`
       sales
       stakeableSupply: stakeable_supply
       staked
+      inactiveStaked: inactive_staked
       timestamp
       totalIssuance: total_issuance
       totalSupply: total_supply
@@ -46,6 +49,7 @@ export const LISTEN_FOR_ECONOMICS = gql`
       unbonding
       liquid
       vesting
+      tmStaked: tm_staked
     }
   }
 `;
