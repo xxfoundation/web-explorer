@@ -7,15 +7,18 @@ import ActionSelection from './StakingOptionsPanel';
 import ConnectWallet from './ConnectWalletPanel';
 import WalletSelection from './WalletSelectionPanel';
 import AmountSelection from './AmountPanel';
+import FinishPanel from './FinishPanel';
 import NavButtons, { NavProps } from './NavButtons';
 import useAccounts from '../../../hooks/useAccounts';
 import { BN_ZERO } from '@polkadot/util';
+import APYPanel from './APYPanel';
 
-type PanelProps = WithChildren &
-  NavProps & {
-    currentStep: number;
-    step: number;
-  };
+const selectedValidators: string[] = [];
+
+type PanelProps = WithChildren & NavProps & {
+  currentStep: number;
+  step: number;
+};
 
 const Panel: FC<PanelProps> = ({ children, currentStep, step, ...navProps }) => {
   return (
@@ -29,18 +32,18 @@ const Panel: FC<PanelProps> = ({ children, currentStep, step, ...navProps }) => 
       {step === currentStep && (
         <Box sx={{ p: { xs: 2, sm: 3, md: 5 } }}>
           {children}
-          <NavButtons {...navProps} />
+          {step < 5 && (<NavButtons {...navProps} />)}
         </Box>
       )}
     </div>
   );
 };
 
-const makeTabProps = (validSteps: Record<number, boolean>) => (index: number): TabProps => {
+const makeTabProps = (validSteps: Record<number, boolean>, currentStep: number) => (index: number): TabProps => {
   return {
     id: `vertical-tab-${index}`,
     'aria-controls': `vertical-tabpanel-${index}`,
-    disabled: !validSteps[index],
+    disabled: currentStep !== index && !validSteps[index],
     sx: {
       px: { sm: 3, md: 5 },
       backgroundColor: 'grey.100',
@@ -54,7 +57,7 @@ const makeTabProps = (validSteps: Record<number, boolean>) => (index: number): T
   };
 };
 
-const MAX_STEPS = 5;
+const MAX_STEPS = 6;
 export type StakingOptions = 'stake' | 'unstake' | 'redeem';
 
 const VerticalTabs = () => {
@@ -64,6 +67,14 @@ const VerticalTabs = () => {
   const [step, setStep] = useState(0);
   const [amount, setAmount] = useState(BN_ZERO);
   const [amountIsValid, setAmountIsValid] = useState(false);
+
+  const reset = useCallback(() => {
+    setSelectedAccount('');
+    setSelectedStakingOption(undefined);
+    setStep(0);
+    setAmount(BN_ZERO);
+    setAmountIsValid(false);
+  }, []);
 
   useEffect(() => {
     if (selectedAccount && !accounts.allAccounts.includes(selectedAccount)) {
@@ -101,8 +112,9 @@ const VerticalTabs = () => {
   );
 
   const panelProps = useCallback(
-    (index: number): PanelProps => ({
-      onNext: index < MAX_STEPS ? next : undefined,
+    (index: number, confirmStep?: boolean): PanelProps => ({
+      confirmStep,
+      onNext:  next,
       canNext: !!validSteps[index + 1],
       onBack: index > 0 ? back : undefined,
       canBack: !!validSteps[index - 1],
@@ -112,7 +124,7 @@ const VerticalTabs = () => {
     [back, next, step, validSteps]
   );
 
-  const tabProps = useMemo(() => makeTabProps(validSteps), [validSteps]);
+  const tabProps = useMemo(() => makeTabProps(validSteps, step), [step, validSteps]);
 
   return (
     <Stack direction='row' sx={{ bgcolor: 'background.paper' }}>
@@ -129,10 +141,11 @@ const VerticalTabs = () => {
         }}
       >
         <Tab label='Connect Wallet' {...tabProps(0)} />
-        <Tab label='Step 02' {...tabProps(1)} />
-        <Tab label='Step 03' {...tabProps(2)} />
-        <Tab label='Step 04' {...tabProps(3)} />
-        <Tab label='Step 05' {...tabProps(4)} />
+        <Tab label='Select Wallet' {...tabProps(1)} />
+        <Tab label='Staking Options' {...tabProps(2)} />
+        <Tab label='Input Amount' {...tabProps(3)} />
+        <Tab label='Nominate' {...tabProps(4)} />
+        <Tab label='Finish' {...tabProps(5)} />
       </Tabs>
       <Panel {...panelProps(0)}>
         <ConnectWallet />
@@ -150,6 +163,16 @@ const VerticalTabs = () => {
           option={selectedStakingOption}
           setAmount={setAmount}
           setAmountIsValid={setAmountIsValid} />
+      </Panel>
+      <Panel {...panelProps(4, true)}>
+        <APYPanel amount={amount} selectedValidators={selectedValidators} />
+      </Panel>
+      <Panel {...panelProps(5)}>
+        <FinishPanel
+          account={selectedAccount}
+          amount={amount}
+          option={selectedStakingOption as StakingOptions}
+          reset={reset} />
       </Panel>
     </Stack>
   );

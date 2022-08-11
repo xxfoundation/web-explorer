@@ -60,9 +60,20 @@ const AmountSelection: FC<Props> = ({
   const stakingInfo = useStakingInfo(account);
   const [inputTouched, setInputTouched] = useState(false);
 
+  const activeStake = stakingInfo?.stakingLedger.active.toBn() ?? BN_ZERO;
+  const displayedStake = activeStake.gt(amount)
+    ? activeStake
+    : amount;
+  const freeBalance = balances?.freeBalance.toBn() ?? BN_ZERO;
+  const totalBalance = activeStake.add(freeBalance);
+  const redeemable = BN_ZERO;
+  
   const amountIsValid = useMemo(
-    () => amount.gt(BN_ZERO) && amount.lte(balances?.availableBalance ?? BN_ZERO),
-    [amount, balances?.availableBalance]
+    () => amount.gt(BN_ZERO) && (
+      amount.lte(balances?.availableBalance ?? BN_ZERO)
+      || amount.lt(activeStake)
+    ),
+    [activeStake, amount, balances?.availableBalance]
   );
 
   useEffect(() => {
@@ -80,10 +91,6 @@ const AmountSelection: FC<Props> = ({
 
   const loading = !balances || !stakingInfo;
 
-  const stakedAmount = stakingInfo?.stakingLedger.active.toBn().add(amount) ?? BN_ZERO;
-  const freeBalance = balances?.freeBalance.toBn() ?? BN_ZERO;
-  const totalBalance = stakedAmount.add(freeBalance);
-  const redeemable = BN_ZERO;
 
   const setMax = useCallback(() => {
     setAmount(freeBalance);
@@ -136,15 +143,15 @@ const AmountSelection: FC<Props> = ({
                 <TableRow>
                   <TableCell>
                     <Typography sx={{ color: validationColor }} variant='body2'>
-                      <FormatBalance value={stakedAmount} />
+                      <FormatBalance value={displayedStake} />
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant='body2'>
                       {option === 'redeem' ? (
-                        <FormatBalance value={freeBalance} />
-                      ) : (
                         <FormatBalance value={redeemable} />
+                      ) : (
+                        <FormatBalance value={freeBalance} />
                       )}
                     </Typography>
                   </TableCell>

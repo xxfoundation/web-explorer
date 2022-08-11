@@ -74,7 +74,7 @@ const Api: FC<WithChildren> = ({ children }) => {
   if (!ready) {
     return (
       <Box sx={{ p: 5, py: 20 }}>
-        <Loading />
+        <Loading size='md' />
         <Typography variant='body1' sx={{ textAlign: 'center' }}>
           Connecting to the API, please wait.
         </Typography>
