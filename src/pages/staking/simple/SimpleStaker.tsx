@@ -15,10 +15,11 @@ import APYPanel from './APYPanel';
 
 const selectedValidators: string[] = [];
 
-type PanelProps = WithChildren & NavProps & {
-  currentStep: number;
-  step: number;
-};
+type PanelProps = WithChildren &
+  NavProps & {
+    currentStep: number;
+    step: number;
+  };
 
 const Panel: FC<PanelProps> = ({ children, currentStep, step, ...navProps }) => {
   return (
@@ -32,30 +33,32 @@ const Panel: FC<PanelProps> = ({ children, currentStep, step, ...navProps }) => 
       {step === currentStep && (
         <Box sx={{ p: { xs: 2, sm: 3, md: 5 } }}>
           {children}
-          {step < 5 && (<NavButtons {...navProps} />)}
+          {step < 5 && <NavButtons {...navProps} />}
         </Box>
       )}
     </div>
   );
 };
 
-const makeTabProps = (validSteps: Record<number, boolean>, currentStep: number) => (index: number): TabProps => {
-  return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
-    disabled: currentStep !== index && !validSteps[index],
-    sx: {
-      px: { sm: 3, md: 5 },
-      backgroundColor: 'grey.100',
-      '&.Mui-selected': {
-        backgroundColor: 'background.paper',
-        borderColor: 'grey.200',
-        borderWidth: '1px',
-        borderStyle: 'solid'
+const makeTabProps =
+  (validSteps: Record<number, boolean>, currentStep: number) =>
+  (index: number): TabProps => {
+    return {
+      id: `vertical-tab-${index}`,
+      'aria-controls': `vertical-tabpanel-${index}`,
+      disabled: currentStep !== index && !validSteps[index],
+      sx: {
+        px: { sm: 3, md: 5 },
+        backgroundColor: 'grey.100',
+        '&.Mui-selected': {
+          backgroundColor: 'background.paper',
+          borderColor: 'grey.200',
+          borderWidth: '1px',
+          borderStyle: 'solid'
+        }
       }
-    }
+    };
   };
-};
 
 const MAX_STEPS = 6;
 export type StakingOptions = 'stake' | 'unstake' | 'redeem';
@@ -114,7 +117,7 @@ const VerticalTabs = () => {
   const panelProps = useCallback(
     (index: number, confirmStep?: boolean): PanelProps => ({
       confirmStep,
-      onNext:  next,
+      onNext: next,
       canNext: !!validSteps[index + 1],
       onBack: index > 0 ? back : undefined,
       canBack: !!validSteps[index - 1],
@@ -162,7 +165,8 @@ const VerticalTabs = () => {
           amount={amount}
           option={selectedStakingOption}
           setAmount={setAmount}
-          setAmountIsValid={setAmountIsValid} />
+          setAmountIsValid={setAmountIsValid}
+        />
       </Panel>
       <Panel {...panelProps(4, true)}>
         <APYPanel amount={amount} selectedValidators={selectedValidators} />
@@ -172,7 +176,8 @@ const VerticalTabs = () => {
           account={selectedAccount}
           amount={amount}
           option={selectedStakingOption as StakingOptions}
-          reset={reset} />
+          reset={reset}
+        />
       </Panel>
     </Stack>
   );
