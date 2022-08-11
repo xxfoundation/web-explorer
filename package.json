@@ -13,12 +13,10 @@
     "@mui/material": "^5.4.2",
     "@mui/system": "^5.4.1",
     "@mui/x-date-pickers": "^5.0.0-alpha.6",
-    "@polkadot/api": "^9.0.1",
-    "@polkadot/api-augment": "^9.0.1",
-    "@polkadot/keyring": "^8.7.1",
-    "@polkadot/types": "^9.0.1",
-    "@polkadot/util": "^8.7.1",
-    "@polkadot/api-contract": "9.0.1",
+    "@polkadot/api": "9.0.1",
+    "@polkadot/keyring": "10.1.2",
+    "@polkadot/types": "9.0.1",
+    "@polkadot/util": "10.1.2",
     "@polkadot/api-derive": "9.0.1",
     "@polkadot/typegen": "9.0.1",
     "@polkadot/ui-keyring": "^2.9.3",
@@ -84,6 +82,11 @@
     ]
   },
   "resolutions": {
+    "@polkadot/api": "9.0.1",
+    "@polkadot/keyring": "10.1.2",
+    "@polkadot/types": "9.0.1",
+    "@polkadot/util": "10.1.2",
+    "@polkadot/api-derive": "9.0.1",
     "@polkadot/wasm-crypto": "file:./src/sleeve/wasm-crypto",
     "@polkadot/wasm-crypto-init": "file:./src/sleeve/wasm-crypto-init",
     "@polkadot/wasm-crypto-wasm": "file:./src/sleeve/wasm-crypto-wasm"

@@ -1,5 +1,5 @@
 // @ts-check
-import '../custom-types/src/interfaces/augment-api';
+import '../augment-types/augment-api';
 import { ApiPromise } from '@polkadot/api';
 import { PalletStakingNominations, PalletStakingStakingLedger, PalletStakingValidatorPrefs } from '@polkadot/types/lookup';
 import { ElectedValidator, Voter, seqPhragmen } from './phragmen';

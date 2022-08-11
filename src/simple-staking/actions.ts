@@ -1,5 +1,5 @@
 // @ts-check
-import '../custom-types/src/interfaces/augment-api';
+import '../augment-types/augment-api';
 import { ApiPromise } from '@polkadot/api';
 import { BN, BN_ZERO } from '@polkadot/util';
 import { selectValidators } from './selection';
