@@ -25,6 +25,11 @@ export default function DesktopNav() {
             Accounts
           </MenuButton>
         </Grid>
+        <Grid item xs>
+          <MenuButton id='glossary-button' href='/glossary'>
+            Glossary
+          </MenuButton>
+        </Grid>
       </Grid>
     </Box>
   );

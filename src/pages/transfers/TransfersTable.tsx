@@ -69,6 +69,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
     () => Object.assign({}, where, whereWithFilters),
     [where, whereWithFilters]
   );
+
   const variables = useMemo(
     () => ({
       orderBy: [{ timestamp: 'desc' }],
