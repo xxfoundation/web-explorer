@@ -10,6 +10,7 @@ import './plugins';
 import SiteFooter from './components/Footer';
 import SiteHeader from './components/Header';
 import Accounts from './pages/accounts';
+import Glossary from './pages/glossary';
 import Blocks from './pages/blocks';
 import EventsHistory from './pages/events';
 import ExtrinsicsRouter from './pages/extrinsics';
@@ -50,6 +51,9 @@ const App = () => {
             </Route>
             <Route path='/staking' exact>
               <Staking />
+            </Route>
+            <Route path='/glossary'>
+              <Glossary />
             </Route>
             <Route path='/staking/simple'>
               <StakingSimple />

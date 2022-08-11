@@ -98,6 +98,11 @@ export default function MobileNav() {
                   Accounts
                 </Link>
               </Typography>
+              <Typography variant='h3' sx={{ mt: 2 }}>
+                <Link to='/glossary' onClick={close}>
+                  Glossary
+                </Link>
+              </Typography>
             </Box>
           </Box>
         </Box>

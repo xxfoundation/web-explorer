@@ -51,8 +51,12 @@ export const extractChartData = (economics?: Economics) => {
 
   const vesting = stakeableSupply.sub(staked).sub(unbonding).sub(liquid);
 
-  const calculatePercentage = (n: BN) =>
-    (n.muln(1e6).div(stakeableSupply).toNumber() / 1e4).toFixed(0);
+  const roundNumber = (num: number, scale: number) =>
+    Math.round(parseFloat(parseFloat(num + 'e+' + scale) + 'e-' + scale));
+
+  const calculatePercentage = (n: BN) => {
+    return roundNumber(n.muln(1e6).div(stakeableSupply).toNumber() / 1e4, 4).toString();
+  };
 
   const serieA: Data[] = [
     {
