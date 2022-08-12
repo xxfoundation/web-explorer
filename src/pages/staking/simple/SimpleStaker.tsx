@@ -51,7 +51,7 @@ const makeTabProps =
     return {
       id: `vertical-tab-${index}`,
       'aria-controls': `vertical-tabpanel-${index}`,
-      disabled: currentStep !== index && !validSteps[index],
+      disabled: currentStep === 5 || (currentStep !== index && !validSteps[index]),
       sx: {
         px: { sm: 3, md: 5 },
         backgroundColor: 'grey.100',
