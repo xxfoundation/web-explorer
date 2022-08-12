@@ -9,6 +9,7 @@ import {
   Grid
 } from '@mui/material';
 import { StakingOptions } from '../SimpleStaker';
+import { StakingBalances } from '../../../../simple-staking/actions';
 
 const optionText = (title: string, body: string) => {
   return (
@@ -20,11 +21,12 @@ const optionText = (title: string, body: string) => {
 };
 
 type Props = {
+  balances: StakingBalances;
   selected?: string;
   onSelect: (option: StakingOptions) => void;
 };
 
-const ActionSelection: FC<Props> = ({ onSelect, selected }) => {
+const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     onSelect(evt.target.value as StakingOptions);
   };
@@ -53,7 +55,7 @@ const ActionSelection: FC<Props> = ({ onSelect, selected }) => {
             <FormControlLabel
               labelPlacement='end'
               value='unstake'
-              control={<Radio />}
+              control={<Radio disabled={balances.staked.eqn(0)} />}
               label={optionText(
                 'Unstake',
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
@@ -62,7 +64,7 @@ const ActionSelection: FC<Props> = ({ onSelect, selected }) => {
             <FormControlLabel
               labelPlacement='end'
               value='redeem'
-              control={<Radio />}
+              control={<Radio disabled={balances.redeemable.eqn(0)} />}
               label={optionText(
                 'Redeem',
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'

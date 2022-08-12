@@ -1,8 +1,8 @@
 import type { StakingOptions } from '../SimpleStaker';
 
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import { BN } from '@polkadot/util';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 
 import FormatBalance from '../../../../components/FormatBalance';
 import Loading from '../../../../components/Loading';
@@ -11,8 +11,10 @@ import Link from '../../../../components/Link';
 type Props = {
   option: StakingOptions;
   amount: BN;
+  error?: string;
   account: string;
   blockHash: string;
+  loading: boolean;
   reset: () => void;
 };
 
@@ -22,15 +24,7 @@ const optionToVerb: Record<StakingOptions, string> = {
   unstake: 'unstaked'
 };
 
-const FinishPanel: FC<Props> = ({ account, amount, blockHash, option, reset }) => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  });
-
+const FinishPanel: FC<Props> = ({ account, amount, blockHash, error, loading, option, reset }) => {
   if (loading) {
     return (
       <Stack spacing={4} sx={{ p: 3, textAlign: 'center' }}>
@@ -41,6 +35,24 @@ const FinishPanel: FC<Props> = ({ account, amount, blockHash, option, reset }) =
       </Stack>
     );
   }
+
+  if (error) {
+    return (
+      <>
+        <Stack spacing={4} sx={{ pb: 10, textAlign: 'center' }}>
+          <Alert severity='error'>
+            {error}
+          </Alert>
+        </Stack>
+        <Box sx={{ textAlign: 'right' }}>
+          <Button onClick={reset} variant='contained'>
+            Go back
+          </Button>
+        </Box>
+      </>
+    )
+  }
+
   return (
     <Stack spacing={4}>
       <Typography variant='h2'>Extrinsic Submitted Successfully</Typography>

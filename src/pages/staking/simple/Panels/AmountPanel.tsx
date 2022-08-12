@@ -24,8 +24,7 @@ import { TableStyled } from '../../../../components/Tables/TableContainer.styled
 import Address from '../../../../components/Hash/XXNetworkAddress';
 import FormatBalance from '../../../../components/FormatBalance';
 import Loading from '../../../../components/Loading';
-import { getStakingBalances, StakingBalances } from '../../../../simple-staking/actions';
-import useApi from '../../../../hooks/useApi';
+import { StakingBalances } from '../../../../simple-staking/actions';
 
 const DECIMAL_POINTS = 9;
 const DECIMALS_POW = BN_TEN.pow(new BN(DECIMAL_POINTS));
@@ -57,20 +56,11 @@ const AmountSelection: FC<Props> = ({
   amount = BN_ZERO,
   balances,
   option,
-  setBalances,
   setAmount,
   setAmountIsValid
 }) => {
   const theme = useTheme();
-  const { api } = useApi();
   const [inputTouched, setInputTouched] = useState(false);
-  const getBalances = useCallback(async () => {
-    if (!api) {
-      return undefined;
-    }
-    const stakingBalances = await getStakingBalances(api, account);
-    setBalances(stakingBalances);
-  }, [account, api, setBalances]);
 
   const activeStake = balances?.staked ?? BN_ZERO;
   const available =
@@ -88,9 +78,8 @@ const AmountSelection: FC<Props> = ({
   );
 
   useEffect(() => {
-    getBalances();
     setAmountIsValid(amountIsValid);
-  }, [amountIsValid, getBalances, setAmountIsValid]);
+  }, [amountIsValid, setAmountIsValid]);
 
   const title = useMemo<Record<StakingOptions, string>>(
     () => ({

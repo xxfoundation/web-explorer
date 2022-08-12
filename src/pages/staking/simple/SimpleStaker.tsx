@@ -12,12 +12,13 @@ import FinishPanel from './Panels/FinishPanel';
 import NavButtons, { NavProps } from './utils/NavButtons';
 import useAccounts from '../../../hooks/useAccounts';
 import { BN_ZERO } from '@polkadot/util';
-import { StakingBalances } from '../../../simple-staking/actions';
+import { getStakingBalances, StakingBalances } from '../../../simple-staking/actions';
 import NonStakePanel from './Panels/NonStakePanel';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import keyring from '@polkadot/ui-keyring';
-import Error from '../../../components/Error';
+import useApi from '../../../hooks/useApi';
+import Loading from '../../../components/Loading';
 
 type PanelProps = WithChildren &
   NavProps & {
@@ -27,8 +28,8 @@ type PanelProps = WithChildren &
 
 const Panel: FC<PanelProps> = ({ children, currentStep, step, ...navProps }) => {
   return (
-    <div
-      style={{ flexGrow: 1 }}
+    <Box
+      sx={{ flexGrow: 1, width: { xs: '100%' } }}
       role='tabpanel'
       hidden={step !== currentStep}
       id={`vertical-tabpanel-${step}`}
@@ -40,7 +41,7 @@ const Panel: FC<PanelProps> = ({ children, currentStep, step, ...navProps }) => 
           {step < 5 && <NavButtons {...navProps} />}
         </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
@@ -69,6 +70,7 @@ export type StakingOptions = 'stake' | 'unstake' | 'redeem';
 
 const VerticalTabs = () => {
   const accounts = useAccounts();
+  const { api } = useApi();
   const [selectedAccount, setSelectedAccount] = useState('');
   const [selectedStakingOption, setSelectedStakingOption] = useState<StakingOptions>('stake');
   const [step, setStep] = useState(0);
@@ -79,17 +81,26 @@ const VerticalTabs = () => {
   const [transaction, setTransaction] =
     useState<Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>>();
   const [blockHash, setBlockHash] = useState<string>('');
+  const [error, setError] = useState<string>();
+  const [executingTransaction, setExecutingTransaction] = useState(false);
 
   const reset = useCallback(() => {
     setSelectedAccount('');
-    setSelectedStakingOption('stake');
-    setStep(0);
     setAmount(BN_ZERO);
+    setStep(0);
     setAmountIsValid(false);
     setPassword(undefined);
     setStakingBalances(undefined);
     setTransaction(undefined);
+    setError(undefined);
   }, []);
+
+  useEffect(() => {
+    if (api && selectedAccount) {
+      getStakingBalances(api, selectedAccount)
+        .then(setStakingBalances);
+    }
+  }, [api, selectedAccount])
 
   useEffect(() => {
     if (selectedAccount && !accounts.allAccounts.includes(selectedAccount)) {
@@ -104,7 +115,7 @@ const VerticalTabs = () => {
       2: !!selectedAccount,
       3: accounts.hasAccounts && !!selectedAccount && !!selectedStakingOption,
       4: amountIsValid,
-      5: !!password
+      5: !!password,
     }),
     [accounts.hasAccounts, amountIsValid, password, selectedAccount, selectedStakingOption]
   );
@@ -126,8 +137,10 @@ const VerticalTabs = () => {
     },
     [validSteps]
   );
+
   const signAndFinish = useCallback(async () => {
     if (transaction) {
+      setExecutingTransaction(true);
       try {
         const pair = keyring.getPair(selectedAccount);
         pair.decodePkcs8(password);
@@ -139,16 +152,9 @@ const VerticalTabs = () => {
         });
         setPassword(undefined);
       } catch {
-        return (
-          <Box sx={{ p: 5, py: 10, textAlign: 'center' }}>
-            <Error
-              variant='body1'
-              sx={{ fontSize: 24, pb: 5 }}
-              message='Unable to sign and submit transaction.'
-            />
-          </Box>
-        );
+        setError('Unable to sign transaction');
       }
+      setExecutingTransaction(false);
     }
     next();
   }, [next, password, selectedAccount, transaction]);
@@ -204,7 +210,7 @@ const VerticalTabs = () => {
         ) : (
           <Tab label='Sign and Commit' {...tabProps(4)} />
         )}
-        <Tab label='Finish' {...tabProps(5)} />
+        <Tab label='Finish' {...tabProps(5)}  disabled={step !== 5} />
       </Tabs>
       <Panel {...panelProps(0)}>
         <ConnectWallet />
@@ -213,7 +219,14 @@ const VerticalTabs = () => {
         <WalletSelection onSelect={setSelectedAccount} selected={selectedAccount} />
       </Panel>
       <Panel {...panelProps(2)}>
-        <ActionSelection selected={selectedStakingOption} onSelect={setSelectedStakingOption} />
+        <Loading loading={!stakingBalances}>
+          {stakingBalances && (
+            <ActionSelection
+              balances={stakingBalances}
+              selected={selectedStakingOption}
+              onSelect={setSelectedStakingOption} />
+          )}
+        </Loading>
       </Panel>
       <Panel {...panelProps(3)}>
         <AmountSelection
@@ -249,17 +262,17 @@ const VerticalTabs = () => {
           />
         </Panel>
       )}
-      {blockHash && (
         <Panel {...panelProps(5)}>
           <FinishPanel
             account={selectedAccount}
             amount={amount}
+            error={error}
+            loading={executingTransaction}
             option={selectedStakingOption as StakingOptions}
             blockHash={blockHash}
             reset={reset}
           />
         </Panel>
-      )}
     </Stack>
   );
 };

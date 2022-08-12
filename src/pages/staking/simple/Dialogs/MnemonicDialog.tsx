@@ -3,6 +3,7 @@ import { Box, Button, Dialog, TextField, Grid, Stack, Typography, Alert } from '
 import { Close } from '@mui/icons-material';
 import { mnemonicValidate } from '@polkadot/util-crypto';
 import { keyring } from '@polkadot/ui-keyring';
+import useInput from '../../../../hooks/useInput';
 
 type Props = {
   open: boolean;
@@ -13,6 +14,7 @@ const MNEMONIC_COUNT = 24;
 const inputCount = Array.from(Array(MNEMONIC_COUNT).keys()).map((i) => i);
 
 const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
+  const [password, setPassword] = useInput();
   const [mnemonic, setMnemonic] = useState<string[]>(inputCount.map(() => ''));
   const [isValid, setValid] = useState(true);
 
@@ -25,7 +27,7 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
     const valid = mnemonicValidate(seed);
     setValid(valid);
     if (valid) {
-      keyring.addUri(seed);
+      keyring.addUri(seed, password);
       onClose(mnemonic);
     }
   };
@@ -70,6 +72,15 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
             </Grid>
           ))}
         </Grid>
+        <Box>
+          <TextField
+            type='password'
+            label='Password'
+            size='small'
+            value={password}
+            onChange={setPassword}
+          />
+        </Box>
         <Box sx={{ textAlign: 'center' }}>
           <Button onClick={handleDone} variant='contained'>
             Done

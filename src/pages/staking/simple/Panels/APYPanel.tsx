@@ -78,10 +78,12 @@ const APYPanel: FC<Props> = ({
   const economics = query.data?.economics[0];
   const loadingQuery = query.loading;
   const apy = economics ? getStakedReturn(economics) : 0;
-  const xxPerEra = (stakingBalances?.staked || BN_ZERO)
+  const xxPerEra = useMemo(() => (stakingBalances?.staked || BN_ZERO)
     .add(amount)
     .muln(apy / 100)
-    .divn(365);
+    .divn(365),
+    [amount, apy, stakingBalances?.staked]
+  );
 
   // Unlock account
   const checkPassword = useCallback((): void => {
@@ -104,7 +106,9 @@ const APYPanel: FC<Props> = ({
   // Create Transaction
   useEffect(() => {
     if (api && stakingBalances && stakingOption === 'stake') {
-      setTransaction(stake(api, stakingBalances, account, amount));
+      setTransaction(
+        stake(api, stakingBalances, account, amount)
+      );
     }
   }, [account, amount, api, setTransaction, stakingBalances, stakingOption]);
 

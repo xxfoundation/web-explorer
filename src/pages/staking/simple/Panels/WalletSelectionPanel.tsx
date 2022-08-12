@@ -89,6 +89,7 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                   <TableCell>
                     <Stack alignItems='center' direction='row'>
                       <Radio
+                        disabled={!balances[i] || balances[i].eqn(0)}
                         checked={selected === acct}
                         onChange={handleAccountChange(acct)}
                         value={acct}
