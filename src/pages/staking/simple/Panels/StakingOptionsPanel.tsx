@@ -8,7 +8,7 @@ import {
   Radio,
   Grid
 } from '@mui/material';
-import { StakingOptions } from './SimpleStaker';
+import { StakingOptions } from '../SimpleStaker';
 
 const optionText = (title: string, body: string) => {
   return (

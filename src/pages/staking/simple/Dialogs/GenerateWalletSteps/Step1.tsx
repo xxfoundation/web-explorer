@@ -11,7 +11,7 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
+import PaperStyled from '../../../../../components/Paper/PaperWrap.styled';
 
 const displayText = (text: string): JSX.Element => <Typography variant='body4'>{text}</Typography>;
 

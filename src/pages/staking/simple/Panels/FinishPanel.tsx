@@ -1,33 +1,34 @@
-import type { StakingOptions } from './SimpleStaker';
+import type { StakingOptions } from '../SimpleStaker';
 
 import React, { FC, useEffect, useState } from 'react';
 import { BN } from '@polkadot/util';
 import { Box, Button, Stack, Typography } from '@mui/material';
 
-import FormatBalance from '../../../components/FormatBalance';
-import Loading from '../../../components/Loading';
-import Link from '../../../components/Link';
+import FormatBalance from '../../../../components/FormatBalance';
+import Loading from '../../../../components/Loading';
+import Link from '../../../../components/Link';
 
 type Props = {
   option: StakingOptions;
   amount: BN;
   account: string;
+  blockHash: string;
   reset: () => void;
-}
+};
 
 const optionToVerb: Record<StakingOptions, string> = {
-  'redeem': 'redeemed',
-  'stake': 'staked',
-  'unstake': 'unstaked'
-}
+  redeem: 'redeemed',
+  stake: 'staked',
+  unstake: 'unstaked'
+};
 
-const FinishPanel: FC<Props> = ({ account, amount, option, reset }) => {
+const FinishPanel: FC<Props> = ({ account, amount, blockHash, option, reset }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 2000);
   });
 
   if (loading) {
@@ -38,19 +39,25 @@ const FinishPanel: FC<Props> = ({ account, amount, option, reset }) => {
           Combobulating the ol' blockchain
         </Typography>
       </Stack>
-    )
+    );
   }
   return (
     <Stack spacing={4}>
-      <Typography variant='h2'>
-        Extrinsic Submitted Successfully
+      <Typography variant='h2'>Extrinsic Submitted Successfully</Typography>
+      <Typography variant='body3' sx={{ fontSize: '1rem' }}>
+        Congratulations! You've successfully{' '}
+        <b>
+          {optionToVerb[option]}
+          &nbsp;
+          <FormatBalance value={amount} />
+        </b>
+        .
       </Typography>
       <Typography variant='body3' sx={{ fontSize: '1rem' }}>
-        Congratulations! You've successfully {optionToVerb[option]}
-        &nbsp;<FormatBalance value={amount} />.
+        See it in all its glory over <Link to={`/blocks/${blockHash}`}>here</Link>.
       </Typography>
       <Typography variant='body3' sx={{ fontSize: '1rem' }}>
-        See it in all its glory over <Link to={'/extrinsics'}>here</Link>.
+        And/or check your account <Link to={`/accounts/${account}`}>here</Link>.
       </Typography>
       <Box sx={{ p: 4 }} />
       <Box sx={{ textAlign: 'right' }}>
@@ -59,7 +66,7 @@ const FinishPanel: FC<Props> = ({ account, amount, option, reset }) => {
         </Button>
       </Box>
     </Stack>
-  )
+  );
 };
 
 export default FinishPanel;

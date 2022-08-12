@@ -30,7 +30,7 @@ const extractMetrics = (economics?: Economics) => {
   };
 };
 
-const getStakedReturn = (economics: Economics): number => {
+export const getStakedReturn = (economics: Economics): number => {
   const totalStaked = new BN(stripNonDigits(economics?.staked));
   const stakeableSupply = new BN(stripNonDigits(economics?.stakeableSupply));
   const inflationRate = new BN(stripNonDigits(economics?.inflationRate)).toNumber();

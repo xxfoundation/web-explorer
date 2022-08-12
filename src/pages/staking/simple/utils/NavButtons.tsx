@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react';
 import { Box, Button, Stack, Checkbox } from '@mui/material';
-import { useToggle } from '../../../hooks';
+import { useToggle } from '../../../../hooks';
 
 export type NavProps = {
   onBack?: () => void;
@@ -8,14 +8,17 @@ export type NavProps = {
   onNext?: () => void;
   canBack?: boolean;
   confirmStep?: boolean;
-}
+};
 
 const NavButtons: FC<NavProps> = ({ canBack, canNext, confirmStep, onBack, onNext }) => {
   const [checked, { set }] = useToggle();
 
-  const onChange = useCallback((evt: unknown, value: boolean) => {
-    set(value);
-  }, [set]);
+  const onChange = useCallback(
+    (evt: unknown, value: boolean) => {
+      set(value);
+    },
+    [set]
+  );
 
   return (
     <Stack direction='row' sx={{ mt: 5 }} justifyContent='space-between'>
@@ -30,14 +33,22 @@ const NavButtons: FC<NavProps> = ({ canBack, canNext, confirmStep, onBack, onNex
         {confirmStep ? (
           <>
             <Checkbox checked={checked} onChange={onChange} />
-            <Button disabled={!checked} variant='contained' onClick={onNext}>
+            <Button
+              disabled={(canNext !== undefined && !canNext) || !checked}
+              variant='contained'
+              onClick={onNext}
+            >
               Agree and Sign
             </Button>
           </>
         ) : (
           <>
             {onNext && (
-              <Button disabled={canNext !== undefined && !canNext} onClick={onNext} variant='contained'>
+              <Button
+                disabled={canNext !== undefined && !canNext}
+                onClick={onNext}
+                variant='contained'
+              >
                 Next
               </Button>
             )}

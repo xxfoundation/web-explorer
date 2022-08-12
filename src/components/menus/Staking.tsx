@@ -35,7 +35,7 @@ export default function Blockchain() {
             Simple Staking
           </MenuLink>
           <MenuLink to={'/staking'} onClick={close}>
-            Validators
+            Dashboard
           </MenuLink>
         </Menu>
       )}

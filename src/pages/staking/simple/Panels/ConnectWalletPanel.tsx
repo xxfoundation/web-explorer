@@ -2,11 +2,11 @@ import React, { FC, useCallback } from 'react';
 import { Alert, Button, Link, Stack, Typography } from '@mui/material';
 import { keyring } from '@polkadot/ui-keyring';
 
-import { useToggle } from '../../../hooks';
-import GenerateDialog from './GenerateDialog';
-import MnemonicDialog from './MnemonicDialog';
-import KeyfileDialog from './KeyfileDialog';
-import useAccounts from '../../../hooks/useAccounts';
+import { useToggle } from '../../../../hooks';
+import GenerateWalletDialog from '../Dialogs/GenerateWalletDialog';
+import MnemonicDialog from '../Dialogs/MnemonicDialog';
+import KeyfileDialog from '../Dialogs/KeyfileDialog';
+import useAccounts from '../../../../hooks/useAccounts';
 
 const ConnectWallet: FC = () => {
   const accounts = useAccounts();
@@ -31,7 +31,7 @@ const ConnectWallet: FC = () => {
 
   return (
     <>
-      <GenerateDialog open={generateDialogOpen} onClose={generateDialog.toggleOff} />
+      <GenerateWalletDialog open={generateDialogOpen} onClose={generateDialog.toggleOff} />
       <MnemonicDialog open={mnemonicDialogOpen} onClose={mnemonicDialog.toggleOff} />
       <KeyfileDialog open={keyfileDialogOpen} onClose={handleKeyfileClose} />
       <Stack spacing={4}>

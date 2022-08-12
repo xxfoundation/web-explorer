@@ -1,19 +1,23 @@
 import type { WithChildren } from '../../../types';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import PaperWrap from '../../../components/Paper/PaperWrap.styled';
-import { Box, Tabs, Tab, TabProps, Stack } from '@mui/material';
+import { Box, Tabs, Tab, TabProps, Stack, Dialog } from '@mui/material';
 
-import ActionSelection from './StakingOptionsPanel';
-import ConnectWallet from './ConnectWalletPanel';
-import WalletSelection from './WalletSelectionPanel';
-import AmountSelection from './AmountPanel';
-import FinishPanel from './FinishPanel';
-import NavButtons, { NavProps } from './NavButtons';
+import ActionSelection from './Panels/StakingOptionsPanel';
+import ConnectWallet from './Panels/ConnectWalletPanel';
+import WalletSelection from './Panels/WalletSelectionPanel';
+import AmountSelection from './Panels/AmountPanel';
+import APYPanel from './Panels/APYPanel';
+import FinishPanel from './Panels/FinishPanel';
+import NavButtons, { NavProps } from './utils/NavButtons';
 import useAccounts from '../../../hooks/useAccounts';
 import { BN_ZERO } from '@polkadot/util';
-import APYPanel from './APYPanel';
-
-const selectedValidators: string[] = [];
+import { StakingBalances } from '../../../simple-staking/actions';
+import NonStakePanel from './Panels/NonStakePanel';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
+import keyring from '@polkadot/ui-keyring';
+import Error from '../../../components/Error';
 
 type PanelProps = WithChildren &
   NavProps & {
@@ -66,17 +70,25 @@ export type StakingOptions = 'stake' | 'unstake' | 'redeem';
 const VerticalTabs = () => {
   const accounts = useAccounts();
   const [selectedAccount, setSelectedAccount] = useState('');
-  const [selectedStakingOption, setSelectedStakingOption] = useState<StakingOptions>();
+  const [selectedStakingOption, setSelectedStakingOption] = useState<StakingOptions>('stake');
   const [step, setStep] = useState(0);
   const [amount, setAmount] = useState(BN_ZERO);
   const [amountIsValid, setAmountIsValid] = useState(false);
+  const [password, setPassword] = useState<string>();
+  const [stakingBalances, setStakingBalances] = useState<StakingBalances>();
+  const [transaction, setTransaction] =
+    useState<Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>>();
+  const [blockHash, setBlockHash] = useState<string>('');
 
   const reset = useCallback(() => {
     setSelectedAccount('');
-    setSelectedStakingOption(undefined);
+    setSelectedStakingOption('stake');
     setStep(0);
     setAmount(BN_ZERO);
     setAmountIsValid(false);
+    setPassword(undefined);
+    setStakingBalances(undefined);
+    setTransaction(undefined);
   }, []);
 
   useEffect(() => {
@@ -91,9 +103,10 @@ const VerticalTabs = () => {
       1: accounts.hasAccounts,
       2: !!selectedAccount,
       3: accounts.hasAccounts && !!selectedAccount && !!selectedStakingOption,
-      4: amountIsValid
+      4: amountIsValid,
+      5: !!password
     }),
-    [accounts.hasAccounts, amountIsValid, selectedAccount, selectedStakingOption]
+    [accounts.hasAccounts, amountIsValid, password, selectedAccount, selectedStakingOption]
   );
 
   const next = useCallback(() => {
@@ -113,6 +126,32 @@ const VerticalTabs = () => {
     },
     [validSteps]
   );
+  const signAndFinish = useCallback(async () => {
+    if (transaction) {
+      try {
+        const pair = keyring.getPair(selectedAccount);
+        pair.decodePkcs8(password);
+        (await transaction).signAndSend(pair, ({ status }) => {
+          if (status.isInBlock) {
+            console.warn(`included in ${status.asInBlock}`);
+            setBlockHash(status.asInBlock.toString());
+          }
+        });
+        setPassword(undefined);
+      } catch {
+        return (
+          <Box sx={{ p: 5, py: 10, textAlign: 'center' }}>
+            <Error
+              variant='body1'
+              sx={{ fontSize: 24, pb: 5 }}
+              message='Unable to sign and submit transaction.'
+            />
+          </Box>
+        );
+      }
+    }
+    next();
+  }, [next, password, selectedAccount, transaction]);
 
   const panelProps = useCallback(
     (index: number, confirmStep?: boolean): PanelProps => ({
@@ -125,6 +164,19 @@ const VerticalTabs = () => {
       currentStep: step
     }),
     [back, next, step, validSteps]
+  );
+
+  const panelPropsSigning = useCallback(
+    (index: number, confirmStep?: boolean): PanelProps => ({
+      confirmStep,
+      onNext: signAndFinish,
+      canNext: !!validSteps[index + 1],
+      onBack: index > 0 ? back : undefined,
+      canBack: !!validSteps[index - 1],
+      step: index,
+      currentStep: step
+    }),
+    [back, signAndFinish, step, validSteps]
   );
 
   const tabProps = useMemo(() => makeTabProps(validSteps, step), [step, validSteps]);
@@ -147,7 +199,11 @@ const VerticalTabs = () => {
         <Tab label='Select Wallet' {...tabProps(1)} />
         <Tab label='Staking Options' {...tabProps(2)} />
         <Tab label='Input Amount' {...tabProps(3)} />
-        <Tab label='Nominate' {...tabProps(4)} />
+        {selectedStakingOption === 'stake' ? (
+          <Tab label='Nominate' {...tabProps(4)} />
+        ) : (
+          <Tab label='Sign and Commit' {...tabProps(4)} />
+        )}
         <Tab label='Finish' {...tabProps(5)} />
       </Tabs>
       <Panel {...panelProps(0)}>
@@ -163,22 +219,47 @@ const VerticalTabs = () => {
         <AmountSelection
           account={selectedAccount}
           amount={amount}
+          balances={stakingBalances}
           option={selectedStakingOption}
           setAmount={setAmount}
           setAmountIsValid={setAmountIsValid}
+          setBalances={setStakingBalances}
         />
       </Panel>
-      <Panel {...panelProps(4, true)}>
-        <APYPanel amount={amount} selectedValidators={selectedValidators} />
-      </Panel>
-      <Panel {...panelProps(5)}>
-        <FinishPanel
-          account={selectedAccount}
-          amount={amount}
-          option={selectedStakingOption as StakingOptions}
-          reset={reset}
-        />
-      </Panel>
+      {selectedStakingOption === 'stake' ? (
+        <Panel {...panelPropsSigning(4, true)}>
+          <APYPanel
+            account={selectedAccount}
+            amount={amount}
+            stakingOption={selectedStakingOption}
+            stakingBalances={stakingBalances}
+            setTransaction={setTransaction}
+            setPassword={setPassword}
+          />
+        </Panel>
+      ) : (
+        <Panel {...panelPropsSigning(4, true)}>
+          <NonStakePanel
+            account={selectedAccount}
+            amount={amount}
+            stakingOption={selectedStakingOption}
+            stakingBalances={stakingBalances}
+            setTransaction={setTransaction}
+            setPassword={setPassword}
+          />
+        </Panel>
+      )}
+      {blockHash && (
+        <Panel {...panelProps(5)}>
+          <FinishPanel
+            account={selectedAccount}
+            amount={amount}
+            option={selectedStakingOption as StakingOptions}
+            blockHash={blockHash}
+            reset={reset}
+          />
+        </Panel>
+      )}
     </Stack>
   );
 };

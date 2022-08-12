@@ -1,17 +1,17 @@
 import { Dialog } from '@mui/material';
 import React, { FC, useState } from 'react';
 
-import useStepper from '../../../hooks/useStepper';
-import Step1 from './Steps/Step1';
-import Step2 from './Steps/Step2';
-import Step3 from './Steps/Step3';
+import useStepper from '../../../../hooks/useStepper';
+import Step1 from './GenerateWalletSteps/Step1';
+import Step2 from './GenerateWalletSteps/Step2';
+import Step3 from './GenerateWalletSteps/Step3';
 
 type Props = {
   open: boolean;
   onClose: () => void;
 };
 
-const GenerateDialog: FC<Props> = ({ onClose, open }) => {
+const GenerateWalletDialog: FC<Props> = ({ onClose, open }) => {
   const [step, nextStep, , setStep] = useStepper();
   const [mnemonics, setMnemonics] = useState<string[]>(['', '']);
 
@@ -30,4 +30,4 @@ const GenerateDialog: FC<Props> = ({ onClose, open }) => {
   );
 };
 
-export default GenerateDialog;
+export default GenerateWalletDialog;

@@ -9,7 +9,7 @@ import useCall from './useCall';
  * @param accountAddress The account address of which balance is to be returned
  * @returns full information about account's balances
  */
-function useBalances (accountAddress: string): DeriveBalancesAll | undefined {
+function useBalances(accountAddress: string): DeriveBalancesAll | undefined {
   const { api } = useApi();
 
   return useCall<DeriveBalancesAll>(api?.derive.balances?.all, [accountAddress]);
