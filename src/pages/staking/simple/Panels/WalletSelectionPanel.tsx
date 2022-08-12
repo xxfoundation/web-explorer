@@ -57,7 +57,10 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
 
   const forget = useCallback(
     (acct: string) => () => {
-      keyring.forgetAccount(acct);
+      const confirmed = confirm('Are you sure you want to forget this account?');
+      if (confirmed) {
+        keyring.forgetAccount(acct);
+      }
     },
     []
   );
