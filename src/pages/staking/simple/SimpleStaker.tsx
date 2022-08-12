@@ -80,7 +80,7 @@ const SimpleStaker = () => {
   const [stakingBalances, setStakingBalances] = useState<StakingBalances>();
   const [transaction, setTransaction] =
     useState<Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>>();
-  const [blockHash, setBlockHash] = useState<string>('');
+  const [blockHash, setBlockHash] = useState<string>();
   const [error, setError] = useState<string>();
   const [executingTransaction, setExecutingTransaction] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
