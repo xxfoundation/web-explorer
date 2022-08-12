@@ -1,7 +1,7 @@
 import type { WithChildren } from '../../../types';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import PaperWrap from '../../../components/Paper/PaperWrap.styled';
-import { Box, Tabs, Tab, TabProps, Stack, Dialog } from '@mui/material';
+import { Box, Tabs, Tab, TabProps, Stack } from '@mui/material';
 
 import ActionSelection from './Panels/StakingOptionsPanel';
 import ConnectWallet from './Panels/ConnectWalletPanel';

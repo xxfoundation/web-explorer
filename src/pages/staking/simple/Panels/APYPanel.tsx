@@ -27,7 +27,6 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import Loading from '../../../../components/Loading';
 import useInput from '../../../../hooks/useInput';
-import { KeyringPair } from '@polkadot/keyring/types';
 
 const validatorsList = undefined;
 
