@@ -130,7 +130,7 @@ const buildVotersList = (chainData: ChainData, exclude: string): Voter[] => {
     return voters
 }
 
-interface ElectedWithReturn extends ElectedValidator {
+export interface ElectedWithReturn extends ElectedValidator {
     return: number;
 }
 
@@ -150,15 +150,15 @@ const computeReturn = (chainData: ChainData, elected: ElectedValidator, avgStake
 
 const targets = 16;
 
-const orderValidatorsByReturn = (chainData: ChainData, validators: ElectedValidator[]): string[] => {
+const orderValidatorsByReturn = (chainData: ChainData, validators: ElectedValidator[]): ElectedWithReturn[] => {
     // Compute average stake
     const avgStake = validators.reduce((sum, val) => sum.plus(val.backedStake), new BigNumber(0)).dividedBy(validators.length);
     // Compute return for all elected validators and then sort descending
     const ordered: ElectedWithReturn[] = validators.map((validator) => computeReturn(chainData, validator, avgStake)).sort((a, b) => a.return > b.return ? -1 : 1);
-    return ordered.slice(0, targets).map(({ validatorId }) => validatorId)
+    return ordered.slice(0, targets)
 }
 
-export const selectValidators = async (api: ApiPromise, nominator: string): Promise<string[]> => {
+export const selectValidators = async (api: ApiPromise, nominator: string): Promise<ElectedWithReturn[]> => {
     // Get chain data
     const chainData = await getChainData(api);
     // Builder voters list (excluding our address)
