@@ -8,15 +8,13 @@ import './index.css';
 import { client as apolloClient } from './plugins/apollo';
 import reportWebVitals from './reportWebVitals';
 import SnackbarProvider from './SnackbarProvider';
-import BannerDesktop from './components/BannerDesktop';
-import BannerMobile from './components/BannerMobile';
+import Banner from './components/BannerDesktop';
 import Api from './components/Api';
 
 ReactDOM.render(
   <React.StrictMode>
     <SnackbarProvider>
-      <BannerDesktop />
-      <BannerMobile />
+      <Banner />
       <ApolloProvider client={apolloClient}>
         <Api>
           <App />

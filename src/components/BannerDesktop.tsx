@@ -1,42 +1,53 @@
-import { AppBar, Button, ThemeProvider, Typography } from '@mui/material';
-import React from 'react';
-import { theme } from '../themes/default';
+import { AppBar, Button, Typography } from '@mui/material';
+import React, { useCallback } from 'react';
+import Close from '@mui/icons-material/Close';
+import useLocalStorage from '../hooks/useLocalStorage';
 import Link from './Link';
 
-export default function BannerDesktop() {
-  return (
+export default function Banner() {
+  const [dismissed, setDismissed] = useLocalStorage<string>('banner.dismissed');
+  const dismiss = useCallback(() => {
+    setDismissed('true');
+  }, [setDismissed]);
+
+  return dismissed ? null : (
     <AppBar
       sx={{
-        display: { sm: 'flex', xs: 'none' },
-        flexDirection: 'row',
+        display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
-        backgroundColor: 'grey.800'
+        backgroundColor: 'grey.800',
+        paddingRight: '2rem',
       }}
     >
+      <Button
+        size='small'
+        variant='text'
+        sx={{ color: 'white', position: 'absolute', top: 0, right: -15 }}
+        onClick={dismiss}>
+        <Close />
+      </Button>
       <Typography variant='body2' sx={{ p: '1em', pr: '2em' }}>
         If you want to interact with the <b>xx network blockchain</b> use our web based wallet app
         (formerly known as the explorer)
       </Typography>
-      <ThemeProvider theme={theme}>
-        <Button
-          component={Link}
-          to='https://wallet.xx.network'
-          variant='contained'
-          color='primary'
-          fontSize='12px'
-          padding='1em'
-          minWidth='fit-content !important'
-          margin='auto'
-          marginRight='1em !important'
-          height='2em'
-          target='_blank'
-          rel='noopener'
-        >
-          xx wallet
-        </Button>
-      </ThemeProvider>
+      <Button
+        component={Link}
+        sx={{ whiteSpace: 'nowrap', mb: 1 }}
+        to={process.env.REACT_APP_WALLET_URL}
+        variant='contained'
+        color='primary'
+        fontSize='12px'
+        padding='1em'
+        minWidth='fit-content !important'
+        height='2em'
+        target='_blank'
+        rel='noopener'
+      >
+        xx wallet
+      </Button>
     </AppBar>
   );
 }
