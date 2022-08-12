@@ -37,12 +37,9 @@ export default function Banner() {
         component={Link}
         sx={{ whiteSpace: 'nowrap', my: 0.75 }}
         to={process.env.REACT_APP_WALLET_URL}
+        size='small'
         variant='contained'
         color='primary'
-        fontSize='12px'
-        padding='1em'
-        minWidth='fit-content !important'
-        height='2em'
         target='_blank'
         rel='noopener'
       >
