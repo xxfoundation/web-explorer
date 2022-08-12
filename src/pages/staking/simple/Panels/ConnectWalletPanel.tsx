@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useMemo } from 'react';
-import { Alert, Box, Button, Link, Stack, Tooltip, Typography } from '@mui/material';
+import { Alert, Button, Link, Stack, Typography } from '@mui/material';
 import { keyring } from '@polkadot/ui-keyring';
 
 import { useToggle } from '../../../../hooks';
@@ -28,7 +28,7 @@ const ConnectWallet: FC = () => {
   );
 
   // Connection Buttons Toggle
-  const [expandConnectionButtons, connectionButtons] = useToggle();
+  const [expandConnectionButtons, connectionButtons] = useToggle(false);
   const endIconConnectionButtons = useMemo(
     () => (expandConnectionButtons ? <KeyboardArrowUp /> : <KeyboardArrowDown />),
     [expandConnectionButtons]

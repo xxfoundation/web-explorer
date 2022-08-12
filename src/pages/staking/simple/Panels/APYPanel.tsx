@@ -27,8 +27,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import Loading from '../../../../components/Loading';
 import useInput from '../../../../hooks/useInput';
-
-const validatorsList = undefined;
+import { selectValidators } from '../../../../simple-staking/selection';
 
 const AmountDisplay = styled(Typography)(({ theme }) => ({
   lineHeight: 1,
@@ -70,6 +69,7 @@ const APYPanel: FC<Props> = ({
   );
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState<boolean>(false);
+  const [selectedValidators, setSelectedValidators] = useState<string[]>(['']);
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [inputPassword, setInputPassword] = useInput('');
 
@@ -105,12 +105,30 @@ const APYPanel: FC<Props> = ({
     }, 0);
   }, [account, inputPassword, setPassword]);
 
+  const getValidator = useCallback(async () => {
+    if (!api) {
+      return undefined;
+    }
+    const targets = await selectValidators(api, account);
+    setSelectedValidators(targets.map((validator) => validator.validatorId));
+  }, [account, api]);
+
   // Create Transaction
   useEffect(() => {
     if (api && stakingBalances && stakingOption === 'stake') {
-      setTransaction(stake(api, stakingBalances, account, amount));
+      getValidator();
+      setTransaction(stake(api, account, amount, selectedValidators));
     }
-  }, [account, amount, api, setTransaction, stakingBalances, stakingOption]);
+  }, [
+    account,
+    amount,
+    api,
+    getValidator,
+    selectedValidators,
+    setTransaction,
+    stakingBalances,
+    stakingOption
+  ]);
 
   return (
     <>
@@ -178,7 +196,7 @@ const APYPanel: FC<Props> = ({
             Show validators selected
           </Button>
         </Stack>
-        {expandValidators && validatorsList && <ValidatorList accounts={validatorsList} />}
+        {expandValidators && selectedValidators && <ValidatorList accounts={selectedValidators} />}
         <Alert severity='info'>
           <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Do you want more control?</AlertTitle>
           <Typography variant='body3'>

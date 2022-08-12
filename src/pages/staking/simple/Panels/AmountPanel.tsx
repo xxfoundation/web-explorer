@@ -80,8 +80,11 @@ const AmountSelection: FC<Props> = ({
   );
 
   useEffect(() => {
+    if (option === 'redeem') {
+      setAmount(redeemable);
+    }
     setAmountIsValid(amountIsValid);
-  }, [amountIsValid, setAmountIsValid]);
+  }, [amountIsValid, option, redeemable, setAmount, setAmountIsValid]);
 
   const title = useMemo<Record<StakingOptions, string>>(
     () => ({
@@ -145,20 +148,22 @@ const AmountSelection: FC<Props> = ({
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Active Stake</TableCell>
+                  {option !== 'redeem' && <TableCell>Active Stake</TableCell>}
                   <TableCell>
                     <>Available to {option}</>
                   </TableCell>
-                  <TableCell>Total</TableCell>
+                  <TableCell>Total Balance</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell>
-                    <Typography sx={{ color: validationColor }} variant='body2'>
-                      <FormatBalance value={displayedStake} precision={4} />
-                    </Typography>
-                  </TableCell>
+                  {option !== 'redeem' && (
+                    <TableCell>
+                      <Typography sx={{ color: validationColor }} variant='body2'>
+                        <FormatBalance value={displayedStake} precision={4} />
+                      </Typography>
+                    </TableCell>
+                  )}
                   <TableCell>
                     <Typography variant='body2'>
                       {option === 'redeem' ? (
@@ -183,7 +188,8 @@ const AmountSelection: FC<Props> = ({
               <Typography variant='body3'>
                 You will be unlocking the tokens you've previously unstaked. After signing and
                 submitting the transaction you will be able to transfer, vote or stake those tokens
-                again.
+                again. Notice that the Total Balance of your account includes the locked coins,
+                which means that balance will not increase after redeeming these coins.
               </Typography>
             </Alert>
           )}

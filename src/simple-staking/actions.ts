@@ -38,7 +38,7 @@ export const getStakingBalances = async (api: ApiPromise, stash: string): Promis
   const totalStaked = ledger.total.unwrap();
   const staked = ledger.active.unwrap();
   const unbonding = totalStaked.sub(staked);
-  const redeemable = ledger.unlocking.filter(({ era }) => era.unwrap() >= currentEra.unwrap()).reduce((total, { value }) => total.add(value.unwrap()), BN_ZERO);
+  const redeemable = ledger.unlocking.filter(({ era }) => era.unwrap().toNumber() <= currentEra.unwrap().toNumber()).reduce((total, { value }) => total.add(value.unwrap()), BN_ZERO);
   const available = free.sub(ed).sub(staked);
   const total = free.add(reserved);
   return {
@@ -50,13 +50,13 @@ export const getStakingBalances = async (api: ApiPromise, stash: string): Promis
   }
 }
 
-export const stake = async (api: ApiPromise, stash: string, amount: BN, targets: string[]): Promise<SubmittableExtrinsic<'promise', ISubmittableResult> | undefined> => {
+export const stake = async (api: ApiPromise, stash: string, amount: BN, targets: string[]): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> => {
   const calls = [];
   const controller = await api.query.staking.bonded(stash);
   if (controller.isNone) {
-    if (amount.isZero()) {
-      return undefined
-    }
+    // if (amount.isZero()) {
+    //   return undefined
+    // }
     calls.push(api.tx.staking.bond(stash, amount, null));
   } else if (!amount.isZero()) {
     const controllerStr = controller.unwrap();
@@ -77,12 +77,12 @@ export const stake = async (api: ApiPromise, stash: string, amount: BN, targets:
   return calls[0]
 }
 
-export const unstake = async (api: ApiPromise, stash: string, amount: BN): Promise<SubmittableExtrinsic<'promise', ISubmittableResult> | undefined> => {
+export const unstake = async (api: ApiPromise, stash: string, amount: BN): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> => {
   const calls = [];
   const controller = await api.query.staking.bonded(stash);
-  if (controller.isNone) {
-    return undefined
-  }
+  // if (controller.isNone) {
+  //   return undefined
+  // }
   const controllerStr = controller.unwrap();
   const ledger = (await api.query.staking.ledger(controllerStr)).unwrap();
   const staked = ledger.active.unwrap();
