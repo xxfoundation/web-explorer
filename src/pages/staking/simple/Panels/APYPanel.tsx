@@ -191,7 +191,7 @@ const APYPanel: FC<Props> = ({
         </Alert>
         <Stack spacing={1}>
           <Typography variant='body3' sx={{ textAlign: 'end' }}>
-            To Sign you need to unlock your wallet using the password used to save it here.
+            Insert password to unlock your wallet
           </Typography>
           <Stack direction='row' justifyContent='end' spacing={2}>
             <Box>
