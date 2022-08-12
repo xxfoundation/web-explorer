@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { Alert, Button, Link, Stack, Typography } from '@mui/material';
 import { keyring } from '@polkadot/ui-keyring';
 
@@ -7,12 +7,24 @@ import GenerateWalletDialog from '../Dialogs/GenerateWalletDialog';
 import MnemonicDialog from '../Dialogs/MnemonicDialog';
 import KeyfileDialog from '../Dialogs/KeyfileDialog';
 import useAccounts from '../../../../hooks/useAccounts';
+import AccountList from '../utils/AccountList';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 
 const ConnectWallet: FC = () => {
   const accounts = useAccounts();
   const [generateDialogOpen, generateDialog] = useToggle();
   const [mnemonicDialogOpen, mnemonicDialog] = useToggle();
   const [keyfileDialogOpen, keyfileDialog] = useToggle();
+  const [expandWallets, wallets] = useToggle();
+  const endIconWallets = useMemo(
+    () => (expandWallets ? <KeyboardArrowUp /> : <KeyboardArrowDown />),
+    [expandWallets]
+  );
+  const [expandConnectionButtons, connectionButtons] = useToggle();
+  const endIconConnectionButtons = useMemo(
+    () => (expandConnectionButtons ? <KeyboardArrowUp /> : <KeyboardArrowDown />),
+    [expandConnectionButtons]
+  );
 
   const handleKeyfileClose = useCallback(() => {
     keyfileDialog.toggleOff();
@@ -44,33 +56,46 @@ const ConnectWallet: FC = () => {
           risus pharetra lacinia.
         </Typography>
         {accounts.hasAccounts && (
-          <Alert severity='success'>
-            Found {accounts.allAccounts.length} accounts. &nbsp;
-            <Link onClick={forget} href='#' underline='hover'>
-              Forget?
-            </Link>
-          </Alert>
+          <Stack display='columns' spacing={2}>
+            <Alert severity='success'>
+              Found {accounts.allAccounts.length} accounts. &nbsp;
+              <Link onClick={forget} href='#' underline='hover'>
+                Forget?
+              </Link>
+            </Alert>
+            <Button onClick={wallets.toggle} endIcon={endIconWallets}>
+              Show connected wallets
+            </Button>
+            {expandWallets && accounts.allAccounts && (
+              <AccountList accounts={accounts.allAccounts} />
+            )}
+          </Stack>
         )}
-        <Stack spacing={5} direction={{ xs: 'column', sm: 'row' }}>
-          <Stack spacing={1}>
-            <Typography variant='h4'>New Wallet</Typography>
-            <Button onClick={generateDialog.toggleOn} variant='contained'>
-              Generate Mnemonics
-            </Button>
+        <Button onClick={connectionButtons.toggle} endIcon={endIconConnectionButtons}>
+          Add more wallets
+        </Button>
+        {expandConnectionButtons && (
+          <Stack spacing={5} direction={{ xs: 'column', sm: 'row' }}>
+            <Stack spacing={1}>
+              <Typography variant='h4'>New Wallet</Typography>
+              <Button onClick={generateDialog.toggleOn} variant='contained'>
+                Generate Mnemonics
+              </Button>
+            </Stack>
+            <Stack spacing={1}>
+              <Typography variant='h4'>Enter Passcodes</Typography>
+              <Button onClick={mnemonicDialog.toggleOn} variant='contained'>
+                Mnemonic Phrase
+              </Button>
+            </Stack>
+            <Stack spacing={1}>
+              <Typography variant='h4'>Import File</Typography>
+              <Button onClick={keyfileDialog.toggleOn} variant='contained'>
+                Keyfile (JSON)
+              </Button>
+            </Stack>
           </Stack>
-          <Stack spacing={1}>
-            <Typography variant='h4'>Enter Passcodes</Typography>
-            <Button onClick={mnemonicDialog.toggleOn} variant='contained'>
-              Mnemonic Phrase
-            </Button>
-          </Stack>
-          <Stack spacing={1}>
-            <Typography variant='h4'>Import File</Typography>
-            <Button onClick={keyfileDialog.toggleOn} variant='contained'>
-              Keyfile (JSON)
-            </Button>
-          </Stack>
-        </Stack>
+        )}
         <Alert sx={{ mt: 3 }} severity='warning'>
           <Typography variant='h5' sx={{ pb: 1 }}>
             Banner Header

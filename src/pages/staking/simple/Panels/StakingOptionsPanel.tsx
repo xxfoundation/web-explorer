@@ -10,8 +10,9 @@ import {
 } from '@mui/material';
 import { StakingOptions } from '../SimpleStaker';
 import { StakingBalances } from '../../../../simple-staking/actions';
+import FormatBalance from '../../../../components/FormatBalance';
 
-const optionText = (title: string, body: string) => {
+const optionText = (title: string, body: JSX.Element | string) => {
   return (
     <Grid item xs={12} sx={{ m: 2 }}>
       <Typography variant='h3'>{title}</Typography>
@@ -46,29 +47,47 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
             <FormControlLabel
               labelPlacement='end'
               value='stake'
-              control={<Radio />}
-              label={optionText(
-                'Stake',
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-              )}
+              control={<Radio disabled={balances.available.eqn(0)} />}
+              label={
+                balances.available.eqn(0)
+                  ? optionText('Stake', <>This account has no tokens to be staked. </>)
+                  : optionText(
+                      'Stake',
+                      <>
+                        You can stake up to <FormatBalance value={balances.available} />.
+                      </>
+                    )
+              }
             />
             <FormControlLabel
               labelPlacement='end'
               value='unstake'
               control={<Radio disabled={balances.staked.eqn(0)} />}
-              label={optionText(
-                'Unstake',
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-              )}
+              label={
+                balances.staked.eqn(0)
+                  ? optionText('Unstake', <>This account has no funds to be unstaked. </>)
+                  : optionText(
+                      'Unstake',
+                      <>
+                        You can unstake up to <FormatBalance value={balances.staked} />.
+                      </>
+                    )
+              }
             />
             <FormControlLabel
               labelPlacement='end'
               value='redeem'
               control={<Radio disabled={balances.redeemable.eqn(0)} />}
-              label={optionText(
-                'Redeem',
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-              )}
+              label={
+                balances.redeemable.eqn(0)
+                  ? optionText('Redeem', <>This account has no funds to be redeemed. </>)
+                  : optionText(
+                      'Redeem',
+                      <>
+                        You can redeem <FormatBalance value={balances.redeemable} />.
+                      </>
+                    )
+              }
             />
           </RadioGroup>
         </FormControl>
