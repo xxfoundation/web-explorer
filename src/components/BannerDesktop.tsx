@@ -35,7 +35,7 @@ export default function Banner() {
       </Typography>
       <Button
         component={Link}
-        sx={{ whiteSpace: 'nowrap', mb: 1 }}
+        sx={{ whiteSpace: 'nowrap', my: 0.75 }}
         to={process.env.REACT_APP_WALLET_URL}
         variant='contained'
         color='primary'
