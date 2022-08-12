@@ -1,7 +1,7 @@
 import type { WithChildren } from '../../../types';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PaperWrap from '../../../components/Paper/PaperWrap.styled';
-import { Box, Tabs, Tab, TabProps, Stack } from '@mui/material';
+import { Box, Tabs, Tab, TabProps, Typography, Stack } from '@mui/material';
 
 import ActionSelection from './Panels/StakingOptionsPanel';
 import ConnectWallet from './Panels/ConnectWalletPanel';
@@ -68,7 +68,7 @@ const makeTabProps =
 const MAX_STEPS = 6;
 export type StakingOptions = 'stake' | 'unstake' | 'redeem';
 
-const VerticalTabs = () => {
+const SimpleStaker = () => {
   const accounts = useAccounts();
   const { api } = useApi();
   const [selectedAccount, setSelectedAccount] = useState('');
@@ -83,6 +83,15 @@ const VerticalTabs = () => {
   const [blockHash, setBlockHash] = useState<string>('');
   const [error, setError] = useState<string>();
   const [executingTransaction, setExecutingTransaction] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const executeScroll = useCallback(() => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    executeScroll();
+  }, [executeScroll, step])
 
   const reset = useCallback(() => {
     setSelectedAccount('');
@@ -188,100 +197,98 @@ const VerticalTabs = () => {
   const tabProps = useMemo(() => makeTabProps(validSteps, step), [step, validSteps]);
 
   return (
-    <Stack direction='row' sx={{ bgcolor: 'background.paper' }}>
-      <Tabs
-        orientation='vertical'
-        value={step}
-        aria-label='Simple Staking Stepper'
-        onChange={onStepChange}
-        sx={{
-          borderRight: 1,
-          borderColor: 'divider',
-          display: { xs: 'none', sm: 'flex' },
-          flex: '0 0 fit-content'
-        }}
-      >
-        <Tab label='Connect Wallet' {...tabProps(0)} />
-        <Tab label='Select Wallet' {...tabProps(1)} />
-        <Tab label='Staking Options' {...tabProps(2)} />
-        <Tab label='Input Amount' {...tabProps(3)} />
-        {selectedStakingOption === 'stake' ? (
-          <Tab label='Nominate' {...tabProps(4)} />
-        ) : (
-          <Tab label='Sign and Commit' {...tabProps(4)} />
-        )}
-        <Tab label='Finish' {...tabProps(5)}  disabled={step !== 5} />
-      </Tabs>
-      <Panel {...panelProps(0)}>
-        <ConnectWallet />
-      </Panel>
-      <Panel {...panelProps(1)}>
-        <WalletSelection onSelect={setSelectedAccount} selected={selectedAccount} />
-      </Panel>
-      <Panel {...panelProps(2)}>
-        <Loading loading={!stakingBalances}>
-          {stakingBalances && (
-            <ActionSelection
+    <>
+      <div ref={scrollRef} />
+      <Typography variant='h1' sx={{ pb: 5}}>Simple Staker</Typography>
+      <PaperWrap sx={{ p: { xs: 0, sm: 0, md: 0 }, overflow: 'hidden' }}>
+        <Stack direction='row' sx={{ bgcolor: 'background.paper' }}>
+          <Tabs
+            orientation='vertical'
+            value={step}
+            aria-label='Simple Staking Stepper'
+            onChange={onStepChange}
+            sx={{
+              borderRight: 1,
+              borderColor: 'divider',
+              display: { xs: 'none', sm: 'flex' },
+              flex: '0 0 fit-content'
+            }}
+          >
+            <Tab label='Connect Wallet' {...tabProps(0)} />
+            <Tab label='Select Wallet' {...tabProps(1)} />
+            <Tab label='Staking Options' {...tabProps(2)} />
+            <Tab label='Input Amount' {...tabProps(3)} />
+            {selectedStakingOption === 'stake' ? (
+              <Tab label='Nominate' {...tabProps(4)} />
+            ) : (
+              <Tab label='Sign and Commit' {...tabProps(4)} />
+            )}
+            <Tab label='Finish' {...tabProps(5)}  disabled={step !== 5} />
+          </Tabs>
+          <Panel {...panelProps(0)}>
+            <ConnectWallet />
+          </Panel>
+          <Panel {...panelProps(1)}>
+            <WalletSelection onSelect={setSelectedAccount} selected={selectedAccount} />
+          </Panel>
+          <Panel {...panelProps(2)}>
+            <Loading loading={!stakingBalances}>
+              {stakingBalances && (
+                <ActionSelection
+                  balances={stakingBalances}
+                  selected={selectedStakingOption}
+                  onSelect={setSelectedStakingOption} />
+              )}
+            </Loading>
+          </Panel>
+          <Panel {...panelProps(3)}>
+            <AmountSelection
+              account={selectedAccount}
+              amount={amount}
               balances={stakingBalances}
-              selected={selectedStakingOption}
-              onSelect={setSelectedStakingOption} />
+              option={selectedStakingOption}
+              setAmount={setAmount}
+              setAmountIsValid={setAmountIsValid}
+              setBalances={setStakingBalances}
+            />
+          </Panel>
+          {selectedStakingOption === 'stake' ? (
+            <Panel {...panelPropsSigning(4, true)}>
+              <APYPanel
+                account={selectedAccount}
+                amount={amount}
+                stakingOption={selectedStakingOption}
+                stakingBalances={stakingBalances}
+                setTransaction={setTransaction}
+                setPassword={setPassword}
+              />
+            </Panel>
+          ) : (
+            <Panel {...panelPropsSigning(4, true)}>
+              <NonStakePanel
+                account={selectedAccount}
+                amount={amount}
+                stakingOption={selectedStakingOption}
+                stakingBalances={stakingBalances}
+                setTransaction={setTransaction}
+                setPassword={setPassword}
+              />
+            </Panel>
           )}
-        </Loading>
-      </Panel>
-      <Panel {...panelProps(3)}>
-        <AmountSelection
-          account={selectedAccount}
-          amount={amount}
-          balances={stakingBalances}
-          option={selectedStakingOption}
-          setAmount={setAmount}
-          setAmountIsValid={setAmountIsValid}
-          setBalances={setStakingBalances}
-        />
-      </Panel>
-      {selectedStakingOption === 'stake' ? (
-        <Panel {...panelPropsSigning(4, true)}>
-          <APYPanel
-            account={selectedAccount}
-            amount={amount}
-            stakingOption={selectedStakingOption}
-            stakingBalances={stakingBalances}
-            setTransaction={setTransaction}
-            setPassword={setPassword}
-          />
-        </Panel>
-      ) : (
-        <Panel {...panelPropsSigning(4, true)}>
-          <NonStakePanel
-            account={selectedAccount}
-            amount={amount}
-            stakingOption={selectedStakingOption}
-            stakingBalances={stakingBalances}
-            setTransaction={setTransaction}
-            setPassword={setPassword}
-          />
-        </Panel>
-      )}
-        <Panel {...panelProps(5)}>
-          <FinishPanel
-            account={selectedAccount}
-            amount={amount}
-            error={error}
-            loading={executingTransaction}
-            option={selectedStakingOption as StakingOptions}
-            blockHash={blockHash}
-            reset={reset}
-          />
-        </Panel>
-    </Stack>
-  );
-};
-
-const SimpleStaker = () => {
-  return (
-    <PaperWrap sx={{ p: { xs: 0, sm: 0, md: 0 }, overflow: 'hidden' }}>
-      <VerticalTabs />
-    </PaperWrap>
+            <Panel {...panelProps(5)}>
+              <FinishPanel
+                account={selectedAccount}
+                amount={amount}
+                error={error}
+                loading={executingTransaction}
+                option={selectedStakingOption as StakingOptions}
+                blockHash={blockHash}
+                reset={reset}
+              />
+            </Panel>
+        </Stack>
+      </PaperWrap>
+    </>
   );
 };
 

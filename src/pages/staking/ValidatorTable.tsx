@@ -5,7 +5,6 @@ import Address from '../../components/Hash/XXNetworkAddress';
 import CmixAddress from '../../components/Hash/CmixAddress';
 import Error from '../../components/Error';
 import FormatBalance from '../../components/FormatBalance';
-import Loading from '../../components/Loading';
 import { TableContainer } from '../../components/Tables/TableContainer';
 import TablePagination from '../../components/Tables/TablePagination';
 import {
@@ -23,6 +22,7 @@ import ValidatorTableControls, {
   ValidatorFilterLabels
 } from './ValidatorTableControls';
 import { TabText } from '../../components/Tabs';
+import SkeletonRows from '../../components/Tables/SkeletonRows';
 
 const ROWS_PER_PAGE = 20;
 
@@ -142,12 +142,14 @@ const ValidatorsTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell colSpan={7}>
-                {!validatorsQuery.loading && error && <Error type='data-unavailable' />}
-                {validatorsQuery.loading && <Loading />}
-              </TableCell>
-            </TableRow>
+            {validatorsQuery.loading && <SkeletonRows columns={8} rows={rowsPerPage} />}
+            {!validatorsQuery.loading && error && (
+                <TableRow>
+                  <TableCell colSpan={7}>
+                    <Error type='data-unavailable' />
+                  </TableCell>
+                </TableRow>
+            )}
             {filter !== 'waiting' ? (
               validators ? (
                 validators.map((validator, index) => (
