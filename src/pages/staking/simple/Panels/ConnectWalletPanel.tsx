@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { Alert, Button, Link, Stack, Typography } from '@mui/material';
 import { keyring } from '@polkadot/ui-keyring';
 
@@ -28,7 +28,7 @@ const ConnectWallet: FC = () => {
   );
 
   // Connection Buttons Toggle
-  const [expandConnectionButtons, connectionButtons] = useToggle(false);
+  const [expandConnectionButtons, connectionButtons] = useToggle();
   const endIconConnectionButtons = useMemo(
     () => (expandConnectionButtons ? <KeyboardArrowUp /> : <KeyboardArrowDown />),
     [expandConnectionButtons]
@@ -55,12 +55,6 @@ const ConnectWallet: FC = () => {
       });
     }
   }, [accounts.allAccounts]);
-
-  useEffect(() => {
-    if (!accounts.hasAccounts) {
-      connectionButtons.toggleOn();
-    }
-  });
 
   // Get APY
   const query = useQuery<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
@@ -113,7 +107,7 @@ const ConnectWallet: FC = () => {
             Add more wallets
           </Button>
         )}
-        {expandConnectionButtons && (
+        {(expandConnectionButtons || !accounts.hasAccounts) && (
           <Stack spacing={5} direction={{ xs: 'column', sm: 'row' }}>
             <Button onClick={generateDialog.toggleOn} variant='contained'>
               Generate Wallet

@@ -1,7 +1,7 @@
 import { Button, TextField, styled, Typography, Stack } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 
-const NUM_CONFIRMATIONS = 1;
+const NUM_CONFIRMATIONS = 5;
 
 interface MnemonicGridProps {
   mnemonic: string[];
