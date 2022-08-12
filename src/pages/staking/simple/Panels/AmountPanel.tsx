@@ -73,8 +73,10 @@ const AmountSelection: FC<Props> = ({
   }, [activeStake, amount, option]);
 
   const amountIsValid = useMemo(
-    () => amount.gt(BN_ZERO) && amount.lte(available),
-    [amount, available]
+    () =>
+      ((amount.gte(BN_ZERO) && activeStake.gt(BN_ZERO)) || amount.gt(BN_ZERO)) &&
+      amount.lte(available),
+    [activeStake, amount, available]
   );
 
   useEffect(() => {

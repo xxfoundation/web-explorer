@@ -91,7 +91,7 @@ const SimpleStaker = () => {
 
   useEffect(() => {
     executeScroll();
-  }, [executeScroll, step])
+  }, [executeScroll, step]);
 
   const reset = useCallback(() => {
     setSelectedAccount('');
@@ -106,10 +106,9 @@ const SimpleStaker = () => {
 
   useEffect(() => {
     if (api && selectedAccount) {
-      getStakingBalances(api, selectedAccount)
-        .then(setStakingBalances);
+      getStakingBalances(api, selectedAccount).then(setStakingBalances);
     }
-  }, [api, selectedAccount])
+  }, [api, selectedAccount]);
 
   useEffect(() => {
     if (selectedAccount && !accounts.allAccounts.includes(selectedAccount)) {
@@ -124,7 +123,7 @@ const SimpleStaker = () => {
       2: !!selectedAccount,
       3: accounts.hasAccounts && !!selectedAccount && !!selectedStakingOption,
       4: amountIsValid,
-      5: !!password,
+      5: !!password
     }),
     [accounts.hasAccounts, amountIsValid, password, selectedAccount, selectedStakingOption]
   );
@@ -199,7 +198,9 @@ const SimpleStaker = () => {
   return (
     <>
       <div ref={scrollRef} />
-      <Typography variant='h1' sx={{ pb: 5}}>Simple Staker</Typography>
+      <Typography variant='h1' sx={{ pb: 5 }}>
+        Simple Staker
+      </Typography>
       <PaperWrap sx={{ p: { xs: 0, sm: 0, md: 0 }, overflow: 'hidden' }}>
         <Stack direction='row' sx={{ bgcolor: 'background.paper' }}>
           <Tabs
@@ -223,7 +224,7 @@ const SimpleStaker = () => {
             ) : (
               <Tab label='Sign and Commit' {...tabProps(4)} />
             )}
-            <Tab label='Finish' {...tabProps(5)}  disabled={step !== 5} />
+            <Tab label='Finish' {...tabProps(5)} disabled={step !== 5} />
           </Tabs>
           <Panel {...panelProps(0)}>
             <ConnectWallet />
@@ -237,7 +238,8 @@ const SimpleStaker = () => {
                 <ActionSelection
                   balances={stakingBalances}
                   selected={selectedStakingOption}
-                  onSelect={setSelectedStakingOption} />
+                  onSelect={setSelectedStakingOption}
+                />
               )}
             </Loading>
           </Panel>
@@ -275,17 +277,17 @@ const SimpleStaker = () => {
               />
             </Panel>
           )}
-            <Panel {...panelProps(5)}>
-              <FinishPanel
-                account={selectedAccount}
-                amount={amount}
-                error={error}
-                loading={executingTransaction}
-                option={selectedStakingOption as StakingOptions}
-                blockHash={blockHash}
-                reset={reset}
-              />
-            </Panel>
+          <Panel {...panelProps(5)}>
+            <FinishPanel
+              account={selectedAccount}
+              amount={amount}
+              error={error}
+              loading={executingTransaction}
+              option={selectedStakingOption as StakingOptions}
+              blockHash={blockHash}
+              reset={reset}
+            />
+          </Panel>
         </Stack>
       </PaperWrap>
     </>
