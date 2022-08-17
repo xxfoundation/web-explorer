@@ -19,6 +19,7 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import keyring from '@polkadot/ui-keyring';
 import useApi from '../../../hooks/useApi';
 import Loading from '../../../components/Loading';
+import { theme } from '../../../themes/default';
 
 type PanelProps = WithChildren &
   NavProps & {
@@ -51,17 +52,28 @@ const makeTabProps =
     return {
       id: `vertical-tab-${index}`,
       'aria-controls': `vertical-tabpanel-${index}`,
-      disabled: currentStep === 5 || (currentStep !== index && !validSteps[index]),
-      sx: {
-        px: { sm: 3, md: 5 },
-        backgroundColor: 'grey.100',
-        '&.Mui-selected': {
-          backgroundColor: 'background.paper',
-          borderColor: 'grey.200',
-          borderWidth: '1px',
-          borderStyle: 'solid'
-        }
-      }
+      disabled: currentStep !== index,
+      sx:
+        currentStep !== index && validSteps[index]
+          ? {
+              px: { sm: 3, md: 5 },
+              borderRight: 0,
+              borderColor: theme.palette.primary.main,
+              color: `${theme.palette.primary.main} !important`,
+              fontWeight: 'normal',
+              backgroundColor: 'background.paper'
+            }
+          : {
+              px: { sm: 3, md: 5 },
+              backgroundColor: 'grey.100',
+              '&.Mui-selected': {
+                fontWeight: 'bolder',
+                backgroundColor: 'background.paper',
+                borderColor: 'grey.200',
+                borderWidth: '1px',
+                borderStyle: 'solid'
+              }
+            }
     };
   };
 

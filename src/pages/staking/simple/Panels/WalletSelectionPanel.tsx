@@ -10,7 +10,8 @@ import {
   TableHead,
   TableBody,
   TableRow,
-  Button
+  Button,
+  Box
 } from '@mui/material';
 import { keyring } from '@polkadot/ui-keyring';
 import useAccounts from '../../../../hooks/useAccounts';
@@ -68,8 +69,13 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   return (
     <Stack spacing={4}>
       <Typography variant='h2'>Select Wallet</Typography>
-      {!balances || !accounts ? (
-        <Loading />
+      {!balances || !accounts || !navigator.onLine ? (
+        <Box sx={{ p: 5, py: 20 }}>
+          <Loading size='md' />
+          <Typography variant='body1' sx={{ textAlign: 'center', marginTop: '1em' }}>
+            Trying to connect to the API... Please check your internet connectivity
+          </Typography>
+        </Box>
       ) : (
         <TableStyled>
           <Table size='small'>

@@ -1,7 +1,7 @@
 import { Button, TextField, styled, Typography, Stack } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 
-const NUM_CONFIRMATIONS = 5;
+const NUM_CONFIRMATIONS = 1;
 
 interface MnemonicGridProps {
   mnemonic: string[];
@@ -16,7 +16,12 @@ const getRandomSet = (array: number[], n: number): number[] => {
   return shuffled.slice(0, n);
 };
 
-const MnemonicGrid = ({ cancel, indexes, mnemonic, onValid }: MnemonicGridProps): React.ReactElement => {
+const MnemonicGrid = ({
+  cancel,
+  indexes,
+  mnemonic,
+  onValid
+}: MnemonicGridProps): React.ReactElement => {
   const [words, setWords] = useState<string[]>(indexes.map(() => ''));
 
   const onSetWord = useCallback(
@@ -54,19 +59,19 @@ const MnemonicGrid = ({ cancel, indexes, mnemonic, onValid }: MnemonicGridProps)
   );
 
   return (
-      <>
-        {result}
-        <Stack direction='row' justifyContent='space-between'>
-          <Button onClick={cancel} variant='outlined'>
-            Cancel
-          </Button>
-          <Button disabled={!isValid} onClick={onValid} variant='contained'>
-            Next
-          </Button>
-        </Stack>
-      </>
-    );
-  };
+    <>
+      {result}
+      <Stack direction='row' justifyContent='space-between'>
+        <Button onClick={cancel} variant='outlined'>
+          Cancel
+        </Button>
+        <Button disabled={!isValid} onClick={onValid} variant='contained'>
+          Next
+        </Button>
+      </Stack>
+    </>
+  );
+};
 
 interface Props {
   mnemonics: string[];
@@ -78,6 +83,12 @@ function Step2({ cancel, mnemonics, onFinish }: Props): React.ReactElement {
   const [onStage2, setOnStage2] = useState<boolean>(false);
   const standard = mnemonics[0].split(' ').map((elem) => elem);
   const quantum = mnemonics[1].split(' ').map((elem) => elem);
+  const [standardIndexes] = useState(
+    getRandomSet(Array.from(Array(standard.length).keys()), NUM_CONFIRMATIONS)
+  );
+  const [quantumIndexes] = useState(
+    getRandomSet(Array.from(Array(quantum.length).keys()), NUM_CONFIRMATIONS)
+  );
 
   const onSetReady = useCallback(() => {
     setOnStage2(true);
@@ -93,7 +104,7 @@ function Step2({ cancel, mnemonics, onFinish }: Props): React.ReactElement {
           </Typography>
           <MnemonicGrid
             cancel={cancel}
-            indexes={getRandomSet(Array.from(Array(quantum.length).keys()), NUM_CONFIRMATIONS)}
+            indexes={quantumIndexes}
             mnemonic={quantum}
             onValid={onSetReady}
           />
@@ -106,7 +117,7 @@ function Step2({ cancel, mnemonics, onFinish }: Props): React.ReactElement {
           </Typography>
           <MnemonicGrid
             cancel={cancel}
-            indexes={getRandomSet(Array.from(Array(standard.length).keys()), NUM_CONFIRMATIONS)}
+            indexes={standardIndexes}
             mnemonic={standard}
             onValid={onFinish}
           />

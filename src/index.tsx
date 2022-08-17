@@ -10,7 +10,6 @@ import reportWebVitals from './reportWebVitals';
 import SnackbarProvider from './SnackbarProvider';
 import BannerDesktop from './components/BannerDesktop';
 import BannerMobile from './components/BannerMobile';
-import Api from './components/Api';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,9 +17,7 @@ ReactDOM.render(
       <BannerDesktop />
       <BannerMobile />
       <ApolloProvider client={apolloClient}>
-        <Api>
-          <App />
-        </Api>
+        <App />
       </ApolloProvider>
     </SnackbarProvider>
   </React.StrictMode>,

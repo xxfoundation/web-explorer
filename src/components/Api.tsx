@@ -20,6 +20,7 @@ const Api: FC<WithChildren> = ({ children }) => {
   const [api, setApi] = useState<ApiPromise>();
   const [connected, setConnected] = useState(false);
   const [ready, setIsReady] = useState(false);
+  const [generate, setGenerate] = useState(false);
 
   useEffect(() => {
     if (!api) {
@@ -54,28 +55,30 @@ const Api: FC<WithChildren> = ({ children }) => {
       api,
       connected,
       ready,
-      error
+      error,
+      setGenerate
     }),
-    [api, connected, error, ready]
+    [api, connected, error, ready, setGenerate]
   );
+  console.warn(generate);
 
-  if (error) {
+  if (error && !generate) {
     return (
       <Box sx={{ p: 5, py: 10, textAlign: 'center' }}>
         <Error
           variant='body1'
           sx={{ fontSize: 24, pb: 5 }}
-          message='Service currently unavailable'
+          message='Service currently unavailable. Please check your internet connectivity.'
         />
       </Box>
     );
   }
 
-  if (!ready) {
+  if (!ready && !generate) {
     return (
       <Box sx={{ p: 5, py: 20 }}>
         <Loading size='md' />
-        <Typography variant='body1' sx={{ textAlign: 'center' }}>
+        <Typography variant='body1' sx={{ textAlign: 'center', marginTop: '1em' }}>
           Connecting to the API, please wait.
         </Typography>
       </Box>

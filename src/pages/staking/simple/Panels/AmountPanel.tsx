@@ -125,6 +125,12 @@ const AmountSelection: FC<Props> = ({
   const stakeInputLabel = (
     <>
       Insert Amount from <i>Available to Stake</i> to be added to <i>Active Stake</i>
+      {activeStake.gt(BN_ZERO) && (
+        <i>
+          <br />
+          (To change the selected validators, you can proceed with 0)
+        </i>
+      )}
     </>
   );
   const unstakeInputLabel = (
