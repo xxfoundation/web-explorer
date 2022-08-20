@@ -6,7 +6,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import React, { useCallback, useState } from 'react';
-import InternalLink from '../Link';
+import Link from '../Link';
 
 export default function MobileNav() {
   const [opened, setOpened] = useState(false);
@@ -52,62 +52,56 @@ export default function MobileNav() {
         >
           <Box sx={{ p: 4 }}>
             <IconButton onClick={close} sx={{ p: 0, ml: -0.5 }}>
-              <CloseIcon sx={{ color: 'secondary.contrastText' }} />
+              <CloseIcon sx={{ color: 'white' }} />
             </IconButton>
             <Box
               sx={{
                 py: 4,
                 a: {
-                  color: 'secondary.contrastText',
+                  color: 'white',
                   textDecoration: 'none',
                   display: 'block',
                   py: 1.5
                 }
               }}
             >
-              <Typography variant='h3'>
-                <InternalLink to='/' onClick={close}>
+              <Typography variant='h4'>
+                <Link to='/' onClick={close}>
                   Blockchain
-                </InternalLink>
+                </Link>
               </Typography>
-              <InternalLink to={'/blocks'} onClick={close}>
+              <Link to={'/blocks'} onClick={close}>
                 Blocks
-              </InternalLink>
-              <InternalLink to='/extrinsics' onClick={close}>
+              </Link>
+              <Link to='/extrinsics' onClick={close}>
                 Extrinsics
-              </InternalLink>
-              <InternalLink to='/transfers' onClick={close}>
+              </Link>
+              <Link to='/transfers' onClick={close}>
                 Transfers
-              </InternalLink>
-              <InternalLink to='/events' onClick={close}>
+              </Link>
+              <Link to='/events' onClick={close}>
                 Events
-              </InternalLink>
-
-              <Typography variant='h3' sx={{ mt: 2 }}>
-                <InternalLink to='/staking' onClick={close}>
+              </Link>
+              <Typography variant='h4' sx={{ mt: 2 }}>
+                <Link to='/staking' onClick={close}>
                   Staking
-                </InternalLink>
+                </Link>
               </Typography>
-
-              {/* <Typography variant='h3' sx={{ mt: 2 }}>
-                <InternalLink to='governance' onClick={close}>Governance</InternalLink>
-              </Typography>
-              <Link href='/' onClick={close}>Overview</Link>
-              <Link href='/' onClick={close}>Democracy</Link>
-              <Link href='/' onClick={close}>Council</Link>
-              <Link href='/' onClick={close}>Tech Committee</Link>
-              <Link href='/' onClick={close}>Treasury</Link>
-              <Link href='/' onClick={close}>Bounties</Link> */}
-
-              <Typography variant='h3' sx={{ mt: 2 }}>
-                <InternalLink to='/accounts' onClick={close}>
+              <Link to='/staking' onClick={close}>
+                Dashboard
+              </Link>
+              <Link to='/staking/simple' onClick={close}>
+                Simple Staking
+              </Link>
+              <Typography variant='h4' sx={{ mt: 2 }}>
+                <Link to='/accounts' onClick={close}>
                   Accounts
-                </InternalLink>
+                </Link>
               </Typography>
               <Typography variant='h3' sx={{ mt: 2 }}>
-                <InternalLink to='/glossary' onClick={close}>
+                <Link to='/glossary' onClick={close}>
                   Glossary
-                </InternalLink>
+                </Link>
               </Typography>
             </Box>
           </Box>

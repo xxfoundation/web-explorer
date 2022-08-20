@@ -23,7 +23,7 @@ function usePagination(options?: PaginationOptions): PaginationResult {
   const [rowsPerPage, setRowsPerPage] = useState(options?.rowsPerPage ?? 20);
   const [page, setPage] = useState(0);
 
-  const onRowsPerPageChange = useCallback(({ target: { value } }) => {
+  const onRowsPerPageChange = useCallback(({ target: { value } }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setRowsPerPage(parseInt(value));
     setPage(0);
   }, []);

@@ -18,8 +18,8 @@ import {
 } from '../../schemas/transfers.schema';
 
 const TransferRow = (data: Transfer) => {
-  const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.index}`;
-  
+  const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.extrinsicIndex}`;
+
   return [
     { value: <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link> },
     { value: <TimeAgo date={data.timestamp} /> },
@@ -29,7 +29,8 @@ const TransferRow = (data: Transfer) => {
           value={data.source}
           name={data.sourceAccount.identity?.display}
           url={`/accounts/${data.source}`}
-          truncated />
+          truncated
+        />
       )
     },
     {
@@ -38,12 +39,13 @@ const TransferRow = (data: Transfer) => {
           name={data.destinationAccount.identity?.display}
           value={data.destination}
           url={`/accounts/${data.destination}`}
-          truncated />
+          truncated
+        />
       )
     },
     { value: <FormatBalance value={data.amount.toString()} /> },
-    { value: <BlockStatusIcon status={data.success ? 'successful' : 'failed'} /> },
-    { value: <Hash truncated value={data.hash} url={extrinsicIdLink} showTooltip /> }
+    { value: <BlockStatusIcon status={data.extrinsic.success ? 'successful' : 'failed'} /> },
+    { value: <Hash truncated value={data.extrinsic.hash} url={extrinsicIdLink} showTooltip /> }
   ];
 };
 

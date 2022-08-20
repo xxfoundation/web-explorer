@@ -1,3 +1,5 @@
+import type { WithChildren } from '../../../types';
+
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { SeriesData, SeriesMetadata, TimeInterval } from './types';
 import { extractInfo } from './utils';
@@ -23,12 +25,14 @@ const SelectedIntervalContext = createContext<SelectedIntervalContextType>({
 
 export const useBarchartContext = () => useContext(SelectedIntervalContext);
 
-export const Provider: React.FC<{
+type Props = WithChildren & {
   data?: [string, number][];
   interval: TimeInterval;
   seriesA: SeriesData;
   seriesB?: SeriesData;
-}> = ({
+}
+
+export const Provider: React.FC<Props> = ({
   children,
   data = [],
   interval,

@@ -12,7 +12,7 @@ type Props = {
 const GenericSearchInput: FC<Props> = ({ loading, search }) => {
   const [searchInput, setSearchInput] = useState('');
 
-  const searchInputOnChange = useCallback(
+  const searchInputOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>>(
     ({ target: { value } }) => setSearchInput(value),
     [setSearchInput]
   );

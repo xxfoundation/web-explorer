@@ -21,7 +21,7 @@ export const HoldersRolesFilters: FC<{
   const theme = useTheme();
   const [filterState, setFilterState] = useState(filters);
 
-  const makeFilterToggler = useCallback((key) => () => setFilterState((state) => ({
+  const makeFilterToggler = useCallback((key: string) => () => setFilterState((state) => ({
     ...state,
     [key]: !state[key]
   })), []);

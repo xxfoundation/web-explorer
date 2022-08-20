@@ -1,3 +1,5 @@
+import type { WithChildren } from '../types';
+
 import React, { FC } from 'react';
 import {
   styled,
@@ -36,7 +38,7 @@ const TableStyled = styled(Table)(({ theme }) => ({
   }
 }));
 
-export const SummaryContainer: FC = ({ children }) => (
+export const SummaryContainer: FC<WithChildren> = ({ children }) => (
   <PaperStyled>
     <TableStyled size='medium'>
       <TableBody>{children}</TableBody>
