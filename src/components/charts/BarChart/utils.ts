@@ -40,7 +40,7 @@ export const convertTimestamps = (timestamps: number[], interval: TimeInterval =
 export const calculateTickSize = (max: number, numOfTicks: number) => {
   const perTick = max / numOfTicks;
   const magnitude = getMagnitude(perTick) - 1;
-  const power = Math.pow(10, magnitude);
+  const power = 10 ** magnitude;
   return toNearestCeiling(perTick, power);
 };
 
@@ -68,7 +68,7 @@ export const extractInfo = (
   interval: TimeInterval,
   numberOfTicks = NUMBER_OF_TICKS
 ): SeriesMetadata => {
-  const maxY = Math.max(...data?.map(([,y]) => y) ?? []);
+  const maxY = Math.max(...data?.map(([, y]) => y) ?? []);
   const tickSize = calculateTickSize(maxY, numberOfTicks);
   const ticks = Array.from(Array(numberOfTicks).keys()).map((i) => (i + 1) * tickSize);
   const maxTick = Math.max(...ticks);

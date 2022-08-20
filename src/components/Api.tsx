@@ -60,7 +60,6 @@ const Api: FC<WithChildren> = ({ children }) => {
     }),
     [api, connected, error, ready, setGenerate]
   );
-  console.warn(generate);
 
   if (error && !generate) {
     return (

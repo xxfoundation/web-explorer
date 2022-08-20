@@ -166,7 +166,7 @@ const SimpleStaker = () => {
         pair.decodePkcs8(password);
         (await transaction).signAndSend(pair, ({ status }) => {
           if (status.isInBlock) {
-            console.warn(`included in ${status.asInBlock}`);
+            console.warn(`tx included in ${status.asInBlock}`);
             setBlockHash(status.asInBlock.toString());
           }
         });
