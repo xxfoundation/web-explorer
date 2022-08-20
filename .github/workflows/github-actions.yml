@@ -15,11 +15,11 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [17.x]
 
     steps:
       # Checkout repo
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Extract branch name
         shell: bash
@@ -31,7 +31,7 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
