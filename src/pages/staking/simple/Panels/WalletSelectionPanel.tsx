@@ -40,10 +40,13 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   }, [accounts.allAccounts.length, setCount]);
 
   useEffect(() => {
-    api?.query.system.account.multi(accounts?.allAccounts).then((infos) => {
-      const b = infos.map((info) => info.data.free.add(info.data.reserved));
-      setBalances(b);
-    });
+    api?.query.system.account
+      .multi(accounts?.allAccounts)
+      .then((infos) => {
+        const b = infos.map((info) => info.data.free.add(info.data.reserved));
+        setBalances(b);
+      })
+      .catch((error) => console.error(error));
   }, [accounts?.allAccounts, api?.query?.system?.account]);
 
   const handleAccountChange = useCallback(

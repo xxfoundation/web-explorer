@@ -118,7 +118,9 @@ const SimpleStaker = () => {
 
   useEffect(() => {
     if (api && selectedAccount) {
-      getStakingBalances(api, selectedAccount).then(setStakingBalances);
+      getStakingBalances(api, selectedAccount)
+        .then(setStakingBalances)
+        .catch(() => console.error('[Simple Staker] Unable to Get Staking Balances'));
     }
   }, [api, selectedAccount]);
 

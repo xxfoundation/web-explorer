@@ -78,7 +78,9 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
   const onChangeFile = useCallback<React.ChangeEventHandler<HTMLInputElement>>((evt) => {
     const currentFile = evt.target.files?.[0];
     if (currentFile) {
-      parseFile(currentFile, setError).then(setJson);
+      parseFile(currentFile, setError)
+        .then(setJson)
+        .catch((err) => console.error(err));
     }
   }, []);
 
