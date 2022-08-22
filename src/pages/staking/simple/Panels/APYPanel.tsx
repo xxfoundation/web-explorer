@@ -15,7 +15,7 @@ import { BN, BN_ZERO } from '@polkadot/util';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { keyring } from '@polkadot/ui-keyring';
-import ValidatorList from '../utils/ValidatorList';
+import ValidatorList from '../utils/AccountList';
 import FormatBalance from '../../../../components/FormatBalance';
 import { useToggle } from '../../../../hooks';
 import { getStakedReturn } from '../../StakingMetrics';
@@ -27,8 +27,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import Loading from '../../../../components/Loading';
 import useInput from '../../../../hooks/useInput';
-
-const validatorsList = undefined;
+import { selectValidators } from '../../../../simple-staking/selection';
 
 const AmountDisplay = styled(Typography)(({ theme }) => ({
   lineHeight: 1,
@@ -70,6 +69,7 @@ const APYPanel: FC<Props> = ({
   );
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState<boolean>(false);
+  const [selectedValidators, setSelectedValidators] = useState<string[]>(['']);
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [inputPassword, setInputPassword] = useInput('');
 
@@ -78,10 +78,12 @@ const APYPanel: FC<Props> = ({
   const economics = query.data?.economics[0];
   const loadingQuery = query.loading;
   const apy = economics ? getStakedReturn(economics) : 0;
-  const xxPerEra = useMemo(() => (stakingBalances?.staked || BN_ZERO)
-    .add(amount)
-    .muln(apy / 100)
-    .divn(365),
+  const xxPerEra = useMemo(
+    () =>
+      (stakingBalances?.staked || BN_ZERO)
+        .add(amount)
+        .muln(apy / 100)
+        .divn(365),
     [amount, apy, stakingBalances?.staked]
   );
 
@@ -103,14 +105,30 @@ const APYPanel: FC<Props> = ({
     }, 0);
   }, [account, inputPassword, setPassword]);
 
+  const getValidator = useCallback(async () => {
+    if (!api) {
+      return undefined;
+    }
+    const targets = await selectValidators(api, account);
+    setSelectedValidators(targets.map((validator) => validator.validatorId));
+  }, [account, api]);
+
   // Create Transaction
   useEffect(() => {
     if (api && stakingBalances && stakingOption === 'stake') {
-      setTransaction(
-        stake(api, stakingBalances, account, amount)
-      );
+      getValidator();
+      setTransaction(stake(api, account, amount, selectedValidators));
     }
-  }, [account, amount, api, setTransaction, stakingBalances, stakingOption]);
+  }, [
+    account,
+    amount,
+    api,
+    getValidator,
+    selectedValidators,
+    setTransaction,
+    stakingBalances,
+    stakingOption
+  ]);
 
   return (
     <>
@@ -152,7 +170,7 @@ const APYPanel: FC<Props> = ({
               for stake of
             </Typography>
             <Typography sx={{ lineHeight: 1.25, fontSize: '1rem' }} variant='body2'>
-              <FormatBalance value={amount} />
+              <FormatBalance value={(stakingBalances?.staked || BN_ZERO).add(amount)} />
             </Typography>
           </Stack>
           {loadingQuery ? (
@@ -178,9 +196,9 @@ const APYPanel: FC<Props> = ({
             Show validators selected
           </Button>
         </Stack>
-        {expandValidators && validatorsList && <ValidatorList accounts={validatorsList} />}
+        {expandValidators && selectedValidators && <ValidatorList accounts={selectedValidators} />}
         <Alert severity='info'>
-          <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Want More Control?</AlertTitle>
+          <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Do you want more control?</AlertTitle>
           <Typography variant='body3'>
             You can always go to our{' '}
             <Link target='__blank' href={walletUrl}>
@@ -191,7 +209,7 @@ const APYPanel: FC<Props> = ({
         </Alert>
         <Stack spacing={1}>
           <Typography variant='body3' sx={{ textAlign: 'end' }}>
-            To Sign you need to unlock your wallet using the password used to save it here.
+            Insert password to unlock your wallet
           </Typography>
           <Stack direction='row' justifyContent='end' spacing={2}>
             <Box>

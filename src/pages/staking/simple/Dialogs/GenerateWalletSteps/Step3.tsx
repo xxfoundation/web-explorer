@@ -23,7 +23,7 @@ function Step3({ onFinish, standardMnemonic }: Props): React.ReactElement {
         setAddress(wallet.pair.address);
         setLoading(false);
       } catch (err) {
-        setError('Decoding failed, double check your password.');
+        setError('Unable to add your wallet.');
         setLoading(false);
       }
     }, 0);

@@ -19,6 +19,7 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import keyring from '@polkadot/ui-keyring';
 import useApi from '../../../hooks/useApi';
 import Loading from '../../../components/Loading';
+import { theme } from '../../../themes/default';
 
 type PanelProps = WithChildren &
   NavProps & {
@@ -51,17 +52,28 @@ const makeTabProps =
     return {
       id: `vertical-tab-${index}`,
       'aria-controls': `vertical-tabpanel-${index}`,
-      disabled: currentStep !== index && !validSteps[index],
-      sx: {
-        px: { sm: 3, md: 5 },
-        backgroundColor: 'grey.100',
-        '&.Mui-selected': {
-          backgroundColor: 'background.paper',
-          borderColor: 'grey.200',
-          borderWidth: '1px',
-          borderStyle: 'solid'
-        }
-      }
+      disabled: currentStep !== index,
+      sx:
+        currentStep !== index && validSteps[index]
+          ? {
+              px: { sm: 3, md: 5 },
+              borderRight: 0,
+              borderColor: theme.palette.primary.main,
+              color: `${theme.palette.primary.main} !important`,
+              fontWeight: 'normal',
+              backgroundColor: 'background.paper'
+            }
+          : {
+              px: { sm: 3, md: 5 },
+              backgroundColor: 'grey.100',
+              '&.Mui-selected': {
+                fontWeight: 'bolder',
+                backgroundColor: 'background.paper',
+                borderColor: 'grey.200',
+                borderWidth: '1px',
+                borderStyle: 'solid'
+              }
+            }
     };
   };
 
@@ -80,7 +92,7 @@ const SimpleStaker = () => {
   const [stakingBalances, setStakingBalances] = useState<StakingBalances>();
   const [transaction, setTransaction] =
     useState<Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>>();
-  const [blockHash, setBlockHash] = useState<string>('');
+  const [blockHash, setBlockHash] = useState<string>();
   const [error, setError] = useState<string>();
   const [executingTransaction, setExecutingTransaction] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -91,7 +103,7 @@ const SimpleStaker = () => {
 
   useEffect(() => {
     executeScroll();
-  }, [executeScroll, step])
+  }, [executeScroll, step]);
 
   const reset = useCallback(() => {
     setSelectedAccount('');
@@ -107,9 +119,10 @@ const SimpleStaker = () => {
   useEffect(() => {
     if (api && selectedAccount) {
       getStakingBalances(api, selectedAccount)
-        .then(setStakingBalances);
+        .then(setStakingBalances)
+        .catch(() => console.error('[Simple Staker] Unable to Get Staking Balances'));
     }
-  }, [api, selectedAccount])
+  }, [api, selectedAccount]);
 
   useEffect(() => {
     if (selectedAccount && !accounts.allAccounts.includes(selectedAccount)) {
@@ -124,7 +137,7 @@ const SimpleStaker = () => {
       2: !!selectedAccount,
       3: accounts.hasAccounts && !!selectedAccount && !!selectedStakingOption,
       4: amountIsValid,
-      5: !!password,
+      5: !!password
     }),
     [accounts.hasAccounts, amountIsValid, password, selectedAccount, selectedStakingOption]
   );
@@ -155,7 +168,7 @@ const SimpleStaker = () => {
         pair.decodePkcs8(password);
         (await transaction).signAndSend(pair, ({ status }) => {
           if (status.isInBlock) {
-            console.warn(`included in ${status.asInBlock}`);
+            console.warn(`tx included in ${status.asInBlock}`);
             setBlockHash(status.asInBlock.toString());
           }
         });
@@ -199,7 +212,9 @@ const SimpleStaker = () => {
   return (
     <>
       <div ref={scrollRef} />
-      <Typography variant='h1' sx={{ pb: 5}}>Simple Staker</Typography>
+      <Typography variant='h1' sx={{ pb: 5 }}>
+        Simple Staker
+      </Typography>
       <PaperWrap sx={{ p: { xs: 0, sm: 0, md: 0 }, overflow: 'hidden' }}>
         <Stack direction='row' sx={{ bgcolor: 'background.paper' }}>
           <Tabs
@@ -223,7 +238,7 @@ const SimpleStaker = () => {
             ) : (
               <Tab label='Sign and Commit' {...tabProps(4)} />
             )}
-            <Tab label='Finish' {...tabProps(5)}  disabled={step !== 5} />
+            <Tab label='Finish' {...tabProps(5)} disabled={step !== 5} />
           </Tabs>
           <Panel {...panelProps(0)}>
             <ConnectWallet />
@@ -237,7 +252,8 @@ const SimpleStaker = () => {
                 <ActionSelection
                   balances={stakingBalances}
                   selected={selectedStakingOption}
-                  onSelect={setSelectedStakingOption} />
+                  onSelect={setSelectedStakingOption}
+                />
               )}
             </Loading>
           </Panel>
@@ -275,17 +291,17 @@ const SimpleStaker = () => {
               />
             </Panel>
           )}
-            <Panel {...panelProps(5)}>
-              <FinishPanel
-                account={selectedAccount}
-                amount={amount}
-                error={error}
-                loading={executingTransaction}
-                option={selectedStakingOption as StakingOptions}
-                blockHash={blockHash}
-                reset={reset}
-              />
-            </Panel>
+          <Panel {...panelProps(5)}>
+            <FinishPanel
+              account={selectedAccount}
+              amount={amount}
+              error={error}
+              loading={executingTransaction}
+              option={selectedStakingOption as StakingOptions}
+              blockHash={blockHash}
+              reset={reset}
+            />
+          </Panel>
         </Stack>
       </PaperWrap>
     </>

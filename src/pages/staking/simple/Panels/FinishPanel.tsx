@@ -13,7 +13,7 @@ type Props = {
   amount: BN;
   error?: string;
   account: string;
-  blockHash: string;
+  blockHash?: string;
   loading: boolean;
   reset: () => void;
 };
@@ -25,17 +25,6 @@ const optionToVerb: Record<StakingOptions, string> = {
 };
 
 const FinishPanel: FC<Props> = ({ account, amount, blockHash, error, loading, option, reset }) => {
-  if (loading) {
-    return (
-      <Stack spacing={4} sx={{ p: 3, textAlign: 'center' }}>
-        <Loading size='md' />
-        <Typography variant='body3' sx={{ mt: 2, fontSize: '1.25rem' }}>
-          Combobulating the ol' blockchain
-        </Typography>
-      </Stack>
-    );
-  }
-
   if (error) {
     return (
       <>
@@ -51,6 +40,22 @@ const FinishPanel: FC<Props> = ({ account, amount, blockHash, error, loading, op
         </Box>
       </>
     )
+  }
+
+  if (loading || !blockHash) {
+    return (
+      <Stack spacing={4} sx={{ p: 3, textAlign: 'center' }}>
+        <Loading size='md' />
+
+        <Typography variant='body3' sx={{ mt: 2, fontSize: '1.25rem' }}>
+          {!loading && !blockHash ? (
+            <>Awaiting the block with your transaction...</>
+          ) : (
+            <>Combobulating the ol' blockchain</>
+          )}
+        </Typography>
+      </Stack>
+    );
   }
 
   return (

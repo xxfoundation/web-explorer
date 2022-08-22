@@ -21,7 +21,8 @@ enum DataLabels {
   Staked = 'Staked',
   Liquid = 'Liquid',
   Unbonding = 'Unbonding',
-  Vesting = 'Vesting'
+  Vesting = 'Vesting',
+  InactiveStaked = 'Staked (inactive)'
 }
 
 type Data = {
@@ -32,7 +33,7 @@ type Data = {
   hideTooltip?: boolean;
 };
 
-const fields: (keyof Economics)[] = ['staked', 'unbonding', 'stakeableSupply', 'liquid'];
+const fields: (keyof Economics)[] = ['staked', 'inactiveStaked', 'unbonding', 'stakeableSupply', 'liquid'];
 
 export const extractChartData = (economics?: Economics) => {
   if (!economics) {
@@ -44,12 +45,12 @@ export const extractChartData = (economics?: Economics) => {
     };
   }
 
-  const { liquid, stakeableSupply, staked, unbonding } = mapValues(
+  const { inactiveStaked, liquid, stakeableSupply, staked, unbonding } = mapValues(
     pick(economics, fields),
     (o) => new BN(o)
   );
 
-  const vesting = stakeableSupply.sub(staked).sub(unbonding).sub(liquid);
+  const vesting = stakeableSupply.sub(staked).sub(unbonding).sub(liquid).sub(inactiveStaked);
 
   const roundNumber = (num: number, scale: number) =>
     Math.round(parseFloat(parseFloat(num + 'e+' + scale) + 'e-' + scale));
@@ -76,6 +77,12 @@ export const extractChartData = (economics?: Economics) => {
       label: DataLabels.Staked,
       value: staked,
       percentage: calculatePercentage(staked)
+    },
+    {
+      color: '#C0C0C0',
+      label: DataLabels.InactiveStaked,
+      value: inactiveStaked,
+      percentage: calculatePercentage(inactiveStaked)
     },
     {
       color: '#59BD1C',

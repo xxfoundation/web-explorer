@@ -14,7 +14,8 @@ const LandingPage: FC = () => {
       .then((res) => res.text())
       .then((md) => {
         setContent(md);
-      });
+      })
+      .catch((error) => console.error(error));
   }, []);
 
   return (

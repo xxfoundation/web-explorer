@@ -10,7 +10,8 @@ import {
   TableHead,
   TableBody,
   TableRow,
-  Button
+  Button,
+  Box
 } from '@mui/material';
 import { keyring } from '@polkadot/ui-keyring';
 import useAccounts from '../../../../hooks/useAccounts';
@@ -39,10 +40,13 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   }, [accounts.allAccounts.length, setCount]);
 
   useEffect(() => {
-    api?.query.system.account.multi(accounts?.allAccounts).then((infos) => {
-      const b = infos.map((info) => info.data.free.add(info.data.reserved));
-      setBalances(b);
-    });
+    api?.query.system.account
+      .multi(accounts?.allAccounts)
+      .then((infos) => {
+        const b = infos.map((info) => info.data.free.add(info.data.reserved));
+        setBalances(b);
+      })
+      .catch((error) => console.error(error));
   }, [accounts?.allAccounts, api?.query?.system?.account]);
 
   const handleAccountChange = useCallback(
@@ -57,7 +61,10 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
 
   const forget = useCallback(
     (acct: string) => () => {
-      keyring.forgetAccount(acct);
+      const confirmed = confirm('Are you sure you want to forget this account?');
+      if (confirmed) {
+        keyring.forgetAccount(acct);
+      }
     },
     []
   );
@@ -65,8 +72,13 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   return (
     <Stack spacing={4}>
       <Typography variant='h2'>Select Wallet</Typography>
-      {!balances || !accounts ? (
-        <Loading />
+      {!balances || !accounts || !navigator.onLine ? (
+        <Box sx={{ p: 5, py: 20 }}>
+          <Loading size='md' />
+          <Typography variant='body1' sx={{ textAlign: 'center', marginTop: '1em' }}>
+            Trying to connect to the API... Please check your internet connectivity
+          </Typography>
+        </Box>
       ) : (
         <TableStyled>
           <Table size='small'>

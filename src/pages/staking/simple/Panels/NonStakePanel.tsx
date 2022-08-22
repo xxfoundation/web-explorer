@@ -76,7 +76,7 @@ const NonStakePanel: FC<Props> = ({
   // Create Transaction
   useEffect(() => {
     if (api && stakingBalances && stakingOption === 'unstake') {
-      setTransaction(unstake(api, stakingBalances, amount));
+      setTransaction(unstake(api, account, amount));
     }
     if (api && stakingBalances && stakingOption === 'redeem') {
       setTransaction(redeem(api, account));
@@ -103,7 +103,9 @@ const NonStakePanel: FC<Props> = ({
           </Stack>
         </Stack>
         <Alert severity='info'>
-          <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Want check your account?</AlertTitle>
+          <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>
+            Do you want to check your account?
+          </AlertTitle>
           <Typography variant='body3'>
             You can always monitor{' '}
             <Link target='__blank' href={accountURL}>

@@ -2,7 +2,6 @@
 import '../augment-types/augment-api';
 import { ApiPromise } from '@polkadot/api';
 import { BN, BN_ZERO } from '@polkadot/util';
-import { selectValidators } from './selection';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 
@@ -39,7 +38,7 @@ export const getStakingBalances = async (api: ApiPromise, stash: string): Promis
   const totalStaked = ledger.total.unwrap();
   const staked = ledger.active.unwrap();
   const unbonding = totalStaked.sub(staked);
-  const redeemable = ledger.unlocking.filter(({ era }) => era.unwrap() <= currentEra.unwrap()).reduce((total, { value }) => total.add(value.unwrap()), BN_ZERO);
+  const redeemable = ledger.unlocking.filter(({ era }) => era.unwrap().toNumber() <= currentEra.unwrap().toNumber()).reduce((total, { value }) => total.add(value.unwrap()), BN_ZERO);
   const available = free.sub(ed).sub(staked);
   const total = free.add(reserved);
   return {
@@ -51,21 +50,26 @@ export const getStakingBalances = async (api: ApiPromise, stash: string): Promis
   }
 }
 
-export const stake = async (api: ApiPromise, balances: StakingBalances, stash: string, amount: BN): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> => {
+export const stake = async (api: ApiPromise, stash: string, amount: BN, targets: string[]): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> => {
   const calls = [];
-  if (!amount.isZero()) {
-    if (balances.staked.isZero() && balances.unbonding.isZero()) {
-      calls.push(api.tx.staking.bond(stash, amount, null));
-    }
-    if (balances.unbonding.gt(BN_ZERO)) {
+  const controller = await api.query.staking.bonded(stash);
+  if (controller.isNone) {
+    // if (amount.isZero()) {
+    //   return undefined
+    // }
+    calls.push(api.tx.staking.bond(stash, amount, null));
+  } else if (!amount.isZero()) {
+    const controllerStr = controller.unwrap();
+    const ledger = (await api.query.staking.ledger(controllerStr)).unwrap();
+    const unbonding = ledger.total.unwrap().sub(ledger.active.unwrap());
+    if (unbonding.gt(BN_ZERO)) {
       calls.push(api.tx.staking.rebond(amount));
     }
-    if (amount.gt(balances.unbonding)) {
-      const extra = amount.sub(balances.unbonding);
+    if (amount.gt(unbonding)) {
+      const extra = amount.sub(unbonding);
       calls.push(api.tx.staking.bondExtra(extra));
     }
   }
-  const targets = await selectValidators(api, stash);
   calls.push(api.tx.staking.nominate(targets));
   if (calls.length > 1) {
     return api.tx.utility.batch(calls)
@@ -73,9 +77,16 @@ export const stake = async (api: ApiPromise, balances: StakingBalances, stash: s
   return calls[0]
 }
 
-export const unstake = async (api: ApiPromise, balances: StakingBalances, amount: BN): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> => {
+export const unstake = async (api: ApiPromise, stash: string, amount: BN): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> => {
   const calls = [];
-  if (amount.eq(balances.staked)) {
+  const controller = await api.query.staking.bonded(stash);
+  // if (controller.isNone) {
+  //   return undefined
+  // }
+  const controllerStr = controller.unwrap();
+  const ledger = (await api.query.staking.ledger(controllerStr)).unwrap();
+  const staked = ledger.active.unwrap();
+  if (amount.eq(staked)) {
     calls.push(api.tx.staking.chill());
   }
   calls.push(api.tx.staking.unbond(amount));
