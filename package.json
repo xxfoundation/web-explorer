@@ -94,7 +94,9 @@
     "@polkadot/api-derive": "9.0.1",
     "@polkadot/wasm-crypto": "file:./src/sleeve/wasm-crypto",
     "@polkadot/wasm-crypto-init": "file:./src/sleeve/wasm-crypto-init",
-    "@polkadot/wasm-crypto-wasm": "file:./src/sleeve/wasm-crypto-wasm"
+    "@polkadot/wasm-crypto-wasm": "file:./src/sleeve/wasm-crypto-wasm",
+    "svgo": "^2.7.0",
+    "got": "^12.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
