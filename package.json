@@ -30,9 +30,9 @@
     "apollo-link-sentry": "^3.1.2",
     "autoprefixer": "^10.4.7",
     "base64url": "^3.0.1",
-    "big-number-input": "^1.0.3",
     "bignumber.js": "^9.0.2",
     "bn.js": "^5.2.0",
+    "big-number-input": "^1.0.3",
     "chart.js": "^3.7.1",
     "commonmark": "^0.30.0",
     "copy-to-clipboard": "^3.3.1",
@@ -94,9 +94,7 @@
     "@polkadot/api-derive": "9.0.1",
     "@polkadot/wasm-crypto": "file:./src/sleeve/wasm-crypto",
     "@polkadot/wasm-crypto-init": "file:./src/sleeve/wasm-crypto-init",
-    "@polkadot/wasm-crypto-wasm": "file:./src/sleeve/wasm-crypto-wasm",
-    "svgo": "^2.7.0",
-    "got": "^12.1.0"
+    "@polkadot/wasm-crypto-wasm": "file:./src/sleeve/wasm-crypto-wasm"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
