@@ -42,10 +42,15 @@ const Api: FC<WithChildren> = ({ children }) => {
       api.on('error', (e) => setApiError(e));
       api.on('ready', () => {
         setIsReady(true);
-        keyring.loadAll({
-          genesisHash: api.genesisHash,
-          ss58Format: 55
-        });
+        try {
+          keyring.loadAll({
+            genesisHash: api.genesisHash,
+            ss58Format: 55
+          });
+        } catch (err) {
+          // Ignoring the error here because keyring.loadInjected is private and this is
+          // the only method we can call to load
+        }
       });
     }
   }, [api]);

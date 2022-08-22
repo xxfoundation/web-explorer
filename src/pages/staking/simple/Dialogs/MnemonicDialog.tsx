@@ -8,7 +8,7 @@ import useInput from '../../../../hooks/useInput';
 type Props = {
   open: boolean;
   onClose: (value: string[]) => void;
-}
+};
 
 const MNEMONIC_COUNT = 24;
 const inputCount = Array.from(Array(MNEMONIC_COUNT).keys()).map((i) => i);
@@ -20,6 +20,9 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
 
   const handleClose = useCallback(() => {
     onClose(mnemonic);
+    setTimeout(() => {
+      setMnemonic(inputCount.map(() => ''));
+    }, 500);
   }, [mnemonic, onClose]);
 
   const handleDone = () => {
@@ -42,25 +45,19 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
       setMnemonic(copy);
     },
     [mnemonic]
-  )
+  );
 
   return (
     <Dialog onClose={handleClose} open={open}>
       <Button variant='text' sx={{ position: 'absolute', top: 0, right: 0 }} onClick={handleClose}>
         <Close />
       </Button>
-      <Stack spacing={3} sx={{ p: { md: 5, sm: 3, xs: 2 }}}>
-        <Typography variant='h3'>
-          Mnemonic Phrase
-        </Typography>
-        {!isValid && (
-          <Alert severity='error'>
-            Please verify that your mnemonic is correct.
-          </Alert>
-        )}
+      <Stack spacing={3} sx={{ p: { md: 5, sm: 3, xs: 2 } }}>
+        <Typography variant='h3'>Mnemonic Phrase</Typography>
+        {!isValid && <Alert severity='error'>Please verify that your mnemonic is correct.</Alert>}
         <Grid container>
           {inputCount.map((i) => (
-            <Grid key={i} item xs={4} sm={3} >
+            <Grid key={i} item xs={4} sm={3}>
               <TextField
                 error={!isValid}
                 onChange={mnemonicSetter(i)}
@@ -68,7 +65,8 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
                 sx={{ m: 1 }}
                 size='small'
                 label={`${i + 1}.`}
-                variant='outlined' />
+                variant='outlined'
+              />
             </Grid>
           ))}
         </Grid>
@@ -89,6 +87,6 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
       </Stack>
     </Dialog>
   );
-}
+};
 
 export default MnemonicDialog;
