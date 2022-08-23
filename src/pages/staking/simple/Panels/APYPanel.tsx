@@ -200,11 +200,11 @@ const APYPanel: FC<Props> = ({
         <Alert severity='info'>
           <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Do you want more control?</AlertTitle>
           <Typography variant='body3'>
-            You can always go to our{' '}
+            You can use the{' '}
             <Link target='__blank' href={walletUrl}>
               wallet
             </Link>{' '}
-            to select validators yourself.
+            webapp to manually select validators.
           </Typography>
         </Alert>
         <Stack spacing={1}>
@@ -226,7 +226,7 @@ const APYPanel: FC<Props> = ({
             </Button>
           </Stack>
           {error && <Alert severity='error'>{error}</Alert>}
-          {!error && ready && <Alert severity='success'>Password confimed!</Alert>}
+          {!error && ready && <Alert severity='success'>Password confirmed!</Alert>}
         </Stack>
       </Stack>
     </>

@@ -38,7 +38,7 @@ const NavButtons: FC<NavProps> = ({ canBack, canNext, confirmStep, onBack, onNex
               variant='contained'
               onClick={onNext}
             >
-              Agree and Sign
+              Submit
             </Button>
           </>
         ) : (

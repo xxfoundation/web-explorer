@@ -107,6 +107,7 @@ const SimpleStaker = () => {
 
   const reset = useCallback(() => {
     setSelectedAccount('');
+    setSelectedStakingOption('stake');
     setAmount(BN_ZERO);
     setStep(0);
     setAmountIsValid(false);
@@ -236,7 +237,7 @@ const SimpleStaker = () => {
             {selectedStakingOption === 'stake' ? (
               <Tab label='Nominate' {...tabProps(4)} />
             ) : (
-              <Tab label='Sign and Commit' {...tabProps(4)} />
+              <Tab label='Sign and Submit' {...tabProps(4)} />
             )}
             <Tab label='Finish' {...tabProps(5)} disabled={step !== 5} />
           </Tabs>

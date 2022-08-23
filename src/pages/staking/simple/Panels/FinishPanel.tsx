@@ -49,9 +49,9 @@ const FinishPanel: FC<Props> = ({ account, amount, blockHash, error, loading, op
 
         <Typography variant='body3' sx={{ mt: 2, fontSize: '1.25rem' }}>
           {!loading && !blockHash ? (
-            <>Awaiting the block with your transaction...</>
+            <>Waiting for your transaction to be included in a block...</>
           ) : (
-            <>Combobulating the ol' blockchain</>
+            <>Connecting to the xx network blockchain...</>
           )}
         </Typography>
       </Stack>
@@ -63,11 +63,16 @@ const FinishPanel: FC<Props> = ({ account, amount, blockHash, error, loading, op
       <Typography variant='h2'>Extrinsic Submitted Successfully</Typography>
       <Typography variant='body3' sx={{ fontSize: '1rem' }}>
         Congratulations! You've successfully{' '}
-        <b>
-          {optionToVerb[option]}
-          &nbsp;
-          <FormatBalance value={amount} />
-        </b>
+        {
+          (option === 'stake' && amount.isZero()) ?
+          'selected new validators'
+          :
+          <b>
+            {optionToVerb[option]}
+            &nbsp;
+            <FormatBalance value={amount} />
+          </b>
+        }
         .
       </Typography>
       <Typography variant='body3' sx={{ fontSize: '1rem' }}>
@@ -79,7 +84,7 @@ const FinishPanel: FC<Props> = ({ account, amount, blockHash, error, loading, op
       <Box sx={{ p: 4 }} />
       <Box sx={{ textAlign: 'right' }}>
         <Button onClick={reset} variant='contained'>
-          Do it again?
+          Done
         </Button>
       </Box>
     </Stack>
