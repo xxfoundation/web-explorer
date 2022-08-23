@@ -9,7 +9,7 @@ export type Voter = {
   targets: string[],
 }
 
-export type Nominator = {
+type Nominator = {
   nominatorId: string,
   budget: BigNumber,
   edges: Edge[],
@@ -110,10 +110,12 @@ const equalise = (nominators: Nominator[], elected: Validators, iterations: numb
 const seqPhragmenCore = (voters: Voter[], count: number): [Nominator[], Validators] => {
   // Setup validators and nominators
   const [validators, nominators] = setup(voters);
+  const numVals = Object.keys(validators).length;
+  const numRounds = count > numVals ? numVals : count;
 
   // Main election loop
   const winners: string[] = [];
-  for (let round = 0; round < count; round++) {
+  for (let round = 0; round < numRounds; round++) {
     // First loop: initialize scores
     Object.keys(validators).forEach((validatorId) => {
       const validator = validators[validatorId];

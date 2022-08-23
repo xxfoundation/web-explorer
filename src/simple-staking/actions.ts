@@ -54,9 +54,6 @@ export const stake = async (api: ApiPromise, stash: string, amount: BN, targets:
   const calls = [];
   const controller = await api.query.staking.bonded(stash);
   if (controller.isNone) {
-    // if (amount.isZero()) {
-    //   return undefined
-    // }
     calls.push(api.tx.staking.bond(stash, amount, null));
   } else if (!amount.isZero()) {
     const controllerStr = controller.unwrap();
@@ -80,9 +77,6 @@ export const stake = async (api: ApiPromise, stash: string, amount: BN, targets:
 export const unstake = async (api: ApiPromise, stash: string, amount: BN): Promise<SubmittableExtrinsic<'promise', ISubmittableResult>> => {
   const calls = [];
   const controller = await api.query.staking.bonded(stash);
-  // if (controller.isNone) {
-  //   return undefined
-  // }
   const controllerStr = controller.unwrap();
   const ledger = (await api.query.staking.ledger(controllerStr)).unwrap();
   const staked = ledger.active.unwrap();

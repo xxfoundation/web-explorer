@@ -71,7 +71,7 @@ const getChainData = async (api: ApiPromise, eras = 7): Promise<ChainData> => {
     // ------------------------------------ //
     // Get active era
     const activeEraNumber = activeEra.unwrap().index.toNumber();
-    const firstEra = activeEraNumber - eras;
+    const firstEra = activeEraNumber > eras ? activeEraNumber - eras : 0;
 
     // Calculate performance for all eras
     for (let era = firstEra; era <= activeEraNumber; era++) {
