@@ -13,7 +13,9 @@ import {
   Button,
   Box
 } from '@mui/material';
+import { Close, Warning } from '@mui/icons-material';
 import { keyring } from '@polkadot/ui-keyring';
+
 import useAccounts from '../../../../hooks/useAccounts';
 import { TableStyled } from '../../../../components/Tables/TableContainer.styled';
 import Address from '../../../../components/Hash/XXNetworkAddress';
@@ -21,7 +23,7 @@ import { usePagination } from '../../../../hooks';
 import useApi from '../../../../hooks/useApi';
 import FormatBalance from '../../../../components/FormatBalance';
 import Loading from '../../../../components/Loading';
-import { Close } from '@mui/icons-material';
+import { CustomTooltip as Tooltip } from '../../../../components/Tooltip'
 
 type Props = {
   selected: string;
@@ -93,10 +95,19 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
               {paginated.map((acct, i) => (
                 <TableRow key={acct}>
                   <TableCell>
-                    <Address truncated='mdDown' value={acct} />
+                    <Stack direction='row'>
+                      {balances[i]?.eqn(0) && (
+                        <Tooltip title='Balances are required to stake' placement='top'>
+                          <Warning sx={{ mr: 1, color: 'warning.main' }} />
+                        </Tooltip>
+                      )}
+                      <Address disableAvatar={balances[i]?.eqn(0)} truncated='mdDown' value={acct} />
+                    </Stack>
                   </TableCell>
                   <TableCell>
-                    <FormatBalance value={balances[i]} />
+                    <Typography sx={{ color: balances[i]?.eqn(0) ? 'warning.main' : undefined }}>
+                      <FormatBalance value={balances[i]} />
+                    </Typography>
                   </TableCell>
                   <TableCell>
                     <Stack alignItems='center' direction='row'>
