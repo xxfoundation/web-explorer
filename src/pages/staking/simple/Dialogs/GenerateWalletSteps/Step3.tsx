@@ -19,7 +19,7 @@ function Step3({ onFinish, standardMnemonic }: Props): React.ReactElement {
     setLoading(true);
     setTimeout((): void => {
       try {
-        const wallet = keyring.addUri(standardMnemonic, password);
+        const wallet = keyring.addUri(standardMnemonic, password, undefined, 'sr25519');
         setAddress(wallet.pair.address);
         setLoading(false);
       } catch (err) {

@@ -30,7 +30,7 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
     const valid = mnemonicValidate(seed);
     setValid(valid);
     if (valid) {
-      keyring.addUri(seed, password);
+      keyring.addUri(seed, password, undefined, 'sr25519');
       onClose(mnemonic);
     }
   };
