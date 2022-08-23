@@ -14,16 +14,15 @@ const MNEMONIC_COUNT = 24;
 const inputCount = Array.from(Array(MNEMONIC_COUNT).keys()).map((i) => i);
 
 const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
-  const [password, setPassword] = useInput();
+  const [password, setPasswordHandler, setPassword] = useInput();
   const [mnemonic, setMnemonic] = useState<string[]>(inputCount.map(() => ''));
   const [isValid, setValid] = useState(true);
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     onClose(mnemonic);
-    setTimeout(() => {
-      setMnemonic(inputCount.map(() => ''));
-    }, 500);
-  }, [mnemonic, onClose]);
+    setMnemonic(inputCount.map(() => ''));
+    setPassword('');
+  };
 
   const handleDone = () => {
     const seed = mnemonic.join(' ');
@@ -31,7 +30,7 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
     setValid(valid);
     if (valid) {
       keyring.addUri(seed, password, undefined, 'sr25519');
-      onClose(mnemonic);
+      handleClose();
     }
   };
 
@@ -76,7 +75,7 @@ const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
             label='Password'
             size='small'
             value={password}
-            onChange={setPassword}
+            onChange={setPasswordHandler}
           />
         </Box>
         <Box sx={{ textAlign: 'center' }}>
