@@ -25,10 +25,6 @@ const StakingCard: FC<{
   const panels = useMemo(() => {
     const cachedPanels = [
       // {
-      //   label: <Typography>rewards & slashes</Typography>,
-      //   content: <RewardStashTable />
-      // },
-      // {
       //   label: <Typography>staking activity</Typography>,
       //   content: <StakingActivityTable />
       // }

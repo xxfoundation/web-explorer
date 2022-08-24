@@ -1,65 +1,66 @@
-import React, { FC } from 'react';
+import { useQuery } from '@apollo/client';
+import React, { FC, useEffect, useMemo } from 'react';
 import FormatBalance from '../../../../components/FormatBalance';
+import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
 import Link from '../../../../components/Link';
-import { BaselineTable } from '../../../../components/Tables';
+import { BaseLineCellsWrapper, BaselineTable } from '../../../../components/Tables';
 import TimeAgoComponent from '../../../../components/TimeAgo';
+import usePagination from '../../../../hooks/usePagination';
+import {
+  GetStakingRewards,
+  GET_STAKING_REWARDS,
+  StakingReward
+} from '../../../../schemas/staking.schema';
 
-type RewardStashType = {
-  eventID: string;
-  extrinsicID: string;
-  action: string;
-  validator: string;
-  era: string;
-  value: string;
-  time: number;
+const DEFAULT_ROWS_PER_PAGE = 10;
+const headers = BaseLineCellsWrapper([
+  'Validator Account',
+  'Block Number',
+  'Era',
+  'Amount',
+  'Timestamp'
+]);
+
+const RewardsRow = (reward: StakingReward) => {
+  return BaseLineCellsWrapper([
+    <XXNetworkAddress truncated='mdDown' value={reward.validatorAddress} />,
+    <Link to={`/blocks/${reward.blockNumber}`}>{reward.blockNumber}</Link>,
+    reward.era,
+    <FormatBalance value={reward.amount.toString()} />,
+    <TimeAgoComponent date={reward.timestamp} />
+  ]);
 };
 
-const headers = [
-  { value: 'Event ID' },
-  { value: 'Action' },
-  { value: 'Validator (Stash)' },
-  { value: 'Era' },
-  { value: 'Value' },
-  { value: 'Time' }
-];
+const RewardStashTable: FC<{
+  accountId: string;
+}> = ({ accountId }) => {
+  const stakingRewards = useQuery<GetStakingRewards>(GET_STAKING_REWARDS, {
+    variables: { accountId }
+  });
+  const rewards = stakingRewards.data?.rewards;
+  const pagination = usePagination({ rowsPerPage: DEFAULT_ROWS_PER_PAGE });
+  const { paginate, setCount } = pagination;
 
-// const sampleData = [
-//   {
-//     eventID: '123131',
-//     extrinsicID: '1231',
-//     action: 'Staking (Rewarded)',
-//     validator: '15p158r32Z12YyFU7BiqLcqpySmHUedVfJLJ4M73THBixKJY',
-//     era: '699',
-//     value: '0000000000',
-//     time: 1652220328
-//   }
-// ];
+  useEffect(() => {
+    if (stakingRewards.data?.aggregates?.aggregate) {
+      setCount(stakingRewards.data?.aggregates?.aggregate.count);
+    }
+  }, [setCount, stakingRewards.data?.aggregates?.aggregate]);
 
-const dataToRow = (props: RewardStashType) => {
-  return [
-    {
-      value: (
-        <Link to={`/extrinsic/${props.extrinsicID}?eventId=${props.eventID}`}>{props.eventID}</Link>
-      )
-    },
-    { value: <Link to='#'>{props.action}</Link> },
-    {
-      value: (
-        <Link to={'#'}>
-          {props.validator.length >= 16
-            ? `${props.validator.slice(0, 6)}....${props.validator.slice(-7, -1)}`
-            : props.validator}
-        </Link>
-      )
-    },
-    { value: props.era },
-    { value: <FormatBalance value={props.value} /> },
-    { value: <TimeAgoComponent date={props.time} /> }
-  ];
-};
+  const paginated = useMemo(
+    () => rewards && paginate(rewards).map(RewardsRow),
+    [paginate, rewards]
+  );
 
-const RewardStashTable: FC = ({}) => {
-  return <BaselineTable headers={headers} rows={[].map(dataToRow)} />;
+  return (
+    <BaselineTable
+      loading={paginated === undefined}
+      headers={headers}
+      rows={paginated ?? []}
+      rowsPerPage={pagination.rowsPerPage}
+      footer={pagination.controls}
+    />
+  );
 };
 
 export default RewardStashTable;

@@ -15,6 +15,7 @@ import {
 } from '../../../../schemas/accounts.schema';
 import TransferTable from '../../../transfers/TransfersTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
+import RewardStashTable from '../staking/RewardStashTable';
 
 type Props = {
   account: Account;
@@ -28,6 +29,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
 
   const extrinsicCount = data?.extrinsicCount.aggregate.count;
   const transferCount = data?.transferCount.aggregate.count;
+  const rewardsCount = data?.rewardsCount.aggregate.count;
 
   const panels = useMemo(() => {
     const transferWhereClause = {
@@ -75,11 +77,20 @@ const BlockchainCard: FC<Props> = ({ account }) => {
                 <TransferTable filters={filters} where={transferWhereClause} />
               </>
             )
+          },
+          {
+            label: (
+              <TabText
+                message={'Staking Rewards'}
+                count={rewardsCount === undefined ? '' : rewardsCount}
+              />
+            ),
+            content: <RewardStashTable accountId={account.id} />
           }
         ];
 
     return tabs;
-  }, [account.id, loading, extrinsicCount, transferCount, filters]);
+  }, [account.id, loading, extrinsicCount, transferCount, filters, rewardsCount]);
 
   return (
     <PaperStyled>
