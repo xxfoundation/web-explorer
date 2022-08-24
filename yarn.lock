@@ -3689,7 +3689,7 @@ anymatch@^3.0.3, anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apollo-link-sentry@^3.1.2:
+apollo-link-sentry@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/apollo-link-sentry/-/apollo-link-sentry-3.2.0.tgz#049100ff3548b8aec508742a6f1a9c08e6b59522"
   integrity sha512-6sVrZ+cWbbOuzYWVe2pPfzE4oyjSB/ylZC/VmbgrodD99PXgIBYE2bcLmJ76iJovKZY2HmyXrvjEtwdOhbYgQg==

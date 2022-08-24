@@ -27,7 +27,7 @@
     "@sentry/react": "^7.7.0",
     "@sentry/tracing": "^7.7.0",
     "@types/webpack-env": "^1.17.0",
-    "apollo-link-sentry": "^3.1.2",
+    "apollo-link-sentry": "^3.2.0",
     "autoprefixer": "^10.4.7",
     "base64url": "^3.0.1",
     "bignumber.js": "^9.0.2",
