@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import { Typography } from '@mui/material';
 import React, { FC, useEffect, useMemo } from 'react';
 import FormatBalance from '../../../../components/FormatBalance';
 import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
@@ -33,7 +34,8 @@ const RewardsRow = (reward: StakingReward) => {
 
 const RewardStashTable: FC<{
   accountId: string;
-}> = ({ accountId }) => {
+  sum?: number;
+}> = ({ accountId, sum }) => {
   const stakingRewards = useQuery<GetStakingRewards>(GET_STAKING_REWARDS, {
     variables: { accountId }
   });
@@ -53,13 +55,23 @@ const RewardStashTable: FC<{
   );
 
   return (
-    <BaselineTable
-      loading={paginated === undefined}
-      headers={headers}
-      rows={paginated ?? []}
-      rowsPerPage={pagination.rowsPerPage}
-      footer={pagination.controls}
-    />
+    <>
+      {sum && (
+        <Typography
+          variant='body3'
+          sx={{ mb: '1em', px: '1px', display: 'block', textAlign: 'right' }}
+        >
+          <b>Total Rewards:</b> <FormatBalance value={sum.toString()} />
+        </Typography>
+      )}
+      <BaselineTable
+        loading={paginated === undefined}
+        headers={headers}
+        rows={paginated ?? []}
+        rowsPerPage={pagination.rowsPerPage}
+        footer={pagination.controls}
+      />
+    </>
   );
 };
 

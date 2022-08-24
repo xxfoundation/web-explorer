@@ -29,7 +29,8 @@ const BlockchainCard: FC<Props> = ({ account }) => {
 
   const extrinsicCount = data?.extrinsicCount.aggregate.count;
   const transferCount = data?.transferCount.aggregate.count;
-  const rewardsCount = data?.rewardsCount.aggregate.count;
+  const rewardsCount = data?.rewardsInfo.aggregate.count;
+  const rewardsSum = data?.rewardsInfo.aggregate.sum.amount;
 
   const panels = useMemo(() => {
     const transferWhereClause = {
@@ -85,12 +86,12 @@ const BlockchainCard: FC<Props> = ({ account }) => {
                 count={rewardsCount === undefined ? '' : rewardsCount}
               />
             ),
-            content: <RewardStashTable accountId={account.id} />
+            content: <RewardStashTable accountId={account.id} sum={rewardsSum} />
           }
         ];
 
     return tabs;
-  }, [account.id, loading, extrinsicCount, transferCount, filters, rewardsCount]);
+  }, [account.id, loading, extrinsicCount, transferCount, filters, rewardsCount, rewardsSum]);
 
   return (
     <PaperStyled>

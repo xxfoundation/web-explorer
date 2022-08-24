@@ -228,7 +228,7 @@ export const GET_WHEN_CREATED_ERAS = gql`
 export type GetExtrinsicCounts = {
   extrinsicCount: { aggregate: { count: number } };
   transferCount: { aggregate: { count: number } };
-  rewardsCount: { aggregate: { count: number } };
+  rewardsInfo: { aggregate: { count: number, sum: { amount: number } } };
 }
 
 export const GET_EXTRINSIC_COUNTS = gql`
@@ -250,9 +250,12 @@ export const GET_EXTRINSIC_COUNTS = gql`
       }
     }
 
-    rewardsCount: staking_reward_aggregate(where: { account_id: { _eq: $accountId } }) {
+    rewardsInfo: staking_reward_aggregate(where: { account_id: { _eq: $accountId } }) {
       aggregate {
         count
+        sum {
+          amount
+        }
       }
     }
   }
