@@ -86,11 +86,11 @@ const NonStakePanel: FC<Props> = ({
   return (
     <>
       <Stack spacing={4}>
-        <Typography variant='h2'>Sign and Commit</Typography>
+        <Typography variant='h2'>Sign and Submit</Typography>
         <Typography variant='body3'>
           {stakingOption === 'unstake'
-            ? 'As previously mentioned, the unstaking process takes 28 days. After those days, the tokens will be kept locked until you redeem them. You can do it here selecting the option Redeem.'
-            : 'As previously mentioned, you will be redeeming the full amount of token that you already unstaked.'}
+            ? 'Please remember that the unstaking process takes 28 days. Furthermore, coins will be kept locked until you redeem them. You can do that using the Redeem option on this app, after waiting for 28 days.'
+            : 'You are redeeming the full amount of coins that were previously unstaked.'}
         </Typography>
         <Stack spacing={3} direction='row'>
           <Typography sx={{ lineHeight: 1.25, fontSize: '1.5rem' }} variant='h3'>
@@ -116,7 +116,7 @@ const NonStakePanel: FC<Props> = ({
         </Alert>
         <Stack spacing={1}>
           <Typography variant='body3' sx={{ textAlign: 'end' }}>
-            To Sign you need to unlock your wallet using the password used to save it here.
+            Insert password to unlock your wallet
           </Typography>
           <Stack direction='row' justifyContent='end' spacing={2}>
             <Box>

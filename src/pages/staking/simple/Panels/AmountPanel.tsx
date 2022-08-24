@@ -83,12 +83,11 @@ const AmountSelection: FC<Props> = ({
     if (option === 'redeem') {
       setAmount(redeemable);
     }
-    setAmountIsValid(amountIsValid);
   }, [amountIsValid, option, redeemable, setAmount, setAmountIsValid]);
 
   const title = useMemo<Record<StakingOptions, string>>(
     () => ({
-      redeem: 'Tokens to be Redeemed',
+      redeem: 'Redeem',
       stake: 'Input Amount to Stake',
       unstake: 'Input Amount to Unstake'
     }),
@@ -190,12 +189,12 @@ const AmountSelection: FC<Props> = ({
           </TableStyled>
           {option === 'redeem' && (
             <Alert severity='info'>
-              <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Reedeming unstaked tokens</AlertTitle>
+              <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Reedeming unstaked coins</AlertTitle>
               <Typography variant='body3'>
-                You will be unlocking the tokens you've previously unstaked. After signing and
-                submitting the transaction you will be able to transfer, vote or stake those tokens
+                You will be unlocking the coins you've previously unstaked. After signing and
+                submitting the transaction you will be able to transfer, vote or stake those coins
                 again. Notice that the Total Balance of your account includes the locked coins,
-                which means that balance will not increase after redeeming these coins.
+                which means that balance will NOT increase after redeeming these coins.
               </Typography>
             </Alert>
           )}

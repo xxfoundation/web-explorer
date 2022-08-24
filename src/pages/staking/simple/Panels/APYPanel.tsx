@@ -155,11 +155,8 @@ const APYPanel: FC<Props> = ({
       <Stack spacing={4}>
         <Typography variant='h2'>Nominate</Typography>
         <Typography variant='body3'>
-          To maximize your returns you should restake on a regular basis to{' '}
-          <Link onClick={dialog.toggleOn} href='#'>
-            reselect your validators
-          </Link>
-          . The following APY is not guaranteed and changes on a per era basis.
+          If you wish to maximize your returns, use this app on a regular basis to reselect your validators.
+          The following APY and staking rewards estimates are not guaranteed and can change every day.
         </Typography>
         <Stack spacing={3} direction='row' sx={{ justifyContent: 'center' }}>
           <Stack>
@@ -190,10 +187,10 @@ const APYPanel: FC<Props> = ({
         </Stack>
         <Stack direction='row' justifyContent='space-between' alignItems='center'>
           <Typography variant='body3'>
-            We've automatically selected validators to nominate for you.
+            We have automatically selected validators for you.
           </Typography>
           <Button onClick={validators.toggle} endIcon={endIcon}>
-            Show validators selected
+            Show validators
           </Button>
         </Stack>
         {expandValidators && selectedValidators && <ValidatorList accounts={selectedValidators} />}

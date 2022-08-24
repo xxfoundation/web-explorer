@@ -233,7 +233,11 @@ const SimpleStaker = () => {
             <Tab label='Connect Wallet' {...tabProps(0)} />
             <Tab label='Select Wallet' {...tabProps(1)} />
             <Tab label='Staking Options' {...tabProps(2)} />
-            <Tab label='Input Amount' {...tabProps(3)} />
+            {selectedStakingOption === 'redeem' ? (
+              <Tab label='Redeem' {...tabProps(3)} />
+            ) : (
+              <Tab label='Input Amount' {...tabProps(3)} />
+            )}
             {selectedStakingOption === 'stake' ? (
               <Tab label='Nominate' {...tabProps(4)} />
             ) : (

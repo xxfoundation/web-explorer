@@ -50,7 +50,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
               control={<Radio disabled={balances.available.eqn(0)} />}
               label={
                 balances.available.eqn(0)
-                  ? optionText('Stake', <>This account has no tokens to be staked. </>)
+                  ? optionText('Stake', <>This account has no funds to be staked. </>)
                   : optionText(
                       'Stake',
                       <>
