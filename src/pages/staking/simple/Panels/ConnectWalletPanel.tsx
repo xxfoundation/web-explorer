@@ -68,17 +68,31 @@ const ConnectWallet: FC = () => {
             </Typography>
           </Stack>
         </Stack>
+        <Stack spacing={5} direction={{ xs: 'column', sm: 'row' }}>
+          <Button onClick={generateDialog.toggleOn} variant='contained'>
+            Generate Wallet
+          </Button>
+          <Button onClick={mnemonicDialog.toggleOn} variant='contained'>
+            Recovery Phrase
+          </Button>
+          <Button onClick={keyfileDialog.toggleOn} variant='contained'>
+            Keyfile (JSON)
+          </Button>
+        </Stack>
         {accounts.hasAccounts && (
           <Stack display='columns' spacing={2}>
-            <Alert severity='success'>
+            <Alert
+              action={
+                <Button sx={{ minWidth: 0 }} size='small' onClick={wallets.toggle}>
+                  {wallets.icon}
+                </Button>
+              } severity='success'>
+              
               Found {accounts.allAccounts.length} accounts. &nbsp;
               <Link onClick={forget} href='#' underline='hover'>
                 Forget?
-              </Link>
+              </Link> &nbsp;
             </Alert>
-            <Button onClick={wallets.toggle} endIcon={wallets.icon}>
-              Show connected wallets
-            </Button>
             {expandWallets && accounts.allAccounts && (
               <AccountList accounts={accounts.allAccounts} />
             )}
