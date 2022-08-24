@@ -23,7 +23,7 @@ import { usePagination } from '../../../../hooks';
 import useApi from '../../../../hooks/useApi';
 import FormatBalance from '../../../../components/FormatBalance';
 import Loading from '../../../../components/Loading';
-import { CustomTooltip as Tooltip } from '../../../../components/Tooltip'
+import { CustomTooltip as Tooltip } from '../../../../components/Tooltip';
 
 type Props = {
   selected: string;
@@ -97,15 +97,23 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                   <TableCell>
                     <Stack direction='row'>
                       {balances[i]?.eqn(0) && (
-                        <Tooltip title='Balances are required to stake' placement='top'>
+                        <Tooltip
+                          title='A positive balance is required for any staking activity'
+                          placement='top'
+                        >
                           <Warning sx={{ mr: 1, color: 'warning.main' }} />
                         </Tooltip>
                       )}
-                      <Address disableAvatar={balances[i]?.eqn(0)} truncated='mdDown' value={acct} />
+                      <Address
+                        truncated='mdDown'
+                        value={acct}
+                        disableUrl={balances[i]?.eqn(0)}
+                        disableAvatar={balances[i]?.eqn(0)}
+                      />
                     </Stack>
                   </TableCell>
                   <TableCell>
-                    <Typography sx={{ color: balances[i]?.eqn(0) ? 'warning.main' : undefined }}>
+                    <Typography>
                       <FormatBalance value={balances[i]} />
                     </Typography>
                   </TableCell>
