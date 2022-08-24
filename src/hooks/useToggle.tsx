@@ -1,7 +1,11 @@
+import React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+
 import useIsMountedRef from './useIsMountedRef';
 
 type UseToggle = [boolean, {
+  icon: React.ReactElement,
   set: (active: boolean) => void;
   toggle: () => void;
   toggleOn: () => void;
@@ -39,14 +43,20 @@ function useToggle (defaultValue = false, onToggle?: (isActive: boolean) => void
     [isActive, onToggle]
   );
 
+  const icon = useMemo(
+    () => (isActive ? <KeyboardArrowUp /> : <KeyboardArrowDown />),
+    [isActive]
+  );
+
   return useMemo(
     () => [isActive, {
+      icon,
       set,
       toggle,
       toggleOn,
       toggleOff
     }],
-    [isActive, set, toggle, toggleOn, toggleOff]
+    [isActive, icon, set, toggle, toggleOn, toggleOff]
   );
 }
 

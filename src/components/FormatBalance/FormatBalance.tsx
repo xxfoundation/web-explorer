@@ -44,7 +44,7 @@ function createElement(
   );
 }
 
-function applyFormat(
+export function applyFormat(
   value: Props['value'],
   denomination: number,
   symbol: string,

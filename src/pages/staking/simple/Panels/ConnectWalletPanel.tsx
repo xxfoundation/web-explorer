@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Alert, Button, Link, Stack, Typography } from '@mui/material';
 import { keyring } from '@polkadot/ui-keyring';
 
@@ -8,7 +8,6 @@ import MnemonicDialog from '../Dialogs/MnemonicDialog';
 import KeyfileDialog from '../Dialogs/KeyfileDialog';
 import useAccounts from '../../../../hooks/useAccounts';
 import AccountList from '../utils/AccountList';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { getStakedReturn } from '../../StakingMetrics';
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../../../schemas/economics.schema';
 import { useQuery } from '@apollo/client';
@@ -19,27 +18,10 @@ const ConnectWallet: FC = () => {
   const [generateDialogOpen, generateDialog] = useToggle();
   const [mnemonicDialogOpen, mnemonicDialog] = useToggle();
   const [keyfileDialogOpen, keyfileDialog] = useToggle();
-
-  // Show Connected Wallets Toggle
   const [expandWallets, wallets] = useToggle();
-  const endIconWallets = useMemo(
-    () => (expandWallets ? <KeyboardArrowUp /> : <KeyboardArrowDown />),
-    [expandWallets]
-  );
-
-  // Connection Buttons Toggle
   const [expandConnectionButtons, connectionButtons] = useToggle();
-  const endIconConnectionButtons = useMemo(
-    () => (expandConnectionButtons ? <KeyboardArrowUp /> : <KeyboardArrowDown />),
-    [expandConnectionButtons]
-  );
-
-  // Disclaimer Toggle
   const [expandDisclaimer, disclaimer] = useToggle();
-  const endIconDisclaimer = useMemo(
-    () => (expandDisclaimer ? <KeyboardArrowUp /> : <KeyboardArrowDown />),
-    [expandDisclaimer]
-  );
+
 
   const handleKeyfileClose = useCallback(() => {
     keyfileDialog.toggleOff();
@@ -94,7 +76,7 @@ const ConnectWallet: FC = () => {
                 Forget?
               </Link>
             </Alert>
-            <Button onClick={wallets.toggle} endIcon={endIconWallets}>
+            <Button onClick={wallets.toggle} endIcon={wallets.icon}>
               Show connected wallets
             </Button>
             {expandWallets && accounts.allAccounts && (
@@ -103,7 +85,7 @@ const ConnectWallet: FC = () => {
           </Stack>
         )}
         {accounts.hasAccounts && (
-          <Button onClick={connectionButtons.toggle} endIcon={endIconConnectionButtons}>
+          <Button onClick={connectionButtons.toggle} endIcon={connectionButtons.icon}>
             Add more wallets
           </Button>
         )}
@@ -135,7 +117,7 @@ const ConnectWallet: FC = () => {
 
         <Button
           onClick={disclaimer.toggle}
-          endIcon={endIconDisclaimer}
+          endIcon={disclaimer.icon}
           sx={{ width: 'fit-content', alignSelf: 'start', color: 'brown' }}
         >
           Disclaimer
