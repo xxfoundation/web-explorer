@@ -8,7 +8,7 @@ import MnemonicDialog from '../Dialogs/MnemonicDialog';
 import KeyfileDialog from '../Dialogs/KeyfileDialog';
 import useAccounts from '../../../../hooks/useAccounts';
 import AccountList from '../utils/AccountList';
-import { AlignHorizontalCenter, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { getStakedReturn } from '../../StakingMetrics';
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../../../schemas/economics.schema';
 import { useQuery } from '@apollo/client';
