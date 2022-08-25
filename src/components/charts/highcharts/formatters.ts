@@ -1,22 +1,22 @@
 import { AxisLabelsFormatterContextObject, TooltipFormatterContextObject } from 'highcharts';
-import { formatBalance } from '../../FormatBalance/formatter';
+import { applyFormat } from '../../FormatBalance/formatter';
 
 export function percentTooltipFormatter(this: TooltipFormatterContextObject) {
   return `<b>${this.series.name} ${this.x}</b><br />${Math.floor((this.y ?? 0) * 100)}%`;
 }
 export function amountByEraTooltip(this: TooltipFormatterContextObject) {
-  return `<b>${this.series.name} ${this.x}</b><br />${this.y} ${this.series.yAxis.options.title?.text}`;
+  return `<b>${this.series.name} ${this.x}</b><br />${applyFormat(this.y?.toString() ?? '0')} ${this.series.yAxis.options.title?.text}`;
 }
 export function decimalTooltipFormatter(this: TooltipFormatterContextObject) {
   return `<b>${this.series.name} ${this.x}</b><br />${this.y}`;
 }
 
-export function amountLabelFormatter(this: AxisLabelsFormatterContextObject) {
-  return `${formatBalance(this.value, { withUnit: false, precision: 0 })}`;
+export function balanceLabelFormatter(this: AxisLabelsFormatterContextObject) {
+  return `${applyFormat(this.value.toString())}`;
 }
 
 export function percentLabelFormatter(this: AxisLabelsFormatterContextObject) {
-  return `${this.value}%`;
+  return `${Number(this.value) * 100}%`;
 }
 
 

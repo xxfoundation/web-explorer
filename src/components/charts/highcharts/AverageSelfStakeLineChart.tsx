@@ -2,7 +2,7 @@ import type { GetStakingStats } from '../../../schemas/staking.schema';
 import { useQuery } from '@apollo/client';
 import React, { useMemo } from 'react';
 
-import { amountByEraTooltip, amountLabelFormatter } from './formatters'
+import { amountByEraTooltip, balanceLabelFormatter } from './formatters'
 import { GET_STAKING_STATS } from '../../../schemas/staking.schema';
 import Loading from '../../Loading';
 import LineChart from './LineChart';
@@ -34,7 +34,7 @@ const AverageSelfStakeLineChart = () => {
   return (
     <DefaultTile header='Average self stake' >
       <LineChart
-        labelFormatters={{ yAxis: amountLabelFormatter }}
+        labelFormatters={{ yAxis: balanceLabelFormatter }}
         tooltipFormatter={amountByEraTooltip}
         data={data} />
     </DefaultTile>

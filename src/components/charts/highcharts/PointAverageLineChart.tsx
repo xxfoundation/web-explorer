@@ -8,6 +8,7 @@ import LineChart from './LineChart';
 import { DataPoint } from './types';
 import Error from '../../Error';
 import DefaultTile from '../../DefaultTile';
+import { decimalTooltipFormatter } from './formatters';
 
 const variables = { limit: 10, offset: 0 }
 
@@ -32,7 +33,7 @@ const AveragePointsLineChart = () => {
 
   return (
     <DefaultTile header='Average era points' >
-      <LineChart data={data} />
+      <LineChart data={data} tooltipFormatter={decimalTooltipFormatter} />
     </DefaultTile>
   )
 }

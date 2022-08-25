@@ -15,7 +15,7 @@ const variables = { limit: 10, offset: 0 }
 const AverageCommissionLineChart = () => {
   const pointsQuery = useQuery<GetStakingStats>(GET_STAKING_STATS, { variables });
   const data = useMemo(
-    () => pointsQuery.data?.stats.map((s) => [s.era, s.commissionAvg] as DataPoint),
+    () => pointsQuery.data?.stats.map((s) => [s.era, s.commissionAvg / 100] as DataPoint),
     [pointsQuery.data]
   );
 
