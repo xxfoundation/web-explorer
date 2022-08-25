@@ -81,9 +81,12 @@ const ConnectWallet: FC = () => {
                 Average Return (APY): <b>{avgStakedReturn.toFixed(2)}%</b>
               </Typography>
             </Loading>
-            {!accounts.hasAccounts && <Typography variant='body3' sx={{ textAlign: 'left' }}>
-              To get started please generate a wallet or recover your existing wallet(s) using one of the options below.
-            </Typography>}
+            {!accounts.hasAccounts && (
+              <Typography variant='body3' sx={{ textAlign: 'left' }}>
+                To get started please generate a wallet or recover your existing wallet(s) using one
+                of the options below.
+              </Typography>
+            )}
           </Stack>
         </Stack>
         {accounts.hasAccounts && (
@@ -93,12 +96,15 @@ const ConnectWallet: FC = () => {
                 <Button sx={{ minWidth: 0 }} size='small' onClick={wallets.toggle}>
                   {endIconWallets}
                 </Button>
-              } severity='success'>
-              
-              Found {accounts.allAccounts.length} account{accounts.allAccounts.length > 1 ? 's' : ''}. &nbsp;
+              }
+              severity='success'
+            >
+              Found {accounts.allAccounts.length} account
+              {accounts.allAccounts.length > 1 ? 's' : ''}. &nbsp;
               <Link onClick={forget} href='#' underline='hover'>
                 Forget?
-              </Link> &nbsp;
+              </Link>{' '}
+              &nbsp;
             </Alert>
             {expandWallets && accounts.allAccounts && (
               <AccountList accounts={accounts.allAccounts} />
@@ -106,7 +112,11 @@ const ConnectWallet: FC = () => {
           </Stack>
         )}
         {accounts.hasAccounts && (
-          <Button onClick={connectionButtons.toggle} endIcon={endIconConnectionButtons}>
+          <Button
+            onClick={connectionButtons.toggle}
+            endIcon={endIconConnectionButtons}
+            sx={{ display: 'flex', justifyContent: 'start' }}
+          >
             Add more wallets
           </Button>
         )}
