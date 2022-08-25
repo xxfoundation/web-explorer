@@ -10,7 +10,7 @@ import { DataPoint } from './types';
 import Error from '../../Error';
 import DefaultTile from '../../DefaultTile';
 
-const variables = { limit: 10, offset: 0 }
+const variables = { limit: 10, offset: 0 };
 
 const AverageCommissionLineChart = () => {
   const pointsQuery = useQuery<GetStakingStats>(GET_STAKING_STATS, { variables });
@@ -20,22 +20,22 @@ const AverageCommissionLineChart = () => {
   );
 
   if (pointsQuery.loading) {
-    return (
-      <Loading />
-    )
+    return <Loading />;
   }
 
   if (pointsQuery.error || !data) {
-    return (
-      <Error />
-    )
+    return <Error />;
   }
 
   return (
-    <DefaultTile header='Average Commission' >
-      <LineChart labelFormatters={{ yAxis: percentLabelFormatter }} tooltipFormatter={percentTooltipFormatter} data={data} />
+    <DefaultTile header='Average Commission'>
+      <LineChart
+        labelFormatters={{ yAxis: percentLabelFormatter }}
+        tooltipFormatter={percentTooltipFormatter}
+        data={data}
+      />
     </DefaultTile>
-  )
-}
+  );
+};
 
 export default AverageCommissionLineChart;

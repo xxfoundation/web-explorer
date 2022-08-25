@@ -6,7 +6,7 @@ import AveragePerformanceLineChart from '../../components/charts/highcharts/Aver
 import AverageSelfStakeLineChart from '../../components/charts/highcharts/AverageSelfStakeLineChart';
 import AverageCommissionLineChart from '../../components/charts/highcharts/AverageCommissionLineChart';
 
-const StakingStats = () => {
+const StakingCharts = () => {
   return (
     <Grid container spacing={2}>
       <Grid md={6} sm={12} item>
@@ -22,7 +22,7 @@ const StakingStats = () => {
         <AveragePointsLineChart />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default StakingStats;
+export default StakingCharts;

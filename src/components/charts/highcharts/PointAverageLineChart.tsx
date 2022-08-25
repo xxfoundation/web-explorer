@@ -8,9 +8,9 @@ import LineChart from './LineChart';
 import { DataPoint } from './types';
 import Error from '../../Error';
 import DefaultTile from '../../DefaultTile';
-import { decimalTooltipFormatter } from './formatters';
+import { amountByEraTooltip } from './formatters';
 
-const variables = { limit: 10, offset: 0 }
+const variables = { limit: 10, offset: 0 };
 
 const AveragePointsLineChart = () => {
   const pointsQuery = useQuery<GetStakingStats>(GET_STAKING_STATS, { variables });
@@ -20,24 +20,18 @@ const AveragePointsLineChart = () => {
   );
 
   if (pointsQuery.loading) {
-    return (
-      <Loading />
-    )
+    return <Loading />;
   }
 
   if (pointsQuery.error || !data) {
-    return (
-      <Error />
-    )
+    return <Error />;
   }
 
   return (
-    <DefaultTile header='Average era points' >
-      <LineChart data={data} tooltipFormatter={decimalTooltipFormatter} />
+    <DefaultTile header='Average era points'>
+      <LineChart tooltipFormatter={amountByEraTooltip} data={data} />
     </DefaultTile>
-  )
-}
+  );
+};
 
 export default AveragePointsLineChart;
-
-

@@ -16,11 +16,10 @@ export function balanceLabelFormatter(this: AxisLabelsFormatterContextObject) {
 }
 
 export function percentLabelFormatter(this: AxisLabelsFormatterContextObject) {
-  return `${Number(this.value) * 100}%`;
+  return `${Math.floor((this.value as number ?? 0) * 100)}%`;
 }
-
 
 export function formatPercent(this: { value: string | number }) {
   const parsed = typeof this.value === 'string' ? parseFloat(this.value) : this.value;
-  return `${parsed * 100} %`;
+  return `${parsed * 100} % `;
 }
