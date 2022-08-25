@@ -8,7 +8,7 @@ import MnemonicDialog from '../Dialogs/MnemonicDialog';
 import KeyfileDialog from '../Dialogs/KeyfileDialog';
 import useAccounts from '../../../../hooks/useAccounts';
 import AccountList from '../utils/AccountList';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { AlignHorizontalCenter, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { getStakedReturn } from '../../StakingMetrics';
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../../../schemas/economics.schema';
 import { useQuery } from '@apollo/client';
@@ -81,29 +81,42 @@ const ConnectWallet: FC = () => {
                 Average Return (APY): <b>{avgStakedReturn.toFixed(2)}%</b>
               </Typography>
             </Loading>
-            <Typography variant='body3' sx={{ textAlign: 'left' }}>
-              To get started please create or connect a wallet using one of the options below.
-            </Typography>
+            {!accounts.hasAccounts && (
+              <Typography variant='body3' sx={{ textAlign: 'left' }}>
+                To get started please generate a wallet or recover your existing wallet(s) using one
+                of the options below.
+              </Typography>
+            )}
           </Stack>
         </Stack>
         {accounts.hasAccounts && (
           <Stack display='columns' spacing={2}>
-            <Alert severity='success'>
-              Found {accounts.allAccounts.length} accounts. &nbsp;
+            <Alert
+              action={
+                <Button sx={{ minWidth: 0 }} size='small' onClick={wallets.toggle}>
+                  {endIconWallets}
+                </Button>
+              }
+              severity='success'
+            >
+              Found {accounts.allAccounts.length} account
+              {accounts.allAccounts.length > 1 ? 's' : ''}. &nbsp;
               <Link onClick={forget} href='#' underline='hover'>
                 Forget?
-              </Link>
+              </Link>{' '}
+              &nbsp;
             </Alert>
-            <Button onClick={wallets.toggle} endIcon={endIconWallets}>
-              Show connected wallets
-            </Button>
             {expandWallets && accounts.allAccounts && (
               <AccountList accounts={accounts.allAccounts} />
             )}
           </Stack>
         )}
         {accounts.hasAccounts && (
-          <Button onClick={connectionButtons.toggle} endIcon={endIconConnectionButtons}>
+          <Button
+            onClick={connectionButtons.toggle}
+            endIcon={endIconConnectionButtons}
+            sx={{ display: 'flex', justifyContent: 'start' }}
+          >
             Add more wallets
           </Button>
         )}
