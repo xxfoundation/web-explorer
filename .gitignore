@@ -28,3 +28,6 @@ sample_server/node_modules/
 
 # Local Netlify folder
 .netlify
+
+# Snyk
+.dccache

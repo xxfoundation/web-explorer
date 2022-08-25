@@ -16,7 +16,7 @@ import AccountDetails from './account/AccountDetails';
 import { useToggle } from '../../hooks';
 import BalanceHistoryChart from './account/BalanceHistoryChart';
 import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
-import ValidatorInfo from './account/ValidatorInfo';
+import StakingCard from './account/staking';
 
 const AccountId: FC = () => {
   const { accountId } = useParams<{ accountId?: string }>();
@@ -53,7 +53,6 @@ const AccountId: FC = () => {
     data?.aggregates && data?.stats
       ? { aggregates: data?.aggregates, stats: data?.stats }
       : undefined;
-  const stats = data?.stats;
 
   return (
     <Container sx={{ my: 5 }}>
@@ -93,10 +92,8 @@ const AccountId: FC = () => {
         </Grid>
 
         {validatorInfoExpanded && account.roles.validator && validator !== undefined && (
-          <Grid item>
-            <Grid item xs={12}>
-              <ValidatorInfo info={stats?.[0]} />
-            </Grid>
+          <Grid item xs={12}>
+            <StakingCard accountId={account.id} validator={validator} />
           </Grid>
         )}
         {historyExpanded && currEra && (
