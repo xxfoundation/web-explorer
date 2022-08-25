@@ -1,6 +1,9 @@
+import type { SeriesClickEventObject } from 'highcharts';
+
 import { useQuery } from '@apollo/client';
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
+
 import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
 import { ListenForEraTransfers, LISTEN_FOR_ERA_TRANSFERS } from '../../../schemas/transfers.schema';
@@ -31,6 +34,12 @@ const TransfersLineChart = () => {
         .slice(-timeframe) as DataPoint[],
     [data?.eraTransfers, timeframe]
   );
+
+  const onClick = useCallback((evt: SeriesClickEventObject) => {
+    // eslint-disable-next-line no-console
+    console.log(evt);
+  }, []);
+
   return (
     <DefaultTile header='Transfers' height='435px'>
       {loading ? (
@@ -54,7 +63,7 @@ const TransfersLineChart = () => {
               </Select>
             </FormControl>
           </Box>
-          <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} />
+          <LineChart onClick={onClick} tooltipFormatter={amountByEraTooltip} data={chartData} />
         </>
       )}
     </DefaultTile>

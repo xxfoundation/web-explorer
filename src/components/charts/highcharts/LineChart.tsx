@@ -1,11 +1,12 @@
 import { Box } from '@mui/material';
 import Highcharts, {
+  SeriesClickEventObject,
   AxisLabelsFormatterCallbackFunction as LabelFormatter,
   Options,
   TooltipFormatterCallbackFunction as TooltipFormatter
 } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import React, { FC, useMemo } from 'react';
+import React, { FC,useMemo } from 'react';
 import { theme } from '../../../themes/footer';
 import Error from '../../Error';
 import { DataPoint } from './types';
@@ -23,6 +24,7 @@ const calculateMaximums = (data: DataPoint[]) => {
 
 type Props = {
   title?: string;
+  onClick?: (evt: SeriesClickEventObject) => void;
   data: DataPoint[];
   labelFormatters?: {
     xAxis?: LabelFormatter;
@@ -32,7 +34,7 @@ type Props = {
   tooltipFormatter?: TooltipFormatter;
 };
 
-const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, x }) => {
+const LineChart: FC<Props> = ({ data, labelFormatters, onClick, title, tooltipFormatter, x }) => {
   const options = useMemo<Options>(() => {
     const { maxX, minX } = x || calculateMaximums(data);
     return {
@@ -81,6 +83,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, 
       },
       plotOptions: {
         series: {
+          cursor: 'pointer',
           marker: {
             enabled: true,
             radius: 5
@@ -89,6 +92,9 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, 
       },
       series: [
         {
+          events: {
+            click: onClick,
+          },
           type: 'line',
           name: 'ERA',
           marker: { symbol: 'circle' },
@@ -96,7 +102,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, 
         }
       ]
     };
-  }, [data, labelFormatters?.xAxis, labelFormatters?.yAxis, title, tooltipFormatter, x]);
+  }, [data, labelFormatters?.xAxis, labelFormatters?.yAxis, onClick, title, tooltipFormatter, x]);
 
   if (!data.length) {
     return (
