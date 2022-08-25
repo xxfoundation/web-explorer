@@ -177,6 +177,9 @@ export type StakingReward = {
   era: number;
   timestamp: string;
   validatorAddress: string;
+  identity: {
+    display: string;
+  }
 }
 
 const STAKING_REWARDS_FRAGMENT = gql`
@@ -187,6 +190,9 @@ const STAKING_REWARDS_FRAGMENT = gql`
     era
     timestamp
     validatorAddress: validator_stash_address
+    identity {
+      display
+    }
   }
 `;
 

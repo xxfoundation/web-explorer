@@ -15,7 +15,7 @@ import {
 } from '../../../../schemas/accounts.schema';
 import TransferTable from '../../../transfers/TransfersTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
-import RewardStashTable from '../staking/RewardStashTable';
+import StakingRewardsTable from './StakingRewardsTable';
 
 type Props = {
   account: Account;
@@ -86,7 +86,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
                 count={rewardsCount === undefined ? '' : rewardsCount}
               />
             ),
-            content: <RewardStashTable accountId={account.id} sum={rewardsSum} />
+            content: <StakingRewardsTable accountId={account.id} sum={rewardsSum} />
           }
         ];
 

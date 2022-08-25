@@ -14,17 +14,15 @@ import {
 } from '../../../../schemas/staking.schema';
 
 const DEFAULT_ROWS_PER_PAGE = 10;
-const headers = BaseLineCellsWrapper([
-  'Validator Account',
-  'Block Number',
-  'Era',
-  'Amount',
-  'Timestamp'
-]);
+const headers = BaseLineCellsWrapper(['Validator', 'Block Number', 'Era', 'Amount', 'Timestamp']);
 
 const RewardsRow = (reward: StakingReward) => {
   return BaseLineCellsWrapper([
-    <XXNetworkAddress truncated='mdDown' value={reward.validatorAddress} />,
+    <XXNetworkAddress
+      truncated='mdDown'
+      value={reward.validatorAddress}
+      name={reward?.identity?.display}
+    />,
     <Link to={`/blocks/${reward.blockNumber}`}>{reward.blockNumber}</Link>,
     reward.era,
     <FormatBalance value={reward.amount.toString()} />,
@@ -32,7 +30,7 @@ const RewardsRow = (reward: StakingReward) => {
   ]);
 };
 
-const RewardStashTable: FC<{
+const StakingRewardsTable: FC<{
   accountId: string;
   sum?: number;
 }> = ({ accountId, sum }) => {
@@ -75,4 +73,4 @@ const RewardStashTable: FC<{
   );
 };
 
-export default RewardStashTable;
+export default StakingRewardsTable;
