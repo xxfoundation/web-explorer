@@ -33,7 +33,14 @@ type Props = {
   tooltipFormatter?: TooltipFormatter;
 };
 
-const LineChart: FC<Props> = ({ data, labelFormatters, title, tooltipFormatter, x, yAxisTitle = '' }) => {
+const LineChart: FC<Props> = ({
+  data,
+  labelFormatters,
+  title,
+  tooltipFormatter,
+  x,
+  yAxisTitle = ''
+}) => {
   const options = useMemo<Options>(() => {
     const { maxX, minX } = x || calculateMaximums(data);
     return {
