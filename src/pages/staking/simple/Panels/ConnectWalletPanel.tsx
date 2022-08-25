@@ -8,7 +8,7 @@ import MnemonicDialog from '../Dialogs/MnemonicDialog';
 import KeyfileDialog from '../Dialogs/KeyfileDialog';
 import useAccounts from '../../../../hooks/useAccounts';
 import AccountList from '../utils/AccountList';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { AlignHorizontalCenter, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { getStakedReturn } from '../../StakingMetrics';
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../../../schemas/economics.schema';
 import { useQuery } from '@apollo/client';
@@ -81,21 +81,10 @@ const ConnectWallet: FC = () => {
                 Average Return (APY): <b>{avgStakedReturn.toFixed(2)}%</b>
               </Typography>
             </Loading>
-            <Typography variant='body3' sx={{ textAlign: 'left' }}>
-              To get started please create or connect a wallet using one of the options below.
-            </Typography>
+            {!accounts.hasAccounts && <Typography variant='body3' sx={{ textAlign: 'left' }}>
+              To get started please generate a wallet or recover your existing wallet(s) using one of the options below.
+            </Typography>}
           </Stack>
-        </Stack>
-        <Stack spacing={5} direction={{ xs: 'column', sm: 'row' }}>
-          <Button onClick={generateDialog.toggleOn} variant='contained'>
-            Generate Wallet
-          </Button>
-          <Button onClick={mnemonicDialog.toggleOn} variant='contained'>
-            Recovery Phrase
-          </Button>
-          <Button onClick={keyfileDialog.toggleOn} variant='contained'>
-            Keyfile (JSON)
-          </Button>
         </Stack>
         {accounts.hasAccounts && (
           <Stack display='columns' spacing={2}>
@@ -106,7 +95,7 @@ const ConnectWallet: FC = () => {
                 </Button>
               } severity='success'>
               
-              Found {accounts.allAccounts.length} accounts. &nbsp;
+              Found {accounts.allAccounts.length} account{accounts.allAccounts.length > 1 ? 's' : ''}. &nbsp;
               <Link onClick={forget} href='#' underline='hover'>
                 Forget?
               </Link> &nbsp;
@@ -114,6 +103,24 @@ const ConnectWallet: FC = () => {
             {expandWallets && accounts.allAccounts && (
               <AccountList accounts={accounts.allAccounts} />
             )}
+          </Stack>
+        )}
+        {accounts.hasAccounts && (
+          <Button onClick={connectionButtons.toggle} endIcon={endIconConnectionButtons}>
+            Add more wallets
+          </Button>
+        )}
+        {(expandConnectionButtons || !accounts.hasAccounts) && (
+          <Stack spacing={5} direction={{ xs: 'column', sm: 'row' }}>
+            <Button onClick={generateDialog.toggleOn} variant='contained'>
+              Generate Wallet
+            </Button>
+            <Button onClick={mnemonicDialog.toggleOn} variant='contained'>
+              Recovery Phrase
+            </Button>
+            <Button onClick={keyfileDialog.toggleOn} variant='contained'>
+              Keyfile (JSON)
+            </Button>
           </Stack>
         )}
         <Alert sx={{ mt: 3 }} severity='warning'>
