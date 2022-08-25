@@ -89,7 +89,7 @@ const NonStakePanel: FC<Props> = ({
         <Typography variant='h2'>Sign and Submit</Typography>
         <Typography variant='body3'>
           {stakingOption === 'unstake'
-            ? 'Please remember that the unstaking process takes 28 days. Furthermore, coins will be kept locked until you redeem them. You can do that using the Redeem option on this app, after waiting for 28 days.'
+            ? 'Please remember that the unstaking process takes 28 days. Furthermore, coins will be kept locked until you redeem them. You can unlock your coins using the Redeem option on this app, after waiting for 28 days.'
             : 'You are redeeming the full amount of coins that were previously unstaked.'}
         </Typography>
         <Stack spacing={3} direction='row'>
@@ -104,12 +104,12 @@ const NonStakePanel: FC<Props> = ({
         </Stack>
         <Alert severity='info'>
           <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>
-            Do you want to check your account?
+            Do you want to view your account?
           </AlertTitle>
           <Typography variant='body3'>
-            You can always monitor{' '}
+            You can monitor your account activity on the{' '}
             <Link target='__blank' href={accountURL}>
-              your wallet on this explorer
+              explorer
             </Link>
             .
           </Typography>
