@@ -197,9 +197,9 @@ const APYPanel: FC<Props> = ({ account, amount, setPassword, setTransaction, sta
           </>
         ) : (
           <Stack spacing={4} sx={{ p: 3, textAlign: 'center' }}>
-            <Loading size='md' />
-            <Typography variant='body3' sx={{ mt: 2, fontSize: '1.25rem' }}>
-              <>We are selecting your validators. It might take couple seconds.</>
+            <Loading size='sm2' />
+            <Typography variant='body3' sx={{ mt: 2, fontSize: '1rem' }}>
+              <>Selecting validators. This might take a few seconds...</>
             </Typography>
           </Stack>
         )}

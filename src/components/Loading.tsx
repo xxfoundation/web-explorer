@@ -2,7 +2,7 @@ import type { WithChildren } from '../types';
 import React, { FC } from 'react';
 import { Box, styled, keyframes } from '@mui/material';
 
-type Size = 'sm' | 'md' | 'lg';
+type Size = 'sm' | 'sm2' | 'md' | 'lg';
 type Variant = 'primary' | 'secondary' | 'warning' | 'info';
 
 type Props = WithChildren & {
@@ -13,6 +13,7 @@ type Props = WithChildren & {
 
 const sizes: Record<Size, string> = {
   sm: '2rem',
+  sm2: '4rem',
   md: '6rem',
   lg: '9rem'
 }
