@@ -12,6 +12,8 @@ export type Event = {
   module: string;
   call: string;
   timestamp: string;
+  doc: string;
+  data: string;
 };
 
 export const EVENTS_OF_BLOCK = gql`
@@ -31,6 +33,8 @@ export const EVENTS_OF_BLOCK = gql`
       call
       id
       timestamp
+      doc
+      data
     }
   }
 `;
@@ -61,6 +65,8 @@ export const LIST_EVENTS = gql`
       call
       id
       timestamp
+      doc
+      data
     }
   }
 `;
