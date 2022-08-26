@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Alert, Button, Link, Stack, Typography } from '@mui/material';
 import { keyring } from '@polkadot/ui-keyring';
 
