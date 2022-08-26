@@ -17,15 +17,24 @@ import { StakingOptions } from '../SimpleStaker';
 import { StakingBalances } from '../../../../simple-staking/actions';
 import FormatBalance from '../../../../components/FormatBalance';
 import { TableStyled } from '../../../../components/Tables/TableContainer.styled';
+import { BN } from '@polkadot/util';
 
 const optionText = (enabled: boolean, title: string, body: JSX.Element | string) => {
   return (
     <Grid item xs={12} sx={{ m: 2 }}>
-      <Typography style={{ fontWeight: enabled ? 600 : 400 }} variant='h3'>{title}</Typography>
-      <Typography style={{ fontWeight: enabled ? 600 : 400 }} variant='body2'>{body}</Typography>
+      <Typography sx={{ fontWeight: enabled ? 600 : 400 }} variant='h3'>{title}</Typography>
+      <Typography sx={{ fontWeight: enabled ? 600 : 400 }} variant='body2'>{body}</Typography>
     </Grid>
   );
 };
+
+const styledBalance = (value: string | BN) => {
+  return (
+    <Typography sx={{ color: 'black', fontWeight: 600}} variant='body3'>
+      <FormatBalance value={value} />
+    </Typography>
+  );
+}
 
 type Props = {
   balances: StakingBalances;
@@ -60,7 +69,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
                   : optionText(true,
                       'Stake',
                       <>
-                        You can stake up to <FormatBalance value={balances.available} />.
+                        You have {styledBalance(balances.staked)} staked. You can stake up to {styledBalance(balances.available)} more.
                       </>
                     )
               }
@@ -75,7 +84,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
                   : optionText(true,
                       'Unstake',
                       <>
-                        You can unstake up to <FormatBalance value={balances.staked} />.
+                        You can unstake up to {styledBalance(balances.staked)}.
                       </>
                     )
               }
@@ -90,7 +99,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
                   : optionText(true,
                       'Redeem',
                       <>
-                        You can redeem <FormatBalance value={balances.redeemable} />.
+                        You can redeem {styledBalance(balances.redeemable)}.
                       </>
                     )
               }
@@ -99,13 +108,13 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
         </FormControl>
         { balances.unlocking.length > 0 &&
           <Stack spacing={2}>
-            <Typography variant='h3'>Funds currently unlocking</Typography>
+            <Typography variant='h3'>Unstaked funds</Typography>
             <TableStyled>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
                     <TableCell>Amount</TableCell>
-                    <TableCell>Time Left</TableCell>
+                    <TableCell>Time left to redeem</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -117,7 +126,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
                     </Typography>
                     </TableCell>
                     <TableCell>
-                    <Typography>{days} days left</Typography>
+                    <Typography>{days} day{(days > 1) && 's'}</Typography>
                     </TableCell>
                     </TableRow>
                   ))}
