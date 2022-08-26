@@ -79,7 +79,7 @@ const FinishPanel: FC<Props> = ({ account, amount, blockHash, error, loading, op
         See it in all its glory over <Link to={`/blocks/${blockHash}`}>here</Link>.
       </Typography>
       <Typography variant='body3' sx={{ fontSize: '1rem' }}>
-        And/or check your account <Link to={`/accounts/${account}`}>here</Link>.
+        Check your account <Link to={`/accounts/${account}`}>here</Link>.
       </Typography>
       <Box sx={{ p: 4 }} />
       <Box sx={{ textAlign: 'right' }}>

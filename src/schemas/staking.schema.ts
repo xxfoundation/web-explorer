@@ -201,3 +201,50 @@ export const GET_STAKING_STATS = gql`
     }
   }
 `
+/* -------------------------------------------------------------------------- */
+/*                               Staking Rewards                              */
+/* -------------------------------------------------------------------------- */
+export type StakingReward = {
+  accountId: string;
+  amount: number;
+  blockNumber: number;
+  era: number;
+  timestamp: string;
+  validatorAddress: string;
+  identity: {
+    display: string;
+  }
+}
+
+const STAKING_REWARDS_FRAGMENT = gql`
+  fragment stakingRewardsFragment on staking_reward {
+    accountId: account_id
+    amount
+    blockNumber: block_number
+    era
+    timestamp
+    validatorAddress: validator_stash_address
+    identity {
+      display
+    }
+  }
+`;
+
+export type GetStakingRewards = {
+  aggregates: { aggregate: { count: number } }
+  rewards: StakingReward[]
+}
+export const GET_STAKING_REWARDS = gql`
+  ${STAKING_REWARDS_FRAGMENT}
+  query GetStakingRewards ($accountId: String!) {
+    aggregates: staking_reward_aggregate(where: { account_id: { _eq: $accountId }}) {
+      aggregate {
+        count
+      }
+    }
+
+    rewards: staking_reward(where: { account_id: { _eq: $accountId } }, order_by: { era: desc }) {
+      ...stakingRewardsFragment
+    }
+  }
+`;

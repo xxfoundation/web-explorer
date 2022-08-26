@@ -148,7 +148,15 @@ const SimpleStaker = () => {
   }, []);
 
   const back = useCallback(() => {
-    setStep((v) => Math.max(0, v - 1));
+    setStep((v) => {
+      const prev = Math.max(0, v - 1);
+      if (prev === 2) {
+        setSelectedStakingOption('stake');
+        setAmount(BN_ZERO);
+        setAmountIsValid(false);
+      }
+      return prev;
+    });
   }, []);
 
   const onStepChange = useCallback(
@@ -278,7 +286,6 @@ const SimpleStaker = () => {
               <APYPanel
                 account={selectedAccount}
                 amount={amount}
-                stakingOption={selectedStakingOption}
                 stakingBalances={stakingBalances}
                 setTransaction={setTransaction}
                 setPassword={setPassword}
