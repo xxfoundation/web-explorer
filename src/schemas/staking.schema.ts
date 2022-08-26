@@ -168,6 +168,40 @@ export const GET_VALIDATOR_STATS = gql`
 `;
 
 /* -------------------------------------------------------------------------- */
+/*                                Staking Stats                               */
+/* -------------------------------------------------------------------------- */
+type StakingStats = {
+  era: number;
+  commissionAvg: number;
+  pointsAvg: number;
+  pointsMax: number;
+  pointsTotal: number;
+  rewardTotal: number;
+  selfStakeAvg: number;
+  timestamp: number;
+  totalStakeAvg: number;
+}
+
+export type GetStakingStats = {
+  stats: StakingStats[]
+}
+
+export const GET_STAKING_STATS = gql`
+  query GetStakingStats($limit: Int!, $offset: Int!) {
+    stats: staking_stats(limit: $limit, offset: $offset, order_by: {era: desc, points_avg: asc}) {
+      commissionAvg: commission_avg
+      era
+      pointsAvg: points_avg
+      pointsMax: points_max
+      pointsTotal: points_total
+      rewardTotal: reward_total
+      selfStakeAvg: self_stake_avg
+      timestamp
+      totalStakeAvg: total_stake_avg
+    }
+  }
+`
+/* -------------------------------------------------------------------------- */
 /*                               Staking Rewards                              */
 /* -------------------------------------------------------------------------- */
 export type StakingReward = {
