@@ -1,4 +1,4 @@
-import { BN, BN_ZERO } from '@polkadot/util';
+import { BN } from '@polkadot/util';
 
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -24,9 +24,7 @@ import useApi from '../../../../hooks/useApi';
 import FormatBalance from '../../../../components/FormatBalance';
 import Loading from '../../../../components/Loading';
 import { CustomTooltip as Tooltip } from '../../../../components/Tooltip';
-
-import { useQuery } from '@apollo/client';
-import { GET_EXTRINSIC_COUNTS, GetExtrinsicCounts } from '../../../../schemas/accounts.schema';
+import StakingRewardsElement from '../utils/StakingRewardsElement';
 
 type Props = {
   selected: string;
@@ -38,17 +36,6 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   const { api } = useApi();
   const pagination = usePagination({ rowsPerPage: 10 });
   const [balances, setBalances] = useState<BN[]>();
-
-  const [rewards, setRewards] = useState<BN>(BN_ZERO);
-  const { data, loading }= useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
-    variables: { accountId: selected }
-  });
-
-  useEffect(() => {
-    if (data && !loading) {
-      setRewards(new BN(data.rewardsInfo.aggregate.sum.amount || 0))
-    }
-  }, [selected, data, loading])
 
   const { setCount } = pagination;
   useEffect(() => {
@@ -88,9 +75,6 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   return (
     <Stack spacing={4}>
       <Typography variant='h2'>Select Wallet</Typography>
-      <Typography>
-        The selected account has earned <FormatBalance value={rewards} /> in staking rewards
-      </Typography>
       {!balances || !accounts || !navigator.onLine ? (
         <Box sx={{ p: 5, py: 20 }}>
           <Loading size='md' />
@@ -105,6 +89,7 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
               <TableRow>
                 <TableCell>Account</TableCell>
                 <TableCell>Balance</TableCell>
+                <TableCell>Rewards</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -133,6 +118,9 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                     <Typography>
                       <FormatBalance value={balances[i]} />
                     </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <StakingRewardsElement address={acct} />
                   </TableCell>
                   <TableCell>
                     <Stack alignItems='center' direction='row'>
