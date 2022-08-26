@@ -4,11 +4,13 @@ import { ApiPromise } from '@polkadot/api';
 import { BN, BN_ZERO } from '@polkadot/util';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
+import _ from 'lodash';
 
 export interface StakingBalances {
   staked: BN;
   unbonding: BN;
   redeemable: BN;
+  unlocking: [BN, number][];
   available: BN;
   total: BN;
 }
@@ -29,6 +31,7 @@ export const getStakingBalances = async (api: ApiPromise, stash: string): Promis
       staked: BN_ZERO,
       unbonding: BN_ZERO,
       redeemable: BN_ZERO,
+      unlocking: [],
       available: free.sub(ed),
       total: free.add(reserved)
     }
@@ -38,13 +41,18 @@ export const getStakingBalances = async (api: ApiPromise, stash: string): Promis
   const totalStaked = ledger.total.unwrap();
   const staked = ledger.active.unwrap();
   const unbonding = totalStaked.sub(staked);
-  const redeemable = ledger.unlocking.filter(({ era }) => era.unwrap().toNumber() <= currentEra.unwrap().toNumber()).reduce((total, { value }) => total.add(value.unwrap()), BN_ZERO);
+  const currEra = currentEra.unwrap().toNumber();
+  const redeemable = ledger.unlocking.filter(({ era }) => era.toNumber() <= currEra).reduce((total, { value }) => total.add(value.unwrap()), BN_ZERO);
+  const uniqueEras = _.uniq(ledger.unlocking.filter(({ era }) => era.toNumber() > currEra).map(({ era }) => era.toNumber() - currEra));
+  const unlockingDup: [BN, number][] = ledger.unlocking.filter(({ era }) => era.toNumber() > currEra).map(({ era, value }) => [ value.unwrap().toBn(), era.toNumber() - currEra]);
+  const unlocking: [BN, number][] = uniqueEras.map((uniqEra) => [unlockingDup.reduce((total, [value, era]) => era === uniqEra ? total.add(value) : total, BN_ZERO), uniqEra]);
   const available = free.sub(ed).sub(staked);
   const total = free.add(reserved);
   return {
     staked,
     unbonding,
     redeemable,
+    unlocking,
     available,
     total
   }

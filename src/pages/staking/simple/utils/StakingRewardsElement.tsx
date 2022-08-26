@@ -4,6 +4,7 @@ import { Typography } from '@mui/material';
 import FormatBalance from '../../../../components/FormatBalance';
 import { useQuery } from '@apollo/client';
 import { GET_EXTRINSIC_COUNTS, GetExtrinsicCounts } from '../../../../schemas/accounts.schema';
+import Loading from '../../../../components/Loading';
 
 type Props = {
   address: string;
@@ -22,9 +23,15 @@ const StakingRewardsElement: FC<Props> = ({ address }) => {
   }, [address, data, loading])
 
   return (
-    <Typography>
-        <FormatBalance value={rewards} />
-    </Typography>
+    <>
+    {loading ? (
+        <Loading size='xs' />
+    ) : (
+        <Typography>
+            <FormatBalance value={rewards} />
+        </Typography>
+    )}
+    </>
   );
 };
 
