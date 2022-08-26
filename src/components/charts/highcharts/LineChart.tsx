@@ -104,7 +104,15 @@ const LineChart: FC<Props> = ({
         }
       ]
     };
-  }, [data, labelFormatters?.xAxis, labelFormatters?.yAxis, title, tooltipFormatter, x]);
+  }, [
+    data,
+    labelFormatters?.xAxis,
+    labelFormatters?.yAxis,
+    title,
+    tooltipFormatter,
+    x,
+    yAxisTitle
+  ]);
 
   if (!data.length) {
     return (
