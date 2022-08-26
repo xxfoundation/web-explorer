@@ -12,7 +12,6 @@ import { getStakedReturn } from '../../StakingMetrics';
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../../../schemas/economics.schema';
 import { useQuery } from '@apollo/client';
 import Loading from '../../../../components/Loading';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 
 const ConnectWallet: FC = () => {
   const accounts = useAccounts();
@@ -22,11 +21,6 @@ const ConnectWallet: FC = () => {
   const [expandWallets, wallets] = useToggle();
   const [expandConnectionButtons, connectionButtons] = useToggle();
   const [expandDisclaimer, disclaimer] = useToggle();
-
-  const endIconConnectionButtons = useMemo(
-    () => (expandConnectionButtons ? <KeyboardArrowUp /> : <KeyboardArrowDown />),
-    [expandConnectionButtons]
-  );
 
   const handleKeyfileClose = useCallback(() => {
     keyfileDialog.toggleOff();
@@ -101,7 +95,7 @@ const ConnectWallet: FC = () => {
         {accounts.hasAccounts && (
           <Button
             onClick={connectionButtons.toggle}
-            endIcon={endIconConnectionButtons}
+            endIcon={connectionButtons.icon}
             sx={{ display: 'flex', justifyContent: 'start' }}
           >
             Add more wallets
