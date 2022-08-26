@@ -2,6 +2,11 @@ import React, { FC } from 'react';
 import {
   Typography,
   Stack,
+  Table,
+  TableCell,
+  TableHead,
+  TableBody,
+  TableRow,
   FormControl,
   RadioGroup,
   FormControlLabel,
@@ -11,6 +16,7 @@ import {
 import { StakingOptions } from '../SimpleStaker';
 import { StakingBalances } from '../../../../simple-staking/actions';
 import FormatBalance from '../../../../components/FormatBalance';
+import { TableStyled } from '../../../../components/Tables/TableContainer.styled';
 
 const optionText = (enabled: boolean, title: string, body: JSX.Element | string) => {
   return (
@@ -91,6 +97,35 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
             />
           </RadioGroup>
         </FormControl>
+        { balances.unlocking.length > 0 &&
+          <Stack spacing={2}>
+            <Typography variant='h3'>Funds currently unlocking</Typography>
+            <TableStyled>
+              <Table size='small'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Amount</TableCell>
+                    <TableCell>Time Left</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {balances.unlocking.map(([value, days]) => (
+                    <TableRow>
+                    <TableCell>
+                    <Typography>
+                      <FormatBalance value={value} />
+                    </Typography>
+                    </TableCell>
+                    <TableCell>
+                    <Typography>{days} days left</Typography>
+                    </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableStyled>
+          </Stack>
+        }
       </Stack>
     </>
   );
