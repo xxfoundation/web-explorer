@@ -154,8 +154,8 @@ const SimpleStaker = () => {
         setSelectedStakingOption('stake');
         setAmount(BN_ZERO);
         setAmountIsValid(false);
-      };
-      return prev
+      }
+      return prev;
     });
   }, []);
 
@@ -286,7 +286,6 @@ const SimpleStaker = () => {
               <APYPanel
                 account={selectedAccount}
                 amount={amount}
-                stakingOption={selectedStakingOption}
                 stakingBalances={stakingBalances}
                 setTransaction={setTransaction}
                 setPassword={setPassword}

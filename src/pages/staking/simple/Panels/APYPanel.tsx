@@ -46,21 +46,12 @@ const { href: walletUrl } = new URL('/#/staking/actions', process.env.REACT_APP_
 type Props = {
   amount: BN;
   account: string;
-  stakingOption: string;
   stakingBalances?: StakingBalances;
   setTransaction: (tx: Promise<SubmittableExtrinsic<'promise', ISubmittableResult>>) => void;
   setPassword: (password: string) => void;
 };
 
-const APYPanel: FC<Props> = ({
-  account,
-  amount,
-  setPassword,
-  setTransaction,
-  stakingBalances,
-  stakingOption
-}) => {
-  const [dialogOpened, dialog] = useToggle();
+const APYPanel: FC<Props> = ({ account, amount, setPassword, setTransaction, stakingBalances }) => {
   const [expandValidators, validators] = useToggle();
   const { api } = useApi();
   const endIcon = useMemo(
@@ -69,7 +60,7 @@ const APYPanel: FC<Props> = ({
   );
   const [error, setError] = useState<string | null>(null);
   const [ready, setReady] = useState<boolean>(false);
-  const [selectedValidators, setSelectedValidators] = useState<string[]>(['']);
+  const [selectedValidators, setSelectedValidators] = useState<string[]>();
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [inputPassword, setInputPassword] = useInput('');
 
@@ -113,50 +104,25 @@ const APYPanel: FC<Props> = ({
     setSelectedValidators(targets.map((validator) => validator.validatorId));
   }, [account, api]);
 
+  useEffect(() => {
+    getValidator();
+  }, [getValidator]);
+
   // Create Transaction
   useEffect(() => {
-    if (api && stakingBalances && stakingOption === 'stake') {
-      getValidator();
+    if (api && selectedValidators) {
       setTransaction(stake(api, account, amount, selectedValidators));
     }
-  }, [
-    account,
-    amount,
-    api,
-    getValidator,
-    selectedValidators,
-    setTransaction,
-    stakingBalances,
-    stakingOption
-  ]);
+  }, [account, amount, api, selectedValidators, setTransaction]);
 
   return (
     <>
-      <Dialog open={dialogOpened} onClose={dialog.toggleOff}>
-        <Button
-          variant='text'
-          sx={{ position: 'absolute', top: 0, right: 0 }}
-          onClick={dialog.toggleOff}
-        >
-          <Close />
-        </Button>
-        <Stack spacing={3} sx={{ p: { md: 5, sm: 3, xs: 2 } }}>
-          <Typography variant='h3'>Validator Selection</Typography>
-          <Typography variant='body3'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
-          </Typography>
-        </Stack>
-      </Dialog>
       <Stack spacing={4}>
         <Typography variant='h2'>Nominate</Typography>
         <Typography variant='body3'>
-          If you wish to maximize your returns, use this app on a regular basis to reselect your validators.
-          The following APY and staking rewards estimates are not guaranteed and can change every day.
+          If you wish to maximize your returns, use this app on a regular basis to reselect your
+          validators. The following APY and staking rewards estimates are not guaranteed and can
+          change every day.
         </Typography>
         <Stack spacing={3} direction='row' sx={{ justifyContent: 'center' }}>
           <Stack>
@@ -185,15 +151,6 @@ const APYPanel: FC<Props> = ({
             </Stack>
           )}
         </Stack>
-        <Stack direction='row' justifyContent='space-between' alignItems='center'>
-          <Typography variant='body3'>
-            We have automatically selected validators for you.
-          </Typography>
-          <Button onClick={validators.toggle} endIcon={endIcon}>
-            Show validators
-          </Button>
-        </Stack>
-        {expandValidators && selectedValidators && <ValidatorList accounts={selectedValidators} />}
         <Alert severity='info'>
           <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Do you want more control?</AlertTitle>
           <Typography variant='body3'>
@@ -204,27 +161,49 @@ const APYPanel: FC<Props> = ({
             webapp to manually select validators.
           </Typography>
         </Alert>
-        <Stack spacing={1}>
-          <Typography variant='body3' sx={{ textAlign: 'end' }}>
-            Insert password to unlock your wallet
-          </Typography>
-          <Stack direction='row' justifyContent='end' spacing={2}>
-            <Box>
-              <TextField
-                type='password'
-                label='Password'
-                size='small'
-                value={inputPassword}
-                onChange={setInputPassword}
-              />
-            </Box>
-            <Button disabled={ready} onClick={checkPassword} variant='contained'>
-              {loadingPassword ? 'Confirming...' : 'Confirm Password'}
-            </Button>
+        {selectedValidators ? (
+          <>
+            <Stack direction='row' justifyContent='space-between' alignItems='center'>
+              <Typography variant='body3'>
+                We have automatically selected validators for you.
+              </Typography>
+              <Button onClick={validators.toggle} endIcon={endIcon}>
+                Show validators
+              </Button>
+            </Stack>
+            {expandValidators && selectedValidators && (
+              <ValidatorList accounts={selectedValidators} />
+            )}
+            <Stack spacing={1}>
+              <Typography variant='body3' sx={{ textAlign: 'end' }}>
+                Insert password to unlock your wallet
+              </Typography>
+              <Stack direction='row' justifyContent='end' spacing={2}>
+                <Box>
+                  <TextField
+                    type='password'
+                    label='Password'
+                    size='small'
+                    value={inputPassword}
+                    onChange={setInputPassword}
+                  />
+                </Box>
+                <Button disabled={ready} onClick={checkPassword} variant='contained'>
+                  {loadingPassword ? 'Confirming...' : 'Confirm Password'}
+                </Button>
+              </Stack>
+              {error && <Alert severity='error'>{error}</Alert>}
+              {!error && ready && <Alert severity='success'>Password confirmed!</Alert>}
+            </Stack>
+          </>
+        ) : (
+          <Stack spacing={4} sx={{ p: 3, textAlign: 'center' }}>
+            <Loading size='md' />
+            <Typography variant='body3' sx={{ mt: 2, fontSize: '1.25rem' }}>
+              <>We are selecting your validators. It might take couple seconds.</>
+            </Typography>
           </Stack>
-          {error && <Alert severity='error'>{error}</Alert>}
-          {!error && ready && <Alert severity='success'>Password confirmed!</Alert>}
-        </Stack>
+        )}
       </Stack>
     </>
   );
