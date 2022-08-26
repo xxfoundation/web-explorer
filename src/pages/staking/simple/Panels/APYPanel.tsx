@@ -1,10 +1,9 @@
-import { Close, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import {
   Alert,
   AlertTitle,
   Box,
   Button,
-  Dialog,
   Link,
   Stack,
   styled,
