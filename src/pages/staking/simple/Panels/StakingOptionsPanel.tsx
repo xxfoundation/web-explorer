@@ -114,7 +114,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Amount</TableCell>
-                    <TableCell>Time left to redeem</TableCell>
+                    <TableCell>Available to redeem in</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
