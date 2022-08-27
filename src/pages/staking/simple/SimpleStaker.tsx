@@ -115,6 +115,7 @@ const SimpleStaker = () => {
     setStakingBalances(undefined);
     setTransaction(undefined);
     setError(undefined);
+    setBlockHash(undefined);
   }, []);
 
   useEffect(() => {
