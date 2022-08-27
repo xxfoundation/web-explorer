@@ -113,9 +113,13 @@ const AmountSelection: FC<Props> = ({
       const decimalPoints = evt.target.value.split('.')[1]?.length ?? 0;
       const parsed = evt.target.value.replace(/\D/g, '');
 
-      setAmount(new BN(parsed).mul(DECIMALS_POW).div(BN_TEN.pow(new BN(decimalPoints))));
+      let value = new BN(parsed).mul(DECIMALS_POW).div(BN_TEN.pow(new BN(decimalPoints)));
+      if (option === 'unstake' && value.gt(available.sub(DECIMALS_POW))) {
+        value = available;
+      }
+      setAmount(value);
     },
-    [setAmount]
+    [setAmount, option, available]
   );
 
   const amountString = useMemo(() => bnToStringDecimal(amount ?? BN_ZERO), [amount]);
@@ -149,7 +153,7 @@ const AmountSelection: FC<Props> = ({
       Insert Amount from <i>Available to Unstake</i> to be removed from <i>Active Stake</i>
       <i>
         <br />
-        (When unstaking, the resulting active stake cannot be less than 1 xx)
+        (When unstaking, the resulting active stake cannot be less than 1 xx, unless its 0 xx)
       </i>
     </>
   );
