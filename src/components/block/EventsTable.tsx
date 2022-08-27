@@ -34,7 +34,7 @@ const DataTile: FC<{ headers?: string[]; values: string[] }> = ({ headers, value
             background: 'rgb(0 0 0 / 4%)'
           }}
         >
-          {headers && headers.length === values.length && (
+          {headers && headers !== [''] && headers.length === values.length && (
             <>
               <b>{headers[index]}</b>
               {': '}
@@ -48,7 +48,10 @@ const DataTile: FC<{ headers?: string[]; values: string[] }> = ({ headers, value
 };
 
 const processEventDoc = (doc: string) => {
-  const substring = doc.substring(doc.indexOf('\\[') + 2, doc.lastIndexOf('\\') - 1);
+  const substring = doc
+    .replace(/\[\"/g, '')
+    .replace(/\]\"/g, '')
+    .substring(doc.indexOf('\\') + 1, doc.lastIndexOf('\\') - 3);
   return substring ? substring.replace(/,","/g, ' ').replace(/,/g, '').split(' ') : undefined;
 };
 

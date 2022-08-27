@@ -11,15 +11,6 @@ export type NavProps = {
 };
 
 const NavButtons: FC<NavProps> = ({ canBack, canNext, confirmStep, onBack, onNext }) => {
-  const [checked, { set }] = useToggle();
-
-  const onChange = useCallback(
-    (evt: unknown, value: boolean) => {
-      set(value);
-    },
-    [set]
-  );
-
   return (
     <Stack direction='row' sx={{ mt: 5 }} justifyContent='space-between'>
       <Box>
@@ -32,9 +23,8 @@ const NavButtons: FC<NavProps> = ({ canBack, canNext, confirmStep, onBack, onNex
       <Box>
         {confirmStep ? (
           <>
-            <Checkbox checked={checked} onChange={onChange} />
             <Button
-              disabled={(canNext !== undefined && !canNext) || !checked}
+              disabled={canNext !== undefined && !canNext}
               variant='contained'
               onClick={onNext}
             >
