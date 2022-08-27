@@ -159,7 +159,6 @@ const orderValidatorsByReturn = (chainData: ChainData, validators: ElectedValida
 }
 
 export const selectValidators = async (api: ApiPromise, nominator: string): Promise<ElectedWithReturn[]> => {
-  console.warn('selectValidators');
   // Get chain data
   const chainData = await getChainData(api);
   // Builder voters list (excluding our address)
