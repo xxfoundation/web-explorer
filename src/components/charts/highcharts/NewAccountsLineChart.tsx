@@ -1,16 +1,21 @@
+import type { DataPoint } from '.';
+import type { SeriesClickEventObject } from 'highcharts';
+
 import { useQuery } from '@apollo/client';
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
-import type { DataPoint } from '.';
+import { useNavigate } from 'react-router-dom';
+
 import { amountByEraTooltip, LineChart } from '.';
 import { CreatedEras, GET_WHEN_CREATED_ERAS } from '../../../schemas/accounts.schema';
 import DefaultTile from '../../DefaultTile';
-import Loader from './Loader';
+import Loading from '../../Loading';
 
 const ERAS_IN_A_QUARTER = 90;
 const ERAS_IN_A_MONTH = 30;
 
 const NewAccountsChart = () => {
+  const navigate = useNavigate();
   const { data, loading } = useQuery<CreatedEras>(GET_WHEN_CREATED_ERAS);
   const newAccounts = data?.account;
   const latestEra = data?.history[0].latestEra || 999;
@@ -45,10 +50,16 @@ const NewAccountsChart = () => {
     return Object.entries(counter).map(([k, v]) => [parseInt(k), v] as DataPoint);
   }, [latestEra, newAccounts]);
 
+  const onClick = useCallback((evt: SeriesClickEventObject) => {
+    navigate(`/accounts?era=${evt.point.options.x}`);
+  }, [navigate]);
+
+  const dataRange = useMemo(() => chartData.slice(eraRange.start, eraRange.end), [chartData, eraRange.end, eraRange.start])
+
   return (
     <DefaultTile header='new accounts' height='435px'>
       {loading || !chartData || !latestEra ? (
-        <Loader />
+        <Loading />
       ) : (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'right', pr: 2 }}>
@@ -69,8 +80,9 @@ const NewAccountsChart = () => {
             </FormControl>
           </Box>
           <LineChart
+            data={dataRange}
+            onClick={onClick}
             tooltipFormatter={amountByEraTooltip}
-            data={chartData.slice(eraRange.start, eraRange.end)}
           />
         </>
       )}

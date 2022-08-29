@@ -11,7 +11,7 @@ import { Box, FormControl, MenuItem, Select, SelectChangeEvent, Typography } fro
 import StepChart from '../../../components/charts/highcharts/StepChart';
 import { formatBalance } from '../../../components/FormatBalance/formatter';
 import { useQuery } from '@apollo/client';
-import Loader from '../../../components/charts/highcharts/Loader';
+import Loading from '../../../components/Loading';
 
 const ERAS_IN_A_MONTH = 30;
 const ERAS_IN_A_WEEK = 7;
@@ -63,7 +63,7 @@ const BalanceHistoryChart: FC<Props> = ({ accountId, era }) => {
   );
 
   if (balanceHistoryQuery.loading) {
-    return <Loader />;
+    return <Loading />;
   }
 
   return (

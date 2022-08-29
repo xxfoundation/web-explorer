@@ -23,7 +23,7 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
     <>
       <TableRow>
         <TableCell colSpan={3} sx={{ paddingLeft: 0 }}>
-          <Header fontWeight={700}>
+          <Header component='div' fontWeight={700}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
                 EXTRINSIC&nbsp;

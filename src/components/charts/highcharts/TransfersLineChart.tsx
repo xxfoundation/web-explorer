@@ -8,12 +8,14 @@ import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
 import { ListenForEraTransfers, LISTEN_FOR_ERA_TRANSFERS } from '../../../schemas/transfers.schema';
 import DefaultTile from '../../DefaultTile';
-import Loader from './Loader';
+import Loading from '../../Loading';
+import { useNavigate } from 'react-router-dom';
 
 const ERAS_IN_A_QUARTER = 90;
 const ERAS_IN_A_MONTH = 30;
 
 const TransfersLineChart = () => {
+  const navigate = useNavigate();
   const { data, loading } = useQuery<ListenForEraTransfers>(LISTEN_FOR_ERA_TRANSFERS);
   const timeframes: Record<string, number> = {
     All: 0,
@@ -36,14 +38,13 @@ const TransfersLineChart = () => {
   );
 
   const onClick = useCallback((evt: SeriesClickEventObject) => {
-    // eslint-disable-next-line no-console
-    console.log(evt);
-  }, []);
+    navigate(`/transfers?era=${evt.point.options.x}`);
+  }, [navigate]);
 
   return (
     <DefaultTile header='Transfers' height='435px'>
       {loading ? (
-        <Loader />
+        <Loading />
       ) : (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'right', pr: 2 }}>

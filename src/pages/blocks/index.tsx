@@ -1,56 +1,27 @@
+import { Container, Stack, Typography } from '@mui/material';
 import React from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import AccountId from '../accounts/_accountId';
-// import BlockProducer from '../producer/_producerId';
-import BlocksPage from './BlocksPage';
-import Block from './_blockNumberOrHash';
+import PaperStyled from '../../components/Paper/PaperWrap.styled';
+import BlocksTable from './BlocksTable';
 
-const VersionRouter = () => {
-  const { path } = useRouteMatch();
+const PageHeader = () => {
   return (
-    <Switch>
-      <Route exact path={path}>
-        <Breadcrumb />
-        <h1>version</h1>
-      </Route>
-      <Route path={`${path}/:module`}>
-        <Breadcrumb />
-        <h1>spec version</h1>
-      </Route>
-    </Switch>
+    <Stack justifyContent={'space-between'} alignItems={'center'} direction={'row'} sx={{ mb: 5 }}>
+      <Typography variant='h1'>Blocks</Typography>
+    </Stack>
   );
 };
 
-const BlockRouter = () => {
-  const { path } = useRouteMatch();
+const BlocksPage = () => {
   return (
-    <Switch>
-      <Route exact path={path}>
-        <Block />
-      </Route>
-      <Route path={`${path}/producer/:accountId`}>
-        <AccountId />
-      </Route>
-      <Route path={`${path}/version/:version`}>
-        <VersionRouter />
-      </Route>
-    </Switch>
+    <Container sx={{ my: 5 }}>
+      <Breadcrumb />
+      <PageHeader />
+      <PaperStyled>
+        <BlocksTable />
+      </PaperStyled>
+    </Container>
   );
 };
 
-const BlocksListRouter = () => {
-  const { path } = useRouteMatch();
-  return (
-    <Switch>
-      <Route exact path={path}>
-        <BlocksPage />
-      </Route>
-      <Route path={`${path}/:numberOrHash`}>
-        <BlockRouter />
-      </Route>
-    </Switch>
-  );
-};
-
-export default BlocksListRouter;
+export default BlocksPage;

@@ -71,6 +71,7 @@ export const GET_DISPLAY_IDENTITY = gql`
 export type Account = {
   id: string;
   whenCreated: number;
+  whenCreatedEra: number;
   controllerAddress?: string;
   blockHeight: number;
   identity: Identity;
@@ -106,6 +107,7 @@ export const ACCOUNT_FRAGMENT = gql`
     id: account_id
     controllerAddress: controller_address
     whenCreated: when_created
+    whenCreatedEra: when_created_era
     blockHeight: block_height
     identity {
       ...identity
@@ -143,8 +145,12 @@ export const GET_ACCOUNT_BY_PK = gql`
 /* -------------------------------------------------------------------------- */
 /*                        Account Page > Holders Table                        */
 /* -------------------------------------------------------------------------- */
+type PartialIdentity = Pick<Identity, 'display'>;
+type AccountKeys = 'id' | 'timestamp' | 'totalBalance' | 'lockedBalance' | 'nonce' | 'roles' | 'whenCreatedEra';
+type PartialAccount = { identity : PartialIdentity } & Pick<Account, AccountKeys>;
+
 export type ListAccounts = TotalOfItems & {
-  account: Account[];
+  account: PartialAccount[];
 };
 
 export const LIST_ACCOUNTS = gql`
@@ -170,6 +176,7 @@ export const LIST_ACCOUNTS = gql`
       identity: identity {
         display
       }
+      whenCreatedEra: when_created_era
     }
     agg: account_aggregate(where: $where) {
       aggregate {

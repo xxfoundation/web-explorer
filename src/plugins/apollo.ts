@@ -45,8 +45,8 @@ const links = split(
 
 export const client = new ApolloClient({
   link: from([
+    sentryLink,
     links,
-    sentryLink
   ]),
   cache: apolloCache
 })

@@ -4,7 +4,7 @@ import Close from '@mui/icons-material/Close';
 import useLocalStorage from '../hooks/useLocalStorage';
 import Link from './Link';
 
-export default function Banner() {
+const Banner = () => {
   const [dismissed, setDismissed] = useLocalStorage<string>('banner.dismissed');
   const dismiss = useCallback(() => {
     setDismissed('true');
@@ -29,7 +29,7 @@ export default function Banner() {
         onClick={dismiss}>
         <Close />
       </Button>
-      <Typography variant='body2' sx={{ p: '1em', pr: '2em' }}>
+      <Typography variant='body2' sx={{ p: '1em', pr: '2em', color: 'white' }}>
         If you want to interact with the <b>xx network blockchain</b> use our web based wallet app
         (formerly known as the explorer)
       </Typography>
@@ -48,3 +48,5 @@ export default function Banner() {
     </AppBar>
   );
 }
+
+export default Banner;

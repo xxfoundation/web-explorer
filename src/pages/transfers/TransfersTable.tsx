@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import type { AddressFilters } from '../../components/Tables/filters/AddressFilter';
 
 import { Box } from '@mui/material';
 import { useSubscription } from '@apollo/client';
-import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react';
+import React, { Dispatch, FC, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
@@ -21,6 +22,8 @@ import {
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
+import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
+import { NumberParam, useQueryParam } from 'use-query-params';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.extrinsicIndex}`;
@@ -56,6 +59,14 @@ type Props = {
 const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) => {
   /* ----------------------- Initialize State Variables ----------------------- */
   const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('transfers.status', null);
+  const [eraQueryParam, setEraQueryParam] = useQueryParam('era', NumberParam);
+  const [eraSessionState, setEraSessionState] = useSessionState<number | undefined>('transfers.era', undefined);
+  const era = useMemo(() => eraQueryParam || eraSessionState, [eraSessionState, eraQueryParam]);
+  const onEraChange = useCallback((e?: string) => {
+    const eraNumber = e ? Number(e) : undefined;
+    setEraQueryParam(eraNumber);
+    setEraSessionState(eraNumber);
+  }, [setEraQueryParam, setEraSessionState]);
 
   /* --------------------- Initialize Dependent Variables --------------------- */
   const whereWithFilters = useMemo(() => {
@@ -68,9 +79,12 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
       }),
       ...(filters?.to && {
         destination: { _eq: filters?.to }
+      }),
+      ...(era && {
+        block: { active_era: { _eq: era } }
       })
     };
-  }, [filters?.from, filters?.to, statusFilter]);
+  }, [era, filters?.from, filters?.to, statusFilter]);
   
   const whereConcat = useMemo(
     () => Object.assign({}, where, whereWithFilters),
@@ -89,7 +103,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   const headers = useMemo(
     () =>
       BaseLineCellsWrapper([
-        'Era',
+        <GeneralFilter value={era?.toString()} onChange={onEraChange} label='Era' />,
         'Block',
         'Time',
         'From',
@@ -103,7 +117,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
         />,
         'Hash'
       ]),
-    [setStatusFilter, statusFilter]
+    [era, onEraChange, setStatusFilter, statusFilter]
   );
 
   /* ----------------------- Main Query - Get Transfers ----------------------- */

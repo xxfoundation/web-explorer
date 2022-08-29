@@ -86,7 +86,6 @@ const Footer = () => {
                 </Link>
               </Typography>
             </Grid>
-            {/* <Grid container item xs='auto' spacing={1.5}> */}
             <Grid item padding={'1rem 0'}>
               <Socials
                 socials={{
@@ -97,7 +96,6 @@ const Footer = () => {
                 }}
               />
             </Grid>
-            {/* </Grid> */}
           </Grid>
         </Container>
       </Box>

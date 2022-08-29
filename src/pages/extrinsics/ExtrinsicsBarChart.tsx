@@ -1,5 +1,5 @@
 import { DocumentNode, useQuery } from '@apollo/client';
-import { Box, CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import BarChart from '../../components/charts/BarChart/BarChart';
 import IntervalControls, {
@@ -7,6 +7,7 @@ import IntervalControls, {
 } from '../../components/charts/BarChart/IntervalControls';
 import { TimeInterval } from '../../components/charts/BarChart/types';
 import Error from '../../components/Error';
+import Loading from '../../components/Loading';
 import {
   GetExtrinsicCounts,
   GET_DAILY_EXTRINSIC_COUNTS,
@@ -46,7 +47,7 @@ const ExtrinsicsBatChart: FC = () => {
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '250px' }}
         >
           {(error || counts?.length === 0) && <Error />}
-          {loading && <CircularProgress />}
+          {loading && <Loading />}
         </Box>
       ) : (
         <BarChart series={{ data: counts, label: 'Extrinsic' }} interval={interval} />

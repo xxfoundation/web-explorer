@@ -1,7 +1,7 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Tooltip, Typography } from '@mui/material';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 
 import { theme } from '../../themes/default';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -13,8 +13,11 @@ import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
 import { HoldersRolesFilters, roleToLabelMap } from './HoldersRolesFilters';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
+import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
+import { NumberParam, useQueryParam } from 'use-query-params';
 
-type Filters = Record<string, boolean>;
+type RoleFilters = Record<string, boolean>;
+type Filters = { era?: number, roles: RoleFilters };
 
 const RolesTooltipContent: FC<{ roles: string[] }> = ({ roles }) => {
   const labels = useMemo(
@@ -57,7 +60,7 @@ const rolesToCell = (roles: string[]) => {
 const accountToRow = (
   item: ListAccounts['account'][0],
   rank: number,
-  filters: Filters
+  filters: RoleFilters
 ): BaselineCell[] => {
   const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
 
@@ -90,17 +93,27 @@ const accountToRow = (
       props: { colSpan: 2 }
     },
     { value: <FormatBalance value={item.lockedBalance.toString()} /> },
-    { value: <FormatBalance value={item.totalBalance.toString()} /> }
+    { value: <FormatBalance value={item.totalBalance.toString()} /> },
+    { value: item.whenCreatedEra }
   ];
 };
 
 const useHeaders = () => {
-  const [filters, setFilters] = useSessionState<Filters>('accounts.filters', {});
+  const [roleFilters, setRoleFilters] = useSessionState<RoleFilters>('accounts.roleFilters', {});
+  const [eraQuery, setEraQuery] = useQueryParam('era', NumberParam);
+  const [eraSessionState, setEraSessionState] = useSessionState<number | undefined>('accounts.whenCreated', undefined);
+  const era = useMemo(() => eraQuery || eraSessionState, [eraSessionState, eraQuery]);
+
+  const onEraChange = useCallback((e?: string) => {
+    const eraNumber = e ? Number(e) : undefined;
+    setEraQuery(eraNumber);
+    setEraSessionState(eraNumber);
+  }, [setEraQuery, setEraSessionState]);
 
   const headers = useMemo(
     () => [
-      { value: 'rank' },
-      { value: 'account' },
+      { value: 'Rank' },
+      { value: 'Account' },
       {
         value: (
           <Tooltip
@@ -112,33 +125,35 @@ const useHeaders = () => {
         )
       },
       {
-        value: <HoldersRolesFilters onChange={setFilters} filters={filters} />,
+        value: <HoldersRolesFilters onChange={setRoleFilters} filters={roleFilters} />,
         props: { colSpan: 2 }
       },
-      { value: 'locked balance' },
-      { value: 'total balance' }
+      { value: 'Locked balance' },
+      { value: 'Total balance' },
+      { value: <GeneralFilter value={era?.toString()} onChange={onEraChange} label='Era created' /> }
     ],
-    [filters, setFilters]
+    [era, onEraChange, roleFilters, setRoleFilters]
   );
 
   return {
     headers,
-    filters
+    filters: { roles: roleFilters, era }
   };
 };
 
 const buildOrClause = (filters: Filters) =>
   [
-    filters.council && { role: { council: { _eq: true } } },
-    filters.nominator && { role: { nominator: { _eq: true } } },
-    filters.techcommit && { role: { techcommit: { _eq: true } } },
-    filters.validator && { role: { validator: { _eq: true } } },
-    filters.special && { role: { special: { _neq: 'null' } } }
+    filters.era !== undefined && { when_created_era: { _eq: filters.era } },
+    filters.roles.council && { role: { council: { _eq: true } } },
+    filters.roles.nominator && { role: { nominator: { _eq: true } } },
+    filters.roles.techcommit && { role: { techcommit: { _eq: true } } },
+    filters.roles.validator && { role: { validator: { _eq: true } } },
+    filters.roles.special && { role: { special: { _neq: 'null' } } }
   ].filter((v) => !!v);
 
 const AccountsTable: FC = () => {
   const { filters, headers } = useHeaders();
-  const hasFilters = !filters.all && Object.values(filters).some((v) => !!v);
+  const hasFilters = filters.era !== undefined && !filters.roles.all && Object.values(filters).some((v) => !!v);
 
   const orClause = useMemo(() => buildOrClause(filters), [filters]);
 
@@ -164,7 +179,7 @@ const AccountsTable: FC = () => {
   const { offset } = pagination;
   const rows = useMemo(
     () =>
-      (data?.account || []).map((item, index) => accountToRow(item, index + 1 + offset, filters)),
+      (data?.account || []).map((item, index) => accountToRow(item, index + 1 + offset, filters.roles)),
     [data?.account, filters, offset]
   );
 
