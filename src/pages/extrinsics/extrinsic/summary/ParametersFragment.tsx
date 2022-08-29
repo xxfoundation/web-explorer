@@ -34,7 +34,7 @@ const callbackCopyMessage = (value: ReactNode) => {
   );
 };
 
-const ParamTile: FC<{ label: string; value: unknown, type?: string }> = ({ label, value }) => {
+const ParamTile: FC<{ label: string; value: unknown; type?: string }> = ({ label, value }) => {
   return (
     <Stack
       sx={{
@@ -46,7 +46,7 @@ const ParamTile: FC<{ label: string; value: unknown, type?: string }> = ({ label
         borderWidth: '1px'
       }}
     >
-      <Typography variant='h5'>{label}</Typography> 
+      <Typography variant='h5'>{label}</Typography>
       <Box
         component={'pre'}
         sx={{
@@ -79,12 +79,10 @@ const ParametersFragment: FC<Params> = ({ args, argsDef }) => {
       )),
     [args, argsDef]
   );
-  
+
   return (
     <SummaryEntry>
-      <SummaryHeader>
-        Parameters
-      </SummaryHeader>
+      <SummaryHeader>Parameters</SummaryHeader>
       <SummaryValue>
         <Stack>
           <Box>

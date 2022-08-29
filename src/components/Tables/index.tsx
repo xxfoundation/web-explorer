@@ -26,9 +26,17 @@ type Props = {
   rows: BaselineCell[][];
   footer?: JSX.Element | React.ReactNode;
   tableProps?: TableProps;
-}
+};
 
-export const BaselineTable: FC<Props> = ({ loading, error, headers, rows, rowsPerPage = 20, footer, tableProps = {} }) => {
+export const BaselineTable: FC<Props> = ({
+  loading,
+  error,
+  headers,
+  rows,
+  rowsPerPage = 20,
+  footer,
+  tableProps = {}
+}) => {
   const memoistHeaders = useMemo(() => {
     return headers.map(({ key, props, value }, index) => {
       return (
@@ -41,21 +49,26 @@ export const BaselineTable: FC<Props> = ({ loading, error, headers, rows, rowsPe
 
   const memoizedRows = useMemo(() => {
     return error ? (
-      <TableRow><TableCell colSpan={headers.length}><Error type='data-unavailable' /></TableCell></TableRow>
-    ) : rows.map((row, index) => {
-      return (
-
-        <TableRow key={index}>
-          {row.map(({ key, props, value }, cellIndex) => {
-            return (
-              <TableCell {...props} key={key || cellIndex}>
-                {value}
-              </TableCell>
-            );
-          })}
-        </TableRow>
-      );
-    });
+      <TableRow>
+        <TableCell colSpan={headers.length}>
+          <Error type='data-unavailable' />
+        </TableCell>
+      </TableRow>
+    ) : (
+      rows.map((row, index) => {
+        return (
+          <TableRow key={index}>
+            {row.map(({ key, props, value }, cellIndex) => {
+              return (
+                <TableCell {...props} key={key || cellIndex}>
+                  {value}
+                </TableCell>
+              );
+            })}
+          </TableRow>
+        );
+      })
+    );
   }, [error, headers.length, rows]);
 
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;

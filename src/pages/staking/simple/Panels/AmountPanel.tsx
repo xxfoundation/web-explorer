@@ -73,16 +73,23 @@ const AmountSelection: FC<Props> = ({
   }, [activeStake, amount, option]);
 
   const amountIsValid = useMemo(
-    () =>
-      ((amount.gte(BN_ZERO) && activeStake.gt(BN_ZERO)) || amount.gt(BN_ZERO)) &&
-      amount.lte(available),
-    [activeStake, amount, available]
+    () => {
+      if (option === 'stake') {
+        return ((amount.gte(BN_ZERO) && activeStake.gt(BN_ZERO)) || amount.gte(DECIMALS_POW)) && amount.lte(available)
+      } else if (option === 'redeem') {
+        return true
+      }
+      // Unstake valid amounts are > 0, but at most available - 1 OR available
+      return (amount.gt(BN_ZERO) && amount.lte(available.sub(DECIMALS_POW))) || amount.eq(available)
+    },
+    [activeStake, amount, available, option]
   );
 
   useEffect(() => {
     if (option === 'redeem') {
       setAmount(redeemable);
     }
+    setAmountIsValid(amountIsValid);
   }, [amountIsValid, option, redeemable, setAmount, setAmountIsValid]);
 
   const title = useMemo<Record<StakingOptions, string>>(
@@ -106,9 +113,13 @@ const AmountSelection: FC<Props> = ({
       const decimalPoints = evt.target.value.split('.')[1]?.length ?? 0;
       const parsed = evt.target.value.replace(/\D/g, '');
 
-      setAmount(new BN(parsed).mul(DECIMALS_POW).div(BN_TEN.pow(new BN(decimalPoints))));
+      let value = new BN(parsed).mul(DECIMALS_POW).div(BN_TEN.pow(new BN(decimalPoints)));
+      if (option === 'unstake' && value.gt(available.sub(DECIMALS_POW))) {
+        value = available;
+      }
+      setAmount(value);
     },
-    [setAmount]
+    [setAmount, option, available]
   );
 
   const amountString = useMemo(() => bnToStringDecimal(amount ?? BN_ZERO), [amount]);
@@ -124,10 +135,15 @@ const AmountSelection: FC<Props> = ({
   const stakeInputLabel = (
     <>
       Insert Amount from <i>Available to Stake</i> to be added to <i>Active Stake</i>
-      {activeStake.gt(BN_ZERO) && (
+      {activeStake.gt(BN_ZERO) ? (
         <i>
           <br />
           (To change the selected validators, you can proceed with 0)
+        </i>
+      ) : (
+        <i>
+          <br />
+          (When Staking for the first time, a minimum of 1 xx is required)
         </i>
       )}
     </>
@@ -135,6 +151,10 @@ const AmountSelection: FC<Props> = ({
   const unstakeInputLabel = (
     <>
       Insert Amount from <i>Available to Unstake</i> to be removed from <i>Active Stake</i>
+      <i>
+        <br />
+        (When unstaking, the resulting active stake cannot be less than 1 xx, unless its 0 xx)
+      </i>
     </>
   );
 

@@ -25,6 +25,7 @@ const calculateMaximums = (data: DataPoint[]) => {
 type Props = {
   title?: string;
   onClick?: (evt: SeriesClickEventObject) => void;
+  yAxisTitle?: string;
   data: DataPoint[];
   labelFormatters?: {
     xAxis?: LabelFormatter;
@@ -34,7 +35,16 @@ type Props = {
   tooltipFormatter?: TooltipFormatter;
 };
 
-const LineChart: FC<Props> = ({ data, labelFormatters, onClick, title, tooltipFormatter, x }) => {
+
+const LineChart: FC<Props> = ({
+  data,
+  labelFormatters,
+  onClick,
+  title,
+  tooltipFormatter,
+  x,
+  yAxisTitle = ''
+}) => {
   const options = useMemo<Options>(() => {
     const { maxX, minX } = x || calculateMaximums(data);
     return {
@@ -77,7 +87,7 @@ const LineChart: FC<Props> = ({ data, labelFormatters, onClick, title, tooltipFo
       },
       yAxis: {
         gridLineWidth: 0,
-        title: { text: '' },
+        title: { text: yAxisTitle },
         labels: { align: 'right', x: 0, formatter: labelFormatters?.yAxis },
         min: 0
       },
@@ -102,7 +112,16 @@ const LineChart: FC<Props> = ({ data, labelFormatters, onClick, title, tooltipFo
         }
       ]
     };
-  }, [data, labelFormatters?.xAxis, labelFormatters?.yAxis, onClick, title, tooltipFormatter, x]);
+  }, [
+    data,
+    labelFormatters?.xAxis,
+    labelFormatters?.yAxis,
+    onClick,
+    title,
+    tooltipFormatter,
+    x,
+    yAxisTitle
+  ]);
 
   if (!data.length) {
     return (

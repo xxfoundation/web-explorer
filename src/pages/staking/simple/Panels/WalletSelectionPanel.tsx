@@ -1,4 +1,4 @@
-import type { BN } from '@polkadot/util';
+import { BN } from '@polkadot/util';
 
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -24,6 +24,7 @@ import useApi from '../../../../hooks/useApi';
 import FormatBalance from '../../../../components/FormatBalance';
 import Loading from '../../../../components/Loading';
 import { CustomTooltip as Tooltip } from '../../../../components/Tooltip';
+import StakingRewardsElement from '../utils/StakingRewardsElement';
 
 type Props = {
   selected: string;
@@ -88,6 +89,7 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
               <TableRow>
                 <TableCell>Account</TableCell>
                 <TableCell>Balance</TableCell>
+                <TableCell>Rewards</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -116,6 +118,9 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                     <Typography>
                       <FormatBalance value={balances[i]} />
                     </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <StakingRewardsElement address={acct} />
                   </TableCell>
                   <TableCell>
                     <Stack alignItems='center' direction='row'>
