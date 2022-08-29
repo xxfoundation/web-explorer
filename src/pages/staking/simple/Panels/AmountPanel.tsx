@@ -75,8 +75,8 @@ const AmountSelection: FC<Props> = ({
   const amountIsValid = useMemo(
     () => {
       if (option === 'stake') {
-        return ((amount.gte(BN_ZERO) && activeStake.gt(BN_ZERO)) || amount.gte(DECIMALS_POW)) && amount.lte(available)
-      } else if (option === 'redeem') {
+        return ((amount.gt(BN_ZERO) && activeStake.gt(BN_ZERO)) || amount.gte(DECIMALS_POW)) && amount.lte(available)
+      } else if (option === 'redeem' || option === 'change') {
         return true
       }
       // Unstake valid amounts are > 0, but at most available - 1 OR available
@@ -94,6 +94,7 @@ const AmountSelection: FC<Props> = ({
 
   const title = useMemo<Record<StakingOptions, string>>(
     () => ({
+      change: 'Change Validators',
       redeem: 'Redeem',
       stake: 'Input Amount to Stake',
       unstake: 'Input Amount to Unstake'
@@ -135,12 +136,7 @@ const AmountSelection: FC<Props> = ({
   const stakeInputLabel = (
     <>
       Insert Amount from <i>Available to Stake</i> to be added to <i>Active Stake</i>
-      {activeStake.gt(BN_ZERO) ? (
-        <i>
-          <br />
-          (To change the selected validators, you can proceed with 0)
-        </i>
-      ) : (
+      {activeStake.eq(BN_ZERO) && (
         <i>
           <br />
           (When Staking for the first time, a minimum of 1 xx is required)
@@ -174,9 +170,9 @@ const AmountSelection: FC<Props> = ({
               <TableHead>
                 <TableRow>
                   {option !== 'redeem' && <TableCell>Active Stake</TableCell>}
-                  <TableCell>
+                  {option !== 'change' && <TableCell>
                     <>Available to {option}</>
-                  </TableCell>
+                  </TableCell>}
                   <TableCell>Total Balance</TableCell>
                 </TableRow>
               </TableHead>
@@ -189,18 +185,20 @@ const AmountSelection: FC<Props> = ({
                       </Typography>
                     </TableCell>
                   )}
+                  {option !== 'change' &&
+                    <TableCell>
+                      <Typography variant='body2'>
+                        {option === 'redeem' ? (
+                          <FormatBalance value={redeemable} precision={4} />
+                        ) : (
+                          <FormatBalance value={available} precision={4} />
+                        )}
+                      </Typography>
+                    </TableCell>
+                  }
                   <TableCell>
                     <Typography variant='body2'>
-                      {option === 'redeem' ? (
-                        <FormatBalance value={redeemable} />
-                      ) : (
-                        <FormatBalance value={available} />
-                      )}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant='body2'>
-                      <FormatBalance value={totalBalance} />
+                      <FormatBalance value={totalBalance} precision={4} />
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -218,7 +216,18 @@ const AmountSelection: FC<Props> = ({
               </Typography>
             </Alert>
           )}
-          {option !== 'redeem' && (
+          {option === 'change' && (
+            <Alert severity='info'>
+              <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Changing Validators</AlertTitle>
+              <Typography variant='body3'>
+                You will be changing your selection of which validators to nominate. After signing and
+                submitting the transaction your new selections will be stored on the blockchain.
+                However, your selections will not take effect immediately and could take up to 2 days to
+                become active.
+              </Typography>
+            </Alert>
+          )}
+          {(option !== 'redeem' && option != 'change') && (
             <>
               <Typography variant='body3'>
                 {option === 'stake' ? stakeInputLabel : unstakeInputLabel}

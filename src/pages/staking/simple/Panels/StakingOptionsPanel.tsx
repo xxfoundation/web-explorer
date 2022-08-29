@@ -55,7 +55,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
           <RadioGroup
             value={selected ?? ''}
             aria-labelledby='staking-options'
-            defaultValue='stake'
+            defaultValue={balances.available.eqn(0) ? 'change' : 'stake'}
             name='staking-options'
             onChange={handleChange}
           >
@@ -64,14 +64,21 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
               value='stake'
               control={<Radio disabled={balances.available.eqn(0)} />}
               label={
-                balances.available.eqn(0)
-                  ? optionText(false, 'Stake', <>This account has no funds to be staked. </>)
-                  : optionText(true,
-                      'Stake',
-                      <>
-                        You have {styledBalance(balances.staked)} staked. You can stake up to {styledBalance(balances.available)} more.
-                      </>
-                    )
+                balances.staked.eqn(0)
+                  ? optionText(true, 'Stake', <>This account has no funds staked. You can stake up to {styledBalance(balances.available)}. </>)
+                  : balances.available.eqn(0)
+                    ? optionText(false, 'Stake', <>This account has all its funds staked. </>)
+                    : optionText(true, 'Stake', <>You can stake up to {styledBalance(balances.available)} more. </>)
+              }
+            />
+            <FormControlLabel
+              labelPlacement='end'
+              value='change'
+              control={<Radio disabled={balances.staked.eqn(0)} />}
+              label={
+                balances.staked.eqn(0)
+                  ? optionText(false, 'Change Validators', <>This option is not available until you start staking. </>)
+                  : optionText(true, 'Change Validators', <>You have {styledBalance(balances.staked)} staked. </>)
               }
             />
             <FormControlLabel
@@ -81,12 +88,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
               label={
                 balances.staked.eqn(0)
                   ? optionText(false, 'Unstake', <>This account has no funds to be unstaked. </>)
-                  : optionText(true,
-                      'Unstake',
-                      <>
-                        You can unstake up to {styledBalance(balances.staked)}.
-                      </>
-                    )
+                  : optionText(true, 'Unstake', <> You can unstake up to {styledBalance(balances.staked)}. </>)
               }
             />
             <FormControlLabel
@@ -96,12 +98,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
               label={
                 balances.redeemable.eqn(0)
                   ? optionText(false, 'Redeem', <>This account has no funds to be redeemed. </>)
-                  : optionText(true,
-                      'Redeem',
-                      <>
-                        You can redeem {styledBalance(balances.redeemable)}.
-                      </>
-                    )
+                  : optionText(true, 'Redeem', <>You can redeem {styledBalance(balances.redeemable)}. </>)
               }
             />
           </RadioGroup>

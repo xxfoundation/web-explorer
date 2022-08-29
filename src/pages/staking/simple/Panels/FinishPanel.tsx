@@ -19,6 +19,7 @@ type Props = {
 };
 
 const optionToVerb: Record<StakingOptions, string> = {
+  change: '',
   redeem: 'redeemed',
   stake: 'staked',
   unstake: 'unstaked'
@@ -64,7 +65,7 @@ const FinishPanel: FC<Props> = ({ account, amount, blockHash, error, loading, op
       <Typography variant='body3' sx={{ fontSize: '1rem' }}>
         Congratulations! You've successfully{' '}
         {
-          (option === 'stake' && amount.isZero()) ?
+          option === 'change' ?
           'selected new validators'
           :
           <b>

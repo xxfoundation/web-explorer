@@ -119,7 +119,7 @@ const APYPanel: FC<Props> = ({ account, amount, setPassword, setTransaction, sta
       <Stack spacing={4}>
         <Typography variant='h2'>Nominate</Typography>
         <Typography variant='body3'>
-          If you wish to maximize your returns, use this app on a regular basis to reselect your
+          If you wish to maximize your returns, use this app on a regular basis to change your selected
           validators. The following APY and staking rewards estimates are not guaranteed and can
           change every day.
         </Typography>
