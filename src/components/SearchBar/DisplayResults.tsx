@@ -56,6 +56,7 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error, results }) => {
                 </Typography>
                 {results.accounts?.map((acct) => (
                   <Address
+                    truncated='mdDown'
                     key={acct.id}
                     onClick={dismiss}
                     value={acct.id}
@@ -83,7 +84,7 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error, results }) => {
                 </Typography>
                 {results.extrinsics?.map((e) => (
                   <Link key={e.hash} to={`/extrinsics/${e.hash}`}>
-                    Extrinsic #{e.blockNumber}-{e.extrinsicIndex} . {e.hash}
+                    Extrinsic #{e.blockNumber}-{e.extrinsicIndex}: <Hash truncated='mdDown' value={e.hash} />
                   </Link>
                 ))}
               </Stack>
