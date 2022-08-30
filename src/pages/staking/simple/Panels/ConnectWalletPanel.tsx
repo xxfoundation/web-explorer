@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from 'react';
-import { Alert, Button, Link, Stack, Typography } from '@mui/material';
+import { Alert, AlertTitle, Button, Link, Stack, Typography } from '@mui/material';
 import { keyring } from '@polkadot/ui-keyring';
 
 import { useToggle } from '../../../../hooks';
@@ -12,6 +12,8 @@ import { getStakedReturn } from '../../StakingMetrics';
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../../../schemas/economics.schema';
 import { useQuery } from '@apollo/client';
 import Loading from '../../../../components/Loading';
+
+const { href: walletUrl } = new URL('/#/accounts', process.env.REACT_APP_WALLET_URL ?? '');
 
 const ConnectWallet: FC = () => {
   const accounts = useAccounts();
@@ -63,10 +65,21 @@ const ConnectWallet: FC = () => {
               </Typography>
             </Loading>
             {!accounts.hasAccounts && (
+              <>
               <Typography variant='body3' sx={{ textAlign: 'left' }}>
                 To get started please generate a wallet or recover your existing wallet(s) using one
                 of the options below.
               </Typography>
+              <Alert severity='info'>
+                <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>
+                  Do you have your accounts in the wallet webapp?
+                </AlertTitle>
+                <Typography variant='body3'>
+                  You can head to the Accounts <Link target='__blank' href={walletUrl}>page</Link> and Export your accounts.
+                  Then use the "Import Keyfile (JSON)" option below to add your accounts to this app.
+                </Typography>
+              </Alert>
+              </>
             )}
           </Stack>
         </Stack>
@@ -110,7 +123,7 @@ const ConnectWallet: FC = () => {
               Recovery Phrase
             </Button>
             <Button onClick={keyfileDialog.toggleOn} variant='contained'>
-              Keyfile (JSON)
+              Import Keyfile (JSON)
             </Button>
           </Stack>
         )}
