@@ -50,7 +50,6 @@ const EllipsisOnEmpty = styled('span')<{ responsiveness: Responsiveness }>(
   ({ responsiveness: res, theme }) => ({
     minWidth: '3ch',
     position: 'relative',
-    backgroundColor: theme.palette.background.paper,
     [breakpointToResponsiveness(theme, res)]: {
       '&:before': {
         content: '"..."'
@@ -103,8 +102,8 @@ const Hash: FC<Props> = ({
 }) => {
   const isValid = valid === undefined ? isHex(value, bitlength) : valid;
   const tooltip = !!showTooltip ? (
-    <Stack direction={'row'} spacing={1} alignItems={'center'}>
-      <Typography variant='body5'>{value}</Typography>
+    <Stack sx={{ display: 'inline-flex' }} direction={'row'} spacing={1} alignItems={'center'}>
+      <Typography component='span' variant='body5'>{value}</Typography>
       <CopyButton value={value} />
     </Stack>
   ) : (
@@ -116,6 +115,7 @@ const Hash: FC<Props> = ({
   return (
     <CustomWidthTooltip title={tooltip} placement='top-start' arrow>
       <Typography
+        component='span'
         fontFamily={'Roboto Mono'}
         color={isValid ? 'info' : 'red'}
         sx={{ fontWeight: 400 }}

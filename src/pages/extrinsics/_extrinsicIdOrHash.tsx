@@ -17,7 +17,7 @@ import Error from '../../components/Error';
 const ExtrinsicComponent = () => {
   const { extrinsicIdOrHash } = useParams<{ extrinsicIdOrHash: string }>();
   const isHash = isHex(extrinsicIdOrHash);
-  const [blockNumber, extrinsicIndex] = !isHash ? extrinsicIdOrHash.split('-') : [];
+  const [blockNumber, extrinsicIndex] = !isHash ? extrinsicIdOrHash?.split('-') ?? [] : [];
 
   const whereExtrinsic = useMemo(
     () =>

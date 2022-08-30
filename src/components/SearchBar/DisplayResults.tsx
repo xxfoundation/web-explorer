@@ -1,9 +1,11 @@
 import type { SearchResults } from '../../hooks/useSearch';
 import CloseIcon from '@mui/icons-material/Close';
 
-import Address from '../Hash/XXNetworkAddress';
 import React, { FC } from 'react';
 import { styled, useTheme, Box, Button, Stack, Typography } from '@mui/material';
+import Address from '../Hash/XXNetworkAddress';
+import Hash from '../Hash';
+
 import Link from '../Link';
 import Error from '../Error';
 
@@ -42,7 +44,7 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error, results }) => {
       {error && <Error color='darkorange' message={error} />}
 
       {results && (
-        <>
+        <Box sx={{ pb: 2 }}>
           <Typography variant='h5' sx={{ fontSize: 26, fontWeight: 500, mb: 1.5 }}>
             Search Results
           </Typography>
@@ -54,6 +56,7 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error, results }) => {
                 </Typography>
                 {results.accounts?.map((acct) => (
                   <Address
+                    truncated='mdDown'
                     key={acct.id}
                     onClick={dismiss}
                     value={acct.id}
@@ -69,7 +72,7 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error, results }) => {
                 </Typography>
                 {results.blocks?.map((block) => (
                   <Link key={block.number} onClick={dismiss} to={`/blocks/${block.number}`}>
-                    Block #{block.number} . {block.hash}
+                    Block #{block.number}: <Hash truncated='mdDown' value={block.hash} />
                   </Link>
                 ))}
               </Stack>
@@ -81,13 +84,13 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error, results }) => {
                 </Typography>
                 {results.extrinsics?.map((e) => (
                   <Link key={e.hash} to={`/extrinsics/${e.hash}`}>
-                    Extrinsic #{e.blockNumber}-{e.extrinsicIndex} . {e.hash}
+                    Extrinsic #{e.blockNumber}-{e.extrinsicIndex}: <Hash truncated='mdDown' value={e.hash} />
                   </Link>
                 ))}
               </Stack>
             )}
           </Stack>
-        </>
+        </Box>
       )}
     </ResultContainer>
   );

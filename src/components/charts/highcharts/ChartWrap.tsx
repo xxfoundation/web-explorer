@@ -1,6 +1,8 @@
 import type { WithChildren } from '../../../types';
-import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
+
+import Loading from '../../Loading';
 
 type Props = WithChildren & {
   title?: string;
@@ -15,7 +17,7 @@ const ChartWrap: FC<Props> = ({ children, loading, title }) => {
         <Box
           sx={{ height: '398px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          <CircularProgress />
+          <Loading />
         </Box>
       ) : (
         children

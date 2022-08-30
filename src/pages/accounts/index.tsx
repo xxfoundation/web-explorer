@@ -1,20 +1,28 @@
+import { Container, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import LandingPage from './LandingPage';
-import AccountId from './_accountId';
+import NewAccountsChart from '../../components/charts/highcharts/NewAccountsLineChart';
+import AccountsTable from './AccountsTable';
+import Summary from './Summary';
 
-const Accounts: FC = () => {
-  const { path } = useRouteMatch();
+const LandingPage: FC = () => {
   return (
-    <Switch>
-      <Route exact path={path}>
-        <LandingPage />
-      </Route>
-      <Route path={`${path}/:accountId`}>
-        <AccountId />
-      </Route>
-    </Switch>
+    <Container sx={{ my: 5 }}>
+      <Typography variant='h1' sx={{ mb: 5 }}>
+        Accounts
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={12}>
+          <Summary />
+        </Grid>
+        <Grid item xs={12}>
+          <NewAccountsChart />
+        </Grid>
+        <Grid item xs={12} md={12}>
+          <AccountsTable />
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
-export default Accounts;
+export default LandingPage;

@@ -29,7 +29,7 @@ const BlockRow: FC<WithNew<Block>> = ({
   <>
     <TableRow>
       <TableCell colSpan={4}>
-        <Header>
+        <Header component='div'>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div>
               Block&nbsp;

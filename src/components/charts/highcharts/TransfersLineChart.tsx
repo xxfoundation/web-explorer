@@ -1,16 +1,21 @@
+import type { SeriesClickEventObject } from 'highcharts';
+
 import { useQuery } from '@apollo/client';
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
+
 import type { DataPoint } from '.';
 import { amountByEraTooltip, LineChart } from '.';
 import { ListenForEraTransfers, LISTEN_FOR_ERA_TRANSFERS } from '../../../schemas/transfers.schema';
 import DefaultTile from '../../DefaultTile';
-import Loader from './Loader';
+import Loading from '../../Loading';
+import { useNavigate } from 'react-router-dom';
 
 const ERAS_IN_A_QUARTER = 90;
 const ERAS_IN_A_MONTH = 30;
 
 const TransfersLineChart = () => {
+  const navigate = useNavigate();
   const { data, loading } = useQuery<ListenForEraTransfers>(LISTEN_FOR_ERA_TRANSFERS);
   const timeframes: Record<string, number> = {
     All: 0,
@@ -31,10 +36,15 @@ const TransfersLineChart = () => {
         .slice(-timeframe) as DataPoint[],
     [data?.eraTransfers, timeframe]
   );
+
+  const onClick = useCallback((evt: SeriesClickEventObject) => {
+    navigate(`/transfers?era=${evt.point.options.x}`);
+  }, [navigate]);
+
   return (
     <DefaultTile header='Transfers' height='435px'>
       {loading ? (
-        <Loader />
+        <Loading />
       ) : (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'right', pr: 2 }}>
@@ -54,7 +64,7 @@ const TransfersLineChart = () => {
               </Select>
             </FormControl>
           </Box>
-          <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} />
+          <LineChart onClick={onClick} tooltipFormatter={amountByEraTooltip} data={chartData} />
         </>
       )}
     </DefaultTile>

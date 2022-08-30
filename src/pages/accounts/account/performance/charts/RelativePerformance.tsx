@@ -1,8 +1,8 @@
 import { useSubscription } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
 import { DataPoint, LineChart } from '../../../../../components/charts/highcharts';
-import Loader from '../../../../../components/charts/highcharts/Loader';
 import DefaultTile from '../../../../../components/DefaultTile';
+import Loading from '../../../../../components/Loading';
 import { LISTEN_FOR_RELATIVE_PERFORMANCE } from '../../../../../schemas/validator.schema';
 
 type ResultType = {
@@ -24,7 +24,7 @@ const RelativePerformance: FC<{ stashAddress: string }> = ({ stashAddress }) => 
   );
   return (
     <DefaultTile header='relative performance' height='400px'>
-      {loading ? <Loader /> : <LineChart data={chartData} />}
+      {loading ? <Loading /> : <LineChart data={chartData} />}
     </DefaultTile>
   );
 };

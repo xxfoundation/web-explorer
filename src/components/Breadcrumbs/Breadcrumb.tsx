@@ -1,16 +1,16 @@
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, Params } from 'react-router-dom';
 import { BreadcrumbStyled, CustomLink } from './Breadcrumb.styled';
 
-type ParamsType = { params: Record<string, string | number> };
+type ParamsType = { params: Readonly<Params> };
 
-const truncateCrumb = (text: string) =>
-  text.length > 15 ? `${text.slice(0, 4)}...${text.slice(-4)}` : text;
+const truncateCrumb = (text = '') =>
+  text.length > 15 ? `${text?.slice(0, 4)}...${text.slice(-4)}` : text;
 
 const blockchainHome = () => <CustomLink to='/'>Blockchain</CustomLink>;
 const blockNumber = ({ params: { number } }: ParamsType) => (
-  <CustomLink to={`/blocks/${number}`}>{truncateCrumb(number.toString())}</CustomLink>
+  <CustomLink to={`/blocks/${number}`}>{truncateCrumb(number?.toString())}</CustomLink>
 );
 const crumbRoutes: Record<string, React.FC<ParamsType>> = {
   blocks: blockchainHome,
@@ -28,7 +28,7 @@ const crumbSplats: Record<string, React.FC<ParamsType>> = {
   ),
   'module:5': ({ params: { number, version } }) => (
     <CustomLink to={`/blocks/${number}/version/${version}`} underline='hover'>
-      {`Spec ${truncateCrumb(version.toString())}`}
+      {`Spec ${truncateCrumb(version?.toString())}`}
     </CustomLink>
   ),
   'extrinsicId:2': () => (
@@ -43,7 +43,7 @@ const crumbSplats: Record<string, React.FC<ParamsType>> = {
   ),
   'accountId:4': ({ params: { numberOrHash } }) => (
     <CustomLink to={`/blocks/${numberOrHash}`} underline='hover'>
-      Block #{`${numberOrHash.toString()}`}
+      Block #{`${numberOrHash?.toString()}`}
     </CustomLink>
   )
 };
