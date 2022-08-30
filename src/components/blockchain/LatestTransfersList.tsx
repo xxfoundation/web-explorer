@@ -1,9 +1,12 @@
 import type { ListOfTransfers, Transfer } from '../../schemas/transfers.schema';
 
 import { useSubscription } from '@apollo/client';
-import { TableBody, TableRow, TableCell, TableContainer, Typography } from '@mui/material';
+import { TableRow, TableCell, TableContainer, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import useNewnessTracker, { WithNew } from '../../hooks/useNewnessTracker';
+import TransitionGroup from 'react-transition-group/TransitionGroup';
+import CSSTransition from 'react-transition-group/CSSTransition';
+
+import '../../assets/css/fade-adjacent.css';
 import { LISTEN_FOR_TRANSFERS_ORDERED } from '../../schemas/transfers.schema';
 import Address from '../Hash/XXNetworkAddress';
 import DefaultTile from '../DefaultTile';
@@ -11,14 +14,14 @@ import FormatBalance from '../FormatBalance';
 import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import Error from '../Error';
-import SkeletonRows from '../Tables/SkeletonRows';
+import Loading from '../Loading';
 import { Table } from '../Tables/TableContainer.styled';
 import { Header, BorderlessCell } from './LatestList.styled';
 import Hash from '../Hash';
 
 const PAGE_LIMIT = 8;
 
-const TransferRow: FC<WithNew<Transfer>> = (props) => {
+const TransferRow: FC<Transfer> = (props) => {
   return (
     <>
       <TableRow>
@@ -53,19 +56,23 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
           <Header>From</Header>
         </BorderlessCell>
         <BorderlessCell>
-          <Address
-            offset={4}
-            sx={{ fontSize: 14, fontWeight: 400 }}
-            value={props.source}
-            name={props.sourceAccount.identity?.display}
-            url={`/accounts/${props.source}`}
-            truncated
-          />
+          <div>
+            <Address
+              offset={4}
+              sx={{ fontSize: 14, fontWeight: 400 }}
+              value={props.source}
+              name={props.sourceAccount.identity?.display}
+              url={`/accounts/${props.source}`}
+              truncated
+            />
+          </div>
         </BorderlessCell>
         <BorderlessCell>
-          <Typography variant='body3' sx={{ whiteSpace: 'nowrap' }}>
-            <TimeAgo date={props.timestamp} />
-          </Typography>
+          <div>
+            <Typography variant='body3' sx={{ whiteSpace: 'nowrap' }}>
+              <TimeAgo date={props.timestamp} />
+            </Typography>
+          </div>
         </BorderlessCell>
       </TableRow>
       <TableRow>
@@ -73,23 +80,27 @@ const TransferRow: FC<WithNew<Transfer>> = (props) => {
           <Header>to</Header>
         </BorderlessCell>
         <BorderlessCell>
-          <Address
-            offset={4}
-            sx={{ fontSize: 14, fontWeight: 400 }}
-            value={props.destination}
-            name={props.destinationAccount.identity?.display}
-            url={`/accounts/${props.destination}`}
-            truncated
-          />
+          <div>
+            <Address
+              offset={4}
+              sx={{ fontSize: 14, fontWeight: 400 }}
+              value={props.destination}
+              name={props.destinationAccount.identity?.display}
+              url={`/accounts/${props.destination}`}
+              truncated
+            />
+          </div>
         </BorderlessCell>
         <BorderlessCell>
-          <Typography variant='body3'>
-            <FormatBalance value={props.amount.toString()} />
-          </Typography>
+          <div>
+            <Typography variant='body3'>
+              <FormatBalance value={props.amount.toString()} />
+            </Typography>
+          </div>
         </BorderlessCell>
       </TableRow>
       <TableRow>
-        <BorderlessCell colSpan={3} />
+        <BorderlessCell colSpan={3}><div /></BorderlessCell>
       </TableRow>
     </>
   );
@@ -100,25 +111,22 @@ const LatestTransfersList = () => {
     variables: { limit: PAGE_LIMIT }
   });
 
-  const transfers = useNewnessTracker(data?.transfers, 'extrinsic');
-
   return (
     <DefaultTile header={'Transfers'} linkName={'SEE ALL'} linkAddress={'/transfers'} height={500}>
+      {loading && <Loading size='lg' />}
+      {error && <Error />}
       <TableContainer>
         <Table size={!loading ? 'small' : undefined}>
-          <TableBody>
-            {loading && <SkeletonRows rows={10} columns={3} />}
-            {error && (
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <Error />
-                </TableCell>
-              </TableRow>
-            )}
-            {transfers?.map((tx) => (
-              <TransferRow {...tx} key={tx.extrinsic.hash} />
+          <TransitionGroup component='tbody'>
+            {data?.transfers?.map((tx) => (
+              <CSSTransition
+                classNames='fade'
+                timeout={500}
+                key={tx.extrinsic.hash}>
+                  <TransferRow {...tx} />
+              </CSSTransition>
             ))}
-          </TableBody>
+          </TransitionGroup>
         </Table>
       </TableContainer>
     </DefaultTile>
