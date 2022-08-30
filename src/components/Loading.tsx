@@ -1,6 +1,7 @@
 import type { WithChildren } from '../types';
 import React, { FC } from 'react';
 import { Box, styled, keyframes } from '@mui/material';
+import { BoxProps } from '@mui/system';
 
 type Size = 'xs' | 'sm' | 'sm2' | 'md' | 'lg';
 type Variant = 'primary' | 'secondary' | 'warning' | 'info';
@@ -51,7 +52,9 @@ const StyledInline = styled(svg)<Pick<Props, 'size' | 'variant' >>(({ size = 'sm
     }
   `;
 
-  return {width: sizes[size],
+  return {
+    margin: '0 auto',
+    width: sizes[size],
     '.stroke-1, .stroke-2, .stroke-3': {
       animation: `${pulse} 1.5s ease-in infinite`,
       fill: theme.palette.primary.light,
@@ -65,21 +68,23 @@ const StyledInline = styled(svg)<Pick<Props, 'size' | 'variant' >>(({ size = 'sm
   }
 });
 
-const Loading: FC<Props> = ({
+const Loading: FC<Props & BoxProps> = ({
   children,
   loading,
   size,
-  variant
-}) => (
+  variant,
+  ...rest
+}) => ( 
   <>
-    {loading === false ? children : (
+    {loading === true ? children : (
       <Box
+        {...rest}
         sx={{
-          height: '100%',
           justifyContent: 'center',
           alignItems: 'center',
           display: 'flex',
-          minWidth: '6rem'
+          minWidth: '6rem',
+          ...rest.sx
         }}
       >
         <StyledInline size={size} variant={variant} />

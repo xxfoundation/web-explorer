@@ -89,10 +89,6 @@ const Block = () => {
 
   const block = hashQuery.data?.block[0] || numberQuery.data?.block;
 
-  if (loading) {
-    return <Loading />;
-  }
-
   if (!loading && !error && !block) {
     return <NotFound />;
   }
@@ -104,6 +100,7 @@ const Block = () => {
 
   return (
     <Container sx={{ my: 5 }}>
+      {loading && <Loading size='lg' sx={{ my: 5 }} />}
       <Breadcrumb />
       <BlockSummaryHeader blockNumber={block.number} />
       <BlockSummary block={block} />
