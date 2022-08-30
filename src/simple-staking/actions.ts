@@ -46,7 +46,8 @@ export const getStakingBalances = async (api: ApiPromise, stash: string): Promis
   const uniqueEras = _.uniq(ledger.unlocking.filter(({ era }) => era.toNumber() > currEra).map(({ era }) => era.toNumber() - currEra));
   const unlockingDup: [BN, number][] = ledger.unlocking.filter(({ era }) => era.toNumber() > currEra).map(({ era, value }) => [ value.unwrap().toBn(), era.toNumber() - currEra]);
   const unlocking: [BN, number][] = uniqueEras.map((uniqEra) => [unlockingDup.reduce((total, [value, era]) => era === uniqEra ? total.add(value) : total, BN_ZERO), uniqEra]);
-  const available = free.sub(ed).sub(staked);
+  const availableToStake = free.sub(staked);
+  const available = availableToStake.gt(ed) ? availableToStake.sub(ed) : BN_ZERO;
   const total = free.add(reserved);
   return {
     staked,
