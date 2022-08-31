@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
-import { Box, Divider, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import ProgressBar from './ProgressBar';
 import StakingSupplyDonutChart from '../../components/charts/StakingSupplyDonutChart';
 import { useQuery } from '@apollo/client';

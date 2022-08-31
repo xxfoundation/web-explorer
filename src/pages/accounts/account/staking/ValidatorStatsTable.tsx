@@ -4,12 +4,12 @@ import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.sch
 import React, { FC, useMemo, useEffect } from 'react';
 import {
   Button,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
   Typography
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -22,12 +22,19 @@ import { usePagination, useToggle } from '../../../../hooks';
 import Error from '../../../../components/Error';
 import FormatBalance from '../../../../components/FormatBalance';
 import { useQuery } from '@apollo/client';
+import { CustomTooltip } from '../../../../components/Tooltip';
+import { InfoOutlined } from '@mui/icons-material';
 
 const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
   return tooltip ? (
-    <Tooltip title={tooltip} arrow>
+    <Stack direction='row' sx={{justifyContent: 'space-between'}}>
+      <CustomTooltip title={tooltip} arrow>
+        <InfoOutlined 
+          style={{fontSize: '1em', margin: 'auto', paddingRight: '0.2em'}}
+        />
+      </CustomTooltip>
       <Typography variant='h4'>{header}</Typography>
-    </Tooltip>
+    </Stack>
   ) : (
     <Typography variant='h4'>{header}</Typography>
   );
