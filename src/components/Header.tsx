@@ -23,7 +23,7 @@ const Header = () => {
   return (
     <ThemeProvider theme={theme}>
       <Root>
-        <Container sx={{ mt: !dismissed ? { sm: '2.5em', xs: '7em' } : undefined }}>
+        <Container sx={{ mt: !dismissed ? { sm: '3em', xs: '8.5em' } : undefined }}>
           <GridContainer container>
             <Grid item xs='auto' sx={{ display: { sm: 'none', xs: 'block' } }}>
               <MobileNav />

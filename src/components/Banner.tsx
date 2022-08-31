@@ -18,8 +18,7 @@ const Banner = () => {
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
-        backgroundColor: 'grey.800',
-        paddingRight: '2rem',
+        backgroundColor: 'grey.800'
       }}
     >
       <Button
@@ -29,13 +28,13 @@ const Banner = () => {
         onClick={dismiss}>
         <Close />
       </Button>
-      <Typography variant='body2' sx={{ p: '1em', pr: '2em', color: 'white' }}>
+      <Typography variant='body2' sx={{ p: {xs: '1em 3em 0', sm: '1.5em 2em'}, color: 'white' }}>
         If you want to interact with the <b>xx network blockchain</b> use our web based wallet app
         (formerly known as the explorer)
       </Typography>
       <Button
         component={Link}
-        sx={{ whiteSpace: 'nowrap', my: 0.75 }}
+        sx={{ whiteSpace: 'nowrap', mb: {xs: 2, sm: 0} , my: {xs: 2, sm: 0}}}
         to={process.env.REACT_APP_WALLET_URL}
         size='small'
         variant='contained'

@@ -8,7 +8,7 @@ import WhaleAlert from './WhaleAlert';
 
 const Blockchain = () => {
   return (
-    <Container sx={{ mt: 5, mb: 12 }}>
+    <Container sx={{ mt: 1, mb: 12 }}>
       <Breadcrumb />
       <ChainInfo />
       <TokenStatus />
