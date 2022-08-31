@@ -47,7 +47,7 @@ const locationString = (geoBin: string, city: string, country: string) => {
   return str;
 };
 
-const ValidatorInfo: FC<{ info?: ValidatorStats }> = ({ info }) => {
+const ValidatorInfo: FC<{ active: boolean, info?: ValidatorStats }> = ({ active, info }) => {
   const location = useMemo(() => {
     if (!info?.location) {
       return ' - ';
@@ -111,28 +111,28 @@ const ValidatorInfo: FC<{ info?: ValidatorStats }> = ({ info }) => {
         <SummaryHeader>Location</SummaryHeader>
         <SummaryValue>{location}</SummaryValue>
       </SummaryEntry>
-      <SummaryEntry>
+      {active && <SummaryEntry>
         <SummaryHeader>Own Stake</SummaryHeader>
         <SummaryValue>
           <FormatBalance value={info.selfStake.toString()} />
         </SummaryValue>
-      </SummaryEntry>
-      <SummaryEntry>
+      </SummaryEntry>}
+      {active && <SummaryEntry>
         <SummaryHeader>Other Stake</SummaryHeader>
         <SummaryValue>
           <FormatBalance value={info.otherStake.toString()} />
         </SummaryValue>
-      </SummaryEntry>
-      <SummaryEntry>
+      </SummaryEntry>}
+      {active && <SummaryEntry>
         <SummaryHeader>Total Stake</SummaryHeader>
         <SummaryValue>
           <FormatBalance value={info.totalStake.toString()} />
         </SummaryValue>
-      </SummaryEntry>
-      <SummaryEntry>
+      </SummaryEntry>}
+      {active && <SummaryEntry>
         <SummaryHeader>Nominators</SummaryHeader>
         <SummaryValue>{info.nominators.length}</SummaryValue>
-      </SummaryEntry>
+      </SummaryEntry>}
       <SummaryEntry>
         <SummaryHeader>Commission</SummaryHeader>
         <SummaryValue>{info.commission}</SummaryValue>

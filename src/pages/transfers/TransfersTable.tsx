@@ -160,7 +160,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   return (
     <>
       <Box sx={{ textAlign: 'right' }}>
-        {data?.transfers && <RefreshButton countSince={transfersSinceFetch} refetch={refetch} />}
+        {data?.transfers && !where && <RefreshButton countSince={transfersSinceFetch} refetch={refetch} />}
       </Box>
       <BaselineTable
         error={!!error}
