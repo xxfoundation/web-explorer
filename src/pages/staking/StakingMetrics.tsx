@@ -8,6 +8,8 @@ import { Economics, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema'
 import Loading from '../../components/Loading';
 import { BN, BN_MILLION } from '@polkadot/util';
 import { stripNonDigits } from '../../utils';
+import { CustomTooltip } from '../../components/Tooltip';
+import { InfoOutlined } from '@mui/icons-material';
 
 const dividerMargins = { ml: 3, mr: 3, mt: 0, mb: 0 };
 
@@ -55,21 +57,29 @@ const StakingMetrics = () => {
         <Loading loading={loading}>
           <Box>
             <Typography variant='h6'>Average Return</Typography>
-            <Tooltip
-              title='Network overall staking return. Calculated from the current staked ratio, current ideal interest and inflation parameters.'
-              arrow
-            >
+            <Stack direction='row' sx={{justifyContent: 'space-between'}}>
               <Typography variant='h3'>{avgStakedReturn}%</Typography>
-            </Tooltip>
+              <CustomTooltip
+                title='Network overall staking return. Calculated from the current staked ratio, current ideal interest and inflation parameters.'
+              >
+                <InfoOutlined
+                    style={{fontSize: '1em' }}
+                  />
+              </CustomTooltip>
+            </Stack>
           </Box>
           <Box>
             <Typography variant='h6'>Circulating AGR</Typography>
-            <Tooltip
-              title='Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
-              arrow
-            >
+            <Stack direction='row' sx={{justifyContent: 'space-between'}}>
               <Typography variant='h3'>{economics?.inflationRate}%</Typography>
-            </Tooltip>
+            <CustomTooltip
+              title='Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
+            >
+              <InfoOutlined
+                  style={{fontSize: '1em'}}
+                />
+            </CustomTooltip>
+            </Stack>
           </Box>
         </Loading>
       </Stack>
@@ -79,19 +89,28 @@ const StakingMetrics = () => {
           <Box sx={{ mb: 2 }}>
             <Stack direction='row' sx={{ mb: 1 }} style={{ justifyContent: 'space-between' }}>
               <Typography variant='h6'>ERA #{metrics.era}</Typography>
+              <CustomTooltip
+                title='An Era is a period of 24 hours during which there is a specific set of active validators. That same set cannot change while in an Era.'
+              >
+                <InfoOutlined 
+                  style={{fontSize: '1em'}}
+                />
+              </CustomTooltip>
             </Stack>
             <ProgressBar value={metrics?.eraProgress} variant='determinate' />
           </Box>
           <Box>
             <Stack direction='row' sx={{ mb: 1 }} style={{ justifyContent: 'space-between' }}>
-              <Tooltip
+              <Typography variant='h6'>
+                EPOCH #{metrics.era}-{metrics.epoch}
+              </Typography>
+              <CustomTooltip
                 title='An Era (24h) is composed by 3 Epochs (8h). An Epoch sets the periods where important actions can take place on chain during an era, like the election of the next validator set which starts before the last epoch.'
-                arrow
               >
-                <Typography variant='h6'>
-                  EPOCH #{metrics.era}-{metrics.epoch}
-                </Typography>
-              </Tooltip>
+                <InfoOutlined 
+                  style={{fontSize: '1em'}}
+                />
+              </CustomTooltip>
             </Stack>
             <ProgressBar value={metrics.epochProgress} variant='determinate' />
           </Box>

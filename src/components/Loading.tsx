@@ -76,7 +76,7 @@ const Loading: FC<Props & BoxProps> = ({
   ...rest
 }) => ( 
   <>
-    {loading === true ? children : (
+    {loading === false ? children : (
       <Box
         {...rest}
         sx={{
