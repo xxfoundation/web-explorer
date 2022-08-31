@@ -15,7 +15,7 @@ type UseToggle = [
   }
 ];
 
-function useToggle(defaultValue = false, onToggle?: (isActive: boolean) => void): UseToggle {
+const useToggle = (defaultValue = false, onToggle?: (isActive: boolean) => void): UseToggle => {
   const mountedRef = useIsMountedRef();
   const [isActive, setActive] = useState(defaultValue);
 

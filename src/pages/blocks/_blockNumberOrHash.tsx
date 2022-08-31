@@ -89,27 +89,27 @@ const Block = () => {
 
   const block = hashQuery.data?.block[0] || numberQuery.data?.block;
 
-  if (loading) {
-    return <Loading />;
-  }
-
   if (!loading && !error && !block) {
     return <NotFound />;
   }
 
-  if (!block || (!loading && error)) {
+  if (error && !loading && !block) {
     console.error(error);
     return <Container sx={{ my: 5 }}><Error /></Container>;
   }
 
   return (
     <Container sx={{ my: 5 }}>
-      <Breadcrumb />
-      <BlockSummaryHeader blockNumber={block.number} />
-      <BlockSummary block={block} />
-      <Box sx={{ mt: 2 }}>
-        <BlockDetailedTabs blockNumber={block.number} loading={loading} />
-      </Box>
+      {(loading || !block ) ? <Loading size='lg' sx={{ my: 5 }} />
+      : <>
+        <Breadcrumb />
+        <BlockSummaryHeader blockNumber={block.number} />
+        <BlockSummary block={block} />
+        <Box sx={{ mt: 2 }}>
+          <BlockDetailedTabs blockNumber={block.number} loading={loading} />
+        </Box>
+      </>
+      }
     </Container>
   );
 };
