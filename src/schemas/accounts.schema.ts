@@ -235,7 +235,6 @@ export const GET_WHEN_CREATED_ERAS = gql`
 export type GetExtrinsicCounts = {
   extrinsicCount: { aggregate: { count: number } };
   transferCount: { aggregate: { count: number } };
-  rewardsInfo: { aggregate: { count: number, sum: { amount: number } } };
 }
 
 export const GET_EXTRINSIC_COUNTS = gql`
@@ -259,7 +258,7 @@ export const GET_EXTRINSIC_COUNTS = gql`
   }
 `
 
-/* -------------------------------------------------------------------------- */
+/* ----------------------tira---------------------------------------------------- */
 /*                          Staking Rewards Counters                          */
 /* -------------------------------------------------------------------------- */
 export type GetStakingRewardCounts = {
