@@ -73,7 +73,6 @@ const ExtrinsicComponent = () => {
             <ExtrinsicTabs
               blockNumber={extrinsic.blockNumber}
               index={extrinsic.extrinsicIndex}
-              transferCount={data.agg.aggregate.count}
             />
           )
         )}
