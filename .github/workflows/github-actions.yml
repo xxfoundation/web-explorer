@@ -47,14 +47,15 @@ jobs:
       - name: Build
         run: yarn run build
 
-  .deploy-staging:
+  deploy-staging:
     name: Deploy Application to Netlify Staging
     needs: [build]
     runs-on: ubuntu-latest
     env:
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_STAGING }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-    if: contains('refs/heads/staging', github.ref)
+    # if: contains('refs/heads/staging', github.ref)
+    if: ${{ false }} # disable for now
     steps:
       - name: Deploy to Staging
         run: netlify deploy --prod
