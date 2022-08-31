@@ -2,7 +2,7 @@ import { Box, Divider, Stack, styled, Tab, Tabs, Typography } from '@mui/materia
 import React, { FC } from 'react';
 import { theme } from '../themes/default';
 
-type TabType = {
+export type TabType = {
   label: JSX.Element;
   content: JSX.Element;
 };
@@ -52,7 +52,7 @@ const TabsWithPanels: React.FC<{
   return (
     <>
       <StyledTabs
-        sx={{ mb: tabMarginBottom || 3 }}
+        sx={{ mb: tabMarginBottom || 1 }}
         value={value}
         onChange={(_, newValue) => {
           setValue(newValue);
@@ -80,7 +80,7 @@ const TabsWithPanels: React.FC<{
             id={`tabpanel-${value}`}
             aria-labelledby={`tab-${value}`}
           >
-            {value === index && <Box sx={{ pt: 3 }}>{content}</Box>}
+            {value === index && <Box sx={{ pt: 1.5 }}>{content}</Box>}
           </div>
         );
       })}

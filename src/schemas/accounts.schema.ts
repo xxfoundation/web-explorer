@@ -256,7 +256,18 @@ export const GET_EXTRINSIC_COUNTS = gql`
         count
       }
     }
+  }
+`
 
+/* -------------------------------------------------------------------------- */
+/*                          Staking Rewards Counters                          */
+/* -------------------------------------------------------------------------- */
+export type GetStakingRewardCounts = {
+  rewardsInfo: { aggregate: { count: number, sum: { amount: number } } };
+}
+
+export const GET_STAKING_REWARDS_COUNTS = gql`
+  query GetStakingRewardsCounts ($accountId: String) {
     rewardsInfo: staking_reward_aggregate(where: { account_id: { _eq: $accountId } }) {
       aggregate {
         count
