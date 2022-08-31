@@ -56,7 +56,6 @@ const DefaultTile: FC<Props> = ({
         mb: 4,
         px: { xs: 3, md: 6 },
         overflow: 'auto',
-        width: '100%',
         height
       }}
     >
