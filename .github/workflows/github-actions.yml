@@ -50,19 +50,19 @@ jobs:
   deploy-staging:
     name: Deploy Application to Netlify Staging
     needs: [build]
-    runs-on:  ubuntu-latest
+    runs-on: ubuntu-latest
     env:
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_STAGING }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
     if: contains('refs/heads/staging', github.ref)
     steps:
       - name: Deploy to Staging
-        run: netlify deploy --prod --open
+        run: netlify deploy --prod
 
   deploy-prod:
     name: Deploy Application to Netlify Production
     needs: [build]
-    runs-on:  ubuntu-latest
+    runs-on: ubuntu-latest
     env:
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_PROD }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
