@@ -7,7 +7,6 @@ import Loading from '../../Loading';
 import LineChart from './LineChart';
 import { DataPoint } from './types';
 import Error from '../../Error';
-import DefaultTile from '../../DefaultTile';
 import { amountByEraTooltip } from './formatters';
 
 export type Props = {
@@ -33,9 +32,7 @@ const AveragePointsLineChart: FC<Props> = ({ limit = 30, offset = 0 }) => {
   }
 
   return (
-    <DefaultTile header='Average era points'>
-      <LineChart tooltipFormatter={amountByEraTooltip} data={data} />
-    </DefaultTile>
+    <LineChart tooltipFormatter={amountByEraTooltip} data={data} />
   );
 };
 

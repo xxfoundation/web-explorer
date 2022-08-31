@@ -26,7 +26,7 @@ const DefaultTile: FC<Props> = ({
   linkAddress,
   linkName
 }) => (
-  <PaperWrap sx={{}}>
+  <PaperWrap>
     {(header || linkName) && (
       <>
         <Stack
