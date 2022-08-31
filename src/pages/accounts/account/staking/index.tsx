@@ -27,7 +27,7 @@ const StakingCard: FC<{
   const { data, loading } = useQuery<GetStakingRewardCounts>(GET_STAKING_REWARDS_COUNTS, {
     variables: { accountId: accountId }
   });
-  const rewardsCount = data?.rewardsInfo.aggregate.count;
+  const rewardsCount = data?.rewardsInfo.aggregate.count || 0;
   const rewardsSum = data?.rewardsInfo.aggregate.sum.amount;
 
   const panels = useMemo(() => {
@@ -73,7 +73,7 @@ const StakingCard: FC<{
   }, [accountId, active, loading, nominators, rewardsCount, rewardsSum, statsCount, validatorInfo, validatorStats]);
 
   return (
-    <AccountTile panels={panels} tabsLabel='account staking card' title='Staking' />
+    rewardsCount ? (<AccountTile panels={panels} tabsLabel='account staking card' title='Staking' />) : <></>
   );
 };
 
