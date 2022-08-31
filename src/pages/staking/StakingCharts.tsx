@@ -7,12 +7,14 @@ import AverageSelfStakeLineChart from '../../components/charts/highcharts/Averag
 import AverageCommissionLineChart from '../../components/charts/highcharts/AverageCommissionLineChart';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 
+const headerSx = { mt: { xs: 2, sm: 0 }, mb: 4 };
+
 const StakingCharts = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={6}>
         <PaperWrapStyled>
-          <Typography variant='h3' gutterBottom>
+          <Typography variant='h3' sx={headerSx} gutterBottom>
             Average Points
           </Typography>
           <AveragePointsLineChart />
@@ -20,7 +22,7 @@ const StakingCharts = () => {
       </Grid>
       <Grid item xs={12} md={6}>
         <PaperWrapStyled>
-          <Typography variant='h3' gutterBottom>
+          <Typography variant='h3' sx={headerSx} gutterBottom>
             Average Performance
           </Typography>
           <AveragePerformanceLineChart />
@@ -28,7 +30,7 @@ const StakingCharts = () => {
       </Grid>
       <Grid item xs={12} md={6}>
         <PaperWrapStyled>
-          <Typography variant='h3' gutterBottom>
+          <Typography variant='h3' sx={headerSx} gutterBottom>
             Average Self Stake
           </Typography>
           <AverageSelfStakeLineChart />
@@ -36,7 +38,7 @@ const StakingCharts = () => {
       </Grid>
       <Grid item xs={12} md={6}>
         <PaperWrapStyled>
-          <Typography variant='h3' gutterBottom>
+          <Typography variant='h3'sx={headerSx} gutterBottom>
             Average Commission
           </Typography>
           <AverageCommissionLineChart />
