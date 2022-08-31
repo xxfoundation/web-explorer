@@ -8,7 +8,6 @@ import Loading from '../../Loading';
 import LineChart from './LineChart';
 import { DataPoint } from './types';
 import Error from '../../Error';
-import DefaultTile from '../../DefaultTile';
 
 export type Props = {
   limit?: number;
@@ -33,13 +32,11 @@ const AverageCommissionLineChart: FC<Props> = ({ limit = 30, offset = 0 }) => {
   }
 
   return (
-    <DefaultTile header='Average Commission'>
-      <LineChart
-        labelFormatters={{ yAxis: percentLabelFormatter }}
-        tooltipFormatter={percentTooltipFormatter}
-        data={data}
-      />
-    </DefaultTile>
+    <LineChart
+      labelFormatters={{ yAxis: percentLabelFormatter }}
+      tooltipFormatter={percentTooltipFormatter}
+      data={data}
+    />
   );
 };
 

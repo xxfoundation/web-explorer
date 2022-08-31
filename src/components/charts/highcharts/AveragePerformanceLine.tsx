@@ -7,7 +7,6 @@ import Loading from '../../Loading';
 import LineChart from './LineChart';
 import { DataPoint } from './types';
 import Error from '../../Error';
-import DefaultTile from '../../DefaultTile';
 import { decimalTooltipFormatter } from './formatters';
 
 export type Props = {
@@ -33,9 +32,7 @@ const AveragePerformanceLineChart: FC<Props> = ({ limit = 30, offset = 0 }) => {
   }
 
   return (
-    <DefaultTile header='Average performance'>
-      <LineChart tooltipFormatter={decimalTooltipFormatter} data={data} />
-    </DefaultTile>
+    <LineChart tooltipFormatter={decimalTooltipFormatter} data={data} />
   );
 };
 
