@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 import FormatBalance from '../../../../components/FormatBalance';
 import { useQuery } from '@apollo/client';
-import { GET_EXTRINSIC_COUNTS, GetExtrinsicCounts } from '../../../../schemas/accounts.schema';
+import { GET_STAKING_REWARDS_COUNTS, GetStakingRewardCounts } from '../../../../schemas/accounts.schema';
 import Loading from '../../../../components/Loading';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 
 const StakingRewardsElement: FC<Props> = ({ address }) => {
   const [rewards, setRewards] = useState<BN>(BN_ZERO);
-  const { data, loading }= useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
+  const { data, loading }= useQuery<GetStakingRewardCounts>(GET_STAKING_REWARDS_COUNTS, {
     variables: { accountId: address }
   });
 
