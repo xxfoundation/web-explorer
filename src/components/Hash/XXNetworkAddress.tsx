@@ -50,6 +50,7 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, targetBla
       ) : (
         <Hash
           {...hashProps}
+          targetBlank={targetBlank}
           url={url}
           valid={hashProps.valid === undefined ? isValid : hashProps.valid}
         />

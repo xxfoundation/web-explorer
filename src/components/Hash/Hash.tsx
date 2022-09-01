@@ -30,6 +30,7 @@ export type Props = TypographyProps & {
   offset?: number | Partial<Record<Breakpoint, number>>;
   valid?: boolean;
   value: string;
+  targetBlank?: boolean;
 };
 
 const breakpointToResponsiveness = (theme: Theme, res: Responsiveness) =>
@@ -98,6 +99,7 @@ const Hash: FC<Props> = ({
   showTooltip = true,
   truncated,
   value,
+  targetBlank = false,
   ...props
 }) => {
   const isValid = valid === undefined ? isHex(value, bitlength) : valid;
@@ -122,9 +124,9 @@ const Hash: FC<Props> = ({
         {...props}
       >
         {url ? (
-          <Link to={url} rel='noopener'>
-            {hash}
-          </Link>
+          targetBlank ? 
+          <Link target='__blank' rel='noopener noreferrer' to={url}>{hash}</Link>
+          : <Link to={url}>{hash}</Link>
         ) : (
           hash
         )}
