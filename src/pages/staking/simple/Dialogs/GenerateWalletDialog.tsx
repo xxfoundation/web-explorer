@@ -46,7 +46,7 @@ const GenerateWalletDialog: FC<Props> = ({ onClose, open }) => {
 
   return (
     <Dialog onClose={onClose} open={open} maxWidth='lg'>
-      <Button variant='text' sx={{ position: 'absolute', top: 0, right: 0 }} onClick={onClose}>
+      <Button variant='text' sx={{ position: 'relative', margin: '0 0 -1em auto' }} onClick={onClose}>
         <Close />
       </Button>
       {step === 1 && <Step1 onFinish={nextStep} setMnemonics={setMnemonics} />}
