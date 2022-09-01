@@ -154,7 +154,7 @@ const APYPanel: FC<Props> = ({ account, amount, setPassword, setTransaction, sta
           <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Do you want more control?</AlertTitle>
           <Typography variant='body3'>
             You can use the{' '}
-            <Link target='__blank' href={walletUrl}>
+            <Link target='__blank' rel='noopener noreferrer' href={walletUrl}>
               wallet
             </Link>{' '}
             webapp to manually select validators.

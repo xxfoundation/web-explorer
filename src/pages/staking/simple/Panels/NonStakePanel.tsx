@@ -108,7 +108,7 @@ const NonStakePanel: FC<Props> = ({
           </AlertTitle>
           <Typography variant='body3'>
             You can monitor your account activity on the{' '}
-            <Link target='__blank' href={accountURL}>
+            <Link target='__blank' rel='noopener noreferrer' href={accountURL}>
               explorer
             </Link>
             .

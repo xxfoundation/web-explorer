@@ -10,13 +10,14 @@ type Props = HashProps & {
   avatar?: string;
   disableAvatar?: boolean;
   disableUrl?: boolean;
+  targetBlank?: boolean;
 };
 
 const CustomAvatar = styled(Avatar)(() => ({
   color: 'white'
 }));
 
-const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, ...hashProps }) => {
+const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, targetBlank = false,  ...hashProps }) => {
   const avatarIcon = useMemo(() => {
     return name ? (
       <Tooltip
@@ -43,7 +44,9 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, ...hashPr
     <Stack direction={'row'} alignItems='center'>
       {!disableAvatar && avatarIcon}
       {name ? (
-        <Link to={url}>{name}</Link>
+        targetBlank ? 
+        <Link target='__blank' rel='noopener noreferrer' to={url}>{name}</Link>
+        : <Link to={url}>{name}</Link>
       ) : (
         <Hash
           {...hashProps}

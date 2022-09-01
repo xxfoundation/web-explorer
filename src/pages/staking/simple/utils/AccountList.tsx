@@ -9,7 +9,7 @@ type Props = {
 const AccountList: FC<Props> = ({ accounts }) => (
   <Stack spacing={2} sx={{ overflow: 'auto', maxHeight: '10rem', width: '100%' }}>
     {accounts?.map((acct) => (
-      <AccountDisplay account={acct} key={acct} />
+      <AccountDisplay account={acct} key={acct} targetBlank={true} />
     ))}
   </Stack>
 );
