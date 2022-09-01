@@ -57,9 +57,14 @@ export const GET_FULL_IDENTITY = gql`
   }
 `
 
+export type GetDisplayIdentity = {
+  identity: {
+    display: string;
+  }[]
+}
 export const GET_DISPLAY_IDENTITY = gql`
-  query GetDisplayIdentity($where: identity_bool_exp) {
-    identity(where: where) {
+  query GetDisplayIdentity($account: String!) {
+    identity(where: { account_id: { _eq: $account } }) {
       display
     }
   }

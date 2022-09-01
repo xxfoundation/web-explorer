@@ -18,13 +18,13 @@ import { keyring } from '@polkadot/ui-keyring';
 
 import useAccounts from '../../../../hooks/useAccounts';
 import { TableStyled } from '../../../../components/Tables/TableContainer.styled';
-import Address from '../../../../components/Hash/XXNetworkAddress';
 import { usePagination } from '../../../../hooks';
 import useApi from '../../../../hooks/useApi';
 import FormatBalance from '../../../../components/FormatBalance';
 import Loading from '../../../../components/Loading';
 import { CustomTooltip as Tooltip } from '../../../../components/Tooltip';
 import StakingRewardsElement from '../utils/StakingRewardsElement';
+import AccountDisplay from '../utils/AccountDisplay';
 
 type Props = {
   selected: string;
@@ -106,12 +106,9 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                           <Warning sx={{ mr: 1, color: 'warning.main' }} />
                         </Tooltip>
                       )}
-                      <Address
-                        truncated='mdDown'
-                        value={acct}
-                        disableUrl={balances[i]?.eqn(0)}
-                        disableAvatar={balances[i]?.eqn(0)}
-                      />
+                      <AccountDisplay  
+                        account={acct}
+                        balance={balances[i]}/>
                     </Stack>
                   </TableCell>
                   <TableCell>
