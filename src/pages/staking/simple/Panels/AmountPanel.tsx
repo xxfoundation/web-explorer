@@ -21,10 +21,10 @@ import {
 } from '@mui/material';
 
 import { TableStyled } from '../../../../components/Tables/TableContainer.styled';
-import Address from '../../../../components/Hash/XXNetworkAddress';
 import FormatBalance from '../../../../components/FormatBalance';
 import Loading from '../../../../components/Loading';
 import { StakingBalances } from '../../../../simple-staking/actions';
+import AccountDisplay from '../utils/AccountDisplay';
 
 const DECIMAL_POINTS = 9;
 const DECIMALS_POW = BN_TEN.pow(new BN(DECIMAL_POINTS));
@@ -161,7 +161,7 @@ const AmountSelection: FC<Props> = ({
         <Typography variant='h3' sx={{ mb: 2 }}>
           Account
         </Typography>
-        <Address value={account} truncated='mdDown' />
+        <AccountDisplay account={account}/>
       </Box>
       <Loading loading={loading}>
         <Stack spacing={4}>

@@ -48,7 +48,7 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
   const [json, setJson] = useState<KeyringPair$Json | KeyringPairs$Json | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [password, setPassword] = useInput('');
+  const [password, setPasswordHandler, setPassword] = useInput('');
   const apiGenesisHash = useMemo(() => api?.genesisHash.toHex(), [api]);
 
   const accountsContainDifferentGenesis = useMemo<boolean>(() => {
@@ -100,13 +100,15 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
         }
 
         setLoading(false);
+        setJson(null);
+        setPassword('');
         onClose();
       } catch (err) {
         setError('Decoding failed, double check your password.');
         setLoading(false);
       }
     }, 0);
-  }, [onClose, json, password]);
+  }, [json, setPassword, onClose, password]);
 
   return (
     <Dialog onClose={handleClose} open={open}>
@@ -148,7 +150,7 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
               label='Password'
               size='small'
               value={password}
-              onChange={setPassword}
+              onChange={setPasswordHandler}
             />
           </Box>
         </Stack>
