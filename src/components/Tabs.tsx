@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { theme } from '../themes/default';
 
 export type TabType = {
-  label: JSX.Element;
+  label: string | JSX.Element;
   content: JSX.Element;
 };
 
@@ -45,7 +45,7 @@ const StyledTabs = styled((props: StyledTabsProps) => (
 
 const TabsWithPanels: React.FC<{
   panels: TabType[];
-  tabsLabel: string;
+  tabsLabel?: string;
   tabMarginBottom?: number | string;
 }> = ({ panels, tabMarginBottom, tabsLabel }) => {
   const [value, setValue] = React.useState(0);

@@ -23,6 +23,7 @@ const PerformanceCard: FC<{
       }
     ];
   }, [props]);
+  
   if (!props.account.roles.validator) return <></>;
   return (
     <Box padding={'40px'}>
