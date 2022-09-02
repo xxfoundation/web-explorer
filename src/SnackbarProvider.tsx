@@ -3,6 +3,7 @@ import { IconButton } from '@mui/material';
 import { SnackbarKey, SnackbarProvider, useSnackbar } from 'notistack';
 import React, { FC } from 'react';
 import { theme } from './themes/default';
+import { WithChildren } from './types';
 
 const SnackbarCloseButton: FC<{ snackbarKey: SnackbarKey }> = ({ snackbarKey }) => {
   const { closeSnackbar } = useSnackbar();
@@ -16,7 +17,7 @@ const SnackbarCloseButton: FC<{ snackbarKey: SnackbarKey }> = ({ snackbarKey }) 
   );
 };
 
-const SnackbarCustomProvider: FC = ({ children }) => {
+const SnackbarCustomProvider: FC<WithChildren> = ({ children }) => {
   return (
     <SnackbarProvider
       anchorOrigin={{

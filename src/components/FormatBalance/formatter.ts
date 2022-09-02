@@ -1,7 +1,10 @@
 import { bnToBn, calcSi, formatDecimal, isBoolean } from '@polkadot/util';
 import { SiDef, ToBn } from '@polkadot/util/types';
 import { SI, SI_MID } from '@polkadot/util/format/si';
-import BN from 'bn.js';
+import { BN } from '@polkadot/util/bn';
+import React from 'react';
+
+import { stripNonDigits } from '../../utils';
 
 const defaultDecimals = 9;
 
@@ -13,6 +16,10 @@ interface Options {
   withSiFull?: boolean;
   withUnit?: boolean | string;
 }
+
+// for million, 2 * 3-grouping + comma
+const M_LENGTH = 6 + 1;
+const K_LENGTH = 3 + 1;
 
 function getUnits(si: SiDef, withSi: boolean, withSiFull: boolean, withUnit: boolean | string): string {
   const unit = isBoolean(withUnit)
@@ -71,4 +78,51 @@ export function formatBalance<ExtToBn extends ToBn>(input?: number | string | bi
   const units = getUnits(si, withSi, withSiFull, withUnit);
 
   return `${sign}${formatDecimal(prefix)}${postfix ? '.' : ''}${postfix}${units}`;
+}
+
+function createElement(
+  prefix: string,
+  postfix: string,
+  unit: string,
+  label: string | React.ReactNode,
+  isShort = false
+): React.ReactNode {
+  const hasDecimal = !isShort && !!postfix;
+  return `${prefix}${hasDecimal ? '.' : ''}${postfix && !isShort ? postfix : ''} ${unit} ${label}`
+}
+
+export function applyFormat(
+  value:  string | BN,
+  denomination = 9,
+  symbol = 'XX',
+  withCurrency = true,
+  withSi = false,
+  _isShort = false,
+  labelPost: string | React.ReactNode = '',
+  precision = 2
+): React.ReactNode {
+  const stripped = stripNonDigits(value);
+  const [prefix, postfix] = formatBalance(stripped, {
+    decimals: denomination,
+    forceUnit: '-',
+    precision,
+    withSi: false
+  }).split('.');
+  const isShort = _isShort || (withSi && prefix.length >= K_LENGTH);
+  const unitPost = withCurrency ? symbol : '';
+
+  if (prefix.length > M_LENGTH) {
+    const formatted = formatBalance(stripped, {
+      decimals: denomination,
+      precision,
+      withUnit: false
+    });
+    const divider = formatted.includes('.') ? '.' : ' ';
+    const [major, rest] = formatted.split(divider);
+    const [minor, unit] = rest.includes(' ') ? rest.split(' ') : [, rest];
+
+    return `${major}${minor ? '.' : ''} ${unit} ${unit ? unitPost : ` ${unitPost}`} ${labelPost}`;
+  }
+
+  return createElement(prefix, postfix, unitPost, labelPost, isShort);
 }

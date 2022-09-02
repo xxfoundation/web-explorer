@@ -2,7 +2,7 @@ import { Box, Divider, Stack, styled, Tab, Tabs, Typography } from '@mui/materia
 import React, { FC } from 'react';
 import { theme } from '../themes/default';
 
-type TabType = {
+export type TabType = {
   label: JSX.Element;
   content: JSX.Element;
 };
@@ -14,13 +14,16 @@ interface StyledTabsProps {
 }
 
 const StyledTabs = styled((props: StyledTabsProps) => (
-  <Tabs {...props} TabIndicatorProps={{ children: <span className='MuiTabs-indicatorSpan' /> }} />
+  <Tabs {...props} variant='scrollable' TabIndicatorProps={{ children: <span className='MuiTabs-indicatorSpan' /> }} />
 ))({
   marginLeft: -16,
   marginRight: -16,
   p: {
     fontSize: '13px',
     fontWeight: '700'
+  },
+  '& .MuiTabs-scroller': {
+    overflow: 'auto'
   },
   '& .MuiTab-textColorPrimary': {
     color: theme.palette.grey[400]
@@ -49,7 +52,7 @@ const TabsWithPanels: React.FC<{
   return (
     <>
       <StyledTabs
-        sx={{ mb: tabMarginBottom || 3 }}
+        sx={{ mb: tabMarginBottom || 1 }}
         value={value}
         onChange={(_, newValue) => {
           setValue(newValue);
@@ -77,7 +80,7 @@ const TabsWithPanels: React.FC<{
             id={`tabpanel-${value}`}
             aria-labelledby={`tab-${value}`}
           >
-            {value === index && <Box sx={{ pt: 3 }}>{content}</Box>}
+            {value === index && <Box sx={{ pt: 1.5 }}>{content}</Box>}
           </div>
         );
       })}

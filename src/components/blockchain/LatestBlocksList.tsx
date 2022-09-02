@@ -1,15 +1,17 @@
 import type { Block, ListBlocks } from './types';
 
 import { useSubscription } from '@apollo/client';
-import { TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material';
+import { TableCell, TableContainer, TableRow, Typography } from '@mui/material';
 import React, { FC } from 'react';
+import TransitionGroup from 'react-transition-group/TransitionGroup';
+import CSSTransition from 'react-transition-group/CSSTransition';
 
-import useNewnessTracker, { WithNew } from '../../hooks/useNewnessTracker';
+import '../../assets/css/fade-adjacent.css';
 import { LISTEN_FOR_LATEST_BLOCKS } from '../../schemas/blocks.schema';
 import BlockStatusIcon from '../block/BlockStatusIcon';
 import DefaultTile from '../DefaultTile';
 import Link from '../Link';
-import SkeletonRows from '../Tables/SkeletonRows';
+import Loading from '../Loading';
 import { Table } from '../Tables/TableContainer.styled';
 import TimeAgo from '../TimeAgo';
 import Error from '../Error';
@@ -18,7 +20,7 @@ import Hash from '../Hash';
 
 const PAGE_LIMIT = 10;
 
-const BlockRow: FC<WithNew<Block>> = ({
+const BlockRow: FC<Block> = ({
   finalized,
   hash,
   number,
@@ -29,7 +31,7 @@ const BlockRow: FC<WithNew<Block>> = ({
   <>
     <TableRow>
       <TableCell colSpan={4}>
-        <Header>
+        <Header component='div'>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div>
               Block&nbsp;
@@ -53,26 +55,36 @@ const BlockRow: FC<WithNew<Block>> = ({
     </TableRow>
     <TableRow>
       <BorderlessCell>
-        <Link to={'/extrinsics'} underline='hover' variant='body3'>
-          {totalExtrinsics} extrinsics
-        </Link>{' '}
+        <div>
+          <Link to={'/extrinsics'} underline='hover' variant='body3'>
+            {totalExtrinsics} extrinsics
+          </Link>{' '}
+        </div>
       </BorderlessCell>
       <BorderlessCell>
-        <Link to={'/events'} underline='hover' variant='body3'>
-          {totalEvents} events
-        </Link>
+        <div>
+          <Link to={'/events'} underline='hover' variant='body3'>
+            {totalEvents} events
+          </Link>
+        </div>
       </BorderlessCell>
       <BorderlessCell>
-        <BlockStatusIcon status={finalized ? 'successful' : 'pending'} />
+        <div>
+          <BlockStatusIcon status={finalized ? 'successful' : 'pending'} />
+        </div>
       </BorderlessCell>
       <BorderlessCell>
-        <Typography variant='body3' sx={{ whiteSpace: 'nowrap' }}>
-          <TimeAgo date={timestamp} />
-        </Typography>
+        <div>
+          <Typography variant='body3' sx={{ whiteSpace: 'nowrap' }}>
+            <TimeAgo date={timestamp} />
+          </Typography>
+        </div>
       </BorderlessCell>
     </TableRow>
     <TableRow>
-      <BorderlessCell colSpan={4} />
+      <div>
+        <BorderlessCell colSpan={4} />
+      </div>
     </TableRow>
   </>
 );
@@ -82,25 +94,22 @@ const LatestBlocksList = () => {
     variables: { limit: PAGE_LIMIT }
   });
 
-  const tracked = useNewnessTracker(data?.blocks, 'hash');
-
   return (
     <DefaultTile header={'Blocks'} linkName={'SEE ALL'} linkAddress={'/blocks'} height={500}>
+      {loading && <Loading size='lg' />}
+      {error && <Error />}
       <TableContainer>
         <Table size={!loading ? 'small' : undefined}>
-          <TableBody>
-            {loading && <SkeletonRows rows={10} columns={4} />}
-            {error && (
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <Error />
-                </TableCell>
-              </TableRow>
-            )}
-            {tracked?.map((block) => (
-              <BlockRow {...block} key={block.number} />
+          <TransitionGroup component='tbody'>
+            {data?.blocks?.map((block) => (
+              <CSSTransition
+                classNames='fade'
+                timeout={500}
+                key={block.number}>
+                  <BlockRow {...block} />
+                </CSSTransition>
             ))}
-          </TableBody>
+          </TransitionGroup>
         </Table>
       </TableContainer>
     </DefaultTile>

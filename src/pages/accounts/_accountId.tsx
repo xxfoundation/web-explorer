@@ -17,13 +17,24 @@ import { useToggle } from '../../hooks';
 import BalanceHistoryChart from './account/BalanceHistoryChart';
 import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 import StakingCard from './account/staking';
+import Tag from '../../components/Tags/Tag';
+
+const validatorStatus = (inValidatorStats: boolean, currentlyActive: boolean) => {
+  return (
+    <Typography variant='body3' sx={{ position: 'absolute', right: '2rem', bottom: '1.5rem', fontWeight: 'bolder'}}>Validator Status:
+      <Tag sx={{ marginLeft: '8px' }}>
+        <Typography fontSize={'12px'} fontWeight={400}>
+          {currentlyActive ? 'Active' : inValidatorStats ? 'Inactive' : 'in Waiting'}
+        </Typography>
+      </Tag>
+    </Typography>)
+}
 
 const AccountId: FC = () => {
   const { accountId } = useParams<{ accountId?: string }>();
   const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const { data, loading } = useFetchValidatorAccountInfo(accountId);
   const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
-  const [validatorInfoExpanded, { toggle: toggleValidatorInfo }] = useToggle(false);
   const currEra = latestEraQuery?.data?.validatorStats[0].era;
 
   if (loading || latestEraQuery.loading) {
@@ -47,11 +58,14 @@ const AccountId: FC = () => {
   }
 
   if (!data?.account) return <NotFound message='Account Not Found' />;
+
   const account = data?.account;
   const validator =
     data?.aggregates && data?.stats
       ? { aggregates: data?.aggregates, stats: data?.stats }
       : undefined;
+  const inValidatorStats = validator && validator?.stats.length > 0 || false;
+  const currentlyActive = inValidatorStats && validator?.stats[0].era == currEra || false;
 
   return (
     <Container sx={{ my: 5 }}>
@@ -64,7 +78,7 @@ const AccountId: FC = () => {
           <IdentityCard account={data.account} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
+          <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 8 } }}>
             <Balances account={data.account} />
             <RoundedButton
               style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
@@ -76,17 +90,9 @@ const AccountId: FC = () => {
           </PaperWrapStyled>
         </Grid>
         <Grid item xs={12} md={6}>
-          <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 6 } }}>
+          <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 8 } }}>
             <AccountDetails account={data.account} />
-            {account.roles.validator && (
-              <RoundedButton
-                style={{ position: 'absolute', right: '2rem', bottom: '1.5rem' }}
-                variant='contained'
-                onClick={toggleValidatorInfo}
-              >
-                {validatorInfoExpanded ? 'Hide validator info' : 'Show validator info'}
-              </RoundedButton>
-            )}
+            {account.roles.validator && validator && validatorStatus(inValidatorStats, currentlyActive)}
           </PaperWrapStyled>
         </Grid>
         {historyExpanded && currEra && (
@@ -96,13 +102,9 @@ const AccountId: FC = () => {
             </PaperWrapStyled>
           </Grid>
         )}
-        {validatorInfoExpanded && account.roles.validator && validator !== undefined && (
-          <Grid item xs={12}>
-            <StakingCard accountId={account.id} validator={validator} />
-          </Grid>
-        )}
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{pt: '0!important'}}>
           <BlockchainCard account={data.account} />
+          {validator !== undefined && <StakingCard accountId={account.id} validator={validator} active={currentlyActive}/>}
         </Grid>
       </Grid>
     </Container>

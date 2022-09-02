@@ -1,3 +1,4 @@
+import { WithChildren } from '../../../types';
 import { Stack, StackProps, styled, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { theme } from '../../../themes/default';
@@ -10,7 +11,7 @@ export const TypographyHeader = styled(Typography)(({}) => ({
   color: theme.palette.grey[600]
 }));
 
-export const TypographyBody: FC = ({ children }) => {
+export const TypographyBody: FC<WithChildren> = ({ children }) => {
   return (
     <Typography
       marginLeft={'30px'}

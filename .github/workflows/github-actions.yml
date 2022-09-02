@@ -15,11 +15,11 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [17.x]
 
     steps:
       # Checkout repo
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Extract branch name
         shell: bash
@@ -31,12 +31,12 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H.%M.%S')"
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
       # - name: Run the tests and generate coverage report
       #   run: npm test -- --coverage
@@ -45,28 +45,30 @@ jobs:
       #   uses: codecov/codecov-action@v1
 
       - name: Build
-        run: npm run build
+        run: yarn run build
 
   deploy-staging:
     name: Deploy Application to Netlify Staging
     needs: [build]
-    runs-on:  ubuntu-latest
+    runs-on: ubuntu-latest
     env:
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_STAGING }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-    if: contains('refs/heads/staging', github.ref)
+    # if: contains('refs/heads/staging', github.ref)
+    if: ${{ false }} # disable for now
     steps:
       - name: Deploy to Staging
-        run: netlify deploy --prod --open
+        run: netlify deploy --prod
 
   deploy-prod:
     name: Deploy Application to Netlify Production
     needs: [build]
-    runs-on:  ubuntu-latest
+    runs-on: ubuntu-latest
     env:
       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_PROD }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-    if: contains('refs/heads/release', github.ref)
+    # if: contains('refs/heads/release', github.ref)
+    if: ${{ false }} # disable for now
     steps:
       - name: Deploy to Prod
         run: netlify deploy --prod

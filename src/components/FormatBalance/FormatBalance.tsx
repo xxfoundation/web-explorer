@@ -1,5 +1,6 @@
 import React from 'react';
-import BN from 'bn.js';
+import { BN } from '@polkadot/util/bn';
+
 import { formatBalance } from './formatter';
 import { stripNonDigits } from '../../utils';
 
@@ -43,7 +44,7 @@ function createElement(
   );
 }
 
-function applyFormat(
+export function applyFormat(
   value: Props['value'],
   denomination: number,
   symbol: string,

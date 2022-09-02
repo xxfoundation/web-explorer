@@ -23,14 +23,11 @@ const FooterMenu = () => {
         <ListLink to='https://xx.network/' underline='hover' rel='noopener' target='_blank'>
           xx network
         </ListLink>
-        <ListLink to='https://xx.network/coin/' underline='hover' rel='noopener' target='_blank'>
-          xx coin
+        <ListLink to='https://xx.network/welcome/' underline='hover' rel='noopener' target='_blank'>
+          xx community
         </ListLink>
       </Grid>
       <Grid item xs>
-        <ListLink to='https://xx.network/nodes' underline='hover' rel='noopener' target='_blank'>
-          Node Runners
-        </ListLink>
         <ListLink
           to='https://xx.network/developers'
           underline='hover'
@@ -43,25 +40,33 @@ const FooterMenu = () => {
           xx wallet
         </ListLink>
         <ListLink
+          to='https://blockchainapi.xx.network'
+          underline='hover'
+          rel='noopener'
+          target='_blank'
+        >
+          xx blockchain api
+        </ListLink>
+        <ListLink
           to='https://dashboard.xx.network'
           underline='hover'
           rel='noopener'
           target='_blank'
         >
-          cMix Dashboard
+          cmix dashboard
         </ListLink>
-        <ListLink to='https://forum.xx.network' underline='hover' rel='noopener' target='_blank'>
-          Technical Forum
-        </ListLink>
-      </Grid>
-      <Grid item xs={12} md='auto'>
         <ListLink
-          to='https://xx.network/overview/'
+          to='https://dashboard-api.xx.network'
           underline='hover'
           rel='noopener'
           target='_blank'
         >
-          Overview
+          cmix dashboard api
+        </ListLink>
+      </Grid>
+      <Grid item xs={12} md='auto'>
+        <ListLink to='https://xx.network/nodes' underline='hover' rel='noopener' target='_blank'>
+          Node Runners
         </ListLink>
         <ListLink
           to='https://xx.network/resources/'
@@ -74,8 +79,8 @@ const FooterMenu = () => {
         <ListLink to='https://xx.network/faq/' underline='hover' rel='noopener' target='_blank'>
           FAQ
         </ListLink>
-        <ListLink to='https://xx.network/team/' underline='hover' rel='noopener' target='_blank'>
-          Team
+        <ListLink to='https://forum.xx.network' underline='hover' rel='noopener' target='_blank'>
+          Technical Forum
         </ListLink>
         <ListLink to='https://xx.network/contact/' underline='hover' rel='noopener' target='_blank'>
           Contact Us

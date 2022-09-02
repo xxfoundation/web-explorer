@@ -166,3 +166,85 @@ export const GET_VALIDATOR_STATS = gql`
     }
   }
 `;
+
+/* -------------------------------------------------------------------------- */
+/*                                Staking Stats                               */
+/* -------------------------------------------------------------------------- */
+type StakingStats = {
+  era: number;
+  commissionAvg: number;
+  pointsAvg: number;
+  pointsMax: number;
+  pointsTotal: number;
+  rewardTotal: number;
+  selfStakeAvg: number;
+  timestamp: number;
+  totalStakeAvg: number;
+}
+
+export type GetStakingStats = {
+  stats: StakingStats[]
+}
+
+export const GET_STAKING_STATS = gql`
+  query GetStakingStats($limit: Int!, $offset: Int!) {
+    stats: staking_stats(limit: $limit, offset: $offset, order_by: {era: desc, points_avg: asc}) {
+      commissionAvg: commission_avg
+      era
+      pointsAvg: points_avg
+      pointsMax: points_max
+      pointsTotal: points_total
+      rewardTotal: reward_total
+      selfStakeAvg: self_stake_avg
+      timestamp
+      totalStakeAvg: total_stake_avg
+    }
+  }
+`
+/* -------------------------------------------------------------------------- */
+/*                               Staking Rewards                              */
+/* -------------------------------------------------------------------------- */
+export type StakingReward = {
+  accountId: string;
+  amount: number;
+  blockNumber: number;
+  era: number;
+  timestamp: string;
+  validatorAddress: string;
+  identity: {
+    display: string;
+  }
+}
+
+const STAKING_REWARDS_FRAGMENT = gql`
+  fragment stakingRewardsFragment on staking_reward {
+    accountId: account_id
+    amount
+    blockNumber: block_number
+    era
+    timestamp
+    validatorAddress: validator_stash_address
+    identity {
+      display
+    }
+  }
+`;
+
+export type GetStakingRewards = {
+  aggregates: { aggregate: { count: number } }
+  rewards: StakingReward[]
+}
+export const GET_STAKING_REWARDS = gql`
+  ${STAKING_REWARDS_FRAGMENT}
+  query GetStakingRewards ($accountId: String!) {
+    aggregates: staking_reward_aggregate(where: { account_id: { _eq: $accountId }}) {
+      aggregate {
+        count
+      }
+    }
+
+    rewards: staking_reward(where: { account_id: { _eq: $accountId } }, order_by: { era: desc }) {
+      ...stakingRewardsFragment
+    }
+  }
+`;

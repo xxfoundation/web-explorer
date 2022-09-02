@@ -1,5 +1,7 @@
-import { styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
+import { styled, ClickAwayListener, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
 import React from 'react';
+
+import useToggle from '../hooks/useToggle';
 
 export const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -9,9 +11,25 @@ export const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps)
   }
 });
 
-export const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
-))({
+export const CustomTooltip = styled(({ className, ...props }: TooltipProps) => {
+  const [active, toggle] = useToggle();
+
+  return (
+    <ClickAwayListener onClickAway={toggle.toggleOff}>
+      <Tooltip
+        {...props}
+        onClose={(evt) => {
+          if (evt.type !== 'touchend') {
+            toggle.toggleOff();
+          }
+        }}
+        open={active}
+        onClick={toggle.toggle}
+        arrow
+        classes={{ popper: className }} />
+    </ClickAwayListener>
+  );
+})({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: '#4F4F4F',
     padding: '1.25rem',

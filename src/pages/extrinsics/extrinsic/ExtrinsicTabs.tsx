@@ -4,13 +4,12 @@ import PaperWrapStyled from '../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../components/Tabs';
 import TransferTable from '../../transfers/TransfersTable';
 
-const ExtrinsicTabs: FC<{ blockNumber: number; index: number; transferCount?: number }> = ({
+const ExtrinsicTabs: FC<{ blockNumber: number; index: number;}> = ({
   blockNumber,
-  index,
-  transferCount
+  index
 }) => {
   const [eventCount, setEventCount] = useState<number>();
-  // const [transferCount, setTransferCount] = useState<number>();
+  const [transferCount, setTransferCount] = useState<number>();
   const panels = useMemo(() => {
     const tabs = [
       {
@@ -26,21 +25,19 @@ const ExtrinsicTabs: FC<{ blockNumber: number; index: number; transferCount?: nu
             setCount={setEventCount}
           />
         )
-      }
-    ];
-
-    if (transferCount) {
-      tabs.push({
+      },
+      {
         label: <TabText message='transfers' count={transferCount} />,
         content: (
           <TransferTable
             where={{
               _and: [{ block_number: { _eq: blockNumber } }, { extrinsic_index: { _eq: index } }]
             }}
+            setCount={setTransferCount}
           />
         )
-      });
-    }
+      }
+    ];
 
     return tabs;
   }, [blockNumber, eventCount, index, transferCount]);

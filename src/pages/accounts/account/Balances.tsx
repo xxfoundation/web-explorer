@@ -1,12 +1,11 @@
-import styled from '@emotion/styled';
+import type { WithChildren } from '../../../types';
+
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
+  styled,
   Box,
   Divider,
   Stack,
-  Tooltip,
-  tooltipClasses,
-  TooltipProps,
   Typography
 } from '@mui/material';
 import React, { FC } from 'react';
@@ -14,28 +13,20 @@ import FormatBalance from '../../../components/FormatBalance';
 import { Account } from '../../../schemas/accounts.schema';
 import { theme } from '../../../themes/default';
 import { InfoCardRow, TypographyBody, TypographyHeader } from './utils';
-
-const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
-))({
-  [`& .${tooltipClasses.tooltip}`]: {
-    maxWidth: 330,
-    padding: 0
-  }
-});
+import { CustomTooltip } from '../../../components/Tooltip';
 
 const TooltipBody = styled(Box)(({}) => ({
-  padding: '30px 40px 20px 40px'
+  padding: '0'
 }));
 
 const TooltipFooter = styled(Box)(({}) => ({
   backgroundColor: theme.palette.grey[500],
-  padding: '20px 40px',
+  padding: '1em',
   borderBottomLeftRadius: 'inherit',
   borderBottomRightRadius: 'inherit'
 }));
 
-const TooltipStack: FC = ({ children }) => {
+const TooltipStack: FC<WithChildren> = ({ children }) => {
   return (
     <Stack
       direction={'row'}
@@ -48,14 +39,14 @@ const TooltipStack: FC = ({ children }) => {
         />
       }
       spacing={3}
-      marginBottom={'6px'}
+      marginBottom={'0.5em'}
     >
       {children}
     </Stack>
   );
 };
 
-const TooltipLineHeader: FC = ({ children }) => (
+const TooltipLineHeader: FC<WithChildren> = ({ children }) => (
   <Typography fontSize={'11px'} fontWeight={500} letterSpacing={'1px'} width={'80px'}>
     {children}
   </Typography>

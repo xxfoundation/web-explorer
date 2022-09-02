@@ -2,7 +2,7 @@ import { OperationVariables, QueryResult, useQuery } from '@apollo/client';
 import React, { useCallback } from 'react';
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
 import Hidden from '@mui/material/Hidden';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { isHex } from '@polkadot/util';
 
 import { BlockNav } from '../../components/block/Block.styled';
@@ -22,7 +22,7 @@ import Error from '../../components/Error';
 import Loading from '../../components/Loading';
 
 const useArrowButtonsOptions = (number: number) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const variables = useCallback((blockNumber: number) => {
     return { variables: { blockNumber } };
@@ -32,10 +32,10 @@ const useArrowButtonsOptions = (number: number) => {
     ({ data, loading }: QueryResult<GetBlockByPK, OperationVariables>) => ({
       disabled: loading || !data?.block?.number,
       onClick: () => {
-        history.push(`/blocks/${data?.block?.number}`);
+        navigate(`/blocks/${data?.block?.number}`);
       }
     }),
-    [history]
+    [navigate]
   );
 
   const nextBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, variables(number + 1));
@@ -89,28 +89,27 @@ const Block = () => {
 
   const block = hashQuery.data?.block[0] || numberQuery.data?.block;
 
-  if (loading) {
-    return <Loading />;
-  }
-
   if (!loading && !error && !block) {
     return <NotFound />;
   }
 
-  if (!block || (!loading && error)) {
-    // eslint-disable-next-line no-console
-    console.log(error);
+  if (error && !loading && !block) {
+    console.error(error);
     return <Container sx={{ my: 5 }}><Error /></Container>;
   }
 
   return (
     <Container sx={{ my: 5 }}>
-      <Breadcrumb />
-      <BlockSummaryHeader blockNumber={block.number} />
-      <BlockSummary block={block} />
-      <Box sx={{ mt: 2 }}>
-        <BlockDetailedTabs blockNumber={block.number} loading={loading} />
-      </Box>
+      {(loading || !block ) ? <Loading size='lg' sx={{ my: 5 }} />
+      : <>
+        <Breadcrumb />
+        <BlockSummaryHeader blockNumber={block.number} />
+        <BlockSummary block={block} />
+        <Box sx={{ mt: 2 }}>
+          <BlockDetailedTabs blockNumber={block.number} loading={loading} />
+        </Box>
+      </>
+      }
     </Container>
   );
 };

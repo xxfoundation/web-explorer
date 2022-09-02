@@ -1,13 +1,11 @@
 import type { AddressFilters } from '../../../../components/Tables/filters/AddressFilter';
 
 import { useQuery } from '@apollo/client';
-import { Box, Typography, Skeleton } from '@mui/material';
+import { Box, Skeleton } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import ExtrinsicsTable from '../../../../components/block/ExtrinsicsTable';
-import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
-import TabsWithPanels, { TabText } from '../../../../components/Tabs';
 import {
   Account,
   GET_EXTRINSIC_COUNTS,
@@ -15,6 +13,8 @@ import {
 } from '../../../../schemas/accounts.schema';
 import TransferTable from '../../../transfers/TransfersTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
+import AccountTile from '../../../../components/AccountTile';
+import { TabText } from '../../../../components/Tabs';
 
 type Props = {
   account: Account;
@@ -82,12 +82,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
   }, [account.id, loading, extrinsicCount, transferCount, filters]);
 
   return (
-    <PaperStyled>
-      <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
-        Blockchain
-      </Typography>
-      <TabsWithPanels panels={panels} tabsLabel='account blockchain card' />
-    </PaperStyled>
+    <AccountTile panels={panels} tabsLabel='account blockchain card' title='Blockchain' />
   );
 };
 

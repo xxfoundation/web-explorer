@@ -1,7 +1,6 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import { useQuery, useSubscription } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
-import { BN } from '@polkadot/util';
 import { camelCase } from 'lodash';
 
 import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
@@ -17,7 +16,7 @@ import { CustomTooltip } from '../Tooltip';
 const ChainInfoCard: FC<{
   title: string;
   tooltip?: string;
-  value?: BN | React.ReactNode;
+  value?: React.ReactNode;
   path?: string;
 }> = ({ path, title, tooltip, value }) => {
   return (

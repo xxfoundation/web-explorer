@@ -19,7 +19,6 @@ const TransfersPage = () => {
         sx={{ mb: 5 }}
       >
         <Typography variant='h1'>Transfers</Typography>
-        {/* <DownloadDataButton onClick={() => {}}>Download data</DownloadDataButton> */}
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled>

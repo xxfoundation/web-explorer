@@ -1,3 +1,5 @@
+import type { WithChildren } from '../types';
+
 import { Box, Divider, Link, Paper, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { FC } from 'react';
@@ -8,7 +10,7 @@ const PaperWrap = styled(Paper)(({ theme }) => ({
   borderRadius: (theme.shape.borderRadius as number) * 3
 }));
 
-type Props = {
+type Props = WithChildren & {
   hasDivider?: boolean;
   header?: string | React.ReactNode;
   height?: string | number;
@@ -24,7 +26,7 @@ const DefaultTile: FC<Props> = ({
   linkAddress,
   linkName
 }) => (
-  <PaperWrap sx={{}}>
+  <PaperWrap>
     {(header || linkName) && (
       <>
         <Stack

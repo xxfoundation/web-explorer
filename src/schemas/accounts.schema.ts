@@ -57,9 +57,14 @@ export const GET_FULL_IDENTITY = gql`
   }
 `
 
+export type GetDisplayIdentity = {
+  identity: {
+    display: string;
+  }[]
+}
 export const GET_DISPLAY_IDENTITY = gql`
-  query GetDisplayIdentity($where: identity_bool_exp) {
-    identity(where: where) {
+  query GetDisplayIdentity($account: String!) {
+    identity(where: { account_id: { _eq: $account } }) {
       display
     }
   }
@@ -71,6 +76,7 @@ export const GET_DISPLAY_IDENTITY = gql`
 export type Account = {
   id: string;
   whenCreated: number;
+  whenCreatedEra: number;
   controllerAddress?: string;
   blockHeight: number;
   identity: Identity;
@@ -106,6 +112,7 @@ export const ACCOUNT_FRAGMENT = gql`
     id: account_id
     controllerAddress: controller_address
     whenCreated: when_created
+    whenCreatedEra: when_created_era
     blockHeight: block_height
     identity {
       ...identity
@@ -143,8 +150,12 @@ export const GET_ACCOUNT_BY_PK = gql`
 /* -------------------------------------------------------------------------- */
 /*                        Account Page > Holders Table                        */
 /* -------------------------------------------------------------------------- */
+type PartialIdentity = Pick<Identity, 'display'>;
+type AccountKeys = 'id' | 'timestamp' | 'totalBalance' | 'lockedBalance' | 'nonce' | 'roles' | 'whenCreatedEra';
+type PartialAccount = { identity : PartialIdentity } & Pick<Account, AccountKeys>;
+
 export type ListAccounts = TotalOfItems & {
-  account: Account[];
+  account: PartialAccount[];
 };
 
 export const LIST_ACCOUNTS = gql`
@@ -170,6 +181,7 @@ export const LIST_ACCOUNTS = gql`
       identity: identity {
         display
       }
+      whenCreatedEra: when_created_era
     }
     agg: account_aggregate(where: $where) {
       aggregate {
@@ -246,6 +258,26 @@ export const GET_EXTRINSIC_COUNTS = gql`
     }) {
       aggregate {
         count
+      }
+    }
+  }
+`
+
+/* -------------------------------------------------------------------------- */
+/*                          Staking Rewards Counters                          */
+/* -------------------------------------------------------------------------- */
+export type GetStakingRewardCounts = {
+  rewardsInfo: { aggregate: { count: number, sum: { amount: number } } };
+}
+
+export const GET_STAKING_REWARDS_COUNTS = gql`
+  query GetStakingRewardsCounts ($accountId: String) {
+    rewardsInfo: staking_reward_aggregate(where: { account_id: { _eq: $accountId } }) {
+      aggregate {
+        count
+        sum {
+          amount
+        }
       }
     }
   }

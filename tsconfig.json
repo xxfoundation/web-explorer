@@ -21,6 +21,6 @@
     "noEmit": true,
     "jsx": "react"
   },
-  "include": ["src", "global.d.ts", "__mocks__"],
+  "include": ["src", "global.d.ts", "__mocks__", "packages"],
   "exclude": ["node_modules", "types"]
 }

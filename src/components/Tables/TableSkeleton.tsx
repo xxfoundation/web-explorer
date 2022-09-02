@@ -3,15 +3,16 @@ import React, { FC, useMemo } from 'react';
 import { BaseLineCellsWrapper, BaselineTable } from '.';
 import genSkeletons from '../genSkeletons';
 
-export const TableSkeleton: FC<{ rows: number; cells: number; footer?: boolean, header?: boolean }> = ({
-  cells,
-  footer,
-  rows
-}) => {
+export const TableSkeleton: FC<{
+  rows: number;
+  cells: number;
+  footer?: boolean;
+  header?: boolean;
+}> = ({ cells, footer, rows }) => {
   const loadingCells = useMemo(() => {
     return BaseLineCellsWrapper(
-      genSkeletons(cells).map((Cell) => {
-        return <Cell />;
+      genSkeletons(cells).map((Cell, index) => {
+        return <Cell key={index} />;
       })
     );
   }, [cells]);

@@ -47,6 +47,7 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
     () =>
       available
         ?.filter((v) => v.toLocaleLowerCase().match(valuesFilter.toLocaleLowerCase()))
+        // deepcode ignore reDOS: https://reactjs.org/docs/introducing-jsx.html#jsx-prevents-injection-attacks
         .sort((a, b) => (localValues?.includes(a) ? 0 : 1) - (localValues?.includes(b) ? 0 : 1)),
     [available, localValues, valuesFilter]
   );
