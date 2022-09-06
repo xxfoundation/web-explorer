@@ -104,7 +104,11 @@ const AccountId: FC = () => {
         )}
         <Grid item xs={12} sx={{pt: '0!important'}}>
           <BlockchainCard account={data.account} />
-          {validator !== undefined && <StakingCard accountId={account.id} validator={validator} active={currentlyActive}/>}
+          {validator !== undefined && (
+            <>
+              <StakingCard accountId={account.id} validator={validator} active={currentlyActive}/>
+            </>
+          )}
         </Grid>
       </Grid>
     </Container>

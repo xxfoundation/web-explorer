@@ -1,19 +1,18 @@
-import { Account } from '../../../../../schemas/accounts.schema';
-import { ValidatorStats } from '../../../../../schemas/staking.schema';
 import { MetricScores } from '../../../types';
+import { ScoringContext } from './types';
 
-const getSlashesScore = ({ }: {
-  account: Account;
-  stats: ValidatorStats;
-}): [MetricScores, string] => {
-  // if (latestSlashes > 0 || holderSlashes > 1) {
-  //   return ['very bad', 'Slashes more than once'];
-  // }
-  // if (latestSlashes + holderSlashes > 0) {
-  //   return ['bad', 'Slashes only once'];
-  // }
-  // return ['good', 'No slashes detected'];
-  return ['good', 'No slashes detected'];
+const getSlashesScore = ({ currentEra, slashes }: ScoringContext): [MetricScores, string] => {
+  const totalSlashes = slashes.length;
+  const recentSlashes = slashes.filter((s) => currentEra - s.era > 28).length;
+  if (recentSlashes >= 1 || totalSlashes > 1) {
+    return ['very bad', 'Slashed more than once OR at least once in the last 28 eras.'];
+  }
+
+  if (totalSlashes > 0) {
+    return ['bad', 'Slashed only once'];
+  }
+
+  return ['good', 'Never slashed'];
 };
 
 export default getSlashesScore;

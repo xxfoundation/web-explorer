@@ -8,7 +8,7 @@ import MetricCards from './MetricsCards';
 
 const PerformanceCard: FC<{
   account: Account;
-  stats: ValidatorStats;
+  stats: ValidatorStats[];
 }> = (props) => {
   const panels = useMemo(() => {
     if (!props.account.roles.validator) return [];

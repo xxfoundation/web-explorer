@@ -37,3 +37,15 @@ export const LISTEN_FOR_ELECTED_SELF_STAKE = gql`
     }
   }
 `;
+
+export const GET_COMMISSION_AVG = gql`
+  query ValidatorCommissionAvg($accountId: String!) {
+    validator_stats_aggregate(where: {stash_address: {_eq: $accountId}}) {
+      aggregate {
+        avg {
+          commission
+        }
+      }
+    }
+  }
+`

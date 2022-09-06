@@ -5,6 +5,7 @@ export type MetricsType =
   | 'address creation'
   | 'slashes'
   | 'subaccounts'
+  | 'validator time'
   | 'nominators'
   | 'era points'
   | 'commission'

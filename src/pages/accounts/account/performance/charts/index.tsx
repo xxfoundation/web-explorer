@@ -1,7 +1,6 @@
 import { Grid } from '@mui/material';
 import React, { FC } from 'react';
 import { Account } from '../../../../../schemas/accounts.schema';
-import { ValidatorStats } from '../../../../../schemas/staking.schema';
 import Commission from './Commission';
 import ElectedSelfStake from './ElectedSelfStake';
 import EraPoints from './EraPoints';
@@ -9,7 +8,6 @@ import RelativePerformance from './RelativePerformance';
 
 const Charts: FC<{
   account: Account;
-  stats: ValidatorStats;
 }> = ({ account }) => {
   return (
     <Grid container spacing={1}>
