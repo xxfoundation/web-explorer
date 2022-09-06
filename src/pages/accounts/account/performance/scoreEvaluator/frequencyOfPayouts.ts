@@ -1,5 +1,6 @@
 import type { ScoringContext } from './types';
 import type { MetricScores } from '../../../types';
+import { applyFormat } from '../../../../../components/FormatBalance/formatter';
 
 const getFrequencyOfPayouts = ({
   rewardFrequency = 0,
@@ -10,7 +11,7 @@ const getFrequencyOfPayouts = ({
   }
 
   const baseMsg = (score: string) =>
-    `${score}, validator has ${unclaimedRewards} unclaimed era rewards`;
+    `${score}, validator has ${applyFormat(unclaimedRewards.toString())} of unclaimed era rewards`;
 
   if (rewardFrequency >= 1 && rewardFrequency < 7) {
     return ['very good', baseMsg('Very Good')];

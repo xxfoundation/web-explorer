@@ -28,7 +28,7 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
 
   return (
     <PaperStyled>
-      <Grid container sx={{ height: '80px' }} height={'100%'}>
+      <Grid container>
         <Grid item xs={4}>
           <ScoreIcon value={score} />
         </Grid>
@@ -113,7 +113,7 @@ const MetricCards: FC<{ account: Account; stats: ValidatorStats[] }> = ({ accoun
   }
 
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={2} sx={{ mt: 1 }}>
       {scoreTiles}
     </Grid>
   );
