@@ -5,12 +5,10 @@ import { ValidatorStats } from '../../../../../schemas/staking.schema';
 export type ScoringContext = {
   account: Account;
   currentEra: number;
-  parentCount: number;
-  childCount: number;
   nominatorCount: number;
   slashes: Slash[];
   stats: ValidatorStats[];
   avgCommission: number;
-  rewardFrequency: number; 
+  rewardFrequency: number;
   unclaimedRewards: number;
 };

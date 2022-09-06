@@ -1,33 +1,22 @@
-import { useSubscription } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
-import { DataPoint, formatPercent, LineChart } from '../../../../../components/charts/highcharts';
+import { DataPoint, LineChart } from '../../../../../components/charts/highcharts';
+
+import { percentLabelFormatter, percentTooltipFormatter } from '../../../../../components/charts/highcharts/formatters';
 import DefaultTile from '../../../../../components/DefaultTile';
-import Loading from '../../../../../components/Loading';
-import { LISTEN_FOR_ERA_COMMISSION } from '../../../../../schemas/validator.schema';
+import { ValidatorStats } from '../../../../../schemas/staking.schema';
 
-type ResultType = {
-  eraCommissions: { era: number; commission: number }[];
-};
+const parser = (stats: ValidatorStats): DataPoint => [stats.era, stats.commission / 100];
 
-const parser = (item: ResultType['eraCommissions'][0]): DataPoint => [item.era, item.commission];
+const Commission: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
+  const chartData = useMemo(() => stats.map(parser), [stats]);
 
-const Commission: FC<{ stashAddress: string }> = ({ stashAddress }) => {
-  const { data, loading } = useSubscription<ResultType>(LISTEN_FOR_ERA_COMMISSION, {
-    variables: { stashAddress }
-  });
-  const chartData = useMemo(() => (data?.eraCommissions || []).map(parser), [data?.eraCommissions]);
   return (
     <DefaultTile header='commission' height='400px'>
-      {loading ? (
-        <Loading />
-      ) : (
-        <LineChart
-          data={chartData}
-          labelFormatters={{
-            yAxis: formatPercent
-          }}
-        />
-      )}
+      <LineChart
+        data={chartData}
+        labelFormatters={{ yAxis: percentLabelFormatter }}
+        tooltipFormatter={percentTooltipFormatter}
+      />
     </DefaultTile>
   );
 };

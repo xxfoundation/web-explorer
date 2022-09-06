@@ -13,7 +13,7 @@ export type Slash = {
 export type GetSlashes = {
   slashes: Slash[];
 }
-
+  
 export const GET_SLASHES_BY_ACCOUNT = gql`
   query GetSlashesByAccount($accountId: String!) {
     slashes: staking_slash(where: { account_id: {_eq:$accountId }}) {

@@ -3,7 +3,6 @@ import {
   Box,
   Divider,
   styled,
-  Tooltip,
   tooltipClasses,
   TooltipProps,
   Typography
@@ -13,13 +12,12 @@ import { theme } from '../../../../themes/default';
 import { WithChildren } from '../../../../types';
 import { MetricPopupProps } from '../../types';
 import { BadScore, GoodScore, NeutralScore, VeryBadScore, VeryGoodScore } from './ScoreIcons';
+import { ClickableTooltip } from '../../../../components/Tooltip';
 
-const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
-))({
+const CustomTooltip = styled(ClickableTooltip)({
   [`& .${tooltipClasses.tooltip}`]: {
     maxWidth: '282px',
-    padding: '30px',
+    padding: '2rem',
     h5: {
       letterSpacing: '1px'
     },
@@ -69,12 +67,12 @@ const ToolttipTitle: FC<MetricPopupProps> = (props) => {
       <Typography fontSize={'12px'} fontWeight={400} component={'p'}>
         {props.description}
       </Typography>
-      {props.scores.veryGood && (
+      {props.scores['very good'] && (
         <>
           <ScoreDivider />
           <ScoreBox>
             <VeryGoodScore />
-            <ScoreTypography>{props.scores.veryGood}</ScoreTypography>
+            <ScoreTypography>{props.scores['very good']}</ScoreTypography>
           </ScoreBox>
         </>
       )}
@@ -105,12 +103,12 @@ const ToolttipTitle: FC<MetricPopupProps> = (props) => {
           </ScoreBox>
         </>
       )}
-      {props.scores.veryBad && (
+      {props.scores['very bad'] && (
         <>
           <ScoreDivider />
           <ScoreBox>
             <VeryBadScore />
-            <ScoreTypography>{props.scores.veryBad}</ScoreTypography>
+            <ScoreTypography>{props.scores['very bad']}</ScoreTypography>
           </ScoreBox>
         </>
       )}

@@ -11,6 +11,8 @@ const PerformanceCard: FC<{
   stats: ValidatorStats[];
 }> = (props) => {
   const panels = useMemo(() => {
+    // eslint-disable-next-line no-console
+    console.log(props.account.roles.validator);
     if (!props.account.roles.validator) return [];
     return [
       {
