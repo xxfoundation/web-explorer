@@ -143,7 +143,6 @@ const useHeaders = () => {
 
 const buildOrClause = (filters: Filters) =>
   [
-    filters.era !== undefined && { when_created_era: { _eq: filters.era } },
     filters.roles.council && { role: { council: { _eq: true } } },
     filters.roles.nominator && { role: { nominator: { _eq: true } } },
     filters.roles.techcommit && { role: { techcommit: { _eq: true } } },
@@ -153,29 +152,31 @@ const buildOrClause = (filters: Filters) =>
 
 const AccountsTable: FC = () => {
   const { filters, headers } = useHeaders();
-  const hasFilters = filters.era !== undefined && !filters.roles.all && Object.values(filters).some((v) => !!v);
+  const hasFilters = filters.era !== undefined || (!filters.roles.all && Object.values(filters).some((v) => !!v));
 
   const orClause = useMemo(() => buildOrClause(filters), [filters]);
 
   const variables = useMemo(
     () => ({
       where: {
-        _and: [
-          hasFilters
-            ? {
-                _or: orClause
-              }
-            : {}
-        ]
+        when_created_era: { _eq: filters.era },
+        ...(orClause.length > 0 && {
+          _and: {
+            _or: orClause
+          }
+        })
       },
       orderBy: [{ total_balance: 'desc' }]
     }),
-    [hasFilters, orClause]
+    [filters.era, orClause]
   );
+
 
   const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {
     variables
   });
+  // eslint-disable-next-line no-console
+  console.log(hasFilters, JSON.stringify(variables), error);
   const { offset } = pagination;
   const rows = useMemo(
     () =>
