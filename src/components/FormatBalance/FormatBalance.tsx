@@ -3,6 +3,7 @@ import { BN } from '@polkadot/util/bn';
 
 import { formatBalance } from './formatter';
 import { stripNonDigits } from '../../utils';
+import { CustomTooltip } from '../Tooltip';
 
 interface Props {
   children?: React.ReactNode;
@@ -16,6 +17,7 @@ interface Props {
   value: string | BN;
   withCurrency?: boolean;
   withSi?: boolean;
+  withTooltip?: boolean;
 }
 
 // for million, 2 * 3-grouping + comma
@@ -103,7 +105,8 @@ function FormatBalance({
   symbol = 'XX',
   value,
   withCurrency,
-  withSi
+  withSi,
+  withTooltip = true
 }: Props): React.ReactElement<Props> {
   const formatted = applyFormat(
     value,
@@ -115,7 +118,7 @@ function FormatBalance({
     labelPost,
     precision
   );
-  return (
+  const formattedBalance = (
     <span className={`ui--FormatBalance ${className}`}>
       {label ? <>{label}&nbsp;</> : ''}
       <span className='ui--FormatBalance-value' data-testid='balance-summary'>
@@ -124,6 +127,10 @@ function FormatBalance({
       {children}
     </span>
   );
+
+  return withTooltip
+    ? <CustomTooltip title={formatBalance(value, { withSi: false, precision: 9, decimals: 9, forceUnit: '-' })}>{formattedBalance}</CustomTooltip>
+    : formattedBalance;
 }
 
 export default FormatBalance;

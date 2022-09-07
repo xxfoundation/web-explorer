@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import FormatBalance from './FormatBalance';
+import { formatBalance } from './formatter';
 
 const nonBreakingSpace = '\u00a0';
 
@@ -93,4 +94,4 @@ describe('Should truncate, not round', () => {
     const text = wrapper.text().replaceAll(nonBreakingSpace, ' ');
     expect(text).toEqual('12.34 XX');
   });
-})
+});
