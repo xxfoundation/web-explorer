@@ -152,8 +152,6 @@ const buildOrClause = (filters: Filters) =>
 
 const AccountsTable: FC = () => {
   const { filters, headers } = useHeaders();
-  const hasFilters = filters.era !== undefined || (!filters.roles.all && Object.values(filters).some((v) => !!v));
-
   const orClause = useMemo(() => buildOrClause(filters), [filters]);
 
   const variables = useMemo(
@@ -175,8 +173,7 @@ const AccountsTable: FC = () => {
   const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {
     variables
   });
-  // eslint-disable-next-line no-console
-  console.log(hasFilters, JSON.stringify(variables), error);
+
   const { offset } = pagination;
   const rows = useMemo(
     () =>
