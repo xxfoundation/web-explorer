@@ -15,6 +15,7 @@ interface Options {
   withSi?: boolean;
   withSiFull?: boolean;
   withUnit?: boolean | string;
+  withSeparators?: boolean;
 }
 
 // for million, 2 * 3-grouping + comma
@@ -61,7 +62,7 @@ export function formatBalance<ExtToBn extends ToBn>(input?: number | string | bi
   }
 
   // extract options - the boolean case is for backwards-compat
-  const { decimals = optDecimals, forceUnit = undefined, precision = 2, withSi = true, withSiFull = false, withUnit = true } = isBoolean(options)
+  const { decimals = optDecimals, forceUnit = undefined, precision = 2, withSi = true, withSiFull = false, withUnit = true, withSeparators = true } = isBoolean(options)
     ? { withSi: options }
     : options;
 
@@ -75,9 +76,11 @@ export function formatBalance<ExtToBn extends ToBn>(input?: number | string | bi
   }
 
   const [si, prefix, postfix] = getPrePost(text, decimals, forceUnit, precision);
-  const units = getUnits(si, withSi, withSiFull, withUnit);
 
-  return `${sign}${formatDecimal(prefix)}${postfix ? '.' : ''}${postfix}${units}`;
+  const units = getUnits(si, withSi, withSiFull, withUnit);
+  const formattedPrefix = withSeparators ? formatDecimal(prefix) : prefix;
+
+  return `${sign}${formattedPrefix}${postfix ? '.' : ''}${postfix}${units}`;
 }
 
 function createElement(
