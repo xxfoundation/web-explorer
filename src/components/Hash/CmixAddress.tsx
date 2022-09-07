@@ -6,8 +6,9 @@ import { toDashboardNodeUrl } from '../../utils';
 
 type Props = HashProps
 
-const CmixAddress: React.FC<Props> = (props) => (
-  <Hash {...props} url={toDashboardNodeUrl(props.value)} />
-);
+const CmixAddress: React.FC<Props> = (props) => {
+  if (!props.value) {return (<>N/A</>)}
+  return (<Hash {...props} url={toDashboardNodeUrl(props.value)} />)
+};
 
 export default CmixAddress;
