@@ -78,7 +78,7 @@ const makeTabProps =
   };
 
 const MAX_STEPS = 6;
-export type StakingOptions = 'change' | 'stake' | 'unstake' | 'redeem';
+export type StakingOptions = '' | 'change' | 'stake' | 'unstake' | 'redeem';
 
 const SimpleStaker = () => {
   const accounts = useAccounts();
@@ -123,7 +123,7 @@ const SimpleStaker = () => {
       getStakingBalances(api, selectedAccount)
         .then((balances) => {
           setStakingBalances(balances);
-          setSelectedStakingOption(balances.available.eqn(0) ? 'change' : 'stake');
+          setSelectedStakingOption(balances.available.eqn(0) ? (balances.onlyStash ? '' : 'change') : 'stake');
         })
         .catch(() => console.error('[Simple Staker] Unable to Get Staking Balances'));
     }
@@ -155,7 +155,7 @@ const SimpleStaker = () => {
     setStep((v) => {
       const prev = Math.max(0, v - 1);
       if (prev === 1 || prev === 2) {
-        setSelectedStakingOption(stakingBalances?.available.eqn(0) ? 'change' : 'stake');
+        setSelectedStakingOption(stakingBalances?.available.eqn(0) ? (stakingBalances?.onlyStash ? '' : 'change') : 'stake');
         setAmount(BN_ZERO);
         setAmountIsValid(false);
       }
@@ -251,15 +251,20 @@ const SimpleStaker = () => {
             {selectedStakingOption === 'change' && (
               <Tab label='Change' {...tabProps(3)} />
             )}
-            {(selectedStakingOption !== 'redeem' && selectedStakingOption !== 'change') && (
+            {(selectedStakingOption !== '' && selectedStakingOption !== 'redeem' && selectedStakingOption !== 'change') && (
               <Tab label='Input Amount' {...tabProps(3)} />
             )}
-            {selectedStakingOption === 'stake' || selectedStakingOption === 'change' ? (
+            {(selectedStakingOption === 'stake' || selectedStakingOption === 'change') && (!stakingBalances?.onlyStash ? (
               <Tab label='Nominate' {...tabProps(4)} />
             ) : (
+              <Tab label='APY' {...tabProps(4)} />
+            ))}
+            {selectedStakingOption !== '' && selectedStakingOption !== 'stake' && selectedStakingOption !== 'change' && (
               <Tab label='Sign and Submit' {...tabProps(4)} />
             )}
-            <Tab label='Finish' {...tabProps(5)} disabled={step !== 5} />
+            {selectedStakingOption !== '' &&
+              <Tab label='Finish' {...tabProps(5)} disabled={step !== 5} />
+            }
           </Tabs>
           <Panel {...panelProps(0)}>
             <ConnectWallet />
@@ -280,7 +285,6 @@ const SimpleStaker = () => {
           </Panel>
           <Panel {...panelProps(3)}>
             <AmountSelection
-              account={selectedAccount}
               amount={amount}
               balances={stakingBalances}
               option={selectedStakingOption}

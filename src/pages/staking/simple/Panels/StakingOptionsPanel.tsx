@@ -28,9 +28,9 @@ const optionText = (enabled: boolean, title: string, body: JSX.Element | string)
   );
 };
 
-const styledBalance = (value: string | BN) => {
+const styledBalance = (value: string | BN, weight = 600) => {
   return (
-    <Typography sx={{ color: 'black', fontWeight: 600}} variant='body3'>
+    <Typography sx={{ color: 'black', fontWeight: weight}} variant='body3'>
       <FormatBalance value={value} />
     </Typography>
   );
@@ -55,7 +55,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
           <RadioGroup
             value={selected ?? ''}
             aria-labelledby='staking-options'
-            defaultValue={balances.available.eqn(0) ? 'change' : 'stake'}
+            defaultValue={balances.available.eqn(0) ? (balances.onlyStash ? '' : 'change') : 'stake'}
             name='staking-options'
             onChange={handleChange}
           >
@@ -74,31 +74,40 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
             <FormControlLabel
               labelPlacement='end'
               value='change'
-              control={<Radio disabled={balances.staked.eqn(0)} />}
+              control={<Radio disabled={balances.staked.eqn(0) || balances.onlyStash} />}
               label={
                 balances.staked.eqn(0)
                   ? optionText(false, 'Change Validators', <>This option is not available until you start staking. </>)
-                  : optionText(true, 'Change Validators', <>You have {styledBalance(balances.staked)} staked. </>)
+                  : ( balances.onlyStash
+                      ? optionText(false, 'Change Validators', <>You have {styledBalance(balances.staked, 400)} staked. Use your controller account to change validators. </>)
+                      : optionText(true, 'Change Validators', <>You have {styledBalance(balances.staked)} staked. </>)
+                    )
               }
             />
             <FormControlLabel
               labelPlacement='end'
               value='unstake'
-              control={<Radio disabled={balances.staked.eqn(0)} />}
+              control={<Radio disabled={balances.staked.eqn(0) || balances.onlyStash} />}
               label={
                 balances.staked.eqn(0)
                   ? optionText(false, 'Unstake', <>This account has no funds to be unstaked. </>)
-                  : optionText(true, 'Unstake', <> You can unstake up to {styledBalance(balances.staked)}. </>)
+                  : ( balances.onlyStash
+                      ? optionText(false, 'Unstake', <> You can unstake up to {styledBalance(balances.staked, 400)}. Use your controller account to unstake. </>)
+                      : optionText(true, 'Unstake', <> You can unstake up to {styledBalance(balances.staked)}. </>)
+                    )
               }
             />
             <FormControlLabel
               labelPlacement='end'
               value='redeem'
-              control={<Radio disabled={balances.redeemable.eqn(0)} />}
+              control={<Radio disabled={balances.redeemable.eqn(0) || balances.onlyStash} />}
               label={
                 balances.redeemable.eqn(0)
                   ? optionText(false, 'Redeem', <>This account has no funds to be redeemed. </>)
-                  : optionText(true, 'Redeem', <>You can redeem {styledBalance(balances.redeemable)}. </>)
+                  : ( balances.onlyStash
+                      ? optionText(false, 'Redeem', <>You can redeem {styledBalance(balances.redeemable, 400)}. Use your controller account to redeem. </>)
+                      : optionText(true, 'Redeem', <>You can redeem {styledBalance(balances.redeemable)}. </>)
+                    )
               }
             />
           </RadioGroup>

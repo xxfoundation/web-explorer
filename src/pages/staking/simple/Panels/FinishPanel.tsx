@@ -19,6 +19,7 @@ type Props = {
 };
 
 const optionToVerb: Record<StakingOptions, string> = {
+  '': '',
   change: '',
   redeem: 'redeemed',
   stake: 'staked',
