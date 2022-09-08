@@ -1,26 +1,21 @@
-import { useSubscription } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
 
 import { DataPoint, LineChart } from '../../../../../components/charts/highcharts';
+import { amountByEraTooltip } from '../../../../../components/charts/highcharts/formatters';
 import DefaultTile from '../../../../../components/DefaultTile';
-import Loading from '../../../../../components/Loading';
-import { LISTEN_FOR_ERA_POINTS } from '../../../../../schemas/validator.schema';
+import { ValidatorStats } from '../../../../../schemas/staking.schema';
 
-type ResultType = { eraPoints: { era: number; points: number }[] };
+const parser = (stats: ValidatorStats): DataPoint => [stats.era, stats.points ?? 0];
 
-const parser = (item: ResultType['eraPoints'][0]): DataPoint => [item.era, item.points];
-
-const EraPoints: FC<{ stashAddress: string }> = ({ stashAddress }) => {
-  const { data, loading } = useSubscription<ResultType>(LISTEN_FOR_ERA_POINTS, {
-    variables: { stashAddress }
-  });
+const EraPoints: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
   const chartData = useMemo(
-    (): DataPoint[] => (data?.eraPoints || []).map(parser),
-    [data?.eraPoints]
+    (): DataPoint[] => stats.map(parser),
+    [stats]
   );
+
   return (
     <DefaultTile header='era points' height='400px'>
-      {loading ? <Loading /> : <LineChart data={chartData} />}
+      <LineChart tooltipFormatter={amountByEraTooltip} data={chartData} />
     </DefaultTile>
   );
 };

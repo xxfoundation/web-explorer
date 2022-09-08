@@ -1,24 +1,24 @@
 import { MetricScores } from '../../../types';
+import { ScoringContext } from './types';
 
-const baseMsg = (value: string) => `Current commission is ${value}`;
+const baseMsg = (value: string) => `Average commission is ${value}`;
 
 const getCommissionScore = ({
-  averageCommission = 0
-}: {
-  averageCommission: number;
-}): [MetricScores, string] => {
-  if (averageCommission >= 30) {
+  avgCommission
+}: ScoringContext): [MetricScores, string] => {
+  if (avgCommission >= 30) {
     return ['very bad', baseMsg('much higher than the majority of validators')];
   }
-  if (averageCommission >= 18) {
+  
+  if (avgCommission >= 18) {
     return ['bad', baseMsg('considerably higher than the average')];
   }
 
-  if (averageCommission >= 10) {
+  if (avgCommission >= 10) {
     return ['neutral', baseMsg('in the average')];
   }
 
-  if (averageCommission >= 5) {
+  if (avgCommission >= 5) {
     return ['good', baseMsg('lower than the average')];
   }
 

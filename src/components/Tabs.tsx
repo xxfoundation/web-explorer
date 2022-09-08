@@ -43,12 +43,15 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   }
 });
 
-const TabsWithPanels: React.FC<{
+type Props = {
   panels: TabType[];
   tabsLabel: string;
   tabMarginBottom?: number | string;
-}> = ({ panels, tabMarginBottom, tabsLabel }) => {
+};
+
+const TabsWithPanels: React.FC<Props> = ({ panels, tabMarginBottom, tabsLabel }) => {
   const [value, setValue] = React.useState(0);
+
   return (
     <>
       <StyledTabs

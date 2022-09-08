@@ -6,7 +6,7 @@ import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import { TabText } from '../../../../components/Tabs';
 import { GetStakingRewardCounts, GET_STAKING_REWARDS_COUNTS } from '../../../../schemas/accounts.schema';
 import { GetValidatorStats } from '../../../../schemas/staking.schema';
-import ValidatorInfo from '../ValidatorInfo';
+import ValidatorInfo from '../ValidatorSummary';
 import NominatorsTable from './NominatorsTable';
 import StakingRewardsTable from './StakingRewardsTable';
 import ValidatorStatsTable from './ValidatorStatsTable';

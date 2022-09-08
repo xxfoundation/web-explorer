@@ -1,30 +1,17 @@
-import { useSubscription } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
+
 import { DataPoint, LineChart } from '../../../../../components/charts/highcharts';
+import { decimalTooltipFormatter } from '../../../../../components/charts/highcharts/formatters';
 import DefaultTile from '../../../../../components/DefaultTile';
-import Loading from '../../../../../components/Loading';
-import { LISTEN_FOR_RELATIVE_PERFORMANCE } from '../../../../../schemas/validator.schema';
+import { ValidatorStats } from '../../../../../schemas/staking.schema';
 
-type ResultType = {
-  eraRelativePerformances: { era: number; relativePerformance: number }[];
-};
 
-const parser = (item: ResultType['eraRelativePerformances'][0]): DataPoint => [
-  item.era,
-  item.relativePerformance
-];
+const RelativePerformance: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
+  const chartData = useMemo(() => stats.map((s) => [s.era, s.relativePerformance] as DataPoint), [stats]);
 
-const RelativePerformance: FC<{ stashAddress: string }> = ({ stashAddress }) => {
-  const { data, loading } = useSubscription<ResultType>(LISTEN_FOR_RELATIVE_PERFORMANCE, {
-    variables: { stashAddress }
-  });
-  const chartData = useMemo(
-    () => (data?.eraRelativePerformances || []).map(parser),
-    [data?.eraRelativePerformances]
-  );
   return (
     <DefaultTile header='relative performance' height='400px'>
-      {loading ? <Loading /> : <LineChart data={chartData} />}
+      <LineChart tooltipFormatter={decimalTooltipFormatter} data={chartData} />
     </DefaultTile>
   );
 };

@@ -324,3 +324,8 @@ export const GET_BALANCE_HISTORY_BY_ID = gql`
     }
   }
 `
+
+export const GET_SUBACCOUNT_COUNTS = gql`
+  ${IDENTITY_FRAGMENT}
+  
+`
