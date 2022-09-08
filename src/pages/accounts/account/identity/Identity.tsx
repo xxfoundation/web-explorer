@@ -4,6 +4,8 @@ import { Account } from '../../../../schemas/accounts.schema';
 import Address from '../../../../components/Hash/XXNetworkAddress';
 import { WithCopy } from '../../../../components/Summary';
 import Socials from '../../../../components/Socials';
+import node from '../../../../assets/images/icons/icon_node.svg'
+import HubIcon from '@mui/icons-material/Hub';
 
 type Props = { account: Account };
 
@@ -35,13 +37,12 @@ const Identity: FC<Props> = ({ account }) => {
   const theme = useTheme();
   const isValidator = account.roles.validator;
   const hasRiotOrWeb = account.identity?.riot || account.identity?.web;
-  const avatarSx = isValidator ? { width: 125, height: 125 } : { width: 30, height: 30 };
 
   return (
     <Grid spacing={3} container>
       {isValidator && (
         <Grid item md={2} sx={{ mb: 2, pr: 2 }}>
-          <Avatar src='' alt='avatar placeholder' sx={avatarSx} />
+          <Avatar src={node} alt='avatar placeholder' sx={{ bgcolor: 'grey.400', width: 80, height: 80, p: 2 }} />
         </Grid>
       )}
       <Grid item md={isValidator ? 10 : 12} xs={12}>
