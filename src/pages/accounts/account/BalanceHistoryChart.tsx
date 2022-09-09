@@ -4,11 +4,9 @@ import {
   GET_BALANCE_HISTORY_BY_ID
 } from '../../../schemas/accounts.schema';
 import type { SeriesOptionsType, TooltipFormatterContextObject } from 'highcharts';
-import type { DataPoint } from '../../../components/charts/highcharts';
 
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
-import StepChart from '../../../components/charts/highcharts/StepChart';
 import { formatBalance } from '../../../components/FormatBalance/formatter';
 import { useQuery } from '@apollo/client';
 import Loading from '../../../components/Loading';
