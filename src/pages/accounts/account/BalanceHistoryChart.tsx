@@ -23,6 +23,10 @@ function amountByEraTooltip(this: TooltipFormatterContextObject) {
 }
 
 const filterEra = (fromEra: number) => (b: BalanceHistory) => b.era >= fromEra;
+const fixBalanceOverlaps = (b: BalanceHistory): BalanceHistory => ({
+  ...b,
+  bonded: b.bonded - b.council - b.vesting - b.democracy
+});
 
 const constructBalanceSeries = (
   era: number,
@@ -34,25 +38,26 @@ const constructBalanceSeries = (
   }
   const fromEra = Math.max(era - timeframe, 0);
   const history = Object.values(data)
-    .filter(filterEra(fromEra));
+    .filter(filterEra(fromEra))
+    .map(fixBalanceOverlaps);
 
   const mapByEra = (key: keyof BalanceHistory) => history.map((h) => [h.era, h[key]]);
 
   return [{
     type: 'area',
-    name: 'Reserved',
-    color: '#99e6ff',
-    data: mapByEra('reserved')
-  }, {
-    type: 'area',
-    name: 'Locked',
-    color: '#66d9ff',
-    data: mapByEra('locked')
-  }, {
-    type: 'area',
     name: 'Transferrable',
-    color: '#33ccff',
+    color: '#99e6ff',
     data: mapByEra('transferrable')
+  }, {
+    type: 'area',
+    name: 'Vesting',
+    color: '#66d9ff',
+    data: mapByEra('vesting')
+  }, {
+    type: 'area',
+    name: 'Unbonding',
+    color: '#33ccff',
+    data: mapByEra('unbonding')
   }, {
     type: 'area',
     name: 'Bonded',
@@ -60,19 +65,19 @@ const constructBalanceSeries = (
     data: mapByEra('bonded')
   }, {
     type: 'area',
-    name: 'Vesting',
-    color: '#00a2d6',
-    data: mapByEra('vesting')
+    name: 'Democracy',
+    color: '#0099cc',
+    data: mapByEra('democracy')
   }, {
     type: 'area',
     name: 'Council',
-    color: '#0086b3',
+    color: '#007399',
     data: mapByEra('council')
   }, {
     type: 'area',
-    name: 'Democracy',
-    color: '#006080',
-    data: mapByEra('democracy')
+    name: 'Reserved',
+    color: '#004d66',
+    data: mapByEra('reserved')
   }];
 };
 

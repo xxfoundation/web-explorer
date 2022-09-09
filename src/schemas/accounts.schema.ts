@@ -304,6 +304,7 @@ export type BalanceHistory = {
   era: number;
   total: number;
   transferrable: number;
+  unbonding: number;
   reserved: number
   locked: number;
   bonded: number;
@@ -322,6 +323,7 @@ export const GET_BALANCE_HISTORY_BY_ID = gql`
       era
       total: total_balance
       transferrable: transferrable_balance
+      unbonding: unbonding_balance
       reserved: reserved_balance
       locked: locked_balance
       bonded: bonded_balance
