@@ -149,7 +149,7 @@ const AmountSelection: FC<Props> = ({
       Insert Amount from <i>Available to Unstake</i> to be removed from <i>Active Stake</i>
       <i>
         <br />
-        (When unstaking, the resulting active stake cannot be less than 1 xx, unless its 0 xx)
+        (When unstaking, the resulting active stake cannot be less than 1 xx, unless it's 0 xx)
       </i>
     </>
   );
