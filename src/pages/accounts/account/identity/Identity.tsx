@@ -5,7 +5,6 @@ import Address from '../../../../components/Hash/XXNetworkAddress';
 import { WithCopy } from '../../../../components/Summary';
 import Socials from '../../../../components/Socials';
 import node from '../../../../assets/images/icons/icon_node.svg'
-import HubIcon from '@mui/icons-material/Hub';
 
 type Props = { account: Account };
 
