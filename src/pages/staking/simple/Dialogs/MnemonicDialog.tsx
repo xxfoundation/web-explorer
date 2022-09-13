@@ -3,7 +3,10 @@ import { Box, Button, Dialog, TextField, Grid, Stack, Typography, Alert } from '
 import { Close } from '@mui/icons-material';
 import { mnemonicValidate } from '@polkadot/util-crypto';
 import { keyring } from '@polkadot/ui-keyring';
+import { useSnackbar } from 'notistack';
+
 import useInput from '../../../../hooks/useInput';
+import useAccounts from '../../../../hooks/useAccounts';
 
 type Props = {
   open: boolean;
@@ -14,25 +17,37 @@ const MNEMONIC_COUNT = 24;
 const inputCount = Array.from(Array(MNEMONIC_COUNT).keys()).map((i) => i);
 
 const MnemonicDialog: FC<Props> = ({ onClose, open }) => {
+  const { allAccounts: accounts } = useAccounts();
+  const { enqueueSnackbar } = useSnackbar();
   const [password, setPasswordHandler, setPassword] = useInput();
   const [mnemonic, setMnemonic] = useState<string[]>(inputCount.map(() => ''));
   const [isValid, setValid] = useState(true);
 
-  const handleClose = () => {
+  const notifyOfDuplicate = useCallback((acct: string) => {
+    if (accounts.includes(acct)) {
+      enqueueSnackbar(
+        'Ignoring duplicate.',
+        { variant: 'warning' }
+      );
+    }
+  }, [accounts, enqueueSnackbar]);
+
+  const handleClose = useCallback(() => {
     onClose(mnemonic);
     setMnemonic(inputCount.map(() => ''));
     setPassword('');
-  };
+  }, [mnemonic, onClose, setPassword]);
 
-  const handleDone = () => {
+  const handleDone = useCallback(() => {
     const seed = mnemonic.join(' ');
     const valid = mnemonicValidate(seed);
     setValid(valid);
     if (valid) {
-      keyring.addUri(seed, password, undefined, 'sr25519');
+      const result = keyring.addUri(seed, password, undefined, 'sr25519');
+      notifyOfDuplicate(result.json.address);
       handleClose();
     }
-  };
+  }, [handleClose, mnemonic, notifyOfDuplicate, password]);
 
   const mnemonicSetter = useCallback(
     (index: number) => (evt: React.ChangeEvent<HTMLInputElement>) => {
