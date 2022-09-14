@@ -13,7 +13,7 @@ import {
   Button,
   Box
 } from '@mui/material';
-import { Close, Warning } from '@mui/icons-material';
+import { Close, Info, Warning } from '@mui/icons-material';
 import { keyring } from '@polkadot/ui-keyring';
 
 import useAccounts from '../../../../hooks/useAccounts';
@@ -36,6 +36,7 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   const { api } = useApi();
   const pagination = usePagination({ rowsPerPage: 10 });
   const [balances, setBalances] = useState<BN[]>();
+  const [stashes, setStashes] = useState<string[]>(['']);
 
   const { setCount } = pagination;
   useEffect(() => {
@@ -43,14 +44,26 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   }, [accounts.allAccounts.length, setCount]);
 
   useEffect(() => {
-    api?.query.system.account
+    if (stashes[0] !== '') {
+      api?.query.system.account
+        .multi(stashes)
+        .then((infos) => {
+          const b = infos.map((info) => info.data.free.add(info.data.reserved));
+          setBalances(b);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [stashes, api?.query?.system?.account]);
+
+  useEffect(() => {
+    api?.query?.staking?.ledger
       .multi(accounts?.allAccounts)
-      .then((infos) => {
-        const b = infos.map((info) => info.data.free.add(info.data.reserved));
-        setBalances(b);
+      .then((ledgers) => {
+        const st = ledgers.map((ledger, idx) => ledger.isSome ? ledger.unwrap().stash.toString() : accounts?.allAccounts[idx]);
+        setStashes(st);
       })
       .catch((error) => console.error(error));
-  }, [accounts?.allAccounts, api?.query?.system?.account]);
+  }, [accounts?.allAccounts, api?.query?.staking?.ledger]);
 
   const handleAccountChange = useCallback(
     (acct: string) => () => {
@@ -75,7 +88,7 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
   return (
     <Stack spacing={4}>
       <Typography variant='h2'>Select Wallet</Typography>
-      {!balances || !accounts || !navigator.onLine ? (
+      {!balances || !accounts || !stashes || !navigator.onLine ? (
         <Box sx={{ p: 5, py: 20 }}>
           <Loading size='md' />
           <Typography variant='body1' sx={{ textAlign: 'center', marginTop: '1em' }}>
@@ -104,6 +117,14 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                           placement='top'
                         >
                           <Warning sx={{ mr: 1, color: 'warning.main' }} />
+                        </Tooltip>
+                      )}
+                      {acct != stashes[i] && (
+                        <Tooltip
+                            title='This account is a Controller. Balance and rewards shown are from the respective Stash account'
+                            placement='top'
+                        >
+                          <Info sx={{ mr: 1, color: 'info.main' }} />
                         </Tooltip>
                       )}
                       <AccountDisplay  

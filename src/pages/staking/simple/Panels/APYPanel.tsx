@@ -20,7 +20,7 @@ import { useToggle } from '../../../../hooks';
 import { getStakedReturn } from '../../StakingMetrics';
 import { useQuery } from '@apollo/client';
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../../../schemas/economics.schema';
-import { StakingBalances, stake } from '../../../../simple-staking/actions';
+import { StakingBalances, stake, stakeExtra } from '../../../../simple-staking/actions';
 import useApi from '../../../../hooks/useApi';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
@@ -96,28 +96,33 @@ const APYPanel: FC<Props> = ({ account, amount, setPassword, setTransaction, sta
   }, [account, inputPassword, setPassword]);
 
   const getValidator = useCallback(async () => {
-    if (!api) {
+    if (!api || !stakingBalances) {
       return undefined;
     }
-    const targets = await selectValidators(api, account);
+    const targets = await selectValidators(api, stakingBalances.stash);
     setSelectedValidators(targets.map((validator) => validator.validatorId));
-  }, [account, api]);
+  }, [stakingBalances, api]);
 
   useEffect(() => {
-    getValidator();
-  }, [getValidator]);
+    if (stakingBalances && !stakingBalances.onlyStash) {
+      getValidator();
+    }
+  }, [stakingBalances, getValidator]);
 
   // Create Transaction
   useEffect(() => {
-    if (api && selectedValidators) {
-      setTransaction(stake(api, account, amount, selectedValidators));
+    if (api && stakingBalances && !stakingBalances.onlyStash && selectedValidators) {
+      setTransaction(stake(api, stakingBalances.controller, amount, selectedValidators));
     }
-  }, [account, amount, api, selectedValidators, setTransaction]);
+    if (api && stakingBalances && stakingBalances.onlyStash) {
+      setTransaction(stakeExtra(api, amount));
+    }
+  }, [amount, api, stakingBalances, selectedValidators, setTransaction]);
 
   return (
     <>
       <Stack spacing={4}>
-        <Typography variant='h2'>Nominate</Typography>
+        <Typography variant='h2'>{stakingBalances?.onlyStash ? 'APY ': 'Nominate'}</Typography>
         <Typography variant='body3'>
           If you wish to maximize your returns, use this app on a regular basis to change your selected
           validators. The following APY and staking rewards estimates are not guaranteed and can
@@ -150,7 +155,7 @@ const APYPanel: FC<Props> = ({ account, amount, setPassword, setTransaction, sta
             </Stack>
           )}
         </Stack>
-        <Alert severity='info'>
+        {!stakingBalances?.onlyStash && <Alert severity='info'>
           <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Do you want more control?</AlertTitle>
           <Typography variant='body3'>
             You can use the{' '}
@@ -159,8 +164,8 @@ const APYPanel: FC<Props> = ({ account, amount, setPassword, setTransaction, sta
             </Link>{' '}
             webapp to manually select validators.
           </Typography>
-        </Alert>
-        {selectedValidators ? (
+        </Alert>}
+        {!stakingBalances?.onlyStash ? (selectedValidators ? (
           <>
             <Stack direction='row' justifyContent='space-between' alignItems='center'>
               <Typography variant='body3'>
@@ -202,6 +207,28 @@ const APYPanel: FC<Props> = ({ account, amount, setPassword, setTransaction, sta
               <>Selecting validators. This might take a few seconds...</>
             </Typography>
           </Stack>
+        )) : (
+          <Stack spacing={1}>
+              <Typography variant='body3' sx={{ textAlign: 'end' }}>
+                Insert password to unlock your wallet
+              </Typography>
+              <Stack direction='row' justifyContent='end' spacing={2}>
+                <Box>
+                  <TextField
+                    type='password'
+                    label='Password'
+                    size='small'
+                    value={inputPassword}
+                    onChange={setInputPassword}
+                  />
+                </Box>
+                <Button disabled={ready} onClick={checkPassword} variant='contained'>
+                  {loadingPassword ? 'Confirming...' : 'Confirm Password'}
+                </Button>
+              </Stack>
+              {error && <Alert severity='error'>{error}</Alert>}
+              {!error && ready && <Alert severity='success'>Password confirmed!</Alert>}
+            </Stack>
         )}
       </Stack>
     </>
