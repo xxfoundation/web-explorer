@@ -5,6 +5,7 @@ const baseMessage = (value: string) => `Validator ${value} information on his id
 
 const getIdentityScore = (account: Account): [MetricScores, string] => {
   const identity = account.identity;
+  if (!identity) return ['very bad', baseMessage('did not add any')];
 
   if (identity.blurb && identity.email && identity.display && identity.judgements?.includes('Known Good')) {
     return ['very good', baseMessage('provides all possible')];
