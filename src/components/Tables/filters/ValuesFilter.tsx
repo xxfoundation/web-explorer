@@ -39,7 +39,7 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
     setLocalValues((m) => (m !== undefined ? undefined : []));
   }, []);
 
-  const reset = useCallback(() => setLocalValues([]), []);
+  const reset = useCallback(() => setLocalValues(undefined), []);
   const applyChanges = useCallback(() => onChange(localValues), [localValues, onChange]);
   const canApplyChanges = localValues !== value || !arrayCompare(localValues, value);
 
@@ -47,7 +47,6 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
     () =>
       available
         ?.filter((v) => v.toLocaleLowerCase().match(valuesFilter.toLocaleLowerCase()))
-        // deepcode ignore reDOS: https://reactjs.org/docs/introducing-jsx.html#jsx-prevents-injection-attacks
         .sort((a, b) => (localValues?.includes(a) ? 0 : 1) - (localValues?.includes(b) ? 0 : 1)),
     [available, localValues, valuesFilter]
   );
