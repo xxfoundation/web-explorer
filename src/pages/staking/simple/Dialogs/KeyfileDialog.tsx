@@ -9,6 +9,8 @@ import { keyring } from '@polkadot/ui-keyring';
 
 import useInput from '../../../../hooks/useInput';
 import useApi from '../../../../hooks/useApi';
+import useAccounts from '../../../../hooks/useAccounts';
+import { useSnackbar } from 'notistack';
 
 type Props = {
   open: boolean;
@@ -45,11 +47,27 @@ const parseFile = async (
 
 const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
   const { api } = useApi();
+  const { allAccounts: accounts } = useAccounts();
+  const { enqueueSnackbar } = useSnackbar();
   const [json, setJson] = useState<KeyringPair$Json | KeyringPairs$Json | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [password, setPasswordHandler, setPassword] = useInput('');
   const apiGenesisHash = useMemo(() => api?.genesisHash.toHex(), [api]);
+  const duplicateAccountCount = useMemo(() => {
+    if (!json) { return 0; }
+    const newAccts = isKeyringPairs$Json(json) ? json.accounts.map((a) => a.address) : [json?.address];
+    return newAccts.filter((a) => accounts.includes(a)).length;
+  }, [accounts, json])
+
+  const notifyOfDuplicateAccounts = useCallback(() => {
+    if (duplicateAccountCount > 0) {
+      enqueueSnackbar(
+        `Ignoring ${duplicateAccountCount} duplicate${duplicateAccountCount > 1 ? 's' : ''}.`,
+        { variant: 'warning' }
+      );
+    }
+  }, [duplicateAccountCount, enqueueSnackbar]);
 
   const accountsContainDifferentGenesis = useMemo<boolean>(() => {
     if (!json) {
@@ -99,6 +117,7 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
           keyring.restoreAccount(json, password);
         }
 
+        notifyOfDuplicateAccounts();
         setLoading(false);
         setJson(null);
         setPassword('');
@@ -108,7 +127,7 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
         setLoading(false);
       }
     }, 0);
-  }, [json, setPassword, onClose, password]);
+  }, [json, setPassword, onClose, notifyOfDuplicateAccounts, password]);
 
   return (
     <Dialog onClose={handleClose} open={open}>
@@ -126,6 +145,11 @@ const KeyfileDialog: FC<Props> = ({ onClose, open }) => {
           </Alert>
         )}
         {error && <Alert severity='error'>{error}</Alert>}
+        {duplicateAccountCount > 0 && (
+          <Alert severity='warning'>
+            We've detected {duplicateAccountCount} duplicate account{duplicateAccountCount > 1 ? 's' : ''}.
+          </Alert>
+        )}
         {accountsContainDifferentGenesis && (
           <Alert severity='warning'>
             One or more accounts imported were originally generated on a different network.
