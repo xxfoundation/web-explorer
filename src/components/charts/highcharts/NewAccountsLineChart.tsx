@@ -1,15 +1,15 @@
-import type { DataPoint } from '.';
-import type { SeriesClickEventObject } from 'highcharts';
+import { amountByEraTooltip, DataPoint } from '.';
+import { SeriesClickEventObject, time } from 'highcharts';
 
 import { useQuery } from '@apollo/client';
-import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { amountByEraTooltip, LineChart } from '.';
 import { CreatedEras, GET_WHEN_CREATED_ERAS } from '../../../schemas/accounts.schema';
 import DefaultTile from '../../DefaultTile';
 import Loading from '../../Loading';
+import DropdownTimelineLineChart from './DropdownTimelineLineChart';
 
 const ERAS_IN_A_QUARTER = 90;
 const ERAS_IN_A_MONTH = 30;
@@ -61,30 +61,7 @@ const NewAccountsChart = () => {
       {loading || !chartData || !latestEra ? (
         <Loading />
       ) : (
-        <>
-          <Box sx={{ display: 'flex', justifyContent: 'right', pr: 2 }}>
-            <FormControl variant='standard'>
-              <Select
-                labelId='timeframe-label'
-                id='timeframe-select'
-                value={timeframe}
-                label='Timeframe'
-                onChange={onChange}
-              >
-                {Object.entries(timeframes).map(([label, time]) => (
-                  <MenuItem value={time} key={time}>
-                    {label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          <LineChart
-            data={dataRange}
-            onClick={onClick}
-            tooltipFormatter={amountByEraTooltip}
-          />
-        </>
+        <DropdownTimelineLineChart tooltipFormatter={amountByEraTooltip} timeframe={timeframe} timeframes={timeframes} data={dataRange} onChange={onChange} onClick={onClick} />
       )}
     </DefaultTile>
   );
