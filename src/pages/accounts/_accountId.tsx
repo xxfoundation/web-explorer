@@ -18,7 +18,7 @@ import BalanceHistoryChart from './account/BalanceHistoryChart';
 import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 import StakingCard from './account/staking';
 import Tag from '../../components/Tags/Tag';
-import PerformanceSection from './account/performance';
+// import PerformanceSection from './account/performance';
 
 const validatorStatus = (inValidatorStats: boolean, currentlyActive: boolean) => {
   return (
@@ -108,7 +108,7 @@ const AccountId: FC = () => {
           {validator !== undefined && (
             <>
               <StakingCard accountId={account.id} validator={validator} active={currentlyActive}/>
-              <PerformanceSection account={account} stats={validator?.stats ?? []} />
+              {/* <PerformanceSection account={account} stats={validator?.stats ?? []} /> */}
             </>
           )}
         </Grid>
