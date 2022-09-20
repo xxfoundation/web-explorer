@@ -80,7 +80,6 @@ const equalise = (nominators: Nominator[], elected: Validators, iterations: numb
           const validator = elected[edge.validatorId];
           if (validator) {
             validator.backedStake = validator.backedStake.minus(edge.weight);
-            validator.backers -= 1;
             edge.weight = new BigNumber(0);
           }
         })
@@ -105,7 +104,6 @@ const equalise = (nominators: Nominator[], elected: Validators, iterations: numb
         for (let j = 0; j < waysToSplit; j++) {
           electedEdges[j].weight = excess.div(waysToSplit).plus(lastStake).minus(elected[electedEdges[j].validatorId].backedStake);
           elected[electedEdges[j].validatorId].backedStake = elected[electedEdges[j].validatorId].backedStake.plus(electedEdges[j].weight);
-          elected[electedEdges[j].validatorId].backers += 1;
         }
       }
     })
