@@ -138,7 +138,7 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <StakingRewardsElement address={acct} />
+                    <StakingRewardsElement address={stashes[i]} />
                   </TableCell>
                   <TableCell>
                     <Stack alignItems='center' direction='row'>
