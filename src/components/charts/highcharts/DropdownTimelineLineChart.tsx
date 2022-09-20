@@ -11,6 +11,7 @@ type Props = {
   onChange: ({ target }: SelectChangeEvent<number>) => void;
   onClick?: (evt: SeriesClickEventObject) => void;
   tooltipFormatter?: (this: TooltipFormatterContextObject) => string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   labelFormatters?: any;
 }
 

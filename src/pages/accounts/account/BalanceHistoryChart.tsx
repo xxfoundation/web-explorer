@@ -6,7 +6,7 @@ import {
 import type { SeriesOptionsType, TooltipFormatterContextObject } from 'highcharts';
 
 import React, { FC, useCallback, useMemo, useState } from 'react';
-import { Box, Button, FormControl, Grid, MenuItem, Select, SelectChangeEvent, Stack, Typography } from '@mui/material';
+import { Box, Button, FormControl, MenuItem, Select, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { formatBalance } from '../../../components/FormatBalance/formatter';
 import { useQuery } from '@apollo/client';
 import Loading from '../../../components/Loading';
@@ -26,12 +26,6 @@ function amountByEraTooltip(this: TooltipFormatterContextObject) {
 const filterEra = (fromEra: number) => (b: BalanceHistory) => b.era >= fromEra;
 const fixBalanceOverlaps = (b: BalanceHistory): BalanceHistory => ({
   ...b
-  // vesting: b.locked - b.unbonding - b.bonded - b.democracy - b.council,
-  // bonded: b.locked - b.vesting - b.unbonding - b.democracy - b.council,
-  // unbonding: b.locked - b.vesting - b.bonded - b.democracy - b.council,
-  // democracy: b.locked - b.vesting - b.unbonding - b.bonded - b.council,
-  // council: b.locked - b.vesting - b.unbonding - b.bonded - b.democracy
-
 });
 
 const constructBalanceSeries = (
@@ -86,26 +80,31 @@ const constructLockedBalanceSeries = (
     type: 'area',
     name: 'Vesting',
     color: '#FF5000',
+    stack: 0,
     data: mapByEra('vesting')
   }, {
     type: 'area',
     name: 'Unbonding',
     color: '#13EEF9',
+    stack: 1,
     data: mapByEra('unbonding')
   }, {
     type: 'area',
     name: 'Bonded',
     color: '#00A2D6',
+    stack: 2,
     data: mapByEra('bonded')
   }, {
     type: 'area',
     name: 'Democracy',
     color: '#FFC908',
+    stack: 3,
     data: mapByEra('democracy')
   }, {
     type: 'area',
     name: 'Council',
     color: '#C0C0C0',
+    stack: 4,
     data: mapByEra('council')
   }];
 };

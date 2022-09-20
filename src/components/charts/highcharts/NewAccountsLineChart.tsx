@@ -1,5 +1,5 @@
 import { amountByEraTooltip, DataPoint } from '.';
-import { SeriesClickEventObject, time } from 'highcharts';
+import { SeriesClickEventObject } from 'highcharts';
 
 import { useQuery } from '@apollo/client';
 import { SelectChangeEvent } from '@mui/material';
