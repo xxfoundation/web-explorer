@@ -132,29 +132,39 @@ const buildVotersList = (chainData: ChainData, exclude: string): Voter[] => {
 
 export interface ElectedWithReturn extends ElectedValidator {
   return: number;
+  blocked: boolean;
 }
 
 // We give a rating of 0.25 to validators without any performance data
 const computeReturn = (chainData: ChainData, elected: ElectedValidator, avgStake: BigNumber): ElectedWithReturn => {
   const performance = chainData.performance[elected.validatorId];
   const avgPerformance = performance ? performance.reduce((sum, val) => sum + val, 0) / performance.length : 0.25;
-  const commission = chainData.validators[elected.validatorId].commission.toNumber() / 1e9
+  const commission = chainData.validators[elected.validatorId].commission.toNumber() / 1e9;
+  const blocked = chainData.validators[elected.validatorId].blocked.toPrimitive();
   const stakingReturn = avgStake.dividedBy(elected.backedStake).toNumber() * (1 - commission);
   return {
     validatorId: elected.validatorId,
     backedStake: elected.backedStake,
     score: elected.score,
+    backers: elected.backers,
     return: avgPerformance * stakingReturn,
+    blocked: blocked,
   }
 }
 
 const targets = 16;
+const maxNominations = 256;
 
 const orderValidatorsByReturn = (chainData: ChainData, validators: ElectedValidator[]): ElectedWithReturn[] => {
   // Compute average stake
   const avgStake = validators.reduce((sum, val) => sum.plus(val.backedStake), new BigNumber(0)).dividedBy(validators.length);
-  // Compute return for all elected validators and then sort descending
-  const ordered: ElectedWithReturn[] = validators.map((validator) => computeReturn(chainData, validator, avgStake)).sort((a, b) => a.return > b.return ? -1 : 1);
+  // Compute return for all elected validators
+  // Then filter out validators that are blocking nominations and that have 256+ nominators
+  // And finally sort them descending (by return)
+  const ordered: ElectedWithReturn[] = validators
+    .map((validator) => computeReturn(chainData, validator, avgStake))
+    .filter(({ backers, blocked }) => !blocked && backers < maxNominations)
+    .sort((a, b) => a.return > b.return ? -1 : 1);
   return ordered.slice(0, targets)
 }
 
