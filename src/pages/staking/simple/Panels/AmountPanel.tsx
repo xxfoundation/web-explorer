@@ -258,7 +258,7 @@ const AmountSelection: FC<Props> = ({
                   {error && (
                     <FormHelperText sx={{ color: theme.palette.error.main }}>
                       {amount.gt(available)
-                        ? 'Amount cannot be bigger than stakeable balance'
+                        ? 'Amount cannot be bigger than Available balance'
                         : 'Input amount is invalid'}
                     </FormHelperText>
                   )}
