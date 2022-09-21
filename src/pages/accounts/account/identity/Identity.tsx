@@ -61,6 +61,7 @@ const Identity: FC<Props> = ({ account }) => {
                 )}
                 <WithCopy value={account.id}>
                   <Address
+                    roles={account.roles}
                     style={{ fontSize: 16 }}
                     truncated='mdDown'
                     offset={{ sm: 16, xs: 8 }}
@@ -99,6 +100,7 @@ const Identity: FC<Props> = ({ account }) => {
                   Stash
                 </Typography>
                 <Address
+                  roles={account.roles}
                   sx={{ fontSize: 12, fontWeight: 400 }}
                   truncated='smDown'
                   offset={{ xs: 16 }}
@@ -111,6 +113,7 @@ const Identity: FC<Props> = ({ account }) => {
                       Controller
                     </Typography>
                     <Address
+                      roles={account.roles}
                       sx={{ fontSize: 12, fontWeight: 400 }}
                       truncated='smDown'
                       offset={{ xs: 16 }}

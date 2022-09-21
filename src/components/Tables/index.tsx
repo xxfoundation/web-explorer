@@ -8,7 +8,7 @@ import {
   TableRow
 } from '@mui/material';
 import Error from '../Error';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { TableContainer } from './TableContainer';
 import { TableSkeleton } from './TableSkeleton';
 

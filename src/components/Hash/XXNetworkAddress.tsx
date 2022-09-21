@@ -1,11 +1,17 @@
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { styled, Avatar, Stack, Tooltip, Typography } from '@mui/material';
+import { AccountRoles, Roles } from '../../schemas/accounts.schema';
+
+import { HowToVote } from '@mui/icons-material';
+import { styled, Avatar, Stack } from '@mui/material';
+
 import Hash, { Props as HashProps } from '.';
 import React, { FC, useMemo } from 'react';
 import { isValidXXNetworkAddress } from '../../utils';
 import Link from '../Link';
+import node from '../../assets/images/icons/icon_node.svg'
+import Tooltip from '../Tooltip';
 
 type Props = HashProps & {
+  roles: Partial<AccountRoles>; 
   name?: string;
   avatar?: string;
   disableAvatar?: boolean;
@@ -17,25 +23,22 @@ const CustomAvatar = styled(Avatar)(() => ({
   color: 'white'
 }));
 
-const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, targetBlank = false,  ...hashProps }) => {
+const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, targetBlank = false,  ...hashProps }) => {
+  const role = useMemo<Roles | 'other'>(() => 
+    (roles?.validator && 'validator')
+    || (roles?.nominator && 'nominator')
+    || 'other',
+    [roles?.nominator, roles?.validator]
+  );
   const avatarIcon = useMemo(() => {
-    return name ? (
-      <Tooltip
-        title={
-          <Typography fontSize={'10px'} fontWeight={400}>
-            Identity Level: No Judgement
-          </Typography>
-        }
-        arrow
-      >
-        <RemoveCircleIcon sx={{ mr: 1 }} />
-      </Tooltip>
-    ) : (
-      <CustomAvatar
-        sx={{ width: 25, height: 25, mr: 1 }}
-        src={avatar} alt={name} />
+    return  (
+        <div>
+          {role === 'nominator' && <HowToVote sx={{ mr: 1 }} /> }
+          {role === 'validator' && <Avatar src={node} alt='avatar placeholder' sx={{ bgcolor: 'grey.400', width: 14, height: 14, padding: 0.7, mr: 1 }} />}
+          {role === 'other' && <CustomAvatar sx={{ width: 25, height: 25, mr: 1 }} src={avatar} alt={name} />}
+        </div>
     );
-  }, [name, avatar]);
+  }, [role, avatar, name]);
 
   const isValid = isValidXXNetworkAddress(hashProps.value);
   const url = !disableUrl ? hashProps.url || `/accounts/${hashProps.value}` : undefined;
