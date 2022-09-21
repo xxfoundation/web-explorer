@@ -32,11 +32,13 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, ta
   );
   const avatarIcon = useMemo(() => {
     return  (
+      <Tooltip title={role}>
         <div>
           {role === 'nominator' && <HowToVote sx={{ mr: 1 }} /> }
           {role === 'validator' && <Avatar src={node} alt='avatar placeholder' sx={{ bgcolor: 'grey.400', width: 14, height: 14, padding: 0.7, mr: 1 }} />}
           {role === 'other' && <CustomAvatar sx={{ width: 25, height: 25, mr: 1 }} src={avatar} alt={name} />}
         </div>
+      </Tooltip>
     );
   }, [role, avatar, name]);
 
