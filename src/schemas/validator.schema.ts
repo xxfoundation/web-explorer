@@ -37,3 +37,44 @@ export const LISTEN_FOR_ELECTED_SELF_STAKE = gql`
     }
   }
 `;
+
+export type GetCommissionAvg = {
+  stats: {
+    aggregate: {
+      avg: {
+        commission: number
+      }
+    }
+  }
+}
+
+
+export const GET_COMMISSION_AVG = gql`
+  query ValidatorCommissionAvg($accountId: String!) {
+    stats: validator_stats_aggregate(where: {stash_address: {_eq: $accountId}}) {
+      aggregate {
+        avg {
+          commission
+        }
+      }
+    }
+  }
+`;
+
+export type GetPayoutFrequency = {
+  extrinsic: {
+    aggregate: {
+      count: number
+    }
+  }
+};
+
+export const GET_PAYOUT_FREQUENCY = gql`
+  query GetPayoutFrequency($accountId: String!) {
+    extrinsic: extrinsic_aggregate(where: {signer: {_eq: $accountId}, call: { _eq: "payoutStakers"}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;

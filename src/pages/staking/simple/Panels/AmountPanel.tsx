@@ -42,7 +42,6 @@ const bnToStringDecimal = (bn: BN) => {
 };
 
 type Props = {
-  account: string;
   amount?: BN;
   balances?: StakingBalances;
   option?: StakingOptions;
@@ -52,7 +51,6 @@ type Props = {
 };
 
 const AmountSelection: FC<Props> = ({
-  account,
   amount = BN_ZERO,
   balances,
   option,
@@ -67,6 +65,7 @@ const AmountSelection: FC<Props> = ({
     option === 'stake' ? balances?.available ?? BN_ZERO : balances?.staked ?? BN_ZERO;
   const redeemable = balances?.redeemable ?? BN_ZERO;
   const totalBalance = balances?.total ?? BN_ZERO;
+  const account = balances?.stash ?? '';
 
   const displayedStake = useMemo(() => {
     return option === 'stake' ? activeStake.add(amount) : activeStake.sub(amount);
@@ -94,6 +93,7 @@ const AmountSelection: FC<Props> = ({
 
   const title = useMemo<Record<StakingOptions, string>>(
     () => ({
+      '': '',
       change: 'Change Validators',
       redeem: 'Redeem',
       stake: 'Input Amount to Stake',
@@ -149,7 +149,7 @@ const AmountSelection: FC<Props> = ({
       Insert Amount from <i>Available to Unstake</i> to be removed from <i>Active Stake</i>
       <i>
         <br />
-        (When unstaking, the resulting active stake cannot be less than 1 xx, unless its 0 xx)
+        (When unstaking, the resulting active stake cannot be less than 1 xx, unless it's 0 xx)
       </i>
     </>
   );

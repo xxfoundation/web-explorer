@@ -18,6 +18,7 @@ import BalanceHistoryChart from './account/BalanceHistoryChart';
 import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 import StakingCard from './account/staking';
 import Tag from '../../components/Tags/Tag';
+// import PerformanceSection from './account/performance';
 
 const validatorStatus = (inValidatorStats: boolean, currentlyActive: boolean) => {
   return (
@@ -59,7 +60,7 @@ const AccountId: FC = () => {
 
   if (!data?.account) return <NotFound message='Account Not Found' />;
 
-  const account = data?.account;
+  const account = data.account;
   const validator =
     data?.aggregates && data?.stats
       ? { aggregates: data?.aggregates, stats: data?.stats }
@@ -104,7 +105,12 @@ const AccountId: FC = () => {
         )}
         <Grid item xs={12} sx={{pt: '0!important'}}>
           <BlockchainCard account={data.account} />
-          {validator !== undefined && <StakingCard accountId={account.id} validator={validator} active={currentlyActive}/>}
+          {validator !== undefined && (
+            <>
+              <StakingCard accountId={account.id} validator={validator} active={currentlyActive}/>
+              {/* <PerformanceSection account={account} stats={validator?.stats ?? []} /> */}
+            </>
+          )}
         </Grid>
       </Grid>
     </Container>

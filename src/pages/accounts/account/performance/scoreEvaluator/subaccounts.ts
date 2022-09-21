@@ -1,20 +1,17 @@
-import { MetricScores } from '../../../types';
+import type { MetricScores } from '../../../types';
+import type { ScoringContext } from './types';
 
 const getSubaccountsScore = ({
-  parentIdentity = [],
-  childrenIdentity = []
-}: {
-  parentIdentity: [];
-  childrenIdentity: [];
-}): [MetricScores, string] => {
-  if (parentIdentity.length || childrenIdentity.length) {
-    return [
-      'good',
-      `Detected sub-identity, the validator is part of a cluster of ${
-        parentIdentity.length + childrenIdentity.length
-      } validators`
-    ];
-  }
+  // childCount = 0,
+  // parentCount = 0
+}: ScoringContext): [MetricScores, string] => {
+  // const count = parentCount + childCount;
+
+  // return (count > 0)
+  //   ? [
+  //     'good',
+  //     `Detected sub-identity, the validator is part of a cluster of ${count} validators`
+  //   ]
   return ['neutral', 'No sub-identity detected'];
 };
 

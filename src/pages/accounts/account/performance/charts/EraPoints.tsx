@@ -1,26 +1,43 @@
-import { useSubscription } from '@apollo/client';
-import React, { FC, useMemo } from 'react';
+import { SelectChangeEvent } from '@mui/material';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 
-import { DataPoint, LineChart } from '../../../../../components/charts/highcharts';
+import { DataPoint } from '../../../../../components/charts/highcharts';
+import DropdownTimelineLineChart from '../../../../../components/charts/highcharts/DropdownTimelineLineChart';
+import { amountByEraTooltip } from '../../../../../components/charts/highcharts/formatters';
 import DefaultTile from '../../../../../components/DefaultTile';
-import Loading from '../../../../../components/Loading';
-import { LISTEN_FOR_ERA_POINTS } from '../../../../../schemas/validator.schema';
+import { ValidatorStats } from '../../../../../schemas/staking.schema';
 
-type ResultType = { eraPoints: { era: number; points: number }[] };
+const parser = (stats: ValidatorStats): DataPoint => [stats.era, stats.points ?? 0];
 
-const parser = (item: ResultType['eraPoints'][0]): DataPoint => [item.era, item.points];
+const ERAS_IN_A_QUARTER = 90;
+const ERAS_IN_A_MONTH = 30;
 
-const EraPoints: FC<{ stashAddress: string }> = ({ stashAddress }) => {
-  const { data, loading } = useSubscription<ResultType>(LISTEN_FOR_ERA_POINTS, {
-    variables: { stashAddress }
-  });
+const EraPoints: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
   const chartData = useMemo(
-    (): DataPoint[] => (data?.eraPoints || []).map(parser),
-    [data?.eraPoints]
+    (): DataPoint[] => stats.map(parser),
+    [stats]
   );
+
+  const latestEra = stats[0].era || 999;
+  const timeframes: Record<string, number> = {
+    All: latestEra,
+    Quarter: ERAS_IN_A_QUARTER,
+    Month: ERAS_IN_A_MONTH
+  };
+  const [timeframe, setTimeframe] = useState(ERAS_IN_A_MONTH);
+  const onChange = useCallback(
+    ({ target }: SelectChangeEvent<number>) => setTimeframe(Number(target.value)),
+    []
+  );
+  const eraRange: { start: number; end: number } = useMemo(() => {
+    return { start: Math.max(latestEra - timeframe, 0), end: latestEra };
+  }, [latestEra, timeframe]);
+
+  const dataRange = useMemo(() => chartData.reverse().slice(eraRange.start, eraRange.end), [chartData, eraRange.end, eraRange.start])
+
   return (
-    <DefaultTile header='era points' height='400px'>
-      {loading ? <Loading /> : <LineChart data={chartData} />}
+    <DefaultTile header='era points' height='435px'>
+      <DropdownTimelineLineChart tooltipFormatter={amountByEraTooltip} timeframe={timeframe} timeframes={timeframes} data={dataRange} onChange={onChange} />
     </DefaultTile>
   );
 };

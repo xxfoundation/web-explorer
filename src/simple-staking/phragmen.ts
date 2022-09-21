@@ -20,6 +20,7 @@ export type ElectedValidator = {
   validatorId: string,
   backedStake: BigNumber,
   score: BigNumber,
+  backers: number,
 }
 
 type Edge = {
@@ -33,6 +34,7 @@ type Candidate = {
   backedStake: BigNumber,
   elected: boolean,
   score: BigNumber,
+  backers: number,
 }
 
 type Validators = Record<string, Candidate>;
@@ -47,9 +49,11 @@ const setup = (voters: Voter[]): [Validators, Nominator[]] => {
           backedStake: new BigNumber(0),
           elected: false,
           score: new BigNumber(0),
+          backers: 1,
         }
       } else {
-        validators[candidate].approvalStake = validators[candidate].approvalStake.plus(stake)
+        validators[candidate].approvalStake = validators[candidate].approvalStake.plus(stake);
+        validators[candidate].backers += 1;
       }
       return {
         validatorId: candidate,
@@ -184,6 +188,10 @@ export const seqPhragmen = (voters: Voter[], count: number): [Nominator[], Elect
   let [nominators, elected] = seqPhragmenCore(voters, count);
   [nominators, elected] = equalise(nominators, elected, iterations);
   // Sort elected by stake
-  const ordered: ElectedValidator[] = Object.keys(elected).map((validatorId) => { return { validatorId: validatorId, backedStake: elected[validatorId].backedStake, score: elected[validatorId].score } }).sort((a, b) => a.backedStake.gt(b.backedStake) ? -1 : 1);
+  const ordered: ElectedValidator[] = Object.keys(elected)
+    .map((validatorId) => { 
+      return { validatorId: validatorId, backedStake: elected[validatorId].backedStake, score: elected[validatorId].score, backers: elected[validatorId].backers }
+    })
+    .sort((a, b) => a.backedStake.gt(b.backedStake) ? -1 : 1);
   return [nominators, ordered]
 }

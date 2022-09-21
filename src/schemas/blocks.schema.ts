@@ -234,3 +234,30 @@ export const LISTEN_FINALIZE_BLOCK_COUNT = gql`
     }
   }
 `;
+
+
+/* -------------------------------------------------------------------------- */
+/*                               GetCurrentEra                                */
+/* -------------------------------------------------------------------------- */
+
+export type GetCurrentEra = {
+  block: {
+    aggregate: {
+      max: {
+        era: number
+      }
+    }
+  }
+};
+
+export const GET_CURRENT_ERA = gql`
+  query GetCurrentEra {
+    block: block_aggregate(where: {finalized: {_eq: true}}) {
+      aggregate {
+        max {
+          era: active_era
+        }
+      }
+    }
+  }
+`

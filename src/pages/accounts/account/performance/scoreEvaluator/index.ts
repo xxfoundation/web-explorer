@@ -1,23 +1,24 @@
-import { Account } from '../../../../../schemas/accounts.schema';
-import { ValidatorStats } from '../../../../../schemas/staking.schema';
+import type { ScoringContext } from './types';
+
 import { MetricScores, MetricsType } from '../../../types';
 import getaAddressCreationScore from './addressCreation';
 import getIdentityScore from './identity';
 import getSlashesScore from './slashes';
+import getNominatorsScore from './nominator';
+import getCommissionScore from './commission';
+import getFrequencyOfPayouts from './frequencyOfPayouts';
+import getValidatorTimeScore from './validatorTime';
 
-const scoreEvaluator = (props: { account: Account; stats: ValidatorStats }): Partial<Record<MetricsType, [MetricScores, string]>> => {
+const evaluateScore = (ctx: ScoringContext): Partial<Record<MetricsType, [MetricScores, string]>> => {
   return {
-    identity: getIdentityScore(props.account),
-    'address creation': getaAddressCreationScore(props),
-    slashes: getSlashesScore(props),
-    // subaccounts: getSubaccountsScore(account),
-    // nominators: getNominatorsScore(account),
-    // 'era points': getEraPointsScore(account),
-    // commission: getCommissionScore(account),
-    // 'frequency of payouts': getFrequencyOfPayouts(account),
-    // // governance: getGovernanceScore(account),
-    // 'validator time': getValidatorTimeScore(account)
+    identity: getIdentityScore(ctx.account),
+    'address creation': getaAddressCreationScore(ctx),
+    slashes: getSlashesScore(ctx),
+    nominators: getNominatorsScore(ctx),
+    commission: getCommissionScore(ctx),
+    'frequency of payouts': getFrequencyOfPayouts(ctx),
+    'validator time': getValidatorTimeScore(ctx),
   };
 };
 
-export default scoreEvaluator;
+export default evaluateScore;

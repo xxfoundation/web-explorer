@@ -286,18 +286,6 @@ export const GET_STAKING_REWARDS_COUNTS = gql`
 /* -------------------------------------------------------------------------- */
 /*                               Balance History                              */
 /* -------------------------------------------------------------------------- */
-export type BalanceHistory = {
-  era: number;
-  totalBalance: number;
-  // transferrableBalance: number;
-  // reservedBalance: number;
-  // lockedBalance: number;
-  // bondedBalance: number;
-  // unbondingBalance: number;
-  // vestingBalance: number;
-  // councilBalance: number;
-  // democracyBalance: number;
-}
 
 export type SearchAccounts = {
   accounts: Account[]
@@ -312,6 +300,19 @@ export const SEARCH_ACCOUNTS = gql`
   }
 `;
 
+export type BalanceHistory = {
+  era: number;
+  total: number;
+  transferrable: number;
+  unbonding: number;
+  reserved: number
+  locked: number;
+  bonded: number;
+  vesting: number;
+  council: number;
+  democracy: number;
+}
+
 export type GetBalanceHistory = {
   history: BalanceHistory[];
 }
@@ -320,7 +321,20 @@ export const GET_BALANCE_HISTORY_BY_ID = gql`
   query GetBalanceHistoryByPk($accountId: String!) {
     history: balance_history(where: {account_id: {_eq: $accountId}}, order_by: {era: asc}) {
       era
-      totalBalance: total_balance
+      total: total_balance
+      transferrable: transferrable_balance
+      unbonding: unbonding_balance
+      reserved: reserved_balance
+      locked: locked_balance
+      bonded: bonded_balance
+      vesting: vesting_balance
+      council: council_balance
+      democracy: democracy_balance
     }
   }
+`
+
+export const GET_SUBACCOUNT_COUNTS = gql`
+  ${IDENTITY_FRAGMENT}
+  
 `

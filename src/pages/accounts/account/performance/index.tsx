@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import TabsWithPanels from '../../../../components/Tabs';
+import AccountTile from '../../../../components/AccountTile';
 import { Account } from '../../../../schemas/accounts.schema';
 import { ValidatorStats } from '../../../../schemas/staking.schema';
 import Charts from './charts';
@@ -8,7 +8,7 @@ import MetricCards from './MetricsCards';
 
 const PerformanceCard: FC<{
   account: Account;
-  stats: ValidatorStats;
+  stats: ValidatorStats[];
 }> = (props) => {
   const panels = useMemo(() => {
     if (!props.account.roles.validator) return [];
@@ -24,13 +24,9 @@ const PerformanceCard: FC<{
     ];
   }, [props]);
   if (!props.account.roles.validator) return <></>;
+
   return (
-    <Box padding={'40px'}>
-      <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
-        Performance
-      </Typography>
-      <TabsWithPanels panels={panels} tabsLabel='account performance card' tabMarginBottom={'1'} />
-    </Box>
+    <AccountTile panels={panels} tabsLabel='account performance card' title='Performance' />
   );
 };
 

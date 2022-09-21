@@ -1,9 +1,10 @@
 import { MetricScores } from '../../../types';
+import { ScoringContext } from './types';
 
 const baseMsg = (number: unknown, value: string) =>
   `Detected ${number} nominators, validator is ${value}`;
 
-const getNominatorsScore = ({ nominators = 0 }: { nominators: number }): [MetricScores, string] => {
+const getNominatorsScore = ({ nominatorCount: nominators }: ScoringContext): [MetricScores, string] => {
   if (nominators < 150) {
     return ['good', baseMsg(nominators, 'undersubscribed')];
   }

@@ -1,8 +1,8 @@
-import { MetricScores, MetricsType } from '../../types';
+import { MetricsType, ScoreDescriptions } from '../../types';
 
 const tooltipsConfiguration: Record<
   MetricsType,
-  { name: MetricsType; description: string; scores: Partial<Record<MetricScores, string>> }
+  { name: MetricsType; description: string; scores: ScoreDescriptions }
 > = {
   identity: {
     name: 'identity',
@@ -107,8 +107,4 @@ const tooltipsConfiguration: Record<
   }
 };
 
-const toolttipConfiguration = (metric: MetricsType) => {
-  return { ...tooltipsConfiguration[metric] };
-};
-
-export default toolttipConfiguration;
+export default tooltipsConfiguration;

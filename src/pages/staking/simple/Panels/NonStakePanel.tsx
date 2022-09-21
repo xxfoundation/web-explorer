@@ -76,12 +76,12 @@ const NonStakePanel: FC<Props> = ({
   // Create Transaction
   useEffect(() => {
     if (api && stakingBalances && stakingOption === 'unstake') {
-      setTransaction(unstake(api, account, amount));
+      setTransaction(unstake(api, stakingBalances.controller, amount));
     }
     if (api && stakingBalances && stakingOption === 'redeem') {
-      setTransaction(redeem(api, account));
+      setTransaction(redeem(api, stakingBalances.controller));
     }
-  }, [account, amount, api, setTransaction, stakingBalances, stakingOption]);
+  }, [amount, api, setTransaction, stakingBalances, stakingOption]);
 
   return (
     <>

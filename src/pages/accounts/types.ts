@@ -5,6 +5,7 @@ export type MetricsType =
   | 'address creation'
   | 'slashes'
   | 'subaccounts'
+  | 'validator time'
   | 'nominators'
   | 'era points'
   | 'commission'
@@ -20,16 +21,10 @@ export type Metrics = {
   description?: string;
 };
 
-export type MetricScorePopupProps = {
-  veryGood?: ReactNode;
-  good?: ReactNode;
-  neutral?: ReactNode;
-  bad?: ReactNode;
-  veryBad?: ReactNode;
-};
+export type ScoreDescriptions =  Partial<Record<MetricScores, string>>;
 
 export type MetricPopupProps = {
   name: string;
   description: ReactNode;
-  scores: MetricScorePopupProps;
+  scores: ScoreDescriptions;
 };
