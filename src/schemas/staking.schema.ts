@@ -187,7 +187,7 @@ export type GetStakingStats = {
 }
 
 export const GET_STAKING_STATS = gql`
-  query GetStakingStats($limit: Int!, $offset: Int!) {
+  query GetStakingStats($limit: Int, $offset: Int) {
     stats: staking_stats(limit: $limit, offset: $offset, order_by: {era: desc, points_avg: asc}) {
       commissionAvg: commission_avg
       era

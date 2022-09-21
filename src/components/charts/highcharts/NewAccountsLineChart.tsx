@@ -2,7 +2,7 @@ import type { DataPoint } from '.';
 import type { SeriesClickEventObject } from 'highcharts';
 
 import { useQuery } from '@apollo/client';
-import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,28 +10,17 @@ import { amountByEraTooltip, LineChart } from '.';
 import { CreatedEras, GET_WHEN_CREATED_ERAS } from '../../../schemas/accounts.schema';
 import DefaultTile from '../../DefaultTile';
 import Loading from '../../Loading';
-
-const ERAS_IN_A_QUARTER = 90;
-const ERAS_IN_A_MONTH = 30;
+import TimeframesDropdown from '../../TimeframesDropdown';
 
 const NewAccountsChart = () => {
   const navigate = useNavigate();
   const { data, loading } = useQuery<CreatedEras>(GET_WHEN_CREATED_ERAS);
   const newAccounts = data?.account;
   const latestEra = data?.history[0].latestEra || 999;
-  const timeframes: Record<string, number> = {
-    All: latestEra,
-    Quarter: ERAS_IN_A_QUARTER,
-    Month: ERAS_IN_A_MONTH
-  };
-  const [timeframe, setTimeframe] = useState(ERAS_IN_A_MONTH);
-  const onChange = useCallback(
-    ({ target }: SelectChangeEvent<number>) => setTimeframe(Number(target.value)),
-    []
-  );
+  const [timeframe, setTimeframe] = useState<number>();
 
   const eraRange: { start: number; end: number } = useMemo(() => {
-    return { start: Math.max(latestEra - timeframe, 0), end: latestEra };
+    return { start: Math.max(latestEra - (timeframe ?? 0), 0), end: latestEra };
   }, [latestEra, timeframe]);
 
   const chartData = useMemo(() => {
@@ -63,21 +52,7 @@ const NewAccountsChart = () => {
       ) : (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'right', pr: 2 }}>
-            <FormControl variant='standard'>
-              <Select
-                labelId='timeframe-label'
-                id='timeframe-select'
-                value={timeframe}
-                label='Timeframe'
-                onChange={onChange}
-              >
-                {Object.entries(timeframes).map(([label, time]) => (
-                  <MenuItem value={time} key={time}>
-                    {label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <TimeframesDropdown onChange={setTimeframe} value={timeframe} />
           </Box>
           <LineChart
             data={dataRange}
