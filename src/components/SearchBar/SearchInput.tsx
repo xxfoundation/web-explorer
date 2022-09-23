@@ -38,7 +38,7 @@ const GenericSearchInput: FC<Props> = ({ loading, search }) => {
           <SearchInput
             placeholder={'Search'}
             disabled={loading}
-            inputProps={{ minLength: 2 }}
+            inputProps={{ minLength: 1 }}
             onChange={searchInputOnChange}
             value={searchInput}
             disableUnderline

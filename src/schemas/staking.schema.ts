@@ -243,7 +243,7 @@ export const GET_STAKING_REWARDS = gql`
       }
     }
 
-    rewards: staking_reward(where: { account_id: { _eq: $accountId } }, order_by: { era: desc }) {
+    rewards: staking_reward(where: { account_id: { _eq: $accountId } }, order_by: { era: desc, block_number: desc }) {
       ...stakingRewardsFragment
     }
   }
