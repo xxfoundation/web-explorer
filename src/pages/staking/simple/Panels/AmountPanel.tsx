@@ -32,9 +32,10 @@ const DECIMALS_POW = BN_TEN.pow(new BN(DECIMAL_POINTS));
 const bnToStringDecimal = (bn: BN) => {
   const converted = bn.toString();
   const regex = `[0-9]{1,${DECIMAL_POINTS}}$`;
-  const match = converted.match(new RegExp(regex));
-  const decimals = match?.[0];
-  const lengthDiff = converted.length - (decimals?.length ?? 0);
+  const matched = converted.match(new RegExp(regex))?.[0];
+  const zeropad = Array(DECIMAL_POINTS + 1).join('0');
+  const decimals = `${zeropad}${matched}`.slice(-DECIMAL_POINTS);
+  const lengthDiff = converted.length - (matched?.length ?? 0);
   const integers = converted.slice(0, lengthDiff) || '0';
   const d = decimals?.replace(new RegExp(`0{1,${DECIMAL_POINTS}}$`), '');
 
@@ -59,6 +60,8 @@ const AmountSelection: FC<Props> = ({
 }) => {
   const theme = useTheme();
   const [inputTouched, setInputTouched] = useState(false);
+  const [amountString, setAmountString] = useState('');
+  const [zeropad, setZeropad] = useState(0);
 
   const activeStake = balances?.staked ?? BN_ZERO;
   const available =
@@ -113,7 +116,8 @@ const AmountSelection: FC<Props> = ({
       setInputTouched(true);
       const decimalPoints = evt.target.value.split('.')[1]?.length ?? 0;
       const parsed = evt.target.value.replace(/\D/g, '');
-
+      const zeroes = evt.target.value.split('.')[1]?.match(/0+$/g)?.[0].length;
+      setZeropad(zeroes ?? 0);
       let value = new BN(parsed).mul(DECIMALS_POW).div(BN_TEN.pow(new BN(decimalPoints)));
       if (option === 'unstake' && value.gt(available.sub(DECIMALS_POW))) {
         value = available;
@@ -123,7 +127,12 @@ const AmountSelection: FC<Props> = ({
     [setAmount, option, available]
   );
 
-  const amountString = useMemo(() => bnToStringDecimal(amount ?? BN_ZERO), [amount]);
+  useEffect(() => {
+    const str = bnToStringDecimal(amount ?? BN_ZERO);
+    const pad = new Array(zeropad + 1).join('0');
+    const dot = !str.includes('.') && pad;
+    setAmountString(`${str}${dot ? '.' : ''}${pad}`);
+  }, [amount, zeropad]);
 
   const error = inputTouched && !amountIsValid;
 
@@ -249,8 +258,8 @@ const AmountSelection: FC<Props> = ({
                   {error && (
                     <FormHelperText sx={{ color: theme.palette.error.main }}>
                       {amount.gt(available)
-                        ? 'Amount cannot be bigger than Available'
-                        : 'Input Amount is invalid'}
+                        ? 'Amount cannot be bigger than Available balance'
+                        : 'Input amount is invalid'}
                     </FormHelperText>
                   )}
                 </FormControl>
