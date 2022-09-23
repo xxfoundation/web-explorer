@@ -1,13 +1,16 @@
 import { AccountRoles, Roles } from '../../schemas/accounts.schema';
 
-import { HowToVote } from '@mui/icons-material';
+import CloudDoneIcon from '@mui/icons-material/CloudDone';
+import PanToolIcon from '@mui/icons-material/PanTool';
+import StarsIcon from '@mui/icons-material/Stars';
+import GavelIcon from '@mui/icons-material/Gavel';
+import TerminalIcon from '@mui/icons-material/Terminal';
 import { styled, Avatar, Stack } from '@mui/material';
 
 import Hash, { Props as HashProps } from '.';
 import React, { FC, useMemo } from 'react';
 import { isValidXXNetworkAddress } from '../../utils';
 import Link from '../Link';
-import node from '../../assets/images/icons/icon_node.svg'
 import Tooltip from '../Tooltip';
 
 type Props = HashProps & {
@@ -25,18 +28,24 @@ const CustomAvatar = styled(Avatar)(() => ({
 
 const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, targetBlank = false,  ...hashProps }) => {
   const role = useMemo<Roles | 'other'>(() => 
-    (roles?.validator && 'validator')
+    (roles?.techcommit && 'techcommit')
+    || (roles?.council && 'council')
+    || (roles?.validator && 'validator')
     || (roles?.nominator && 'nominator')
+    || (roles?.special && 'special')
     || 'other',
-    [roles?.nominator, roles?.validator]
+    [roles?.council, roles?.nominator, roles?.special, roles?.techcommit, roles?.validator]
   );
   const avatarIcon = useMemo(() => {
     return  (
       <Tooltip title={role}>
         <div>
-          {role === 'nominator' && <HowToVote sx={{ mr: 1 }} /> }
-          {role === 'validator' && <Avatar src={node} alt='avatar placeholder' sx={{ bgcolor: 'grey.400', width: 14, height: 14, padding: 0.7, mr: 1 }} />}
           {role === 'other' && <CustomAvatar sx={{ width: 25, height: 25, mr: 1 }} src={avatar} alt={name} />}
+          {role === 'special' && <StarsIcon sx={{ mr: 1 }} /> }
+          {role === 'nominator' && <PanToolIcon sx={{ mr: 1 }} /> }
+          {role === 'validator' && <CloudDoneIcon sx={{ mr: 1 }} /> }
+          {role === 'council' && <GavelIcon sx={{ mr: 1 }} /> }
+          {role === 'techcommit' && <TerminalIcon sx={{ mr: 1 }} /> }
         </div>
       </Tooltip>
     );
