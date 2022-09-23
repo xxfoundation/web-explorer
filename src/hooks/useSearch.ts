@@ -51,8 +51,8 @@ const useSearch = (): UseSearch => {
   );
 
   const search = useCallback(async (input: string) => {
-    if (input.length < 2) {
-      return setError('Search needs to be a minimum of 2 characters.');
+    if (input.length < 1) {
+      return setError('Search needs to be a minimum of 1 characters.');
     }
     setLoading(true);
     setResults(undefined);
@@ -71,7 +71,7 @@ const useSearch = (): UseSearch => {
       );
     }
 
-    if (input) {
+    if (input && input.length > 1) {
       promises.push(
         executeAccountSearch({ variables: { search: `%${input}%` } })
           .then((result) => result.data && accounts.push(...result.data.accounts))
