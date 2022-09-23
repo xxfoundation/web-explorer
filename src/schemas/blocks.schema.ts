@@ -1,8 +1,10 @@
 import { gql } from '@apollo/client';
+import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
 import { TotalOfItems } from './types';
 
 /* ---------------------------- General Variables --------------------------- */
 export type AuthorName = {
+  role: AccountRoles,
   identity: {
     display: string;
   }
@@ -29,6 +31,7 @@ export type Block = {
 }
 
 export const BLOCK_KEYS_FRAGMENT = gql`
+  ${ROLES_FRAGMENT}
   fragment blocks on block {
     number: block_number
     hash: block_hash
@@ -43,6 +46,9 @@ export const BLOCK_KEYS_FRAGMENT = gql`
     totalEvents: total_events
     totalExtrinsics: total_extrinsics
     authorName: account {
+      role {
+        ...roles
+      }
       identity {
         display: display
       }

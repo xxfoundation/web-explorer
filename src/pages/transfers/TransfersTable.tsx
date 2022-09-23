@@ -33,12 +33,14 @@ const TransferRow = (data: Transfer) => {
     <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link>,
     <TimeAgo date={data.timestamp} />,
     <Address
+      roles={data.sourceAccount.role}
       name={data.sourceAccount.identity?.display}
       value={data.source}
       url={`/accounts/${data.source}`}
       truncated
     />,
     <Address
+      roles={data.destinationAccount.role}
       value={data.destination}
       name={data.destinationAccount.identity?.display}
       url={`/accounts/${data.destination}`}

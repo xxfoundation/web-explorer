@@ -29,7 +29,7 @@ const headers = [
 
 const stakingActivityToRow = (item: StakingActivityType): BaselineCell[] => {
   return [
-    { value: <Address value={item.validatorAddress} name={item.validator} /> },
+    { value: <Address value={item.validatorAddress} name={item.validator} roles={{ validator: true }} /> },
     { value: <FormatBalance value={item.bonded.toString()} /> },
     { value: item.bond.toString() },
     { value: <FormatBalance value={item.totalBonded.toString()} /> },
