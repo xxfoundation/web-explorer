@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
 import { TotalOfItems } from './types';
 
 /* -------------------------------------------------------------------------- */
@@ -19,9 +20,11 @@ export type Transfer = {
   amount: number;
   timestamp: string;
   destinationAccount: {
+    role: AccountRoles,
     identity: null | { display: string }
   },
   sourceAccount: {
+    role: AccountRoles,
     identity: null | { display: string }
   }
   block: {
@@ -34,6 +37,7 @@ export type Transfer = {
 };
 
 export const TRANSFER_FRAGMENT = gql`
+  ${ROLES_FRAGMENT}
   fragment transfer_common_fields on transfer {
     blockNumber: block_number
     extrinsicIndex: extrinsic_index
@@ -42,11 +46,17 @@ export const TRANSFER_FRAGMENT = gql`
     amount
     timestamp
     sourceAccount: account {
+      role {
+        ...roles
+      }
       identity {
         display
       }
     }
     destinationAccount: accountByDestination {
+      role {
+        ...roles
+      }
       identity {
         display
       }

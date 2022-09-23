@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
 
 /* ------------------------------ General Types ----------------------------- */
 export type Nominator = {
@@ -26,11 +27,13 @@ export type ValidatorStats = {
   relativePerformance: number | null;
   reward: number | null;
   rewardsAccount: {
+    roles: AccountRoles,
     identity: null | { display: string }
   };
 }
 
 const VALIDATOR_STATS_FRAGMENT = gql`
+  ${ROLES_FRAGMENT}
   fragment validatorStatsFragment on validator_stats {
     cmixId: cmix_id
     commission
@@ -43,6 +46,9 @@ const VALIDATOR_STATS_FRAGMENT = gql`
     reward
     rewardsAddress: rewards_address
     rewardsAccount {
+      roles: role {
+        ...roles
+      }
       identity {
         display
       }

@@ -10,7 +10,13 @@ describe('Without denomination, without precision amounts', () => {
   it('Should the address', () => {
     const wrapper = mount(
       <BrowserRouter>
-        <Address value={testHash} />
+        <Address roles={{
+          council: false,
+          nominator: true,
+          special: '',
+          techcommit: false,
+          validator: false,
+        }} value={testHash} />
       </BrowserRouter>
     )
 
@@ -23,7 +29,13 @@ describe('Without denomination, without precision amounts', () => {
     const name = 'Hello';
     const wrapper = mount(
       <BrowserRouter>
-        <Address name={name} value={testHash} />
+        <Address roles={{
+          council: false,
+          nominator: true,
+          special: '',
+          techcommit: false,
+          validator: false,
+        }} name={name} value={testHash} />
       </BrowserRouter>
     )
 

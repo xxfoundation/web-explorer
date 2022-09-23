@@ -46,7 +46,15 @@ export const IDENTITY_FRAGMENT = gql`
   }
 `;
 
-
+export const ROLES_FRAGMENT = gql`
+  fragment roles on roles {
+    council
+    nominator
+    special
+    techcommit
+    validator
+  }
+`
 
 export const GET_FULL_IDENTITY = gql`
   ${IDENTITY_FRAGMENT}
@@ -60,12 +68,21 @@ export const GET_FULL_IDENTITY = gql`
 export type GetDisplayIdentity = {
   identity: {
     display: string;
+    account: {
+      roles: AccountRoles
+    }
   }[]
 }
 export const GET_DISPLAY_IDENTITY = gql`
+  ${ROLES_FRAGMENT}
   query GetDisplayIdentity($account: String!) {
     identity(where: { account_id: { _eq: $account } }) {
       display
+      account {
+        roles: role {
+          ...roles
+        }
+      }
     }
   }
 `
@@ -100,6 +117,8 @@ export type Account = {
   };
 };
 
+export type AccountRoles = Account['roles'];
+
 export type GetAccountByAddressType = {
   account: Account;
   aggregates: { aggregate: { count: number } };
@@ -108,6 +127,7 @@ export type GetAccountByAddressType = {
 
 export const ACCOUNT_FRAGMENT = gql`
   ${IDENTITY_FRAGMENT}
+  ${ROLES_FRAGMENT}
   fragment account on account {
     id: account_id
     controllerAddress: controller_address
@@ -120,11 +140,7 @@ export const ACCOUNT_FRAGMENT = gql`
     nonce
     timestamp
     roles: role {
-      council
-      nominator
-      techcommit
-      validator
-      special
+      ...roles
     }
     lockedBalance: locked_balance
     reservedBalance: reserved_balance
@@ -159,6 +175,7 @@ export type ListAccounts = TotalOfItems & {
 };
 
 export const LIST_ACCOUNTS = gql`
+  ${ROLES_FRAGMENT}
   query ListAccounts(
     $orderBy: [account_order_by!]
     $offset: Int
@@ -172,11 +189,7 @@ export const LIST_ACCOUNTS = gql`
       lockedBalance: locked_balance
       nonce
       roles: role {
-        council
-        nominator
-        techcommit
-        validator
-        special
+        ...roles
       }
       identity: identity {
         display

@@ -14,16 +14,18 @@ type Props = {
 const AccountDisplay: FC<Props> = ({ account, balance, targetBlank = false }) => {
   const {data, loading} = useQuery<GetDisplayIdentity>(GET_DISPLAY_IDENTITY, { variables: { account }});
   const display = data?.identity && data?.identity.length && data?.identity[0].display || undefined;
+  const roles = data?.identity && data?.identity.length && data?.identity[0].account.roles || {};
+
   const loadingQuery = loading;
 
   return loadingQuery ? (
     <Loading size='xs'/>
   ) : (
     balance ? 
-    <Address truncated='mdDown' targetBlank={targetBlank} value={account} name={display} 
+    <Address roles={roles} truncated='mdDown' targetBlank={targetBlank} value={account} name={display} 
         disableUrl={balance.eqn(0)}
         disableAvatar={balance.eqn(0)} />
-    : <Address truncated='mdDown' targetBlank={targetBlank} value={account} name={display} />
+    : <Address roles={roles}  truncated='mdDown' targetBlank={targetBlank} value={account} name={display} />
   );
 };
 

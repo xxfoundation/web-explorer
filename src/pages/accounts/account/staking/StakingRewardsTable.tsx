@@ -25,6 +25,7 @@ const RewardsRow = (reward: StakingReward) => {
       truncated='mdDown'
       value={reward.validatorAddress}
       name={reward?.identity?.display}
+      roles={{ validator: true }}
     />,
     <Link to={`/blocks/${reward.blockNumber}`}>{reward.blockNumber}</Link>,
     reward.era,
