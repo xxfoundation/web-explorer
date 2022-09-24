@@ -93,6 +93,7 @@ const ValidatorInfo: FC<{ active: boolean, info?: ValidatorStats }> = ({ active,
               {...addressProps}
               value={info.rewardsAddress}
               name={info.rewardsAccount.identity?.display}
+              roles={info.rewardsAccount.roles}
             />
           </WithCopy>
         </SummaryValue>

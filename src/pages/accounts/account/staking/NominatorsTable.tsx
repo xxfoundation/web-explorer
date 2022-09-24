@@ -9,7 +9,7 @@ import { Divider, Typography } from '@mui/material';
 
 const EraStake = (nominator: Nominator) => {
   return BaseLineCellsWrapper([
-    <XXNetworkAddress truncated='mdDown' value={nominator.account_id} />,
+    <XXNetworkAddress truncated='mdDown' value={nominator.account_id} roles={{ nominator: true }} />,
     <FormatBalance value={nominator.stake} />,
     `${parseFloat(nominator.share).toFixed(2)}%`
   ]);

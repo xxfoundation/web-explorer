@@ -60,6 +60,7 @@ const TransferRow: FC<Transfer> = (props) => {
             <Address
               offset={4}
               sx={{ fontSize: 14, fontWeight: 400 }}
+              roles={props.sourceAccount.role}
               value={props.source}
               name={props.sourceAccount.identity?.display}
               url={`/accounts/${props.source}`}
@@ -85,6 +86,7 @@ const TransferRow: FC<Transfer> = (props) => {
               offset={4}
               sx={{ fontSize: 14, fontWeight: 400 }}
               value={props.destination}
+              roles={props.destinationAccount.role}
               name={props.destinationAccount.identity?.display}
               url={`/accounts/${props.destination}`}
               truncated

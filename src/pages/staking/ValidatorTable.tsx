@@ -54,7 +54,7 @@ const ValidatorRow: FC<ValidatorAccount & { index: number }> = ({
         <Typography variant='h4'>{index}</Typography>
       </TableCell>
       <TableCell data-label={'Validator'}>
-        <Address value={addressId} name={identityDisplay} url={validatorLink} truncated />
+        <Address roles={{ validator: true }} value={addressId} name={identityDisplay} url={validatorLink} truncated />
       </TableCell>
       <TableCell data-label='Location'>{parsed}</TableCell>
       <TableCell data-label='Own Stake'>
@@ -144,11 +144,11 @@ const ValidatorsTable = () => {
           <TableBody>
             {validatorsQuery.loading && <SkeletonRows columns={8} rows={rowsPerPage} />}
             {!validatorsQuery.loading && error && (
-                <TableRow>
-                  <TableCell colSpan={7}>
-                    <Error type='data-unavailable' />
-                  </TableCell>
-                </TableRow>
+              <TableRow>
+                <TableCell colSpan={7}>
+                  <Error type='data-unavailable' />
+                </TableCell>
+              </TableRow>
             )}
             {filter !== 'waiting' ? (
               validators ? (
