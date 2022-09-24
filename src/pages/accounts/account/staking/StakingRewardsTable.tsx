@@ -4,7 +4,7 @@ import React, { FC, useEffect, useMemo } from 'react';
 import FormatBalance from '../../../../components/FormatBalance';
 import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
 import Link from '../../../../components/Link';
-import { BaseLineCellsWrapper, BaselineTable } from '../../../../components/Tables';
+import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../../../components/Tables';
 import TimeAgoComponent from '../../../../components/TimeAgo';
 import usePagination from '../../../../hooks/usePagination';
 import {
@@ -14,7 +14,7 @@ import {
 } from '../../../../schemas/staking.schema';
 
 const DEFAULT_ROWS_PER_PAGE = 10;
-const headers = BaseLineCellsWrapper(['Validator', 'Block Number', 'Era', 'Amount', 'Timestamp']);
+const headers = HeaderCellsWrapper(['Validator', 'Block Number', 'Era', 'Amount', 'Timestamp']);
 
 const RewardsRow = (reward: StakingReward) => {
   return BaseLineCellsWrapper([

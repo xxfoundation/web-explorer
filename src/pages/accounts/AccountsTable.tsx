@@ -7,7 +7,7 @@ import { theme } from '../../themes/default';
 import Address from '../../components/Hash/XXNetworkAddress';
 import FormatBalance from '../../components/FormatBalance';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
-import { BaselineCell, BaselineTable } from '../../components/Tables';
+import { BaselineCell, BaselineTable, HeaderCell } from '../../components/Tables';
 import { CustomTooltip } from '../../components/Tooltip';
 import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
 import { HoldersRolesFilters, roleToLabelMap } from './HoldersRolesFilters';
@@ -110,11 +110,12 @@ const useHeaders = () => {
     setEraSessionState(eraNumber);
   }, [setEraQuery, setEraSessionState]);
 
-  const headers = useMemo(
+  const headers = useMemo<HeaderCell[]>(
     () => [
       { value: 'Rank' },
       { value: 'Account' },
       {
+        label: 'Extrinsics',
         value: (
           <Tooltip
             title='An Extrinsic is defined by any action that is performed by an user of the xx network blockchain.'
@@ -125,12 +126,16 @@ const useHeaders = () => {
         )
       },
       {
+        label: 'Role',
         value: <HoldersRolesFilters onChange={setRoleFilters} filters={roleFilters} />,
         props: { colSpan: 2 }
       },
       { value: 'Locked balance' },
       { value: 'Total balance' },
-      { value: <GeneralFilter value={era?.toString()} onChange={onEraChange} label='Era created' /> }
+      {
+        label: 'Era created',
+        value: <GeneralFilter value={era?.toString()} onChange={onEraChange} label='Era created' />
+      }
     ],
     [era, onEraChange, roleFilters, setRoleFilters]
   );

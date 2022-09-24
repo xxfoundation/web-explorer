@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client';
-import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Stack, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
 import Address from '../../components/Hash/XXNetworkAddress';
 import CmixAddress from '../../components/Hash/CmixAddress';
 import Error from '../../components/Error';
 import FormatBalance from '../../components/FormatBalance';
-import { TableContainer } from '../../components/Tables/TableContainer';
+import { Table, TableContainer } from '../../components/Tables/Table.styled';
 import TablePagination from '../../components/Tables/TablePagination';
 import {
   GET_CURRENT_VALIDATORS,
@@ -50,30 +50,30 @@ const ValidatorRow: FC<ValidatorAccount & { index: number }> = ({
 
   return (
     <TableRow key={addressId}>
-      <TableCell>
+      <TableCell data-label={'#'}>
         <Typography variant='h4'>{index}</Typography>
       </TableCell>
-      <TableCell>
+      <TableCell data-label={'Validator'}>
         <Address value={addressId} name={identityDisplay} url={validatorLink} truncated />
       </TableCell>
-      <TableCell>{parsed}</TableCell>
-      <TableCell>
+      <TableCell data-label='Location'>{parsed}</TableCell>
+      <TableCell data-label='Own Stake'>
         <FormatBalance value={ownStake} />
       </TableCell>
       {totalStake && (
-        <TableCell>
+        <TableCell data-label='Total Stake'>
           <FormatBalance value={totalStake} />
         </TableCell>
       )}
-      <TableCell>
+      <TableCell data-label='Commission'>
         <Typography>{commission.toFixed(2)} %</Typography>
       </TableCell>
-      <TableCell>
+      <TableCell data-label='cMix ID'>
         <Typography variant='code'>
           <CmixAddress truncated value={cmixId} />
         </Typography>
       </TableCell>
-      <TableCell>{nominators.length}</TableCell>
+      <TableCell data-label='Nominators'>{nominators.length}</TableCell>
     </TableRow>
   );
 };

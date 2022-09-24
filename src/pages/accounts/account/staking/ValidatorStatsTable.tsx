@@ -5,7 +5,6 @@ import React, { FC, useMemo, useEffect } from 'react';
 import {
   Button,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -15,7 +14,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-import { TableStyled } from '../../../../components/Tables/TableContainer.styled';
+import { Table, TableContainer } from '../../../../components/Tables/Table.styled';
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import Link from '../../../../components/Link';
 import { usePagination, useToggle } from '../../../../hooks';
@@ -102,25 +101,25 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
   return (
     <>
       <TableRow>
-        <TableCell>{stats.era}</TableCell>
-        <TableCell>{stats.commission.toFixed(2)} %</TableCell>
-        <TableCell>
+        <TableCell data-label='Era'>{stats.era}</TableCell>
+        <TableCell data-label='Commission'>{stats.commission.toFixed(2)} %</TableCell>
+        <TableCell data-label='Self Stake'>
           <FormatBalance value={stats.selfStake.toString()} />
         </TableCell>
-        <TableCell>
+        <TableCell data-label='Other Stake'>
           <FormatBalance value={stats.otherStake.toString()} />
         </TableCell>
-        <TableCell>
+        <TableCell data-label='Total Stake'>
           <FormatBalance value={stats.totalStake.toString()} />
         </TableCell>
-        <TableCell>{stats.points ?? '-'}</TableCell>
-        <TableCell>
+        <TableCell data-label='Points'>{stats.points ?? '-'}</TableCell>
+        <TableCell data-label='Performance'>
           {stats.relativePerformance !== null ? (stats.relativePerformance * 100)?.toFixed(2) : '-'}
         </TableCell>
-        <TableCell>
+        <TableCell data-label='Reward'>
           {stats.reward !== null ? <FormatBalance value={stats.reward.toString()} /> : '-'}
         </TableCell>
-        <TableCell>
+        <TableCell data-label='Blocks Produced'>
           <Button
             disabled={!blocksProduced || blocksProduced.length === 0}
             variant='text'
@@ -133,7 +132,7 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
       </TableRow>
       {expanded && (
         <TableRow>
-          <TableCell colSpan={9} sx={{ pt: 0 }}>
+          <TableCell colSpan={9} sx={{ pt: 0, display: 'table-cell !important' }}>
             {blocksProduced
               ?.map<React.ReactNode>((block) => <BlockLink key={block} block={block} />)
               .reduce((prev, curr) => [prev, ', ', curr])}
@@ -176,7 +175,7 @@ const ValidatorStatsTable: FC<Props> = ({ accountId, stats }) => {
     return <Error type='data-unavailable' />;
   }
   return (
-    <TableStyled>
+    <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
@@ -192,7 +191,7 @@ const ValidatorStatsTable: FC<Props> = ({ accountId, stats }) => {
         </TableBody>
       </Table>
       {pagination.controls}
-    </TableStyled>
+    </TableContainer>
   );
 };
 

@@ -1,5 +1,4 @@
 import {
-  Table,
   TableBody,
   TableCell,
   TableCellProps,
@@ -9,8 +8,23 @@ import {
 } from '@mui/material';
 import Error from '../Error';
 import React, { FC, useMemo } from 'react';
-import { TableContainer } from './TableContainer';
 import { TableSkeleton } from './TableSkeleton';
+import { Table, TableContainer } from './Table.styled';
+
+type NormalCell = {
+  value: number | string;
+  props?: TableCellProps;
+  key?: string | number;
+};
+
+type JSXCell = {
+  value: JSX.Element;
+  label: string;
+  props?: TableCellProps;
+  key?: string | number;
+}
+
+export type HeaderCell = NormalCell | JSXCell;
 
 export type BaselineCell = {
   value: number | string | JSX.Element;
@@ -18,29 +32,33 @@ export type BaselineCell = {
   key?: string | number;
 };
 
+const isNormalCell = (cell: HeaderCell): cell is NormalCell => typeof cell.value !== 'object';
+const getCellLabel = (cell: HeaderCell) =>  isNormalCell(cell) ? cell.value : cell.label;
+
 type Props = {
   loading?: boolean;
   error?: boolean;
   rowsPerPage?: number;
-  headers: BaselineCell[];
+  headers: HeaderCell[];
   rows: BaselineCell[][];
   footer?: JSX.Element | React.ReactNode;
   tableProps?: TableProps;
 };
 
-export const BaselineTable: FC<Props> = ({
-  loading,
-  error,
-  headers,
-  rows,
-  rowsPerPage = 20,
-  footer,
-  tableProps = {}
-}) => {
+export const BaselineTable: FC<Props> = (props) => {
+  const {
+    loading,
+    error,
+    headers,
+    rows,
+    rowsPerPage = 20,
+    footer,
+    tableProps = {}
+  } = props;
   const memoistHeaders = useMemo(() => {
-    return headers.map(({ key, props, value }, index) => {
+    return headers.map(({ key, props: p, value }, index) => {
       return (
-        <TableCell {...props} key={key || index}>
+        <TableCell {...p} key={key || index}>
           {value}
         </TableCell>
       );
@@ -55,21 +73,18 @@ export const BaselineTable: FC<Props> = ({
         </TableCell>
       </TableRow>
     ) : (
-      rows.map((row, index) => {
-        return (
+      rows.map((row, index) => (
           <TableRow key={index}>
-            {row.map(({ key, props, value }, cellIndex) => {
-              return (
-                <TableCell {...props} key={key || cellIndex}>
-                  {value}
-                </TableCell>
-              );
-            })}
+            {row.map(({ key, props: p, value }, cellIndex) => (
+              <TableCell {...p} key={key || cellIndex} data-label={getCellLabel(headers[cellIndex])}>
+                {value}
+              </TableCell>
+            ))}
           </TableRow>
-        );
-      })
+        )
+      )
     );
-  }, [error, headers.length, rows]);
+  }, [error, headers, rows]);
 
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
 
@@ -85,6 +100,19 @@ export const BaselineTable: FC<Props> = ({
     </TableContainer>
   );
 };
+
+export const HeaderWrapper = (element: JSX.Element | string | number, label: string): HeaderCell => {
+  return typeof element === 'string' || typeof element === 'number' ? {
+    value: element,
+  } : {
+    value: element, 
+    label
+  };
+};
+
+export const HeaderCellsWrapper = (elements: ([string, JSX.Element] | string | number)[]) => {
+  return elements.map((e) => Array.isArray(e) ? HeaderWrapper(e[1], e[0]) : HeaderWrapper(e, e.toString()));
+}
 
 export const BaseLineCellWrapper = (element: JSX.Element | string | number) => {
   return {

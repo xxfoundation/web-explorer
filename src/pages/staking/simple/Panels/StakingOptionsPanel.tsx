@@ -16,7 +16,7 @@ import {
 import { StakingOptions } from '../SimpleStaker';
 import { StakingBalances } from '../../../../simple-staking/actions';
 import FormatBalance from '../../../../components/FormatBalance';
-import { TableStyled } from '../../../../components/Tables/TableContainer.styled';
+import { TableContainer } from '../../../../components/Tables/Table.styled';
 import { BN } from '@polkadot/util';
 
 const optionText = (enabled: boolean, title: string, body: JSX.Element | string) => {
@@ -115,7 +115,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
         { balances.unlocking.length > 0 &&
           <Stack spacing={2}>
             <Typography variant='h3'>Unstaked funds</Typography>
-            <TableStyled>
+            <TableContainer>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
@@ -138,7 +138,7 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
                   ))}
                 </TableBody>
               </Table>
-            </TableStyled>
+            </TableContainer>
           </Stack>
         }
       </Stack>

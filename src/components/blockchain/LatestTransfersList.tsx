@@ -15,7 +15,7 @@ import Link from '../Link';
 import TimeAgo from '../TimeAgo';
 import Error from '../Error';
 import Loading from '../Loading';
-import { Table } from '../Tables/TableContainer.styled';
+import { Table } from '../Tables/Table.styled';
 import { Header, BorderlessCell } from './LatestList.styled';
 import Hash from '../Hash';
 

@@ -4,7 +4,7 @@ import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
 import Link from '../../components/Link';
-import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
+import { BaselineCell, BaseLineCellsWrapper, BaselineTable, HeaderCell, HeaderCellsWrapper } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
 import {
   ListOfBlocksOrdered,
@@ -65,18 +65,18 @@ const BlocksTable: FC = () => {
   }, [range.from, range.to, statusFilter]);
 
   /* --------------------------------- Headers -------------------------------- */
-  const headers = useMemo(
+  const headers = useMemo<HeaderCell[]>(
     () =>
-      BaseLineCellsWrapper([
+      HeaderCellsWrapper([
         'block',
-        <BooleanFilter
+        ['Status', <BooleanFilter
           label='Status'
           onChange={setStatusFilter}
           toggleLabel={(v) => (v ? 'Success' : 'Pending')}
           value={statusFilter}
-        />,
+        />],
         'era',
-        <DateRangeFilter onChange={setRange} value={range} />,
+        ['Time', <DateRangeFilter onChange={setRange} value={range} />],
         'extrinsics',
         'block producer',
         'block hash'

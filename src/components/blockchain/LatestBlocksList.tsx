@@ -12,7 +12,7 @@ import BlockStatusIcon from '../block/BlockStatusIcon';
 import DefaultTile from '../DefaultTile';
 import Link from '../Link';
 import Loading from '../Loading';
-import { Table } from '../Tables/TableContainer.styled';
+import { Table } from '../Tables/Table.styled';
 import TimeAgo from '../TimeAgo';
 import Error from '../Error';
 import { BorderlessCell, Header } from './LatestList.styled';

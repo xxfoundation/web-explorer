@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Hash from '../../components/Hash';
 import Link from '../../components/Link';
-import { BaselineCell, BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
+import { BaselineCell, BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
 import RefreshButton from '../../components/buttons/Refresh';
 import {
@@ -112,29 +112,29 @@ const ExtrinsicsTable: FC<Props> = (props) => {
   /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo(
     () =>
-      BaseLineCellsWrapper([
+      HeaderCellsWrapper([
         'Extrinsic id',
         'Block',
         'Extrinsic hash',
-        <DateRangeFilter onChange={setRange} value={range} />,
-        <BooleanFilter
+        ['Time', <DateRangeFilter onChange={setRange} value={range} />],
+        ['Result', <BooleanFilter
           label='Result'
           toggleLabel={(v) => (v ? 'Success' : 'Failed')}
           onChange={setResultFilter}
           value={resultFilter}
-        />,
-        <ValuesFilter
+        />],
+        ['Modules', <ValuesFilter
           availableValues={availableModules}
           buttonLabel='Module'
           onChange={setModulesFilter}
           value={modulesFilter}
-        />,
-        <ValuesFilter
+        />],
+        ['Call', <ValuesFilter
           availableValues={availableCalls}
           buttonLabel='Call'
           onChange={setCallsFilter}
           value={callsFilter}
-        />
+        />]
       ]),
     [
       availableCalls,

@@ -3,7 +3,7 @@ import type { Nominator } from '../../../../schemas/staking.schema';
 import React, { FC, useEffect, useMemo } from 'react';
 import FormatBalance from '../../../../components/FormatBalance';
 import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
-import { BaseLineCellsWrapper, BaselineTable } from '../../../../components/Tables';
+import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../../../components/Tables';
 import { usePagination } from '../../../../hooks';
 import { Divider, Typography } from '@mui/material';
 
@@ -16,11 +16,13 @@ const EraStake = (nominator: Nominator) => {
 };
 
 const DEFAULT_ROWS_PER_PAGE = 10;
-const headers = BaseLineCellsWrapper(['Account', 'Stake', 'Share']);
+const headers = HeaderCellsWrapper(['Account', 'Stake', 'Share']);
 
-const NominatorsTable: FC<{
+type Props = {
   nominators?: Nominator[];
-}> = ({ nominators }) => {
+}
+
+const NominatorsTable: FC<Props> = ({ nominators }) => {
   const pagination = usePagination({ rowsPerPage: DEFAULT_ROWS_PER_PAGE });
   const { paginate, setCount } = pagination;
 
@@ -42,13 +44,13 @@ const NominatorsTable: FC<{
     totalNominatorsShare += parseFloat(elem.share);
   });
 
-  const nominatorsFooter = BaseLineCellsWrapper([
+  const nominatorsFooter = useMemo(() => BaseLineCellsWrapper([
     <Typography variant='h4' sx={{ textAlign: 'end' }}>
       Total of Other Stake
     </Typography>,
     <FormatBalance value={totalNominatorsStake?.toString()} />,
     `${totalNominatorsShare.toFixed(2)}%`
-  ]);
+  ]), [totalNominatorsShare, totalNominatorsStake]);
 
   if (nominatorsFooter && paginated?.length) {
     paginated?.push(BaseLineCellsWrapper([<Divider />, <Divider />, <Divider />]));

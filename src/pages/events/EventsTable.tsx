@@ -11,7 +11,7 @@ import {
 import FunctionsIcon from '@mui/icons-material/Functions';
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from '../../components/Link';
-import { BaselineCell, BaselineTable } from '../../components/Tables';
+import { BaselineCell, BaselineTable, HeaderCell } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
 import RefreshButton from '../../components/buttons/Refresh';
 import {
@@ -106,12 +106,16 @@ const EventsTable = () => {
   );
 
   /* --------------------------------- Headers -------------------------------- */
-  const headers = useMemo(
+  const headers = useMemo<HeaderCell[]>(
     () => [
       { value: 'event id' },
       { value: 'block number' },
-      { value: <DateRangeFilter onChange={setRange} value={range} /> },
       {
+        label: 'Time',
+        value: <DateRangeFilter onChange={setRange} value={range} />
+      },
+      {
+        label: 'Module',
         value: (
           <ValuesFilter
             availableValues={availableModules}
@@ -122,6 +126,7 @@ const EventsTable = () => {
         )
       },
       {
+        label: 'Event',
         value: (
           <ValuesFilter
             availableValues={availableCalls}
