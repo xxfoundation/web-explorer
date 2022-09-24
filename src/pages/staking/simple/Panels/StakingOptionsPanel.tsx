@@ -126,14 +126,14 @@ const ActionSelection: FC<Props> = ({ balances, onSelect, selected }) => {
                 <TableBody>
                   {balances.unlocking.map(([value, days]) => (
                     <TableRow>
-                    <TableCell>
-                    <Typography>
-                      <FormatBalance value={value} />
-                    </Typography>
-                    </TableCell>
-                    <TableCell>
-                    <Typography>{days} day{(days > 1) && 's'}</Typography>
-                    </TableCell>
+                      <TableCell>
+                        <Typography>
+                          <FormatBalance value={value} />
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography>{days} day{(days > 1) && 's'}</Typography>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
