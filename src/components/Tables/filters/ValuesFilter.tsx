@@ -46,7 +46,7 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
   const availableValues = useMemo(
     () =>
       available
-        ?.filter((v) => v.toLocaleLowerCase().match(valuesFilter.toLocaleLowerCase()))
+        ?.filter((v) => v.toLocaleLowerCase().includes(valuesFilter.toLocaleLowerCase()))
         .sort((a, b) => (localValues?.includes(a) ? 0 : 1) - (localValues?.includes(b) ? 0 : 1)),
     [available, localValues, valuesFilter]
   );
