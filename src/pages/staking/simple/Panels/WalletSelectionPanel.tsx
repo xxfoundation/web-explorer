@@ -5,7 +5,6 @@ import {
   Typography,
   Radio,
   Stack,
-  Table,
   TableCell,
   TableHead,
   TableBody,
@@ -17,7 +16,7 @@ import { Close, Info, Warning } from '@mui/icons-material';
 import { keyring } from '@polkadot/ui-keyring';
 
 import useAccounts from '../../../../hooks/useAccounts';
-import { TableStyled } from '../../../../components/Tables/TableContainer.styled';
+import { Table, TableContainer } from '../../../../components/Tables/Table.styled';
 import { usePagination } from '../../../../hooks';
 import useApi from '../../../../hooks/useApi';
 import FormatBalance from '../../../../components/FormatBalance';
@@ -96,7 +95,7 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
           </Typography>
         </Box>
       ) : (
-        <TableStyled>
+        <TableContainer>
           <Table size='small'>
             <TableHead>
               <TableRow>
@@ -108,8 +107,8 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
             </TableHead>
             <TableBody>
               {paginated.map((acct, i) => (
-                <TableRow key={acct}>
-                  <TableCell>
+                <TableRow key={acct} onClick={(balances[i] && !balances[i].eqn(0)) ? handleAccountChange(acct) : undefined} sx={{ cursor: 'pointer' }}>
+                  <TableCell data-label='Account'>
                     <Stack direction='row'>
                       {balances[i]?.eqn(0) && (
                         <Tooltip
@@ -132,12 +131,12 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
                         balance={balances[i]}/>
                     </Stack>
                   </TableCell>
-                  <TableCell>
+                  <TableCell data-label='Balance'>
                     <Typography>
                       <FormatBalance value={balances[i]} />
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell data-label='Rewards'>
                     <StakingRewardsElement address={stashes[i]} />
                   </TableCell>
                   <TableCell>
@@ -163,7 +162,7 @@ const WalletSelection: FC<Props> = ({ onSelect, selected }) => {
             </TableBody>
           </Table>
           {pagination.controls}
-        </TableStyled>
+        </TableContainer>
       )}
     </Stack>
   );

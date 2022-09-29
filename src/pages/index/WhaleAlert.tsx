@@ -55,10 +55,10 @@ const headers = [
   { value: 'Block' },
   { value: 'Time' },
   {
-    value: <Typography>From</Typography>
+    value: 'From'
   },
   {
-    value: <Typography>To</Typography>
+    value: 'To',
   },
   { value: 'Amount' },
   { value: 'Result' },

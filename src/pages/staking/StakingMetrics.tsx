@@ -72,13 +72,13 @@ const StakingMetrics = () => {
             <Typography variant='h6'>Circulating AGR</Typography>
             <Stack direction='row' sx={{justifyContent: 'space-between'}}>
               <Typography variant='h3'>{economics?.inflationRate}%</Typography>
-            <CustomTooltip
-              title='Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
-            >
-              <InfoOutlined
-                  style={{fontSize: '1em'}}
-                />
-            </CustomTooltip>
+              <CustomTooltip
+                title='Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
+              >
+                <InfoOutlined
+                    style={{fontSize: '1em'}}
+                  />
+              </CustomTooltip>
             </Stack>
           </Box>
         </Loading>

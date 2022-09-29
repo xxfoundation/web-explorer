@@ -20,7 +20,7 @@ import {
   useTheme
 } from '@mui/material';
 
-import { TableStyled } from '../../../../components/Tables/TableContainer.styled';
+import { TableContainer } from '../../../../components/Tables/Table.styled';
 import FormatBalance from '../../../../components/FormatBalance';
 import Loading from '../../../../components/Loading';
 import { StakingBalances } from '../../../../simple-staking/actions';
@@ -174,7 +174,7 @@ const AmountSelection: FC<Props> = ({
       </Box>
       <Loading loading={loading}>
         <Stack spacing={4}>
-          <TableStyled>
+          <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
@@ -213,7 +213,7 @@ const AmountSelection: FC<Props> = ({
                 </TableRow>
               </TableBody>
             </Table>
-          </TableStyled>
+          </TableContainer>
           {option === 'redeem' && (
             <Alert severity='info'>
               <AlertTitle sx={{ fontSize: '1rem', mb: 1 }}>Reedeming unstaked coins</AlertTitle>

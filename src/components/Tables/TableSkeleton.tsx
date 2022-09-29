@@ -1,6 +1,6 @@
 import { Skeleton } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import { BaseLineCellsWrapper, BaselineTable } from '.';
+import { BaselineTable, HeaderCell } from '.';
 import genSkeletons from '../genSkeletons';
 
 export const TableSkeleton: FC<{
@@ -9,13 +9,10 @@ export const TableSkeleton: FC<{
   footer?: boolean;
   header?: boolean;
 }> = ({ cells, footer, rows }) => {
-  const loadingCells = useMemo(() => {
-    return BaseLineCellsWrapper(
-      genSkeletons(cells).map((Cell, index) => {
-        return <Cell key={index} />;
-      })
-    );
-  }, [cells]);
+  const loadingCells = useMemo<HeaderCell[]>(
+    () => genSkeletons(cells).map((Cell, index) =>  ({ label: '', value:  <Cell key={index} /> })),
+    [cells]
+  );
   const loadingRows = useMemo(
     () => genSkeletons(rows).map(() => loadingCells),
     [loadingCells, rows]
