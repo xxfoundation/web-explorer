@@ -4,6 +4,7 @@ import Address from '../../../../components/Hash/XXNetworkAddress';
 import { useQuery } from '@apollo/client';
 import Loading from '../../../../components/Loading';
 import { BN } from '@polkadot/util';
+import _ from 'lodash';
 
 type Props = {
   account: string;
@@ -15,8 +16,7 @@ const AccountDisplay: FC<Props> = ({ account, balance, targetBlank = false }) =>
   const {data, loading} = useQuery<GetDisplayIdentity>(GET_DISPLAY_IDENTITY, { variables: { account }});
   const display = data?.roles && data?.roles.length && data?.roles[0].account?.identity?.display || undefined;
   const rolesAux = data?.roles && data?.roles[0];
-  // TODO: improve this code
-  const roles: Partial<AccountRoles> = Object.assign({}, {council: rolesAux?.council, nominator: rolesAux?.nominator, special: rolesAux?.special, techcommit: rolesAux?.techcommit, validator: rolesAux?.validator});
+  const roles: Partial<AccountRoles> = _.omit(rolesAux, 'account');
   const loadingQuery = loading;
 
   return loadingQuery ? (
