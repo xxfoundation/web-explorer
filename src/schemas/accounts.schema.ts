@@ -66,21 +66,27 @@ export const GET_FULL_IDENTITY = gql`
 `
 
 export type GetDisplayIdentity = {
-  identity: {
-    display: string;
+  roles: {
+    council: boolean;
+    nominator: boolean;
+    special: string;
+    techcommit: boolean;
+    validator: boolean;
     account: {
-      roles: AccountRoles
+      identity: {
+        display: string;
+      }
     }
   }[]
 }
 export const GET_DISPLAY_IDENTITY = gql`
   ${ROLES_FRAGMENT}
   query GetDisplayIdentity($account: String!) {
-    identity(where: { account_id: { _eq: $account } }) {
-      display
+    roles(where: { account_id: { _eq: $account } }) {
+      ...roles
       account {
-        roles: role {
-          ...roles
+        identity {
+          display
         }
       }
     }

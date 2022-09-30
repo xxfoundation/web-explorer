@@ -1,9 +1,10 @@
-import { GetDisplayIdentity, GET_DISPLAY_IDENTITY } from '../../../../schemas/accounts.schema';
+import { AccountRoles, GetDisplayIdentity, GET_DISPLAY_IDENTITY } from '../../../../schemas/accounts.schema';
 import React, { FC } from 'react';
 import Address from '../../../../components/Hash/XXNetworkAddress';
 import { useQuery } from '@apollo/client';
 import Loading from '../../../../components/Loading';
 import { BN } from '@polkadot/util';
+import _ from 'lodash';
 
 type Props = {
   account: string;
@@ -13,9 +14,9 @@ type Props = {
 
 const AccountDisplay: FC<Props> = ({ account, balance, targetBlank = false }) => {
   const {data, loading} = useQuery<GetDisplayIdentity>(GET_DISPLAY_IDENTITY, { variables: { account }});
-  const display = data?.identity && data?.identity.length && data?.identity[0].display || undefined;
-  const roles = data?.identity && data?.identity.length && data?.identity[0].account.roles || {};
-
+  const display = data?.roles && data?.roles.length && data?.roles[0].account?.identity?.display || undefined;
+  const rolesAux = data?.roles && data?.roles[0];
+  const roles: Partial<AccountRoles> = _.omit(rolesAux, 'account');
   const loadingQuery = loading;
 
   return loadingQuery ? (

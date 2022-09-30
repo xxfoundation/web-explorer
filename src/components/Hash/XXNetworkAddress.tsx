@@ -14,7 +14,7 @@ import Link from '../Link';
 import Tooltip from '../Tooltip';
 
 type Props = HashProps & {
-  roles: Partial<AccountRoles>; 
+  roles?: Partial<AccountRoles>; 
   name?: string;
   avatar?: string;
   disableAvatar?: boolean;
