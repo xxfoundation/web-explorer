@@ -26,6 +26,7 @@ import ValidatorTableControls, {
 import { TabText } from '../../components/Tabs';
 import SkeletonRows from '../../components/Tables/SkeletonRows';
 import useInput from '../../hooks/useInput';
+import useDebounce from '../../hooks/useDebounce';
 
 const ROWS_PER_PAGE = 20;
 
@@ -86,6 +87,7 @@ const ValidatorsTable = () => {
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<ValidatorFilter>('current');
   const [search, setSearch] = useInput('');
+  const debouncedSearch = useDebounce(search, 500);
   const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const latestEra = latestEraQuery.data?.validatorStats?.[0].era;
   const countsQuery = useQuery<ActiveCountsQuery>(GET_ACTIVE_COUNTS, {
@@ -98,18 +100,18 @@ const ValidatorsTable = () => {
       _or: [
         {
           identity: {
-            display: { _ilike: `%${search}%`},
+            display: { _ilike: `%${debouncedSearch}%`},
           }
         },
         {
-          cmix_id: { _ilike: `%${search}%`}
+          cmix_id: { _ilike: `%${debouncedSearch}%`}
         },
         {
-          stash_address: { _ilike: `%${search}%`}
+          stash_address: { _ilike: `%${debouncedSearch}%`}
         }
       ]
     },
-  }), [search]);
+  }), [debouncedSearch]);
 
   const variables = useMemo(
     () => ({
