@@ -1,7 +1,7 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Tooltip, Typography } from '@mui/material';
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 
 import { theme } from '../../themes/default';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -15,6 +15,7 @@ import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
 import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
 import { NumberParam, useQueryParam } from 'use-query-params';
+import useDebounce from '../../hooks/useDebounce';
 
 type RoleFilters = Record<string, boolean>;
 type Filters = { era?: number, roles: RoleFilters };
@@ -99,6 +100,7 @@ const accountToRow = (
 };
 
 const useHeaders = () => {
+  const [search, setSearch] = useState<string>();
   const [roleFilters, setRoleFilters] = useSessionState<RoleFilters>('accounts.roleFilters', {});
   const [eraQuery, setEraQuery] = useQueryParam('era', NumberParam);
   const [eraSessionState, setEraSessionState] = useSessionState<number | undefined>('accounts.whenCreated', undefined);
@@ -113,7 +115,10 @@ const useHeaders = () => {
   const headers = useMemo<HeaderCell[]>(
     () => [
       { value: 'Rank' },
-      { value: 'Account' },
+      {
+        label: 'Account',
+        value: <GeneralFilter label='Account' value={search} onChange={setSearch} />
+      },
       {
         label: 'Extrinsics',
         value: (
@@ -137,27 +142,34 @@ const useHeaders = () => {
         value: <GeneralFilter value={era?.toString()} onChange={onEraChange} label='Era created' />
       }
     ],
-    [era, onEraChange, roleFilters, setRoleFilters]
+    [era, onEraChange, roleFilters, search, setRoleFilters]
   );
 
   return {
     headers,
-    filters: { roles: roleFilters, era }
+    filters: { roles: roleFilters, era },
+    search
   };
 };
 
-const buildOrClause = (filters: Filters) =>
+const buildOrClause = (filters: Filters, search?: string) =>
   [
     filters.roles.council && { role: { council: { _eq: true } } },
     filters.roles.nominator && { role: { nominator: { _eq: true } } },
     filters.roles.techcommit && { role: { techcommit: { _eq: true } } },
     filters.roles.validator && { role: { validator: { _eq: true } } },
-    filters.roles.special && { role: { special: { _neq: 'null' } } }
+    filters.roles.special && { role: { special: { _neq: 'null' } } },
+    search !== undefined && { account_id: { _ilike: `%${search}%`} },
+    search !== undefined && { identity: { display: { _ilike: `%${search}%`} } },
   ].filter((v) => !!v);
 
 const AccountsTable: FC = () => {
-  const { filters, headers } = useHeaders();
-  const orClause = useMemo(() => buildOrClause(filters), [filters]);
+  const { filters, headers, search } = useHeaders();
+  const debouncedSearch = useDebounce(search, 500);
+  const orClause = useMemo(
+    () => buildOrClause(filters, debouncedSearch),
+    [debouncedSearch, filters]
+  );
 
   const variables = useMemo(
     () => ({
