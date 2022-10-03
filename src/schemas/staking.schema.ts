@@ -134,8 +134,8 @@ export const GET_CURRENT_VALIDATORS = gql`
 `;
 
 export const GET_WAITING_LIST = gql`
-  query GetWaitingList {
-    validators: waiting(order_by: { self_stake: desc }) {
+  query GetWaitingList ($where: waiting_bool_exp) {
+    validators: waiting(order_by: { self_stake: desc }, where: $where) {
       addressId: stash_address
       location
       ownStake: self_stake
