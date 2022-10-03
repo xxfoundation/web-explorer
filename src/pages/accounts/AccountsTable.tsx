@@ -152,38 +152,37 @@ const useHeaders = () => {
   };
 };
 
-const buildOrClause = (filters: Filters, search?: string) =>
+const buildOrClause = (filters: Filters) =>
   [
     filters.roles.council && { role: { council: { _eq: true } } },
     filters.roles.nominator && { role: { nominator: { _eq: true } } },
     filters.roles.techcommit && { role: { techcommit: { _eq: true } } },
     filters.roles.validator && { role: { validator: { _eq: true } } },
     filters.roles.special && { role: { special: { _neq: 'null' } } },
-    search !== undefined && { account_id: { _ilike: `%${search}%`} },
-    search !== undefined && { identity: { display: { _ilike: `%${search}%`} } },
   ].filter((v) => !!v);
 
 const AccountsTable: FC = () => {
   const { filters, headers, search } = useHeaders();
-  const debouncedSearch = useDebounce(search, 500);
   const orClause = useMemo(
-    () => buildOrClause(filters, debouncedSearch),
-    [debouncedSearch, filters]
+    () => buildOrClause(filters),
+    [filters]
   );
 
   const variables = useMemo(
     () => ({
       where: {
         when_created_era: { _eq: filters.era },
+        _or: [
+          { account_id: { _ilike: `%${search ?? ''}%`} },
+          { identity: { display: { _ilike: `%${search ?? ''}%`} } }
+        ],
         ...(orClause.length > 0 && {
-          _and: {
-            _or: orClause
-          }
+          _and: { _or: orClause }
         })
       },
       orderBy: [{ total_balance: 'desc' }]
     }),
-    [filters.era, orClause]
+    [filters.era, search, orClause]
   );
 
 
