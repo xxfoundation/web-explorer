@@ -1,6 +1,8 @@
 import { useQuery } from '@apollo/client';
-import { Stack, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { CircularProgress, FormControl, Input, InputAdornment, Stack, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+
 import Address from '../../components/Hash/XXNetworkAddress';
 import CmixAddress from '../../components/Hash/CmixAddress';
 import Error from '../../components/Error';
@@ -23,6 +25,8 @@ import ValidatorTableControls, {
 } from './ValidatorTableControls';
 import { TabText } from '../../components/Tabs';
 import SkeletonRows from '../../components/Tables/SkeletonRows';
+import useInput from '../../hooks/useInput';
+import useDebounce from '../../hooks/useDebounce';
 
 const ROWS_PER_PAGE = 20;
 
@@ -82,25 +86,52 @@ const ValidatorsTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<ValidatorFilter>('current');
+  const [search, setSearch] = useInput('');
+  const debouncedSearch = useDebounce(search, 500);
   const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const latestEra = latestEraQuery.data?.validatorStats?.[0].era;
   const countsQuery = useQuery<ActiveCountsQuery>(GET_ACTIVE_COUNTS, {
     variables: { era: latestEra },
     skip: !latestEra
   });
+
+  const searchClause  = useMemo(() => ({
+    _and: {
+      _or: [
+        {
+          identity: {
+            display: { _ilike: `%${debouncedSearch}%`},
+          }
+        },
+        {
+          cmix_id: { _ilike: `%${debouncedSearch}%`}
+        },
+        {
+          stash_address: { _ilike: `%${debouncedSearch}%`}
+        }
+      ]
+    },
+  }), [debouncedSearch]);
+
   const variables = useMemo(
     () => ({
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      where: { era: { _eq: latestEra } }
+      where: {
+        era: { _eq: latestEra },
+        ...searchClause,
+      }
     }),
-    [latestEra, page, rowsPerPage]
+    [latestEra, page, rowsPerPage, searchClause]
   );
+
   const validatorsQuery = useQuery<ValidatorAccountsQuery>(GET_CURRENT_VALIDATORS, {
     variables,
     skip: !latestEra
   });
-  const waitingQuery = useQuery<ValidatorAccountsQuery>(GET_WAITING_LIST);
+  const waitingQuery = useQuery<ValidatorAccountsQuery>(GET_WAITING_LIST, {
+    variables: { where: searchClause }
+  });
   const validators = validatorsQuery.data?.validators;
   const waitingList = waitingQuery.data?.validators;
   const activeCount = countsQuery.data?.active.aggregate.count;
@@ -125,7 +156,23 @@ const ValidatorsTable = () => {
         <Typography variant='h2' sx={{ ml: 1.5, fontWeight: 500 }}>
           Validator
         </Typography>
-        <ValidatorTableControls labels={labels} selected={filter} onSelect={setFilter} />
+        <Stack sx={{ flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between', alignItems: 'center' }} direction='row' >
+          <ValidatorTableControls labels={labels} selected={filter} onSelect={setFilter} />
+          <FormControl
+            sx={{ minWidth: {xs: '90%', md: '20em'}, mt: {xs: '1em'} }}>
+            <Input
+              value={search}
+              onChange={setSearch}
+              placeholder='Search by Address / Identity / Cmix ID'
+              endAdornment={
+                <InputAdornment position='start'>
+                  {validatorsQuery.loading
+                    ? <CircularProgress size={20} color='inherit' />
+                    : <SearchIcon />}
+                </InputAdornment>
+              }/>
+          </FormControl>
+        </Stack>
       </Stack>
       <TableContainer>
         <Table>

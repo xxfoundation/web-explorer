@@ -313,7 +313,7 @@ export type SearchAccounts = {
 export const SEARCH_ACCOUNTS = gql`
   ${ACCOUNT_FRAGMENT}
   query SearchAccounts($search: String) {
-    accounts: account(where: {_or: [{account_id: {_like: $search }}, { identity: { display: { _ilike: $search } } }]}) {
+    accounts: account(where: {_or: [{account_id: {_ilike: $search }}, { identity: { display: { _ilike: $search } } }]}) {
       ...account
     }
   }
