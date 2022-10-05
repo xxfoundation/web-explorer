@@ -120,7 +120,8 @@ const Hash: FC<Props> = ({
         component='span'
         fontFamily={'Roboto Mono'}
         color={isValid ? 'info' : 'red'}
-        sx={{ fontWeight: 400 }}
+        fontSize='14px'
+        fontWeight='400'
         {...props}
       >
         {url ? (

@@ -156,13 +156,14 @@ const ValidatorsTable = () => {
         <Typography variant='h2' sx={{ ml: 1.5, fontWeight: 500 }}>
           Validator
         </Typography>
-        <Stack direction='row' justifyContent='space-between' alignItems='center'>
+        <Stack sx={{ flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between', alignItems: 'center' }} direction='row' >
           <ValidatorTableControls labels={labels} selected={filter} onSelect={setFilter} />
-          <FormControl>
+          <FormControl
+            sx={{ minWidth: {xs: '90%', md: '20em'}, mt: {xs: '1em'} }}>
             <Input
               value={search}
               onChange={setSearch}
-              placeholder='Search'
+              placeholder='Search by Address / Identity / Cmix ID'
               endAdornment={
                 <InputAdornment position='start'>
                   {validatorsQuery.loading
