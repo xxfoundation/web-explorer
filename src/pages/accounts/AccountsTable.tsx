@@ -15,7 +15,6 @@ import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
 import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
 import { NumberParam, useQueryParam } from 'use-query-params';
-import useDebounce from '../../hooks/useDebounce';
 
 type RoleFilters = Record<string, boolean>;
 type Filters = { era?: number, roles: RoleFilters };
