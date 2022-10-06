@@ -175,6 +175,7 @@ const ValidatorsTable = () => {
         </Stack>
       </Stack>
       <TableContainer>
+        
         <Table>
           <TableHead>
             <TableRow>

@@ -10,6 +10,7 @@ import Error from '../Error';
 import React, { FC, useMemo } from 'react';
 import { TableSkeleton } from './TableSkeleton';
 import { Table, TableContainer } from './Table.styled';
+import HeaderMobileFilters from './HeaderMobileFilters';
 
 type NormalCell = {
   value: number | string;
@@ -90,6 +91,7 @@ export const BaselineTable: FC<Props> = (props) => {
 
   return (
     <TableContainer>
+      <HeaderMobileFilters headers={headers} />
       <Table {...tableProps}>
         <TableHead>
           <TableRow>{memoistHeaders}</TableRow>
