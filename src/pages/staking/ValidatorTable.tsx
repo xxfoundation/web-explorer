@@ -58,7 +58,7 @@ const ValidatorRow: FC<ValidatorAccount & { index: number }> = ({
         <Typography variant='h4'>{index}</Typography>
       </TableCell>
       <TableCell data-label={'Validator'}>
-        <Address roles={{ validator: true }} value={addressId} name={identityDisplay} url={validatorLink} truncated />
+        <Address roles={{ validator: true }} value={addressId} name={identityDisplay} url={validatorLink} truncated sx={{ textAlign: 'end' }}/>
       </TableCell>
       <TableCell data-label='Location'>{parsed}</TableCell>
       <TableCell data-label='Own Stake'>
@@ -159,7 +159,7 @@ const ValidatorsTable = () => {
         <Stack sx={{ flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between', alignItems: 'center' }} direction='row' >
           <ValidatorTableControls labels={labels} selected={filter} onSelect={setFilter} />
           <FormControl
-            sx={{ minWidth: {xs: '90%', md: '20em'}, mt: {xs: '1em'} }}>
+            sx={{ minWidth: {xs: '95%', md: '20em'}, mt: {xs: '1em'}, pl: {xs: '10px'} }}>
             <Input
               value={search}
               onChange={setSearch}
@@ -168,14 +168,13 @@ const ValidatorsTable = () => {
                 <InputAdornment position='start'>
                   {validatorsQuery.loading
                     ? <CircularProgress size={20} color='inherit' />
-                    : <SearchIcon />}
+                    : <SearchIcon fontSize='small'/>}
                 </InputAdornment>
               }/>
           </FormControl>
         </Stack>
       </Stack>
-      <TableContainer>
-        
+      <TableContainer>  
         <Table>
           <TableHead>
             <TableRow>
