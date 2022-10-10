@@ -39,7 +39,7 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, ta
   );
   const avatarIcon = useMemo(() => {
     return  (
-      <Tooltip title={role}>
+      <Tooltip title={role} sx={{ margin: { xs: '0' } }}>
         <div>
           {role === 'other' && <CustomAvatar sx={{ width: 25, height: 25, mr: 1 }} src={avatar} alt={name} />}
           {role === 'special' && <StarsIcon sx={{ mr: 1 }} /> }
@@ -62,7 +62,7 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, ta
   )
 
   return (
-    <Stack direction={'row'} alignItems='center'>
+    <Stack direction={'row'} alignItems='center' sx={{ textAlign: { xs: 'end' } }}>
       {!disableAvatar && avatarIcon}
       {name ? (
       <CustomWidthTooltip title={tooltip} placement='top-start' arrow>
@@ -71,13 +71,13 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, ta
           color={isValid ? 'info' : 'red'}
           fontSize='14px'
           fontWeight='400'
+          sx={{ maxWidth: { xs: '6rem' } }}
         >
             {targetBlank ? 
             <Link target='__blank' rel='noopener noreferrer' to={url}>{name}</Link>
           : <Link to={url}>{name}</Link>}
         </Typography>
       </CustomWidthTooltip>
-        
       ) : (
         <Hash
           {...hashProps}
