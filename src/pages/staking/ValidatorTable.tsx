@@ -173,33 +173,43 @@ const ValidatorsTable = () => {
               }/>
           </FormControl>
         </Stack>
-      </Stack>
-      <TableContainer>  
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell>Validator</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Own Stake</TableCell>
-              {filter !== 'waiting' && <TableCell>Total Stake</TableCell>}
-              <TableCell>Commission</TableCell>
-              <TableCell>Cmix ID</TableCell>
-              <TableCell>Nominators</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {validatorsQuery.loading && <SkeletonRows columns={8} rows={rowsPerPage} />}
-            {!validatorsQuery.loading && error && (
+        <TableContainer>
+          <Table>
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={7}>
-                  <Error type='data-unavailable' />
-                </TableCell>
+                <TableCell>#</TableCell>
+                <TableCell>Validator</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Own Stake</TableCell>
+                {filter !== 'waiting' && <TableCell>Total Stake</TableCell>}
+                <TableCell>Commission</TableCell>
+                <TableCell>Cmix ID</TableCell>
+                <TableCell>Nominators</TableCell>
               </TableRow>
-            )}
-            {filter !== 'waiting' ? (
-              validators ? (
-                validators.map((validator, index) => (
+            </TableHead>
+            <TableBody>
+              {validatorsQuery.loading && <SkeletonRows columns={8} rows={rowsPerPage} />}
+              {!validatorsQuery.loading && error && (
+                <TableRow>
+                  <TableCell colSpan={7}>
+                    <Error type='data-unavailable' />
+                  </TableCell>
+                </TableRow>
+              )}
+              {filter !== 'waiting' ? (
+                validators ? (
+                  validators.map((validator, index) => (
+                    <ValidatorRow
+                      key={validator.addressId}
+                      index={index + 1 + page * rowsPerPage}
+                      {...validator}
+                    />
+                  ))
+                ) : (
+                  <TableRow></TableRow>
+                )
+              ) : waitingList ? (
+                waitingList.map((validator, index) => (
                   <ValidatorRow
                     key={validator.addressId}
                     index={index + 1 + page * rowsPerPage}
@@ -208,34 +218,24 @@ const ValidatorsTable = () => {
                 ))
               ) : (
                 <TableRow></TableRow>
-              )
-            ) : waitingList ? (
-              waitingList.map((validator, index) => (
-                <ValidatorRow
-                  key={validator.addressId}
-                  index={index + 1 + page * rowsPerPage}
-                  {...validator}
-                />
-              ))
-            ) : (
-              <TableRow></TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <TablePagination
-          page={page}
-          count={count ?? 0}
-          rowsPerPage={rowsPerPage}
-          onPageChange={(_: unknown, number: number) => {
-            setPage(number);
-          }}
-          rowsPerPageOptions={[ROWS_PER_PAGE, 30, 40, 50]}
-          onRowsPerPageChange={(event) => {
-            setRowsPerPage(parseInt(event.target.value));
-            setPage(0);
-          }}
-        />
-      </TableContainer>
+              )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            page={page}
+            count={count ?? 0}
+            rowsPerPage={rowsPerPage}
+            onPageChange={(_: unknown, number: number) => {
+              setPage(number);
+            }}
+            rowsPerPageOptions={[ROWS_PER_PAGE, 30, 40, 50]}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(parseInt(event.target.value));
+              setPage(0);
+            }}
+          />
+        </TableContainer>
+      </Stack>
     </Stack>
   );
 };
