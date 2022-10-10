@@ -1,13 +1,15 @@
-import { Box, Container, Divider, Grid, Link, Typography } from '@mui/material';
+import { Button, Box, Container, Divider, Grid, Typography, styled } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import xxNetworkLogo from '../assets/images/logos/xx-network-logo--white.svg';
+
+
+import hub from '../assets/images/logos/xx_hub_logotype.svg';
 import Socials from './Socials';
-import { theme } from '../themes/footer';
+import { theme as footerTheme } from '../themes/footer';
 import { theme as defaultTheme } from '../themes/default';
-import FooterMenu from './menus/Footer';
 import { GET_RUNTIME_VERSION, RuntimeVersion } from '../schemas/chaindata.schema';
 import { useQuery } from '@apollo/client';
+import Link from './Link';
 
 const VERSION_LENGTH = 6;
 const RELEASE_URL = 'https://github.com/xx-labs/xxchain/releases/tag/';
@@ -37,12 +39,30 @@ const runtimeVersion = (data: string) => {
   );
 };
 
+const ListLink = styled(Link)(({ theme }) => ({
+  display: 'block',
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
+  color: theme.palette.primary.contrastText,
+  fontSize: 14
+}));
+
+const StyledButton = styled(Button)(() => ({
+  backgroundColor: 'white',
+  margin: 'auto',
+  borderRadius: 11,
+  padding: '1rem 0.75rem 0.75rem',
+  '&:hover': {
+    backgroundColor: 'rgb(255,255,255,0.8)',
+  }
+}));
+
 const Footer = () => {
   const { data, loading } = useQuery<RuntimeVersion>(GET_RUNTIME_VERSION);
   const version = data?.block[0].version.toString();
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={footerTheme}>
       <Box
         sx={{
           backgroundColor: 'background.default'
@@ -57,10 +77,61 @@ const Footer = () => {
         >
           <Grid container justifyContent='space-between'>
             <Grid item xs={12} md='auto' sx={{ mb: 2 }}>
-              <img src={xxNetworkLogo} alt='xx network' />
+              <StyledButton href='https://hub.xx.network'>
+                <img src={hub} />
+              </StyledButton>
             </Grid>
             <Grid item xs={12} md={5}>
-              <FooterMenu />
+              <Grid container spacing={3}>
+                <Grid item xs>
+                  <ListLink to='/' underline='hover'>
+                    Home
+                  </ListLink>
+                  <ListLink to='https://xx.network/mission/' underline='hover' rel='noopener' target='_blank'>
+                    Mission
+                  </ListLink>
+                  <ListLink
+                    to='https://xx.network/resources/'
+                    underline='hover'
+                    rel='noopener'
+                    target='_blank'
+                  >
+                    Resources
+                  </ListLink>
+                </Grid>
+                <Grid item xs> 
+                  <ListLink
+                    to='https://xx.network/blockchain'
+                    underline='hover'
+                    rel='noopener'
+                    target='_blank'
+                  >
+                    xx blockchain
+                  </ListLink>
+                  <ListLink
+                    to='https://xx.network/messenger/'
+                    underline='hover'
+                    rel='noopener'
+                    target='_blank'
+                  >
+                    xx messenger
+                  </ListLink>
+                  <ListLink to='https://xx.network/welcome/' underline='hover' rel='noopener' target='_blank'>
+                    xx community
+                  </ListLink>
+                </Grid>
+                <Grid item xs={12} md='auto'>
+                  <ListLink to='https://xx.network/whitepapers' underline='hover' rel='noopener' target='_blank'>
+                    Whitepapers
+                  </ListLink>
+                  <ListLink to='https://xx.network/faq/' underline='hover' rel='noopener' target='_blank'>
+                    FAQ
+                  </ListLink>
+                  <ListLink to='https://xx.network/contact/' underline='hover' rel='noopener' target='_blank'>
+                    Contact Us
+                  </ListLink>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
           {!loading && version && (
