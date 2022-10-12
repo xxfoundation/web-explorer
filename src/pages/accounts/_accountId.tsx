@@ -1,17 +1,18 @@
-import { Container, Grid, Skeleton, Typography } from '@mui/material';
-import React, { FC } from 'react';
+import { Container, Grid, Skeleton, Tab, Typography } from '@mui/material';
+import React, { FC, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
-import RoundedButton from '../../components/buttons/Rounded';
-import useFetchValidatorAccountInfo from '../../hooks/useFetchValidatorAccountInfo';
-import NotFound from '../NotFound';
 import Balances from './account/Balances';
 import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
 import AccountDetails from './account/AccountDetails';
+import NotFound from '../NotFound';
+import PageTabs, { Panel } from '../../components/PageTabs';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
+import RoundedButton from '../../components/buttons/Rounded';
+import useFetchValidatorAccountInfo from '../../hooks/useFetchValidatorAccountInfo';
 
 import { useToggle } from '../../hooks';
 import BalanceHistoryChart from './account/BalanceHistoryChart';
@@ -37,6 +38,11 @@ const AccountId: FC = () => {
   const { data, loading } = useFetchValidatorAccountInfo(accountId);
   const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
   const currEra = latestEraQuery?.data?.validatorStats[0].era;
+  const [tab, setTab] = useState(0);
+
+  const handleTab = useCallback((event: React.SyntheticEvent, t: number) => {
+    setTab(t);
+  }, []);
 
   if (loading || latestEraQuery.loading) {
     return (
@@ -103,14 +109,26 @@ const AccountId: FC = () => {
             </PaperWrapStyled>
           </Grid>
         )}
-        <Grid item xs={12} sx={{pt: '0!important'}}>
-          <BlockchainCard account={data.account} />
-          {validator !== undefined && (
-            <>
-              <StakingCard accountId={account.id} validator={validator} active={currentlyActive}/>
-              {/* <PerformanceSection account={account} stats={validator?.stats ?? []} /> */}
-            </>
-          )}
+        <Grid item xs={12}>
+          <PaperWrapStyled sx={{ position: 'relative', overflow: 'hidden', pt: 11 }}>
+            <PageTabs value={tab} onChange={handleTab}>
+              <Tab label='Blockchain' />
+              {validator !== undefined && (
+                <Tab label='Staking' />
+              )}
+            </PageTabs>
+            <Panel index={tab} value={0}>
+              <BlockchainCard account={data.account} />
+            </Panel>
+              {validator !== undefined && (
+                <Panel index={tab} value={1}>
+                  <StakingCard
+                    accountId={account.id}
+                    validator={validator}
+                    active={currentlyActive}/>
+                </Panel>
+              )}
+          </PaperWrapStyled>
         </Grid>
       </Grid>
     </Container>

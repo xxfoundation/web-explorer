@@ -1,15 +1,16 @@
 import { useQuery } from '@apollo/client';
 import { Skeleton, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import AccountTile from '../../../../components/AccountTile';
-import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
-import { TabText } from '../../../../components/Tabs';
-import { GetStakingRewardCounts, GET_STAKING_REWARDS_COUNTS } from '../../../../schemas/accounts.schema';
-import { GetValidatorStats } from '../../../../schemas/staking.schema';
-import ValidatorInfo from '../ValidatorSummary';
+
 import NominatorsTable from './NominatorsTable';
 import StakingRewardsTable from './StakingRewardsTable';
 import ValidatorStatsTable from './ValidatorStatsTable';
+import ValidatorInfo from '../ValidatorSummary';
+import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
+import TabsWithPanels, { TabText } from '../../../../components/Tabs';
+import { GetStakingRewardCounts, GET_STAKING_REWARDS_COUNTS } from '../../../../schemas/accounts.schema';
+import { GetValidatorStats } from '../../../../schemas/staking.schema';
+
 
 const StakingCard: FC<{
   accountId: string;
@@ -73,7 +74,7 @@ const StakingCard: FC<{
   }, [accountId, active, loading, nominators, rewardsCount, rewardsSum, statsCount, validatorInfo, validatorStats]);
 
   return (
-    rewardsCount ? (<AccountTile panels={panels} tabsLabel='account staking card' title='Staking' />) : <></>
+    rewardsCount ? (<TabsWithPanels panels={panels} tabsLabel='account staking card' />) : <></>
   );
 };
 
