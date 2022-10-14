@@ -13,7 +13,7 @@ import {
 } from '../../../../schemas/accounts.schema';
 import TransferTable from '../../../transfers/TransfersTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
-import AccountTile from '../../../../components/AccountTile';
+import TabsWithPanels from '../../../../components/Tabs';
 import { TabText } from '../../../../components/Tabs';
 
 type Props = {
@@ -82,7 +82,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
   }, [account.id, loading, extrinsicCount, transferCount, filters]);
 
   return (
-    <AccountTile panels={panels} tabsLabel='account blockchain card' title='Blockchain' />
+    <TabsWithPanels panels={panels} tabsLabel='account blockchain card' />
   );
 };
 
