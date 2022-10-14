@@ -109,7 +109,7 @@ const StakingRewardsTable: FC<{
         headers={headers}
         rows={paginated ?? []}
         rowsPerPage={pagination.rowsPerPage}
-        footer={(
+        footer={csvData?.length ? (
           <>
             <Divider />
             <Stack direction={'row'} sx={{ justifyContent: 'space-between' }}>
@@ -121,7 +121,7 @@ const StakingRewardsTable: FC<{
               {pagination.controls}
             </Stack>
           </>
-        )}
+        ) : <></>}
       />
     </>
   );
