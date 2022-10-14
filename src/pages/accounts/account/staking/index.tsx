@@ -10,7 +10,6 @@ import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import TabsWithPanels, { TabText } from '../../../../components/Tabs';
 import { GetStakingRewardCounts, GET_STAKING_REWARDS_COUNTS } from '../../../../schemas/accounts.schema';
 import { GetValidatorStats } from '../../../../schemas/staking.schema';
-import Loading from '../../../../components/Loading';
 
 const StakingCard: FC<{
   accountId: string;
