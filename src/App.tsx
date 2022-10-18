@@ -16,13 +16,13 @@ import Extrinsics from './pages/extrinsics';
 import BlockChain from './pages/index';
 import NotFound from './pages/NotFound';
 import Staking from './pages/staking';
-import StakingSimple from './pages/staking/simple';
 import Transfers from './pages/transfers';
 import AccountId from './pages/accounts/_accountId';
 import Block from './pages/blocks/_blockNumberOrHash';
 import ExtrinsicComponent from './pages/extrinsics/_extrinsicIdOrHash';
 
 import Banner from './components/Banner';
+import Redirect from './components/Redirect';
 
 const App = () => (
   <Router>
@@ -50,7 +50,7 @@ const App = () => (
         </Route>
         <Route path='staking' element={<Staking />} />
         <Route path='glossary' element={<Glossary />} />
-        <Route path='staking/simple' element={<StakingSimple />} />
+        <Route path='staking/simple' element={<Redirect />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
       <SiteFooter />
