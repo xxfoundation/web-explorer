@@ -5,16 +5,17 @@ import PanToolIcon from '@mui/icons-material/PanTool';
 import StarsIcon from '@mui/icons-material/Stars';
 import GavelIcon from '@mui/icons-material/Gavel';
 import TerminalIcon from '@mui/icons-material/Terminal';
-import { styled, Avatar, Stack } from '@mui/material';
+import { styled, Avatar, Stack, Typography } from '@mui/material';
 
 import Hash, { Props as HashProps } from '.';
 import React, { FC, useMemo } from 'react';
 import { isValidXXNetworkAddress } from '../../utils';
 import Link from '../Link';
-import Tooltip from '../Tooltip';
+import Tooltip, { CustomWidthTooltip } from '../Tooltip';
+import CopyButton from '../buttons/CopyButton';
 
 type Props = HashProps & {
-  roles: Partial<AccountRoles>; 
+  roles?: Partial<AccountRoles>; 
   name?: string;
   avatar?: string;
   disableAvatar?: boolean;
@@ -38,7 +39,7 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, ta
   );
   const avatarIcon = useMemo(() => {
     return  (
-      <Tooltip title={role}>
+      <Tooltip title={role} sx={{ margin: { xs: '0' } }}>
         <div>
           {role === 'other' && <CustomAvatar sx={{ width: 25, height: 25, mr: 1 }} src={avatar} alt={name} />}
           {role === 'special' && <StarsIcon sx={{ mr: 1 }} /> }
@@ -53,14 +54,30 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, ta
 
   const isValid = isValidXXNetworkAddress(hashProps.value);
   const url = !disableUrl ? hashProps.url || `/accounts/${hashProps.value}` : undefined;
+  const tooltip = (
+    <Stack sx={{ display: 'inline-flex' }} direction={'row'} spacing={1} alignItems={'center'}>
+      <Typography component='span' variant='body5'>{hashProps.value}</Typography>
+      <CopyButton value={hashProps.value} />
+    </Stack>
+  )
 
   return (
-    <Stack direction={'row'} alignItems='center'>
+    <Stack direction={'row'} alignItems='center' sx={{ textAlign: { xs: 'end' } }}>
       {!disableAvatar && avatarIcon}
       {name ? (
-        targetBlank ? 
-        <Link target='__blank' rel='noopener noreferrer' to={url}>{name}</Link>
-        : <Link to={url}>{name}</Link>
+      <CustomWidthTooltip title={tooltip} placement='top-start' arrow>
+        <Typography
+          component='span'
+          color={isValid ? 'info' : 'red'}
+          fontSize='14px'
+          fontWeight='400'
+          sx={{ maxWidth: { xs: '6rem' } }}
+        >
+            {targetBlank ? 
+            <Link target='__blank' rel='noopener noreferrer' to={url}>{name}</Link>
+          : <Link to={url}>{name}</Link>}
+        </Typography>
+      </CustomWidthTooltip>
       ) : (
         <Hash
           {...hashProps}

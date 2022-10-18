@@ -9,7 +9,7 @@ import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
-import { BaseLineCellsWrapper, BaselineTable } from '../../components/Tables';
+import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../components/Tables';
 import TimeAgo from '../../components/TimeAgo';
 import RefreshButton from '../../components/buttons/Refresh';
 import {
@@ -104,19 +104,19 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo(
     () =>
-      BaseLineCellsWrapper([
-        <GeneralFilter value={era?.toString()} onChange={onEraChange} label='Era' />,
+      HeaderCellsWrapper([
+        ['Era', <GeneralFilter value={era?.toString()} onChange={onEraChange} label='Era' />],
         'Block',
         'Time',
         'From',
         'To',
         'Amount',
-        <BooleanFilter
+        ['Result', <BooleanFilter
           label='Result'
           onChange={setStatusFilter}
           toggleLabel={(v) => (v ? 'Successful' : 'Failed')}
           value={statusFilter}
-        />,
+        />],
         'Hash'
       ]),
     [era, onEraChange, setStatusFilter, statusFilter]
