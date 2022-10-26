@@ -50,7 +50,7 @@ export const Panel: FC<PanelProps> = ({ children, index, value, ...other }) => (
     {...other}
   >
     {value === index && (
-      <Box>
+      <Box sx={{ pt: 7 }}>
         {children}
       </Box>
     )}
