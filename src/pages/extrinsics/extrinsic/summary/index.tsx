@@ -19,6 +19,15 @@ import TimeAgo from '../../../../components/TimeAgo';
 import ModuleCalls from './ModuleCalls';
 import ParametersFragment from './ParametersFragment';
 import FormatBalance from '../../../../components/FormatBalance';
+import { BN, BN_ZERO } from '@polkadot/util';
+
+const computeFee = (fee: string): BN => {
+  const inclusion = JSON.parse(fee).inclusionFee;
+  if (inclusion === null) {
+    return BN_ZERO
+  }
+  return new BN(inclusion.baseFee).add(new BN(inclusion.lenFee));
+}
 
 type Props = {
   extrinsic: Extrinsic;
@@ -84,7 +93,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
           <SummaryHeader>Fee</SummaryHeader>
           <SummaryValue>
             <Typography>
-              <FormatBalance precision={4} value={JSON.parse(extrinsic.fee).partialFee} />
+              <FormatBalance precision={4} value={computeFee(extrinsic.fee)} />
             </Typography>
           </SummaryValue>
         </SummaryEntry>

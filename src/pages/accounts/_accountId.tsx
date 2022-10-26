@@ -110,7 +110,7 @@ const AccountId: FC = () => {
           </Grid>
         )}
         <Grid item xs={12}>
-          <PaperWrapStyled sx={{ position: 'relative', overflow: 'hidden', pt: 11 }}>
+          <PaperWrapStyled sx={{ position: 'relative', overflow: 'hidden' }}>
             <PageTabs value={tab} onChange={handleTab}>
               <Tab label='Blockchain' />
               {validator !== undefined && (

@@ -29,7 +29,7 @@ const EXTRINSIC_FRAGMENT = gql`
     argsDef: args_def
     doc
     errorMsg: error_message
-    fee: fee_info
+    fee: fee_details
   }
 `
 
