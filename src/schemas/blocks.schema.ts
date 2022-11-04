@@ -1,10 +1,9 @@
 import { gql } from '@apollo/client';
-import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
+import { Roles, ROLES_FRAGMENT } from './accounts.schema';
 import { TotalOfItems } from './types';
 
 /* ---------------------------- General Variables --------------------------- */
-export type AuthorName = {
-  role: AccountRoles,
+export type AuthorName = Roles & {
   identity: {
     display: string;
   }
@@ -36,7 +35,7 @@ export const BLOCK_KEYS_FRAGMENT = gql`
     number: block_number
     hash: block_hash
     finalized: finalized
-    currentEra: active_era
+    currentEra: era
     parentHash: parent_hash
     stateRoot: state_root
     extrinsicsRoot: extrinsics_root
@@ -46,9 +45,7 @@ export const BLOCK_KEYS_FRAGMENT = gql`
     totalEvents: total_events
     totalExtrinsics: total_extrinsics
     authorName: account {
-      role {
-        ...roles
-      }
+      ...roles_fragment
       identity {
         display: display
       }
@@ -164,7 +161,7 @@ export const GET_BLOCKS_BY_BP = gql`
   query GetBlocksByProducer($where: block_bool_exp) {
     blocks: block(where: $where) {
       number: block_number
-      currentEra: active_era
+      currentEra: era
     }
   }
 `;
@@ -261,7 +258,7 @@ export const GET_CURRENT_ERA = gql`
     block: block_aggregate(where: {finalized: {_eq: true}}) {
       aggregate {
         max {
-          era: active_era
+          era
         }
       }
     }

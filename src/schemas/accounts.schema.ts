@@ -2,10 +2,6 @@ import { gql } from '@apollo/client';
 import { ValidatorStats } from './staking.schema';
 import { TotalOfItems } from './types';
 
-/* ---------------------------- General Variables --------------------------- */
-export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit' | 'special';
-
-
 /* -------------------------------------------------------------------------- */
 /*                                  Identity                                  */
 /* -------------------------------------------------------------------------- */
@@ -31,6 +27,24 @@ export type Identity = {
   web?: string;
 };
 
+export type Roles = {
+  council: boolean;
+  nominator: boolean;
+  special: string | null;
+  techcommit: boolean;
+  validator: boolean;
+}
+
+export const ROLES_FRAGMENT = gql`
+  fragment roles_fragment on account {
+    techcommit
+    special
+    nominator
+    council
+    validator
+  }
+`
+
 export const IDENTITY_FRAGMENT = gql`
   fragment identity on identity {
     blurb
@@ -46,16 +60,6 @@ export const IDENTITY_FRAGMENT = gql`
   }
 `;
 
-export const ROLES_FRAGMENT = gql`
-  fragment roles on roles {
-    council
-    nominator
-    special
-    techcommit
-    validator
-  }
-`
-
 export const GET_FULL_IDENTITY = gql`
   ${IDENTITY_FRAGMENT}
   query GetFullIdentity($where: identity_bool_exp) {
@@ -66,28 +70,23 @@ export const GET_FULL_IDENTITY = gql`
 `
 
 export type GetDisplayIdentity = {
-  roles: {
+  account: {
     council: boolean;
     nominator: boolean;
     special: string;
     techcommit: boolean;
     validator: boolean;
-    account: {
-      identity: {
-        display: string;
-      }
+    identity: {
+      display: string;
     }
   }[]
 }
 export const GET_DISPLAY_IDENTITY = gql`
-  ${ROLES_FRAGMENT}
   query GetDisplayIdentity($account: String!) {
-    roles(where: { account_id: { _eq: $account } }) {
-      ...roles
-      account {
-        identity {
-          display
-        }
+    account(where: { account_id: { _eq: $account } }) {
+      ...roles_fragment
+      identity {
+        display
       }
     }
   }
@@ -123,8 +122,6 @@ export type Account = {
   };
 };
 
-export type AccountRoles = Account['roles'];
-
 export type GetAccountByAddressType = {
   account: Account;
   aggregates: { aggregate: { count: number } };
@@ -145,9 +142,7 @@ export const ACCOUNT_FRAGMENT = gql`
     }
     nonce
     timestamp
-    roles: role {
-      ...roles
-    }
+    ...roles_fragment
     lockedBalance: locked_balance
     reservedBalance: reserved_balance
     totalBalance: total_balance
@@ -174,7 +169,7 @@ export const GET_ACCOUNT_BY_PK = gql`
 /* -------------------------------------------------------------------------- */
 type PartialIdentity = Pick<Identity, 'display'>;
 type AccountKeys = 'id' | 'timestamp' | 'totalBalance' | 'lockedBalance' | 'nonce' | 'roles' | 'whenCreatedEra';
-type PartialAccount = { identity : PartialIdentity } & Pick<Account, AccountKeys>;
+type PartialAccount = { identity : PartialIdentity } & Roles & Pick<Account, AccountKeys>;
 
 export type ListAccounts = TotalOfItems & {
   account: PartialAccount[];
@@ -194,9 +189,7 @@ export const LIST_ACCOUNTS = gql`
       totalBalance: total_balance
       lockedBalance: locked_balance
       nonce
-      roles: role {
-        ...roles
-      }
+      ...roles_fragment
       identity: identity {
         display
       }
@@ -224,10 +217,10 @@ export type NewAccounts = {
 
 export const LISTEN_FOR_NEW_ACCOUNTS = gql`
   query ListenForNewAccounts {
-    newAccount: event(where: {call: {_eq: "NewAccount"}}, order_by: {block: {active_era: desc}}) {
+    newAccount: event(where: {call: {_eq: "NewAccount"}}, order_by: {block: {era: desc}}) {
       accounts: data
       block {
-        era: active_era
+        era
       }
     }
   }
@@ -243,7 +236,7 @@ export type CreatedEras = {
 }
 
 export const GET_WHEN_CREATED_ERAS = gql`
-  query ListenForNewAccounts {
+  query GetWhenCreatedEras {
     account {
       era: when_created_era
     }

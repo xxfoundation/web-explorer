@@ -47,7 +47,7 @@ export const extractChartData = (economics?: Economics) => {
 
   const { inactiveStaked, liquid, stakeableSupply, staked, unbonding } = mapValues(
     pick(economics, fields),
-    (o) => new BN(o)
+    (o) => new BN(o.toString())
   );
 
   const vesting = stakeableSupply.sub(staked).sub(unbonding).sub(liquid).sub(inactiveStaked);

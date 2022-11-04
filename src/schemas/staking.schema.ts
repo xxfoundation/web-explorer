@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
+import { Roles, ROLES_FRAGMENT } from './accounts.schema';
 
 /* ------------------------------ General Types ----------------------------- */
 export type Nominator = {
@@ -26,8 +26,7 @@ export type ValidatorStats = {
   points: number | null;
   relativePerformance: number | null;
   reward: number | null;
-  rewardsAccount: {
-    roles: AccountRoles,
+  rewardsAccount: Roles & {
     identity: null | { display: string }
   };
 }

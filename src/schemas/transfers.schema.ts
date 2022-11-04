@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
+import { Roles, ROLES_FRAGMENT } from './accounts.schema';
 import { TotalOfItems } from './types';
 
 /* -------------------------------------------------------------------------- */
@@ -19,17 +19,15 @@ export type Transfer = {
   destination: string;
   amount: number;
   timestamp: string;
-  destinationAccount: {
-    role: AccountRoles,
+  destinationAccount: Roles & {
     identity: null | { display: string }
   },
-  sourceAccount: {
-    role: AccountRoles,
+  sourceAccount: Roles & {
     identity: null | { display: string }
-  }
+  },
   block: {
     era: number;
-  }
+  },
   extrinsic: {
     hash: string;
     success: boolean;
@@ -38,7 +36,7 @@ export type Transfer = {
 
 export const TRANSFER_FRAGMENT = gql`
   ${ROLES_FRAGMENT}
-  fragment transfer_common_fields on transfer {
+  fragment transfer_fragment on transfer {
     blockNumber: block_number
     extrinsicIndex: extrinsic_index
     source
@@ -46,23 +44,19 @@ export const TRANSFER_FRAGMENT = gql`
     amount
     timestamp
     sourceAccount: account {
-      role {
-        ...roles
-      }
+      ...roles_fragment
       identity {
         display
       }
     }
     destinationAccount: accountByDestination {
-      role {
-        ...roles
-      }
+      ...roles_fragment
       identity {
         display
       }
     }
     block {
-      era: active_era
+      era
     }
     extrinsic {
       hash
@@ -80,9 +74,9 @@ export type ListOfTransfers = {
 
 export const LISTEN_FOR_TRANSFERS_ORDERED = gql`
   ${TRANSFER_FRAGMENT}
-  subscription ListenForTransfersOrdered($limit: Int) {
+  subscription ListenForTransfersOrdered($limit: Int!) {
     transfers: transfer(order_by: { block_number: desc }, limit: $limit) {
-      ...transfer_common_fields
+      ...transfer_fragment
     }
   }
 `;
@@ -118,7 +112,7 @@ export const LIST_TRANSFERS_ORDERED = gql`
     $where: transfer_bool_exp
   ) {
     transfers: transfer(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
-      ...transfer_common_fields
+      ...transfer_fragment
     }
     
     agg: transfer_aggregate(where: $where) {
@@ -145,7 +139,7 @@ export const GET_TRANSFERS_BY_ACCOUNT_ID = gql`
         { source:{ _eq: $accountId } }
       ]
     }) {
-      ...transfer_common_fields
+      ...transfer_fragment
     }
   }
 `
@@ -157,7 +151,7 @@ export const LIST_WHALE_TRANSFERS = gql`
   ${TRANSFER_FRAGMENT}
   query ListWhaleTransfers {
     transfers: whale_alert {
-      ...transfer_common_fields
+      ...transfer_fragment
     }
   }
 `;
@@ -167,7 +161,7 @@ export const LIST_WHALE_TRANSFERS = gql`
 /* -------------------------------------------------------------------------- */
 type EraByTransfer = { era: number; transfers: number };
 
-export type ListenForEraTransfers = {
+export type QueryEraTransfers = {
   eraTransfers: EraByTransfer[];
 };
 

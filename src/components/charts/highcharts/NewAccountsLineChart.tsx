@@ -61,7 +61,13 @@ const NewAccountsChart = () => {
       {loading || !chartData || !latestEra ? (
         <Loading />
       ) : (
-        <DropdownTimelineLineChart tooltipFormatter={amountByEraTooltip} timeframe={timeframe} timeframes={timeframes} data={dataRange} onChange={onChange} onClick={onClick} />
+        <DropdownTimelineLineChart
+          tooltipFormatter={amountByEraTooltip}
+          timeframe={timeframe}
+          timeframes={timeframes}
+          data={dataRange}
+          onChange={onChange}
+          onClick={onClick} />
       )}
     </DefaultTile>
   );

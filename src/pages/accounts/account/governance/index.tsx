@@ -40,7 +40,7 @@ const techCommitteActivityTab = {
   content: <TechCommitteeActivityTable />
 };
 
-const GovernanceCard: FC<{ roles: Roles[] }> = ({ roles }) => {
+const GovernanceCard: FC<{ roles: (keyof Roles)[] }> = ({ roles }) => {
   const memoistPanels = useMemo(() => {
     const panels = [identityActivityTab, proposalActivityTab, referendaActivityTab];
     if (roles.includes('nominator')) {

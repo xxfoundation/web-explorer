@@ -21,14 +21,6 @@ import ParametersFragment from './ParametersFragment';
 import FormatBalance from '../../../../components/FormatBalance';
 import { BN, BN_ZERO } from '@polkadot/util';
 
-const computeFee = (fee: string): BN => {
-  const inclusion = JSON.parse(fee).inclusionFee;
-  if (inclusion === null) {
-    return BN_ZERO
-  }
-  return new BN(inclusion.baseFee).add(new BN(inclusion.lenFee));
-}
-
 type Props = {
   extrinsic: Extrinsic;
 };
@@ -93,7 +85,9 @@ const Summary: FC<Props> = ({ extrinsic }) => {
           <SummaryHeader>Fee</SummaryHeader>
           <SummaryValue>
             <Typography>
-              <FormatBalance precision={4} value={computeFee(extrinsic.fee)} />
+              <FormatBalance
+                precision={4}
+                value={extrinsic.fee.toString() ?? BN_ZERO} />
             </Typography>
           </SummaryValue>
         </SummaryEntry>
@@ -111,7 +105,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryEntry>
           <SummaryHeader>Signer</SummaryHeader>
           <SummaryValue>
-            <Address name={extrinsic.signerAccount?.identity?.display} roles={extrinsic.signerAccount?.roles ?? {}} value={extrinsic.signer} />
+            <Address name={extrinsic.signerAccount?.identity?.display} roles={extrinsic.signerAccount ?? {}} value={extrinsic.signer} />
           </SummaryValue>
         </SummaryEntry>
       )}
