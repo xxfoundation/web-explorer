@@ -84,8 +84,15 @@ export const GET_AVAILABLE_EVENT_ACTIONS = gql`
     modules: event (distinct_on: module) {
       module
     }
+  }
+`;
 
-    calls: event (distinct_on: call) {
+export type GetCallsForModules = {
+  calls: { call: string }[];
+}
+export const GET_CALLS_FOR_MODULES_ACTIONS = gql`
+  query GetCallsForModules ($where: event_bool_exp) {
+    calls: event (distinct_on: call, where: $where) {
       call
     }
   }

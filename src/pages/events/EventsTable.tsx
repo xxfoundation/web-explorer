@@ -1,4 +1,4 @@
-import { useQuery, useSubscription } from '@apollo/client';
+import { useQuery, useLazyQuery, useSubscription } from '@apollo/client';
 import {
   Box,
   Checkbox,
@@ -21,7 +21,7 @@ import {
   ListEvents,
   LIST_EVENTS,
   SubscribeEventsSinceBlock,
-  SUBSCRIBE_EVENTS_SINCE_BLOCK
+  SUBSCRIBE_EVENTS_SINCE_BLOCK, GET_CALLS_FOR_MODULES_ACTIONS, GetCallsForModules
 } from '../../schemas/events.schema';
 import { theme } from '../../themes/default';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
@@ -44,6 +44,7 @@ const rowsParser = ({ blockNumber, call, index, module, timestamp }: Event): Bas
 const EventsTable = () => {
   /* ----------------- Query Available Extrinsic Module/Calls ----------------- */
   const actionsQuery = useQuery<GetAvailableEventActions>(GET_AVAILABLE_EVENT_ACTIONS);
+  const [fetchCalls, {data: callsQuery}] = useLazyQuery<GetCallsForModules>(GET_CALLS_FOR_MODULES_ACTIONS,);
 
   /* ----------------------- Initialize State Variables ----------------------- */
   const [range, setRange] = useSessionState<Range>('events.range', {
@@ -60,20 +61,35 @@ const EventsTable = () => {
     'events.modules',
     undefined
   );
-
+  
   const [callsFilter, setCallsFilter] = useSessionState<string[] | undefined>(
     'events.calls',
     undefined
   );
-
+  
+  useEffect(() => {
+    if(modulesFilter) {
+      setCallsFilter([])
+      fetchCalls({
+        variables: {
+          where: {
+            module: {
+              _in: modulesFilter
+            }
+          }
+        }
+      })
+    }
+  }, [modulesFilter])
+  
   /* --------------------- Initialize Dependent Variables --------------------- */
   const availableModules = useMemo(
     () => actionsQuery.data?.modules.map((m) => m.module),
     [actionsQuery.data]
   );
   const availableCalls = useMemo(
-    () => actionsQuery.data?.calls.map((c) => c.call),
-    [actionsQuery.data]
+    () => callsQuery?.calls.map((c) => c.call),
+    [callsQuery]
   );
   const callVariable = useMemo(() => {
     const conditions = [];
