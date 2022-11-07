@@ -60,6 +60,28 @@ export const IDENTITY_FRAGMENT = gql`
   }
 `;
 
+export const CREATION_EVENT_FRAGMENT = gql`
+  fragment creation_event_fragment on account {
+    creationEvent: events(where: {call: {_eq: "NewAccount"} }) {
+      block {
+        era
+        block_number
+        timestamp
+      }
+    }
+  }
+`;
+
+export type CreationEventFragment = {
+  creationEvent: {
+    block: {
+      era: number;
+      number: number;
+      timestamp: number;
+    }
+  }[]
+}
+
 export const GET_FULL_IDENTITY = gql`
   ${IDENTITY_FRAGMENT}
   query GetFullIdentity($where: identity_bool_exp) {
@@ -95,10 +117,9 @@ export const GET_DISPLAY_IDENTITY = gql`
 /* -------------------------------------------------------------------------- */
 /*                           Account Individual Page                          */
 /* -------------------------------------------------------------------------- */
-export type Account = {
+export type Account = CreationEventFragment & Roles & {
   id: string;
   whenCreated: number;
-  whenCreatedEra: number;
   controllerAddress?: string;
   blockHeight: number;
   identity: Identity;
@@ -113,13 +134,6 @@ export type Account = {
   transferrableBalance: number;
   unbondingBalance: number;
   vestingBalance: number;
-  roles: {
-    council: boolean;
-    nominator: boolean;
-    special: string;
-    techcommit: boolean;
-    validator: boolean;
-  };
 };
 
 export type GetAccountByAddressType = {
@@ -131,11 +145,12 @@ export type GetAccountByAddressType = {
 export const ACCOUNT_FRAGMENT = gql`
   ${IDENTITY_FRAGMENT}
   ${ROLES_FRAGMENT}
+  ${CREATION_EVENT_FRAGMENT}
   fragment account on account {
     id: account_id
     controllerAddress: controller_address
+    ...creation_event_fragment
     whenCreated: when_created
-    whenCreatedEra: when_created_era
     blockHeight: block_height
     identity {
       ...identity
@@ -168,8 +183,8 @@ export const GET_ACCOUNT_BY_PK = gql`
 /*                        Account Page > Holders Table                        */
 /* -------------------------------------------------------------------------- */
 type PartialIdentity = Pick<Identity, 'display'>;
-type AccountKeys = 'id' | 'timestamp' | 'totalBalance' | 'lockedBalance' | 'nonce' | 'roles' | 'whenCreatedEra';
-type PartialAccount = { identity : PartialIdentity } & Roles & Pick<Account, AccountKeys>;
+type AccountKeys = 'id' | 'timestamp' | 'totalBalance' | 'lockedBalance' | 'nonce';
+type PartialAccount = { identity : PartialIdentity } & CreationEventFragment & Roles & Pick<Account, AccountKeys>;
 
 export type ListAccounts = TotalOfItems & {
   account: PartialAccount[];
@@ -177,6 +192,7 @@ export type ListAccounts = TotalOfItems & {
 
 export const LIST_ACCOUNTS = gql`
   ${ROLES_FRAGMENT}
+  ${CREATION_EVENT_FRAGMENT}
   query ListAccounts(
     $orderBy: [account_order_by!]
     $offset: Int
@@ -193,7 +209,7 @@ export const LIST_ACCOUNTS = gql`
       identity: identity {
         display
       }
-      whenCreatedEra: when_created_era
+      ...creation_event_fragment
     }
     agg: account_aggregate(where: $where) {
       aggregate {

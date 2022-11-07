@@ -119,8 +119,6 @@ const BlocksTable: FC = () => {
   );
   const blocksSinceFetch = blocksSinceLastFetch?.data?.blocks?.aggregate?.count;
 
-  console.error(error);
-
   /* ----------------------------- Build Component ---------------------------- */
   return (
     <>

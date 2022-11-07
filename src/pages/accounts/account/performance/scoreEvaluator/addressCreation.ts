@@ -5,7 +5,7 @@ const baseMessage = (blockNumber: number, seniority: string) =>
   `Stash address was created at block #${blockNumber} making it a ${seniority} of the network`;
 
 const getaAddressCreationScore = ({ account, currentEra }: ScoringContext): [MetricScores, string] => {
-  const block = account.whenCreatedEra;
+  const block = account.creationEvent[0]?.block.number ?? 0;
   const eraAge = currentEra - block;
 
   if (eraAge >= 365) {

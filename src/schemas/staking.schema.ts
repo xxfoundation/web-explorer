@@ -45,9 +45,7 @@ const VALIDATOR_STATS_FRAGMENT = gql`
     reward
     rewardsAddress: rewards_address
     rewardsAccount {
-      roles: role {
-        ...roles
-      }
+      ...roles_fragment
       identity {
         display
       }
@@ -122,22 +120,6 @@ export const GET_CURRENT_VALIDATORS = gql`
       ownStake: self_stake
       otherStake: other_stake
       totalStake: total_stake
-      commission
-      cmixId: cmix_id
-      nominators
-      name: identity {
-        display
-      }
-    }
-  }
-`;
-
-export const GET_WAITING_LIST = gql`
-  query GetWaitingList ($where: waiting_bool_exp) {
-    validators: waiting(order_by: { self_stake: desc }, where: $where) {
-      addressId: stash_address
-      location
-      ownStake: self_stake
       commission
       cmixId: cmix_id
       nominators

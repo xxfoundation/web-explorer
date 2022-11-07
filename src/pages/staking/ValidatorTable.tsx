@@ -16,8 +16,7 @@ import {
   LatestEraQuery,
   ValidatorAccountsQuery,
   ValidatorAccount,
-  GET_ACTIVE_COUNTS,
-  GET_WAITING_LIST
+  GET_ACTIVE_COUNTS
 } from '../../schemas/staking.schema';
 import ValidatorTableControls, {
   ValidatorFilter,
@@ -129,8 +128,15 @@ const ValidatorsTable = () => {
     variables,
     skip: !latestEra
   });
-  const waitingQuery = useQuery<ValidatorAccountsQuery>(GET_WAITING_LIST, {
-    variables: { where: searchClause }
+  const waitingQuery = useQuery<ValidatorAccountsQuery>(GET_CURRENT_VALIDATORS, {
+    variables: {
+      limit: rowsPerPage,
+      offset: page * rowsPerPage,
+      where: {
+        ...searchClause,
+        waiting: true,
+      }
+    }
   });
   const validators = validatorsQuery.data?.validators;
   const waitingList = waitingQuery.data?.validators;

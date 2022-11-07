@@ -64,7 +64,7 @@ const accountToRow = (
 ): BaselineCell[] => {
   const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
 
-  const roles = Object.entries(item.roles)
+  const roles = Object.entries(item)
     .filter(([key]) => key !== '__typename')
     .filter(([, value]) => !!value)
     .sort(([roleA], [roleB]) => (filters[roleB] ? 1 : 0) - (filters[roleA] ? 1 : 0))
@@ -76,7 +76,7 @@ const accountToRow = (
   return [
     { value: rank, props: rankProps },
     {
-      value: <Address truncated roles={item.roles} name={item.identity?.display} value={item.id} url={accountLink} />
+      value: <Address truncated roles={item} name={item.identity?.display} value={item.id} url={accountLink} />
     },
     { value: item.nonce },
     {
@@ -94,7 +94,7 @@ const accountToRow = (
     },
     { value: <FormatBalance value={item.lockedBalance.toString()} /> },
     { value: <FormatBalance value={item.totalBalance.toString()} /> },
-    { value: item.whenCreatedEra }
+    { value: item.creationEvent[0]?.block.number }
   ];
 };
 
