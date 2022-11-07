@@ -9,6 +9,7 @@ const EXTRINSIC_FRAGMENT = gql`
   ${ROLES_FRAGMENT}
   fragment extrinsicFragment on extrinsic {
     blockNumber: block_number
+    dispatchInfo: dispatch_info
     extrinsicIndex: extrinsic_index
     hash
     module
@@ -28,12 +29,14 @@ const EXTRINSIC_FRAGMENT = gql`
     doc
     errorMsg: error_message
     fee
+    tip
   }
 `
 
 export type Extrinsic = {
   id: number;
   blockNumber: number;
+  dispatchInfo: string;
   extrinsicIndex: number;
   hash: string;
   timestamp: number;
@@ -52,6 +55,7 @@ export type Extrinsic = {
   doc: string[];
   errorMsg: string;
   fee: number | null;
+  tip: number;
 }
 
 /* -------------------------------------------------------------------------- */
