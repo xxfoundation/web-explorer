@@ -87,7 +87,7 @@ export const GET_ACTIVE_COUNTS = gql`
       }
     }
 
-    waiting: waiting_aggregate {
+    waiting: validator_aggregate (where: { active: { _eq: false }}) {
       aggregate {
         count
       }
@@ -103,9 +103,11 @@ export type ValidatorAccount = {
   totalStake: string;
   otherStake: string;
   commission: number;
-  name: {
-    display: string;
-  }[];
+  account: {
+    identity: null | {
+      display: string;
+    }
+  }
 };
 
 export type ValidatorAccountsQuery = {
@@ -123,13 +125,66 @@ export const GET_CURRENT_VALIDATORS = gql`
       commission
       cmixId: cmix_id
       nominators
-      name: identity {
-        display
+      account {
+        identity {
+          display
+        }
       }
     }
   }
 `;
 
+export type GetWaitingListQuery = {
+  validators: {
+    addressId: string;
+    location: string;
+    stake: number;
+    cmixId: string;
+    nominators: Nominator[];
+    account: {
+      identity: null | {
+        display: string;
+      }
+    }
+  }[]
+}
+
+export const GET_WAITING_LIST = gql`
+query GetWaitingList($search: String) {
+  validators: validator(order_by: { stake: desc }, where: {
+    active:{_eq: false},
+    _and: {
+      _or: [
+        {
+          account:{
+            identity:{
+              display: {_ilike: $search}
+            }
+          }
+        },
+        {
+          cmix_id:{_ilike: $search }
+        },
+        {
+          stash_address: {_ilike: $search }
+        }
+      ]
+    }
+  } ) {
+    addressId: stash_address
+    location
+    stake
+    commission
+    cmixId: cmix_id
+    nominators
+    account {
+      identity {
+        display
+      }
+    }
+  }
+}
+`;
 
 /* -------------------------------------------------------------------------- */
 /*                       Account Page > Validator Stats                       */

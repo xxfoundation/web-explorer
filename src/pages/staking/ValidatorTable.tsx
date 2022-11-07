@@ -16,7 +16,8 @@ import {
   LatestEraQuery,
   ValidatorAccountsQuery,
   ValidatorAccount,
-  GET_ACTIVE_COUNTS
+  GET_ACTIVE_COUNTS,
+  GET_WAITING_LIST
 } from '../../schemas/staking.schema';
 import ValidatorTableControls, {
   ValidatorFilter,
@@ -30,18 +31,18 @@ import useDebounce from '../../hooks/useDebounce';
 const ROWS_PER_PAGE = 20;
 
 const ValidatorRow: FC<ValidatorAccount & { index: number }> = ({
+  account,
   addressId,
   cmixId,
   commission,
   index,
   location,
-  name,
   nominators,
   ownStake,
   totalStake
 }) => {
+  const identityDisplay = account.identity?.display;
   const validatorLink = `/accounts/${addressId}`;
-  const identityDisplay = name && name[0] && name[0].display;
   let parsed;
 
   try {
@@ -98,8 +99,10 @@ const ValidatorsTable = () => {
     _and: {
       _or: [
         {
-          identity: {
-            display: { _ilike: `%${debouncedSearch}%`},
+          account: {
+            identity: {
+              display: { _ilike: `%${debouncedSearch}%`},
+            }
           }
         },
         {
@@ -128,14 +131,11 @@ const ValidatorsTable = () => {
     variables,
     skip: !latestEra
   });
-  const waitingQuery = useQuery<ValidatorAccountsQuery>(GET_CURRENT_VALIDATORS, {
+  const waitingQuery = useQuery<ValidatorAccountsQuery>(GET_WAITING_LIST, {
     variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,
-      where: {
-        ...searchClause,
-        waiting: true,
-      }
+      search: `%${debouncedSearch}%`
     }
   });
   const validators = validatorsQuery.data?.validators;
