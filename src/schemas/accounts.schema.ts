@@ -49,6 +49,7 @@ export const IDENTITY_FRAGMENT = gql`
   fragment identity on identity {
     blurb
     display
+    discord
     displayParent: display_parent
     email
     judgements
