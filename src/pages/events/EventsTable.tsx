@@ -9,7 +9,7 @@ import {
   Typography
 } from '@mui/material';
 import FunctionsIcon from '@mui/icons-material/Functions';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Link from '../../components/Link';
 import { BaselineCell, BaselineTable, HeaderCell } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
@@ -80,6 +80,8 @@ const EventsTable = () => {
         }
       })
     }
+    // Would like to call this function only when the modulesFilter is updated 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modulesFilter])
   
   /* --------------------- Initialize Dependent Variables --------------------- */
