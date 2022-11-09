@@ -1,4 +1,6 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
+import { Box } from '@mui/material';
+import { useQuery, useSubscription } from '@apollo/client';
 
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -7,17 +9,18 @@ import Link from '../../components/Link';
 import { BaselineCell, BaseLineCellsWrapper, BaselineTable, HeaderCell, HeaderCellsWrapper } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
 import {
+  GET_BLOCK_PRODUCERS,
+  GetBlockProducers,
   ListOfBlocksOrdered,
   LIST_BLOCKS_ORDERED,
   SubscribeBlocksSinceBlock,
-  SUBSCRIBE_BLOCKS_SINCE_BLOCK
+  SUBSCRIBE_BLOCKS_SINCE_BLOCK,
 } from '../../schemas/blocks.schema';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import BooleanFilter from '../../components/Tables/filters/BooleanFilter';
+import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
-import { useSubscription } from '@apollo/client';
 import RefreshButton from '../../components/buttons/Refresh';
-import { Box } from '@mui/material';
 import useSessionState from '../../hooks/useSessionState';
 
 const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
@@ -51,6 +54,19 @@ const BlocksTable: FC = () => {
     to: null
   });
   const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('blocks.status', null);
+  const [selectedBlockProducers, setBlockProducers] = useSessionState<string[] | undefined>('blocks.producers', undefined);
+  const [blockProducerSearch, setBlockProducerSearch] = useState<string>('');
+  
+  const possibleBlockProducersQuery = useQuery<GetBlockProducers>(GET_BLOCK_PRODUCERS, { 
+    skip: blockProducerSearch.length < 2,
+    variables: {
+      search: `%${blockProducerSearch}%`
+    }
+  });
+  const possibleBlockProducers = useMemo(
+    () => possibleBlockProducersQuery.data?.producers.map((v) => v.address) ?? [],
+    [possibleBlockProducersQuery.data?.producers]
+  );
 
   /* --------------------- Initialize Dependent Variables --------------------- */
   const where = useMemo(() => {
@@ -58,12 +74,20 @@ const BlocksTable: FC = () => {
       ...(statusFilter !== null && {
         finalized: { _eq: statusFilter }
       }),
+      ...(selectedBlockProducers && selectedBlockProducers.length !== 0 && {
+          account: {
+            account_id: {
+              _in: selectedBlockProducers,
+            }
+          }
+      }),
       timestamp: {
         ...(range.from ? { _gt: new Date(range.from).getTime() } : undefined),
         ...(range.to ? { _lt: new Date(range.to).getTime() } : undefined)
       }
     };
-  }, [range.from, range.to, statusFilter]);
+  }, [range.from, range.to, selectedBlockProducers, statusFilter]);
+
 
   /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo<HeaderCell[]>(
@@ -79,10 +103,31 @@ const BlocksTable: FC = () => {
         'era',
         ['Time', <DateRangeFilter onChange={setRange} value={range} />],
         'extrinsics',
-        'block producer',
+        ['block producer', (
+          <ValuesFilter
+            availableValues={possibleBlockProducers}
+            buttonLabel='block producer'
+            search={blockProducerSearch}
+            transformValue={(v) => <Hash value={v} truncated />}
+            onSearchChange={setBlockProducerSearch}
+            value={selectedBlockProducers}
+            valuesLoading={possibleBlockProducersQuery.loading}
+            onChange={setBlockProducers}
+          />
+        )],
         'block hash'
       ]),
-    [range, setRange, setStatusFilter, statusFilter]
+    [
+      blockProducerSearch,
+      selectedBlockProducers,
+      possibleBlockProducers,
+      possibleBlockProducersQuery.loading,
+      range,
+      setBlockProducers,
+      setRange,
+      setStatusFilter,
+      statusFilter
+    ]
   );
 
   /* ------------------------- Main Query - Get Blocks ------------------------ */

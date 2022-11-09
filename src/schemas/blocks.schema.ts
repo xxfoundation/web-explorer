@@ -167,6 +167,39 @@ export const GET_BLOCKS_BY_BP = gql`
 `;
 
 /* -------------------------------------------------------------------------- */
+/*                        Get Blocks By Block Producer                        */
+/* -------------------------------------------------------------------------- */
+export type GetBlockProducers = {
+  producers: {
+    address: string
+  }[];
+};
+export const GET_BLOCK_PRODUCERS = gql`
+  query GetDistinctProducers($search: String) {
+    producers: block(
+      where: {
+        _or: [
+          {
+            block_author: {
+              _ilike:$search
+            }
+          },
+          {
+            account: {
+              identity:{
+                display: {_ilike: $search}
+              }
+            }
+          }
+        ]
+      },
+      distinct_on: block_author
+    ) {
+      address:block_author
+    }
+  }
+`;
+/* -------------------------------------------------------------------------- */
 /*                             Block Detailed Tabs                            */
 /* -------------------------------------------------------------------------- */
 export type GetBlockCounts = {
@@ -229,7 +262,7 @@ export type FinalizedBlockCount = {
 }
 
 export const LISTEN_FINALIZE_BLOCK_COUNT = gql`
-  subscription MyQuery {
+  subscription FinalizedBlockCountSubscription {
     block: block_aggregate(where: {finalized: {_eq: true}}) {
       aggregate {
         count
