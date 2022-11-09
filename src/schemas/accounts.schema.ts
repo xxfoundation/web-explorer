@@ -184,39 +184,42 @@ export const GET_ACCOUNT_BY_PK = gql`
 /* -------------------------------------------------------------------------- */
 type PartialIdentity = Pick<Identity, 'display'>;
 type AccountKeys = 'id' | 'timestamp' | 'totalBalance' | 'lockedBalance' | 'nonce';
-type PartialAccount = { identity : PartialIdentity } & CreationEventFragment & Roles & Pick<Account, AccountKeys>;
+export type PartialAccount = { identity : PartialIdentity } & CreationEventFragment & Roles & Pick<Account, AccountKeys>;
 
 export type ListAccounts = TotalOfItems & {
-  account: PartialAccount[];
+  events: { account: PartialAccount }[];
 };
 
-export const LIST_ACCOUNTS = gql`
+export const LIST_ACCOUNTS_FROM_EVENTS = gql`
   ${ROLES_FRAGMENT}
   ${CREATION_EVENT_FRAGMENT}
-  query ListAccounts(
-    $orderBy: [account_order_by!]
+  query ListCreatedAccountsFromEvents(
     $offset: Int
     $limit: Int
-    $where: account_bool_exp
+    $where: event_bool_exp
   ) {
-    account: account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
-      id: account_id
-      timestamp
-      totalBalance: total_balance
-      lockedBalance: locked_balance
-      nonce
-      ...roles_fragment
-      identity: identity {
-        display
-      }
+    events: event(offset: $offset, limit: $limit, where: $where) {
+      account {
+        id: account_id
+        timestamp
+        totalBalance: total_balance
+        lockedBalance: locked_balance
+        nonce
+        ...roles_fragment
+        identity: identity {
+          display
+        }
       ...creation_event_fragment
+      }
     }
-    agg: account_aggregate(where: $where) {
+    
+    agg: event_aggregate(where: $where) {
       aggregate {
         count
       }
     }
   }
+  
 `;
 
 /* -------------------------------------------------------------------------- */
@@ -252,9 +255,10 @@ export type CreatedEras = {
 }
 
 export const GET_WHEN_CREATED_ERAS = gql`
+  ${CREATION_EVENT_FRAGMENT}
   query GetWhenCreatedEras {
-    account {
-      era: when_created_era
+    account { 
+      ...creation_event_fragment
     }
     history: balance_history(order_by: {era: desc}, limit: 1) {
       latestEra: era
