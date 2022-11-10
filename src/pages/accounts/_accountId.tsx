@@ -19,6 +19,7 @@ import BalanceHistoryChart from './account/BalanceHistoryChart';
 import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 import StakingCard from './account/staking';
 import Tag from '../../components/Tags/Tag';
+import GovernanceCard from './account/_governance';
 // import PerformanceSection from './account/performance';
 
 const validatorStatus = (inValidatorStats: boolean, currentlyActive: boolean) => {
@@ -113,6 +114,7 @@ const AccountId: FC = () => {
           <PaperWrapStyled sx={{ position: 'relative', overflow: 'hidden' }}>
             <PageTabs value={tab} onChange={handleTab}>
               <Tab label='Blockchain' />
+              <Tab label='Governance' />
               {validator !== undefined && (
                 <Tab label='Staking' />
               )}
@@ -120,8 +122,13 @@ const AccountId: FC = () => {
             <Panel index={tab} value={0}>
               <BlockchainCard account={data.account} />
             </Panel>
+            <Panel index={tab} value={1}>
+              <GovernanceCard
+                account={data.account}
+              />
+            </Panel>
               {validator !== undefined && (
-                <Panel index={tab} value={1}>
+                <Panel index={tab} value={2}>
                   <StakingCard
                     accountId={account.id}
                     validator={validator}
