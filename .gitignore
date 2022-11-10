@@ -31,3 +31,5 @@ sample_server/node_modules/
 
 # Snyk
 .dccache
+
+.idea/
