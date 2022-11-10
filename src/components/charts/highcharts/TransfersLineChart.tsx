@@ -5,7 +5,7 @@ import { SelectChangeEvent } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 
 import { amountByEraTooltip, DataPoint } from '.';
-import { ListenForEraTransfers, LISTEN_FOR_ERA_TRANSFERS } from '../../../schemas/transfers.schema';
+import { QueryEraTransfers, LISTEN_FOR_ERA_TRANSFERS } from '../../../schemas/transfers.schema';
 import DefaultTile from '../../DefaultTile';
 import Loading from '../../Loading';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ const ERAS_IN_A_MONTH = 30;
 
 const TransfersLineChart = () => {
   const navigate = useNavigate();
-  const { data, loading } = useQuery<ListenForEraTransfers>(LISTEN_FOR_ERA_TRANSFERS);
+  const { data, loading } = useQuery<QueryEraTransfers>(LISTEN_FOR_ERA_TRANSFERS);
   const timeframes: Record<string, number> = {
     All: 0,
     Quarter: ERAS_IN_A_QUARTER,

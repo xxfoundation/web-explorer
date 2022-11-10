@@ -34,7 +34,7 @@ const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
         <Address
           truncated
           value={block.author}
-          roles={block.authorName[0]?.role}
+          roles={block.authorName[0]}
           name={block.authorName[0]?.identity?.display}
           url={`/blocks/${block.number}/producer/${block.author}`}
         />
@@ -118,8 +118,6 @@ const BlocksTable: FC = () => {
     }
   );
   const blocksSinceFetch = blocksSinceLastFetch?.data?.blocks?.aggregate?.count;
-
-  console.error(error);
 
   /* ----------------------------- Build Component ---------------------------- */
   return (

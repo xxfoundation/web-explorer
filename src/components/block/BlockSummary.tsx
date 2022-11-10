@@ -84,7 +84,7 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
             {block ? (
               <WithCopy value={block.author}>
                 <Address
-                  roles={block?.authorName[0]?.role}
+                  roles={block?.authorName[0]}
                   truncated='mdDown'
                   name={block?.authorName[0]?.identity?.display}
                   value={block.author}

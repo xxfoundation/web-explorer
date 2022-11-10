@@ -19,6 +19,7 @@ import Error from '../Error';
 import Loading from '../Loading';
 
 type Options = ChartProps<'doughnut'>['options'];
+
 enum DataLabels {
   Circulating = 'Circulating',
   Vesting = 'Vesting',
@@ -52,6 +53,7 @@ const keysCollapsedUnderOther: (keyof Economics)[] = [
   'sales',
   'treasury'
 ];
+
 const tooltipHeaderWidth = 5;
 const tooltipBalanceaWidth = 7;
 const OthersTooltipExtension: FC<Economics> = (economics) => (
@@ -105,9 +107,11 @@ const extractChartData = (economics?: Economics) => {
     };
   }
 
+  const keysToConvert = seriesKeys.concat(keysCollapsedUnderOther)
+  
   const converted = mapValues(
-    pick(economics, seriesKeys.concat(keysCollapsedUnderOther)),
-    (o) => new BN(o)
+    pick(economics, keysToConvert),
+    (o) => new BN(o.toString())
   );
 
   const others = Object.values(pick(converted, keysCollapsedUnderOther)).reduce(

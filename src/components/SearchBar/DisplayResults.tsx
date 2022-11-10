@@ -56,7 +56,7 @@ const DisplaySearchResults: FC<Props> = ({ dismiss, error, results }) => {
                 </Typography>
                 {results.accounts?.map((acct) => (
                   <Address
-                    roles={acct.roles}
+                    roles={acct}
                     truncated='mdDown'
                     key={acct.id}
                     onClick={dismiss}

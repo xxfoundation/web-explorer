@@ -33,7 +33,7 @@ const TextWithLabel: FC<{ label: string; text: string; url?: string }> = ({ labe
 
 const Identity: FC<Props> = ({ account }) => {
   const theme = useTheme();
-  const isStaking = account.roles.validator || account.roles.nominator;
+  const isStaking = account.validator || account.nominator;
   const hasRiotOrWeb = account.identity?.riot || account.identity?.web;
   return (
     <Grid spacing={3} container>
@@ -54,7 +54,7 @@ const Identity: FC<Props> = ({ account }) => {
                 )}
                 <WithCopy value={account.id}>
                   <Address
-                    roles={account.roles}
+                    roles={account}
                     style={{ fontSize: 16 }}
                     truncated='mdDown'
                     offset={{ sm: 16, xs: 8 }}
@@ -92,7 +92,7 @@ const Identity: FC<Props> = ({ account }) => {
                   Stash
                 </Typography>
                 <Address
-                  roles={account.roles}
+                  roles={account}
                   sx={{ fontSize: 12, fontWeight: 400 }}
                   truncated='smDown'
                   offset={{ xs: 16 }}
@@ -105,7 +105,7 @@ const Identity: FC<Props> = ({ account }) => {
                       Controller
                     </Typography>
                     <Address
-                      roles={account.roles}
+                      roles={account}
                       sx={{ fontSize: 12, fontWeight: 400 }}
                       truncated='smDown'
                       offset={{ xs: 16 }}

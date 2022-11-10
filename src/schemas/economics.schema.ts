@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export type Economics = {
-  activeEra: number;
+  era: number;
   inflationRate: string;
   timestamp: string;
   totalIssuance: string;
@@ -29,8 +29,8 @@ export type EconomicsSubscription = {
 
 export const LISTEN_FOR_ECONOMICS = gql`
   query ListenForEconomics {
-    economics(limit: 1, order_by: {active_era: desc}) {
-      activeEra: active_era
+    economics(limit: 1, order_by: {era: desc}) {
+      era
       bridge
       canary
       circulating
