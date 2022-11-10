@@ -195,7 +195,7 @@ export const LIST_ACCOUNTS_FROM_EVENTS = gql`
   ${ROLES_FRAGMENT}
   ${CREATION_EVENT_FRAGMENT}
   query ListCreatedAccountsFromEvents(
-    $orderBy: [account_order_by!]
+    $orderBy: [event_order_by!]
     $offset: Int
     $limit: Int
     $where: event_bool_exp

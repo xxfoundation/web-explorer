@@ -169,6 +169,7 @@ const AccountsTable: FC = () => {
 
   const variables = useMemo(
     () => ({
+      orderBy: [{ account: { total_balance: 'desc' } }],
       where: {
         block: { era: { _eq: filters.era } },
         _or: [
@@ -178,7 +179,6 @@ const AccountsTable: FC = () => {
         ...(orClause.length > 0 && {
           _and: { _or: orClause }
         }),
-      orderBy: [{account: {total_balance: 'desc'}}]
       },
     }),
     [filters.era, search, orClause]
