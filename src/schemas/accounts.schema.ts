@@ -49,6 +49,7 @@ export const IDENTITY_FRAGMENT = gql`
   fragment identity on identity {
     blurb
     display
+    discord
     displayParent: display_parent
     email
     judgements
@@ -194,11 +195,12 @@ export const LIST_ACCOUNTS_FROM_EVENTS = gql`
   ${ROLES_FRAGMENT}
   ${CREATION_EVENT_FRAGMENT}
   query ListCreatedAccountsFromEvents(
+    $orderBy: [event_order_by!]
     $offset: Int
     $limit: Int
     $where: event_bool_exp
   ) {
-    events: event(offset: $offset, limit: $limit, where: $where) {
+    events: event(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
       account {
         id: account_id
         timestamp
