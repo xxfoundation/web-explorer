@@ -68,8 +68,8 @@ const EventsTable = () => {
   );
   
   useEffect(() => {
+    setCallsFilter([])
     if(modulesFilter) {
-      setCallsFilter([])
       fetchCalls({
         variables: {
           where: {
