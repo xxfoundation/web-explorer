@@ -7,20 +7,37 @@ import {
   Input,
   FormControlLabel,
   Stack,
-  FormControl
+  FormControl,
+  Typography
 } from '@mui/material';
+import { uniq } from 'lodash';
 
 import Dropdown from '../../Dropdown';
 import { arrayCompare } from '../../utils';
+import Loading from '../../Loading';
+import { Box } from '@mui/system';
 
 type Props = {
   buttonLabel: string | null | React.ReactNode;
+  search?: string;
+  onSearchChange?: (s: string) => void;
   value?: string[];
+  transformValue?: (s: string) => string | React.ReactNode,
+  valuesLoading?: boolean;
   onChange: (v?: string[]) => void;
   availableValues?: string[];
 };
 
-const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onChange, value }) => {
+const ValuesFilter: FC<Props> = ({
+  availableValues: available,
+  buttonLabel,
+  onChange,
+  onSearchChange,
+  search = '',
+  transformValue = (s) => s,
+  value,
+  valuesLoading = false,
+}) => {
   const theme = useTheme();
   const [localValues, setLocalValues] = useState<string[] | undefined>(value);
   const toggleValue = useCallback(
@@ -35,20 +52,26 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
 
   const [valuesFilter, setValuesFilter] = useState('');
 
+  const onSearchFilterChange = useCallback((v: string) => {
+    
+    if (onSearchChange) {
+      onSearchChange(v)
+    } else {
+      setValuesFilter(v);
+    }
+  }, [onSearchChange])
+
   const toggleFilter = useCallback(() => {
     setLocalValues((m) => (m !== undefined ? undefined : []));
   }, []);
 
   const reset = useCallback(() => setLocalValues(undefined), []);
   const applyChanges = useCallback(() => onChange(localValues), [localValues, onChange]);
-  const canApplyChanges = localValues !== value || !arrayCompare(localValues, value);
+  const canApplyChanges = !valuesLoading && (localValues !== value || !arrayCompare(localValues, value));
 
   const availableValues = useMemo(
-    () =>
-      available
-        ?.filter((v) => v.toLocaleLowerCase().includes(valuesFilter.toLocaleLowerCase()))
-        .sort((a, b) => (localValues?.includes(a) ? 0 : 1) - (localValues?.includes(b) ? 0 : 1)),
-    [available, localValues, valuesFilter]
+    () => uniq((localValues ?? []).concat(available ?? [])),
+    [available, localValues]
   );
 
   return (
@@ -86,34 +109,50 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
               <Input
                 sx={{ mb: 1 }}
                 placeholder='Search...'
-                onChange={(v) => setValuesFilter(v.target.value)}
-                value={valuesFilter}
+                onChange={(v) => onSearchFilterChange(v.target.value)}
+                value={search || valuesFilter}
               />
             </FormControl>
-            <Stack sx={{ maxHeight: '12rem', overflow: 'auto', mb: 1 }}>
-              {availableValues?.map((val) => (
-                <FormControlLabel
-                  key={val}
-                  sx={{
-                    mb: -0.75,
-                    span: {
-                      fontSize: '14px',
-                      fontWeight: 400,
-                      color: localValues.includes(val)
-                        ? theme.palette.primary.main
-                        : theme.palette.grey[600]
+            {valuesLoading ? (
+              <Box sx={{ my: 2 }}>
+                <Loading size='sm' />
+                <Box sx={{ mt: 1, textAlign: 'center' }}>
+                  <Typography variant='body3' sx={{ fontSize: 12 }}>
+                    Loading...
+                  </Typography>
+                </Box>
+              </Box>
+            ) : (
+              <Stack sx={{ maxHeight: '12rem', overflow: 'auto', mb: 1 }}>
+                {availableValues?.length === 0 && (
+                  <Typography variant='body3'>
+                    No available values...
+                  </Typography>
+                )}
+                {availableValues?.map((val) => (
+                  <FormControlLabel
+                    key={val}
+                    sx={{
+                      mb: -0.75,
+                      span: {
+                        fontSize: '14px',
+                        fontWeight: 400,
+                        color: localValues.includes(val)
+                          ? theme.palette.primary.main
+                          : theme.palette.grey[600]
+                      }
+                    }}
+                    control={
+                      <Checkbox
+                        checked={localValues.includes(val)}
+                        onChange={() => toggleValue(val)}
+                      />
                     }
-                  }}
-                  control={
-                    <Checkbox
-                      checked={localValues.includes(val)}
-                      onChange={() => toggleValue(val)}
-                    />
-                  }
-                  label={val}
-                />
-              ))}
-            </Stack>
+                    label={transformValue(val)}
+                  />
+                ))}
+              </Stack>
+            )}
           </Stack>
         )}
         <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
