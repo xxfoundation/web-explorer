@@ -151,6 +151,7 @@ const EventsTable = () => {
             buttonLabel='Event'
             onChange={setCallsFilter}
             value={callsFilter}
+            disabled={!modulesFilter || modulesFilter?.length === 0}
           />
         )
       }

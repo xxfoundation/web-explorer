@@ -18,9 +18,10 @@ type Props = {
   value?: string[];
   onChange: (v?: string[]) => void;
   availableValues?: string[];
+  disabled?: boolean
 };
 
-const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onChange, value }) => {
+const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, disabled = false, onChange, value }) => {
   const theme = useTheme();
   const [localValues, setLocalValues] = useState<string[] | undefined>(value);
   const toggleValue = useCallback(
@@ -39,7 +40,7 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
     setLocalValues((m) => (m !== undefined ? undefined : []));
   }, []);
 
-  const reset = useCallback(() => setLocalValues(undefined), []);
+  const reset = useCallback(() => {setLocalValues(undefined); onChange([])}, []);
   const applyChanges = useCallback(() => onChange(localValues), [localValues, onChange]);
   const canApplyChanges = localValues !== value || !arrayCompare(localValues, value);
 
@@ -53,6 +54,7 @@ const ValuesFilter: FC<Props> = ({ availableValues: available, buttonLabel, onCh
 
   return (
     <Dropdown
+      disabled={disabled}
       buttonLabel={
         <>
           {buttonLabel}

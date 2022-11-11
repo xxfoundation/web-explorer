@@ -7,9 +7,10 @@ import { WithChildren } from '../types';
 
 type Props = WithChildren & {
   buttonLabel: string | React.ReactNode;
+  disabled?: boolean
 }
 
-export const DropdownFilter: FC<Props> = ({ buttonLabel, children }) => {
+export const DropdownFilter: FC<Props> = ({ buttonLabel, children, disabled = false }) => {
   const [open, { toggle, toggleOff: close }] = useToggle();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -18,6 +19,7 @@ export const DropdownFilter: FC<Props> = ({ buttonLabel, children }) => {
   return (
     <>
       <Button
+        disabled={disabled}
         sx={{ mx: -1 }}
         ref={buttonRef}
         color={'inherit'}
