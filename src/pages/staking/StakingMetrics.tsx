@@ -35,7 +35,7 @@ const extractMetrics = (economics?: Economics) => {
   };
 };
 
-export const getStakedReturn = (economics: Omit<Economics, 'era'>): number => {
+export const getStakedReturn = (economics: Economics): number => {
   const totalStaked = new BN(stripNonDigits(economics.staked));
   const tmStaked = new BN(stripNonDigits(economics.tmStaked));
   const stakeableSupply = new BN(stripNonDigits(economics.stakeableSupply));
@@ -43,6 +43,7 @@ export const getStakedReturn = (economics: Omit<Economics, 'era'>): number => {
   const stakedFraction =
     totalStaked.mul(BN_MILLION).div(stakeableSupply).toNumber() / BN_MILLION.toNumber();
   const multiplierImpact = totalStaked.mul(BN_MILLION).div(totalStaked.add(tmStaked)).toNumber() / 1e6;
+  
   return stakedFraction ? inflationRate * multiplierImpact / stakedFraction / 100 : 0;
 };
 

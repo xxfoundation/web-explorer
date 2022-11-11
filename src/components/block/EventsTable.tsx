@@ -12,7 +12,7 @@ const ROWS_PER_PAGE = 10;
 
 const props: TableCellProps = { align: 'left' };
 
-export const DataTile: FC<{ headers?: string[]; values: string[] }> = ({ headers, values }) => {
+const DataTile: FC<{ headers?: string[]; values: string[] }> = ({ headers, values }) => {
   return values.length !== 0 ? (
     <CodeDisplay>
       {values.map((value, index) => (

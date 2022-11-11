@@ -39,10 +39,15 @@ const useArrowButtonsOptions = (number: number) => {
   );
 
   const nextBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, variables(number + 1));
+  useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, variables(number + 2));
 
   const previousBlockQuery = useQuery<GetBlockByPK>(
     GET_BLOCK_BY_BLOCK_NUMBER,
     variables(number - 1)
+  );
+  useQuery<GetBlockByPK>(
+    GET_BLOCK_BY_BLOCK_NUMBER,
+    variables(number - 2)
   );
 
   return { next: buttonProps(nextBlockQuery), previous: buttonProps(previousBlockQuery) };
