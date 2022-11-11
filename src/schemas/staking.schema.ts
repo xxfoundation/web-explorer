@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
+import { Roles, ROLES_FRAGMENT } from './accounts.schema';
 
 /* ------------------------------ General Types ----------------------------- */
 export type Nominator = {
@@ -26,8 +26,7 @@ export type ValidatorStats = {
   points: number | null;
   relativePerformance: number | null;
   reward: number | null;
-  rewardsAccount: {
-    roles: AccountRoles,
+  rewardsAccount: Roles & {
     identity: null | { display: string }
   };
 }
@@ -46,9 +45,7 @@ const VALIDATOR_STATS_FRAGMENT = gql`
     reward
     rewardsAddress: rewards_address
     rewardsAccount {
-      roles: role {
-        ...roles
-      }
+      ...roles_fragment
       identity {
         display
       }
@@ -90,7 +87,7 @@ export const GET_ACTIVE_COUNTS = gql`
       }
     }
 
-    waiting: waiting_aggregate {
+    waiting: validator_aggregate (where: { active: { _eq: false }}) {
       aggregate {
         count
       }
@@ -106,9 +103,11 @@ export type ValidatorAccount = {
   totalStake: string;
   otherStake: string;
   commission: number;
-  name: {
-    display: string;
-  }[];
+  account: {
+    identity: null | {
+      display: string;
+    }
+  }
 };
 
 export type ValidatorAccountsQuery = {
@@ -126,29 +125,66 @@ export const GET_CURRENT_VALIDATORS = gql`
       commission
       cmixId: cmix_id
       nominators
-      name: identity {
-        display
+      account {
+        identity {
+          display
+        }
       }
     }
   }
 `;
+
+export type GetWaitingListQuery = {
+  validators: {
+    addressId: string;
+    location: string;
+    stake: number;
+    cmixId: string;
+    nominators: Nominator[];
+    account: {
+      identity: null | {
+        display: string;
+      }
+    }
+  }[]
+}
 
 export const GET_WAITING_LIST = gql`
-  query GetWaitingList ($where: waiting_bool_exp) {
-    validators: waiting(order_by: { self_stake: desc }, where: $where) {
-      addressId: stash_address
-      location
-      ownStake: self_stake
-      commission
-      cmixId: cmix_id
-      nominators
-      name: identity {
+query GetWaitingList($search: String) {
+  validators: validator(order_by: { stake: desc }, where: {
+    active:{_eq: false},
+    _and: {
+      _or: [
+        {
+          account:{
+            identity:{
+              display: {_ilike: $search}
+            }
+          }
+        },
+        {
+          cmix_id:{_ilike: $search }
+        },
+        {
+          stash_address: {_ilike: $search }
+        }
+      ]
+    }
+  } ) {
+    addressId: stash_address
+    location
+    stake
+    commission
+    cmixId: cmix_id
+    nominators
+    account {
+      identity {
         display
       }
     }
   }
+}
 `;
-
 
 /* -------------------------------------------------------------------------- */
 /*                       Account Page > Validator Stats                       */

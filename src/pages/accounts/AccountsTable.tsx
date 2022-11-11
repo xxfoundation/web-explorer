@@ -9,7 +9,7 @@ import FormatBalance from '../../components/FormatBalance';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable, HeaderCell } from '../../components/Tables';
 import { CustomTooltip } from '../../components/Tooltip';
-import { ListAccounts, LIST_ACCOUNTS } from '../../schemas/accounts.schema';
+import { ListAccounts, LIST_ACCOUNTS_FROM_EVENTS, PartialAccount } from '../../schemas/accounts.schema';
 import { HoldersRolesFilters, roleToLabelMap } from './HoldersRolesFilters';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
@@ -58,13 +58,13 @@ const rolesToCell = (roles: string[]) => {
 };
 
 const accountToRow = (
-  item: ListAccounts['account'][0],
+  item: PartialAccount,
   rank: number,
   filters: RoleFilters
 ): BaselineCell[] => {
   const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
 
-  const roles = Object.entries(item.roles)
+  const roles = Object.entries(item)
     .filter(([key]) => key !== '__typename')
     .filter(([, value]) => !!value)
     .sort(([roleA], [roleB]) => (filters[roleB] ? 1 : 0) - (filters[roleA] ? 1 : 0))
@@ -76,7 +76,7 @@ const accountToRow = (
   return [
     { value: rank, props: rankProps },
     {
-      value: <Address truncated roles={item.roles} name={item.identity?.display} value={item.id} url={accountLink} />
+      value: <Address truncated roles={item} name={item.identity?.display} value={item.id} url={accountLink} />
     },
     { value: item.nonce },
     {
@@ -94,7 +94,7 @@ const accountToRow = (
     },
     { value: <FormatBalance value={item.lockedBalance.toString()} /> },
     { value: <FormatBalance value={item.totalBalance.toString()} /> },
-    { value: item.whenCreatedEra }
+    { value: item.creationEvent[0]?.block.era }
   ];
 };
 
@@ -153,11 +153,11 @@ const useHeaders = () => {
 
 const buildOrClause = (filters: Filters) =>
   [
-    filters.roles.council && { role: { council: { _eq: true } } },
-    filters.roles.nominator && { role: { nominator: { _eq: true } } },
-    filters.roles.techcommit && { role: { techcommit: { _eq: true } } },
-    filters.roles.validator && { role: { validator: { _eq: true } } },
-    filters.roles.special && { role: { special: { _neq: 'null' } } },
+    filters.roles.council && { account: { council: { _eq: true } } },
+    filters.roles.nominator && { account: { nominator: { _eq: true } } },
+    filters.roles.techcommit && { account: { techcommit: { _eq: true } } },
+    filters.roles.validator && { account: { validator: { _eq: true } } },
+    filters.roles.special && { account: { special: { _neq: 'null' } } },
   ].filter((v) => !!v);
 
 const AccountsTable: FC = () => {
@@ -169,31 +169,36 @@ const AccountsTable: FC = () => {
 
   const variables = useMemo(
     () => ({
+      orderBy: [{ account: { total_balance: 'desc' } }],
       where: {
-        when_created_era: { _eq: filters.era },
+        block: { era: { _eq: filters.era } },
         _or: [
-          { account_id: { _ilike: `%${search ?? ''}%`} },
-          { identity: { display: { _ilike: `%${search ?? ''}%`} } }
+          { account: { account_id: { _ilike: `%${search ?? ''}%`} } },
+          { account: { identity: { display: { _ilike: `%${search ?? ''}%`} } } }
         ],
         ...(orClause.length > 0 && {
           _and: { _or: orClause }
-        })
+        }),
       },
-      orderBy: [{ total_balance: 'desc' }]
     }),
     [filters.era, search, orClause]
   );
 
-
-  const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {
+  const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS_FROM_EVENTS, {
     variables
   });
 
   const { offset } = pagination;
   const rows = useMemo(
     () =>
-      (data?.account || []).map((item, index) => accountToRow(item, index + 1 + offset, filters.roles)),
-    [data?.account, filters, offset]
+      (data?.events || []).map(
+        (event, index) => accountToRow(
+          event.account,
+          index + 1 + offset,
+          filters.roles
+        )
+      ),
+    [data?.events, filters, offset]
   );
 
   return (

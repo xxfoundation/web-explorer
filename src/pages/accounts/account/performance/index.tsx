@@ -13,7 +13,7 @@ const PerformanceCard: FC<{
   stats: ValidatorStats[];
 }> = (props) => {
   const panels = useMemo(() => {
-    if (!props.account.roles.validator) return [];
+    if (!props.account.validator) return [];
     return [
       {
         label: <Typography>metrics</Typography>,
@@ -25,7 +25,7 @@ const PerformanceCard: FC<{
       }
     ];
   }, [props]);
-  if (!props.account.roles.validator) return <></>;
+  if (!props.account.validator) return <></>;
 
   return (
     <TabsWithPanels panels={panels} tabsLabel='account performance card' />

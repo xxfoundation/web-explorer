@@ -33,14 +33,14 @@ const TransferRow = (data: Transfer) => {
     <Link to={`/blocks/${data.blockNumber}`}>{data.blockNumber}</Link>,
     <TimeAgo date={data.timestamp} />,
     <Address
-      roles={data.sourceAccount.role}
+      roles={data.sourceAccount}
       name={data.sourceAccount.identity?.display}
       value={data.source}
       url={`/accounts/${data.source}`}
       truncated
     />,
     <Address
-      roles={data.destinationAccount.role}
+      roles={data.destinationAccount}
       value={data.destination}
       name={data.destinationAccount.identity?.display}
       url={`/accounts/${data.destination}`}
@@ -83,7 +83,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
         destination: { _eq: filters?.to }
       }),
       ...(era && {
-        block: { active_era: { _eq: era } }
+        block: { era: { _eq: era } }
       })
     };
   }, [era, filters?.from, filters?.to, statusFilter]);

@@ -99,7 +99,7 @@ const AccountId: FC = () => {
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 8 } }}>
             <AccountDetails account={data.account} />
-            {account.roles.validator && validator && validatorStatus(inValidatorStats, currentlyActive)}
+            {account.validator && validator && validatorStatus(inValidatorStats, currentlyActive)}
           </PaperWrapStyled>
         </Grid>
         {historyExpanded && currEra && (
