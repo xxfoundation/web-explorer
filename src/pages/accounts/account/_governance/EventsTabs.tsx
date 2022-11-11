@@ -3,6 +3,7 @@ import React from 'react';
 import {Skeleton} from '@mui/material';
 import {TableSkeleton} from '../../../../components/Tables/TableSkeleton';
 import EventsTable from './EventsTable';
+import {IModulesProps} from './index'
 
 interface TLabels {
   [key: string]: string
@@ -19,12 +20,12 @@ const LABELS: TLabels = {
 interface IEventsTab {
   accountId: string,
   loading: boolean
-  modules: any
+  modules: IModulesProps[] | undefined
 }
 
 const EventsTab: React.FC<IEventsTab> = ({accountId, loading, modules}) => {
-  const renderTabs = (data: any) => {
-    return data.map(({count, key}: { count: number, key: string }) => {
+  const renderTabs = (data: IModulesProps[] | undefined) => {
+    return !data ? [] : data.map(({count, key}: { count: number, key: string }) => {
       const label = LABELS[key]
       return {
         label: (

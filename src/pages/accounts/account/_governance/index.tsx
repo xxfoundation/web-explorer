@@ -10,6 +10,11 @@ type Props = {
   account: Account;
 };
 
+export interface IModulesProps {
+  key: string, 
+  count: number
+}
+
 const GovernanceCard: FC<Props> = ({ account }) => {
   const {data, loading} = useQuery<GetEventsCounts>(GET_EVENTS_COUNTS, {
     variables: { accountId: account.id }
@@ -27,11 +32,12 @@ const GovernanceCard: FC<Props> = ({ account }) => {
     return !hasRecords && !loading;
   }
   
-  const filterOutEmptyRecords = (records: any) => {
-    const formattedData: any = []
+  const filterOutEmptyRecords = (records: GetEventsCounts | undefined) => {
+    const formattedData: IModulesProps[] = []
     if(!records) {
       return undefined;
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Object.entries(records).filter((r: any) => r[1].aggregate.count > 0).map((r: any) => {
       const key: string = r[0];
       const value = r[1];
