@@ -293,13 +293,53 @@ export const GET_EXTRINSIC_COUNTS = gql`
 /* -------------------------------------------------------------------------- */
 /*                     Extrincs and Transfers Tab Counters                    */
 /* -------------------------------------------------------------------------- */
-export type GetModulesCounts = {
+export type GetEventsCounts = {
+  technicalCommittee: { aggregate: { count: number } };
+  councilElections: { aggregate: { count: number } };
+  democracy: { aggregate: { count: number } };
+  treasury: { aggregate: { count: number } };
+  tips: { aggregate: { count: number } };
+}
+
+export const GET_EVENTS_COUNTS = gql`
+query GetModules ($accountId: String) {
+  technicalCommittee: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "technicalCommittee" }}) {
+    aggregate {
+      count
+    }
+  }
+  councilElections: event_aggregate(where: { account_id: {_eq: $accountId}, _and: {_or: [{module: {_eq: "council"}}, {module: {_eq: "elections"}}]}}) {
+    aggregate {
+      count
+    }
+  }
+  democracy: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "democracy" }}) {
+    aggregate {
+      count
+    }
+  }
+  treasury: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "treasury" }}) {
+    aggregate {
+      count
+    }
+  }
+  tips: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "treasury" }}) {
+    aggregate {
+      count
+    }
+  }
+}
+`
+/* -------------------------------------------------------------------------- */
+/*                     Extrincs and Transfers Tab Counters                    */
+/* -------------------------------------------------------------------------- */
+export type GetEventsList = {
   event: []
 }
 
-export const GET_MODULES_COUNTS = gql`
-  query GetModules ($accountId: String) {
-    event(where: {account_id: {_eq: $accountId}, _and: {_or: [{module: {_eq: "technicalCommittee"}}, {module: {_eq: "council"}}, {module: {_eq: "democracy"}}, {module: {_eq: "elections"}}, {module: {_eq: "treasury"}}, {module: {_eq: "tips"}}]}}) {
+export const GET_EVENTS_LIST = gql`
+  query GetModules ($where: event_bool_exp) {
+    event(where: $where) {
       blockNumber: block_number
       index: event_index
       timestamp
