@@ -295,7 +295,7 @@ export const GET_EXTRINSIC_COUNTS = gql`
   }
 `
 /* -------------------------------------------------------------------------- */
-/*                     Extrincs and Transfers Tab Counters                    */
+/*                     Events Tab Counters                    */
 /* -------------------------------------------------------------------------- */
 export type GetEventsCounts = {
   technicalCommittee: { aggregate: { count: number } };
@@ -335,7 +335,7 @@ query GetModules ($accountId: String) {
 }
 `
 /* -------------------------------------------------------------------------- */
-/*                     Extrincs and Transfers Tab Counters                    */
+/*                     Events List                    */
 /* -------------------------------------------------------------------------- */
 export type GetEventsList = {
   event: []
