@@ -14,6 +14,7 @@ export type Event = {
   timestamp: string;
   doc: string;
   data: string;
+  amount?: number;
 };
 
 export const EVENTS_OF_BLOCK = gql`
@@ -62,6 +63,38 @@ export const LIST_EVENTS = gql`
       blockNumber: block_number
       index: event_index
       module
+      call
+      id
+      timestamp
+      doc
+      data
+    }
+  }
+`;
+/* -------------------------------------------------------------------------- */
+/*                                Events Table                                */
+/* -------------------------------------------------------------------------- */
+export type ListBalances = {
+  events: Event[];
+} & TotalOfItems;
+
+export const LIST_BALANCES = gql`
+  query ListEventsOrdered(
+    $orderBy: [event_order_by!]
+    $limit: Int
+    $offset: Int
+    $where: event_bool_exp
+  ) {
+    agg: event_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    events: event(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+      blockNumber: block_number
+      index: event_index
+      module
+      amount
       call
       id
       timestamp

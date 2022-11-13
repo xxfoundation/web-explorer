@@ -274,11 +274,18 @@ export const GET_WHEN_CREATED_ERAS = gql`
 export type GetExtrinsicCounts = {
   extrinsicCount: { aggregate: { count: number } };
   transferCount: { aggregate: { count: number } };
+  balanceCount: { aggregate: { count: number } };
 }
 
 export const GET_EXTRINSIC_COUNTS = gql`
   query GetExtrinsicCounts ($accountId: String) {
     extrinsicCount: extrinsic_aggregate(where: { signer: { _eq: $accountId } }) {
+      aggregate {
+        count
+      }
+    }
+    
+    balanceCount: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq:"balances"} _and: {call: {_in: ["Withdraw", "Deposit"]}}}) {
       aggregate {
         count
       }
