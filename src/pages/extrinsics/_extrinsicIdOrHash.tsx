@@ -19,7 +19,7 @@ const ExtrinsicComponent = () => {
   const isHash = isHex(extrinsicIdOrHash);
   const [blockNumber, extrinsicIndex] = !isHash ? extrinsicIdOrHash?.split('-') ?? [] : [];
 
-  const whereExtrinsic = useMemo(
+  const where = useMemo(
     () =>
       isHash
         ? { hash: { _eq: extrinsicIdOrHash } }
@@ -27,12 +27,8 @@ const ExtrinsicComponent = () => {
     [blockNumber, extrinsicIdOrHash, extrinsicIndex, isHash]
   );
 
-  const whereTransfer = useMemo(() => {
-    return { block_number: { _eq: blockNumber }, extrinsic_index: { _eq: extrinsicIndex } };
-  }, [blockNumber, extrinsicIndex]);
-
   const { data, error, loading } = useQuery<GetExtrinsicWhere>(GET_EXTRINSIC_WHERE, {
-    variables: { where1: whereExtrinsic, where2: isHash ? {} : whereTransfer }
+    variables: { where1: where, where2: where}
   });
 
   if (!loading && !error && (!data || !data?.extrinsic[0])) {
@@ -73,6 +69,7 @@ const ExtrinsicComponent = () => {
             <ExtrinsicTabs
               blockNumber={extrinsic.blockNumber}
               index={extrinsic.extrinsicIndex}
+              transferCount={data?.agg.aggregate.count}
             />
           )
         )}
