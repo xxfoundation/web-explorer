@@ -10,11 +10,11 @@ interface TLabels {
 }
 
 const LABELS: TLabels = {
-  technicalCommittee: 'Technical Committee',
-  councilElections: 'Council / Elections',
-  tips: 'Tips',
+  technicalCommittee: 'Tech Committee',
+  councilElections: 'Council',
   democracy: 'Democracy',
   treasury: 'Treasury',
+  tips: 'Tips',
 }
 
 interface IEventsTab {
