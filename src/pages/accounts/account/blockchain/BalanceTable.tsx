@@ -20,7 +20,7 @@ const rowsParser = ({ amount, blockNumber, call, index, timestamp }: Event): Bas
     { value: <Link to={`/blocks/${blockNumber}`}>{blockNumber}</Link> },
     { value: <TimeAgoComponent date={timestamp} /> },
     { value: `${call}` },
-    { value: <FormatBalance value={amount?.toString() || ''} /> }
+    { value: <FormatBalance value={amount?.toString() || ''} precision={4} /> }
   ];
 };
 
@@ -49,7 +49,7 @@ const BalanceTable: React.FC<IBalanceTable> = ({accountId}) => {
       { value: 'event id' },
       { value: 'block number' },
       {value: 'Time'},
-      {value: 'Call (Deposit / Withdrawal)'},
+      {value: 'Call'},
       {value: 'Amount'}
     ],
     []
