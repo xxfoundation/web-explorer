@@ -1,17 +1,13 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
-import { useQuery, useSubscription } from '@apollo/client';
-import React, { FC, useMemo } from 'react';
-import { camelCase } from 'lodash';
+import { useQuery } from '@apollo/client';
+import React, { FC } from 'react';
 
-import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
-import { FinalizedBlockCount, LISTEN_FINALIZE_BLOCK_COUNT } from '../../schemas/blocks.schema';
 import { ChainInfoLink, Data, Item } from './ChainInfo.styles';
 import { InfoOutlined } from '@mui/icons-material';
 import FormatBalance from '../FormatBalance';
-import { EraMetrics, Metric } from './types';
-import { EconomicsSubscription, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 import Error from '../Error';
 import { CustomTooltip } from '../Tooltip';
+import { ListenForMetrics, LISTEN_FOR_METRICS } from '../../schemas/chaindata.schema';
 
 const ChainInfoCard: FC<{
   title: string;
@@ -39,30 +35,10 @@ const ChainInfoCard: FC<{
   );
 };
 
-const processMetrics = (data?: Metric[]) =>
-  (data ?? []).reduce(
-    (acc, { title, value }) => ({
-      ...acc,
-      [camelCase(title)]: value
-    }),
-    {} as Record<string, string>
-  );
-
 const ChainInfo = () => {
-  const metricsSubscription = useSubscription<EraMetrics>(LISTEN_FOR_ERA_METRICS);
-  const finalizedBlocks = useSubscription<FinalizedBlockCount>(LISTEN_FINALIZE_BLOCK_COUNT);
-  const economicsQuery = useQuery<EconomicsSubscription>(LISTEN_FOR_ECONOMICS);
-  const data = useMemo(
-    () => processMetrics(metricsSubscription.data?.metrics),
-    [metricsSubscription.data?.metrics]
-  );
+  const metricsSubscription = useQuery<ListenForMetrics>(LISTEN_FOR_METRICS);
 
-  const { accounts, activeEra, activeValidatorCount, nominatorCount, transfers, validatorSet } =
-    data;
-  const { inflationRate, totalIssuance } = economicsQuery.data?.economics[0] ?? {};
-  const blocks = finalizedBlocks.data?.block.aggregate.count;
-
-  if (metricsSubscription.error || economicsQuery.error) {
+  if (metricsSubscription.error) {
     return <Error type='data-unavailable' />;
   }
 
@@ -72,29 +48,29 @@ const ChainInfo = () => {
         Chain data
       </Typography>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
-        <ChainInfoCard title='Finalized Blocks' value={blocks} path='/blocks' />
-        <ChainInfoCard title='Active Era' value={activeEra} />
-        <ChainInfoCard title='Transfers' value={transfers} path='/transfers' />
-        <ChainInfoCard title='Account Holders' value={accounts} path='/accounts' />
+        <ChainInfoCard title='Finalized Blocks' value={metricsSubscription.data?.finalizedBlocks.aggregate.count} path='/blocks' />
+        <ChainInfoCard title='Active Era' value={metricsSubscription.data?.activeEra[0].era} />
+        <ChainInfoCard title='Transfers' value={metricsSubscription.data?.numTransfers.aggregate.count} path='/transfers' />
+        <ChainInfoCard title='Account Holders' value={metricsSubscription.data?.numAccounts.aggregate.count} path='/accounts' />
         <ChainInfoCard
           title='Total Issuance'
           tooltip={
             'Defined by the Total Supply minus the xx issued as an ERC1404 and not claimed yet (Other > Claims).'
           }
-          value={totalIssuance && <FormatBalance value={totalIssuance} />}
+          value={metricsSubscription.data?.economics[0].totalIssuance && <FormatBalance value={metricsSubscription.data?.economics[0].totalIssuance} />}
         />
-        <ChainInfoCard title='Nominators' value={nominatorCount} />
+        <ChainInfoCard title='Nominators' value={metricsSubscription.data?.economics[0].inflationRate} />
         <ChainInfoCard
           title='Validators'
           path='/staking'
-          value={activeValidatorCount && validatorSet && `${activeValidatorCount}/${validatorSet}`}
+          value={`${metricsSubscription.data?.numActiveValidators.aggregate.count}`}
         />
         <ChainInfoCard
           title='Circulating AGR'
           tooltip={
             'Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
           }
-          value={inflationRate && `${inflationRate}%`}
+          value={metricsSubscription.data?.economics[0].inflationRate && `${metricsSubscription.data?.economics[0].inflationRate}%`}
         />
       </Grid>
     </Box>
