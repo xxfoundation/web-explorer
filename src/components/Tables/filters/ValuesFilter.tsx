@@ -26,11 +26,13 @@ type Props = {
   valuesLoading?: boolean;
   onChange: (v?: string[]) => void;
   availableValues?: string[];
+  disabled?: boolean
 };
 
 const ValuesFilter: FC<Props> = ({
   availableValues: available,
   buttonLabel,
+  disabled = false,
   onChange,
   onSearchChange,
   search = '',
@@ -65,7 +67,8 @@ const ValuesFilter: FC<Props> = ({
     setLocalValues((m) => (m !== undefined ? undefined : []));
   }, []);
 
-  const reset = useCallback(() => setLocalValues(undefined), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const reset = useCallback(() => {setLocalValues(undefined); onChange([])}, []);
   const applyChanges = useCallback(() => onChange(localValues), [localValues, onChange]);
   const canApplyChanges = !valuesLoading && (localValues !== value || !arrayCompare(localValues, value));
 
@@ -76,6 +79,7 @@ const ValuesFilter: FC<Props> = ({
 
   return (
     <Dropdown
+      disabled={disabled}
       buttonLabel={
         <>
           {buttonLabel}
