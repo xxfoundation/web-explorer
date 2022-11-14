@@ -48,6 +48,7 @@ const generateWhere = (accountId: string, entity: string) => {
 const EventsTable:React.FC<IEventsTable> = ({accountId,  entity}) => {
   const { data, loading } = useQuery<GetEventsList>(GET_EVENTS_LIST, {
     variables: {
+      orderBy: [{ timestamp: 'desc' }],
       where: generateWhere(accountId, entity)
     }
   });

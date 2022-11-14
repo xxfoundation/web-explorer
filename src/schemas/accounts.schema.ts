@@ -285,7 +285,7 @@ export const GET_EXTRINSIC_COUNTS = gql`
       }
     }
     
-    balanceCount: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq:"balances"} _and: {call: {_in: ["Withdraw", "Deposit"]}}}) {
+    balanceCount: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq:"balances"} }) {
       aggregate {
         count
       }
@@ -303,6 +303,7 @@ export const GET_EXTRINSIC_COUNTS = gql`
     }
   }
 `
+
 /* -------------------------------------------------------------------------- */
 /*                     Events Tab Counters                    */
 /* -------------------------------------------------------------------------- */
@@ -351,8 +352,8 @@ export type GetEventsList = {
 }
 
 export const GET_EVENTS_LIST = gql`
-  query GetModules ($where: event_bool_exp) {
-    event(where: $where) {
+  query GetModules ($orderBy: [event_order_by!], $where: event_bool_exp) {
+    event(order_by: $orderBy, where: $where) {
       blockNumber: block_number
       index: event_index
       timestamp
