@@ -15,6 +15,7 @@ import TransferTable from '../../../transfers/TransfersTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
 import TabsWithPanels from '../../../../components/Tabs';
 import { TabText } from '../../../../components/Tabs';
+import BalanceTable from './BalanceTable';
 
 type Props = {
   account: Account;
@@ -28,6 +29,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
 
   const extrinsicCount = data?.extrinsicCount.aggregate.count;
   const transferCount = data?.transferCount.aggregate.count;
+  const balanceCount = data?.balanceCount.aggregate.count;
 
   const panels = useMemo(() => {
     const transferWhereClause = {
@@ -75,11 +77,22 @@ const BlockchainCard: FC<Props> = ({ account }) => {
                 <TransferTable filters={filters} where={transferWhereClause} />
               </>
             )
+          },
+          {
+            label: (
+              <TabText
+                message={'Balance events'}
+                count={balanceCount === undefined ? '' : balanceCount}
+              />
+            ),
+            content: (
+              <BalanceTable accountId={account?.id} />
+            )
           }
         ];
 
     return tabs;
-  }, [account.id, loading, extrinsicCount, transferCount, filters]);
+  }, [account.id, loading, extrinsicCount, balanceCount, transferCount, filters]);
 
   return (
     <TabsWithPanels panels={panels} tabsLabel='account blockchain card' />
