@@ -55,3 +55,5 @@ export type Transfer = {
 export type ListOfTransfers = {
   transfers: Transfer[];
 };
+
+export type Timeframe = 'All' | 'Quarter' | 'Month'

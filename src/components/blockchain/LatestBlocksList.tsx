@@ -32,13 +32,13 @@ const BlockRow: FC<Block> = ({
     <TableRow>
       <TableCell colSpan={4}>
         <Header component='div'>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div>
+          <span style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>
               Block&nbsp;
               <Link to={`/blocks/${number}`} underline='hover' variant='body2'>
                 #{number}
               </Link>
-            </div>
+            </span>
             <Hash
               truncated
               value={hash}
@@ -49,36 +49,36 @@ const BlockRow: FC<Block> = ({
                 textTransform: 'lowercase'
               }}
             />
-          </div>
+          </span>
         </Header>
       </TableCell>
     </TableRow>
     <TableRow>
       <BorderlessCell>
-        <div>
+        <span>
           <Link to={'/extrinsics'} underline='hover' variant='body3'>
             {totalExtrinsics} extrinsics
           </Link>{' '}
-        </div>
+        </span>
       </BorderlessCell>
       <BorderlessCell>
-        <div>
+        <span>
           <Link to={'/events'} underline='hover' variant='body3'>
             {totalEvents} events
           </Link>
-        </div>
+        </span>
       </BorderlessCell>
       <BorderlessCell>
-        <div>
+        <span>
           <BlockStatusIcon status={finalized ? 'successful' : 'pending'} />
-        </div>
+        </span>
       </BorderlessCell>
       <BorderlessCell>
-        <div>
+        <span>
           <Typography variant='body3' sx={{ whiteSpace: 'nowrap' }}>
             <TimeAgo date={timestamp} />
           </Typography>
-        </div>
+        </span>
       </BorderlessCell>
     </TableRow>
     <TableRow>

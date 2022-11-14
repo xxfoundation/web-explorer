@@ -1,11 +1,14 @@
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { SeriesClickEventObject, TooltipFormatterContextObject } from 'highcharts';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
+import HighchartsReact from 'highcharts-react-official';
+
+import { Timeframe } from '../types';
 import LineChart from './LineChart';
 import { DataPoint } from './types';
 
 type Props = {
-  timeframes: Record<string, number>;
+  timeframes: Record<Timeframe, number>;
   timeframe: number;
   data: DataPoint[];
   onChange: ({ target }: SelectChangeEvent<number>) => void;
@@ -24,6 +27,17 @@ const DropdownTimelineLineChart: FC<Props> = ({
   timeframes,
   tooltipFormatter
 }) => {
+  const chartRef = useRef<HighchartsReact.RefObject>(null);
+
+  useEffect(
+    () => {
+      setTimeout(() => {
+        chartRef.current?.chart.reflow();
+      })
+    },
+    [timeframe]
+  );
+
   return (
   <>
     <Box sx={{ display: 'flex', justifyContent: 'right', pr: 2 }}>
@@ -44,6 +58,7 @@ const DropdownTimelineLineChart: FC<Props> = ({
       </FormControl>
     </Box>
     <LineChart
+      chartRef={chartRef}
       data={data}
       onClick={onClick}
       tooltipFormatter={tooltipFormatter}
