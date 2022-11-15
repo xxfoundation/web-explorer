@@ -59,11 +59,11 @@ const ChainInfo = () => {
           }
           value={metricsSubscription.data?.economics[0].totalIssuance && <FormatBalance value={metricsSubscription.data?.economics[0].totalIssuance} />}
         />
-        <ChainInfoCard title='Nominators' value={metricsSubscription.data?.economics[0].inflationRate} />
+        <ChainInfoCard title='Nominators' value={metricsSubscription.data?.numNominators.aggregate.count} />
         <ChainInfoCard
           title='Validators'
           path='/staking'
-          value={`${metricsSubscription.data?.numActiveValidators.aggregate.count}`}
+          value={metricsSubscription.data?.numActiveValidators.aggregate.count}
         />
         <ChainInfoCard
           title='Circulating AGR'

@@ -1,6 +1,5 @@
 import { Divider, Hidden, Grid, Container, Typography } from '@mui/material';
 import React, { FC, Fragment, useMemo } from 'react';
-import Address from '../../../components/Hash/XXNetworkAddress';
 import Hash, { Props as HashProps } from '../../../components/Hash';
 import CmixAddress from '../../../components/Hash/CmixAddress';
 import FormatBalance from '../../../components/FormatBalance';
@@ -85,19 +84,6 @@ const ValidatorInfo: FC<{ active: boolean, info?: ValidatorStats }> = ({ active,
 
   return (
     <SummaryContainer>
-      <SummaryEntry>
-        <SummaryHeader>Reward</SummaryHeader>
-        <SummaryValue>
-          <WithCopy value={info.rewardsAddress}>
-            <Address
-              {...addressProps}
-              value={info.rewardsAddress}
-              name={info.rewardsAccount.identity?.display}
-              roles={info.rewardsAccount}
-            />
-          </WithCopy>
-        </SummaryValue>
-      </SummaryEntry>
       {info.cmixId && (
         <SummaryEntry>
           <SummaryHeader>Cmix ID</SummaryHeader>

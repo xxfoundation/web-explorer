@@ -20,7 +20,7 @@ import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 import StakingCard from './account/staking';
 import Tag from '../../components/Tags/Tag';
 import GovernanceCard from './account/governance';
-// import PerformanceSection from './account/performance';
+import PerformanceCard from './account/performance';
 
 const validatorStatus = (inValidatorStats: boolean, currentlyActive: boolean) => {
   return (
@@ -127,14 +127,19 @@ const AccountId: FC = () => {
                 account={data.account}
               />
             </Panel>
-              {validator !== undefined && (
-                <Panel index={tab} value={2}>
-                  <StakingCard
-                    accountId={account.id}
-                    validator={validator}
-                    active={currentlyActive}/>
-                </Panel>
-              )}
+            {validator !== undefined && (
+            <Panel index={tab} value={2}>
+              <StakingCard
+                accountId={account.id}
+                validator={validator}
+                active={currentlyActive}/>
+            </Panel>)}
+            {validator !== undefined && (
+            <Panel index={tab} value={3}>
+              <PerformanceCard
+                account={account}
+                stats={validator.stats}/>
+            </Panel>)}
           </PaperWrapStyled>
         </Grid>
       </Grid>
