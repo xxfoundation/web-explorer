@@ -7,6 +7,13 @@ export type Nominator = {
   share: string;
 }
 
+export type RewardBreakdown = {
+  commission: string;
+  self: string;
+  nominators: Nominator[];
+  custody: string;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                          Validator Stats Fragment                          */
 /* -------------------------------------------------------------------------- */
@@ -14,42 +21,38 @@ export type ValidatorStats = {
   era: number;
   stashAddress: string;
   commission: number;
+  blocking: boolean;
   selfStake: number;
   otherStake: number;
+  custodyStake: number;
   totalStake: number;
   nominators: Nominator[];
-  sessionKeys: string | null;
-  cmixId: string | null;
-  location: string | null;
   points: number | null;
   relativePerformance: number | null;
   reward: number | null;
-  account: {
-    identity: null | { display: string }
-  };
+  rewardSplit: RewardBreakdown;
+  cmixId: string | null;
+  location: string | null;
 }
 
 const VALIDATOR_STATS_FRAGMENT = gql`
   fragment validatorStatsFragment on validator_stats {
-    cmixId: cmix_id
-    commission
     era
-    location
-    nominators
+    stashAddress: stash_address
+    commission
+    blocking
+    selfStake: self_stake
     otherStake: other_stake
+    custodyStake: custody_stake
+    totalStake: total_stake
+    nominators
     points
     relativePerformance: relative_performance
     reward
-    account {
-      identity {
-        display
-      }
-    }
-    selfStake: self_stake
-    sessionKeys: session_keys
-    stashAddress: stash_address
+    rewardSplit: reward_split
+    cmixId: cmix_id
+    location
     timestamp
-    totalStake: total_stake
   }
 `;
 
@@ -248,8 +251,10 @@ export type StakingReward = {
   era: number;
   timestamp: string;
   validatorAddress: string;
-  identity: {
-    display: string;
+  account: {
+    identity: {
+      display: string;
+    }
   }
 }
 
@@ -260,9 +265,11 @@ const STAKING_REWARDS_FRAGMENT = gql`
     blockNumber: block_number
     era
     timestamp
-    validatorAddress: validator_stash_address
-    identity {
-      display
+    validatorAddress: validator_id
+    account {
+      identity {
+        display
+      }
     }
   }
 `;

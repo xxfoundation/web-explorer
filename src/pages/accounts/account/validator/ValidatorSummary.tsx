@@ -1,18 +1,18 @@
 import { Divider, Hidden, Grid, Container, Typography } from '@mui/material';
 import React, { FC, Fragment, useMemo } from 'react';
-import Hash, { Props as HashProps } from '../../../components/Hash';
-import CmixAddress from '../../../components/Hash/CmixAddress';
-import FormatBalance from '../../../components/FormatBalance';
+import Hash, { Props as HashProps } from '../../../../components/Hash';
+import CmixAddress from '../../../../components/Hash/CmixAddress';
+import FormatBalance from '../../../../components/FormatBalance';
 import {
   SummaryContainer,
   SummaryHeader,
   SummaryEntry,
   SummaryValue,
   WithCopy
-} from '../../../components/Summary';
-import { ValidatorStats } from '../../../schemas/staking.schema';
-import Ellipsis from '../../../components/Ellipsis';
-import Error from '../../../components/Error';
+} from '../../../../components/Summary';
+import Ellipsis from '../../../../components/Ellipsis';
+import Error from '../../../../components/Error';
+import { ValidatorInfo } from '../../../../schemas/validator.schema';
 
 const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
   return (
@@ -46,7 +46,8 @@ const locationString = (geoBin: string, city: string, country: string) => {
   return str;
 };
 
-const ValidatorInfo: FC<{ active: boolean, info?: ValidatorStats }> = ({ active, info }) => {
+const ValidatorSummary: FC<{ active: boolean, info?: ValidatorInfo }> = ({ active, info }) => {
+  console.warn(info)
   const location = useMemo(() => {
     if (!info?.location) {
       return ' - ';
@@ -101,22 +102,10 @@ const ValidatorInfo: FC<{ active: boolean, info?: ValidatorStats }> = ({ active,
       {active && <SummaryEntry>
         <SummaryHeader>Own Stake</SummaryHeader>
         <SummaryValue>
-          <FormatBalance value={info.selfStake.toString()} />
+          <FormatBalance value={info.stake} />
         </SummaryValue>
       </SummaryEntry>}
-      {active && <SummaryEntry>
-        <SummaryHeader>Other Stake</SummaryHeader>
-        <SummaryValue>
-          <FormatBalance value={info.otherStake.toString()} />
-        </SummaryValue>
-      </SummaryEntry>}
-      {active && <SummaryEntry>
-        <SummaryHeader>Total Stake</SummaryHeader>
-        <SummaryValue>
-          <FormatBalance value={info.totalStake.toString()} />
-        </SummaryValue>
-      </SummaryEntry>}
-      {active && <SummaryEntry>
+      {active && info.nominators && <SummaryEntry>
         <SummaryHeader>Nominators</SummaryHeader>
         <SummaryValue>{info.nominators.length}</SummaryValue>
       </SummaryEntry>}
@@ -136,4 +125,4 @@ const ValidatorInfo: FC<{ active: boolean, info?: ValidatorStats }> = ({ active,
   );
 };
 
-export default ValidatorInfo;
+export default ValidatorSummary;

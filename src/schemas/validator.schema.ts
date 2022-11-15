@@ -78,3 +78,57 @@ export const GET_PAYOUT_FREQUENCY = gql`
     }
   }
 `;
+
+const VALIDATOR_INFO_FRAGMENT = gql`
+  fragment validatorInfoFragment on validator {
+    stashAddress: stash_address
+    rewardsAddress: rewards_address
+    account {
+      identity {
+        display
+      }
+    }
+    active
+    stake
+    commission
+    blocking
+    nominators
+    sessionKeys: session_keys
+    cmixId: cmix_id
+    location
+    timestamp
+  }
+`;
+
+
+export type ValidatorInfo = {
+  stashAddress: string;
+  rewardAddress: string;
+  account: {
+    identity: null | {
+      display: string;
+    }
+  }
+  active: boolean;
+  stake: string;
+  commission: number;
+  blocking: boolean;
+  nominators: string[];
+  sessionKeys: string | null;
+  cmixId: string;
+  location: string;
+  timestamp: string;
+};
+
+export type GetValidatorInfo = {
+  validator: ValidatorInfo[];
+}
+
+export const GET_VALIDATOR_INFO = gql`
+  ${VALIDATOR_INFO_FRAGMENT}
+  query GetValidatorInfo($accountId: String!) {
+    validator(where: { stash_address: { _eq: $accountId }}) {
+      ...validatorInfoFragment
+    }
+  }
+`

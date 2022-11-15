@@ -1,4 +1,4 @@
-import type { ValidatorStats } from '../../../../schemas/staking.schema';
+import type { Nominator, ValidatorStats } from '../../../../schemas/staking.schema';
 import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.schema';
 
 import React, { FC, useMemo, useEffect } from 'react';
@@ -23,6 +23,7 @@ import FormatBalance from '../../../../components/FormatBalance';
 import { useQuery } from '@apollo/client';
 import { CustomTooltip } from '../../../../components/Tooltip';
 import { InfoOutlined } from '@mui/icons-material';
+import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
 
 const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
   return tooltip ? (
@@ -72,11 +73,22 @@ const headers = [
 const BlockLink = ({ block }: { block?: number }) =>
   block ? <Link to={`/blocks/${block}`}>{block}</Link> : <Typography>-</Typography>;
 
+const NominatorsList = ({ nominator }: { nominator?: Nominator }) =>
+  nominator ? 
+  <TableRow>
+    <TableCell align='left'>
+      <XXNetworkAddress truncated='mdDown' value={nominator.account_id} roles={{ nominator: true }} />
+    </TableCell>
+    <TableCell align='left'><FormatBalance value={nominator.stake} /></TableCell>
+    <TableCell align='left'>{`${nominator.share}%`}</TableCell>
+  </TableRow>
+  : <Typography>-</Typography>
+
 const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBlocks }> = ({
   producedBlocks,
   stats
 }) => {
-  const [expanded, { toggle }] = useToggle();
+  const [expandedBlocks, toggleBlocks] = useToggle();
   const blocksProduced = useMemo(
     () =>
       producedBlocks?.blocks
@@ -85,17 +97,29 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
         .map((b) => b.number),
     [producedBlocks, stats.era]
   );
-
-  const endIcon = useMemo(
+  const endIconBlocks = useMemo(
     () =>
       blocksProduced && blocksProduced?.length > 0 ? (
-        expanded ? (
+        expandedBlocks ? (
           <KeyboardArrowUpIcon />
         ) : (
           <KeyboardArrowDownIcon />
         )
       ) : undefined,
-    [blocksProduced, expanded]
+    [blocksProduced, expandedBlocks]
+  );
+
+  const [expandedNominators, toogleNominators] = useToggle();
+  const endIconNominators = useMemo(
+    () =>
+      blocksProduced && blocksProduced?.length > 0 ? (
+        expandedBlocks ? (
+          <KeyboardArrowUpIcon />
+        ) : (
+          <KeyboardArrowDownIcon />
+        )
+      ) : undefined,
+    [blocksProduced, expandedBlocks]
   );
 
   return (
@@ -107,7 +131,14 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
           <FormatBalance value={stats.selfStake.toString()} />
         </TableCell>
         <TableCell data-label='Other Stake'>
-          <FormatBalance value={stats.otherStake.toString()} />
+          <Button
+            disabled={!blocksProduced || blocksProduced.length === 0}
+            variant='text'
+            endIcon={endIconNominators}
+            onClick={toogleNominators.toggle}
+          >
+            <FormatBalance value={stats.otherStake.toString()} />
+          </Button>
         </TableCell>
         <TableCell data-label='Total Stake'>
           <FormatBalance value={stats.totalStake.toString()} />
@@ -123,14 +154,14 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
           <Button
             disabled={!blocksProduced || blocksProduced.length === 0}
             variant='text'
-            endIcon={endIcon}
-            onClick={toggle}
+            endIcon={endIconBlocks}
+            onClick={toggleBlocks.toggle}
           >
             {blocksProduced?.length}
           </Button>
         </TableCell>
       </TableRow>
-      {expanded && (
+      {expandedBlocks && (
         <TableRow>
           <TableCell colSpan={9} sx={{ pt: 0, display: 'table-cell !important' }}>
             {blocksProduced
@@ -138,6 +169,22 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
               .reduce((prev, curr) => [prev, ', ', curr])}
           </TableCell>
         </TableRow>
+      )}
+      {expandedNominators && (
+      <TableRow>
+        <TableCell colSpan={9} sx={{ pt: 0, display: 'table-cell !important' }}>
+          <TableHead>
+            <TableRow>
+              <TableCell align='left'>Account Id</TableCell>
+              <TableCell align='left'>Stake</TableCell>
+              <TableCell align='left'>Share</TableCell>
+            </TableRow>
+          </TableHead>
+          {stats.nominators
+            ?.map<React.ReactNode>((nominator) => <NominatorsList key={nominator.account_id} nominator={nominator} />)
+          }
+        </TableCell>
+      </TableRow>
       )}
     </>
   );

@@ -20,7 +20,7 @@ import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 import StakingCard from './account/staking';
 import Tag from '../../components/Tags/Tag';
 import GovernanceCard from './account/governance';
-import PerformanceCard from './account/performance';
+import ValidatorCard from './account/validator';
 
 const validatorStatus = (inValidatorStats: boolean, currentlyActive: boolean) => {
   return (
@@ -115,9 +115,8 @@ const AccountId: FC = () => {
             <PageTabs value={tab} onChange={handleTab}>
               <Tab label='Blockchain' />
               <Tab label='Governance' />
-              {validator !== undefined && (
-                <Tab label='Staking' />
-              )}
+              <Tab label='Staking' />
+              {validator !== undefined && (<Tab label='Validator' />)}
             </PageTabs>
             <Panel index={tab} value={0}>
               <BlockchainCard account={data.account} />
@@ -127,18 +126,15 @@ const AccountId: FC = () => {
                 account={data.account}
               />
             </Panel>
-            {validator !== undefined && (
             <Panel index={tab} value={2}>
               <StakingCard
-                accountId={account.id}
-                validator={validator}
-                active={currentlyActive}/>
-            </Panel>)}
+                accountId={account.id}/>
+            </Panel>
             {validator !== undefined && (
             <Panel index={tab} value={3}>
-              <PerformanceCard
-                account={account}
-                stats={validator.stats}/>
+              <ValidatorCard
+                accountId={account.id}
+                active={currentlyActive}/>
             </Panel>)}
           </PaperWrapStyled>
         </Grid>
