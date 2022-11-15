@@ -1,8 +1,8 @@
 import type { DocumentNode, TypedDocumentNode, QueryHookOptions, QueryResult, OperationVariables } from '@apollo/client';
 import { useQuery } from '@apollo/client';
 import { TotalOfItems } from '../schemas/types';
-import usePagination, { DEFAULT_ROWS_PER_PAGE, PaginationOptions } from '../hooks/usePagination';
-import { useEffect, useMemo } from 'react';
+import usePagination, { PaginationOptions } from '../hooks/usePagination';
+import { useEffect } from 'react';
 
 type UsePaginatedQuery<TData> = QueryResult<TData, OperationVariables>
   & { pagination: ReturnType<typeof usePagination> }
@@ -15,18 +15,15 @@ const usePaginatedQuery = <TData extends TotalOfItems>(
 ):  UsePaginatedQuery<TData> => {
   const pagination = usePagination(paginationOptions);
   const { limit, offset, setCount } = pagination;
-  const queryOptions = useMemo(
-    () => ({
-      ...options,
-      fetchPolicy: 'cache-first',
-      variables: {
-        limit,
-        offset,
-        ...options.variables,
-      }
-    }) as QueryHookOptions<TData>,
-    [limit, offset, options]
-  );
+  const queryOptions = {
+    ...options,
+    fetchPolicy: 'network-only',
+    variables: {
+      limit,
+      offset,
+      ...options.variables,
+    }
+  } as QueryHookOptions;
 
   const result = useQuery<TData>(query, queryOptions);
   
@@ -35,26 +32,6 @@ const usePaginatedQuery = <TData extends TotalOfItems>(
       setCount(Number(result.data?.agg.aggregate.count));
     }
   }, [setCount, result.data?.agg.aggregate.count]);
-
-  useEffect(
-    () => {
-      result.client.query({
-        query,
-        variables: {
-          limit,
-          offset: offset + (paginationOptions?.rowsPerPage ?? DEFAULT_ROWS_PER_PAGE),
-          ...options.variables,
-        }
-      })
-    }, [
-    limit,
-    offset,
-    options.variables,
-    paginationOptions?.rowsPerPage,
-    query,
-    queryOptions,
-    result.client
-  ]);
 
   return {
     ...result,
