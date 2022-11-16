@@ -49,7 +49,7 @@ const GovernanceCard: FC<Props> = ({ account }) => {
     return formattedData;
   }
 
-  return isEmpty() ? <div>No records available</div> : (
+  return isEmpty() ? <div>No activity</div> : (
     <EventsTabs loading={loading} accountId={account.id} modules={filterOutEmptyRecords(data)} />
   );
 }

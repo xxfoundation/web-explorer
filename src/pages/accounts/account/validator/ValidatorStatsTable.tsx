@@ -112,14 +112,14 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
   const [expandedNominators, toogleNominators] = useToggle();
   const endIconNominators = useMemo(
     () =>
-      blocksProduced && blocksProduced?.length > 0 ? (
-        expandedBlocks ? (
+      stats.nominators && stats.nominators?.length > 0 ? (
+        expandedNominators ? (
           <KeyboardArrowUpIcon />
         ) : (
           <KeyboardArrowDownIcon />
         )
       ) : undefined,
-    [blocksProduced, expandedBlocks]
+    [expandedNominators, stats.nominators]
   );
 
   return (
@@ -132,7 +132,7 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
         </TableCell>
         <TableCell data-label='Other Stake'>
           <Button
-            disabled={!blocksProduced || blocksProduced.length === 0}
+            disabled={!stats.nominators || stats.nominators.length === 0}
             variant='text'
             endIcon={endIconNominators}
             onClick={toogleNominators.toggle}

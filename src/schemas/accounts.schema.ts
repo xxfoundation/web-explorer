@@ -120,7 +120,9 @@ export const GET_DISPLAY_IDENTITY = gql`
 /* -------------------------------------------------------------------------- */
 export type Account = CreationEventFragment & Roles & {
   id: string;
+  active: boolean;
   whenCreated: number;
+  whenKilled: number;
   controllerAddress?: string;
   blockHeight: number;
   identity: Identity;
@@ -151,7 +153,9 @@ export const ACCOUNT_FRAGMENT = gql`
     id: account_id
     controllerAddress: controller_address
     ...creation_event_fragment
+    active
     whenCreated: when_created
+    whenKilled: when_killed
     blockHeight: block_height
     identity {
       ...identity
@@ -352,7 +356,7 @@ export type GetEventsList = {
 }
 
 export const GET_EVENTS_LIST = gql`
-  query GetModules ($orderBy: [event_order_by!], $where: event_bool_exp) {
+  query GetEventsList ($orderBy: [event_order_by!], $where: event_bool_exp) {
     event(order_by: $orderBy, where: $where) {
       blockNumber: block_number
       index: event_index
@@ -360,6 +364,7 @@ export const GET_EVENTS_LIST = gql`
       module
       call
       data 
+      doc
   }
 }
 `

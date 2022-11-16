@@ -12,15 +12,23 @@ interface IEventsTable {
   entity: string
 }
 
-const rowsParser = ({ blockNumber, call, data, index, timestamp }: Event): BaselineCell[] => {
+const processEventDoc = (doc: string) => {
+  const substring = doc
+    .replace(/\[\"/g, '')
+    .replace(/\]\"/g, '')
+    .substring(doc.indexOf('\\') + 1, doc.lastIndexOf('\\') - 3);
+  return substring ? substring.replace(/,","/g, ' ').replace(/,/g, '').split(' ') : undefined;
+};
+
+const rowsParser = ({ blockNumber, call, data, doc, index, timestamp }: Event): BaselineCell[] => {
   return [
     { value: index },
     { value: <Link to={`/blocks/${blockNumber}`}>{blockNumber}</Link> },
     { value: <TimeAgoComponent date={timestamp} /> },
     { value: `${call}` },
-    { value: <DataTile values={JSON.parse(data)} /> }];
+    { value: <DataTile headers={processEventDoc(doc)} values={JSON.parse(data)} /> }];
 };
-const headers = HeaderCellsWrapper(['EVENT ID', 'Block Number', 'Time', 'Call', 'Data']);
+const headers = HeaderCellsWrapper(['ID', 'Block', 'Time', 'Call', 'Data']);
 
 const generateWhere = (accountId: string, entity: string) => {
   if (entity === 'councilElections') {

@@ -24,7 +24,7 @@ const ValidatorCard: FC<{
   });
   const validatorStats = queryValidatorStats.data?.stats
 
-  const nominators = validatorStats && validatorStats[0].nominators
+  const nominators = validatorStats && validatorStats[0] && validatorStats[0].nominators
     ?.slice()
     .sort((a, b) => parseFloat(b.share) - parseFloat(a.share));
 
@@ -58,7 +58,11 @@ const ValidatorCard: FC<{
     return cachedPanels;
   }, [accountId, active, nominators, queryValidatorInfo.loading, queryValidatorStats.loading, statsCount, validatorInfo, validatorStats]);
 
-  return (
+  const isEmpty = () => {
+    return !queryValidatorInfo.data?.validator.length && !queryValidatorStats.data?.aggregates.aggregate.count;
+  }
+
+  return isEmpty() ? <div>No activity</div> : (
     !(queryValidatorInfo.loading || queryValidatorStats.loading) ? (<TabsWithPanels panels={panels} tabsLabel='account staking card' />) : <>
       <Stack sx={{ py: 3 }} spacing={2} direction='row'>
         <Skeleton width={160} />

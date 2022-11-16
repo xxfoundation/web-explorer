@@ -39,7 +39,11 @@ const StakingCard: FC<{
     return cachedPanels;
   }, [accountId, loading, rewardsCount, rewardsSum]);
 
-  return (
+  const isEmpty = () => {
+    return !data?.rewardsInfo.aggregate.count;
+  }
+
+  return isEmpty() ? <div>No activity</div> : (
     !loading ? (<TabsWithPanels panels={panels} tabsLabel='account staking card' />) : <>
       <Stack sx={{ py: 3 }} spacing={2} direction='row'>
         <Skeleton width={160} />

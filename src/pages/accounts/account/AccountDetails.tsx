@@ -58,6 +58,22 @@ const AccountDetails: FC<{ account: Account }> = ({ account }) => {
         <TypographyBody>{account.nonce}</TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
+        <TypographyHeader sx={{ width: '110px' }}>Status</TypographyHeader>
+        <Typography fontWeight='100'>|</Typography>
+        {account.active ? 
+        <TypographyBody>
+          Active
+        </TypographyBody>
+        : <TypographyBody>
+          <Tag filled sx={{ marginRight: '0.75em' }}>
+            <Typography fontSize={'12px'} fontWeight={400}>
+              Closed
+            </Typography>
+          </Tag>
+          <TimeAgoComponent date={account.whenKilled} />
+        </TypographyBody>}
+      </InfoCardRow>
+      <InfoCardRow>
         <TypographyHeader sx={{ width: '110px' }}>role</TypographyHeader>
         <Typography fontWeight='100'>|</Typography>
         <Box display={'flex'} alignItems={'center'}>
