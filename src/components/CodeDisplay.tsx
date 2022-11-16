@@ -12,7 +12,13 @@ const CodeDisplayComponent = styled(Box)(({ theme }) => ({
   borderStyle: 'solid',
   borderWidth: '1px',
   background: 'rgb(0 0 0 / 4%)',
-  overflowY: 'auto'
+  overflowY: 'auto',
+  [theme.breakpoints.down('md')]: {
+    fontSize: '0.5rem',
+    overflow: 'auto',
+    maxWidth: '8rem',
+    marginLeft: '1rem'
+  },
 }));
 
 type Props = WithChildren & Omit<BoxProps, 'component'> & {
