@@ -133,7 +133,7 @@ const ValuesFilter: FC<Props> = ({
                     No available values...
                   </Typography>
                 )}
-                {availableValues?.map((val) => (
+                {availableValues?.filter(v => v.toLowerCase().match(valuesFilter?.toLowerCase())).map((val) => (
                   <FormControlLabel
                     key={val}
                     sx={{
