@@ -17,6 +17,7 @@ export const GET_RUNTIME_VERSION = gql`
 export type ListenForAccountMetrics = {
   numTransfers: { aggregate: { count: number } };
   numAccounts: { aggregate: { count: number } };
+  numFakeAccounts: { aggregate: { count: number } };
 }
 
 export const LISTEN_FOR_ACCOUNT_METRICS = gql`
@@ -27,6 +28,11 @@ export const LISTEN_FOR_ACCOUNT_METRICS = gql`
       }
     }
     numAccounts: account_aggregate {
+      aggregate {
+        count
+      }
+    }
+    numFakeAccounts: account_aggregate(where: {_and: {active: {_eq: false}, when_killed: {_is_null: true}}}) {
       aggregate {
         count
       }

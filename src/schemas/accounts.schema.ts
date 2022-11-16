@@ -148,11 +148,9 @@ export type GetAccountByAddressType = {
 export const ACCOUNT_FRAGMENT = gql`
   ${IDENTITY_FRAGMENT}
   ${ROLES_FRAGMENT}
-  ${CREATION_EVENT_FRAGMENT}
   fragment account on account {
     id: account_id
     controllerAddress: controller_address
-    ...creation_event_fragment
     active
     whenCreated: when_created
     whenKilled: when_killed
@@ -188,38 +186,35 @@ export const GET_ACCOUNT_BY_PK = gql`
 /*                        Account Page > Holders Table                        */
 /* -------------------------------------------------------------------------- */
 type PartialIdentity = Pick<Identity, 'display'>;
-type AccountKeys = 'id' | 'timestamp' | 'totalBalance' | 'lockedBalance' | 'nonce';
-export type PartialAccount = { identity : PartialIdentity } & CreationEventFragment & Roles & Pick<Account, AccountKeys>;
+type AccountKeys = 'id' | 'nonce' | 'lockedBalance' | 'totalBalance' | 'whenCreated';
+export type PartialAccount = { identity : PartialIdentity } & Roles & Pick<Account, AccountKeys>;
 
 export type ListAccounts = TotalOfItems & {
-  events: { account: PartialAccount }[];
+  account: PartialAccount[];
 };
 
-export const LIST_ACCOUNTS_FROM_EVENTS = gql`
+export const LIST_ACCOUNTS = gql`
   ${ROLES_FRAGMENT}
-  ${CREATION_EVENT_FRAGMENT}
-  query ListCreatedAccountsFromEvents(
-    $orderBy: [event_order_by!]
+  query ListAccounts(
+    $orderBy: [account_order_by!]
     $offset: Int
     $limit: Int
-    $where: event_bool_exp
+    $where: account_bool_exp
   ) {
-    events: event(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
-      account {
-        id: account_id
-        timestamp
-        totalBalance: total_balance
-        lockedBalance: locked_balance
-        nonce
-        ...roles_fragment
-        identity: identity {
-          display
-        }
-      ...creation_event_fragment
+    account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
+      id: account_id
+      timestamp
+      totalBalance: total_balance
+      lockedBalance: locked_balance
+      whenCreated: when_created
+      nonce
+      ...roles_fragment
+      identity: identity {
+        display
       }
     }
-    
-    agg: event_aggregate(where: $where) {
+
+    agg: account_aggregate(where: $where) {
       aggregate {
         count
       }

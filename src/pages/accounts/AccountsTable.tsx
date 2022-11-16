@@ -1,7 +1,7 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Tooltip, Typography } from '@mui/material';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 
 import { theme } from '../../themes/default';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -9,15 +9,15 @@ import FormatBalance from '../../components/FormatBalance';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { BaselineCell, BaselineTable, HeaderCell } from '../../components/Tables';
 import { CustomTooltip } from '../../components/Tooltip';
-import { ListAccounts, LIST_ACCOUNTS_FROM_EVENTS, PartialAccount } from '../../schemas/accounts.schema';
+import { ListAccounts, LIST_ACCOUNTS, PartialAccount, Roles } from '../../schemas/accounts.schema';
 import { HoldersRolesFilters, roleToLabelMap } from './HoldersRolesFilters';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
 import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
-import { NumberParam, useQueryParam } from 'use-query-params';
+import TimeAgoComponent from '../../components/TimeAgo';
 
 type RoleFilters = Record<string, boolean>;
-type Filters = { era?: number, roles: RoleFilters };
+type Filters = { roles: RoleFilters };
 
 const RolesTooltipContent: FC<{ roles: string[] }> = ({ roles }) => {
   const labels = useMemo(
@@ -63,8 +63,15 @@ const accountToRow = (
   filters: RoleFilters
 ): BaselineCell[] => {
   const rankProps = rank <= 10 ? { style: { fontWeight: 900 } } : {};
+  const rolesObj: Roles = {
+    council: item.council,
+    nominator: item.nominator,
+    special: item.special,
+    techcommit: item.techcommit,
+    validator: item.validator
+  }
 
-  const roles = Object.entries(item)
+  const roles = Object.entries(rolesObj)
     .filter(([key]) => key !== '__typename')
     .filter(([, value]) => !!value)
     .sort(([roleA], [roleB]) => (filters[roleB] ? 1 : 0) - (filters[roleA] ? 1 : 0))
@@ -94,22 +101,13 @@ const accountToRow = (
     },
     { value: <FormatBalance value={item.lockedBalance.toString()} /> },
     { value: <FormatBalance value={item.totalBalance.toString()} /> },
-    { value: item.creationEvent[0]?.block.era }
+    { value: <Typography><TimeAgoComponent date={item.whenCreated} /></Typography>}
   ];
 };
 
 const useHeaders = () => {
   const [search, setSearch] = useState<string>();
   const [roleFilters, setRoleFilters] = useSessionState<RoleFilters>('accounts.roleFilters', {});
-  const [eraQuery, setEraQuery] = useQueryParam('era', NumberParam);
-  const [eraSessionState, setEraSessionState] = useSessionState<number | undefined>('accounts.whenCreated', undefined);
-  const era = useMemo(() => eraQuery || eraSessionState, [eraSessionState, eraQuery]);
-
-  const onEraChange = useCallback((e?: string) => {
-    const eraNumber = e ? Number(e) : undefined;
-    setEraQuery(eraNumber);
-    setEraSessionState(eraNumber);
-  }, [setEraQuery, setEraSessionState]);
 
   const headers = useMemo<HeaderCell[]>(
     () => [
@@ -136,28 +134,25 @@ const useHeaders = () => {
       },
       { value: 'Locked balance' },
       { value: 'Total balance' },
-      {
-        label: 'Era created',
-        value: <GeneralFilter value={era?.toString()} onChange={onEraChange} label='Era created' />
-      }
+      { value: 'When Created' }
     ],
-    [era, onEraChange, roleFilters, search, setRoleFilters]
+    [roleFilters, search, setRoleFilters]
   );
 
   return {
     headers,
-    filters: { roles: roleFilters, era },
+    filters: { roles: roleFilters },
     search
   };
 };
 
 const buildOrClause = (filters: Filters) =>
   [
-    filters.roles.council && { account: { council: { _eq: true } } },
-    filters.roles.nominator && { account: { nominator: { _eq: true } } },
-    filters.roles.techcommit && { account: { techcommit: { _eq: true } } },
-    filters.roles.validator && { account: { validator: { _eq: true } } },
-    filters.roles.special && { account: { special: { _neq: 'null' } } },
+    filters.roles.council && { council: { _eq: true } },
+    filters.roles.nominator && { nominator: { _eq: true } },
+    filters.roles.techcommit && { techcommit: { _eq: true } },
+    filters.roles.validator && { validator: { _eq: true } },
+    filters.roles.special && { special: { _neq: 'null' } },
   ].filter((v) => !!v);
 
 const AccountsTable: FC = () => {
@@ -169,36 +164,35 @@ const AccountsTable: FC = () => {
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ account: { total_balance: 'desc' } }],
+      orderBy: [{ total_balance: 'desc' }],
       where: {
-        block: { era: { _eq: filters.era } },
         _or: [
-          { account: { account_id: { _ilike: `%${search ?? ''}%`} } },
-          { account: { identity: { display: { _ilike: `%${search ?? ''}%`} } } }
+          { account_id: { _ilike: `%${search ?? ''}%`} },
+          { identity: { display: { _ilike: `%${search ?? ''}%`} } }
         ],
         ...(orClause.length > 0 && {
           _and: { _or: orClause }
         }),
       },
     }),
-    [filters.era, search, orClause]
+    [search, orClause]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS_FROM_EVENTS, {
+  const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {
     variables
   });
 
   const { offset } = pagination;
   const rows = useMemo(
     () =>
-      (data?.events || []).map(
-        (event, index) => accountToRow(
-          event.account,
+      (data?.account || []).map(
+        (account, index) => accountToRow(
+          account,
           index + 1 + offset,
           filters.roles
         )
       ),
-    [data?.events, filters, offset]
+    [data?.account, filters, offset]
   );
 
   return (

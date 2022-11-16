@@ -48,7 +48,7 @@ const SummaryInfo = () => {
           {loading ? (
             <Skeleton />
           ) : data?.numAccounts !== undefined ? (
-            data?.numAccounts.aggregate.count
+            data?.numAccounts.aggregate.count - data?.numFakeAccounts.aggregate.count
           ) : (
             'N/D'
           )}
