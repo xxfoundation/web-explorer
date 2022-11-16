@@ -15,7 +15,7 @@ import TransferTable from '../../../transfers/TransfersTable';
 import AddressFilter from '../../../../components/Tables/filters/AddressFilter';
 import TabsWithPanels from '../../../../components/Tabs';
 import { TabText } from '../../../../components/Tabs';
-import BalanceTable from './BalanceTable';
+import BalanceTable from './BalancesEventsTable';
 
 type Props = {
   account: Account;
@@ -81,7 +81,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
           {
             label: (
               <TabText
-                message={'Balance events'}
+                message={'Balance Events'}
                 count={balanceCount === undefined ? '' : balanceCount}
               />
             ),

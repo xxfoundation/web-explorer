@@ -6,8 +6,7 @@ import Link from '../../../../components/Link';
 import { BaselineCell, BaselineTable, HeaderCell } from '../../../../components/Tables';
 import TimeAgoComponent from '../../../../components/TimeAgo';
 import {
-  Event,
-  LIST_BALANCES, ListBalances
+  Event, ListBalancesEvents, LIST_BALANCES_EVENTS,
 } from '../../../../schemas/events.schema';
 import usePaginatedQuery from '../../../../hooks/usePaginatedQuery';
 import FormatBalance from '../../../../components/FormatBalance';
@@ -24,14 +23,14 @@ const rowsParser = ({ amount, blockNumber, call, index, timestamp }: Event): Bas
   ];
 };
 
-interface IBalanceTable {
+interface IBalancesEventsTable {
   accountId: string
 }
 
-const BalanceTable: React.FC<IBalanceTable> = ({accountId}) => {
+const BalancesEventsTable: React.FC<IBalancesEventsTable> = ({accountId}) => {
   const where = useMemo(() => {
     return {
-      ...{account_id: { _eq: accountId}, module: {_eq: 'balances'}, _and: {call: {_in: ['Withdraw', 'Deposit']}}}
+      ...{account_id: { _eq: accountId}, module: {_eq: 'balances'}}
     };
   }, [accountId]);
 
@@ -56,7 +55,7 @@ const BalanceTable: React.FC<IBalanceTable> = ({accountId}) => {
   );
 
   /* ------------------------- Main Query - Get `balances` Events ------------------------ */
-  const { data, error, loading, pagination } = usePaginatedQuery<ListBalances>(LIST_BALANCES, {
+  const { data, error, loading, pagination } = usePaginatedQuery<ListBalancesEvents>(LIST_BALANCES_EVENTS, {
     variables
   });
   const rows = useMemo(() => (data?.events || []).map(rowsParser), [data]);
@@ -74,4 +73,4 @@ const BalanceTable: React.FC<IBalanceTable> = ({accountId}) => {
   );
 };
 
-export default BalanceTable;
+export default BalancesEventsTable;

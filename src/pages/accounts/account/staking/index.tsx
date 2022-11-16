@@ -5,16 +5,18 @@ import React, { FC, useMemo } from 'react';
 import StakingRewardsTable from './StakingRewardsTable';
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import TabsWithPanels, { TabText } from '../../../../components/Tabs';
-import { GetStakingRewardCounts, GET_STAKING_REWARDS_COUNTS } from '../../../../schemas/accounts.schema';
+import { GetStakingCounts, GET_STAKING_COUNTS } from '../../../../schemas/accounts.schema';
+import StakingEventsTable from './StakingEventsTable';
 
 const StakingCard: FC<{
   accountId: string;
 }> = ({ accountId}) => {
-  const { data, loading } = useQuery<GetStakingRewardCounts>(GET_STAKING_REWARDS_COUNTS, {
+  const { data, loading } = useQuery<GetStakingCounts>(GET_STAKING_COUNTS, {
     variables: { accountId: accountId }
   });
   const rewardsCount = data?.rewardsInfo.aggregate.count || 0;
   const rewardsSum = data?.rewardsInfo.aggregate.sum.amount;
+  const stakingCount = data?.stakingEvents.aggregate.count
 
   const panels = useMemo(() => {
     const cachedPanels = loading
@@ -33,14 +35,25 @@ const StakingCard: FC<{
           />
         ),
         content: <StakingRewardsTable accountId={accountId} sum={rewardsSum} />
+      },
+      {
+        label: (
+          <TabText
+            message={'Staking Events'}
+            count={stakingCount === undefined ? '' : stakingCount}
+          />
+        ),
+        content: (
+          <StakingEventsTable accountId={accountId} />
+        )
       }
     ];
     
     return cachedPanels;
-  }, [accountId, loading, rewardsCount, rewardsSum]);
+  }, [accountId, loading, rewardsCount, rewardsSum, stakingCount]);
 
   const isEmpty = () => {
-    return !data?.rewardsInfo.aggregate.count;
+    return !data?.rewardsInfo.aggregate.count && !data?.stakingEvents.aggregate.count && !loading;
   }
 
   return isEmpty() ? <div>No activity</div> : (

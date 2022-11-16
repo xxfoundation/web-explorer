@@ -59,7 +59,7 @@ const ValidatorCard: FC<{
   }, [accountId, active, nominators, queryValidatorInfo.loading, queryValidatorStats.loading, statsCount, validatorInfo, validatorStats]);
 
   const isEmpty = () => {
-    return !queryValidatorInfo.data?.validator.length && !queryValidatorStats.data?.aggregates.aggregate.count;
+    return !queryValidatorInfo.data?.validator.length && !queryValidatorStats.data?.aggregates.aggregate.count && !(queryValidatorInfo.loading || queryValidatorStats.loading);
   }
 
   return isEmpty() ? <div>No activity</div> : (

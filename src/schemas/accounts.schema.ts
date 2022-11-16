@@ -372,11 +372,12 @@ export const GET_EVENTS_LIST = gql`
 /* -------------------------------------------------------------------------- */
 /*                          Staking Rewards Counters                          */
 /* -------------------------------------------------------------------------- */
-export type GetStakingRewardCounts = {
+export type GetStakingCounts = {
   rewardsInfo: { aggregate: { count: number, sum: { amount: number } } };
+  stakingEvents: { aggregate: { count: number }};
 }
 
-export const GET_STAKING_REWARDS_COUNTS = gql`
+export const GET_STAKING_COUNTS = gql`
   query GetStakingRewardsCounts ($accountId: String) {
     rewardsInfo: staking_reward_aggregate(where: { account_id: { _eq: $accountId } }) {
       aggregate {
@@ -384,6 +385,11 @@ export const GET_STAKING_REWARDS_COUNTS = gql`
         sum {
           amount
         }
+      }
+    }
+    stakingEvents: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "staking" }}) {
+      aggregate {
+        count
       }
     }
   }

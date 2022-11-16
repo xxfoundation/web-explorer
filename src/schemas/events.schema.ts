@@ -71,15 +71,16 @@ export const LIST_EVENTS = gql`
     }
   }
 `;
+
 /* -------------------------------------------------------------------------- */
-/*                                Events Table                                */
+/*                            Balance Events Table                            */
 /* -------------------------------------------------------------------------- */
-export type ListBalances = {
+export type ListBalancesEvents = {
   events: Event[];
 } & TotalOfItems;
 
-export const LIST_BALANCES = gql`
-  query ListEventsOrdered(
+export const LIST_BALANCES_EVENTS = gql`
+  query ListBalancesEvents(
     $orderBy: [event_order_by!]
     $limit: Int
     $offset: Int
@@ -103,6 +104,40 @@ export const LIST_BALANCES = gql`
     }
   }
 `;
+
+/* -------------------------------------------------------------------------- */
+/*                            Staking Events Table                            */
+/* -------------------------------------------------------------------------- */
+export type ListStakingEvents = {
+  events: Event[];
+} & TotalOfItems;
+
+export const LIST_STAKING_EVENTS = gql`
+  query ListStakingEvents(
+    $orderBy: [event_order_by!]
+    $limit: Int
+    $offset: Int
+    $where: event_bool_exp
+  ) {
+    agg: event_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    events: event(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+      blockNumber: block_number
+      index: event_index
+      module
+      amount
+      call
+      id
+      timestamp
+      doc
+      data
+    }
+  }
+`;
+
 
 /* -------------------------------------------------------------------------- */
 /*                         Get available Module / Call                        */
