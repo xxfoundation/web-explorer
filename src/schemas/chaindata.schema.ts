@@ -41,6 +41,7 @@ export type ListenForMetrics = {
   }[];
   numTransfers: { aggregate: { count: number } };
   numAccounts: { aggregate: { count: number } };
+  numFakeAccounts: { aggregate: { count: number } };
   numNominators: { aggregate: { count: number } };
   numActiveValidators: { aggregate: { count: number } };
   economics: {
@@ -66,6 +67,11 @@ export const LISTEN_FOR_METRICS = gql`
         }
       }
       numAccounts: account_aggregate {
+        aggregate {
+          count
+        }
+      }
+      numFakeAccounts: account_aggregate(where: {_and: {active: {_eq: false}, when_killed: {_is_null: true}}}) {
         aggregate {
           count
         }

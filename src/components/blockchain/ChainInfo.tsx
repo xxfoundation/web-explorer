@@ -51,7 +51,7 @@ const ChainInfo = () => {
         <ChainInfoCard title='Finalized Blocks' value={metricsSubscription.data?.finalizedBlocks.aggregate.count} path='/blocks' />
         <ChainInfoCard title='Active Era' value={metricsSubscription.data?.activeEra[0].era} />
         <ChainInfoCard title='Transfers' value={metricsSubscription.data?.numTransfers.aggregate.count} path='/transfers' />
-        <ChainInfoCard title='Account Holders' value={metricsSubscription.data?.numAccounts.aggregate.count} path='/accounts' />
+        <ChainInfoCard title='Account Holders' value={metricsSubscription.data?.numAccounts.aggregate.count && (metricsSubscription.data?.numAccounts.aggregate.count - metricsSubscription.data?.numFakeAccounts.aggregate.count)} path='/accounts' />
         <ChainInfoCard
           title='Total Issuance'
           tooltip={
