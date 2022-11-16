@@ -2,11 +2,12 @@ import { useQuery } from '@apollo/client';
 import { Box, Stack, Skeleton } from '@mui/material';
 import React, { FC, useMemo } from 'react';
 
-import StakingRewardsTable from './StakingRewardsTable';
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import TabsWithPanels, { TabText } from '../../../../components/Tabs';
 import { GetStakingCounts, GET_STAKING_COUNTS } from '../../../../schemas/accounts.schema';
 import StakingEventsTable from './StakingEventsTable';
+import StakingRewardsTable from './StakingRewardsTable';
+import StakingSlashesTable from './StakingSlashesTable';
 
 const StakingCard: FC<{
   accountId: string;
@@ -14,8 +15,10 @@ const StakingCard: FC<{
   const { data, loading } = useQuery<GetStakingCounts>(GET_STAKING_COUNTS, {
     variables: { accountId: accountId }
   });
-  const rewardsCount = data?.rewardsInfo.aggregate.count || 0;
-  const rewardsSum = data?.rewardsInfo.aggregate.sum.amount;
+  const rewardsCount = data?.rewards.aggregate.count || 0;
+  const rewardsSum = data?.rewards.aggregate.sum.amount;
+  const slashesCount = data?.slashes.aggregate.count || 0;
+  const slashesSum = data?.slashes.aggregate.sum.amount;
   const stakingCount = data?.stakingEvents.aggregate.count
 
   const panels = useMemo(() => {
@@ -30,7 +33,7 @@ const StakingCard: FC<{
       {
         label: (
           <TabText
-            message={'Staking Rewards'}
+            message={'Rewards'}
             count={rewardsCount === undefined ? '' : rewardsCount}
           />
         ),
@@ -39,7 +42,16 @@ const StakingCard: FC<{
       {
         label: (
           <TabText
-            message={'Staking Events'}
+            message={'Slashes'}
+            count={slashesCount === undefined ? '' : slashesCount}
+          />
+        ),
+        content: <StakingSlashesTable accountId={accountId} sum={slashesSum} />
+      },
+      {
+        label: (
+          <TabText
+            message={'Events'}
             count={stakingCount === undefined ? '' : stakingCount}
           />
         ),
@@ -50,10 +62,10 @@ const StakingCard: FC<{
     ];
     
     return cachedPanels;
-  }, [accountId, loading, rewardsCount, rewardsSum, stakingCount]);
+  }, [accountId, loading, rewardsCount, rewardsSum, slashesCount, slashesSum, stakingCount]);
 
   const isEmpty = () => {
-    return !data?.rewardsInfo.aggregate.count && !data?.stakingEvents.aggregate.count && !loading;
+    return !rewardsCount && !stakingCount && !slashesCount && !loading;
   }
 
   return isEmpty() ? <div>No activity</div> : (

@@ -241,6 +241,59 @@ export const GET_STAKING_STATS = gql`
     }
   }
 `
+
+/* -------------------------------------------------------------------------- */
+/*                               Staking Slashes                              */
+/* -------------------------------------------------------------------------- */
+export type StakingSlash = {
+  accountId: string;
+  amount: number;
+  blockNumber: number;
+  era: number;
+  timestamp: string;
+  validatorAddress: string;
+  account: {
+    identity: {
+      display: string;
+    }
+  }
+}
+
+const STAKING_SLASH_FRAGMENT = gql`
+  fragment stakingSlashFragment on staking_slash {
+    accountId: account_id
+    amount
+    blockNumber: block_number
+    era
+    timestamp
+    validatorAddress: validator_id
+    account {
+      identity {
+        display
+      }
+    }
+  }
+`;
+
+export type GetStakingSlashes = {
+  aggregates: { aggregate: { count: number } }
+  slashes: StakingSlash[]
+}
+export const GET_STAKING_SLASHES = gql`
+  ${STAKING_SLASH_FRAGMENT}
+  query GetStakingRewards ($accountId: String!) {
+    aggregates: staking_slash_aggregate(where: { account_id: { _eq: $accountId }}) {
+      aggregate {
+        count
+      }
+    }
+
+    slashes: staking_slash(where: { account_id: { _eq: $accountId } }, order_by: { era: desc, block_number: desc }) {
+      ...stakingSlashFragment
+    }
+  }
+`;
+
 /* -------------------------------------------------------------------------- */
 /*                               Staking Rewards                              */
 /* -------------------------------------------------------------------------- */
@@ -258,8 +311,8 @@ export type StakingReward = {
   }
 }
 
-const STAKING_REWARDS_FRAGMENT = gql`
-  fragment stakingRewardsFragment on staking_reward {
+const STAKING_REWARD_FRAGMENT = gql`
+  fragment stakingRewardFragment on staking_reward {
     accountId: account_id
     amount
     blockNumber: block_number
@@ -279,7 +332,7 @@ export type GetStakingRewards = {
   rewards: StakingReward[]
 }
 export const GET_STAKING_REWARDS = gql`
-  ${STAKING_REWARDS_FRAGMENT}
+  ${STAKING_REWARD_FRAGMENT}
   query GetStakingRewards ($accountId: String!) {
     aggregates: staking_reward_aggregate(where: { account_id: { _eq: $accountId }}) {
       aggregate {
@@ -288,7 +341,7 @@ export const GET_STAKING_REWARDS = gql`
     }
 
     rewards: staking_reward(where: { account_id: { _eq: $accountId } }, order_by: { era: desc, block_number: desc }) {
-      ...stakingRewardsFragment
+      ...stakingRewardFragment
     }
   }
 `;
