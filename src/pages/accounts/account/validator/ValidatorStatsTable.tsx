@@ -43,7 +43,7 @@ const NominatorsList = ({ nominator }: { nominator?: Nominator }) =>
 
 const NominatorsTable = ({ nominators }: { nominators : Nominator[]}) =>  (
   <TableContainer>
-    <Table size='small' className='no-card'>
+    <Table sx={{margin: '1em'}} size='small' className='no-card'>
       <TableRow>
         <TableCell colSpan={9} sx={{ pt: 0, display: 'table-cell !important' }}>
           <TableHead>
