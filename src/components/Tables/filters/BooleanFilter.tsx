@@ -1,7 +1,7 @@
 import { useTheme, Badge, Button, Checkbox, FormControlLabel, Stack, Switch } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
 
-import Dropdown from '../../Dropdown';
+import Dropdown from '../../DropdownFilter';
 
 export type Props = {
   label: string;

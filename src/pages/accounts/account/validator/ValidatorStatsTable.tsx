@@ -17,6 +17,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Table, TableContainer } from '../../../../components/Tables/Table.styled';
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import Link from '../../../../components/Link';
+import Dropdown from '../../../../components/Dropdown';
 import { usePagination, useToggle } from '../../../../hooks';
 import Error from '../../../../components/Error';
 import FormatBalance from '../../../../components/FormatBalance';
@@ -24,6 +25,48 @@ import { useQuery } from '@apollo/client';
 import { CustomTooltip } from '../../../../components/Tooltip';
 import { InfoOutlined } from '@mui/icons-material';
 import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
+
+const NominatorsList = ({ nominator }: { nominator?: Nominator }) =>
+  nominator ? 
+  <TableRow>
+    <TableCell align='left'>
+      <XXNetworkAddress truncated='mdDown' value={nominator.account_id} roles={{ nominator: true }} />
+    </TableCell>
+    <TableCell align='left'>
+      <FormatBalance value={nominator.stake} />
+    </TableCell>
+    <TableCell align='left'>
+      {`${nominator.share}%`}
+    </TableCell>
+  </TableRow>
+  : <Typography>-</Typography>
+
+const NominatorsTable = ({ nominators }: { nominators : Nominator[]}) =>  (
+  <TableContainer>
+    <Table sx={{margin: '1em'}} size='small' className='no-card'>
+      <TableRow>
+        <TableCell colSpan={9} sx={{ pt: 0, display: 'table-cell !important' }}>
+          <TableHead>
+            <TableRow>
+              <TableCell align='left'>Account Id</TableCell>
+              <TableCell align='left'>Stake</TableCell>
+              <TableCell align='left'>Share</TableCell>
+            </TableRow>
+          </TableHead>
+          {nominators?.map<React.ReactNode>(
+            (nominator) => (
+              <NominatorsList
+                key={nominator.account_id}
+                nominator={nominator}
+                />
+              )
+            )
+          }
+        </TableCell>
+      </TableRow>
+    </Table>
+  </TableContainer>
+);
 
 const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
   return tooltip ? (
@@ -73,17 +116,6 @@ const headers = [
 const BlockLink = ({ block }: { block?: number }) =>
   block ? <Link to={`/blocks/${block}`}>{block}</Link> : <Typography>-</Typography>;
 
-const NominatorsList = ({ nominator }: { nominator?: Nominator }) =>
-  nominator ? 
-  <TableRow>
-    <TableCell align='left'>
-      <XXNetworkAddress truncated='mdDown' value={nominator.account_id} roles={{ nominator: true }} />
-    </TableCell>
-    <TableCell align='left'><FormatBalance value={nominator.stake} /></TableCell>
-    <TableCell align='left'>{`${nominator.share}%`}</TableCell>
-  </TableRow>
-  : <Typography>-</Typography>
-
 const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBlocks }> = ({
   producedBlocks,
   stats
@@ -109,19 +141,6 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
     [blocksProduced, expandedBlocks]
   );
 
-  const [expandedNominators, toogleNominators] = useToggle();
-  const endIconNominators = useMemo(
-    () =>
-      stats.nominators && stats.nominators?.length > 0 ? (
-        expandedNominators ? (
-          <KeyboardArrowUpIcon />
-        ) : (
-          <KeyboardArrowDownIcon />
-        )
-      ) : undefined,
-    [expandedNominators, stats.nominators]
-  );
-
   return (
     <>
       <TableRow>
@@ -131,14 +150,13 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
           <FormatBalance value={stats.selfStake.toString()} />
         </TableCell>
         <TableCell data-label='Other Stake'>
-          <Button
+          <Dropdown
+            buttonProps={{ color: 'primary' }}
+            buttonLabel={<FormatBalance value={stats.otherStake.toString()} />}
             disabled={!stats.nominators || stats.nominators.length === 0}
-            variant='text'
-            endIcon={endIconNominators}
-            onClick={toogleNominators.toggle}
           >
-            <FormatBalance value={stats.otherStake.toString()} />
-          </Button>
+            <NominatorsTable nominators={stats.nominators} />
+          </Dropdown>
         </TableCell>
         <TableCell data-label='Total Stake'>
           <FormatBalance value={stats.totalStake.toString()} />
@@ -169,22 +187,6 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
               .reduce((prev, curr) => [prev, ', ', curr])}
           </TableCell>
         </TableRow>
-      )}
-      {expandedNominators && (
-      <TableRow>
-        <TableCell colSpan={9} sx={{ pt: 0, display: 'table-cell !important' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell align='left'>Account Id</TableCell>
-              <TableCell align='left'>Stake</TableCell>
-              <TableCell align='left'>Share</TableCell>
-            </TableRow>
-          </TableHead>
-          {stats.nominators
-            ?.map<React.ReactNode>((nominator) => <NominatorsList key={nominator.account_id} nominator={nominator} />)
-          }
-        </TableCell>
-      </TableRow>
       )}
     </>
   );
@@ -223,7 +225,7 @@ const ValidatorStatsTable: FC<Props> = ({ accountId, stats }) => {
   }
   return (
     <TableContainer>
-      <Table>
+      <Table size='small'>
         <TableHead>
           <TableRow>
             {headers.map((header, index) => (

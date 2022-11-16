@@ -3,7 +3,7 @@ import { useTheme, Badge, Button, Stack, TextField } from '@mui/material';
 import React, { useCallback } from 'react';
 import useInput from '../../../hooks/useInput';
 
-import Dropdown from '../../Dropdown';
+import Dropdown from '../../DropdownFilter';
 
 
 export type Props = {
