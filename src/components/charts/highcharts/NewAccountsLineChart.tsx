@@ -10,7 +10,7 @@ import { SelectChangeEvent } from '@mui/material';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { CreatedEras, GET_WHEN_CREATED_ERAS } from '../../../schemas/accounts.schema';
+import { CreatedAccounts, GET_WHEN_CREATED_ACCOUNTS } from '../../../schemas/accounts.schema';
 import DefaultTile from '../../DefaultTile';
 import Loading from '../../Loading';
 import DropdownTimelineLineChart from './DropdownTimelineLineChart';
@@ -26,8 +26,8 @@ const NOOP = () => {};
 
 const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
   const navigate = useNavigate();
-  const { data, loading } = useQuery<CreatedEras>(GET_WHEN_CREATED_ERAS);
-  const newAccounts = data?.account;
+  const { data, loading } = useQuery<CreatedAccounts>(GET_WHEN_CREATED_ACCOUNTS);
+  // const newAccounts = data?.account;
   const latestEra = data?.history[0].latestEra || 999;
   const timeframes: Record<string, number> = useMemo(() => ({
     All: latestEra,
@@ -46,26 +46,13 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
 
   const chartData = useMemo(() => {
     const counter: { [era: number]: number } = {};
-
-    newAccounts?.forEach(({ era }) => {
-      counter[era] = (counter[era] || 0) + 1;
-    });
-
-    // Initialize to 0 eras with no new accounts
-    for (let i = latestEra; i >= 0; i--) {
-      if (!(i in counter)) {
-        counter[i] = 0;
-      }
-    }
     return Object.entries(counter).map(([k, v]) => [parseInt(k), v] as DataPoint);
-  }, [latestEra, newAccounts]);
-
+  }, []);
 
   useEffect(() => {
     const t = Object.entries(timeframes).find(([,eras]) => eras === timeframeEras)?.[0] as Timeframe | undefined;
     if (t) {
       onEraTimeframeChange(t);
-      
     }
   }, [onEraTimeframeChange, timeframeEras, timeframes]);
   

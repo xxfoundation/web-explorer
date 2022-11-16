@@ -61,18 +61,6 @@ export const IDENTITY_FRAGMENT = gql`
   }
 `;
 
-export const CREATION_EVENT_FRAGMENT = gql`
-  fragment creation_event_fragment on account {
-    creationEvent: events(where: {call: {_eq: "NewAccount"} }) {
-      block {
-        era
-        block_number
-        timestamp
-      }
-    }
-  }
-`;
-
 export type CreationEventFragment = {
   creationEvent: {
     block: {
@@ -246,20 +234,19 @@ export const LISTEN_FOR_NEW_ACCOUNTS = gql`
   }
 `;
 
-export type CreatedEras = {
+export type CreatedAccounts = {
   account: {
-    era: number;
+    timestamp: number;
   }[];
   history: {
     latestEra: number;
   }[];
 }
 
-export const GET_WHEN_CREATED_ERAS = gql`
-  ${CREATION_EVENT_FRAGMENT}
-  query GetWhenCreatedEras {
-    account { 
-      ...creation_event_fragment
+export const GET_WHEN_CREATED_ACCOUNTS = gql`
+  query GetWhenCreatedAccounts {
+    account(order_by: {timestamp: desc}) { 
+      timestamp
     }
     history: balance_history(order_by: {era: desc}, limit: 1) {
       latestEra: era
