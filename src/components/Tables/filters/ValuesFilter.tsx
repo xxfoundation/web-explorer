@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { uniq } from 'lodash';
 
-import Dropdown from '../../Dropdown';
+import Dropdown from '../../DropdownFilter';
 import { arrayCompare } from '../../utils';
 import Loading from '../../Loading';
 import { Box } from '@mui/system';

@@ -1,20 +1,18 @@
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Button, Popover } from '@mui/material';
-import React, { FC, useMemo, useRef } from 'react';
+import { CloseOutlined } from '@mui/icons-material';
+import { Box, Button, ButtonProps, Popover } from '@mui/material';
+import React, { FC, useRef } from 'react';
 import { useToggle } from '../hooks';
 import { WithChildren } from '../types';
 
 type Props = WithChildren & {
   buttonLabel: string | React.ReactNode;
-  disabled?: boolean
+  disabled?: boolean;
+  buttonProps?: ButtonProps;
 }
 
-export const DropdownFilter: FC<Props> = ({ buttonLabel, children, disabled = false }) => {
-  const [open, { toggle, toggleOff: close }] = useToggle();
+export const Dropdown: FC<Props> = ({ buttonLabel, buttonProps, children, disabled = false }) => {
+  const [open, { icon, toggle, toggleOff: close }] = useToggle();
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const endIcon = useMemo(() => (open ? <FilterAltIcon /> : <FilterAltOutlinedIcon />), [open]);
 
   return (
     <>
@@ -22,9 +20,11 @@ export const DropdownFilter: FC<Props> = ({ buttonLabel, children, disabled = fa
         disabled={disabled}
         sx={{ mx: -1 }}
         ref={buttonRef}
+        endIcon={icon}
         color={'inherit'}
-        endIcon={endIcon}
-        onClick={toggle}>
+        onClick={toggle}
+        {...buttonProps}
+      >
         {buttonLabel}
       </Button>
       {children && (
@@ -35,11 +35,19 @@ export const DropdownFilter: FC<Props> = ({ buttonLabel, children, disabled = fa
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           onClose={close}
         >
-          {children}
+          <Box sx={{ p: { md: 2, sm: 1.5 }, pt: 4, position: 'relative' }}>
+            <Button
+              sx={{ position: 'absolute', right: 8, top: 8, p: 0, minWidth: 0 }}
+              onClick={close}
+              variant='text'>
+              <CloseOutlined />
+            </Button>
+            {children}
+          </Box>
         </Popover>
       )}
     </>
   );
 };
 
-export default DropdownFilter;
+export default Dropdown;
