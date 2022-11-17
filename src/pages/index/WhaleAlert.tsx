@@ -29,7 +29,7 @@ const TransferRow = (data: Transfer) => {
           value={data.source}
           name={data.sourceAccount.identity?.display}
           url={`/accounts/${data.source}`}
-          roles={data.sourceAccount.role}
+          roles={data.sourceAccount}
           truncated
         />
       )
@@ -40,7 +40,7 @@ const TransferRow = (data: Transfer) => {
           name={data.destinationAccount.identity?.display}
           value={data.destination}
           url={`/accounts/${data.destination}`}
-          roles={data.destinationAccount.role}
+          roles={data.destinationAccount}
           truncated
         />
       )

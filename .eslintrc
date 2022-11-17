@@ -15,11 +15,12 @@
   ],
   "extends": ["airbnb-typescript", "plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
+    "no-unused-vars": "error",
     "sort-destructure-keys/sort-destructure-keys": [2],
     "react/jsx-filename-extension": [0],
     "implicit-arrow-linebreak": "off",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": "error",
     "no-param-reassign": [
       "error",
       {

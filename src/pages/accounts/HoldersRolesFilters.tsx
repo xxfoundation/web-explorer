@@ -1,12 +1,11 @@
 import { Badge, Button, Checkbox, FormControlLabel, FormGroup, Stack, useTheme } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
-import Dropdown from '../../components/Dropdown';
+import Dropdown from '../../components/DropdownFilter';
 import { Roles } from '../../schemas/accounts.schema';
 
-export type RoleFiltersType = Roles | 'all';
+export type RoleFiltersType = Roles;
 
 export const roleToLabelMap: Record<string, string> = {
-  all: 'all',
   validator: 'validator',
   nominator: 'nominator',
   council: 'council',

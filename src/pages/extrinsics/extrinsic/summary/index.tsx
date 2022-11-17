@@ -19,6 +19,8 @@ import TimeAgo from '../../../../components/TimeAgo';
 import ModuleCalls from './ModuleCalls';
 import ParametersFragment from './ParametersFragment';
 import FormatBalance from '../../../../components/FormatBalance';
+import { BN_ZERO } from '@polkadot/util';
+import CodeDisplay from '../../../../components/CodeDisplay';
 
 type Props = {
   extrinsic: Extrinsic;
@@ -79,12 +81,26 @@ const Summary: FC<Props> = ({ extrinsic }) => {
           </SummaryValue>
         </SummaryEntry>
       )}
-      {extrinsic.fee && (
+      {extrinsic.fee !== null && (
         <SummaryEntry>
           <SummaryHeader>Fee</SummaryHeader>
           <SummaryValue>
             <Typography>
-              <FormatBalance precision={4} value={JSON.parse(extrinsic.fee).partialFee} />
+              <FormatBalance
+                precision={4}
+                value={extrinsic.fee.toString() ?? BN_ZERO.toString()} />
+            </Typography>
+          </SummaryValue>
+        </SummaryEntry>
+      )}
+      {extrinsic.tip !== null && (
+        <SummaryEntry>
+          <SummaryHeader>Tip</SummaryHeader>
+          <SummaryValue>
+            <Typography>
+              <FormatBalance
+                precision={4}
+                value={extrinsic.tip.toString() ?? BN_ZERO.toString()} />
             </Typography>
           </SummaryValue>
         </SummaryEntry>
@@ -102,10 +118,18 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryEntry>
           <SummaryHeader>Signer</SummaryHeader>
           <SummaryValue>
-            <Address name={extrinsic.signerAccount?.identity?.display} roles={extrinsic.signerAccount?.roles ?? {}} value={extrinsic.signer} />
+            <Address name={extrinsic.signerAccount?.identity?.display} roles={extrinsic.signerAccount ?? {}} value={extrinsic.signer} />
           </SummaryValue>
         </SummaryEntry>
       )}
+      <SummaryEntry>
+        <SummaryHeader>Dispatch Info</SummaryHeader>
+        <SummaryValue>
+          <CodeDisplay>
+            {JSON.stringify(JSON.parse(extrinsic.dispatchInfo), null, 2)}
+          </CodeDisplay>
+        </SummaryValue>
+      </SummaryEntry>
     </SummaryContainer>
   );
 };

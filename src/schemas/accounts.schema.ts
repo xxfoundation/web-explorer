@@ -2,10 +2,6 @@ import { gql } from '@apollo/client';
 import { ValidatorStats } from './staking.schema';
 import { TotalOfItems } from './types';
 
-/* ---------------------------- General Variables --------------------------- */
-export type Roles = 'validator' | 'nominator' | 'council' | 'techcommit' | 'special';
-
-
 /* -------------------------------------------------------------------------- */
 /*                                  Identity                                  */
 /* -------------------------------------------------------------------------- */
@@ -31,10 +27,29 @@ export type Identity = {
   web?: string;
 };
 
+export type Roles = {
+  council: boolean;
+  nominator: boolean;
+  special: string | null;
+  techcommit: boolean;
+  validator: boolean;
+}
+
+export const ROLES_FRAGMENT = gql`
+  fragment roles_fragment on account {
+    techcommit
+    special
+    nominator
+    council
+    validator
+  }
+`
+
 export const IDENTITY_FRAGMENT = gql`
   fragment identity on identity {
     blurb
     display
+    discord
     displayParent: display_parent
     email
     judgements
@@ -46,15 +61,27 @@ export const IDENTITY_FRAGMENT = gql`
   }
 `;
 
-export const ROLES_FRAGMENT = gql`
-  fragment roles on roles {
-    council
-    nominator
-    special
-    techcommit
-    validator
+export const CREATION_EVENT_FRAGMENT = gql`
+  fragment creation_event_fragment on account {
+    creationEvent: events(where: {call: {_eq: "NewAccount"} }) {
+      block {
+        era
+        block_number
+        timestamp
+      }
+    }
   }
-`
+`;
+
+export type CreationEventFragment = {
+  creationEvent: {
+    block: {
+      era: number;
+      number: number;
+      timestamp: number;
+    }
+  }[]
+}
 
 export const GET_FULL_IDENTITY = gql`
   ${IDENTITY_FRAGMENT}
@@ -66,28 +93,23 @@ export const GET_FULL_IDENTITY = gql`
 `
 
 export type GetDisplayIdentity = {
-  roles: {
+  account: {
     council: boolean;
     nominator: boolean;
     special: string;
     techcommit: boolean;
     validator: boolean;
-    account: {
-      identity: {
-        display: string;
-      }
+    identity: {
+      display: string;
     }
   }[]
 }
 export const GET_DISPLAY_IDENTITY = gql`
-  ${ROLES_FRAGMENT}
   query GetDisplayIdentity($account: String!) {
-    roles(where: { account_id: { _eq: $account } }) {
-      ...roles
-      account {
-        identity {
-          display
-        }
+    account(where: { account_id: { _eq: $account } }) {
+      ...roles_fragment
+      identity {
+        display
       }
     }
   }
@@ -96,10 +118,11 @@ export const GET_DISPLAY_IDENTITY = gql`
 /* -------------------------------------------------------------------------- */
 /*                           Account Individual Page                          */
 /* -------------------------------------------------------------------------- */
-export type Account = {
+export type Account = CreationEventFragment & Roles & {
   id: string;
+  active: boolean;
   whenCreated: number;
-  whenCreatedEra: number;
+  whenKilled: number;
   controllerAddress?: string;
   blockHeight: number;
   identity: Identity;
@@ -114,16 +137,7 @@ export type Account = {
   transferrableBalance: number;
   unbondingBalance: number;
   vestingBalance: number;
-  roles: {
-    council: boolean;
-    nominator: boolean;
-    special: string;
-    techcommit: boolean;
-    validator: boolean;
-  };
 };
-
-export type AccountRoles = Account['roles'];
 
 export type GetAccountByAddressType = {
   account: Account;
@@ -137,17 +151,16 @@ export const ACCOUNT_FRAGMENT = gql`
   fragment account on account {
     id: account_id
     controllerAddress: controller_address
+    active
     whenCreated: when_created
-    whenCreatedEra: when_created_era
+    whenKilled: when_killed
     blockHeight: block_height
     identity {
       ...identity
     }
     nonce
     timestamp
-    roles: role {
-      ...roles
-    }
+    ...roles_fragment
     lockedBalance: locked_balance
     reservedBalance: reserved_balance
     totalBalance: total_balance
@@ -173,8 +186,8 @@ export const GET_ACCOUNT_BY_PK = gql`
 /*                        Account Page > Holders Table                        */
 /* -------------------------------------------------------------------------- */
 type PartialIdentity = Pick<Identity, 'display'>;
-type AccountKeys = 'id' | 'timestamp' | 'totalBalance' | 'lockedBalance' | 'nonce' | 'roles' | 'whenCreatedEra';
-type PartialAccount = { identity : PartialIdentity } & Pick<Account, AccountKeys>;
+type AccountKeys = 'id' | 'nonce' | 'lockedBalance' | 'totalBalance' | 'whenCreated';
+export type PartialAccount = { identity : PartialIdentity } & Roles & Pick<Account, AccountKeys>;
 
 export type ListAccounts = TotalOfItems & {
   account: PartialAccount[];
@@ -188,26 +201,26 @@ export const LIST_ACCOUNTS = gql`
     $limit: Int
     $where: account_bool_exp
   ) {
-    account: account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
+    account(order_by: $orderBy, offset: $offset, limit: $limit, where: $where) {
       id: account_id
       timestamp
       totalBalance: total_balance
       lockedBalance: locked_balance
+      whenCreated: when_created
       nonce
-      roles: role {
-        ...roles
-      }
+      ...roles_fragment
       identity: identity {
         display
       }
-      whenCreatedEra: when_created_era
     }
+
     agg: account_aggregate(where: $where) {
       aggregate {
         count
       }
     }
   }
+  
 `;
 
 /* -------------------------------------------------------------------------- */
@@ -224,10 +237,10 @@ export type NewAccounts = {
 
 export const LISTEN_FOR_NEW_ACCOUNTS = gql`
   query ListenForNewAccounts {
-    newAccount: event(where: {call: {_eq: "NewAccount"}}, order_by: {block: {active_era: desc}}) {
+    newAccount: event(where: {call: {_eq: "NewAccount"}}, order_by: {block: {era: desc}}) {
       accounts: data
       block {
-        era: active_era
+        era
       }
     }
   }
@@ -243,9 +256,10 @@ export type CreatedEras = {
 }
 
 export const GET_WHEN_CREATED_ERAS = gql`
-  query ListenForNewAccounts {
-    account {
-      era: when_created_era
+  ${CREATION_EVENT_FRAGMENT}
+  query GetWhenCreatedEras {
+    account { 
+      ...creation_event_fragment
     }
     history: balance_history(order_by: {era: desc}, limit: 1) {
       latestEra: era
@@ -259,11 +273,18 @@ export const GET_WHEN_CREATED_ERAS = gql`
 export type GetExtrinsicCounts = {
   extrinsicCount: { aggregate: { count: number } };
   transferCount: { aggregate: { count: number } };
+  balanceCount: { aggregate: { count: number } };
 }
 
 export const GET_EXTRINSIC_COUNTS = gql`
   query GetExtrinsicCounts ($accountId: String) {
     extrinsicCount: extrinsic_aggregate(where: { signer: { _eq: $accountId } }) {
+      aggregate {
+        count
+      }
+    }
+    
+    balanceCount: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq:"balances"} }) {
       aggregate {
         count
       }
@@ -283,20 +304,96 @@ export const GET_EXTRINSIC_COUNTS = gql`
 `
 
 /* -------------------------------------------------------------------------- */
-/*                          Staking Rewards Counters                          */
+/*                     Events Tab Counters                    */
 /* -------------------------------------------------------------------------- */
-export type GetStakingRewardCounts = {
-  rewardsInfo: { aggregate: { count: number, sum: { amount: number } } };
+export type GetEventsCounts = {
+  technicalCommittee: { aggregate: { count: number } };
+  councilElections: { aggregate: { count: number } };
+  democracy: { aggregate: { count: number } };
+  treasury: { aggregate: { count: number } };
+  tips: { aggregate: { count: number } };
 }
 
-export const GET_STAKING_REWARDS_COUNTS = gql`
+export const GET_EVENTS_COUNTS = gql`
+query GetModules ($accountId: String) {
+  technicalCommittee: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "technicalCommittee" }}) {
+    aggregate {
+      count
+    }
+  }
+  councilElections: event_aggregate(where: { account_id: {_eq: $accountId}, _and: {_or: [{module: {_eq: "council"}}, {module: {_eq: "elections"}}]}}) {
+    aggregate {
+      count
+    }
+  }
+  democracy: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "democracy" }}) {
+    aggregate {
+      count
+    }
+  }
+  treasury: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "treasury" }}) {
+    aggregate {
+      count
+    }
+  }
+  tips: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "treasury" }}) {
+    aggregate {
+      count
+    }
+  }
+}
+`
+/* -------------------------------------------------------------------------- */
+/*                     Events List                    */
+/* -------------------------------------------------------------------------- */
+export type GetEventsList = {
+  event: []
+}
+
+export const GET_EVENTS_LIST = gql`
+  query GetEventsList ($orderBy: [event_order_by!], $where: event_bool_exp) {
+    event(order_by: $orderBy, where: $where) {
+      blockNumber: block_number
+      index: event_index
+      timestamp
+      module
+      call
+      data 
+      doc
+  }
+}
+`
+
+/* -------------------------------------------------------------------------- */
+/*                          Staking Rewards Counters                          */
+/* -------------------------------------------------------------------------- */
+export type GetStakingCounts = {
+  rewards: { aggregate: { count: number, sum: { amount: number } } };
+  slashes: { aggregate: { count: number, sum: { amount: number } } };
+  stakingEvents: { aggregate: { count: number }};
+}
+
+export const GET_STAKING_COUNTS = gql`
   query GetStakingRewardsCounts ($accountId: String) {
-    rewardsInfo: staking_reward_aggregate(where: { account_id: { _eq: $accountId } }) {
+    rewards: staking_reward_aggregate(where: { account_id: { _eq: $accountId } }) {
       aggregate {
         count
         sum {
           amount
         }
+      }
+    }
+    slashes: staking_slash_aggregate(where: { account_id: { _eq: $accountId } }) {
+      aggregate {
+        count
+        sum {
+          amount
+        }
+      }
+    }
+    stakingEvents: event_aggregate(where: { account_id: {_eq: $accountId}, module: {_eq: "staking" }}) {
+      aggregate {
+        count
       }
     }
   }

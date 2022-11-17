@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
 
 /* ------------------------------ General Types ----------------------------- */
 export type Nominator = {
@@ -8,56 +7,52 @@ export type Nominator = {
   share: string;
 }
 
+export type RewardBreakdown = {
+  commission: string;
+  self: string;
+  nominators: Nominator[];
+  custody: string;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                          Validator Stats Fragment                          */
 /* -------------------------------------------------------------------------- */
 export type ValidatorStats = {
   era: number;
   stashAddress: string;
-  rewardsAddress: string;
   commission: number;
+  blocking: boolean;
   selfStake: number;
   otherStake: number;
+  custodyStake: number;
   totalStake: number;
   nominators: Nominator[];
-  sessionKeys: string | null;
-  cmixId: string | null;
-  location: string | null;
   points: number | null;
   relativePerformance: number | null;
   reward: number | null;
-  rewardsAccount: {
-    roles: AccountRoles,
-    identity: null | { display: string }
-  };
+  rewardSplit: RewardBreakdown;
+  cmixId: string | null;
+  location: string | null;
 }
 
 const VALIDATOR_STATS_FRAGMENT = gql`
-  ${ROLES_FRAGMENT}
   fragment validatorStatsFragment on validator_stats {
-    cmixId: cmix_id
-    commission
     era
-    location
-    nominators
+    stashAddress: stash_address
+    commission
+    blocking
+    selfStake: self_stake
     otherStake: other_stake
+    custodyStake: custody_stake
+    totalStake: total_stake
+    nominators
     points
     relativePerformance: relative_performance
     reward
-    rewardsAddress: rewards_address
-    rewardsAccount {
-      roles: role {
-        ...roles
-      }
-      identity {
-        display
-      }
-    }
-    selfStake: self_stake
-    sessionKeys: session_keys
-    stashAddress: stash_address
+    rewardSplit: reward_split
+    cmixId: cmix_id
+    location
     timestamp
-    totalStake: total_stake
   }
 `;
 
@@ -90,7 +85,7 @@ export const GET_ACTIVE_COUNTS = gql`
       }
     }
 
-    waiting: waiting_aggregate {
+    waiting: validator_aggregate (where: { active: { _eq: false }}) {
       aggregate {
         count
       }
@@ -106,9 +101,11 @@ export type ValidatorAccount = {
   totalStake: string;
   otherStake: string;
   commission: number;
-  name: {
-    display: string;
-  }[];
+  account: {
+    identity: null | {
+      display: string;
+    }
+  }
 };
 
 export type ValidatorAccountsQuery = {
@@ -126,29 +123,66 @@ export const GET_CURRENT_VALIDATORS = gql`
       commission
       cmixId: cmix_id
       nominators
-      name: identity {
-        display
+      account {
+        identity {
+          display
+        }
       }
     }
   }
 `;
+
+export type GetWaitingListQuery = {
+  validators: {
+    addressId: string;
+    location: string;
+    stake: number;
+    cmixId: string;
+    nominators: Nominator[];
+    account: {
+      identity: null | {
+        display: string;
+      }
+    }
+  }[]
+}
 
 export const GET_WAITING_LIST = gql`
-  query GetWaitingList ($where: waiting_bool_exp) {
-    validators: waiting(order_by: { self_stake: desc }, where: $where) {
-      addressId: stash_address
-      location
-      ownStake: self_stake
-      commission
-      cmixId: cmix_id
-      nominators
-      name: identity {
+query GetWaitingList($search: String) {
+  validators: validator(order_by: { stake: desc }, where: {
+    active:{_eq: false},
+    _and: {
+      _or: [
+        {
+          account:{
+            identity:{
+              display: {_ilike: $search}
+            }
+          }
+        },
+        {
+          cmix_id:{_ilike: $search }
+        },
+        {
+          stash_address: {_ilike: $search }
+        }
+      ]
+    }
+  } ) {
+    addressId: stash_address
+    location
+    stake
+    commission
+    cmixId: cmix_id
+    nominators
+    account {
+      identity {
         display
       }
     }
   }
+}
 `;
-
 
 /* -------------------------------------------------------------------------- */
 /*                       Account Page > Validator Stats                       */
@@ -207,6 +241,59 @@ export const GET_STAKING_STATS = gql`
     }
   }
 `
+
+/* -------------------------------------------------------------------------- */
+/*                               Staking Slashes                              */
+/* -------------------------------------------------------------------------- */
+export type StakingSlash = {
+  accountId: string;
+  amount: number;
+  blockNumber: number;
+  era: number;
+  timestamp: string;
+  validatorAddress: string;
+  account: {
+    identity: {
+      display: string;
+    }
+  }
+}
+
+const STAKING_SLASH_FRAGMENT = gql`
+  fragment stakingSlashFragment on staking_slash {
+    accountId: account_id
+    amount
+    blockNumber: block_number
+    era
+    timestamp
+    validatorAddress: validator_id
+    account {
+      identity {
+        display
+      }
+    }
+  }
+`;
+
+export type GetStakingSlashes = {
+  aggregates: { aggregate: { count: number } }
+  slashes: StakingSlash[]
+}
+export const GET_STAKING_SLASHES = gql`
+  ${STAKING_SLASH_FRAGMENT}
+  query GetStakingRewards ($accountId: String!) {
+    aggregates: staking_slash_aggregate(where: { account_id: { _eq: $accountId }}) {
+      aggregate {
+        count
+      }
+    }
+
+    slashes: staking_slash(where: { account_id: { _eq: $accountId } }, order_by: { era: desc, block_number: desc }) {
+      ...stakingSlashFragment
+    }
+  }
+`;
+
 /* -------------------------------------------------------------------------- */
 /*                               Staking Rewards                              */
 /* -------------------------------------------------------------------------- */
@@ -217,21 +304,25 @@ export type StakingReward = {
   era: number;
   timestamp: string;
   validatorAddress: string;
-  identity: {
-    display: string;
+  account: {
+    identity: {
+      display: string;
+    }
   }
 }
 
-const STAKING_REWARDS_FRAGMENT = gql`
-  fragment stakingRewardsFragment on staking_reward {
+const STAKING_REWARD_FRAGMENT = gql`
+  fragment stakingRewardFragment on staking_reward {
     accountId: account_id
     amount
     blockNumber: block_number
     era
     timestamp
-    validatorAddress: validator_stash_address
-    identity {
-      display
+    validatorAddress: validator_id
+    account {
+      identity {
+        display
+      }
     }
   }
 `;
@@ -241,7 +332,7 @@ export type GetStakingRewards = {
   rewards: StakingReward[]
 }
 export const GET_STAKING_REWARDS = gql`
-  ${STAKING_REWARDS_FRAGMENT}
+  ${STAKING_REWARD_FRAGMENT}
   query GetStakingRewards ($accountId: String!) {
     aggregates: staking_reward_aggregate(where: { account_id: { _eq: $accountId }}) {
       aggregate {
@@ -250,7 +341,7 @@ export const GET_STAKING_REWARDS = gql`
     }
 
     rewards: staking_reward(where: { account_id: { _eq: $accountId } }, order_by: { era: desc, block_number: desc }) {
-      ...stakingRewardsFragment
+      ...stakingRewardFragment
     }
   }
 `;

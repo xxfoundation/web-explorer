@@ -3,7 +3,7 @@ export type { Range } from '../../DateRange';
 import React, { FC } from 'react';
 import { Badge } from '@mui/material';
 
-import Dropdown from '../../Dropdown';
+import Dropdown from '../../DropdownFilter';
 import DateRange, { Props as RangeProps} from '../../DateRange';
 
 const DateRangeFilter: FC<RangeProps & { label?: string }> = (props) => {

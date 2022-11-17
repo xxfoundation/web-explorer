@@ -1,65 +1,57 @@
-import { Typography } from '@mui/material';
-import React, { FC, useMemo } from 'react';
-import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
-import TabsWithPanels from '../../../../components/Tabs';
-import { Roles } from '../../../../schemas/accounts.schema';
-import CouncilActivityTable from './CouncilActivityTable';
-import ElectionActivityTable from './ElectionActivityTable';
-import IdentityActivityTable from './IdentityActivityTable';
-import ProposalActivityTable from './ProposalActivityTable';
-import ReferendaActivityTable from './ReferendaActivityTable';
-import TechCommitteeActivityTable from './TechCommitteeActivityTable';
+import React, {FC} from 'react';
+import {useQuery} from '@apollo/client';
+import {
+  Account, GET_EVENTS_COUNTS,
+  GetEventsCounts,
+} from '../../../../schemas/accounts.schema';
+import EventsTabs from './EventsTabs';
 
-const identityActivityTab = {
-  label: <Typography>identity activity</Typography>,
-  content: <IdentityActivityTable />
+type Props = {
+  account: Account;
 };
 
-const referendaActivityTab = {
-  label: <Typography>Referenda Activity</Typography>,
-  content: <ReferendaActivityTable />
-};
+export interface IModulesProps {
+  key: string, 
+  count: number
+}
 
-const proposalActivityTab = {
-  label: <Typography>proposal activity</Typography>,
-  content: <ProposalActivityTable />
-};
+const GovernanceCard: FC<Props> = ({ account }) => {
+  const {data, loading} = useQuery<GetEventsCounts>(GET_EVENTS_COUNTS, {
+    variables: { accountId: account.id }
+  })
 
-const councilActivityTab = {
-  label: <Typography>Council Activity</Typography>,
-  content: <CouncilActivityTable />
-};
-
-const electionActivityTab = {
-  label: <Typography>Election Activity</Typography>,
-  content: <ElectionActivityTable />
-};
-
-const techCommitteActivityTab = {
-  label: <Typography>tech committee activity</Typography>,
-  content: <TechCommitteeActivityTable />
-};
-
-const GovernanceCard: FC<{ roles: Roles[] }> = ({ roles }) => {
-  const memoistPanels = useMemo(() => {
-    const panels = [identityActivityTab, proposalActivityTab, referendaActivityTab];
-    if (roles.includes('nominator')) {
-      panels.push(electionActivityTab);
-      panels.push(councilActivityTab);
+  const isEmpty = () => {
+    let hasRecords = false;
+    if (data) {
+      Object.entries(data).map(d => {
+        if(d[1].aggregate.count > 0) {
+          hasRecords = true;
+        }
+      }) 
     }
-    if (roles.includes('techcommit')) {
-      panels.push(techCommitteActivityTab);
+    return !hasRecords && !loading;
+  }
+  
+  const filterOutEmptyRecords = (records: GetEventsCounts | undefined) => {
+    const formattedData: IModulesProps[] = []
+    if(!records) {
+      return undefined;
     }
-    return panels;
-  }, [roles]);
-  return (
-    <PaperStyled>
-      <Typography fontSize={26} fontWeight={500} marginBottom={'10px'}>
-        Governance
-      </Typography>
-      <TabsWithPanels panels={memoistPanels} tabsLabel='account governance card' />
-    </PaperStyled>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Object.entries(records).filter((r: any) => r[1].aggregate.count > 0).map((r: any) => {
+      const key: string = r[0];
+      const value = r[1];
+      formattedData.push({
+        key,
+        count: value.aggregate.count
+      })
+    })
+    return formattedData;
+  }
+
+  return isEmpty() ? <div>No activity</div> : (
+    <EventsTabs loading={loading} accountId={account.id} modules={filterOutEmptyRecords(data)} />
   );
-};
+}
 
 export default GovernanceCard;

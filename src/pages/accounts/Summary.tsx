@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   Box,
   Divider,
@@ -10,10 +10,10 @@ import {
   styled,
   Typography
 } from '@mui/material';
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import Socials from '../../components/Socials';
-import { LISTEN_FOR_ERA_METRICS } from '../../schemas/chaindata.schema';
+import { ListenForAccountMetrics, LISTEN_FOR_ACCOUNT_METRICS } from '../../schemas/chaindata.schema';
 import NetworkIcon from './NetworkIcon';
 
 const SubduedHeader = styled(Typography)(({ theme }) => ({
@@ -32,17 +32,10 @@ const DarkSubtitle = styled(Typography)(({ theme }) => ({
 }));
 
 const SummaryInfo = () => {
-  const { data, loading } = useSubscription<{ metrics: { title: string; value: number }[] }>(
-    LISTEN_FOR_ERA_METRICS
+  const { data, loading } = useQuery<ListenForAccountMetrics>(
+    LISTEN_FOR_ACCOUNT_METRICS
   );
-  const mappedMetrics = useMemo(() => {
-    return (data?.metrics || []).reduce((prev, current) => {
-      return {
-        ...prev,
-        [current.title]: current.value
-      };
-    }, {} as Record<string, number>);
-  }, [data?.metrics]);
+
   return (
     <Stack direction='row' justifyContent={{ md: 'space-between', sm: 'flex-start' }} spacing={5}>
       <Stack>
@@ -54,8 +47,8 @@ const SummaryInfo = () => {
         <DarkSubtitle>
           {loading ? (
             <Skeleton />
-          ) : mappedMetrics.accounts !== undefined ? (
-            mappedMetrics.accounts
+          ) : data?.numAccounts !== undefined ? (
+            data?.numAccounts.aggregate.count - data?.numFakeAccounts.aggregate.count
           ) : (
             'N/D'
           )}
@@ -66,8 +59,8 @@ const SummaryInfo = () => {
         <DarkSubtitle>
           {loading ? (
             <Skeleton />
-          ) : mappedMetrics.transfers !== undefined ? (
-            mappedMetrics.transfers
+          ) : data?.numTransfers !== undefined ? (
+            data?.numTransfers.aggregate.count
           ) : (
             'N/D'
           )}

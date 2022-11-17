@@ -31,18 +31,18 @@ import useDebounce from '../../hooks/useDebounce';
 const ROWS_PER_PAGE = 20;
 
 const ValidatorRow: FC<ValidatorAccount & { index: number }> = ({
+  account,
   addressId,
   cmixId,
   commission,
   index,
   location,
-  name,
   nominators,
   ownStake,
   totalStake
 }) => {
+  const identityDisplay = account.identity?.display;
   const validatorLink = `/accounts/${addressId}`;
-  const identityDisplay = name && name[0] && name[0].display;
   let parsed;
 
   try {
@@ -99,8 +99,10 @@ const ValidatorsTable = () => {
     _and: {
       _or: [
         {
-          identity: {
-            display: { _ilike: `%${debouncedSearch}%`},
+          account: {
+            identity: {
+              display: { _ilike: `%${debouncedSearch}%`},
+            }
           }
         },
         {
@@ -130,7 +132,11 @@ const ValidatorsTable = () => {
     skip: !latestEra
   });
   const waitingQuery = useQuery<ValidatorAccountsQuery>(GET_WAITING_LIST, {
-    variables: { where: searchClause }
+    variables: {
+      limit: rowsPerPage,
+      offset: page * rowsPerPage,
+      search: `%${debouncedSearch}%`
+    }
   });
   const validators = validatorsQuery.data?.validators;
   const waitingList = waitingQuery.data?.validators;

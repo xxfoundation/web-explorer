@@ -1,34 +1,25 @@
 import { useQuery } from '@apollo/client';
-import { Skeleton, Typography } from '@mui/material';
+import { Box, Stack, Skeleton } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import AccountTile from '../../../../components/AccountTile';
+
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
-import { TabText } from '../../../../components/Tabs';
-import { GetStakingRewardCounts, GET_STAKING_REWARDS_COUNTS } from '../../../../schemas/accounts.schema';
-import { GetValidatorStats } from '../../../../schemas/staking.schema';
-import ValidatorInfo from '../ValidatorSummary';
-import NominatorsTable from './NominatorsTable';
+import TabsWithPanels, { TabText } from '../../../../components/Tabs';
+import { GetStakingCounts, GET_STAKING_COUNTS } from '../../../../schemas/accounts.schema';
+import StakingEventsTable from './StakingEventsTable';
 import StakingRewardsTable from './StakingRewardsTable';
-import ValidatorStatsTable from './ValidatorStatsTable';
+import StakingSlashesTable from './StakingSlashesTable';
 
 const StakingCard: FC<{
   accountId: string;
-  active: boolean;
-  validator: GetValidatorStats;
-}> = ({ accountId, active, validator }) => {
-  const validatorInfo = validator?.stats && validator?.stats[0];
-  const nominators = validatorInfo?.nominators
-    ?.slice()
-    .sort((a, b) => parseFloat(b.share) - parseFloat(a.share));
-
-  const validatorStats = validator?.stats;
-  const statsCount = validator?.aggregates.aggregate.count;
-
-  const { data, loading } = useQuery<GetStakingRewardCounts>(GET_STAKING_REWARDS_COUNTS, {
+}> = ({ accountId}) => {
+  const { data, loading } = useQuery<GetStakingCounts>(GET_STAKING_COUNTS, {
     variables: { accountId: accountId }
   });
-  const rewardsCount = data?.rewardsInfo.aggregate.count || 0;
-  const rewardsSum = data?.rewardsInfo.aggregate.sum.amount;
+  const rewardsCount = data?.rewards.aggregate.count || 0;
+  const rewardsSum = data?.rewards.aggregate.sum.amount;
+  const slashesCount = data?.slashes.aggregate.count || 0;
+  const slashesSum = data?.slashes.aggregate.sum.amount;
+  const stakingCount = data?.stakingEvents.aggregate.count
 
   const panels = useMemo(() => {
     const cachedPanels = loading
@@ -42,38 +33,53 @@ const StakingCard: FC<{
       {
         label: (
           <TabText
-            message={'Staking Rewards'}
+            message={'Rewards'}
             count={rewardsCount === undefined ? '' : rewardsCount}
           />
         ),
         content: <StakingRewardsTable accountId={accountId} sum={rewardsSum} />
+      },
+      {
+        label: (
+          <TabText
+            message={'Slashes'}
+            count={slashesCount === undefined ? '' : slashesCount}
+          />
+        ),
+        content: <StakingSlashesTable accountId={accountId} sum={slashesSum} />
+      },
+      {
+        label: (
+          <TabText
+            message={'Events'}
+            count={stakingCount === undefined ? '' : stakingCount}
+          />
+        ),
+        content: (
+          <StakingEventsTable accountId={accountId} />
+        )
       }
     ];
-
-    if (validatorInfo) {
-      cachedPanels.push(
-        {
-          label: <Typography>Validator Info</Typography>,
-          content: <ValidatorInfo active={active} info={validatorInfo} />
-        },
-        {
-          label: <TabText message='Validator Stats' count={statsCount} />,
-          content: <ValidatorStatsTable accountId={accountId} stats={validatorStats} />
-        }
-      )
-    }
     
-    if (active && nominators) {
-      cachedPanels.push({
-        label: <TabText message='nominators' count={nominators?.length} />,
-        content: <NominatorsTable nominators={nominators} />
-      });
-    }
     return cachedPanels;
-  }, [accountId, active, loading, nominators, rewardsCount, rewardsSum, statsCount, validatorInfo, validatorStats]);
+  }, [accountId, loading, rewardsCount, rewardsSum, slashesCount, slashesSum, stakingCount]);
 
-  return (
-    rewardsCount ? (<AccountTile panels={panels} tabsLabel='account staking card' title='Staking' />) : <></>
+  const isEmpty = () => {
+    return !rewardsCount && !stakingCount && !slashesCount && !loading;
+  }
+
+  return isEmpty() ? <div>No activity</div> : (
+    !loading ? (<TabsWithPanels panels={panels} tabsLabel='account staking card' />) : <>
+      <Stack sx={{ py: 3 }} spacing={2} direction='row'>
+        <Skeleton width={160} />
+        <Skeleton width={160} />
+        <Skeleton width={160} />
+        <Skeleton width={160} />
+      </Stack>
+      <Box sx={{ mt: 4 }}>
+        <TableSkeleton rows={10} cells={5} />
+      </Box>
+    </>
   );
 };
 

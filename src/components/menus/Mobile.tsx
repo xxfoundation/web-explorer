@@ -87,12 +87,6 @@ export default function MobileNav() {
                   Staking
                 </Link>
               </Typography>
-              <Link to='/staking/simple' onClick={close}>
-                Simple Staking
-              </Link>
-              <Link to='/staking' onClick={close}>
-                Dashboard
-              </Link>
               <Typography variant='h4' sx={{ mt: 2 }}>
                 <Link to='/accounts' onClick={close}>
                   Accounts

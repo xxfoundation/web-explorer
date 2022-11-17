@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
+import { Roles, ROLES_FRAGMENT } from './accounts.schema';
 import { TotalOfItems } from './types';
 
 /* -------------------------------------------------------------------------- */
@@ -9,6 +9,7 @@ const EXTRINSIC_FRAGMENT = gql`
   ${ROLES_FRAGMENT}
   fragment extrinsicFragment on extrinsic {
     blockNumber: block_number
+    dispatchInfo: dispatch_info
     extrinsicIndex: extrinsic_index
     hash
     module
@@ -18,9 +19,7 @@ const EXTRINSIC_FRAGMENT = gql`
     isSigned: is_signed
     signer
     signerAccount {
-      roles: role {
-        ...roles
-      }
+      ...roles_fragment
       identity {
         display
       }
@@ -29,13 +28,15 @@ const EXTRINSIC_FRAGMENT = gql`
     argsDef: args_def
     doc
     errorMsg: error_message
-    fee: fee_info
+    fee
+    tip
   }
 `
 
 export type Extrinsic = {
   id: number;
   blockNumber: number;
+  dispatchInfo: string;
   extrinsicIndex: number;
   hash: string;
   timestamp: number;
@@ -43,8 +44,7 @@ export type Extrinsic = {
   call: string;
   success: boolean;
   signer?: string;
-  signerAccount: null | {
-    roles: AccountRoles,
+  signerAccount: null | Roles & {
     identity: null | {
       display: string
     }
@@ -54,7 +54,8 @@ export type Extrinsic = {
   argsDef: Record<string, string>;
   doc: string[];
   errorMsg: string;
-  fee: string | null;
+  fee: number | null;
+  tip: number;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -23,6 +23,7 @@ const calculateMaximums = (data: DataPoint[]) => {
 };
 
 type Props = {
+  chartRef?: React.Ref<HighchartsReact.RefObject>;
   title?: string;
   onClick?: (evt: SeriesClickEventObject) => void;
   yAxisTitle?: string;
@@ -37,6 +38,7 @@ type Props = {
 
 
 const LineChart: FC<Props> = ({
+  chartRef,
   data,
   labelFormatters,
   onClick,
@@ -137,7 +139,12 @@ const LineChart: FC<Props> = ({
       </Box>
     );
   }
-  return <HighchartsReact highcharts={Highcharts} options={options} />;
+  return (
+    <HighchartsReact
+      ref={chartRef}
+      highcharts={Highcharts}
+      options={options} />
+  );
 };
 
 export default LineChart;
