@@ -8,7 +8,7 @@ import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
 import AccountDetails from './account/AccountDetails';
 import NotFound from '../NotFound';
-import PageTabs, { Panel } from '../../components/PageTabs';
+import PageTabs, { Panel } from '../../components/PillTabs';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import RoundedButton from '../../components/buttons/Rounded';
@@ -110,14 +110,17 @@ const AccountId: FC = () => {
             </PaperWrapStyled>
           </Grid>
         )}
+
+        <Grid item xs={12}>
+          <PageTabs value={tab} onChange={handleTab}>
+            <Tab label='Blockchain' />
+            <Tab label='Governance' />
+            <Tab label='Staking' />
+            {validator !== undefined && (<Tab label='Validator' />)}
+          </PageTabs>
+        </Grid>
         <Grid item xs={12}>
           <PaperWrapStyled sx={{ position: 'relative', overflow: 'hidden' }}>
-            <PageTabs value={tab} onChange={handleTab}>
-              <Tab label='Blockchain' />
-              <Tab label='Governance' />
-              <Tab label='Staking' />
-              {validator !== undefined && (<Tab label='Validator' />)}
-            </PageTabs>
             <Panel index={tab} value={0}>
               <BlockchainCard account={data.account} />
             </Panel>

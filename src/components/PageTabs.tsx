@@ -1,5 +1,4 @@
-import React, { FC } from 'react';
-import { Box, Tabs, styled } from '@mui/material';
+import { Tabs, styled } from '@mui/material';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   '&:after': {
@@ -11,14 +10,22 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     height: 1,
     backgroundColor:  theme.palette.grey[300],
   },
+  overflowX: 'auto',
   position: 'absolute',
   left: 0,
   top: 0,
   width: '100%',
   backgroundColor: '#f6f6f6',
   '& .MuiTab-root': {
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 10,
+      padding: '0.5rem',
+    },
     zIndex: 1,
     '&:first-child': {
+      [theme.breakpoints.down('sm')]: {
+        paddingLeft: '1rem',
+      },
       paddingLeft: '2rem',
     },
     '&.Mui-selected': {
@@ -35,28 +42,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   }
 }));
 
-type PanelProps = {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-export const Panel: FC<PanelProps> = ({ children, index, value, ...other }) => (
-  <div
-    role='tabpanel'
-    hidden={value !== index}
-    id={`vertical-tabpanel-${index}`}
-    aria-labelledby={`vertical-tab-${index}`}
-    {...other}
-  >
-    {value === index && (
-      <Box sx={{ pt: 7 }}>
-        {children}
-      </Box>
-    )}
-  </div>
-);
-
+export { default as Panel } from './TabPanel'
 
 export default StyledTabs;
 
