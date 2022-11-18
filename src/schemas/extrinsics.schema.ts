@@ -37,9 +37,12 @@ const EXTRINSIC_FRAGMENT = gql`
 export type NestedCall = {
   module: string;
   call: string;
+  args: string;
+  args_def: string;
   doc: string;
   success: boolean;
   depth: number;
+  error_message: string;
 }
 
 export type Extrinsic = {
