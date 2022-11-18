@@ -30,8 +30,17 @@ const EXTRINSIC_FRAGMENT = gql`
     errorMsg: error_message
     fee
     tip
+    nestedCalls: nested_calls
   }
 `
+
+export type NestedCall = {
+  module: string;
+  call: string;
+  doc: string;
+  success: boolean;
+  depth: number;
+}
 
 export type Extrinsic = {
   id: number;
@@ -56,6 +65,7 @@ export type Extrinsic = {
   errorMsg: string;
   fee: number | null;
   tip: number;
+  nestedCalls: Array<NestedCall> | null;
 }
 
 /* -------------------------------------------------------------------------- */
