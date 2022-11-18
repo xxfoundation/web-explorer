@@ -4,11 +4,11 @@ import type { ScoringContext } from './types';
 const baseMessage = (eraNumber: number, seniority: string) =>
   `Stash address was created at era #${eraNumber} making it a ${seniority} of the network`;
 
-const getaAddressCreationScore = ({ account, currentEra }: ScoringContext): [MetricScores, string] => {
-  const block = account.creationEvent[0]?.block;
-  const creationEra = block.era ?? 0;
+const getaAddressCreationScore = ({ account }: ScoringContext): [MetricScores, string] => {
+  const currentEra = Date.now()
+  const creationEra = account?.whenCreated ?? 0;
   const eraAge = currentEra - creationEra;
-
+  
   if (eraAge >= 365) {
     return ['very good', baseMessage(creationEra, 'a veteran')];
   }

@@ -19,7 +19,7 @@ const RelativePerformance: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
     Quarter: ERAS_IN_A_QUARTER,
     Month: ERAS_IN_A_MONTH
   };
-  const [timeframe, setTimeframe] = useState(ERAS_IN_A_MONTH);
+  const [timeframe, setTimeframe] = useState(latestEra);
   const onChange = useCallback(
     ({ target }: SelectChangeEvent<number>) => setTimeframe(Number(target.value)),
     []
