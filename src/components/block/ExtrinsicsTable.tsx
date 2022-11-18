@@ -4,7 +4,7 @@ import React, { FC, useMemo, useEffect } from 'react';
 import { EXTRINSICS_OF_BLOCK, ListExtrinsics, Extrinsic } from '../../schemas/extrinsics.schema';
 import Hash from '../Hash';
 import Link from '../Link';
-import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../Tables';
+import { BaseLineCellsWrapper, BaselineTable, headerCellsWrapper } from '../Tables';
 import TimeAgoComponent from '../TimeAgo';
 import { usePagination } from '../../hooks';
 
@@ -28,7 +28,7 @@ const rowsParser = (extrinsic: Extrinsic) => {
   ]);
 };
 
-const headers = HeaderCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
+const headers = headerCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
 
 type Props = {
   accountId?: string;

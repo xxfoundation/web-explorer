@@ -1,5 +1,7 @@
 import React, {FC} from 'react';
-import {useQuery} from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import { useTranslation } from 'react-i18next';
+
 import {
   Account, GET_EVENTS_COUNTS,
   GetEventsCounts,
@@ -16,6 +18,7 @@ export interface IModulesProps {
 }
 
 const GovernanceCard: FC<Props> = ({ account }) => {
+  const { t } = useTranslation();
   const {data, loading} = useQuery<GetEventsCounts>(GET_EVENTS_COUNTS, {
     variables: { accountId: account.id }
   })
@@ -37,8 +40,8 @@ const GovernanceCard: FC<Props> = ({ account }) => {
     if(!records) {
       return undefined;
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Object.entries(records).filter((r: any) => r[1].aggregate.count > 0).map((r: any) => {
+    
+    Object.entries(records).filter((r) => r[1].aggregate.count > 0).map((r) => {
       const key: string = r[0];
       const value = r[1];
       formattedData.push({
@@ -49,7 +52,7 @@ const GovernanceCard: FC<Props> = ({ account }) => {
     return formattedData;
   }
 
-  return isEmpty() ? <div>No activity</div> : (
+  return isEmpty() ? <div>{t('No activity')}</div> : (
     <EventsTabs loading={loading} accountId={account.id} modules={filterOutEmptyRecords(data)} />
   );
 }

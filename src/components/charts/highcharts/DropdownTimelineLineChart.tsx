@@ -2,6 +2,7 @@ import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/mate
 import { SeriesClickEventObject, TooltipFormatterContextObject } from 'highcharts';
 import React, { FC, useEffect, useRef } from 'react';
 import HighchartsReact from 'highcharts-react-official';
+import { useTranslation } from 'react-i18next';
 
 import { Timeframe } from '../types';
 import LineChart from './LineChart';
@@ -27,6 +28,7 @@ const DropdownTimelineLineChart: FC<Props> = ({
   timeframes,
   tooltipFormatter
 }) => {
+  const { t } = useTranslation();
   const chartRef = useRef<HighchartsReact.RefObject>(null);
 
   useEffect(
@@ -46,7 +48,7 @@ const DropdownTimelineLineChart: FC<Props> = ({
           labelId='timeframe-label'
           id='timeframe-select'
           value={timeframe}
-          label='Timeframe'
+          label={t('Timeframe')}
           onChange={onChange}
         >
           {Object.entries(timeframes).map(([label, time]) => (

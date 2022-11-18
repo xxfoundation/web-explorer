@@ -21,22 +21,25 @@ import ParametersFragment from './ParametersFragment';
 import FormatBalance from '../../../../components/FormatBalance';
 import { BN_ZERO } from '@polkadot/util';
 import CodeDisplay from '../../../../components/CodeDisplay';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   extrinsic: Extrinsic;
 };
 
 const Summary: FC<Props> = ({ extrinsic }) => {
+  const { t } = useTranslation();
+
   return (
     <SummaryContainer>
       <SummaryEntry>
-        <SummaryHeader>Time</SummaryHeader>
+        <SummaryHeader>{t('Time')}</SummaryHeader>
         <SummaryValue>
           <TimeAgo date={extrinsic.timestamp} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Block</SummaryHeader>
+        <SummaryHeader>{t('Block')}</SummaryHeader>
         <SummaryValue>
           <Link to={`/blocks/${extrinsic.blockNumber}`}>
             <Stack direction='row' spacing={1} alignItems='center'>
@@ -47,7 +50,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Extrinsic Hash</SummaryHeader>
+        <SummaryHeader>{t('Extrinsic Hash')}</SummaryHeader>
         <SummaryValue>
           <WithCopy value={extrinsic.hash}>
             <Hash truncated='lgDown' value={extrinsic.hash} />
@@ -55,13 +58,13 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Module/Call</SummaryHeader>
+        <SummaryHeader>{t('Module/Call')}</SummaryHeader>
         <SummaryValue>
           <ModuleCalls module={extrinsic.module} call={extrinsic.call} doc={extrinsic.doc} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Result</SummaryHeader>
+        <SummaryHeader>{t('Result')}</SummaryHeader>
         <SummaryValue>
           <Stack direction='row' spacing={1} alignItems='center'>
             <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />
@@ -71,7 +74,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
       </SummaryEntry>
       {!extrinsic.success && (
         <SummaryEntry>
-          <SummaryHeader>Failure Message</SummaryHeader>
+          <SummaryHeader>{t('Failure Message')}</SummaryHeader>
           <SummaryValue>
             <WithCopy tooltip value={extrinsic.errorMsg}>
               <Typography variant='code' sx={{ fontSize: 18 }} color='red'>
@@ -83,7 +86,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
       )}
       {extrinsic.fee !== null && (
         <SummaryEntry>
-          <SummaryHeader>Fee</SummaryHeader>
+          <SummaryHeader>{t('Fee')}</SummaryHeader>
           <SummaryValue>
             <Typography>
               <FormatBalance
@@ -95,7 +98,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
       )}
       {extrinsic.tip !== null && (
         <SummaryEntry>
-          <SummaryHeader>Tip</SummaryHeader>
+          <SummaryHeader>{t('Tip')}</SummaryHeader>
           <SummaryValue>
             <Typography>
               <FormatBalance
@@ -116,14 +119,14 @@ const Summary: FC<Props> = ({ extrinsic }) => {
       <ParametersFragment {...extrinsic} />
       {extrinsic.signer && extrinsic.isSigned && (
         <SummaryEntry>
-          <SummaryHeader>Signer</SummaryHeader>
+          <SummaryHeader>{t('Signer')}</SummaryHeader>
           <SummaryValue>
             <Address name={extrinsic.signerAccount?.identity?.display} roles={extrinsic.signerAccount ?? {}} value={extrinsic.signer} />
           </SummaryValue>
         </SummaryEntry>
       )}
       <SummaryEntry>
-        <SummaryHeader>Dispatch Info</SummaryHeader>
+        <SummaryHeader>{t('Dispatch Info')}</SummaryHeader>
         <SummaryValue>
           <CodeDisplay>
             {JSON.stringify(JSON.parse(extrinsic.dispatchInfo), null, 2)}

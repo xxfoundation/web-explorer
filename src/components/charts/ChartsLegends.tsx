@@ -11,6 +11,7 @@ const LegendItem: FC<CustomPointOptions> = (props) => {
   const title = useMemo(() => {
     return <SeriesDetailedInfo custom={props.custom} name={props.name} />;
   }, [props.custom, props.name]);
+
   return (
     <Stack direction={'row'} spacing={1} alignItems='center' sx={{ marginY: '4px' }}>
       <HtmlTooltip title={title}>
@@ -36,11 +37,13 @@ const LegendItems: FC<{ data: CustomPointOptions[] }> = ({ data }) => {
   );
 };
 
-const ChartsLegends: FC<{
+type Props = {
   legends: CustomPointOptions[];
   name: string;
   value: string;
-}> = ({ legends, name, value }) => {
+};
+
+const ChartsLegends: FC<Props> = ({ legends, name, value }) => {
   return (
     <>
       <LegendTypographySubHeaders>{name}</LegendTypographySubHeaders>

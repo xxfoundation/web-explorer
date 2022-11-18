@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { useTranslation } from 'react-i18next';
 
 import { Table, TableContainer } from '../../../../components/Tables/Table.styled';
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
@@ -41,33 +42,36 @@ const NominatorsList = ({ nominator }: { nominator?: Nominator }) =>
   </TableRow>
   : <Typography>-</Typography>
 
-const NominatorsTable = ({ nominators }: { nominators : Nominator[]}) =>  (
-  <TableContainer>
-    <Table sx={{margin: '1em'}} size='small' className='no-card'>
-      <TableRow>
-        <TableCell colSpan={9} sx={{ pt: 0, display: 'table-cell !important' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell align='left'>Account Id</TableCell>
-              <TableCell align='left'>Stake</TableCell>
-              <TableCell align='left'>Share</TableCell>
-            </TableRow>
-          </TableHead>
-          {nominators?.map<React.ReactNode>(
-            (nominator) => (
-              <NominatorsList
-                key={nominator.account_id}
-                nominator={nominator}
-                />
-              )
-            )
-          }
-        </TableCell>
-      </TableRow>
-    </Table>
-  </TableContainer>
-);
+const NominatorsTable: FC<{ nominators : Nominator[]}> = ({ nominators }) =>  {
+  const { t } = useTranslation();
 
+  return (
+    <TableContainer>
+      <Table sx={{margin: '1em'}} size='small' className='no-card'>
+        <TableRow>
+          <TableCell colSpan={9} sx={{ pt: 0, display: 'table-cell !important' }}>
+            <TableHead>
+              <TableRow>
+                <TableCell align='left'>{t('Account Id')}</TableCell>
+                <TableCell align='left'>{t('Stake')}</TableCell>
+                <TableCell align='left'>{t('Share')}</TableCell>
+              </TableRow>
+            </TableHead>
+            {nominators?.map<React.ReactNode>(
+              (nominator) => (
+                <NominatorsList
+                  key={nominator.account_id}
+                  nominator={nominator}
+                  />
+                )
+              )
+            }
+          </TableCell>
+        </TableRow>
+      </Table>
+    </TableContainer>
+  );
+}
 const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
   return tooltip ? (
     <Stack direction='row' sx={{justifyContent: 'space-between'}}>
@@ -83,36 +87,6 @@ const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
   );
 };
 
-const commissionTooltip = 'Portion of rewards the validator takes to cover operating costs.';
-
-const pointsTooltip = (
-  <>
-    For authoring a block: 130 points
-    <br />
-    Per completed cmix round: 10 points
-    <br />
-    Per failed cmix realtime round: -20 points
-  </>
-);
-
-const rewardsTooltip =
-  'Total amount of xx earned by the validator in that era. Validator will take his commission (%) out of the total and the remainder is split among the nominators and himself according to their stake.';
-
-const relativePerformanceTooltip =
-  'Comparison with best performing validator of the era. [own_points / max_points]';
-
-const headers = [
-  tableHeader('Era'),
-  tableHeader('Commission', commissionTooltip),
-  tableHeader('Own Stake'),
-  tableHeader('Other Stake'),
-  tableHeader('Total Stake'),
-  tableHeader('Points', pointsTooltip),
-  tableHeader('Relative Performance', relativePerformanceTooltip),
-  tableHeader('Rewards', rewardsTooltip),
-  tableHeader('Blocks Produced')
-];
-
 const BlockLink = ({ block }: { block?: number }) =>
   block ? <Link to={`/blocks/${block}`}>{block}</Link> : <Typography>-</Typography>;
 
@@ -120,6 +94,8 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
   producedBlocks,
   stats
 }) => {
+  const { t } = useTranslation();
+  
   const [expandedBlocks, toggleBlocks] = useToggle();
   const blocksProduced = useMemo(
     () =>
@@ -144,12 +120,12 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
   return (
     <>
       <TableRow>
-        <TableCell data-label='Era'>{stats.era}</TableCell>
-        <TableCell data-label='Commission'>{stats.commission.toFixed(2)} %</TableCell>
-        <TableCell data-label='Self Stake'>
+        <TableCell data-label={t('Era')}>{stats.era}</TableCell>
+        <TableCell data-label={t('Commission')}>{stats.commission.toFixed(2)} %</TableCell>
+        <TableCell data-label={t('Self Stake')}>
           <FormatBalance value={stats.selfStake.toString()} />
         </TableCell>
-        <TableCell data-label='Other Stake'>
+        <TableCell data-label={t('Other Stake')}>
           <Dropdown
             buttonProps={{ color: 'primary' }}
             buttonLabel={<FormatBalance value={stats.otherStake.toString()} />}
@@ -158,17 +134,17 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
             <NominatorsTable nominators={stats.nominators} />
           </Dropdown>
         </TableCell>
-        <TableCell data-label='Total Stake'>
+        <TableCell data-label={t('Total Stake')}>
           <FormatBalance value={stats.totalStake.toString()} />
         </TableCell>
-        <TableCell data-label='Points'>{stats.points ?? '-'}</TableCell>
-        <TableCell data-label='Performance'>
+        <TableCell data-label={t('Points')}>{stats.points ?? '-'}</TableCell>
+        <TableCell data-label={t('Performance')}>
           {stats.relativePerformance !== null ? (stats.relativePerformance * 100)?.toFixed(2) : '-'}
         </TableCell>
-        <TableCell data-label='Reward'>
+        <TableCell data-label={t('Reward')}>
           {stats.reward !== null ? <FormatBalance value={stats.reward.toString()} /> : '-'}
         </TableCell>
-        <TableCell data-label='Blocks Produced'>
+        <TableCell data-label={t('Blocks Produced')}>
           <Button
             disabled={!blocksProduced || blocksProduced.length === 0}
             variant='text'
@@ -195,6 +171,37 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
 type Props = { accountId?: string; stats?: ValidatorStats[] };
 
 const ValidatorStatsTable: FC<Props> = ({ accountId, stats }) => {
+  const { t } = useTranslation();
+  
+  const commissionTooltip = t('Portion of rewards the validator takes to cover operating costs.');
+
+  const pointsTooltip = useMemo(() => (
+    <>
+      {t('For authoring a block: 130 points')}
+      <br />
+      {t('Per completed cmix round: 10 points')}
+      <br />
+      {t('Per failed cmix realtime round: -20 points')}
+    </>
+  ), [t]);
+
+  const rewardsTooltip =
+    t('Total amount of xx earned by the validator in that era. Validator will take his commission (%) out of the total and the remainder is split among the nominators and himself according to their stake.');
+
+  const relativePerformanceTooltip =
+    t('Comparison with best performing validator of the era. [own_points / max_points]');
+
+  const headers = useMemo(() => [
+    tableHeader(t('Era')),
+    tableHeader(t('Commission'), commissionTooltip),
+    tableHeader(t('Own Stake')),
+    tableHeader(t('Other Stake')),
+    tableHeader(t('Total Stake')),
+    tableHeader(t('Points'), pointsTooltip),
+    tableHeader(t('Relative Performance'), relativePerformanceTooltip),
+    tableHeader(t('Rewards'), rewardsTooltip),
+    tableHeader(t('Blocks Produced'))
+  ], [commissionTooltip, pointsTooltip, relativePerformanceTooltip, rewardsTooltip, t]);
   const variables = useMemo(() => {
     return {
       orderBy: [{ block_number: 'desc' }],

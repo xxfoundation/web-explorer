@@ -1,21 +1,12 @@
-import TabsWithPanels, {TabText} from '../../../../components/Tabs';
-import React from 'react';
+
+import React, { useCallback, useMemo } from 'react';
 import {Skeleton} from '@mui/material';
+import { useTranslation } from 'react-i18next';
+
 import {TableSkeleton} from '../../../../components/Tables/TableSkeleton';
 import EventsTable from './EventsTable';
 import {IModulesProps} from './index'
-
-interface TLabels {
-  [key: string]: string
-}
-
-const LABELS: TLabels = {
-  technicalCommittee: 'Tech Committee',
-  councilElections: 'Council',
-  democracy: 'Democracy',
-  treasury: 'Treasury',
-  tips: 'Tips',
-}
+import TabsWithPanels, { TabText } from '../../../../components/Tabs';
 
 interface IEventsTab {
   accountId: string,
@@ -24,9 +15,18 @@ interface IEventsTab {
 }
 
 const EventsTab: React.FC<IEventsTab> = ({accountId, loading, modules}) => {
-  const renderTabs = (data: IModulesProps[] | undefined) => {
+  const { t } = useTranslation();
+  const labels = useMemo<Record<string, string>>(() => ({
+    technicalCommittee: t('Tech Committee'),
+    councilElections: t('Council'),
+    democracy: t('Democracy'),
+    treasury: t('Treasury'),
+    tips: t('Tips'),
+  }), [t]);
+
+  const renderTabs = useCallback((data: IModulesProps[] | undefined) => {
     return !data ? [] : data.map(({count, key}: { count: number, key: string }) => {
-      const label = LABELS[key]
+      const label = labels[key];
       return {
         label: (
           <TabText
@@ -39,11 +39,10 @@ const EventsTab: React.FC<IEventsTab> = ({accountId, loading, modules}) => {
         )
       }
     })
-  }
+  }, [accountId, labels]);
 
-  const myTabs = () => {
-    return loading
-      ? [
+  const myTabs = useMemo(() => 
+    loading ? [
         {
           label: <Skeleton width={'90%'}/>,
           content: <TableSkeleton rows={2} cells={1}/>
@@ -54,8 +53,11 @@ const EventsTab: React.FC<IEventsTab> = ({accountId, loading, modules}) => {
         }
       ]
       : renderTabs(modules)
-  }
-  return <TabsWithPanels panels={myTabs()} tabsLabel='account governance card'/>
+    ,
+    [loading, modules, renderTabs]
+  );
+
+  return <TabsWithPanels panels={myTabs} tabsLabel={t('account governance card')}/>
 }
 
 export default EventsTab;

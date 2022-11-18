@@ -2,11 +2,14 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import { IconButton, IconButtonProps, Stack, Typography } from '@mui/material';
-import React, { ReactNode } from 'react';
+import { TFunction } from 'i18next';
+import React, { ReactNode, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import useCopyClipboard from '../../hooks/useCopyToClipboard';
 import { theme } from '../../themes/default';
 
-export const callbackCopyMessage = (value: ReactNode) => {
+export const callbackCopyMessage = (t: TFunction) => (value: ReactNode) => {
   return (
     <Stack
       spacing={1}
@@ -21,7 +24,7 @@ export const callbackCopyMessage = (value: ReactNode) => {
       <Stack direction={'row'} alignItems={'center'} spacing={2}>
         <CheckCircleOutlineIcon sx={{ color: theme.palette.success.light }} />
         <Typography fontSize={10} fontWeight={600}>
-          Copied to Clipboard
+          {t('Copied to Clipboard')}
         </Typography>
       </Stack>
       <Typography fontSize={10} fontStyle={'italic'} component={'span'}>
@@ -32,15 +35,19 @@ export const callbackCopyMessage = (value: ReactNode) => {
 };
 
 const CopyButton: React.FC<{ value: string } & IconButtonProps> = ({ value, ...props }) => {
+  const { t } = useTranslation();
   const [isCopied, staticCopy] = useCopyClipboard(4000);
+
+  const onClick = useCallback(() => {
+    staticCopy(value, callbackCopyMessage(t));
+  }, [staticCopy, t, value]);
+
   return (
     <IconButton
       {...props}
       size='small'
       arial-label='copy'
-      onClick={() => {
-        staticCopy(value, callbackCopyMessage);
-      }}
+      onClick={onClick}
     >
       {isCopied ? (
         <FileCopyIcon fontSize={'small'} color={'primary'} />

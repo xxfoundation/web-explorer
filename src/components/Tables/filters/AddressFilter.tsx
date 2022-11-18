@@ -10,7 +10,7 @@ export type AddressFilters = {
 }
 
 export type Props = {
-  label: string | React.ReactElement;
+  label: string | React.ReactElement | null;
   onChange: (v: AddressFilters) => void;
   value: AddressFilters;
   address: string;

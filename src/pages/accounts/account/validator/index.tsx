@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Box, Stack, Skeleton, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import NominatorsTable from './NominatorsTable';
 import ValidatorStatsTable from './ValidatorStatsTable';
@@ -10,10 +11,13 @@ import { GetValidatorStats, GET_VALIDATOR_STATS } from '../../../../schemas/stak
 import { GetValidatorInfo, GET_VALIDATOR_INFO } from '../../../../schemas/validator.schema';
 import ValidatorSummary from './ValidatorSummary';
 
-const ValidatorCard: FC<{
+type Props = {
   accountId: string;
   active: boolean;
-}> = ({ accountId, active }) => {
+}
+
+const ValidatorCard: FC<Props> = ({ accountId, active }) => {
+  const { t } = useTranslation();
   const queryValidatorInfo = useQuery<GetValidatorInfo>(GET_VALIDATOR_INFO, {
     variables: { accountId: accountId }
   });
@@ -40,7 +44,7 @@ const ValidatorCard: FC<{
         ]
       : [
       {
-        label: <Typography>Validator Info</Typography>,
+        label: <Typography>{t('Validator Info')}</Typography>,
         content: <ValidatorSummary active={active} info={validatorInfo} />
       },
       {
@@ -56,14 +60,14 @@ const ValidatorCard: FC<{
       });
     }
     return cachedPanels;
-  }, [accountId, active, nominators, queryValidatorInfo.loading, queryValidatorStats.loading, statsCount, validatorInfo, validatorStats]);
+  }, [accountId, active, nominators, queryValidatorInfo.loading, queryValidatorStats.loading, statsCount, t, validatorInfo, validatorStats]);
 
   const isEmpty = () => {
     return !queryValidatorInfo.data?.validator.length && !queryValidatorStats.data?.aggregates.aggregate.count && !(queryValidatorInfo.loading || queryValidatorStats.loading);
   }
 
-  return isEmpty() ? <div>No activity</div> : (
-    !(queryValidatorInfo.loading || queryValidatorStats.loading) ? (<TabsWithPanels panels={panels} tabsLabel='account staking card' />) : <>
+  return isEmpty() ? <div>{t('No activity')}</div> : (
+    !(queryValidatorInfo.loading || queryValidatorStats.loading) ? (<TabsWithPanels panels={panels} tabsLabel={t('account staking card')} />) : <>
       <Stack sx={{ py: 3 }} spacing={2} direction='row'>
         <Skeleton width={160} />
         <Skeleton width={160} />

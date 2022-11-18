@@ -27,6 +27,7 @@ import { TabText } from '../../components/Tabs';
 import SkeletonRows from '../../components/Tables/SkeletonRows';
 import useInput from '../../hooks/useInput';
 import useDebounce from '../../hooks/useDebounce';
+import { useTranslation } from 'react-i18next';
 
 const ROWS_PER_PAGE = 20;
 
@@ -41,6 +42,7 @@ const ValidatorRow: FC<ValidatorAccount & { index: number }> = ({
   ownStake,
   totalStake
 }) => {
+  const { t } = useTranslation();
   const identityDisplay = account.identity?.display;
   const validatorLink = `/accounts/${addressId}`;
   let parsed;
@@ -60,29 +62,30 @@ const ValidatorRow: FC<ValidatorAccount & { index: number }> = ({
       <TableCell data-label={'Validator'}>
         <Address roles={{ validator: true }} value={addressId} name={identityDisplay} url={validatorLink} truncated sx={{ textAlign: 'end' }}/>
       </TableCell>
-      <TableCell data-label='Location'>{parsed}</TableCell>
-      <TableCell data-label='Own Stake'>
+      <TableCell data-label={t('Location')}>{parsed}</TableCell>
+      <TableCell data-label={t('Own Stake')}>
         <FormatBalance value={ownStake} />
       </TableCell>
       {totalStake && (
-        <TableCell data-label='Total Stake'>
+        <TableCell data-label={t('Total Stake')}>
           <FormatBalance value={totalStake} />
         </TableCell>
       )}
-      <TableCell data-label='Commission'>
+      <TableCell data-label={t('Commission')}>
         <Typography>{commission.toFixed(2)} %</Typography>
       </TableCell>
-      <TableCell data-label='cMix ID'>
+      <TableCell data-label={t('cMix ID')}>
         <Typography variant='code'>
           <CmixAddress truncated value={cmixId} />
         </Typography>
       </TableCell>
-      <TableCell data-label='Nominators'>{nominators.length}</TableCell>
+      <TableCell data-label={t('Nominators')}>{nominators.length}</TableCell>
     </TableRow>
   );
 };
 
 const ValidatorsTable = () => {
+  const { t } = useTranslation();
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState<ValidatorFilter>('current');
@@ -146,12 +149,12 @@ const ValidatorsTable = () => {
 
   const labels: ValidatorFilterLabels = useMemo(
     () => ({
-      current: <TabText message={'Current'} count={activeCount === undefined ? '' : activeCount} />,
+      current: <TabText message={t('Current')} count={activeCount === undefined ? '' : activeCount} />,
       waiting: (
-        <TabText message={'Waiting'} count={waitingCount === undefined ? '' : waitingCount} />
+        <TabText message={t('Waiting')} count={waitingCount === undefined ? '' : waitingCount} />
       )
     }),
-    [activeCount, waitingCount]
+    [t, activeCount, waitingCount]
   );
 
   const error = latestEraQuery.error || validatorsQuery.error;
@@ -160,7 +163,7 @@ const ValidatorsTable = () => {
     <Stack spacing={3}>
       <Stack sx={{ mb: 2, ml: -1.5 }} spacing={2}>
         <Typography variant='h2' sx={{ ml: 1.5, fontWeight: 500 }}>
-          Validator
+          {t('Validator')}
         </Typography>
         <Stack sx={{ flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between', alignItems: 'center' }} direction='row' >
           <ValidatorTableControls labels={labels} selected={filter} onSelect={setFilter} />
@@ -169,7 +172,7 @@ const ValidatorsTable = () => {
             <Input
               value={search}
               onChange={setSearch}
-              placeholder='Search by Address / Identity / Cmix ID'
+              placeholder={t('Search by Address / Identity / Cmix ID') ?? ''}
               endAdornment={
                 <InputAdornment position='start'>
                   {validatorsQuery.loading
@@ -184,13 +187,13 @@ const ValidatorsTable = () => {
             <TableHead>
               <TableRow>
                 <TableCell>#</TableCell>
-                <TableCell>Validator</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Own Stake</TableCell>
-                {filter !== 'waiting' && <TableCell>Total Stake</TableCell>}
-                <TableCell>Commission</TableCell>
-                <TableCell>Cmix ID</TableCell>
-                <TableCell>Nominators</TableCell>
+                <TableCell>{t('Validator')}</TableCell>
+                <TableCell>{t('Location')}</TableCell>
+                <TableCell>{t('Own Stake')}</TableCell>
+                {filter !== 'waiting' && <TableCell>{t('Total Stake')}</TableCell>}
+                <TableCell>{t('Commission')}</TableCell>
+                <TableCell>{t('Cmix ID')}</TableCell>
+                <TableCell>{t('Nominators')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

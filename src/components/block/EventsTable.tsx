@@ -7,6 +7,7 @@ import { EVENTS_OF_BLOCK, ListEvents, Event } from '../../schemas/events.schema'
 import { BaselineCell, BaselineTable } from '../Tables';
 import TimeAgoComponent from '../TimeAgo';
 import { usePagination } from '../../hooks';
+import { useTranslation } from 'react-i18next';
 
 const ROWS_PER_PAGE = 10;
 
@@ -55,19 +56,13 @@ const rowsParser = ({
   ];
 };
 
-const headers = [
-  { value: 'event id', props },
-  { value: 'time' },
-  { value: 'action' },
-  { value: 'data' }
-];
-
 type Props = {
   setCount?: (count: number) => void;
   where: Record<string, unknown>;
 };
 
 const EventsTable: FC<Props> = ({ setCount = () => {}, where }) => {
+  const { t } = useTranslation();
   const pagination = usePagination({ rowsPerPage: ROWS_PER_PAGE });
   const { paginate, setCount: setPaginationCount } = pagination;
 
@@ -90,6 +85,13 @@ const EventsTable: FC<Props> = ({ setCount = () => {}, where }) => {
       setPaginationCount(data.agg.aggregate.count);
     }
   }, [data?.agg, setCount, setPaginationCount]);
+
+  const headers = useMemo(() => [
+    { value: t('event id'), props },
+    { value: t('time') },
+    { value: t('action') },
+    { value: t('data') }
+  ], [t]);
 
   return (
     <BaselineTable

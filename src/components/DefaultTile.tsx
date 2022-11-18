@@ -15,7 +15,7 @@ type Props = WithChildren & {
   header?: string | React.ReactNode;
   height?: string | number;
   linkAddress?: string;
-  linkName?: string;
+  linkName?: string | null;
 };
 
 const DefaultTile: FC<Props> = ({

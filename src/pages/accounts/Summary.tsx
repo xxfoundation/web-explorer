@@ -11,6 +11,7 @@ import {
   Typography
 } from '@mui/material';
 import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import Socials from '../../components/Socials';
 import { ListenForAccountMetrics, LISTEN_FOR_ACCOUNT_METRICS } from '../../schemas/chaindata.schema';
@@ -32,6 +33,7 @@ const DarkSubtitle = styled(Typography)(({ theme }) => ({
 }));
 
 const SummaryInfo = () => {
+  const { t } = useTranslation();
   const { data, loading } = useQuery<ListenForAccountMetrics>(
     LISTEN_FOR_ACCOUNT_METRICS
   );
@@ -39,11 +41,11 @@ const SummaryInfo = () => {
   return (
     <Stack direction='row' justifyContent={{ md: 'space-between', sm: 'flex-start' }} spacing={5}>
       <Stack>
-        <SubduedHeader>decimals</SubduedHeader>
-        <DarkSubtitle>9</DarkSubtitle>
+        <SubduedHeader>{t('decimals')}</SubduedHeader>
+        <DarkSubtitle>{t('9')}</DarkSubtitle>
       </Stack>
       <Stack>
-        <SubduedHeader>holders</SubduedHeader>
+        <SubduedHeader>{t('holders')}</SubduedHeader>
         <DarkSubtitle>
           {loading ? (
             <Skeleton />
@@ -55,7 +57,7 @@ const SummaryInfo = () => {
         </DarkSubtitle>
       </Stack>
       <Stack>
-        <SubduedHeader>transfers</SubduedHeader>
+        <SubduedHeader>{t('transfers')}</SubduedHeader>
         <DarkSubtitle>
           {loading ? (
             <Skeleton />

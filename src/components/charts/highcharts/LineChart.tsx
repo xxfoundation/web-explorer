@@ -7,6 +7,8 @@ import Highcharts, {
 } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC,useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { theme } from '../../../themes/footer';
 import Error from '../../Error';
 import { DataPoint } from './types';
@@ -47,6 +49,7 @@ const LineChart: FC<Props> = ({
   x,
   yAxisTitle = ''
 }) => {
+  const { t } = useTranslation();
   const options = useMemo<Options>(() => {
     const { maxX, minX } = x || calculateMaximums(data);
     return {
@@ -74,14 +77,13 @@ const LineChart: FC<Props> = ({
       legend: { enabled: false },
       xAxis: {
         title: {
-          text: 'ERA',
+          text: t('ERA') ?? '',
           align: 'low',
           textAlign: 'center',
           style: { fontWeight: 'bolder' }
         },
         labels: { y: 20, formatter: labelFormatters?.xAxis },
         tickWidth: 1,
-        // TODO tickPixelInterval: pixelIntervalX, create a parameter to control this better
         offset: 10,
         min: minX,
         max: maxX,
@@ -108,13 +110,14 @@ const LineChart: FC<Props> = ({
             click: onClick,
           },
           type: 'line',
-          name: 'ERA',
+          name: t('ERA') ?? '',
           marker: { symbol: 'circle' },
           data
         }
       ]
     };
   }, [
+    t,
     data,
     labelFormatters?.xAxis,
     labelFormatters?.yAxis,

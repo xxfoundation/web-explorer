@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import { theme } from '../../themes/default';
@@ -16,6 +18,7 @@ import ExtrinsicsBarChart from './ExtrinsicsBarChart';
 import ExtrinsicsTable from './ExtrinsicsTable';
 
 const HistoryPage = () => {
+  const { t } = useTranslation();
   const [totalOfExtrinsics, setTotalOfExtrinsics] = useState<number>();
   const [withTimestampEvents, setWithTimestampEvents] = useState<boolean>(false);
 
@@ -28,7 +31,7 @@ const HistoryPage = () => {
         direction={'row'}
         sx={{ mb: 5 }}
       >
-        <Typography variant='h1'>Extrinsics</Typography>
+        <Typography variant='h1'>{t('Extrinsics')}</Typography>
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled>
@@ -50,7 +53,10 @@ const HistoryPage = () => {
           >
             <div style={{ margin: '0 0 1em 0', display: 'inline-flex' }}>
               <FunctionsIcon />
-              <Tooltip title='Total Number of Extrinsics' placement='top' arrow>
+              <Tooltip
+                title={t('Total Number of Extrinsics')}
+                placement='top'
+                arrow>
                 <Typography>= {totalOfExtrinsics}</Typography>
               </Tooltip>
             </div>
@@ -67,7 +73,7 @@ const HistoryPage = () => {
             />
           </Stack>
         )}
-        <span hidden>filters placeholder</span>
+        <span hidden>{t('filters placeholder')}</span>
         <ExtrinsicsTable
           setTotalOfExtrinsics={setTotalOfExtrinsics}
           withTimestampEvents={withTimestampEvents}

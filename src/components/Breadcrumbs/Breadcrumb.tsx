@@ -1,6 +1,10 @@
+
+
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import React from 'react';
+import React, { FC } from 'react';
 import { useLocation, useParams, Params } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import { BreadcrumbStyled, CustomLink } from './Breadcrumb.styled';
 
 type ParamsType = { params: Readonly<Params> };
@@ -8,16 +12,24 @@ type ParamsType = { params: Readonly<Params> };
 const truncateCrumb = (text = '') =>
   text.length > 15 ? `${text?.slice(0, 4)}...${text.slice(-4)}` : text;
 
-const blockchainHome = () => <CustomLink to='/'>Blockchain</CustomLink>;
-const blockNumber = ({ params: { number } }: ParamsType) => (
+const BlockchainHome: React.FC<ParamsType> = () => {
+  const { t } = useTranslation();
+
+  return (
+    <CustomLink to='/'>{t('Blockchain')}</CustomLink>
+  )
+};
+
+const BlockNumber: FC<ParamsType> = ({ params: { number } }: ParamsType) => (
   <CustomLink to={`/blocks/${number}`}>{truncateCrumb(number?.toString())}</CustomLink>
 );
+
 const crumbRoutes: Record<string, React.FC<ParamsType>> = {
-  blocks: blockchainHome,
-  version: blockNumber,
-  extrinsics: blockchainHome,
-  transfers: blockchainHome,
-  events: blockchainHome
+  blocks: BlockchainHome,
+  version: BlockNumber,
+  extrinsics: BlockchainHome,
+  transfers: BlockchainHome,
+  events: BlockchainHome
 };
 
 const crumbSplats: Record<string, React.FC<ParamsType>> = {

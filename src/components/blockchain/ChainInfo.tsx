@@ -1,6 +1,7 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import { useQuery } from '@apollo/client';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ChainInfoLink, Data, Item } from './ChainInfo.styles';
 import { InfoOutlined } from '@mui/icons-material';
@@ -11,7 +12,7 @@ import { ListenForMetrics, LISTEN_FOR_METRICS } from '../../schemas/chaindata.sc
 
 const ChainInfoCard: FC<{
   title: string;
-  tooltip?: string;
+  tooltip?: string | null;
   value?: React.ReactNode;
   path?: string;
 }> = ({ path, title, tooltip, value }) => {
@@ -36,7 +37,15 @@ const ChainInfoCard: FC<{
 };
 
 const ChainInfo = () => {
+  const { t } = useTranslation();
   const metricsSubscription = useQuery<ListenForMetrics>(LISTEN_FOR_METRICS);
+
+  const accountHoldersAmount = useMemo(
+    () => metricsSubscription.data?.numAccounts.aggregate.count && (
+      metricsSubscription.data?.numAccounts.aggregate.count - metricsSubscription.data?.numFakeAccounts.aggregate.count
+    ),
+    [metricsSubscription.data?.numAccounts.aggregate.count, metricsSubscription.data?.numFakeAccounts.aggregate.count]
+  );
 
   if (metricsSubscription.error) {
     return <Error type='data-unavailable' />;
@@ -45,28 +54,39 @@ const ChainInfo = () => {
   return (
     <Box className='blockchain-component-chainInfo' mb={7}>
       <Typography variant='h3' gutterBottom>
-        Chain data
+        {t('Chain data')}
       </Typography>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
-        <ChainInfoCard title='Finalized Blocks' value={metricsSubscription.data?.finalizedBlocks.aggregate.count} path='/blocks' />
-        <ChainInfoCard title='Active Era' value={metricsSubscription.data?.activeEra[0].era} />
-        <ChainInfoCard title='Transfers' value={metricsSubscription.data?.numTransfers.aggregate.count} path='/transfers' />
-        <ChainInfoCard title='Account Holders' value={metricsSubscription.data?.numAccounts.aggregate.count && (metricsSubscription.data?.numAccounts.aggregate.count - metricsSubscription.data?.numFakeAccounts.aggregate.count)} path='/accounts' />
         <ChainInfoCard
-          title='Total Issuance'
+          title={t('Finalized Blocks')}
+          value={metricsSubscription.data?.finalizedBlocks.aggregate.count}
+          path='/blocks' />
+        <ChainInfoCard
+          title={t('Active Era')}
+          value={metricsSubscription.data?.activeEra[0].era} />
+        <ChainInfoCard
+          title={t('Transfers')}
+          value={metricsSubscription.data?.numTransfers.aggregate.count}
+          path='/transfers' />
+        <ChainInfoCard
+          title={t('Account Holders')}
+          value={accountHoldersAmount}
+          path='/accounts' />
+        <ChainInfoCard
+          title={t('Total Issuance')}
           tooltip={
-            'Defined by the Total Supply minus the xx issued as an ERC1404 and not claimed yet (Other > Claims).'
+            t('Defined by the Total Supply minus the xx issued as an ERC1404 and not claimed yet (Other > Claims).')
           }
           value={metricsSubscription.data?.economics[0].totalIssuance && <FormatBalance value={metricsSubscription.data?.economics[0].totalIssuance} />}
         />
-        <ChainInfoCard title='Nominators' value={metricsSubscription.data?.numNominators.aggregate.count} />
+        <ChainInfoCard title={t('Nominators')} value={metricsSubscription.data?.numNominators.aggregate.count} />
         <ChainInfoCard
-          title='Validators'
+          title={t('Validators')}
           path='/staking'
           value={metricsSubscription.data?.numActiveValidators.aggregate.count}
         />
         <ChainInfoCard
-          title='Circulating AGR'
+          title={t('Circulating AGR')}
           tooltip={
             'Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
           }

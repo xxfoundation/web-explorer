@@ -1,3 +1,5 @@
+import type { TFunction } from 'i18next';
+
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { useQuery, useSubscription } from '@apollo/client';
@@ -6,7 +8,7 @@ import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
 import Link from '../../components/Link';
-import { BaselineCell, BaseLineCellsWrapper, BaselineTable, HeaderCell, HeaderCellsWrapper } from '../../components/Tables';
+import { BaselineCell, BaseLineCellsWrapper, BaselineTable, HeaderCell, headerCellsWrapper } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
 import {
   GET_BLOCK_PRODUCERS,
@@ -22,8 +24,9 @@ import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import RefreshButton from '../../components/buttons/Refresh';
 import useSessionState from '../../hooks/useSessionState';
+import { useTranslation } from 'react-i18next';
 
-const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
+const rowParser = (t: TFunction) => (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
   return BaseLineCellsWrapper([
     <Link to={`/blocks/${block.number}`}>{block.number}</Link>,
     <BlockStatusIcon status={block.finalized ? 'successful' : 'pending'} />,
@@ -32,7 +35,7 @@ const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
     block.totalExtrinsics,
     <>
       {!block.author ? (
-        'Genesis'
+        t('Genesis')
       ) : (
         <Address
           truncated
@@ -48,6 +51,7 @@ const rowParser = (block: ListOfBlocksOrdered['blocks'][0]): BaselineCell[] => {
 };
 
 const BlocksTable: FC = () => {
+  const { t } = useTranslation();
   /* ----------------------- Initialize State Variables ----------------------- */
   const [range, setRange] = useSessionState<Range>('blocks.range', {
     from: null,
@@ -92,21 +96,21 @@ const BlocksTable: FC = () => {
   /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo<HeaderCell[]>(
     () =>
-      HeaderCellsWrapper([
-        'block',
-        ['Status', <BooleanFilter
-          label='Status'
+      headerCellsWrapper([
+        t('block'),
+        [t('Status'), <BooleanFilter
+          label={t('Status')}
           onChange={setStatusFilter}
-          toggleLabel={(v) => (v ? 'Success' : 'Pending')}
+          toggleLabel={(v) => (v ? t('Success') : t('Pending'))}
           value={statusFilter}
         />],
-        'era',
-        ['Time', <DateRangeFilter onChange={setRange} value={range} />],
-        'extrinsics',
-        ['block producer', (
+        t('era'),
+        [t('Time'), <DateRangeFilter onChange={setRange} value={range} />],
+        t('extrinsics'),
+        [t('block producer'), (
           <ValuesFilter
             availableValues={possibleBlockProducers}
-            buttonLabel='block producer'
+            buttonLabel={t('block producer')}
             search={blockProducerSearch}
             transformValue={(v) => <Hash value={v} truncated />}
             onSearchChange={setBlockProducerSearch}
@@ -115,9 +119,10 @@ const BlocksTable: FC = () => {
             onChange={setBlockProducers}
           />
         )],
-        'block hash'
+        t('block hash')
       ]),
     [
+      t,
       blockProducerSearch,
       selectedBlockProducers,
       possibleBlockProducers,
@@ -139,7 +144,7 @@ const BlocksTable: FC = () => {
       }
     }
   );
-  const rows = useMemo(() => (data?.blocks || []).map(rowParser), [data]);
+  const rows = useMemo(() => (data?.blocks || []).map(rowParser(t)), [data?.blocks, t]);
 
   /* ---------------------------- Setup Pagination ---------------------------- */
   const { reset } = pagination;

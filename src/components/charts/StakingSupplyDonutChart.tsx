@@ -1,14 +1,15 @@
 import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types';
+import type { TFunction } from 'i18next';
 
 import React, { FC, useMemo, useRef } from 'react';
-import { Economics, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
-
 import { Doughnut } from 'react-chartjs-2';
 import { Box, Stack, Typography } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import { mapValues, pick } from 'lodash';
 import { BN } from '@polkadot/util/bn';
+import { useTranslation } from 'react-i18next';
 
+import { Economics, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 import Legend from './Legend';
 import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typographies';
 import FormatBalance from '../FormatBalance';
@@ -17,16 +18,8 @@ import useCustomTooltip from '../../hooks/useCustomTooltip';
 import Error from '../Error';
 import Loading from '../Loading';
 
-enum DataLabels {
-  Staked = 'Staked',
-  Liquid = 'Liquid',
-  Unbonding = 'Unbonding',
-  Vesting = 'Vesting',
-  InactiveStaked = 'Staked (inactive)'
-}
-
 type Data = {
-  label: DataLabels;
+  label: string;
   value: BN;
   percentage: string;
   color: string;
@@ -35,7 +28,7 @@ type Data = {
 
 const fields: (keyof Economics)[] = ['staked', 'inactiveStaked', 'unbonding', 'stakeableSupply', 'liquid'];
 
-export const extractChartData = (economics?: Economics) => {
+export const extractChartData = (t: TFunction, economics?: Economics) => {
   if (!economics) {
     return {
       legendData: [],
@@ -62,31 +55,31 @@ export const extractChartData = (economics?: Economics) => {
   const serieA: Data[] = [
     {
       color: '#13EEF9',
-      label: DataLabels.Liquid,
+      label: t('Liquid'),
       value: liquid,
       percentage: calculatePercentage(liquid)
     },
     {
       color: '#00A2D6',
-      label: DataLabels.Vesting,
+      label: t('Vesting'),
       value: vesting,
       percentage: calculatePercentage(vesting)
     },
     {
       color: '#6F74FF',
-      label: DataLabels.Staked,
+      label: t('Staked'),
       value: staked,
       percentage: calculatePercentage(staked)
     },
     {
       color: '#C0C0C0',
-      label: DataLabels.InactiveStaked,
+      label: t('Staked (inactive)'),
       value: inactiveStaked,
       percentage: calculatePercentage(inactiveStaked)
     },
     {
       color: '#59BD1C',
-      label: DataLabels.Unbonding,
+      label: t('Unbonding'),
       value: unbonding,
       percentage: calculatePercentage(unbonding)
     }
@@ -114,12 +107,16 @@ export const extractChartData = (economics?: Economics) => {
 type Options = ChartProps<'doughnut'>['options'];
 
 const StakingSupplyDonutChart: FC = () => {
+  const { t } = useTranslation();
   const subscription = useQuery<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
   const economics = subscription.data?.economics[0];
   const chartRef = useRef<ChartJSOrUndefined<'doughnut', Data[]>>(null);
   const customTooltip = useCustomTooltip(chartRef);
 
-  const { data, legendData } = useMemo(() => extractChartData(economics), [economics]);
+  const { data, legendData } = useMemo(
+    () => extractChartData(t, economics),
+    [economics, t]
+  );
 
   const chartOptions = useMemo<Options>(
     () => ({
@@ -159,7 +156,9 @@ const StakingSupplyDonutChart: FC = () => {
       <Stack style={{ minWidth: '33%' }} spacing={2}>
         {economics?.stakeableSupply && (
           <Box>
-            <LegendTypographyHeader>Stakeable Supply</LegendTypographyHeader>
+            <LegendTypographyHeader>
+              {t('Stakeable Supply')}
+            </LegendTypographyHeader>
             <LegendTypographySubHeaders>
               <FormatBalance value={economics.stakeableSupply} />
             </LegendTypographySubHeaders>

@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { Economics } from '../../schemas/economics.schema';
 import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types';
+import type { TFunction } from 'i18next';
 
 import { useQuery } from '@apollo/client';
 import React, { useRef, useMemo } from 'react';
@@ -17,20 +18,12 @@ import useCustomTooltip from '../../hooks/useCustomTooltip';
 import { LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 import Error from '../Error';
 import Loading from '../Loading';
+import { useTranslation } from 'react-i18next';
 
 type Options = ChartProps<'doughnut'>['options'];
 
-enum DataLabels {
-  Circulating = 'Circulating',
-  Vesting = 'Vesting',
-  Rewards = 'Rewards',
-  Others = 'Other',
-  StakeableSupply = 'Stakeable',
-  StakeableSupplyOther = 'Other'
-}
-
 type Data = {
-  label: DataLabels;
+  label: string;
   value: BN;
   percentage: string;
   color: string;
@@ -56,48 +49,52 @@ const keysCollapsedUnderOther: (keyof Economics)[] = [
 
 const tooltipHeaderWidth = 5;
 const tooltipBalanceaWidth = 7;
-const OthersTooltipExtension: FC<Economics> = (economics) => (
-  <Grid container sx={{ mt: 1, minWidth: '10rem', fontSize: '12px' }}>
-    <Grid item xs={tooltipHeaderWidth}>
-      Treasury &nbsp;
-    </Grid>
-    <Grid item xs={tooltipBalanceaWidth}>
-      <FormatBalance value={economics.treasury} />
-    </Grid>
-    <Grid item xs={tooltipHeaderWidth}>
-      Canary &nbsp;
-    </Grid>
-    <Grid item xs={tooltipBalanceaWidth}>
-      <FormatBalance value={economics.canary} />
-    </Grid>
-    <Grid item xs={tooltipHeaderWidth}>
-      Sales &nbsp;
-    </Grid>
-    <Grid item xs={tooltipBalanceaWidth}>
-      <FormatBalance value={economics.sales} />
-    </Grid>
-    <Grid item xs={tooltipHeaderWidth}>
-      Claims &nbsp;
-    </Grid>
-    <Grid item xs={tooltipBalanceaWidth}>
-      <FormatBalance value={economics.claims} />
-    </Grid>
-    <Grid item xs={tooltipHeaderWidth}>
-      Bridge &nbsp;
-    </Grid>
-    <Grid item xs={tooltipBalanceaWidth}>
-      <FormatBalance value={economics.bridge} />
-    </Grid>
-    <Grid item xs={tooltipHeaderWidth}>
-      Custody &nbsp;
-    </Grid>
-    <Grid item xs={tooltipBalanceaWidth}>
-      <FormatBalance value={economics.custody} />
-    </Grid>
-  </Grid>
-);
+const OthersTooltipExtension: FC<Economics> = (economics) => {
+  const { t } = useTranslation();
 
-const extractChartData = (economics?: Economics) => {
+  return (
+    <Grid container sx={{ mt: 1, minWidth: '10rem', fontSize: '12px' }}>
+      <Grid item xs={tooltipHeaderWidth}>
+        {t('Treasury')} &nbsp;
+      </Grid>
+      <Grid item xs={tooltipBalanceaWidth}>
+        <FormatBalance value={economics.treasury} />
+      </Grid>
+      <Grid item xs={tooltipHeaderWidth}>
+        {t('Canary')} &nbsp;
+      </Grid>
+      <Grid item xs={tooltipBalanceaWidth}>
+        <FormatBalance value={economics.canary} />
+      </Grid>
+      <Grid item xs={tooltipHeaderWidth}>
+        {t('Sales')} &nbsp;
+      </Grid>
+      <Grid item xs={tooltipBalanceaWidth}>
+        <FormatBalance value={economics.sales} />
+      </Grid>
+      <Grid item xs={tooltipHeaderWidth}>
+        {t('Claims')} &nbsp;
+      </Grid>
+      <Grid item xs={tooltipBalanceaWidth}>
+        <FormatBalance value={economics.claims} />
+      </Grid>
+      <Grid item xs={tooltipHeaderWidth}>
+        {t('Bridge')} &nbsp;
+      </Grid>
+      <Grid item xs={tooltipBalanceaWidth}>
+        <FormatBalance value={economics.bridge} />
+      </Grid>
+      <Grid item xs={tooltipHeaderWidth}>
+        {t('Custody')} &nbsp;
+      </Grid>
+      <Grid item xs={tooltipBalanceaWidth}>
+        <FormatBalance value={economics.custody} />
+      </Grid>
+    </Grid>
+  );
+}
+
+const extractChartData = (t: TFunction, economics?: Economics) => {
   if (!economics) {
     return {
       legendData: [],
@@ -130,25 +127,25 @@ const extractChartData = (economics?: Economics) => {
   const serieA: Data[] = [
     {
       color: '#13EEF9',
-      label: DataLabels.Circulating,
+      label: t('Circulating'),
       value: circulating,
       percentage: calculatePercentage(circulating)
     },
     {
       color: '#00A2D6',
-      label: DataLabels.Vesting,
+      label: t('Vesting'),
       value: vesting,
       percentage: calculatePercentage(vesting)
     },
     {
       color: '#6F74FF',
-      label: DataLabels.Rewards,
+      label: t('Rewards'),
       value: rewards,
       percentage: calculatePercentage(rewards)
     },
     {
       color: '#59BD1C',
-      label: DataLabels.Others,
+      label: t('Other'),
       value: others,
       percentage: calculatePercentage(others)
     }
@@ -159,13 +156,13 @@ const extractChartData = (economics?: Economics) => {
   const serieB: Data[] = [
     {
       color: '#FFC908',
-      label: DataLabels.StakeableSupply,
+      label: t('Stakeable'),
       value: stakeableSupply,
       percentage: calculatePercentage(stakeableSupply)
     },
     {
       color: '#FFFFFF',
-      label: DataLabels.StakeableSupplyOther,
+      label: t('Other'),
       value: other,
       percentage: calculatePercentage(other),
       hideTooltip: true
@@ -200,12 +197,16 @@ const extractChartData = (economics?: Economics) => {
 };
 
 const TotalIssuanceDonutChart = () => {
+  const { t } = useTranslation();
   const subscription = useQuery<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
   const economics = subscription.data?.economics[0];
 
   const chartRef = useRef<ChartJSOrUndefined<'doughnut', Data[]>>(null);
   const customTooltip = useCustomTooltip(chartRef);
-  const { data, legendData } = useMemo(() => extractChartData(economics), [economics]);
+  const { data, legendData } = useMemo(
+    () => extractChartData(t, economics),
+    [t, economics]
+  );
 
   const chartOptions = useMemo<Options>(
     () => ({
@@ -247,7 +248,7 @@ const TotalIssuanceDonutChart = () => {
             <Typography variant={'body1'}>
               {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value} />}
             </Typography>
-            {economics && customTooltip.data?.label === DataLabels.Others && (
+            {economics && customTooltip.data?.label === 'Other' && (
               <OthersTooltipExtension {...economics} />
             )}
           </LightTooltip>
@@ -256,7 +257,7 @@ const TotalIssuanceDonutChart = () => {
       <Stack style={{ minWidth: '33%' }} spacing={2}>
         {economics?.totalSupply && (
           <Box>
-            <LegendTypographyHeader>Total Supply</LegendTypographyHeader>
+            <LegendTypographyHeader>{t('Total Supply')}</LegendTypographyHeader>
             <LegendTypographySubHeaders>
               <FormatBalance value={economics.totalSupply} />
             </LegendTypographySubHeaders>

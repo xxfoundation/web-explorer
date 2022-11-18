@@ -1,18 +1,20 @@
 import { useTheme, Badge, Button, Stack, TextField } from '@mui/material';
 
 import React, { useCallback } from 'react';
-import useInput from '../../../hooks/useInput';
+import { useTranslation } from 'react-i18next';
 
+import useInput from '../../../hooks/useInput';
 import Dropdown from '../../DropdownFilter';
 
 
 export type Props = {
-  label: string | React.ReactElement;
+  label: string | React.ReactElement | null;
   onChange: (v?: string) => void;
   value?: string;
 }
 
 const GeneralFilter = ({ label, onChange, value }: Props) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [filter, onFilterChange, setFilter] = useInput(value);
 
@@ -41,7 +43,7 @@ const GeneralFilter = ({ label, onChange, value }: Props) => {
     }>
       <Stack padding={2}>
         <TextField
-          placeholder='Filter'
+          placeholder={t('Filter') ?? ''}
           sx={{
             mb: 1,
             span: {

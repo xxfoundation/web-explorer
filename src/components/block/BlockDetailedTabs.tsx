@@ -1,6 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { Skeleton } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { GetBlockCounts, GET_BLOCK_COUNTS } from '../../schemas/blocks.schema';
 import PaperStyled from '../Paper/PaperWrap.styled';
 import { TableSkeleton } from '../Tables/TableSkeleton';
@@ -14,6 +16,7 @@ type Props = {
 };
 
 const BlockDetailedTabs: React.FC<Props> = ({ blockNumber, loading }) => {
+  const { t } = useTranslation();
   const [extrinsicsCount, setExtrinsicsCount] = useState<number>();
   const [eventCount, setEventCount] = useState<number>();
   const query = useQuery<GetBlockCounts>(GET_BLOCK_COUNTS, { variables: { blockNumber } });
@@ -55,7 +58,7 @@ const BlockDetailedTabs: React.FC<Props> = ({ blockNumber, loading }) => {
 
   return (
     <PaperStyled>
-      <TabsWithPanels panels={panels} tabsLabel='block event tabs' />
+      <TabsWithPanels panels={panels} tabsLabel={t('block event tabs')} />
     </PaperStyled>
   );
 };

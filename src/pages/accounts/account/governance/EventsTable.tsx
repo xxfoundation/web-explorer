@@ -1,4 +1,4 @@
-import {BaselineCell, BaselineTable, HeaderCellsWrapper} from '../../../../components/Tables';
+import {BaselineCell, BaselineTable, headerCellsWrapper} from '../../../../components/Tables';
 import React, {useMemo} from 'react';
 import {Event} from '../../../../schemas/events.schema';
 import Link from '../../../../components/Link';
@@ -28,7 +28,7 @@ const rowsParser = ({ blockNumber, call, data, doc, index, timestamp }: Event): 
     { value: `${call}` },
     { value: <DataTile headers={processEventDoc(doc)} values={JSON.parse(data)} /> }];
 };
-const headers = HeaderCellsWrapper(['ID', 'Block', 'Time', 'Call', 'Data']);
+const headers = headerCellsWrapper(['ID', 'Block', 'Time', 'Call', 'Data']);
 
 const generateWhere = (accountId: string, entity: string) => {
   if (entity === 'councilElections') {

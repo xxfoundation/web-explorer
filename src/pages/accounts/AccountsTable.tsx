@@ -1,7 +1,10 @@
+import type { TFunction } from 'i18next';
+
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Tooltip, Typography } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { theme } from '../../themes/default';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -20,6 +23,7 @@ type RoleFilters = Record<string, boolean>;
 type Filters = { roles: RoleFilters };
 
 const RolesTooltipContent: FC<{ roles: string[] }> = ({ roles }) => {
+  const { t } = useTranslation();
   const labels = useMemo(
     () =>
       roles.slice(1).map((role, index) => <span key={index}>{roleToLabelMap[role] ?? role}</span>),
@@ -28,7 +32,7 @@ const RolesTooltipContent: FC<{ roles: string[] }> = ({ roles }) => {
   return (
     <>
       <Typography fontSize={'12px'} textTransform={'uppercase'} paddingBottom={'10px'}>
-        additional roles
+        {t('additional roles')}
       </Typography>
       <Stack fontSize={'12px'} spacing={2}>
         {labels}
@@ -37,11 +41,11 @@ const RolesTooltipContent: FC<{ roles: string[] }> = ({ roles }) => {
   );
 };
 
-const rolesToCell = (roles: string[]) => {
+const rolesToCell = (t: TFunction, roles: string[]) => {
   return !roles.length ? (
     <>
       <AccountBoxIcon />
-      <span>none</span>
+      <span>{t('none')}</span>
     </>
   ) : (
     <>
@@ -58,6 +62,7 @@ const rolesToCell = (roles: string[]) => {
 };
 
 const accountToRow = (
+  t: TFunction,
   item: PartialAccount,
   rank: number,
   filters: RoleFilters
@@ -94,7 +99,7 @@ const accountToRow = (
           justifyContent='flex-start'
           divider={<Divider flexItem variant='middle' orientation='vertical' />}
         >
-          {rolesToCell(roles)}
+          {rolesToCell(t, roles)}
         </Stack>
       ),
       props: { colSpan: 2 }
@@ -106,37 +111,43 @@ const accountToRow = (
 };
 
 const useHeaders = () => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState<string>();
   const [roleFilters, setRoleFilters] = useSessionState<RoleFilters>('accounts.roleFilters', {});
 
   const headers = useMemo<HeaderCell[]>(
     () => [
-      { value: 'Rank' },
+      { value: t('Rank') },
       {
-        label: 'Account',
-        value: <GeneralFilter label='Account' value={search} onChange={setSearch} />
+        label: t('Account'),
+        value: (
+          <GeneralFilter
+            label={t('Account')}
+            value={search}
+            onChange={setSearch} />
+        )
       },
       {
-        label: 'Extrinsics',
+        label: t('Extrinsics'),
         value: (
           <Tooltip
-            title='An Extrinsic is defined by any action that is performed by an user of the xx network blockchain.'
+            title={t('An Extrinsic is defined by any action that is performed by an user of the xx network blockchain.')}
             arrow
           >
-            <Typography variant='h4'>extrinsics</Typography>
+            <Typography variant='h4'>{t('extrinsics')}</Typography>
           </Tooltip>
         )
       },
       {
-        label: 'Role',
+        label: t('Role'),
         value: <HoldersRolesFilters onChange={setRoleFilters} filters={roleFilters} />,
         props: { colSpan: 2 }
       },
-      { value: 'Locked balance' },
-      { value: 'Total balance' },
-      { value: 'When Created' }
+      { value: t('Locked balance') },
+      { value: t('Total balance') },
+      { value: t('When Created') }
     ],
-    [roleFilters, search, setRoleFilters]
+    [roleFilters, search, setRoleFilters, t]
   );
 
   return {
@@ -156,6 +167,7 @@ const buildOrClause = (filters: Filters) =>
   ].filter((v) => !!v);
 
 const AccountsTable: FC = () => {
+  const { t } = useTranslation();
   const { filters, headers, search } = useHeaders();
   const orClause = useMemo(
     () => buildOrClause(filters),
@@ -187,18 +199,19 @@ const AccountsTable: FC = () => {
     () =>
       (data?.account || []).map(
         (account, index) => accountToRow(
+          t,
           account,
           index + 1 + offset,
           filters.roles
         )
       ),
-    [data?.account, filters, offset]
+    [t, data?.account, filters, offset]
   );
 
   return (
     <PaperStyled>
       <Typography variant='h3' sx={{ mb: 4, px: '3px' }}>
-        Account Holders
+        {t('Account Holders')}
       </Typography>
       <BaselineTable
         error={!!error}
