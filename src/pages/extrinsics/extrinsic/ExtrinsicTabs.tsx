@@ -2,12 +2,15 @@ import React, { FC, useMemo, useState } from 'react';
 import EventsTable from '../../../components/block/EventsTable';
 import PaperWrapStyled from '../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../components/Tabs';
+import { NestedCall } from '../../../schemas/extrinsics.schema';
 import TransferTable from '../../transfers/TransfersTable';
+import CallsTable from './CallsTable';
 
-const ExtrinsicTabs: FC<{ transferCount: number; blockNumber: number; index: number;}> = ({
+const ExtrinsicTabs: FC<{ transferCount: number; blockNumber: number; index: number; nestedCalls: Array<NestedCall> | null; }> = ({
   blockNumber,
   index,
-  transferCount
+  nestedCalls,
+  transferCount,
 }) => {
   const [eventCount, setEventCount] = useState<number>();
   const panels = useMemo(() => {
@@ -35,11 +38,17 @@ const ExtrinsicTabs: FC<{ transferCount: number; blockNumber: number; index: num
             }}
           />
         )
+      },
+      {
+        label: <TabText message='calls' count={nestedCalls?.length || 0} />,
+        content: (
+          <CallsTable data={nestedCalls} />
+        )
       }
     ];
 
     return tabs;
-  }, [blockNumber, eventCount, index, transferCount]);
+  }, [blockNumber, eventCount, index, nestedCalls, transferCount]);
 
   return (
     <PaperWrapStyled>

@@ -4,7 +4,6 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 
-import BlockStatusIcon from '../../../../components/block/BlockStatusIcon';
 import Address from '../../../../components/Hash/XXNetworkAddress';
 import Hash from '../../../../components/Hash';
 import Link from '../../../../components/Link';
@@ -21,6 +20,7 @@ import ParametersFragment from './ParametersFragment';
 import FormatBalance from '../../../../components/FormatBalance';
 import { BN_ZERO } from '@polkadot/util';
 import CodeDisplay from '../../../../components/CodeDisplay';
+import StatusMessage from '../../../../components/blockchain/StatusMessage';
 
 type Props = {
   extrinsic: Extrinsic;
@@ -64,23 +64,10 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryHeader>Result</SummaryHeader>
         <SummaryValue>
           <Stack direction='row' spacing={1} alignItems='center'>
-            <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />
-            &nbsp;&nbsp;{extrinsic.success ? 'Success' : 'Failure'}
+            <StatusMessage status={extrinsic.success ? 'successful' : 'failed'} message={extrinsic.errorMsg}/>
           </Stack>
         </SummaryValue>
       </SummaryEntry>
-      {!extrinsic.success && (
-        <SummaryEntry>
-          <SummaryHeader>Failure Message</SummaryHeader>
-          <SummaryValue>
-            <WithCopy tooltip value={extrinsic.errorMsg}>
-              <Typography variant='code' sx={{ fontSize: 18 }} color='red'>
-                {extrinsic.errorMsg}
-              </Typography>
-            </WithCopy>
-          </SummaryValue>
-        </SummaryEntry>
-      )}
       {extrinsic.fee !== null && (
         <SummaryEntry>
           <SummaryHeader>Fee</SummaryHeader>

@@ -47,7 +47,6 @@ const locationString = (geoBin: string, city: string, country: string) => {
 };
 
 const ValidatorSummary: FC<{ active: boolean, info?: ValidatorInfo }> = ({ active, info }) => {
-
   const location = useMemo(() => {
     if (!info?.location) {
       return ' - '
