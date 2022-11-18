@@ -56,19 +56,19 @@ export const SummaryValue = styled(MuiCell)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.grey[500],
   [theme.breakpoints.up('sm')]: {
-    paddingLeft: '1.5rem',
-    paddingRight: '1.5rem'
+    paddingLeft: '1rem',
+    paddingRight: '1rem'
   },
   [theme.breakpoints.up('md')]: {
-    paddingLeft: '3rem',
-    paddingRight: '3rem'
+    paddingLeft: '2rem',
+    paddingRight: '2rem'
   },
   border: 'none',
   fontWeight: 400
 }));
 
 export const SummaryHeader = styled(SummaryValue)(({ theme }) => ({
-  width: '6rem',
+  width: '8rem',
   color: theme.palette.grey[700],
   fontWeight: 700,
   backgroundColor: theme.palette.grey[100],
