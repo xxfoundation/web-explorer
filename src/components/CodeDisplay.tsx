@@ -13,11 +13,20 @@ const CodeDisplayComponent = styled(Box)(({ theme }) => ({
   borderWidth: '1px',
   background: 'rgb(0 0 0 / 4%)',
   overflowY: 'auto',
+  maxWidth: '30rem',
+  [theme.breakpoints.down('lg')]: {
+    overflow: 'auto',
+    maxWidth: '22rem'
+  },
   [theme.breakpoints.down('md')]: {
+    fontSize: '0.7rem',
+    overflow: 'auto',
+    maxWidth: '15rem'
+  },
+  [theme.breakpoints.down('sm')]: {
     fontSize: '0.5rem',
     overflow: 'auto',
-    maxWidth: '8rem',
-    marginLeft: '1rem'
+    maxWidth: '10rem'
   },
 }));
 

@@ -28,6 +28,12 @@ const CallsTable: FC<Props> = ({ data }) => {
             loading={data === null}
             headers={headers}
             rows={rows}
+            tableProps={
+              {
+                size: 'small',
+                sx: {fontSize: '10px'}
+              }
+            }
           />
         </>
       );
