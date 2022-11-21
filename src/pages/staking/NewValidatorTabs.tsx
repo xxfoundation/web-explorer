@@ -59,7 +59,12 @@ const ValidatorTabs = () => {
       ]
       : renderTabs()
   }
-  return <TabsWithPanels panels={myTabs()} tabsLabel='validator tabs'/>
+  return (
+    <div>
+      <h1>Validator</h1>
+      <TabsWithPanels panels={myTabs()} tabsLabel='validator tabs'/>
+    </div>
+  )
 }
 
 export default ValidatorTabs;

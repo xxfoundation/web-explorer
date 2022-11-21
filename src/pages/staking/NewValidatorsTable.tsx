@@ -12,6 +12,7 @@ import useInput from '../../hooks/useInput';
 import Address from '../../components/Hash/XXNetworkAddress';
 import FormatBalance from '../../components/FormatBalance';
 import CmixAddress from '../../components/Hash/CmixAddress';
+import {Input} from '@mui/material';
 
 
 const rowsParser = ({
@@ -44,26 +45,26 @@ const rowsParser = ({
   ];
 };
 
-/* --------------------------------- Headers -------------------------------- */
-const headers = [
-  { value: 'Validator' },
-  { value: 'Location' },
-  { value: 'Own Stake' },
-  { value: 'Total Stake' },
-  { value: 'Commission' },
-  { value: 'Cmix ID' },
-  { value: 'Nominators' }
-]
-
 interface IValidatorsTableProps {
   latestEra: number | undefined,
   isWaiting: boolean,
 }
 
 const NewValidatorsTable: React.FC<IValidatorsTableProps> = ({isWaiting = false, latestEra}) => {
-  const [search] = useInput('');
+  const [search, setSearch] = useInput('');
   const debouncedSearch = useDebounce(search, 500);
 
+
+  /* --------------------------------- Headers -------------------------------- */
+  const headers = [
+    { value: 'Validator' },
+    { value: 'Location' },
+    { value: 'Own Stake' },
+    { value: 'Total Stake' },
+    { value: 'Commission' },
+    { value: 'Cmix ID' },
+    { value: 'Nominators' }
+  ]
 
   const searchClause  = useMemo(() => ({
     _and: {
@@ -105,14 +106,32 @@ const NewValidatorsTable: React.FC<IValidatorsTableProps> = ({isWaiting = false,
   const rows = useMemo(() => (data?.validators || []).map(rowsParser), [data]);
 
   return (
-          <BaselineTable
-            error={!!error}
-            loading={loading}
-            headers={headers}
-            rows={rows}
-            rowsPerPage={pagination.rowsPerPage}
-            footer={pagination.controls}
-          />    
+          <>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'end',
+              marginTop: '-61px'
+            }}>
+              <Input
+                value={search}
+                onChange={setSearch}
+                placeholder='Search by Address / Identity / Cmix ID'
+                style={{
+                  display: 'flex',
+                  width: '300px',
+                  marginBottom: '50px',
+                }}
+              />
+            </div>
+            <BaselineTable
+              error={!!error}
+              loading={loading}
+              headers={headers}
+              rows={rows}
+              rowsPerPage={pagination.rowsPerPage}
+              footer={pagination.controls}
+            />
+          </>
   )
 }
 export default NewValidatorsTable;
