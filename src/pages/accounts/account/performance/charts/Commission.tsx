@@ -32,10 +32,9 @@ const Commission: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
   }, [latestEra, timeframe]);
 
   const dataRange = useMemo(() => chartData.reverse().slice(eraRange.start, eraRange.end), [chartData, eraRange.end, eraRange.start])
-  const isFullRange = timeframe === timeframes.All;
 
   return (
-    <Grid item xs={12} md={isFullRange ? 12 : 6}>
+    <Grid item xs={12} md={12}>
     <DefaultTile header='commission' height='435px'>
       <DropdownTimelineLineChart 
         labelFormatters={{ yAxis: percentLabelFormatter }} tooltipFormatter={percentTooltipFormatter} timeframe={timeframe} timeframes={timeframes} data={dataRange} onChange={onChange} />
