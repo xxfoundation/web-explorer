@@ -7,12 +7,69 @@ export type Nominator = {
   share: string;
 }
 
+export type Validator = {
+  account_id: string; // * Not overwritten when queried, so it needs to match the DB
+  stake: string;
+  share: string;
+}
+
 export type RewardBreakdown = {
   commission: string;
   self: string;
   nominators: Nominator[];
   custody: string;
 }
+
+export type RewardSplit = {
+  account_id: string;
+  reward: string;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                          Nominator Stats Fragment                          */
+/* -------------------------------------------------------------------------- */
+export type NominatorStats = {
+  era: number;
+  stashAddress: string;
+  stake: number;
+  validators: Validator[];
+  reward: number | null;
+  rewardSplit: RewardSplit[];
+}
+
+const NOMINATOR_STATS_FRAGMENT = gql`
+  fragment nominatorStatsFragment on nominator_stats {
+    era
+    stashAddress: stash_address
+    stake
+    targets
+    validators
+    reward
+    rewardSplit: reward_split
+  }
+`;
+
+export type GetNominatorStats = {
+  aggregates: { aggregate: { count: number } }
+  stats: NominatorStats[]
+}
+
+export const GET_NOMINATOR_STATS = gql`
+  ${NOMINATOR_STATS_FRAGMENT}
+  query GetNominatorStats ($accountId: String!) {
+    aggregates: nominator_stats_aggregate(where: { stash_address: { _eq: $accountId }}) {
+      aggregate {
+        count
+      }
+    }
+
+    stats: nominator_stats(where: { stash_address: { _eq: $accountId } }, order_by: { era: desc }) {
+      ...nominatorStatsFragment
+    }
+  }
+`;
+
+
 
 /* -------------------------------------------------------------------------- */
 /*                          Validator Stats Fragment                          */

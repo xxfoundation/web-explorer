@@ -41,10 +41,11 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 });
 
-const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({
+const ModuleCalls: FC<{ module: string; call: string; doc: string[]; shorten?: boolean }> = ({
   call,
   doc,
-  module
+  module,
+  shorten = false
 }) => {
   const title = useMemo(() => {
     let markdownDoc = '';
@@ -76,18 +77,19 @@ const ModuleCalls: FC<{ module: string; call: string; doc: string[] }> = ({
 
   return (
     <Stack direction='row' alignItems='center'>
-      <Breadcrumbs separator='/'>
-        <Tag filled>
-          <Typography fontSize={'12px'} fontWeight={400}>
-            {module}
-          </Typography>
-        </Tag>
-        <Tag>
-          <Typography fontSize={'12px'} fontWeight={400}>
-            {call}
-          </Typography>
-        </Tag>
-      </Breadcrumbs>
+      {shorten ? <Typography fontSize='12px'><b>{module}</b> ({call})</Typography> 
+      : <Breadcrumbs separator='/'>
+          <Tag filled>
+            <Typography fontSize={'12px'} fontWeight={400}>
+              {module}
+            </Typography>
+          </Tag>
+          <Tag>
+            <Typography fontSize={'12px'} fontWeight={400}>
+              {call}
+            </Typography>
+          </Tag>
+        </Breadcrumbs>}
       <CustomTooltip title={title}>
         <InfoOutlinedIcon
           color='primary'

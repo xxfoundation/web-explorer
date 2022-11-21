@@ -21,6 +21,8 @@ import StakingCard from './account/staking';
 import Tag from '../../components/Tags/Tag';
 import GovernanceCard from './account/governance';
 import ValidatorCard from './account/validator';
+import NominatorCard from './account/nominator';
+import { GetNominatorInfo, GET_NOMINATOR_INFO } from '../../schemas/nominator.schema';
 
 const validatorStatus = (inValidatorStats: boolean, currentlyActive: boolean) => {
   return (
@@ -37,6 +39,7 @@ const AccountId: FC = () => {
   const { accountId } = useParams<{ accountId?: string }>();
   const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const { data, loading } = useFetchValidatorAccountInfo(accountId);
+  const queryNominator = useQuery<GetNominatorInfo>(GET_NOMINATOR_INFO, { variables: { accountId } });
   const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
   const currEra = latestEraQuery?.data?.validatorStats[0].era;
   const [tab, setTab] = useState(0);
@@ -45,7 +48,7 @@ const AccountId: FC = () => {
     setTab(t);
   }, []);
 
-  if (loading || latestEraQuery.loading) {
+  if (loading || latestEraQuery.loading || queryNominator.loading) {
     return (
       <Container sx={{ my: 5 }}>
         <Typography maxWidth={'100px'}>
@@ -68,6 +71,8 @@ const AccountId: FC = () => {
   if (!data?.account) return <NotFound message='Account Not Found' />;
 
   const account = data.account;
+  const nominator = queryNominator.data?.nominator
+
   const validator =
     data?.aggregates && data?.stats
       ? { aggregates: data?.aggregates, stats: data?.stats }
@@ -117,6 +122,7 @@ const AccountId: FC = () => {
             <Tab label='Governance' />
             <Tab label='Staking' />
             {validator !== undefined && (<Tab label='Validator' />)}
+            {nominator !== undefined && (<Tab label='Nominator' />)}
           </PageTabs>
         </Grid>
         <Grid item xs={12}>
@@ -139,6 +145,11 @@ const AccountId: FC = () => {
                 accountId={account.id}
                 account={account}
                 active={currentlyActive}/>
+            </Panel>)}
+            {nominator !== undefined && (
+            <Panel index={tab} value={4}>
+              <NominatorCard
+                accountId={account.id} />
             </Panel>)}
           </PaperWrapStyled>
         </Grid>
