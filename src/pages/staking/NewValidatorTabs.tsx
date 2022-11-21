@@ -1,6 +1,6 @@
 import TabsWithPanels, {TabText} from '../../components/Tabs';
 import React from 'react';
-import {Skeleton} from '@mui/material';
+import {Skeleton, Typography} from '@mui/material';
 import {TableSkeleton} from '../../components/Tables/TableSkeleton';
 import ValidatorTable from './NewValidatorsTable';
 import {useQuery} from '@apollo/client';
@@ -60,10 +60,12 @@ const ValidatorTabs = () => {
       : renderTabs()
   }
   return (
-    <div>
-      <h1>Validator</h1>
+    <>
+      <Typography variant='h2' gutterBottom>
+        Validator
+      </Typography>
       <TabsWithPanels panels={myTabs()} tabsLabel='validator tabs'/>
-    </div>
+    </>
   )
 }
 
