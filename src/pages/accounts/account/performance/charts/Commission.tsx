@@ -2,6 +2,7 @@ import { SelectChangeEvent } from '@mui/material';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { DataPoint } from '../../../../../components/charts/highcharts';
 import DropdownTimelineLineChart from '../../../../../components/charts/highcharts/DropdownTimelineLineChart';
+import { Grid } from '@mui/material';
 
 import { percentLabelFormatter, percentTooltipFormatter } from '../../../../../components/charts/highcharts/formatters';
 import DefaultTile from '../../../../../components/DefaultTile';
@@ -31,12 +32,15 @@ const Commission: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
   }, [latestEra, timeframe]);
 
   const dataRange = useMemo(() => chartData.reverse().slice(eraRange.start, eraRange.end), [chartData, eraRange.end, eraRange.start])
+  const isFullRange = timeframe === timeframes.All;
 
   return (
+    <Grid item xs={12} md={isFullRange ? 12 : 6}>
     <DefaultTile header='commission' height='435px'>
       <DropdownTimelineLineChart 
         labelFormatters={{ yAxis: percentLabelFormatter }} tooltipFormatter={percentTooltipFormatter} timeframe={timeframe} timeframes={timeframes} data={dataRange} onChange={onChange} />
     </DefaultTile>
+    </Grid>
   );
 };
 

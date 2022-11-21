@@ -60,11 +60,11 @@ const ValidatorCard: FC<{
     }
     cachedPanels.push(
         {
-          label: <TabText message='Metrics' count={statsCount} />,
+          label: <TabText message='Metrics' />,
           content: <MetricCards account={account} stats={validatorStats || []} />
         },
         {
-          label: <TabText message='Charts' count={statsCount} />,
+          label: <TabText message='Charts' />,
           content: <Charts account={account} />
         }
       )

@@ -21,18 +21,10 @@ const Charts: FC<{ account: Account }> = ({ account }) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
         <RelativePerformance stats={stats.data.stats} />
-      </Grid>
-      <Grid item xs={12} md={6}>
         <EraPoints stats={stats.data.stats}/>
-      </Grid>
-      <Grid item xs={12} md={6}>
         <Commission stats={stats.data.stats} />
-      </Grid>
-      <Grid item xs={12} md={6}>
         <ElectedSelfStake stats={stats.data.stats} />
-      </Grid>
     </Grid>
   );
 };
