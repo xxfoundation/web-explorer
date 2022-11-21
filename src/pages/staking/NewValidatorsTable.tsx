@@ -1,5 +1,5 @@
-import {BaselineTable} from '../../components/Tables';
-import React, {FC, useMemo} from 'react';
+import {BaselineCell, BaselineTable} from '../../components/Tables';
+import React, {useMemo} from 'react';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import {
   GET_CURRENT_VALIDATORS,
@@ -14,7 +14,7 @@ import FormatBalance from '../../components/FormatBalance';
 import CmixAddress from '../../components/Hash/CmixAddress';
 
 
-const rowsParser: FC<ValidatorAccount> = ({
+const rowsParser = ({
                       account,
                       addressId,
                       cmixId,
@@ -22,10 +22,10 @@ const rowsParser: FC<ValidatorAccount> = ({
                       location,
                       nominators,
                       ownStake,
-                      totalStake }) => {
+                      totalStake }: ValidatorAccount): BaselineCell[] => {
   const identityDisplay = account.identity?.display;
   const validatorLink = `/accounts/${addressId}`;
-  let parsed;
+  let parsed = '';
 
   try {
     const { city, country } = location ? JSON.parse(location) : ({} as Record<string, string>);
