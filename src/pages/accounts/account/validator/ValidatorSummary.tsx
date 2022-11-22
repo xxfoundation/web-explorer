@@ -106,7 +106,7 @@ const ValidatorSummary: FC<{ active: boolean, info?: ValidatorInfo }> = ({ activ
       </SummaryEntry>}
       <SummaryEntry>
         <SummaryHeader>Commission</SummaryHeader>
-        <SummaryValue>{info.commission}</SummaryValue>
+        <SummaryValue>{info.commission} %</SummaryValue>
       </SummaryEntry>
       {sessionEntries && (
         <SummaryEntry>

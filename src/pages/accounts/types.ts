@@ -7,7 +7,7 @@ export type MetricsType =
   | 'subaccounts'
   | 'validator time'
   | 'nominators'
-  | 'era points'
+  | 'performance'
   | 'commission'
   | 'frequency of payouts'
   | 'governance'

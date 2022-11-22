@@ -23,6 +23,7 @@ export type Identity = {
   legal?: string;
   riot?: string;
   twitter?: string;
+  discord?: string;
   verified?: boolean;
   web?: string;
 };

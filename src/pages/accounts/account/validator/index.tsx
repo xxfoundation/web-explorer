@@ -58,16 +58,20 @@ const ValidatorCard: FC<{
         content: <NominatorsTable nominators={nominators} />
       });
     }
-    cachedPanels.push(
+    if (account.validator) {
+      cachedPanels.push(
         {
           label: <TabText message='Metrics' />,
           content: <MetricCards account={account} stats={validatorStats || []} />
-        },
+        })
+    }
+    if (validatorStats) {
+      cachedPanels.push(
         {
           label: <TabText message='Charts' />,
           content: <Charts account={account} />
-        }
-      )
+        })
+    }
     return cachedPanels;
   }, [account, active, nominators, queryValidatorInfo.loading, queryValidatorStats.loading, statsCount, validatorInfo, validatorStats]);
 
