@@ -44,7 +44,7 @@ export const getStakedReturn = (economics: Economics): number => {
     totalStaked.mul(BN_MILLION).div(stakeableSupply).toNumber() / BN_MILLION.toNumber();
   const multiplierImpact = totalStaked.mul(BN_MILLION).div(totalStaked.add(tmStaked)).toNumber() / 1e6;
   
-  return stakedFraction ? inflationRate * multiplierImpact / stakedFraction / 100 : 0;
+  return stakedFraction ? inflationRate * multiplierImpact / stakedFraction : 0;
 };
 
 const StakingMetrics = () => {

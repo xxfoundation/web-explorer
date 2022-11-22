@@ -1,5 +1,5 @@
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
-import { useQuery } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import React, { FC } from 'react';
 
 import { ChainInfoLink, Data, Item } from './ChainInfo.styles';
@@ -7,7 +7,7 @@ import { InfoOutlined } from '@mui/icons-material';
 import FormatBalance from '../FormatBalance';
 import Error from '../Error';
 import { CustomTooltip } from '../Tooltip';
-import { ListenForMetrics, LISTEN_FOR_METRICS } from '../../schemas/chaindata.schema';
+import { GetChainMetrics, GET_CHAIN_METRICS, ListenFinalizedBlocks, ListenNumAccounts, ListenNumFakeAccounts, ListenNumTransfers, LISTEN_FINALIZED_BLOCKS, LISTEN_NUM_ACCOUNTS, LISTEN_NUM_FAKE_ACCOUNTS, LISTEN_NUM_TRANSFERS } from '../../schemas/chaindata.schema';
 
 const ChainInfoCard: FC<{
   title: string;
@@ -36,11 +36,19 @@ const ChainInfoCard: FC<{
 };
 
 const ChainInfo = () => {
-  const metricsSubscription = useQuery<ListenForMetrics>(LISTEN_FOR_METRICS);
+  const metricsQuery = useQuery<GetChainMetrics>(GET_CHAIN_METRICS);
+  // Subscriptions
+  const finalizedBlocksSubscription = useSubscription<ListenFinalizedBlocks>(LISTEN_FINALIZED_BLOCKS);
+  const numTransfersSubscription = useSubscription<ListenNumTransfers>(LISTEN_NUM_TRANSFERS);
+  const numAccountsSubscription = useSubscription<ListenNumAccounts>(LISTEN_NUM_ACCOUNTS);
+  const numFakeAccountsSubscription = useSubscription<ListenNumFakeAccounts>(LISTEN_NUM_FAKE_ACCOUNTS);
+  
 
-  if (metricsSubscription.error) {
+  if (metricsQuery.error || finalizedBlocksSubscription.error || numTransfersSubscription.error || numAccountsSubscription.error || numFakeAccountsSubscription.error) {
     return <Error type='data-unavailable' />;
   }
+
+  const totalNumAcccounts = numAccountsSubscription.data && numFakeAccountsSubscription.data ? numAccountsSubscription.data?.numAccounts.aggregate.count - numFakeAccountsSubscription.data?.numFakeAccounts.aggregate.count : undefined
 
   return (
     <Box className='blockchain-component-chainInfo' mb={7}>
@@ -48,29 +56,29 @@ const ChainInfo = () => {
         Chain data
       </Typography>
       <Grid container spacing={{ xs: 1, sm: 2 }}>
-        <ChainInfoCard title='Finalized Blocks' value={metricsSubscription.data?.finalizedBlocks.aggregate.count} path='/blocks' />
-        <ChainInfoCard title='Active Era' value={metricsSubscription.data?.activeEra[0].era} />
-        <ChainInfoCard title='Transfers' value={metricsSubscription.data?.numTransfers.aggregate.count} path='/transfers' />
-        <ChainInfoCard title='Account Holders' value={metricsSubscription.data?.numAccounts.aggregate.count && (metricsSubscription.data?.numAccounts.aggregate.count - metricsSubscription.data?.numFakeAccounts.aggregate.count)} path='/accounts' />
+        <ChainInfoCard title='Finalized Blocks' value={finalizedBlocksSubscription.data?.finalizedBlocks.aggregate.count} path='/blocks' />
+        <ChainInfoCard title='Active Era' value={metricsQuery.data?.activeEra[0].era} />
+        <ChainInfoCard title='Transfers' value={numTransfersSubscription.data?.numTransfers.aggregate.count} path='/transfers' />
+        <ChainInfoCard title='Account Holders' value={totalNumAcccounts} path='/accounts' />
         <ChainInfoCard
           title='Total Issuance'
           tooltip={
             'Defined by the Total Supply minus the xx issued as an ERC1404 and not claimed yet (Other > Claims).'
           }
-          value={metricsSubscription.data?.economics[0].totalIssuance && <FormatBalance value={metricsSubscription.data?.economics[0].totalIssuance} />}
+          value={metricsQuery.data?.economics[0].totalIssuance && <FormatBalance value={metricsQuery.data?.economics[0].totalIssuance} />}
         />
-        <ChainInfoCard title='Nominators' value={metricsSubscription.data?.numNominators.aggregate.count} />
+        <ChainInfoCard title='Nominators' value={metricsQuery.data?.numNominators.aggregate.count} />
         <ChainInfoCard
           title='Validators'
           path='/staking'
-          value={metricsSubscription.data?.numActiveValidators.aggregate.count}
+          value={metricsQuery.data?.numActiveValidators.aggregate.count}
         />
         <ChainInfoCard
           title='Circulating AGR'
           tooltip={
             'Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
           }
-          value={metricsSubscription.data?.economics[0].inflationRate && `${metricsSubscription.data?.economics[0].inflationRate}%`}
+          value={metricsQuery.data?.economics[0].inflationRate && `${metricsQuery.data?.economics[0].inflationRate}%`}
         />
       </Grid>
     </Box>
