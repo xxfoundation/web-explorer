@@ -71,6 +71,7 @@ const ExtrinsicComponent = () => {
             <ExtrinsicTabs
               blockNumber={extrinsic.blockNumber}
               index={extrinsic.extrinsicIndex}
+              nestedCalls={extrinsic.nestedCalls}
               transferCount={data?.agg.aggregate.count}
             />
           )

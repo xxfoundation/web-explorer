@@ -1,4 +1,4 @@
-import { Divider, Hidden, Grid, Container, Typography } from '@mui/material';
+import { Divider, Hidden, Grid } from '@mui/material';
 import React, { FC, Fragment, useMemo } from 'react';
 import Hash, { Props as HashProps } from '../../../../components/Hash';
 import CmixAddress from '../../../../components/Hash/CmixAddress';
@@ -11,9 +11,9 @@ import {
   WithCopy
 } from '../../../../components/Summary';
 import Ellipsis from '../../../../components/Ellipsis';
-import Error from '../../../../components/Error';
 import { ValidatorInfo } from '../../../../schemas/validator.schema';
 import { useTranslation } from 'react-i18next';
+import { InfoMessage } from '../utils';
 
 const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
   return (
@@ -56,7 +56,7 @@ const ValidatorSummary: FC<Props> = ({ active, info }) => {
   const { t } = useTranslation();
   const location = useMemo(() => {
     if (!info?.location) {
-      return ' - ';
+      return ' - '
     }
     const parsedLocation: { city: string; country: string; geoBin: string } = JSON.parse(
       info?.location
@@ -65,7 +65,7 @@ const ValidatorSummary: FC<Props> = ({ active, info }) => {
 
     return !isEmpty
       ? locationString(parsedLocation.geoBin, parsedLocation.city, parsedLocation.country)
-      : ' - ';
+      : ' - '
   }, [info?.location]);
 
   const sessionEntries = useMemo(
@@ -75,11 +75,7 @@ const ValidatorSummary: FC<Props> = ({ active, info }) => {
 
   if (!info) {
     return (
-      <Container sx={{ my: 5 }}>
-        <Typography variant='h1' maxWidth={'400px'} sx={{ mb: 5 }}>
-          <Error type='data-unavailable' />;
-        </Typography>
-      </Container>
+      <InfoMessage message={'Not an Active Validator'} />
     );
   }
 

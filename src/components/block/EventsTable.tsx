@@ -8,6 +8,7 @@ import { BaselineCell, BaselineTable } from '../Tables';
 import TimeAgoComponent from '../TimeAgo';
 import { usePagination } from '../../hooks';
 import { useTranslation } from 'react-i18next';
+import { processEventDoc } from '../utils';
 
 const ROWS_PER_PAGE = 10;
 
@@ -29,14 +30,6 @@ export const DataTile: FC<{ headers?: string[]; values: string[] }> = ({ headers
       ))}
     </CodeDisplay>
   ) : null;
-};
-
-const processEventDoc = (doc: string) => {
-  const substring = doc
-    .replace(/\[\"/g, '')
-    .replace(/\]\"/g, '')
-    .substring(doc.indexOf('\\') + 1, doc.lastIndexOf('\\') - 3);
-  return substring ? substring.replace(/,","/g, ' ').replace(/,/g, '').split(' ') : undefined;
 };
 
 const rowsParser = ({

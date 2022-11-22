@@ -8,19 +8,12 @@ import TimeAgoComponent from '../../../../components/TimeAgo';
 import { useQuery } from '@apollo/client';
 import { GET_EVENTS_LIST, GetEventsList } from '../../../../schemas/accounts.schema';
 import { DataTile } from '../../../../components/block/EventsTable';
+import { processEventDoc } from '../../../../components/utils';
 
 interface IEventsTable {
   accountId: string,
   entity: string
 }
-
-const processEventDoc = (doc: string) => {
-  const substring = doc
-    .replace(/\[\"/g, '')
-    .replace(/\]\"/g, '')
-    .substring(doc.indexOf('\\') + 1, doc.lastIndexOf('\\') - 3);
-  return substring ? substring.replace(/,","/g, ' ').replace(/,/g, '').split(' ') : undefined;
-};
 
 const rowsParser = ({ blockNumber, call, data, doc, index, timestamp }: Event): BaselineCell[] => {
   return [

@@ -3,18 +3,22 @@ import { useTranslation } from 'react-i18next';
 import EventsTable from '../../../components/block/EventsTable';
 import PaperWrapStyled from '../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../components/Tabs';
+import { NestedCall } from '../../../schemas/extrinsics.schema';
 import TransferTable from '../../transfers/TransfersTable';
+import CallsTable from './CallsTable';
 
 type Props = {
-  transferCount: number;
   blockNumber: number;
   index: number;
+  nestedCalls: Array<NestedCall> | null;
+  transferCount: number;
 }
 
 const ExtrinsicTabs: FC<Props> = ({
   blockNumber,
   index,
-  transferCount
+  nestedCalls,
+  transferCount,
 }) => {
   const { t } = useTranslation();
   const [eventCount, setEventCount] = useState<number>();
@@ -43,11 +47,17 @@ const ExtrinsicTabs: FC<Props> = ({
             }}
           />
         )
+      },
+      {
+        label: <TabText message='calls' count={nestedCalls?.length || 0} />,
+        content: (
+          <CallsTable data={nestedCalls} />
+        )
       }
     ];
 
     return tabs;
-  }, [t, blockNumber, eventCount, index, transferCount]);
+  }, [t, blockNumber, eventCount, index, nestedCalls, transferCount]);
 
   return (
     <PaperWrapStyled>
