@@ -16,8 +16,8 @@ module.exports = {
     resource: {
       jsonIndent: 2,
       lineEnding: '\n',
-      loadPath: 'public/locales/i18n/{{lng}}/index.json',
-      savePath: 'public/locales/i18n/{{lng}}/index.json'
+      loadPath: 'public/locales/{{lng}}/index.json',
+      savePath: 'public/locales/{{lng}}/index.json'
     },
     trans: {
       component: 'Trans'
