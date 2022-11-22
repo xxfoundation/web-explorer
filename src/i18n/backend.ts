@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import languageCache from './cache';
 
 type Callback = (error: string | null, data: any) => void;
