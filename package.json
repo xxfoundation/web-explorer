@@ -15,7 +15,7 @@
     "@mui/x-date-pickers": "5.0.4",
     "@polkadot/api": "9.0.1",
     "@polkadot/api-derive": "9.0.1",
-    "@polkadot/keyring": "^10.1.11",
+    "@polkadot/keyring": "^10.1.12",
     "@polkadot/typegen": "9.0.1",
     "@polkadot/types": "9.0.1",
     "@polkadot/ui-keyring": "^2.9.3",
