@@ -47,6 +47,11 @@ const ChainInfo = () => {
     [metricsSubscription.data?.numAccounts.aggregate.count, metricsSubscription.data?.numFakeAccounts.aggregate.count]
   );
 
+  const totalIssuance = useMemo(
+    () => metricsSubscription.data?.economics[0].totalIssuance,
+    [metricsSubscription.data]
+  );
+
   if (metricsSubscription.error) {
     return <Error type='data-unavailable' />;
   }
@@ -77,9 +82,10 @@ const ChainInfo = () => {
           tooltip={
             t('Defined by the Total Supply minus the xx issued as an ERC1404 and not claimed yet (Other > Claims).')
           }
-          value={metricsSubscription.data?.economics[0].totalIssuance && <FormatBalance value={metricsSubscription.data?.economics[0].totalIssuance} />}
-        />
-        <ChainInfoCard title={t('Nominators')} value={metricsSubscription.data?.numNominators.aggregate.count} />
+          value={totalIssuance && (<FormatBalance value={totalIssuance} />)} />
+        <ChainInfoCard
+          title={t('Nominators')}
+          value={metricsSubscription.data?.numNominators.aggregate.count} />
         <ChainInfoCard
           title={t('Validators')}
           path='/staking'

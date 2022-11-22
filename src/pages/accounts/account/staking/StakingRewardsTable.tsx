@@ -15,9 +15,12 @@ import {
 } from '../../../../schemas/staking.schema';
 import DownloadDataButton from '../../../../components/buttons/DownloadDataButton';
 import { ExportToCsv } from 'export-to-csv';
+import { useTranslation } from 'react-i18next';
+
+
+type CSVRow = Record<string, string | number>;
 
 const DEFAULT_ROWS_PER_PAGE = 10;
-const headers = headerCellsWrapper(['Validator', 'Block Number', 'Era', 'Amount', 'Timestamp']);
 
 const RewardsRow = (reward: StakingReward) => {
   return BaseLineCellsWrapper([
@@ -34,16 +37,6 @@ const RewardsRow = (reward: StakingReward) => {
   ]);
 };
 
-interface CSVRow {
-  'Payout Date': string;
-  'Block Number': number;
-  'Reward Date': string;
-  'Era': number;
-  'Validator Address': string;
-  'Validator ID': string;
-  'Amount': number;
-}
-
 const eraTime = 86400000;
 const genesisTime = 1637132496000;
 
@@ -51,6 +44,7 @@ const StakingRewardsTable: FC<{
   accountId: string;
   sum?: number;
 }> = ({ accountId, sum }) => {
+  const { t } = useTranslation();
   const stakingRewards = useQuery<GetStakingRewards>(GET_STAKING_REWARDS, {
     variables: { accountId }
   });
@@ -69,6 +63,7 @@ const StakingRewardsTable: FC<{
     useBom: true,
     useKeysAsHeaders: true,
   };
+
   const [csvData, setCsvData] = useState<CSVRow[]>();
   const csvExporter = new ExportToCsv(options);
 
@@ -77,22 +72,34 @@ const StakingRewardsTable: FC<{
       setCount(stakingRewards.data?.aggregates?.aggregate.count);
       setCsvData(stakingRewards.data?.rewards.map((el) => {
         return {
-          'Payout Date': dayjs.utc(el.timestamp).format('ll LTS Z'),
-          'Block Number': el.blockNumber,
-          'Reward Date': dayjs.utc((el.era+1)*eraTime+genesisTime).format('ll LTS Z'),
-          'Era': el.era,
-          'Validator Address': el.validatorAddress,
-          'Validator ID': el.account.identity?.display || '',
-          'Amount': el.amount / 1e9,
+          [t('Payout Date')]: dayjs.utc(el.timestamp).format('ll LTS Z'),
+          [t('Block Number')]: el.blockNumber,
+          [t('Reward Date')]: dayjs.utc((el.era+1)*eraTime+genesisTime).format('ll LTS Z'),
+          [t('Era')]: el.era,
+          [t('Validator Address')]: el.validatorAddress,
+          [t('Validator ID')]: el.account.identity?.display || '',
+          [t('Amount')]: el.amount / 1e9,
         }
       }))
     }
-  }, [setCount, setCsvData, stakingRewards.data]);
+  }, [t, setCount, setCsvData, stakingRewards.data]);
 
   const paginated = useMemo(
     () => rewards && paginate(rewards).map(RewardsRow),
     [paginate, rewards]
   );
+
+  const headers = useMemo(
+    () => headerCellsWrapper([
+      t('Validator'),
+      t('Block Number'),
+      t('Era'),
+      t('Amount'),
+      t('Timestamp')
+    ]),
+    [t]
+  );
+
 
   return (
     <>
@@ -101,7 +108,9 @@ const StakingRewardsTable: FC<{
           variant='body3'
           sx={{ mb: '1em', px: '1px', display: 'block', textAlign: 'right' }}
         >
-          <b>Total Rewards:</b> <FormatBalance value={sum.toString()} />
+          <b>
+            {t('Total Rewards')}:</b>
+            <FormatBalance value={sum.toString()} />
         </Typography>
       )}
       <BaselineTable
@@ -121,7 +130,7 @@ const StakingRewardsTable: FC<{
               {pagination.controls}
             </Stack>
           </>
-        ) : <></>}
+        ) : undefined}
       />
     </>
   );

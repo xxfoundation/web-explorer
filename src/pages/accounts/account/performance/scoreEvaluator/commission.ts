@@ -1,21 +1,24 @@
-import { MetricScores } from '../../../types';
-import { ScoringContext } from './types';
+import type { TFunction } from 'i18next';
+import type { MetricScores } from '../../../types';
+import type { ScoringContext } from './types';
 
-const baseMsg = (value: string) => `Average commission is ${value}`;
+const makeBaseMsg = (t: TFunction) => (value: string) => t('Average commission is {{value}}', { value });
 
 const getCommissionScore = ({
-  avgCommission
+  avgCommission,
+  t
 }: ScoringContext): [MetricScores, string] => {
+  const baseMsg = makeBaseMsg(t);
   if (avgCommission >= 30) {
-    return ['very bad', baseMsg('much higher than the majority of validators')];
+    return ['very bad', baseMsg(t('much higher than the majority of validators'))];
   }
   
   if (avgCommission >= 18) {
-    return ['bad', baseMsg('considerably higher than the average')];
+    return ['bad', baseMsg(t('considerably higher than the average'))];
   }
 
   if (avgCommission >= 10) {
-    return ['neutral', baseMsg('in the average')];
+    return ['neutral', baseMsg(t('in the average'))];
   }
 
   if (avgCommission >= 5) {

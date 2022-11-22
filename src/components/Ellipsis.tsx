@@ -8,12 +8,8 @@ export const styles: CSSProperties = {
   textOverflow: 'ellipsis'
 }
 
-// duplication here is because mui is being retarded. Try passing styles below.
 export const Ellipsis = styled(Box)({
-  display: 'block',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis'
+  ...styles,
 });
 
 export default Ellipsis;

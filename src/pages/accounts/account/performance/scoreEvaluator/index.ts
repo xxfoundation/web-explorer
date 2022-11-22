@@ -11,7 +11,7 @@ import getValidatorTimeScore from './validatorTime';
 
 const evaluateScore = (ctx: ScoringContext): Partial<Record<MetricsType, [MetricScores, string]>> => {
   return {
-    identity: getIdentityScore(ctx.account),
+    identity: getIdentityScore(ctx),
     'address creation': getaAddressCreationScore(ctx),
     slashes: getSlashesScore(ctx),
     nominators: getNominatorsScore(ctx),

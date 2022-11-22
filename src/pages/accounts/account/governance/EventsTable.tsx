@@ -1,11 +1,13 @@
 import {BaselineCell, BaselineTable, headerCellsWrapper} from '../../../../components/Tables';
 import React, {useMemo} from 'react';
-import {Event} from '../../../../schemas/events.schema';
+import { useTranslation } from 'react-i18next';
+
+import { Event } from '../../../../schemas/events.schema';
 import Link from '../../../../components/Link';
 import TimeAgoComponent from '../../../../components/TimeAgo';
-import {useQuery} from '@apollo/client';
-import {GET_EVENTS_LIST, GetEventsList} from '../../../../schemas/accounts.schema';
-import {DataTile} from '../../../../components/block/EventsTable';
+import { useQuery } from '@apollo/client';
+import { GET_EVENTS_LIST, GetEventsList } from '../../../../schemas/accounts.schema';
+import { DataTile } from '../../../../components/block/EventsTable';
 
 interface IEventsTable {
   accountId: string,
@@ -28,7 +30,6 @@ const rowsParser = ({ blockNumber, call, data, doc, index, timestamp }: Event): 
     { value: `${call}` },
     { value: <DataTile headers={processEventDoc(doc)} values={JSON.parse(data)} /> }];
 };
-const headers = headerCellsWrapper(['ID', 'Block', 'Time', 'Call', 'Data']);
 
 const generateWhere = (accountId: string, entity: string) => {
   if (entity === 'councilElections') {
@@ -54,14 +55,26 @@ const generateWhere = (accountId: string, entity: string) => {
 }
 
 const EventsTable:React.FC<IEventsTable> = ({accountId,  entity}) => {
+  const { t } = useTranslation();
   const { data, loading } = useQuery<GetEventsList>(GET_EVENTS_LIST, {
     variables: {
       orderBy: [{ timestamp: 'desc' }],
       where: generateWhere(accountId, entity)
     }
   });
-  
+  const headers = useMemo(
+    () => headerCellsWrapper([
+      t('ID'),
+      t('Block'),
+      t('Time'),
+      t('Call'),
+      t('Data')
+    ]),
+    [t]
+  );
+
   const rows = useMemo(() => data ? data.event.map(d => rowsParser(d)) : [], [data])
+  
   return (
     <BaselineTable
       loading={loading}

@@ -1,10 +1,13 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Menu } from '@mui/material';
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { useToggle } from '../../hooks';
 import { MenuButton, MenuLink } from './menu.styles';
 
 export default function Governance() {
+  const { t } = useTranslation();
   const button = useRef(null);
   const [opened, { toggle, toggleOff: close }] = useToggle();
 
@@ -19,7 +22,7 @@ export default function Governance() {
         onClick={toggle}
         endIcon={<KeyboardArrowDownIcon />}
       >
-        Governance
+        {t('Governance')}
       </MenuButton>
       {button.current && (
         <Menu
@@ -32,22 +35,22 @@ export default function Governance() {
           }}
         >
           <MenuLink to={'/'} onClick={close}>
-            Overview
+            {t('Overview')}
           </MenuLink>
           <MenuLink to={'/'} onClick={close}>
-            Democracy
+            {t('Democracy')}
           </MenuLink>
           <MenuLink to={'/'} onClick={close}>
-            Council
+            {t('Council')}
           </MenuLink>
           <MenuLink to={'/'} onClick={close}>
-            Tech Committee
+            {t('Tech Committee')}
           </MenuLink>
           <MenuLink to={'/'} onClick={close}>
-            Treasury
+            {t('Treasury')}
           </MenuLink>
           <MenuLink to={'/'} onClick={close}>
-            Bounties
+            {t('Bounties')}
           </MenuLink>
         </Menu>
       )}

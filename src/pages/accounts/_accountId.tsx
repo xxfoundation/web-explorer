@@ -95,7 +95,7 @@ const AccountId: FC = () => {
               variant='contained'
               onClick={toggleHistory}
             >
-              {historyExpanded ? 'Hide history' : 'Show history'}
+              {historyExpanded ? t('Hide history') : t('Show history')}
             </RoundedButton>
           </PaperWrapStyled>
         </Grid>

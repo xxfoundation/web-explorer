@@ -1,71 +1,77 @@
+import { TFunction } from 'i18next';
 import { MetricsType, ScoreDescriptions } from '../../types';
 
-const tooltipsConfiguration: Record<
+type TooltipsConfig = Record<
   MetricsType,
-  { name: MetricsType; description: string; scores: ScoreDescriptions }
-> = {
+  {
+    name: MetricsType;
+    description: string;
+    scores: ScoreDescriptions
+  }
+>;
+
+const tooltipsConfiguration = (t: TFunction): TooltipsConfig => ({
   identity: {
     name: 'identity',
-    description: 'Evaluate the quality of the identity data provided by the validator',
+    description: t('Evaluate the quality of the identity data provided by the validator'),
     scores: {
-      'very bad': 'None',
-      bad: 'Display Name',
-      neutral: '',
-      good: 'Display Name and Email',
-      'very good': 'Display Name, Email and Blurb + Judgment (Known Good)'
+      'very bad': t('None'),
+      bad: t('Display Name'),
+      good: t('Display Name and Email'),
+      'very good': t('Display Name, Email and Blurb + Judgment (Known Good)')
     }
   },
   'address creation': {
     name: 'address creation',
-    description: 'Evaluate how old is the validator address',
+    description: t('Evaluate how old is the validator address'),
     scores: {
-      neutral: 'CurrentEra - CreationEra ≤ 180',
-      good: '180 ≤ CurrentEra - CreationEra < 365',
-      'very good': 'CurrentEra - CreationEra ≥ 365'
+      neutral: t('CurrentEra - CreationEra ≤ 180'),
+      good: t('180 ≤ CurrentEra - CreationEra < 365'),
+      'very good': t('CurrentEra - CreationEra ≥ 365')
     }
   },
   slashes: {
     name: 'slashes',
-    description: 'Evaluate if the validator was slashed in the last 28 eras.',
+    description: t('Evaluate if the validator was slashed in the last 28 eras.'),
     scores: {
-      'very bad': 'Slashed more than once OR at least once in the last 28 eras.',
-      bad: 'Slashed only once',
-      good: 'Never Slashed'
+      'very bad': t('Slashed more than once OR at least once in the last 28 eras.'),
+      bad: t('Slashed only once'),
+      good: t('Never Slashed')
     }
   },
   subaccounts: {
     name: 'subaccounts',
-    description: 'Evaluate if the validator uses sub-accounts.',
+    description: t('Evaluate if the validator uses sub-accounts.'),
     scores: {
-      neutral: 'No subaccounts',
-      good: 'At least 1 subaccount'
+      neutral: t('No subaccounts'),
+      good: t('At least 1 subaccount')
     }
   },
   nominators: {
     name: 'nominators',
     description:
-      'Evaluate nominators and if the validator is oversubscribed (256 - pulled from chain).',
+      t('Evaluate nominators and if the validator is oversubscribed (256 - pulled from chain).'),
     scores: {
-      bad: '> 256 Nominators',
-      neutral: '150 < Nominators < 256',
-      good: 'Nominators < 150'
+      bad: t('> 256 Nominators'),
+      neutral: t('150 < Nominators < 256'),
+      good: t('Nominators < 150')
     }
   },
   'era points': {
     name: 'era points',
     description:
-      'Evaluate if the era points earned by the validator in the history are below or above average',
+      t('Evaluate if the era points earned by the validator in the history are below or above average'),
     scores: {
-      'very good': '> 90th percentile',
-      good: '≤ 90th percentile',
-      neutral: '≤ 70th percentile',
-      bad: '≤ 30th percentile',
-      'very bad': '≤ 10th percentil'
+      'very good': t('> 90th percentile'),
+      good: t('≤ 90th percentile'),
+      neutral: t('≤ 70th percentile'),
+      bad: t('≤ 30th percentile'),
+      'very bad': t('≤ 10th percentile')
     }
   },
   commission: {
     name: 'commission',
-    description: 'Evaluate validator commission over time.',
+    description: t('Evaluate validator commission over time.'),
     scores: {
       'very bad': '> 30%',
       bad: '18 > 30%',
@@ -76,35 +82,35 @@ const tooltipsConfiguration: Record<
   },
   'frequency of payouts': {
     name: 'frequency of payouts',
-    description: 'Evaluate frequency of rewards distribution (max 84 eras)',
+    description: t('Evaluate frequency of rewards distribution (max 84 eras)'),
     scores: {
-      'very bad': '< 60 Eras',
-      bad: '60 < 30 Eras',
-      good: '30 < 7 Eras',
-      'very good': '7 < 1 Era'
+      'very bad': t('< 60 Eras'),
+      bad: t('60 < 30 Eras'),
+      good: t('30 < 7 Eras'),
+      'very good': t('7 < 1 Era')
     }
   },
   governance: {
     name: 'governance',
     description:
-      'Evaluate if the validator is backing a council member and if is participating in a current proposal or referendum (as proposer or voter).',
+      t('Evaluate if the validator is backing a council member and if is participating in a current proposal or referendum (as proposer or voter).'),
     scores: {
-      'very bad': 'Never participated in Democracy',
-      bad: 'No votes in > 90 eras (if there is anything to vote on)',
-      good: 'Actively Voting (≥ 1 proposal vote per month) + Voted for Council Member(s)',
-      'very good': 'Part of the Council AND Actively voting'
+      'very bad': t('Never participated in Democracy'),
+      bad: t('No votes in > 90 eras (if there is anything to vote on)'),
+      good: t('Actively Voting (≥ 1 proposal vote per month) + Voted for Council Member(s)'),
+      'very good': t('Part of the Council AND Actively voting')
     }
   },
   'validator time': {
     name: 'validator time',
     description:
-      'Evaluate if the address was a validator for the majority of its time in the network (since first time as a validator).',
+      t('Evaluate if the address was a validator for the majority of its time in the network (since first time as a validator).'),
     scores: {
-      bad: 'No. Eras as validator / (CurrentEra - FirstValidatorEra) < 0.75',
-      neutral: 'No. Eras as validator / (CurrentEra - FirstValidatorEra) < 0.90',
-      good: 'No. Eras as validator / (CurrentEra - FirstValidatorEra) > 0.90'
+      bad: t('No. Eras as validator / (CurrentEra - FirstValidatorEra) < 0.75'),
+      neutral: t('No. Eras as validator / (CurrentEra - FirstValidatorEra) < 0.90'),
+      good: t('No. Eras as validator / (CurrentEra - FirstValidatorEra) > 0.90')
     }
   }
-};
+});
 
 export default tooltipsConfiguration;

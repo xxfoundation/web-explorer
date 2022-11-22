@@ -46,7 +46,7 @@ const Banner = () => {
         target='_blank'
         rel='noopener'
       >
-        xx wallet
+        {t('xx wallet')}
       </Button>
     </AppBar>
   );

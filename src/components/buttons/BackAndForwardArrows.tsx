@@ -9,10 +9,20 @@ export const BackAndForwardArrows: FC<{ back: IconButtonProps; forward: IconButt
 }) => {
   return (
     <ButtonGroup>
-      <IconButton color={'primary'} aria-label='back' size='small' {...back}>
+      <IconButton
+        color={'primary'}
+        aria-label='back'
+        size='small'
+        {...back}
+      >
         <ArrowBackIcon fontSize='small' />
       </IconButton>
-      <IconButton color={'primary'} arial-label='forward' size='small' {...forward}>
+      <IconButton
+        color={'primary'}
+        arial-label='forward'
+        size='small'
+        {...forward}
+      >
         <ArrowForwardIcon fontSize='small' />
       </IconButton>
     </ButtonGroup>

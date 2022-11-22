@@ -52,7 +52,7 @@ const SummaryInfo = () => {
           ) : data?.numAccounts !== undefined ? (
             data?.numAccounts.aggregate.count - data?.numFakeAccounts.aggregate.count
           ) : (
-            'N/D'
+            t('N/D')
           )}
         </DarkSubtitle>
       </Stack>
@@ -64,7 +64,7 @@ const SummaryInfo = () => {
           ) : data?.numTransfers !== undefined ? (
             data?.numTransfers.aggregate.count
           ) : (
-            'N/D'
+            t('N/D')
           )}
         </DarkSubtitle>
       </Stack>

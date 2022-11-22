@@ -16,7 +16,7 @@ export const BreadcrumbStyled = styled(Breadcrumbs)(({ theme }) => ({
   }
 }));
 
-export const CustomLink = styled(Link)(({ theme }) => ({
+export const CustomLink: typeof Link = styled(Link)(({ theme }) => ({
   textDecorationLine: 'none',
   color: theme.palette.grey[500],
   ':hover': {

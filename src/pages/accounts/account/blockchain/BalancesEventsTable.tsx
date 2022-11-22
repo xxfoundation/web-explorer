@@ -2,6 +2,8 @@ import {
   TableCellProps,
 } from '@mui/material';
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import Link from '../../../../components/Link';
 import { BaselineCell, BaselineTable, HeaderCell } from '../../../../components/Tables';
 import TimeAgoComponent from '../../../../components/TimeAgo';
@@ -28,6 +30,7 @@ interface IBalancesEventsTable {
 }
 
 const BalancesEventsTable: React.FC<IBalancesEventsTable> = ({accountId}) => {
+  const { t } = useTranslation();
   const where = useMemo(() => {
     return {
       ...{account_id: { _eq: accountId}, module: {_eq: 'balances'}}
@@ -45,13 +48,13 @@ const BalancesEventsTable: React.FC<IBalancesEventsTable> = ({accountId}) => {
   /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo<HeaderCell[]>(
     () => [
-      { value: 'event id' },
-      { value: 'block number' },
-      {value: 'Time'},
-      {value: 'Call'},
-      {value: 'Amount'}
+      { value: t('event id') },
+      { value: t('block number') },
+      {value: t('Time') },
+      {value: t('Call') },
+      {value: t('Amount') }
     ],
-    []
+    [t]
   );
 
   /* ------------------------- Main Query - Get `balances` Events ------------------------ */

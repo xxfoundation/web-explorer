@@ -21,7 +21,7 @@ export type Metrics = {
   description?: string;
 };
 
-export type ScoreDescriptions =  Partial<Record<MetricScores, string>>;
+export type ScoreDescriptions =  Partial<Record<MetricScores, string | null>>;
 
 export type MetricPopupProps = {
   name: string;

@@ -3,7 +3,8 @@ import type { SeriesData, TimeInterval } from '../../components/charts/BarChart/
 import { useQuery } from '@apollo/client';
 import { Box, CircularProgress } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
-// import DownloadDataButton from '../../components/buttons/DownloadDataButton';
+import { useTranslation } from 'react-i18next';
+
 import BarChart from '../../components/charts/BarChart/BarChart';
 import { convertTimestamps } from '../../components/charts/BarChart/utils';
 import IntervalControls, {
@@ -13,6 +14,7 @@ import Error from '../../components/Error';
 import { GET_TRANSFERS_TIMESTAMPS } from '../../schemas/transfers.schema';
 
 const TranfersBarChart: FC = () => {
+  const { t } = useTranslation();
   const [interval, setInterval] = useState<TimeInterval>('1h');
   const variables = useMemo(() => {
     return {
@@ -28,9 +30,9 @@ const TranfersBarChart: FC = () => {
   const amounts = useMemo(
     () =>
       convertTimestamps(
-        (data?.transfer || []).map((t) => t.timestamp),
+        (data?.transfer || []).map((tx) => tx.timestamp),
         interval,
-        (data?.transfer || []).map((t) => t.amount)
+        (data?.transfer || []).map((tx) => tx.amount)
       ),
     [data?.transfer, interval]
   );
@@ -38,7 +40,7 @@ const TranfersBarChart: FC = () => {
   const counts = useMemo(
     () =>
       convertTimestamps(
-        (data?.transfer || []).map((t) => t.timestamp),
+        (data?.transfer || []).map((tx) => tx.timestamp),
         interval
       ),
     [data?.transfer, interval]
@@ -52,7 +54,7 @@ const TranfersBarChart: FC = () => {
         label: 'xx'
       },
       {
-        timestamps: (data?.transfer || []).map((t) => t.timestamp),
+        timestamps: (data?.transfer || []).map((tx) => tx.timestamp),
         label: 'transfers',
         data: counts
       }
@@ -60,16 +62,24 @@ const TranfersBarChart: FC = () => {
     [amounts, counts, data?.transfer]
   );
 
-  let errorMessage = 'No transfers made in the past '
-  if (interval == '1h') {
-    errorMessage += '48 hours'
-  }
-  if (interval == '6h') {
-    errorMessage += '10 days'
-  }
-  if (interval == '1d') {
-    errorMessage += 'month'
-  }
+  const errorMessage = useMemo(() => {
+    let timeframe;
+    if (interval == '1h') {
+      timeframe = t('48 hours');
+    }
+
+    if (interval == '6h') {
+      timeframe = t('10 days')
+    }
+
+    if (interval == '1d') {
+      timeframe = t('month')
+    }
+
+    return t('No transfers made in the past {{timeframe}}', { timeframe });
+  }, [t, interval])
+
+ 
 
   return (
     <Box

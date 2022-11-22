@@ -59,11 +59,11 @@ const BlockSummaryHeader: React.FC<{
 }> = ({ blockNumber }) => {
   const { t } = useTranslation();
   const arrowsOptions = useArrowButtonsOptions(blockNumber);
-  
+
   return (
     <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
       <Typography variant='h1' style={{ whiteSpace: 'break-spaces' }}>
-        Block No. {blockNumber}
+        {t('Block No.')} {blockNumber}
       </Typography>
       <BlockNav direction={'row'} alignItems={'center'} spacing={2}>
         <Hidden mdDown>

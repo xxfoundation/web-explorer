@@ -18,7 +18,6 @@ const EraStake = (nominator: Nominator) => {
 };
 
 const DEFAULT_ROWS_PER_PAGE = 10;
-const headers = headerCellsWrapper(['Account', 'Stake', 'Share']);
 
 type Props = {
   nominators?: Nominator[];
@@ -28,6 +27,11 @@ const NominatorsTable: FC<Props> = ({ nominators }) => {
   const { t } = useTranslation();
   const pagination = usePagination({ rowsPerPage: DEFAULT_ROWS_PER_PAGE });
   const { paginate, setCount } = pagination;
+
+  const headers = useMemo(
+    () => headerCellsWrapper([t('Account'), t('Stake'), t('Share')]),
+    [t]
+  );
 
   useEffect(() => {
     if (nominators) {

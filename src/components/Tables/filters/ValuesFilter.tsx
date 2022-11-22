@@ -69,8 +69,10 @@ const ValuesFilter: FC<Props> = ({
     setLocalValues((m) => (m !== undefined ? undefined : []));
   }, []);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const reset = useCallback(() => {setLocalValues(undefined); onChange([])}, []);
+  const reset = useCallback(() => {
+    setLocalValues(undefined);
+    onChange([]);
+  }, [onChange]);
   const applyChanges = useCallback(() => onChange(localValues), [localValues, onChange]);
   const canApplyChanges = !valuesLoading && (localValues !== value || !arrayCompare(localValues, value));
 

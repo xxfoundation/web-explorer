@@ -131,7 +131,7 @@ const ExtrinsicsTable: FC<Props> = (props) => {
           onChange={setModulesFilter}
           value={modulesFilter}
         />],
-        ['Call', <ValuesFilter
+        [t('Call'), <ValuesFilter
           availableValues={availableCalls}
           buttonLabel={t('Call')}
           onChange={setCallsFilter}

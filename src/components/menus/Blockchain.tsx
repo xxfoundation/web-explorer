@@ -1,10 +1,13 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Menu } from '@mui/material';
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { useToggle } from '../../hooks';
 import { MenuButton, MenuLink } from './menu.styles';
 
 export default function Blockchain() {
+  const { t } = useTranslation();
   const button = useRef(null);
   const [opened, { toggle, toggleOff: close }] = useToggle();
 
@@ -19,7 +22,7 @@ export default function Blockchain() {
         onClick={toggle}
         endIcon={<KeyboardArrowDownIcon />}
       >
-        Blockchain
+        {t('Blockchain')}
       </MenuButton>
       {button.current && (
         <Menu
@@ -32,16 +35,16 @@ export default function Blockchain() {
           }}
         >
           <MenuLink to={'/blocks'} onClick={close}>
-            Blocks
+            {t('Blocks')}
           </MenuLink>
           <MenuLink to={'/extrinsics'} onClick={close}>
-            Extrinsics
+            {t('Extrinsics')}
           </MenuLink>
           <MenuLink to={'/events'} onClick={close}>
-            Events
+            {t('Events')}
           </MenuLink>
           <MenuLink to={'/transfers'} onClick={close}>
-            Transfers
+            {t('Transfers')}
           </MenuLink>
         </Menu>
       )}

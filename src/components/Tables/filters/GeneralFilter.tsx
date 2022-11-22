@@ -73,7 +73,7 @@ const GeneralFilter = ({ label, onChange, value }: Props) => {
             }}
             onClick={applyChanges}
           >
-            Apply
+            {t('Apply')}
           </Button>
           <Button
             variant='contained'
@@ -90,7 +90,7 @@ const GeneralFilter = ({ label, onChange, value }: Props) => {
             }}
             onClick={reset}
           >
-            Clear
+            {t('Clear')}
           </Button>
         </Stack>
       </Stack>

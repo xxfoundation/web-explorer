@@ -11,6 +11,7 @@ import {
 } from '../../../../schemas/events.schema';
 import usePaginatedQuery from '../../../../hooks/usePaginatedQuery';
 import FormatBalance from '../../../../components/FormatBalance';
+import { useTranslation } from 'react-i18next';
 
 const props: TableCellProps = { align: 'left' };
 
@@ -29,6 +30,7 @@ interface IStakingEventsTable {
 }
 
 const StakingEventsTable: React.FC<IStakingEventsTable> = ({accountId}) => {
+  const { t } = useTranslation();
   const where = useMemo(() => {
     return {
       ...{account_id: { _eq: accountId}, module: {_eq: 'staking'}}
@@ -46,13 +48,13 @@ const StakingEventsTable: React.FC<IStakingEventsTable> = ({accountId}) => {
   /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo<HeaderCell[]>(
     () => [
-      { value: 'event id' },
-      { value: 'block number' },
-      {value: 'Time'},
-      {value: 'Call'},
-      {value: 'Amount'}
+      { value: t('event id') },
+      { value: t('block number') },
+      {value: t('Time')},
+      {value: t('Call')},
+      {value: t('Amount')}
     ],
-    []
+    [t]
   );
 
   /* ------------------------- Main Query - Get `balances` Events ------------------------ */
