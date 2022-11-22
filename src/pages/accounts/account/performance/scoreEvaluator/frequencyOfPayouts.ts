@@ -5,11 +5,9 @@ const getFrequencyOfPayouts = ({
   payoutClaimedEras = 0,
   payoutTotalEras = 0
 }: ScoringContext): [MetricScores, string] => {
-  if (!payoutClaimedEras) {
-    return ['neutral', 'validator never received a reward'];
-  }
   // Remove current era from total eras to be claimed
   const unclaimedEras = Math.abs((payoutTotalEras - 1) - payoutClaimedEras);
+  console.warn(unclaimedEras);
 
   const baseMsg = (score: string) =>
     `${score}, validator has ${unclaimedEras} ${unclaimedEras ? 'eras' : 'era'} unclaimed.`;
