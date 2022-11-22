@@ -143,6 +143,7 @@ const AccountId: FC = () => {
             <Panel index={tab} value={3}>
               <ValidatorCard
                 accountId={account.id}
+                account={account}
                 active={currentlyActive}/>
             </Panel>)}
             {nominator !== undefined && (

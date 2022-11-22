@@ -4,7 +4,7 @@ import { Typography, TypographyProps } from '@mui/material';
 type ErrorType = 'data-unavailable' | 'general';
 
 const messages: Record<ErrorType, string> = {
-  'data-unavailable': 'Data unavailable...',
+  'data-unavailable': 'No data on this timeframe',
   'general': 'Something went wrong...'
 }
 

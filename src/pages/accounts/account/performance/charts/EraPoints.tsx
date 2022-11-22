@@ -1,5 +1,6 @@
 import { SelectChangeEvent } from '@mui/material';
 import React, { FC, useCallback, useMemo, useState } from 'react';
+import { Grid } from '@mui/material';
 
 import { DataPoint } from '../../../../../components/charts/highcharts';
 import DropdownTimelineLineChart from '../../../../../components/charts/highcharts/DropdownTimelineLineChart';
@@ -24,7 +25,7 @@ const EraPoints: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
     Quarter: ERAS_IN_A_QUARTER,
     Month: ERAS_IN_A_MONTH
   };
-  const [timeframe, setTimeframe] = useState(ERAS_IN_A_MONTH);
+  const [timeframe, setTimeframe] = useState(latestEra);
   const onChange = useCallback(
     ({ target }: SelectChangeEvent<number>) => setTimeframe(Number(target.value)),
     []
@@ -36,9 +37,12 @@ const EraPoints: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
   const dataRange = useMemo(() => chartData.reverse().slice(eraRange.start, eraRange.end), [chartData, eraRange.end, eraRange.start])
 
   return (
+    <Grid item xs={12} md={12}>
+
     <DefaultTile header='era points' height='435px'>
       <DropdownTimelineLineChart tooltipFormatter={amountByEraTooltip} timeframe={timeframe} timeframes={timeframes} data={dataRange} onChange={onChange} />
     </DefaultTile>
+    </Grid>
   );
 };
 

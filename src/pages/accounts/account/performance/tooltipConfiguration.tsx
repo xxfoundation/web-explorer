@@ -6,29 +6,29 @@ const tooltipsConfiguration: Record<
 > = {
   identity: {
     name: 'identity',
-    description: 'Evaluate the quality of the identity data provided by the validator',
+    description: 'Evaluate the identity data provided by the validator',
     scores: {
       'very bad': 'None',
-      bad: 'Display Name',
-      neutral: '',
-      good: 'Display Name and Email',
-      'very good': 'Display Name, Email and Blurb + Judgment (Known Good)'
+      bad: 'Display name',
+      neutral: 'Display name and one contact info',
+      good: 'Display name and at least two contact info',
+      'very good': 'Display name, at least two contact info and, website or blurb'
     }
   },
   'address creation': {
     name: 'address creation',
     description: 'Evaluate how old is the validator address',
     scores: {
-      neutral: 'CurrentEra - CreationEra ≤ 180',
-      good: '180 ≤ CurrentEra - CreationEra < 365',
-      'very good': 'CurrentEra - CreationEra ≥ 365'
+      neutral: 'Less than 6 months old',
+      good: 'Between 6 months to a year old',
+      'very good': 'More than a year old'
     }
   },
   slashes: {
     name: 'slashes',
     description: 'Evaluate if the validator was slashed in the last 28 eras.',
     scores: {
-      'very bad': 'Slashed more than once OR at least once in the last 28 eras.',
+      'very bad': 'Slashed more than once or at least once in the last 28 eras.',
       bad: 'Slashed only once',
       good: 'Never Slashed'
     }
@@ -46,13 +46,13 @@ const tooltipsConfiguration: Record<
     description:
       'Evaluate nominators and if the validator is oversubscribed (256 - pulled from chain).',
     scores: {
-      bad: '> 256 Nominators',
-      neutral: '150 < Nominators < 256',
-      good: 'Nominators < 150'
+      bad: 'More than 256 nominators',
+      neutral: 'Between 150 and 256 nominators',
+      good: 'Less than 150 nominators'
     }
   },
-  'era points': {
-    name: 'era points',
+  'performance': {
+    name: 'performance',
     description:
       'Evaluate if the era points earned by the validator in the history are below or above average',
     scores: {
@@ -78,10 +78,10 @@ const tooltipsConfiguration: Record<
     name: 'frequency of payouts',
     description: 'Evaluate frequency of rewards distribution (max 84 eras)',
     scores: {
-      'very bad': '< 60 Eras',
-      bad: '60 < 30 Eras',
-      good: '30 < 7 Eras',
-      'very good': '7 < 1 Era'
+      'very bad': '> 60 eras unclaimed',
+      bad: '30 > 60 eras unclaimed',
+      good: '7 > 30 eras unclaimed',
+      'very good': '< 7 eras unclaimed'
     }
   },
   governance: {

@@ -23,7 +23,7 @@ export const GET_SLASHES_BY_ACCOUNT = gql`
       era
       event_index
       timestamp
-      validator_stash_address
+      validator_id
     }
   }
 `;
