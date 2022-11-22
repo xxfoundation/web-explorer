@@ -42,7 +42,7 @@ const SummaryInfo = () => {
     <Stack direction='row' justifyContent={{ md: 'space-between', sm: 'flex-start' }} spacing={5}>
       <Stack>
         <SubduedHeader>{t('decimals')}</SubduedHeader>
-        <DarkSubtitle>{t('9')}</DarkSubtitle>
+        <DarkSubtitle>9</DarkSubtitle>
       </Stack>
       <Stack>
         <SubduedHeader>{t('holders')}</SubduedHeader>
