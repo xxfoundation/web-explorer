@@ -83,12 +83,12 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
     const accounts = listOfAllAccounts?.accounts || [];
     for (let i = 0; i < accounts.length; i++) {
       const current = accounts[i];
-      const currentDate = current?.timestamp
+      const currentDate = current?.whenCreated
       const d = new Date();
       d.setDate(d.getDate() - timeframeEras);
       if(currentDate >= new Date(d).getTime()) {
         if(acc.length === 0) {
-          acc.push([current.timestamp, 1])
+          acc.push([current.whenCreated, 1])
         }
         else {
           const old = acc[count][0]
@@ -96,7 +96,7 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
             acc[count][1] = ++acc[count][1]
           }
           else {
-            acc.push([current.timestamp, acc[count][1]+1])
+            acc.push([current.whenCreated, acc[count][1]+1])
             count++;
           }
         } 
@@ -104,7 +104,7 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
     }
     return acc;
   }, [listOfAllAccounts, timeframeEras])
-
+  
   return (
     <DefaultTile header='new accounts' height='435px'>
       {loading || !chartData || !latestEra ? (

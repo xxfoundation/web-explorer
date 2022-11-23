@@ -460,8 +460,8 @@ export type ListAccountsTimeStamps = {
 
 export const LIST_ACCOUNTS_TIMESTAMPS = gql`
   query GetAccountsTimestamps {
-    accounts: account (order_by: {timestamp: asc}) {
-      timestamp
+    accounts: account (order_by: {when_created: asc}) {
+      whenCreated: when_created
     }
   }
 `
