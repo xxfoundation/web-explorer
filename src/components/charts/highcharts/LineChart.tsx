@@ -12,14 +12,14 @@ import { theme } from '../../../themes/footer';
 import Error from '../../Error';
 import { DataPoint } from './types';
 
-const calculateMaximums = (data: DataPoint[]) => {
+const calculateMaximums = (data: DataPoint[], xAxisType: string | undefined) => {
   const xItems = data.map(([x]) => x);
   const maxX = Math.max(...xItems);
   const minX = Math.min(...xItems);
-
+  const isBasedOnERAs = xAxisType === 'datetime';
   return {
-    minX: minX * 0.995,
-    maxX: maxX * 1.005
+    minX: isBasedOnERAs ? minX : minX * 0.995,
+    maxX: isBasedOnERAs ? maxX : maxX * 1.005
   };
 };
 
@@ -57,7 +57,7 @@ const LineChart: FC<Props> = ({
   yAxisTitle = '',
 }) => {
   const options = useMemo<Options>(() => {
-    const { maxX, minX } = x || calculateMaximums(data);
+    const { maxX, minX } = x || calculateMaximums(data, xAxisType);
     return {
         title: {
         text: title,
