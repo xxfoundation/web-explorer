@@ -1,7 +1,7 @@
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Tooltip, Typography } from '@mui/material';
-import React, { FC, useMemo, useState } from 'react';
+import React, {FC, useEffect, useMemo, useState} from 'react';
 
 import { theme } from '../../themes/default';
 import Address from '../../components/Hash/XXNetworkAddress';
@@ -15,6 +15,8 @@ import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
 import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
 import TimeAgoComponent from '../../components/TimeAgo';
+import DateRangeFilter, {Range} from '../../components/Tables/filters/DateRangeFilter';
+import {NumberParam, useQueryParam} from 'use-query-params';
 
 type RoleFilters = Record<string, boolean>;
 type Filters = { roles: RoleFilters };
@@ -105,9 +107,13 @@ const accountToRow = (
   ];
 };
 
-const useHeaders = () => {
+const useHeaders = (eraQueryParam: string | null) => {
   const [search, setSearch] = useState<string>();
   const [roleFilters, setRoleFilters] = useSessionState<RoleFilters>('accounts.roleFilters', {});
+  const [range, setRange] = useSessionState<Range>('accounts.range', {
+    from: eraQueryParam,
+    to: null
+  });
 
   const headers = useMemo<HeaderCell[]>(
     () => [
@@ -134,15 +140,18 @@ const useHeaders = () => {
       },
       { value: 'Locked balance' },
       { value: 'Total balance' },
-      { value: 'When Created' }
+      { label: 'When Created', value: <DateRangeFilter dateOnly={true} onChange={setRange} value={range} /> }
     ],
-    [roleFilters, search, setRoleFilters]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [roleFilters, search, setRoleFilters, range]
   );
-
+  
   return {
     headers,
     filters: { roles: roleFilters },
-    search
+    search,
+    range,
+    setRange
   };
 };
 
@@ -156,15 +165,35 @@ const buildOrClause = (filters: Filters) =>
   ].filter((v) => !!v);
 
 const AccountsTable: FC = () => {
-  const { filters, headers, search } = useHeaders();
+  const [eraQueryParam] = useQueryParam('era', NumberParam);
+  const { filters, headers, range, search, setRange } = useHeaders(eraQueryParam ? new Date(eraQueryParam).toISOString() : null);
+  
   const orClause = useMemo(
     () => buildOrClause(filters),
     [filters]
   );
+  
+  useEffect(() => {
+    if(eraQueryParam) {
+      setRange({from: new Date(eraQueryParam).toISOString(), to: range.to ? new Date(range.to).toISOString() : null})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eraQueryParam])
+  
+  const getTimeStamps = useMemo(() => {
+    const whenCreated: any = {};
+    if(range.to) {
+      whenCreated._lte = new Date(range.to).getTime()
+    }
+    if(range.from) {
+      whenCreated._gte = new Date(range.from).getTime()
+    }
+    return {when_created: whenCreated}
+  }, [range])
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ total_balance: 'desc' }],
+      orderBy: [{ when_created: 'desc' }],
       where: {
         _or: [
           { account_id: { _ilike: `%${search ?? ''}%`} },
@@ -173,14 +202,20 @@ const AccountsTable: FC = () => {
         ...(orClause.length > 0 && {
           _and: { _or: orClause }
         }),
+        ...getTimeStamps
       },
     }),
-    [search, orClause]
+    [search, orClause, getTimeStamps]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {
     variables
   });
+  
+  useEffect(() => {
+    refetch({variables})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [range])
 
   const { offset } = pagination;
   const rows = useMemo(
