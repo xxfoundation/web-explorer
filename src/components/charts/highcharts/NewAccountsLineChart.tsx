@@ -84,22 +84,26 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
     for (let i = 0; i < accounts.length; i++) {
       const current = accounts[i];
       const currentDate = current?.timestamp
-      if(acc.length === 0) {
-        acc.push([current.timestamp, 1])
-      }
-      else {
-        const old = acc[count][0]
-        if(sameDay(currentDate, old)) {
-          acc[count][1] = ++acc[count][1]
+      const d = new Date();
+      d.setDate(d.getDate() - timeframeEras);
+      if(currentDate >= new Date(d).getTime()) {
+        if(acc.length === 0) {
+          acc.push([current.timestamp, 1])
         }
         else {
-          acc.push([current.timestamp, acc[count][1]+1])
-          count++;
-        }
+          const old = acc[count][0]
+          if(sameDay(currentDate, old)) {
+            acc[count][1] = ++acc[count][1]
+          }
+          else {
+            acc.push([current.timestamp, acc[count][1]+1])
+            count++;
+          }
+        } 
       }
     }
     return acc;
-  }, [listOfAllAccounts])
+  }, [listOfAllAccounts, timeframeEras])
 
   return (
     <DefaultTile header='new accounts' height='435px'>
