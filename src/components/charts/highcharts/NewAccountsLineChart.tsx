@@ -115,8 +115,8 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
           timeframes={timeframes}
           data={formattedData || []}
           onChange={onChange}
-          yAxisTitle={'Accounts'}
-          xAxisTitle={'Timeline'}
+          yAxisTitle={'New Accounts (Cumulative)'}
+          xAxisTitle={'Date'}
           xAxisType={'datetime'}
           toolTipType={'datetime'}
           seriesName={'Accounts'}

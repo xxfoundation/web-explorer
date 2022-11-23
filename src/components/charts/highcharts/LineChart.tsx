@@ -16,10 +16,10 @@ const calculateMaximums = (data: DataPoint[], xAxisType: string | undefined) => 
   const xItems = data.map(([x]) => x);
   const maxX = Math.max(...xItems);
   const minX = Math.min(...xItems);
-  const isBasedOnERAs = xAxisType === 'datetime';
+  const isBasedOnDateTime = xAxisType === 'datetime';
   return {
-    minX: isBasedOnERAs ? minX : minX * 0.995,
-    maxX: isBasedOnERAs ? maxX : maxX * 1.005
+    minX: isBasedOnDateTime ? minX : minX * 0.995,
+    maxX: isBasedOnDateTime ? maxX : maxX * 1.005
   };
 };
 
