@@ -33,7 +33,7 @@ const StepChart: FC<Props> = ({
   const theme = useTheme();
   const options: Options = {
     colors: ['#00C4FF'],
-    chart: { marginLeft: 50, zoomType: 'x' },
+    chart: { marginLeft: 50, zooming: {type: 'x'} },
     credits: { enabled: false },
     legend: { enabled: false },
     tooltip: {
