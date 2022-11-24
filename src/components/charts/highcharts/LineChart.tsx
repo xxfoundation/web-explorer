@@ -11,6 +11,7 @@ import React, { FC,useMemo } from 'react';
 import { theme } from '../../../themes/footer';
 import Error from '../../Error';
 import { DataPoint } from './types';
+const MILISECONDS_IN_DAY = 86400000;
 
 const calculateMaximums = (data: DataPoint[], xAxisType: string | undefined) => {
   const xItems = data.map(([x]) => x);
@@ -18,8 +19,8 @@ const calculateMaximums = (data: DataPoint[], xAxisType: string | undefined) => 
   const minX = Math.min(...xItems);
   const isBasedOnDateTime = xAxisType === 'datetime';
   return {
-    minX: isBasedOnDateTime ? minX : minX * 0.995,
-    maxX: isBasedOnDateTime ? maxX : maxX * 1.005
+    minX: isBasedOnDateTime ? minX - MILISECONDS_IN_DAY : minX * 0.995,
+    maxX: isBasedOnDateTime ? maxX + MILISECONDS_IN_DAY : maxX * 1.005
   };
 };
 
