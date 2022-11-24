@@ -69,7 +69,7 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
   }, [onEraTimeframeChange, timeframeEras, timeframes]);
   
   const onClick = useCallback((evt: SeriesClickEventObject) => {
-    navigate(`/accounts?era=${evt.point.options.x}`);
+    navigate(`/accounts?whenCreated=${evt.point.options.x}`);
   }, [navigate]);
 
   function sameDay(t1: number, t2: number) {

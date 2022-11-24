@@ -15,8 +15,10 @@ import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
 import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
 import TimeAgoComponent from '../../components/TimeAgo';
-import DateRangeFilter, {Range} from '../../components/Tables/filters/DateRangeFilter';
 import {NumberParam, useQueryParam} from 'use-query-params';
+import DateDayFilter from '../../components/Tables/filters/DateDayFilter';
+
+const MILISECONDS_IN_DAY = 86400000;
 
 type RoleFilters = Record<string, boolean>;
 type Filters = { roles: RoleFilters };
@@ -107,13 +109,10 @@ const accountToRow = (
   ];
 };
 
-const useHeaders = (eraQueryParam: string | null) => {
+const useHeaders = (whenCreatedQueryParam: string | null) => {
   const [search, setSearch] = useState<string>();
   const [roleFilters, setRoleFilters] = useSessionState<RoleFilters>('accounts.roleFilters', {});
-  const [range, setRange] = useSessionState<Range>('accounts.range', {
-    from: eraQueryParam,
-    to: null
-  });
+  const [filteredDay, setFilteredDay] = useSessionState<string | undefined>('accounts.filteredDay', whenCreatedQueryParam !== null ? whenCreatedQueryParam : undefined);
 
   const headers = useMemo<HeaderCell[]>(
     () => [
@@ -140,18 +139,18 @@ const useHeaders = (eraQueryParam: string | null) => {
       },
       { value: 'Locked balance' },
       { value: 'Total balance' },
-      { label: 'When Created', value: <DateRangeFilter dateOnly={true} onChange={setRange} value={range} /> }
+      { label: 'When Created', value: <DateDayFilter dateOnly={true} onChange={setFilteredDay} value={filteredDay} /> }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [roleFilters, search, setRoleFilters, range]
+    [roleFilters, search, setRoleFilters, filteredDay]
   );
   
   return {
     headers,
     filters: { roles: roleFilters },
     search,
-    range,
-    setRange
+    filteredDay,
+    setFilteredDay
   };
 };
 
@@ -165,8 +164,8 @@ const buildOrClause = (filters: Filters) =>
   ].filter((v) => !!v);
 
 const AccountsTable: FC = () => {
-  const [eraQueryParam] = useQueryParam('era', NumberParam);
-  const { filters, headers, range, search, setRange } = useHeaders(eraQueryParam ? new Date(eraQueryParam).toISOString() : null);
+  const [whenCreatedQueryParam] = useQueryParam('whenCreated', NumberParam);
+  const { filteredDay, filters, headers, search, setFilteredDay } = useHeaders(whenCreatedQueryParam ? new Date(whenCreatedQueryParam).toISOString() : null);
   
   const orClause = useMemo(
     () => buildOrClause(filters),
@@ -174,22 +173,20 @@ const AccountsTable: FC = () => {
   );
   
   useEffect(() => {
-    if(eraQueryParam) {
-      setRange({from: new Date(eraQueryParam).toISOString(), to: range.to ? new Date(range.to).toISOString() : null})
+    if(whenCreatedQueryParam) {
+      setFilteredDay(new Date(whenCreatedQueryParam).toISOString())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eraQueryParam])
+  }, [whenCreatedQueryParam])
   
   const getTimeStamps = useMemo(() => {
     const whenCreated: any = {};
-    if(range.to) {
-      whenCreated._lte = new Date(range.to).getTime()
-    }
-    if(range.from) {
-      whenCreated._gte = new Date(range.from).getTime()
+    if(filteredDay) {
+      whenCreated._gte = new Date(filteredDay).getTime()
+      whenCreated._lte = new Date(filteredDay).getTime() + MILISECONDS_IN_DAY
     }
     return {when_created: whenCreated}
-  }, [range])
+  }, [filteredDay])
 
   const variables = useMemo(
     () => ({
@@ -215,7 +212,7 @@ const AccountsTable: FC = () => {
   useEffect(() => {
     refetch({variables})
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [range])
+  }, [setFilteredDay])
 
   const { offset } = pagination;
   const rows = useMemo(
