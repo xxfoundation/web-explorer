@@ -28,14 +28,14 @@ const DropdownTimelineLineChart: FC<Props> = ({
   labelFormatters,
   onChange,
   onClick,
-                                                seriesName,
+  seriesName,
   timeframe,
   timeframes,
-                                                toolTipType,
+  toolTipType,
   tooltipFormatter,
-                                                xAxisTitle,
-                                                xAxisType,
-                                                yAxisTitle,
+  xAxisTitle,
+  xAxisType,
+  yAxisTitle,
 }) => {
   const chartRef = useRef<HighchartsReact.RefObject>(null);
 

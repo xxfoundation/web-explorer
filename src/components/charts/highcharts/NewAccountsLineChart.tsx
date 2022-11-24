@@ -17,6 +17,9 @@ import DropdownTimelineLineChart from './DropdownTimelineLineChart';
 const ERAS_IN_A_QUARTER = 90;
 const ERAS_IN_A_MONTH = 30;
 
+// const eraTime = 86400000;
+// const genesisTime = 1637132496000;
+
 type Props = {
   onEraTimeframeChange?: (timeframe: Timeframe) => void;
 }
@@ -76,27 +79,44 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
       d1.getMonth() === d2.getMonth() &&
       d1.getDate() === d2.getDate();
   }
+
+  function getStartEraDay(t: number) {
+    const d = new Date(t)
+    const newDate = d.setHours(7,0,0,0)
+    return newDate;
+  }
   
   const formattedData = useMemo(() => {
     const acc: DataPoint[] = [];
     let count = 0;
     const accounts = listOfAllAccounts?.accounts || [];
+    
+    const d = new Date();
+    // -1 to start on era #0 (genesis)
+    d.setDate(d.getDate() - timeframeEras - 1);
+    const initChartDate = new Date(d).getTime()
+
+    // flag to calculate offset
+    let offset = false;
+
     for (let i = 0; i < accounts.length; i++) {
       const current = accounts[i];
-      const currentDate = current?.whenCreated
-      const d = new Date();
-      d.setDate(d.getDate() - timeframeEras);
-      if(currentDate >= new Date(d).getTime()) {
+      const currentDate = current?.whenCreated;
+      if(currentDate >= initChartDate) {
+        if (!offset) {
+          acc.push([getStartEraDay(current.whenCreated), i])
+          offset = true;
+        }
         if(acc.length === 0) {
-          acc.push([current.whenCreated, 1])
+          acc.push([getStartEraDay(current.whenCreated), 1])
         }
         else {
           const old = acc[count][0]
           if(sameDay(currentDate, old)) {
-            acc[count][1] = ++acc[count][1]
+            ++acc[count][1]
           }
           else {
-            acc.push([current.whenCreated, acc[count][1]+1])
+            acc.push([getStartEraDay(current.whenCreated), acc[count][1]+1])
             count++;
           }
         } 
@@ -106,7 +126,7 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
   }, [listOfAllAccounts, timeframeEras])
   
   return (
-    <DefaultTile header='new accounts' height='435px'>
+    <DefaultTile header='new accounts (Cumulative)' height='435px'>
       {loading || !chartData || !latestEra ? (
         <Loading />
       ) : (

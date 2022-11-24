@@ -47,9 +47,9 @@ const LineChart: FC<Props> = ({
   data,
   labelFormatters,
   onClick,
-                                seriesName = 'ERA',
+  seriesName = 'ERA',
   title,
-                                toolTipType ,
+  toolTipType ,
   tooltipFormatter,
   x,
   xAxisTitle = 'ERA',
@@ -101,8 +101,7 @@ const LineChart: FC<Props> = ({
       yAxis: {
         gridLineWidth: 0,
         title: { text: yAxisTitle },
-        labels: { align: 'right', x: 0, formatter: labelFormatters?.yAxis },
-        min: 0,
+        labels: { align: 'right', x: 0, formatter: labelFormatters?.yAxis }
       },
       plotOptions: {
         series: {
