@@ -112,7 +112,7 @@ const accountToRow = (
 const useHeaders = (whenCreatedQueryParam: string | null) => {
   const [search, setSearch] = useState<string>();
   const [roleFilters, setRoleFilters] = useSessionState<RoleFilters>('accounts.roleFilters', {});
-  const [filteredDay, setFilteredDay] = useSessionState<string | undefined>('accounts.filteredDay', whenCreatedQueryParam !== null ? whenCreatedQueryParam : undefined);
+  const [filteredDay, setFilteredDay] = useSessionState<string | undefined | any>('accounts.filteredDay', whenCreatedQueryParam !== null ? whenCreatedQueryParam : undefined);
 
   const headers = useMemo<HeaderCell[]>(
     () => [
@@ -139,12 +139,11 @@ const useHeaders = (whenCreatedQueryParam: string | null) => {
       },
       { value: 'Locked balance' },
       { value: 'Total balance' },
-      { label: 'When Created', value: <DateDayFilter dateOnly={true} onChange={setFilteredDay} value={filteredDay} /> }
+      { label: 'When Created', value: <DateDayFilter onChange={setFilteredDay} value={filteredDay} /> }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [roleFilters, search, setRoleFilters, filteredDay]
   );
-  
   return {
     headers,
     filters: { roles: roleFilters },
