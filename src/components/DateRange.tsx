@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { MobileDateTimePicker } from '@mui/x-date-pickers';
+import { MobileDateTimePicker, DatePicker } from '@mui/x-date-pickers';
 import {
   Button,
   Checkbox,
@@ -18,14 +18,15 @@ defaultFrom.set('hour', 7);
 const defaultTo = dayjs.utc();
 
 export type Range = {
-  from: string | null;
-  to: string | null;
+  from: string | number | null;
+  to: string | number | null;
 };
 
 export type Props = {
   value?: Range;
   onChange: (range: Range) => void;
   maximumRange?: number;
+  dateOnly?: boolean
 };
 
 const THREE_MONTHS_IN_SECONDS = 7890000000;
@@ -33,12 +34,13 @@ const THREE_MONTHS_IN_SECONDS = 7890000000;
 const DateRange: FC<Props> = ({
   onChange,
   value = { from: null, to: null },
+                                dateOnly = false,
   maximumRange = THREE_MONTHS_IN_SECONDS
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  const [from, setFrom] = useState<string | null>(value.from);
-  const [to, setTo] = useState<string | null>(value.to);
+  const [from, setFrom] = useState<string | number | null>(value.from);
+  const [to, setTo] = useState<string | number | null>(value.to);
   const [fromEnabled, { toggle: toggleFrom, toggleOff: disableFrom }] = useToggle(!!from);
   const [toEnabled, { toggle: toggleTo, toggleOff: disableTo }] = useToggle(!!to);
 
@@ -164,13 +166,22 @@ const DateRange: FC<Props> = ({
       />
       {fromEnabled && (
         <FormControl sx={{ mb: 1.5 }} component='div'>
-          <MobileDateTimePicker
+          {dateOnly ? <DatePicker
             disableFuture
             label={'From (UTC)'}
             onChange={fromChanged}
             value={from}
             renderInput={(params) => <TextField {...params} />}
           />
+            :
+            <MobileDateTimePicker
+              disableFuture
+              label={'From (UTC)'}
+              onChange={fromChanged}
+              value={from}
+              renderInput={(params) => <TextField {...params} />}
+              />
+          }
         </FormControl>
       )}
       <FormControlLabel
@@ -187,13 +198,26 @@ const DateRange: FC<Props> = ({
       />
 
       {toEnabled && (
-        <MobileDateTimePicker
-          disableFuture
-          label={'To (UTC)'}
-          onChange={toChanged}
-          value={to}
-          renderInput={(params) => <TextField {...params} />}
-        />
+        <>
+        {
+          dateOnly ?
+            (<DatePicker
+              disableFuture
+              label={'To (UTC)'}
+              onChange={toChanged}
+              value={to}
+              renderInput={(params) => <TextField {...params} />}
+            />)
+            :
+            (<MobileDateTimePicker
+              disableFuture
+              label={'To (UTC)'}
+              onChange={toChanged}
+              value={to}
+              renderInput={(params) => <TextField {...params} />}
+            />)
+        }
+        </>
       )}
       <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
         <Button
