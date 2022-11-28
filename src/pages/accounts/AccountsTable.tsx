@@ -17,6 +17,7 @@ import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
 import TimeAgoComponent from '../../components/TimeAgo';
 import {NumberParam, useQueryParam} from 'use-query-params';
 import DateDayFilter from '../../components/Tables/filters/DateDayFilter';
+import { TDate } from '../../components/SingleDate';
 
 const MILISECONDS_IN_DAY = 86400000;
 
@@ -112,7 +113,7 @@ const accountToRow = (
 const useHeaders = (whenCreatedQueryParam: string | null) => {
   const [search, setSearch] = useState<string>();
   const [roleFilters, setRoleFilters] = useSessionState<RoleFilters>('accounts.roleFilters', {});
-  const [filteredDay, setFilteredDay] = useSessionState<string | undefined | any>('accounts.filteredDay', whenCreatedQueryParam !== null ? whenCreatedQueryParam : undefined);
+  const [filteredDay, setFilteredDay] = useSessionState<string | undefined | TDate>('accounts.filteredDay', whenCreatedQueryParam !== null ? whenCreatedQueryParam : undefined);
 
   const headers = useMemo<HeaderCell[]>(
     () => [
@@ -165,7 +166,7 @@ const buildOrClause = (filters: Filters) =>
 const AccountsTable: FC = () => {
   const [whenCreatedQueryParam] = useQueryParam('whenCreated', NumberParam);
   const { filteredDay, filters, headers, search, setFilteredDay } = useHeaders(whenCreatedQueryParam ? new Date(whenCreatedQueryParam).toISOString() : null);
-  
+
   const orClause = useMemo(
     () => buildOrClause(filters),
     [filters]
@@ -177,15 +178,6 @@ const AccountsTable: FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [whenCreatedQueryParam])
-  
-  const getTimeStamps = useMemo(() => {
-    const whenCreated: any = {};
-    if(filteredDay) {
-      whenCreated._gte = new Date(filteredDay).getTime()
-      whenCreated._lte = new Date(filteredDay).getTime() + MILISECONDS_IN_DAY
-    }
-    return {when_created: whenCreated}
-  }, [filteredDay])
 
   const variables = useMemo(
     () => ({
@@ -198,10 +190,13 @@ const AccountsTable: FC = () => {
         ...(orClause.length > 0 && {
           _and: { _or: orClause }
         }),
-        ...getTimeStamps
+        when_created: { 
+          _gt: filteredDay && new Date(filteredDay).getTime(), 
+          _lte: filteredDay && new Date(filteredDay).getTime() + MILISECONDS_IN_DAY
+        }
       },
     }),
-    [search, orClause, getTimeStamps]
+    [search, filteredDay, orClause]
   );
 
   const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {

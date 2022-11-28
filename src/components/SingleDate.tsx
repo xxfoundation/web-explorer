@@ -11,7 +11,7 @@ import {
 export type TDate = string | number | Date | null
 
 export type Props = {
-  value?: TDate;
+  value?: TDate | number;
   onChange: (date: TDate) => void;
   maximumRange?: number;
   dateOnly?: boolean

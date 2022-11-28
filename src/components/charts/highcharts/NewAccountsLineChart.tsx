@@ -76,50 +76,14 @@ const NewAccountsChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
     const d1 = new Date(t1)
     const d2 = new Date(t2)
 
-    if (d2.getDay() > d1.getDay() + 1 || d2.getDay() < d1.getDay() - 1) {
-      return false
-    }
-
-    const sameYearMonth = d1.getFullYear() === d2.getFullYear() &&
-                          d1.getMonth() === d2.getMonth()
-    
-    if (!sameYearMonth) {
-      return false
-    }
-
-    let soonerDate = d1
-    let laterDay = d2
-    if (sameYearMonth && d2.getDay() > d1.getDay() + 1) {
-      soonerDate = d1
-      laterDay = d2
-    } else if (sameYearMonth && d2.getDay() < d1.getDay() - 1) {
-      soonerDate = d2
-      laterDay = d1
-    } else if (sameYearMonth && d2.getDay() === d1.getDay()) {
-      return true
-    } else {
-      return false
-    }
-
-    const d = new Date()
-    d.setFullYear(soonerDate.getFullYear(), soonerDate.getMonth(), soonerDate.getDay())
-
-    if (soonerDate.getHours() <= d.setHours(7,0,0,0)) {
-      return false
-    }
-
-    d.setDate(laterDay.getDay())
-    if (laterDay.getHours() > d.setHours(7,0,0,0)) {
-      return false
-    }
-
-    return true;
+    return  d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() && 
+            d2.getDay() === d1.getDay();
   }
 
   function getStartEraDay(t: number) {
     const d = new Date(t)
-    const newDate = d.setHours(7,0,0,0)
-    return newDate;
+    return d.setHours(0,0,0,0);
   }
   
   const formattedData = useMemo(() => {
