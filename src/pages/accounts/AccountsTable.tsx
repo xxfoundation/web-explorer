@@ -190,10 +190,16 @@ const AccountsTable: FC = () => {
         ...(orClause.length > 0 && {
           _and: { _or: orClause }
         }),
-        when_created: { 
-          _gt: filteredDay && new Date(filteredDay).getTime(), 
-          _lte: filteredDay && new Date(filteredDay).getTime() + MILISECONDS_IN_DAY
-        }
+        ...(filteredDay && {
+          _or: 
+            {
+              when_created: { 
+                _gt: new Date(filteredDay).getTime(), 
+                _lte: new Date(filteredDay).getTime() + MILISECONDS_IN_DAY
+              }
+            }
+          }
+        )
       },
     }),
     [search, filteredDay, orClause]
