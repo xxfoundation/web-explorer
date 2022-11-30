@@ -8,7 +8,7 @@ const EventsHistory = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
-      <Typography sx={{ mb: 5 }} variant='h1'>
+      <Typography id='h1' sx={{ mb: 5 }} variant='h1'>
         Events
       </Typography>
       <PaperStyled>
