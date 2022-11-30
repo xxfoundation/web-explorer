@@ -5,7 +5,7 @@ describe('Events Page Render', () => {
     cy.visit('/events')
   })
   it('valid page heading', () => {
-    cy.get('#h1').contains('Event')
+    cy.get('h1[cy-id="h1"]').contains('Event')
   })
 })
 
@@ -37,17 +37,18 @@ describe('Events Page API Calls', () => {
     cy.window().then((win) => {
       win.sessionStorage.clear()
     })
-    
+
     cy.intercept('POST', 'https://xxscan.hasura.app/v1/graphql', (req, res) => {
       aliasQuery(req, 'ListEventsOrdered')
     })
   })
 
   it('modules filter fetches and display correct data', () => {
+    cy.wait(5000)
     cy.get('.css-ruiwse-MuiButtonBase-root-MuiButton-root').contains('Module').click();
     cy.get('.css-1forqcf-MuiStack-root input.PrivateSwitchBase-input.css-1m9pwf3').click({force: true, multiple:true});
     cy.get('label.css-16vvaaj-MuiFormControlLabel-root span').contains('assets').click();
-    cy.get('.css-6qclsq-MuiStack-root button').contains('Apply').click();
+    cy.get('button[cy-id="apply-btn"]').click();
     cy.wait('@gqlListEventsOrderedQuery').then(xhr => {
       xhr.response.body.data.events.map(event => {
         expect(event.module).to.eq('assets')

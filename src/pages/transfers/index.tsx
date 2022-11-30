@@ -18,7 +18,7 @@ const TransfersPage = () => {
         direction={'row'}
         sx={{ mb: 5 }}
       >
-        <Typography variant='h1'>Transfers</Typography>
+        <Typography cy-id='h1' variant='h1'>Transfers</Typography>
       </Stack>
       <Box sx={{ mb: 5 }}>
         <PaperStyled>

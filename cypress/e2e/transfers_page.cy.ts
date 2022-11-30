@@ -1,3 +1,13 @@
+describe('Transfers Page Render', () => {
+  it('navigates to Transfers page', () => {
+    cy.visit('/transfers')
+  })
+  it('valid page heading', () => {
+    cy.get('h1[cy-id="h1"]').contains('Transfers')
+  })
+})
+
+
 describe('Transfers Test Suit',()=>{
   it('Transfers Results Filter Test Case',()=>{
     cy.visit('https://explorer.xx.network/transfers')

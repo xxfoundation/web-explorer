@@ -161,6 +161,7 @@ const ValuesFilter: FC<Props> = ({
         )}
         <Stack direction={'row'} marginTop={'12px'} justifyContent={'space-evenly'}>
           <Button
+            cy-id='apply-btn'
             disabled={!canApplyChanges}
             variant='contained'
             sx={{
