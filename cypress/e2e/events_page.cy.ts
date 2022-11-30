@@ -1,4 +1,4 @@
-import { aliasQuery, aliasMutation } from '../utils/graphql-test-utils'
+import { aliasQuery } from '../utils/graphql-test-utils'
 
 describe('Events Page Render', () => {
   it('navigates to Events page', () => {
@@ -9,38 +9,41 @@ describe('Events Page Render', () => {
   })
 })
 
-// describe('Events Page Data render', () => {
-//   beforeEach(() => {
-//     cy.visit('/events')
-//     cy.intercept('POST', 'https://xxscan.hasura.app/v1/graphql', (req, res) => {
-//       // console.log('interceptiing')
-//       aliasQuery(req, 'ListEventsOrdered')
-//       // console.log('req = ', req)
-//     })
-//   })
-//   it('loads data in Events table', () => {
-//     cy.wait('@gqlListEventsOrderedQuery')
-//     cy.get('tbody tr').should('have.length.at.least', 1)
-//   })
-//   it('renders 20 rows for table', () => {
-//     cy.wait('@gqlListEventsOrderedQuery')
-//     cy.get('tbody tr').should('have.length', 20)
-//   })
-// })
+describe('Events Page Data render', () => {
+  beforeEach(() => {
+    cy.visit('/events')
+    cy.window().then((win) => {
+      win.sessionStorage.clear()
+    })
+    cy.intercept('POST', 'https://xxscan.hasura.app/v1/graphql', (req, res) => {
+      aliasQuery(req, 'ListEventsOrdered')
+    })
+  })
+  it('loads data in Events table', () => {
+    cy.wait(5000)
+    cy.wait('@gqlListEventsOrderedQuery')
+    cy.get('tbody tr').should('have.length.at.least', 1)
+  })
+  it('renders 20 rows for table', () => {
+    cy.wait('@gqlListEventsOrderedQuery')
+    cy.get('tbody tr').should('have.length', 20)
+  })
+})
 
 describe('Events Page API Calls', () => {
   beforeEach(() => {
     cy.visit('/events')
-    cy.clearLocalStorage()
+
+    cy.window().then((win) => {
+      win.sessionStorage.clear()
+    })
+    
     cy.intercept('POST', 'https://xxscan.hasura.app/v1/graphql', (req, res) => {
-      console.log('interceptiing')
       aliasQuery(req, 'ListEventsOrdered')
-      console.log('req = ', req)
     })
   })
 
   it('modules filter fetches and display correct data', () => {
-    cy.wait(5000)
     cy.get('.css-ruiwse-MuiButtonBase-root-MuiButton-root').contains('Module').click();
     cy.get('.css-1forqcf-MuiStack-root input.PrivateSwitchBase-input.css-1m9pwf3').click({force: true, multiple:true});
     cy.get('label.css-16vvaaj-MuiFormControlLabel-root span').contains('assets').click();
@@ -50,6 +53,5 @@ describe('Events Page API Calls', () => {
         expect(event.module).to.eq('assets')
       })
     })
-
   })
 })
