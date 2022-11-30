@@ -11,17 +11,16 @@ describe('Events Page Render', () => {
 
 describe('Events Page Data render', () => {
   beforeEach(() => {
-    cy.visit('/events')
     cy.window().then((win) => {
       win.sessionStorage.clear()
     })
     cy.intercept('POST', 'https://xxscan.hasura.app/v1/graphql', (req, res) => {
       aliasQuery(req, 'ListEventsOrdered')
     })
+    cy.visit('/events')
   })
   it('loads data in Events table', () => {
-    cy.wait(5000)
-    cy.wait('@gqlListEventsOrderedQuery')
+    cy.wait('@gqlListEventsOrderedQuery', {requestTimeout: 60000})
     cy.get('tbody tr').should('have.length.at.least', 1)
   })
   it('renders 20 rows for table', () => {
@@ -32,15 +31,13 @@ describe('Events Page Data render', () => {
 
 describe('Events Page API Calls', () => {
   beforeEach(() => {
-    cy.visit('/events')
-
     cy.window().then((win) => {
       win.sessionStorage.clear()
     })
-
     cy.intercept('POST', 'https://xxscan.hasura.app/v1/graphql', (req, res) => {
       aliasQuery(req, 'ListEventsOrdered')
     })
+    cy.visit('/events')
   })
 
   it('modules filter fetches and display correct data', () => {

@@ -124,6 +124,7 @@ const NewValidatorsTable: React.FC<IValidatorsTableProps> = ({isWaiting = false,
               />
             </div>
             <BaselineTable
+              id='baseline-table'
               error={!!error}
               loading={loading}
               headers={headers}

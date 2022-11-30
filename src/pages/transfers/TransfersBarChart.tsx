@@ -80,7 +80,7 @@ const TranfersBarChart: FC = () => {
       }}
     >
       <IntervalControls interval={interval} setInterval={setInterval} loading={loading} />
-      {loading || !(data?.transfer || []).length ? (
+      {loading || !([] || []).length ? (
         <Box
           sx={{
             display: 'flex',

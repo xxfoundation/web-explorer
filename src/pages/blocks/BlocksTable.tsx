@@ -171,6 +171,7 @@ const BlocksTable: FC = () => {
         {data?.blocks && <RefreshButton countSince={blocksSinceFetch} refetch={refetch} />}
       </Box>
       <BaselineTable
+        id='baseline-table'
         error={!!error}
         loading={loading}
         headers={headers}

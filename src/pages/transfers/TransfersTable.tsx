@@ -165,6 +165,7 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
         {data?.transfers && !where && <RefreshButton countSince={transfersSinceFetch} refetch={refetch} />}
       </Box>
       <BaselineTable
+        id='baseline-table'
         error={!!error}
         loading={loading}
         headers={headers}

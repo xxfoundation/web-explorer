@@ -7,7 +7,7 @@ import BlocksTable from './BlocksTable';
 const PageHeader = () => {
   return (
     <Stack justifyContent={'space-between'} alignItems={'center'} direction={'row'} sx={{ mb: 5 }}>
-      <Typography variant='h1'>Blocks</Typography>
+      <Typography cy-id='h1' variant='h1'>Blocks</Typography>
     </Stack>
   );
 };

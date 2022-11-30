@@ -14,8 +14,8 @@ const Staking: React.FC = () => {
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <Stack direction='row' sx={{ mb: 5 }} alignItems='flex-end' justifyContent='space-between'>
-        <Typography variant='h1'>Staking</Typography>
-        <Button onClick={stats.toggle} endIcon={stats.icon}>
+        <Typography cy-id='h1' variant='h1'>Staking</Typography>
+        <Button cy-id='show-staking-charts' onClick={stats.toggle} endIcon={stats.icon}>
           Show Staking Charts
         </Button>
       </Stack>

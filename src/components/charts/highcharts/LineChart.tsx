@@ -45,7 +45,7 @@ const LineChart: FC<Props> = ({
   title,
   tooltipFormatter,
   x,
-  yAxisTitle = ''
+  yAxisTitle = '',
 }) => {
   const options = useMemo<Options>(() => {
     const { maxX, minX } = x || calculateMaximums(data);
