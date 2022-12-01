@@ -1,13 +1,28 @@
 import { aliasQuery } from '../utils/graphql-test-utils'
 
-// describe('Transfers Page Render', () => {
-//   it('navigates to Transfers page', () => {
-//     cy.visit('/transfers')
-//   })
-//   it('valid page heading', () => {
-//     cy.get('.css-wp8zft-MuiStack-root').should('have.text','Transfers')
-//   })
-// })
+describe('Transfers Page Render', () => {
+  it('navigates to Transfers page', () => {
+    cy.visit('/transfers')
+  })
+  it('valid page heading', () => {
+    cy.get('.css-wp8zft-MuiStack-root').should('have.text','Transfers')
+  })
+})
+
+describe("Transfers chart displays data", () => {
+  beforeEach(() => {
+    cy.visit("/transfers");
+    cy.window().then((win) => {
+      win.sessionStorage.clear();
+    });
+  });
+  it("Render Transfers chart", () => {
+    cy.wait(5000);
+    cy.get('[data-testid="CloseIcon"]').click();
+    cy.get(".bar").should("have.length.at.least", 1);
+  });
+});
+
 describe('Transfers Page Data render', () => {
   beforeEach(() => {
     cy.window().then((win) => {

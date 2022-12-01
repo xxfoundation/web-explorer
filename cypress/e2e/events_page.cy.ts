@@ -14,7 +14,7 @@ describe('Events Page Data render', () => {
     cy.window().then((win) => {
       win.sessionStorage.clear()
     })
-    cy.intercept('POST', 'https://xxscan.hasura.app/v1/graphql', (req, res) => {
+    cy.intercept('POST', 'https://xxscan-test.hasura.app/v1/graphql', (req, res) => {
       aliasQuery(req, 'ListEventsOrdered')
     })
     cy.visit('/events')
@@ -34,7 +34,7 @@ describe('Events Page API Calls', () => {
     cy.window().then((win) => {
       win.sessionStorage.clear()
     })
-    cy.intercept('POST', 'https://xxscan.hasura.app/v1/graphql', (req, res) => {
+    cy.intercept('POST', 'https://xxscan-test.hasura.app/v1/graphql', (req, res) => {
       aliasQuery(req, 'ListEventsOrdered')
     })
     cy.visit('/events')

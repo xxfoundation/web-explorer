@@ -200,6 +200,7 @@ const ExtrinsicsTable: FC<Props> = (props) => {
         {data?.extrinsics && <RefreshButton countSince={blocksSinceFetch} refetch={refetch} />}
       </Box>
       <BaselineTable
+        id='baseline-table'
         error={!!error}
         loading={loading}
         headers={headers}

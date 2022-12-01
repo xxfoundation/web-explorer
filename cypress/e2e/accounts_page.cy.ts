@@ -7,6 +7,23 @@ describe('Accounts Page Render', () => {
     cy.get('.css-1wy44kq-MuiTypography-root').should('have.text','Accounts')
   })
 })
+describe("Accounts chart Test Suite", () => {
+  beforeEach(() => {
+    cy.window().then((win) => {
+      win.sessionStorage.clear();
+    });
+    cy.visit("/accounts");
+  });
+  it("Render Account chart", () => {
+    cy.wait(5000);
+    cy.get('[data-testid="CloseIcon"]').click();
+    cy.get(".highcharts-point.highcharts-color-0").should(
+      "have.length.at.least",
+      1
+    );
+  });
+});
+
 describe('Accounts Page Data render', () => {
   beforeEach(() => {
     cy.window().then((win) => {
@@ -28,6 +45,7 @@ describe('Accounts Page Data render', () => {
     })
   })
 })
+
 describe('Accounts Page API Calls', () => {
   beforeEach(() => {
     cy.window().then((win) => {
