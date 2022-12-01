@@ -33,7 +33,7 @@ describe('Transfers Page Data render', () => {
     })
     cy.visit('/transfers')
   })
-  it('loads data in Events table', () => {
+  it('loads data in Transfers table', () => {
     cy.wait('@gqlListTransfersOrderedQuery').then(xhr => {
       cy.get('[cy-id="baseline-table"] tbody tr').should('have.length.at.least', 1)
     })

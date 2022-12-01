@@ -34,7 +34,7 @@ describe('Accounts Page Data render', () => {
     })
     cy.visit('/accounts')
   })
-  it('loads data in Events table', () => {
+  it('loads data in Accounts table', () => {
         cy.wait('@gqlListAccountsQuery').then(xhr => {
           cy.get('tbody tr').should('have.length.at.least', 1)
         })

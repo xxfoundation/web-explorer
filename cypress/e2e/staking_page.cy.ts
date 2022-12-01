@@ -42,7 +42,7 @@ describe('Staking Page', () => {
     })
   });
   describe('Validators table', () => {
-    it('loads data in Events table', () => {
+    it('loads data in Staking table', () => {
       cy.wait('@gqlGetCurrentValidatorsQuery').then(xhr => {
         cy.get('[cy-id="baseline-table"] tbody tr').should('have.length.at.least', 1)
       })

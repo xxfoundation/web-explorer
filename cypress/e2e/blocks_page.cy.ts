@@ -22,7 +22,7 @@ describe("Blocks Data render", () => {
     );
     cy.visit("/blocks");
   });
-  it("loads data in Events table", () => {
+  it("loads data in Blocks table", () => {
     cy.wait("@gqlListBlocksOrderedQuery").then((xhr) => {
       cy.get('[cy-id="baseline-table"] tbody tr').should(
         "have.length.at.least",
@@ -37,7 +37,7 @@ describe("Blocks Data render", () => {
   });
 });
 
-describe("Blocks Test Suite", () => {
+describe("Blocks Table filters", () => {
   beforeEach(() => {
     cy.window().then((win) => {
       win.sessionStorage.clear();
@@ -46,32 +46,32 @@ describe("Blocks Test Suite", () => {
     cy.wait(2000);
     cy.get('[data-testid="CloseIcon"]').click();
   });
+  
   it("Blocks Producer Filter", () => {
-    cy.get(".css-3zvw0q-MuiTableCell-root button").eq(2).click();
-    cy.get(".css-13xvg6k-MuiFormControlLabel-root").click();
-    cy.get('[placeholder="Search..."]').type(
+    cy.get('[cy-id="th-5"] button').click();
+    cy.get("#account-holders-table-filters label").click();
+    cy.get("#account-holders-table-filters  input:visible").type(
       "6Y7jBFdAXY41gUYbXmzXezMP5CzpjyFMhB5r5FPLpv6ouR6z"
     );
     cy.wait(50000);
-    cy.get('[placeholder="Search..."]')
+    cy.get("#account-holders-table-filters  input:visible")
       .invoke("val")
       .then((sometext) => {
-        cy.get('[data-testid="CheckBoxOutlineBlankIcon"]').click({
+        cy.get("#account-holders-table-filters label").eq(1).click({
           force: true,
         });
-        cy.get(".css-1nlsvi-MuiButtonBase-root-MuiButton-root").click();
-        cy.get(
-          "td:nth-child(6) .css-1kd8f55-MuiTypography-root-MuiLink-root"
-        ).each(($ele) => {
+        cy.get('[cy-id="apply-btn"]').click();
+        cy.get("tbody tr [cy-id='td-5'] a").each(($ele) => {
           cy.wrap($ele).realHover("mouse");
           cy.wait(1000);
-          cy.get(".css-1l8riu6-MuiTypography-root").then((element) => {
+          cy.get("[role='tooltip'] div span:nth-child(1)").then((element) => {
             const elementText = element.text();
             expect(elementText).to.eq(sometext);
           });
         });
       });
   });
+
   it("status", () => {
     cy.get("[cy-id='th-1'] button").eq(0).click();
     cy.get("#account-holders-table-filters label").click();
