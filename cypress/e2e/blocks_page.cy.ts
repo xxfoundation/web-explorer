@@ -50,8 +50,9 @@ describe("Blocks Table filters", () => {
   it("Blocks Producer Filter", () => {
     cy.get('[cy-id="th-5"] button').click();
     cy.get("#account-holders-table-filters label").click();
+    const blockProducer = "6ZWXwuMP8Zq9RsjLBtXyJCo6ueajJPtLMVtvTwJoZfqsQ9NT"
     cy.get("#account-holders-table-filters  input:visible").type(
-      "6Y7jBFdAXY41gUYbXmzXezMP5CzpjyFMhB5r5FPLpv6ouR6z"
+      blockProducer
     );
     cy.wait(50000);
     cy.get("#account-holders-table-filters  input:visible")
@@ -63,10 +64,10 @@ describe("Blocks Table filters", () => {
         cy.get('[cy-id="apply-btn"]').click();
         cy.get("tbody tr [cy-id='td-5'] a").each(($ele) => {
           cy.wrap($ele).realHover("mouse");
-          cy.wait(1000);
+          cy.wait(500);
           cy.get("[role='tooltip'] div span:nth-child(1)").then((element) => {
             const elementText = element.text();
-            expect(elementText).to.eq(sometext);
+            expect(elementText).to.contain(sometext);
           });
         });
       });
@@ -79,7 +80,7 @@ describe("Blocks Table filters", () => {
     cy.get("#account-holders-table-filters button").eq(0).click();
     cy.get("tbody tr [cy-id='td-1'] svg").each(($el) => {
       cy.wrap($el).realHover("mouse");
-      cy.wait(2000);
+      cy.wait(500);
       cy.get(".css-12wicnf-MuiTooltip-tooltip").should("have.text", "pending");
     });
   });
