@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { LanguageMenu } from '../LanguageSwitcher';
 
 import Link from '../Link';
 
@@ -47,7 +48,6 @@ export default function MobileNav() {
       >
         <Box
           sx={{
-            height: 1,
             backgroundColor: '#4F4F4F',
             width: '100%'
           }}
@@ -99,6 +99,12 @@ export default function MobileNav() {
                   {t('Glossary')}
                 </Link>
               </Typography>
+              <Typography variant='h4' sx={{ mt: 2, color: 'white' }}>
+                {t('Language')}
+              </Typography>
+              <Box>
+                <LanguageMenu sx={{ color: 'white', mx: -2, mt: 2 }} />
+              </Box>
             </Box>
           </Box>
         </Box>

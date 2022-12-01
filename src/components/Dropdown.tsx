@@ -7,10 +7,11 @@ import { WithChildren } from '../types';
 type Props = WithChildren & {
   buttonLabel: string | React.ReactNode;
   disabled?: boolean;
+  closeButton?: boolean;
   buttonProps?: ButtonProps;
 }
 
-export const Dropdown: FC<Props> = ({ buttonLabel, buttonProps, children, disabled = false }) => {
+export const Dropdown: FC<Props> = ({ buttonLabel, buttonProps, children, closeButton, disabled = false }) => {
   const [open, { icon, toggle, toggleOff: close }] = useToggle();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -36,12 +37,12 @@ export const Dropdown: FC<Props> = ({ buttonLabel, buttonProps, children, disabl
           onClose={close}
         >
           <Box sx={{ p: { md: 2, sm: 1.5 }, pt: 4, position: 'relative' }}>
-            <Button
+            {closeButton && (<Button
               sx={{ position: 'absolute', right: 8, top: 8, p: 0, minWidth: 0 }}
               onClick={close}
               variant='text'>
               <CloseOutlined />
-            </Button>
+            </Button>)}
             {children}
           </Box>
         </Popover>

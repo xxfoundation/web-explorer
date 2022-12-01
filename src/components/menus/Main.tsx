@@ -1,6 +1,7 @@
 import { Box, Grid } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 import BlockchainMenu from './Blockchain';
 import { MenuButton } from './menu.styles';
@@ -28,6 +29,9 @@ export default function DesktopNav() {
           <MenuButton id='glossary-button' href='/glossary'>
             {t('Glossary')}
           </MenuButton>
+        </Grid>
+        <Grid item xs>
+          <LanguageSwitcher />
         </Grid>
       </Grid>
     </Box>
