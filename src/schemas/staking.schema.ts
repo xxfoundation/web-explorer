@@ -166,11 +166,17 @@ export type ValidatorAccount = {
 };
 
 export type ValidatorAccountsQuery = {
+  agg: { aggregate: { count: number } };
   validators: ValidatorAccount[];
 };
 
 export const GET_CURRENT_VALIDATORS = gql`
   query GetCurrentValidators($limit: Int!, $offset: Int!, $where: validator_stats_bool_exp) {
+    agg: validator_stats_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
     validators: validator_stats(limit: $limit, offset: $offset, where: $where, order_by: { total_stake: desc }) {
       addressId: stash_address
       location
@@ -206,6 +212,31 @@ export type GetWaitingListQuery = {
 
 export const GET_WAITING_LIST = gql`
 query GetWaitingList($search: String) {
+  agg: validator_aggregate(where: {
+    active:{_eq: false},
+    _and: {
+      _or: [
+        {
+          account:{
+            identity:{
+              display: {_ilike: $search}
+            }
+          }
+        },
+        {
+          cmix_id:{_ilike: $search }
+        },
+        {
+          stash_address: {_ilike: $search }
+        }
+      ]
+    }
+  } ) {
+    aggregate {
+      count
+    }
+  }
+  
   validators: validator(order_by: { stake: desc }, where: {
     active:{_eq: false},
     _and: {

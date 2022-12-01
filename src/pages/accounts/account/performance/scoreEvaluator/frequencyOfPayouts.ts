@@ -1,33 +1,32 @@
-import type { ScoringContext } from './types';
-import type { MetricScores } from '../../../types';
 import { applyFormat } from '../../../../../components/FormatBalance/formatter';
 import { TFunction } from 'i18next';
+import type { ScoringContext } from './types';
+import type { MetricScores } from '../../../types';
 
 const makeBaseMsg = (t: TFunction, amount: number) => (score: string) =>
-  t('{{score}}, validator has {{amount}} of unclaimed era rewards', {
+  t('{{score}}, validator has {{amount}} eras unclaimed', {
     amount: applyFormat(amount.toString()),
     score
   });
 
-
+  
 const getFrequencyOfPayouts = ({
-  rewardFrequency = 0,
-  t,
-  unclaimedRewards = 0,
+  payoutClaimedEras = 0,
+  payoutTotalEras = 0,
+  t
 }: ScoringContext): [MetricScores, string] => {
-  const baseMsg = makeBaseMsg(t, unclaimedRewards);
-  if (!rewardFrequency) {
-    return ['neutral', t('validator never received a reward')];
-  }
+  // Remove current era from total eras to be claimed
+  const unclaimedEras = Math.abs((payoutTotalEras - 1) - payoutClaimedEras);
+  const baseMsg = makeBaseMsg(t, unclaimedEras)
 
-  if (rewardFrequency >= 1 && rewardFrequency < 7) {
-    return ['very good', baseMsg(t('Very Good'))];
+  if (unclaimedEras < 7) {
+    return ['very good', baseMsg('Very Good')];
   }
-  if (rewardFrequency >= 7 && rewardFrequency < 30) {
-    return ['good', baseMsg(t('Good'))];
+  if (unclaimedEras >= 7 && unclaimedEras < 30) {
+    return ['good', baseMsg('Good')];
   }
-  if (rewardFrequency >= 30 && rewardFrequency < 60) {
-    return ['bad', baseMsg(t('Bad'))];
+  if (unclaimedEras >= 30 && unclaimedEras < 60) {
+    return ['bad', baseMsg('Bad')];
   }
 
   return ['very bad', baseMsg(t('Very Bad'))];

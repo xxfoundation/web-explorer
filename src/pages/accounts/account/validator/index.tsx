@@ -10,21 +10,25 @@ import TabsWithPanels, { TabText } from '../../../../components/Tabs';
 import { GetValidatorStats, GET_VALIDATOR_STATS } from '../../../../schemas/staking.schema';
 import { GetValidatorInfo, GET_VALIDATOR_INFO } from '../../../../schemas/validator.schema';
 import ValidatorSummary from './ValidatorSummary';
+import MetricCards from '../performance/MetricsCards';
+import Charts from '../performance/charts';
+import {Account} from '../../../../schemas/accounts.schema';
 
 type Props = {
   accountId: string;
+  account: Account;
   active: boolean;
 }
 
-const ValidatorCard: FC<Props> = ({ accountId, active }) => {
+const ValidatorCard: FC<Props> = ({ account, accountId, active }) => {
   const { t } = useTranslation();
   const queryValidatorInfo = useQuery<GetValidatorInfo>(GET_VALIDATOR_INFO, {
-    variables: { accountId: accountId }
+    variables: { accountId }
   });
   const validatorInfo = queryValidatorInfo?.data?.validator[0]
 
   const queryValidatorStats = useQuery<GetValidatorStats>(GET_VALIDATOR_STATS, {
-    variables: { accountId: accountId }
+    variables: { accountId }
   });
   const validatorStats = queryValidatorStats.data?.stats
 
@@ -49,7 +53,7 @@ const ValidatorCard: FC<Props> = ({ accountId, active }) => {
       },
       {
         label: <TabText message='Validator Stats' count={statsCount} />,
-        content: <ValidatorStatsTable accountId={accountId} stats={validatorStats} />
+        content: <ValidatorStatsTable accountId={account?.id} stats={validatorStats} />
       }
     ];
     
@@ -59,8 +63,22 @@ const ValidatorCard: FC<Props> = ({ accountId, active }) => {
         content: <NominatorsTable nominators={nominators} />
       });
     }
+    if (account.validator) {
+      cachedPanels.push(
+        {
+          label: <TabText message='Metrics' />,
+          content: <MetricCards account={account} stats={validatorStats || []} />
+        })
+    }
+    if (validatorStats) {
+      cachedPanels.push(
+        {
+          label: <TabText message='Charts' />,
+          content: <Charts account={account} />
+        })
+    }
     return cachedPanels;
-  }, [accountId, active, nominators, queryValidatorInfo.loading, queryValidatorStats.loading, statsCount, t, validatorInfo, validatorStats]);
+  }, [account, active, nominators, queryValidatorInfo.loading, queryValidatorStats.loading, statsCount, t, validatorInfo, validatorStats]);
 
   const isEmpty = () => {
     return !queryValidatorInfo.data?.validator.length && !queryValidatorStats.data?.aggregates.aggregate.count && !(queryValidatorInfo.loading || queryValidatorStats.loading);

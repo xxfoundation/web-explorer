@@ -60,7 +60,7 @@ const ScoreBox: FC<WithChildren> = ({ children }) => {
   );
 };
 
-const ToolttipTitle: FC<MetricPopupProps> = (props) => {
+const TooltipTitle: FC<MetricPopupProps> = (props) => {
   return (
     <>
       <Typography variant='h5'>{props.name}</Typography>
@@ -127,7 +127,7 @@ const MetricTooltip: FC<Omit<TooltipProps, 'title'> & { metrics: MetricPopupProp
       arrow
       placement='left'
       title={
-        <ToolttipTitle
+        <TooltipTitle
           name={metrics.name}
           description={metrics.description}
           scores={metrics.scores}

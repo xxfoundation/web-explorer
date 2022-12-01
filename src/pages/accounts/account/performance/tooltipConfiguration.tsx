@@ -13,30 +13,31 @@ type TooltipsConfig = Record<
 const tooltipsConfiguration = (t: TFunction): TooltipsConfig => ({
   identity: {
     name: 'identity',
-    description: t('Evaluate the quality of the identity data provided by the validator'),
+    description: t('Evaluate the identity data provided by the validator'),
     scores: {
       'very bad': t('None'),
-      bad: t('Display Name'),
-      good: t('Display Name and Email'),
-      'very good': t('Display Name, Email and Blurb + Judgment (Known Good)')
+      bad: t('Display name'),
+      neutral: t('Display name and one contact info'),
+      good: t('Display name and at least two contact info'),
+      'very good': t('Display name, at least two contact info and, website or blurb')
     }
   },
   'address creation': {
     name: 'address creation',
     description: t('Evaluate how old is the validator address'),
     scores: {
-      neutral: t('CurrentEra - CreationEra ≤ 180'),
-      good: t('180 ≤ CurrentEra - CreationEra < 365'),
-      'very good': t('CurrentEra - CreationEra ≥ 365')
+      neutral: t('Less than 6 months old'),
+      good: t('Between 6 months to a year old'),
+      'very good': t('More than a year old')
     }
   },
   slashes: {
     name: 'slashes',
     description: t('Evaluate if the validator was slashed in the last 28 eras.'),
     scores: {
-      'very bad': t('Slashed more than once OR at least once in the last 28 eras.'),
-      bad: t('Slashed only once'),
-      good: t('Never Slashed')
+      'very bad': t('Slashed more than once or at least once in the last 28 eras.'),
+      bad: 'Slashed only once',
+      good: 'Never Slashed'
     }
   },
   subaccounts: {
@@ -52,9 +53,9 @@ const tooltipsConfiguration = (t: TFunction): TooltipsConfig => ({
     description:
       t('Evaluate nominators and if the validator is oversubscribed (256 - pulled from chain).'),
     scores: {
-      bad: t('> 256 Nominators'),
-      neutral: t('150 < Nominators < 256'),
-      good: t('Nominators < 150')
+      bad: t('More than 256 nominators'),
+      neutral: t('Between 150 and 256 nominators'),
+      good: t('Less than 150 nominators')
     }
   },
   'era points': {
@@ -84,10 +85,10 @@ const tooltipsConfiguration = (t: TFunction): TooltipsConfig => ({
     name: 'frequency of payouts',
     description: t('Evaluate frequency of rewards distribution (max 84 eras)'),
     scores: {
-      'very bad': t('< 60 Eras'),
-      bad: t('60 < 30 Eras'),
-      good: t('30 < 7 Eras'),
-      'very good': t('7 < 1 Era')
+      'very bad': t('> 60 eras unclaimed'),
+      bad: t('30 > 60 eras unclaimed'),
+      good: t('7 > 30 eras unclaimed'),
+      'very good': t('< 7 eras unclaimed')
     }
   },
   governance: {

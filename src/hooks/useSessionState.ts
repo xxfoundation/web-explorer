@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 const useSessionState = <T = unknown>(keyName: string, defaultValue: T): [value: T, setValue: (v: T) => void] => {
   const [storedValue, setStoredValue] = React.useState<T>(() => {
@@ -16,12 +16,14 @@ const useSessionState = <T = unknown>(keyName: string, defaultValue: T): [value:
     }
   });
 
-  const setValue = (newValue: T) => {
+  const setValue = useCallback((newValue: T) => {
     try {
       window.sessionStorage.setItem(keyName, JSON.stringify(newValue));
-    } catch (err) { }
-    setStoredValue(newValue);
-  };
+      setStoredValue(newValue);
+    } catch (err) {
+      console.error('Session storage set value error');
+    }
+  }, [keyName]);
 
   return [storedValue, setValue];
 };

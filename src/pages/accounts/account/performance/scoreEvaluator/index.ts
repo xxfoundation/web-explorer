@@ -8,6 +8,7 @@ import getNominatorsScore from './nominator';
 import getCommissionScore from './commission';
 import getFrequencyOfPayouts from './frequencyOfPayouts';
 import getValidatorTimeScore from './validatorTime';
+import getPerformanceScore from './performance';
 
 const evaluateScore = (ctx: ScoringContext): Partial<Record<MetricsType, [MetricScores, string]>> => {
   return {
@@ -18,6 +19,7 @@ const evaluateScore = (ctx: ScoringContext): Partial<Record<MetricsType, [Metric
     commission: getCommissionScore(ctx),
     'frequency of payouts': getFrequencyOfPayouts(ctx),
     'validator time': getValidatorTimeScore(ctx),
+    'performance': getPerformanceScore(ctx),
   };
 };
 

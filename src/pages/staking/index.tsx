@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import PaperWrap from '../../components/Paper/PaperWrap.styled';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StakingMetrics from './StakingMetrics';
-import ValidatorTable from './ValidatorTable';
 import { useToggle } from '../../hooks';
 import StakingCharts from './StakingCharts';
+import NewValidatorTabs from './NewValidatorTabs';
 
 const Staking: React.FC = () => {
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ const Staking: React.FC = () => {
           <StakingMetrics />
         </PaperWrap>
         <PaperWrap>
-          <ValidatorTable />
+          <NewValidatorTabs />
         </PaperWrap>
       </Stack>
     </Container>

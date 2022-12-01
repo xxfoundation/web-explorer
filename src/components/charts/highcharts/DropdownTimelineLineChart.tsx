@@ -1,5 +1,5 @@
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { SeriesClickEventObject, TooltipFormatterContextObject } from 'highcharts';
+import {AxisTypeValue, SeriesClickEventObject, TooltipFormatterContextObject} from 'highcharts';
 import React, { FC, useEffect, useRef } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,11 @@ type Props = {
   tooltipFormatter?: (this: TooltipFormatterContextObject) => string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   labelFormatters?: any;
+  toolTipType?: string;
+  yAxisTitle?: string;
+  xAxisTitle?: string;
+  xAxisType?: AxisTypeValue;
+  seriesName?: string;
 }
 
 const DropdownTimelineLineChart: FC<Props> = ({
@@ -24,9 +29,14 @@ const DropdownTimelineLineChart: FC<Props> = ({
   labelFormatters,
   onChange,
   onClick,
+  seriesName,
   timeframe,
   timeframes,
-  tooltipFormatter
+  toolTipType,
+  tooltipFormatter,
+  xAxisTitle,
+  xAxisType,
+  yAxisTitle,
 }) => {
   const { t } = useTranslation();
   const chartRef = useRef<HighchartsReact.RefObject>(null);
@@ -65,6 +75,11 @@ const DropdownTimelineLineChart: FC<Props> = ({
       onClick={onClick}
       tooltipFormatter={tooltipFormatter}
       labelFormatters={labelFormatters}
+      yAxisTitle={yAxisTitle}
+      xAxisType={xAxisType}
+      toolTipType={toolTipType}
+      xAxisTitle={xAxisTitle}
+      seriesName={seriesName}
     />
   </>);
 };

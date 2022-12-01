@@ -22,7 +22,7 @@ const statusToIconMap: Record<Status, React.ReactElement> = {
 function statusMap(status: Status, message?: string): React.ReactElement {
   return (
     <Box component='span' sx={{ display: 'flex' }} aria-label={status}>
-      <Tooltip title={message} arrow>
+      <Tooltip title={message || ''} arrow>
         {statusToIconMap[status]}
       </Tooltip>
       <Typography sx={{ fontWeight: 'normal', pl: '0.3em', alignSelf: 'center'}}>{upperFirst(status)}</Typography>

@@ -15,7 +15,7 @@ const Error: FC<Props> = ({ children, error, message, type = 'data-unavailable',
 
   const messages = useMemo<Record<ErrorType, string>>(
     () => ({
-      'data-unavailable': t('Data unavailable...'),
+      'data-unavailable': t('No data on this timeframe'),
       'general': t('Something went wrong...')
     }),
     [t]

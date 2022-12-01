@@ -113,7 +113,7 @@ const ValidatorSummary: FC<Props> = ({ active, info }) => {
       </SummaryEntry>}
       <SummaryEntry>
         <SummaryHeader>{t('Commission')}</SummaryHeader>
-        <SummaryValue>{info.commission}</SummaryValue>
+        <SummaryValue>{info.commission} %</SummaryValue>
       </SummaryEntry>
       {sessionEntries && (
         <SummaryEntry>

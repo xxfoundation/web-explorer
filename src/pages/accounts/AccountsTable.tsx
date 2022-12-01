@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Divider, Stack, Tooltip, Typography } from '@mui/material';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { theme } from '../../themes/default';
@@ -18,6 +18,11 @@ import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
 import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
 import TimeAgoComponent from '../../components/TimeAgo';
+import {NumberParam, useQueryParam} from 'use-query-params';
+import DateDayFilter from '../../components/Tables/filters/DateDayFilter';
+import { TDate } from '../../components/SingleDate';
+
+const MILISECONDS_IN_DAY = 86400000;
 
 type RoleFilters = Record<string, boolean>;
 type Filters = { roles: RoleFilters };
@@ -110,10 +115,11 @@ const accountToRow = (
   ];
 };
 
-const useHeaders = () => {
+const useHeaders = (whenCreatedQueryParam: string | null) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState<string>();
   const [roleFilters, setRoleFilters] = useSessionState<RoleFilters>('accounts.roleFilters', {});
+  const [filteredDay, setFilteredDay] = useSessionState<string | undefined | TDate>('accounts.filteredDay', whenCreatedQueryParam !== null ? whenCreatedQueryParam : undefined);
 
   const headers = useMemo<HeaderCell[]>(
     () => [
@@ -145,15 +151,16 @@ const useHeaders = () => {
       },
       { value: t('Locked balance') },
       { value: t('Total balance') },
-      { value: t('When Created') }
+      { label: t('When Created'), value: <DateDayFilter onChange={setFilteredDay} value={filteredDay} /> }
     ],
-    [roleFilters, search, setRoleFilters, t]
+    [filteredDay, roleFilters, search, setFilteredDay, setRoleFilters, t]
   );
-
   return {
     headers,
     filters: { roles: roleFilters },
-    search
+    search,
+    filteredDay,
+    setFilteredDay
   };
 };
 
@@ -168,15 +175,23 @@ const buildOrClause = (filters: Filters) =>
 
 const AccountsTable: FC = () => {
   const { t } = useTranslation();
-  const { filters, headers, search } = useHeaders();
+  const [whenCreatedQueryParam] = useQueryParam('whenCreated', NumberParam);
+  const { filteredDay, filters, headers, search, setFilteredDay } = useHeaders(whenCreatedQueryParam ? new Date(whenCreatedQueryParam).toISOString() : null);
+
   const orClause = useMemo(
     () => buildOrClause(filters),
     [filters]
   );
+  
+  useEffect(() => {
+    if(whenCreatedQueryParam) {
+      setFilteredDay(new Date(whenCreatedQueryParam).toISOString())
+    }
+  }, [setFilteredDay, whenCreatedQueryParam])
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ total_balance: 'desc' }],
+      orderBy: [{ when_created: 'desc' }],
       where: {
         _or: [
           { account_id: { _ilike: `%${search ?? ''}%`} },
@@ -185,14 +200,28 @@ const AccountsTable: FC = () => {
         ...(orClause.length > 0 && {
           _and: { _or: orClause }
         }),
+        ...(filteredDay && {
+          _or: 
+            {
+              when_created: { 
+                _gt: new Date(filteredDay).getTime(), 
+                _lte: new Date(filteredDay).getTime() + MILISECONDS_IN_DAY
+              }
+            }
+          }
+        )
       },
     }),
-    [search, orClause]
+    [search, filteredDay, orClause]
   );
 
-  const { data, error, loading, pagination } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {
+  const { data, error, loading, pagination, refetch } = usePaginatedQuery<ListAccounts>(LIST_ACCOUNTS, {
     variables
   });
+  
+  useEffect(() => {
+    refetch({variables})
+  }, [refetch, setFilteredDay, variables])
 
   const { offset } = pagination;
   const rows = useMemo(

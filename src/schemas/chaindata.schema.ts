@@ -40,14 +40,10 @@ export const LISTEN_FOR_ACCOUNT_METRICS = gql`
   }
 `;
 
-export type ListenForMetrics = {
-  finalizedBlocks: { aggregate: { count: number } };
+export type GetChainMetrics = {
   activeEra: {
     era: number;
   }[];
-  numTransfers: { aggregate: { count: number } };
-  numAccounts: { aggregate: { count: number } };
-  numFakeAccounts: { aggregate: { count: number } };
   numNominators: { aggregate: { count: number } };
   numActiveValidators: { aggregate: { count: number } };
   economics: {
@@ -57,8 +53,8 @@ export type ListenForMetrics = {
 }
 
 // Finalized Blocks, Active Era, # Transfers, # Accounts, Total Issuance, # Nominators, # Validators, Circulating APG
-export const LISTEN_FOR_METRICS = gql`
-  query ListenForMetrics {
+export const GET_CHAIN_METRICS = gql`
+  query GetChainMetrics {
       finalizedBlocks: block_aggregate(where: {finalized: {_eq: true}}) {
         aggregate {
           count
@@ -98,3 +94,65 @@ export const LISTEN_FOR_METRICS = gql`
       }
   }
 `;
+
+/* -------------------------------------------------------------------------- */
+/*                          Chain Info Subscriptions                          */
+/* -------------------------------------------------------------------------- */
+
+export type ListenFinalizedBlocks = {
+  finalizedBlocks: { aggregate: { count: number } };
+}
+
+export const LISTEN_FINALIZED_BLOCKS = gql`
+  subscription ListenFinalizedBlocks {
+    finalizedBlocks: block_aggregate(where: {finalized: {_eq: true}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export type ListenNumTransfers = {
+  numTransfers: { aggregate: { count: number } };
+}
+
+export const LISTEN_NUM_TRANSFERS = gql`
+  subscription ListenNumTransfers {
+    numTransfers: transfer_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export type ListenNumAccounts = {
+  numAccounts: { aggregate: { count: number } };
+}
+
+export const LISTEN_NUM_ACCOUNTS = gql`
+  subscription ListenNumAccounts {
+    numAccounts: account_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+export type ListenNumFakeAccounts = {
+  numFakeAccounts: { aggregate: { count: number } };
+}
+
+export const LISTEN_NUM_FAKE_ACCOUNTS = gql`
+  subscription ListenNumFakeAccounts {
+    numFakeAccounts: account_aggregate(where: {_and: {active: {_eq: false}, when_killed: {_is_null: true}}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+
