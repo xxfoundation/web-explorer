@@ -21,11 +21,11 @@ describe('Events Page Data render', () => {
   })
   it('loads data in Events table', () => {
     cy.wait('@gqlListEventsOrderedQuery', {requestTimeout: 60000})
-    cy.get('tbody tr').should('have.length.at.least', 1)
+    cy.get('[cy-id="baseline-table"] tbody tr').should('have.length.at.least', 1)
   })
   it('renders 20 rows for table', () => {
     cy.wait('@gqlListEventsOrderedQuery')
-    cy.get('tbody tr').should('have.length', 20)
+    cy.get('[cy-id="baseline-table"] tbody tr').should('have.length', 20)
   })
 })
 

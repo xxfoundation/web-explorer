@@ -61,7 +61,7 @@ export const BaselineTable: FC<Props> = (props) => {
   const memoistHeaders = useMemo(() => {
     return headers.map(({ key, props: p, value }, index) => {
       return (
-        <TableCell {...p} key={key || index}>
+        <TableCell cy-id={`th-${index}`} {...p} key={key || index}>
           {value}
         </TableCell>
       );
@@ -79,7 +79,7 @@ export const BaselineTable: FC<Props> = (props) => {
       rows.map((row, index) => (
           <TableRow cy-id='tr' key={index}>
             {row.map(({ key, props: p, value }, cellIndex) => (
-              <TableCell {...p} key={key || cellIndex} data-label={getCellLabel(headers[cellIndex])}>
+              <TableCell cy-id={`td-${cellIndex}`} {...p} key={key || cellIndex} data-label={getCellLabel(headers[cellIndex])}>
                 {value}
               </TableCell>
             ))}

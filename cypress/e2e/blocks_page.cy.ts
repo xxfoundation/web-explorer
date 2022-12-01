@@ -36,6 +36,7 @@ describe("Blocks Data render", () => {
     });
   });
 });
+
 describe("Blocks Test Suite", () => {
   beforeEach(() => {
     cy.window().then((win) => {
@@ -45,7 +46,6 @@ describe("Blocks Test Suite", () => {
     cy.wait(2000);
     cy.get('[data-testid="CloseIcon"]').click();
   });
-  it("Blocks Test Case", () => {});
   it("Blocks Producer Filter", () => {
     cy.get(".css-3zvw0q-MuiTableCell-root button").eq(2).click();
     cy.get(".css-13xvg6k-MuiFormControlLabel-root").click();
@@ -73,11 +73,11 @@ describe("Blocks Test Suite", () => {
       });
   });
   it("status", () => {
-    cy.get(".css-3zvw0q-MuiTableCell-root button").eq(0).click();
-    cy.get(".css-13xvg6k-MuiFormControlLabel-root").click();
-    cy.get(".css-j204z7-MuiFormControlLabel-root").click();
-    cy.get(".css-1nlsvi-MuiButtonBase-root-MuiButton-root").click();
-    cy.get(".css-7d4cw7-MuiSvgIcon-root").each(($el) => {
+    cy.get("[cy-id='th-1'] button").eq(0).click();
+    cy.get("#account-holders-table-filters label").click();
+    cy.get("#account-holders-table-filters label").eq(1).click();
+    cy.get("#account-holders-table-filters button").eq(0).click();
+    cy.get("tbody tr [cy-id='td-1'] svg").each(($el) => {
       cy.wrap($el).realHover("mouse");
       cy.wait(2000);
       cy.get(".css-12wicnf-MuiTooltip-tooltip").should("have.text", "pending");
