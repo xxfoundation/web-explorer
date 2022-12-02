@@ -33,3 +33,7 @@ sample_server/node_modules/
 .dccache
 
 .idea/
+
+cypress/screenshots/
+
+cypress/videos/
