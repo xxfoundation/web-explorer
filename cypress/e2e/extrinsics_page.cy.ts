@@ -73,9 +73,8 @@ describe('Extrinsic Table filters', () => {
     cy.get('.css-3zvw0q-MuiTableCell-root button').eq(1).click();
     cy.get('.css-13xvg6k-MuiFormControlLabel-root').click({ force: true, multiple: true });
     cy.get('.css-1nlsvi-MuiButtonBase-root-MuiButton-root').click();
-    cy.wait(5000);
+    cy.wait(20000)
     cy.wait('@gqlListExtrinsicOrderedQuery').then((xhr) => {
-      cy.wait(7000)
       cy.get('.css-d3z3o4-MuiSvgIcon-root').each(($el) => {
         cy.wrap($el).realHover('mouse')
         cy.get('[role="tooltip"]').should('have.text', 'successful')
