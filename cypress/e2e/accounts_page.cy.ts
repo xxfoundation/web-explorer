@@ -52,16 +52,19 @@ describe('Accounts Page API Calls', () => {
       win.sessionStorage.clear()
     })
     cy.visit('/accounts')
-    cy.intercept('POST', 'https://xxscan-test.hasura.app/v1/graphql', (req, res) => {
-      aliasQuery(req, 'ListAccounts')
-    })
   })
   it('modules filter fetches and display correct data', () => {
     cy.get('.css-3zvw0q-MuiTableCell-root button').eq(1).click()
     cy.get('.css-1qxz1k9-MuiFormControlLabel-root').contains('validator').click();
     cy.get('.css-6qclsq-MuiStack-root button').eq(0).click();
+    cy.intercept('POST', 'https://xxscan-test.hasura.app/v1/graphql', (req, res) => {
+      aliasQuery(req, 'ListAccounts')
+    })
+    cy.wait(10000)
     cy.wait('@gqlListAccountsQuery').then(xhr => {
+      console.log('accounts = ', xhr.response.body.data.account)
       xhr.response.body.data.account.map(accounts => {
+        console.log('accounts = ', accounts)
         expect(accounts.validator).to.eq(true)
       })
     })
