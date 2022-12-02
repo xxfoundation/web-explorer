@@ -455,3 +455,14 @@ export const GET_SUBACCOUNT_COUNTS = gql`
   ${IDENTITY_FRAGMENT}
   
 `
+export type ListAccountsTimeStamps = {
+  accounts: Account[];
+}
+
+export const LIST_ACCOUNTS_TIMESTAMPS = gql`
+  query GetAccountsTimestamps {
+    accounts: account (order_by: {when_created: asc}) {
+      whenCreated: when_created
+    }
+  }
+`
