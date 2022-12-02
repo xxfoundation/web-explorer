@@ -15,7 +15,7 @@ describe("Accounts chart Test Suite", () => {
     cy.visit("/accounts");
   });
   it("Render Account chart", () => {
-    cy.wait(5000);
+    cy.wait(8000);
     cy.get('[data-testid="CloseIcon"]').click();
     cy.get(".highcharts-point.highcharts-color-0").should(
       "have.length.at.least",
