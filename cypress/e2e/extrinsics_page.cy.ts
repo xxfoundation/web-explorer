@@ -73,7 +73,7 @@ describe('Extrinsic Table filters', () => {
     cy.get('.css-3zvw0q-MuiTableCell-root button').eq(1).click();
     cy.get('.css-13xvg6k-MuiFormControlLabel-root').click({ force: true, multiple: true });
     cy.get('.css-1nlsvi-MuiButtonBase-root-MuiButton-root').click();
-    cy.wait(20000)
+    cy.wait(30000)
     cy.wait('@gqlListExtrinsicOrderedQuery').then((xhr) => {
       cy.get('.css-d3z3o4-MuiSvgIcon-root').each(($el) => {
         cy.wrap($el).realHover('mouse')
@@ -90,7 +90,7 @@ describe('Extrinsic Table filters', () => {
     cy.get('.css-1nlsvi-MuiButtonBase-root-MuiButton-root').click();
     cy.wait(5000);
     cy.wait('@gqlListExtrinsicOrderedQuery').then((xhr) => {
-      cy.wait(7000).then(() => {
+      cy.wait(30000).then(() => {
         cy.get('[data-testid="ErrorOutlineIcon"]').each(($el) => {
           cy.wrap($el).realHover('mouse')
           cy.get('[role="tooltip"]').should('have.text', 'failed')
@@ -107,7 +107,7 @@ describe('Extrinsic Table filters', () => {
     cy.get('.css-13xvg6k-MuiFormControlLabel-root').click({ force: true, multiple: true });
     cy.get('label.css-16vvaaj-MuiFormControlLabel-root span').contains('assets').click();
     cy.get('button[cy-id="apply-btn"]').click();
-    cy.wait(5000);
+    cy.wait(50000);
     cy.wait('@gqlListExtrinsicOrderedQuery').then((xhr) => {
       cy.get('td:nth-child(6)').each(($e1) => {
         expect(`${$e1.text()}`).to.eq('assets')

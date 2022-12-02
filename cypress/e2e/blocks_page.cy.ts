@@ -54,7 +54,7 @@ describe("Blocks Table filters", () => {
     cy.get("#account-holders-table-filters  input:visible").type(
       blockProducer
     );
-    cy.wait(50000);
+    cy.wait(70000);
     cy.get("#account-holders-table-filters  input:visible")
       .invoke("val")
       .then((sometext) => {
