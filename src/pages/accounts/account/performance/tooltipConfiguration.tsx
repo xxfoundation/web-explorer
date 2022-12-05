@@ -58,8 +58,8 @@ const tooltipsConfiguration = (t: TFunction): TooltipsConfig => ({
       good: t('Less than 150 nominators')
     }
   },
-  'era points': {
-    name: 'era points',
+  'performance': {
+    name: 'performance',
     description:
       t('Evaluate if the era points earned by the validator in the history are below or above average'),
     scores: {
