@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-function Redirect() {
-
+function Redirect({ url }: { url: string }) {
   useEffect(() => {
-    window.location.href = 'https://staking.xx.network';
-  }, []);
+    window.location.href = url;
+  }, [url]);
 
-  return (
-    <div>
-    </div>
-  );
+  return null;
 }
 
 export default Redirect;

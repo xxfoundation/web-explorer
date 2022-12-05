@@ -50,7 +50,7 @@ const App = () => (
         </Route>
         <Route path='staking' element={<Staking />} />
         <Route path='glossary' element={<Glossary />} />
-        <Route path='staking/simple' element={<Redirect />} />
+        <Route path='staking/simple' element={<Redirect url='https://staking.xx.network' />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
       <SiteFooter />

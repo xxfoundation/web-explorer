@@ -1,5 +1,6 @@
 import { useTheme, Badge, Button, Checkbox, FormControlLabel, Stack, Switch } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Dropdown from '../../DropdownFilter';
 
@@ -11,6 +12,7 @@ export type Props = {
 }
 
 const BooleanFilter: FC<Props> = ({ label, onChange, toggleLabel, value }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [valueFilter, setValueFilter] = useState(value);
 
@@ -87,7 +89,7 @@ const BooleanFilter: FC<Props> = ({ label, onChange, toggleLabel, value }) => {
             }}
             onClick={applyChanges}
           >
-            Apply
+            {t('Apply')}
           </Button>
           <Button
             variant='contained'
@@ -104,7 +106,7 @@ const BooleanFilter: FC<Props> = ({ label, onChange, toggleLabel, value }) => {
             }}
             onClick={reset}
           >
-            Clear
+            {t('Clear')}
           </Button>
         </Stack>
       </Stack>

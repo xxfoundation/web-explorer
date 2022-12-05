@@ -1,4 +1,5 @@
 import React, { FC, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import EventsTable from '../../../components/block/EventsTable';
 import PaperWrapStyled from '../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../components/Tabs';
@@ -6,17 +7,25 @@ import { NestedCall } from '../../../schemas/extrinsics.schema';
 import TransferTable from '../../transfers/TransfersTable';
 import CallsTable from './CallsTable';
 
-const ExtrinsicTabs: FC<{ transferCount: number; blockNumber: number; index: number; nestedCalls: Array<NestedCall> | null; }> = ({
+type Props = {
+  blockNumber: number;
+  index: number;
+  nestedCalls: Array<NestedCall> | null;
+  transferCount: number;
+}
+
+const ExtrinsicTabs: FC<Props> = ({
   blockNumber,
   index,
   nestedCalls,
   transferCount,
 }) => {
+  const { t } = useTranslation();
   const [eventCount, setEventCount] = useState<number>();
   const panels = useMemo(() => {
     const tabs = [
       {
-        label: <TabText message='events' count={eventCount === undefined ? '' : eventCount} />,
+        label: <TabText message={t('events')} count={eventCount === undefined ? '' : eventCount} />,
         content: (
           <EventsTable
             where={{
@@ -30,7 +39,7 @@ const ExtrinsicTabs: FC<{ transferCount: number; blockNumber: number; index: num
         )
       },
       {
-        label: <TabText message='transfers' count={transferCount} />,
+        label: <TabText message={t('transfers')} count={transferCount} />,
         content: (
           <TransferTable
             where={{
@@ -48,11 +57,11 @@ const ExtrinsicTabs: FC<{ transferCount: number; blockNumber: number; index: num
     ];
 
     return tabs;
-  }, [blockNumber, eventCount, index, nestedCalls, transferCount]);
+  }, [t, blockNumber, eventCount, index, nestedCalls, transferCount]);
 
   return (
     <PaperWrapStyled>
-      <TabsWithPanels panels={panels} tabsLabel='extrinsic page events' />
+      <TabsWithPanels panels={panels} tabsLabel={t('extrinsic page events')} />
     </PaperWrapStyled>
   );
 };

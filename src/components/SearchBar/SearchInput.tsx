@@ -2,6 +2,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, Grid, InputAdornment } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import React, { FC, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SearchButton, SearchInput } from './Bar.styles';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 }
 
 const GenericSearchInput: FC<Props> = ({ loading, search }) => {
+  const { t } = useTranslation();
   const [searchInput, setSearchInput] = useState('');
 
   const searchInputOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>>(
@@ -55,7 +57,7 @@ const GenericSearchInput: FC<Props> = ({ loading, search }) => {
       </Grid>
       <Grid item xs='auto' sx={{ display: { xs: 'none', sm: 'block' } }}>
         <SearchButton disabled={loading} onClick={submitSearch}>
-          SEARCH
+          {t('SEARCH')}
         </SearchButton>
       </Grid>
     </>

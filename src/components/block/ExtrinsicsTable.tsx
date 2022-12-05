@@ -4,9 +4,10 @@ import React, { FC, useMemo, useEffect } from 'react';
 import { EXTRINSICS_OF_BLOCK, ListExtrinsics, Extrinsic } from '../../schemas/extrinsics.schema';
 import Hash from '../Hash';
 import Link from '../Link';
-import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../Tables';
+import { BaseLineCellsWrapper, BaselineTable, headerCellsWrapper } from '../Tables';
 import TimeAgoComponent from '../TimeAgo';
 import { usePagination } from '../../hooks';
+import { useTranslation } from 'react-i18next';
 
 const ROWS_PER_PAGE = 10;
 
@@ -28,14 +29,13 @@ const rowsParser = (extrinsic: Extrinsic) => {
   ]);
 };
 
-const headers = HeaderCellsWrapper(['extrinsic id', 'hash', 'time', 'result', 'action']);
-
 type Props = {
   accountId?: string;
   blockNumber?: number;
 };
 
 const ExtrinsicsTable: FC<Props> = ({ accountId, blockNumber }) => {
+  const { t } = useTranslation();
   const pagination = usePagination({ rowsPerPage: ROWS_PER_PAGE });
   const { paginate, setCount: setPaginationCount } = pagination;
 
@@ -60,6 +60,17 @@ const ExtrinsicsTable: FC<Props> = ({ accountId, blockNumber }) => {
       setPaginationCount(data.agg.aggregate.count);
     }
   }, [data?.agg, setPaginationCount]);
+
+  const headers = useMemo(
+    () => headerCellsWrapper([
+      t('extrinsic id'),
+      t('hash'),
+      t('time'),
+      t('result'),
+      t('action')
+    ]),
+    [t]
+  )
 
   return (
     <BaselineTable

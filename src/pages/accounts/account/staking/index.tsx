@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Box, Stack, Skeleton } from '@mui/material';
 import React, { FC, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import TabsWithPanels, { TabText } from '../../../../components/Tabs';
@@ -9,9 +10,8 @@ import StakingEventsTable from './StakingEventsTable';
 import StakingRewardsTable from './StakingRewardsTable';
 import StakingSlashesTable from './StakingSlashesTable';
 
-const StakingCard: FC<{
-  accountId: string;
-}> = ({ accountId}) => {
+const StakingCard: FC<{ accountId: string; }> = ({ accountId }) => {
+  const { t } = useTranslation();
   const { data, loading } = useQuery<GetStakingCounts>(GET_STAKING_COUNTS, {
     variables: { accountId: accountId }
   });
@@ -33,7 +33,7 @@ const StakingCard: FC<{
       {
         label: (
           <TabText
-            message={'Rewards'}
+            message={t('Rewards')}
             count={rewardsCount === undefined ? '' : rewardsCount}
           />
         ),
@@ -42,7 +42,7 @@ const StakingCard: FC<{
       {
         label: (
           <TabText
-            message={'Slashes'}
+            message={t('Slashes')}
             count={slashesCount === undefined ? '' : slashesCount}
           />
         ),
@@ -51,7 +51,7 @@ const StakingCard: FC<{
       {
         label: (
           <TabText
-            message={'Events'}
+            message={t('Events')}
             count={stakingCount === undefined ? '' : stakingCount}
           />
         ),
@@ -62,14 +62,14 @@ const StakingCard: FC<{
     ];
     
     return cachedPanels;
-  }, [accountId, loading, rewardsCount, rewardsSum, slashesCount, slashesSum, stakingCount]);
+  }, [accountId, loading, rewardsCount, rewardsSum, slashesCount, slashesSum, stakingCount, t]);
 
   const isEmpty = () => {
     return !rewardsCount && !stakingCount && !slashesCount && !loading;
   }
 
-  return isEmpty() ? <div>No activity</div> : (
-    !loading ? (<TabsWithPanels panels={panels} tabsLabel='account staking card' />) : <>
+  return isEmpty() ? <div>{t('No activity')}</div> : (
+    !loading ? (<TabsWithPanels panels={panels} tabsLabel={t('account staking card')} />) : <>
       <Stack sx={{ py: 3 }} spacing={2} direction='row'>
         <Skeleton width={160} />
         <Skeleton width={160} />

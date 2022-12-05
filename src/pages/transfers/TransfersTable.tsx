@@ -9,7 +9,7 @@ import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
 import FormatBalance from '../../components/FormatBalance';
 import Link from '../../components/Link';
-import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../components/Tables';
+import { BaseLineCellsWrapper, BaselineTable, headerCellsWrapper } from '../../components/Tables';
 import TimeAgo from '../../components/TimeAgo';
 import RefreshButton from '../../components/buttons/Refresh';
 import {
@@ -24,6 +24,7 @@ import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
 import GeneralFilter from '../../components/Tables/filters/GeneralFilter';
 import { NumberParam, useQueryParam } from 'use-query-params';
+import { useTranslation } from 'react-i18next';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.extrinsicIndex}`;
@@ -59,6 +60,7 @@ type Props = {
 };
 
 const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) => {
+  const { t } = useTranslation();
   /* ----------------------- Initialize State Variables ----------------------- */
   const [statusFilter, setStatusFilter] = useSessionState<boolean | null>('transfers.status', null);
   const [eraQueryParam, setEraQueryParam] = useQueryParam('era', NumberParam);
@@ -104,22 +106,22 @@ const TransferTable: FC<Props> = ({ filters, where = {}, setCount = () => {} }) 
   /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo(
     () =>
-      HeaderCellsWrapper([
-        ['Era', <GeneralFilter value={era?.toString()} onChange={onEraChange} label='Era' />],
-        'Block',
-        'Time',
-        'From',
-        'To',
-        'Amount',
-        ['Result', <BooleanFilter
-          label='Result'
+      headerCellsWrapper([
+        [t('Era'), <GeneralFilter value={era?.toString()} onChange={onEraChange} label={t('Era')} />],
+        t('Block'),
+        t('Time'),
+        t('From'),
+        t('To'),
+        t('Amount'),
+        [t('Result'), <BooleanFilter
+          label={t('Result')}
           onChange={setStatusFilter}
-          toggleLabel={(v) => (v ? 'Successful' : 'Failed')}
+          toggleLabel={(v) => (v ? t('Successful') : t('Failed'))}
           value={statusFilter}
         />],
-        'Hash'
+        t('Hash')
       ]),
-    [era, onEraChange, setStatusFilter, statusFilter]
+    [t, era, onEraChange, setStatusFilter, statusFilter]
   );
 
   /* ----------------------- Main Query - Get Transfers ----------------------- */

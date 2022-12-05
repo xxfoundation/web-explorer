@@ -8,6 +8,8 @@ import Highcharts, {
 } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC,useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { theme } from '../../../themes/footer';
 import Error from '../../Error';
 import { DataPoint } from './types';
@@ -48,15 +50,16 @@ const LineChart: FC<Props> = ({
   data,
   labelFormatters,
   onClick,
-  seriesName = 'ERA',
+  seriesName,
   title,
   toolTipType ,
   tooltipFormatter,
   x,
-  xAxisTitle = 'ERA',
+  xAxisTitle,
   xAxisType,
   yAxisTitle = '',
 }) => {
+  const { t } = useTranslation();
   const options = useMemo<Options>(() => {
     const { maxX, minX } = x || calculateMaximums(data, xAxisType);
     return {
@@ -85,14 +88,13 @@ const LineChart: FC<Props> = ({
       legend: { enabled: false },
       xAxis: {
         title: {
-          text: xAxisTitle,
+          text: xAxisTitle || t<string>('ERA'),
           align: 'low',
           textAlign: 'center',
           style: { fontWeight: 'bolder' }
         },
         labels: { y: 20, formatter: labelFormatters?.xAxis },
         tickWidth: 1,
-        // TODO tickPixelInterval: pixelIntervalX, create a parameter to control this better
         offset: 10,
         min: minX,
         max: maxX,
@@ -119,25 +121,26 @@ const LineChart: FC<Props> = ({
             click: onClick,
           },
           type: 'line',
-          name: seriesName,
+          name: seriesName || t<string>('ERA'),
           marker: { symbol: 'circle' },
           data,
         }
       ]
     };
   }, [
+    x,
     data,
-    labelFormatters?.xAxis,
-    labelFormatters?.yAxis,
-    onClick,
+    xAxisType,
     title,
     toolTipType,
     tooltipFormatter,
-    x,
-    yAxisTitle,
-    seriesName,
     xAxisTitle,
-    xAxisType
+    labelFormatters?.xAxis,
+    labelFormatters?.yAxis,
+    yAxisTitle,
+    onClick,
+    seriesName,
+    t
   ]);
 
   if (!data.length) {

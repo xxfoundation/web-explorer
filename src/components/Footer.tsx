@@ -10,6 +10,7 @@ import { theme as defaultTheme } from '../themes/default';
 import { GET_RUNTIME_VERSION, RuntimeVersion } from '../schemas/chaindata.schema';
 import { useQuery } from '@apollo/client';
 import Link from './Link';
+import { Trans, useTranslation } from 'react-i18next';
 
 const VERSION_LENGTH = 6;
 const RELEASE_URL = 'https://github.com/xx-labs/xxchain/releases/tag/';
@@ -58,6 +59,7 @@ const StyledButton = styled(Button)(() => ({
 }));
 
 const Footer = () => {
+  const { t } = useTranslation();
   const { data, loading } = useQuery<RuntimeVersion>(GET_RUNTIME_VERSION);
   const version = data?.block[0].version.toString();
 
@@ -85,10 +87,10 @@ const Footer = () => {
               <Grid container spacing={3}>
                 <Grid item xs>
                   <ListLink to='/' underline='hover'>
-                    Home
+                    {t('Home')}
                   </ListLink>
                   <ListLink to='https://xx.network/mission/' underline='hover' rel='noopener' target='_blank'>
-                    Mission
+                    {t('Mission')}
                   </ListLink>
                   <ListLink
                     to='https://xx.network/resources/'
@@ -96,7 +98,7 @@ const Footer = () => {
                     rel='noopener'
                     target='_blank'
                   >
-                    Resources
+                    {t('Resources')}
                   </ListLink>
                 </Grid>
                 <Grid item xs> 
@@ -106,7 +108,7 @@ const Footer = () => {
                     rel='noopener'
                     target='_blank'
                   >
-                    xx blockchain
+                    {t('xx blockchain')}
                   </ListLink>
                   <ListLink
                     to='https://xx.network/messenger/'
@@ -114,21 +116,21 @@ const Footer = () => {
                     rel='noopener'
                     target='_blank'
                   >
-                    xx messenger
+                    {t('xx messenger')}
                   </ListLink>
                   <ListLink to='https://xx.network/welcome/' underline='hover' rel='noopener' target='_blank'>
-                    xx community
+                    {t('xx community')}
                   </ListLink>
                 </Grid>
                 <Grid item xs={12} md='auto'>
                   <ListLink to='https://xx.network/whitepapers' underline='hover' rel='noopener' target='_blank'>
-                    Whitepapers
+                    {t('Whitepapers')}
                   </ListLink>
                   <ListLink to='https://xx.network/faq/' underline='hover' rel='noopener' target='_blank'>
-                    FAQ
+                    {t('FAQ')}
                   </ListLink>
                   <ListLink to='https://xx.network/contact/' underline='hover' rel='noopener' target='_blank'>
-                    Contact Us
+                    {t('Contact Us')}
                   </ListLink>
                 </Grid>
               </Grid>
@@ -143,18 +145,20 @@ const Footer = () => {
           <Grid container justifyContent='space-between' spacing={3}>
             <Grid item xs={12} md={8}>
               <Typography variant='body1'>
-                xx Network does not distribute, offer, solicit sales of, or sell any xx coins in any
-                state or jurisdiction in which such a distribution, offer, solicitation or sale
-                would be unlawful prior to registration or qualification under the securities laws
-                of any such state or jurisdiction. Copyright © 2022 xx labs SEZC |{' '}
-                <Link
-                  href='https://xx.network/privacy-policy'
-                  color='inherit'
-                  rel='noopener'
-                  target='_blank'
-                >
-                  Privacy Policy & Term of Use
-                </Link>
+                <Trans t={t}>
+                  xx Network does not distribute, offer, solicit sales of, or sell any xx coins in any
+                  state or jurisdiction in which such a distribution, offer, solicitation or sale
+                  would be unlawful prior to registration or qualification under the securities laws
+                  of any such state or jurisdiction. Copyright © 2022 xx labs SEZC |{' '}
+                  <Link
+                    href='https://xx.network/privacy-policy'
+                    color='inherit'
+                    rel='noopener'
+                    target='_blank'
+                  >
+                    Privacy Policy & Terms of Use
+                  </Link>
+                </Trans>
               </Typography>
             </Grid>
             <Grid item padding={'1rem 0'}>

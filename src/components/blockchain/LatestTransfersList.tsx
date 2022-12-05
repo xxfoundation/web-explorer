@@ -5,6 +5,7 @@ import { TableRow, TableCell, TableContainer, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 import CSSTransition from 'react-transition-group/CSSTransition';
+import { useTranslation } from 'react-i18next';
 
 import '../../assets/css/fade-adjacent.css';
 import { LISTEN_FOR_TRANSFERS_ORDERED } from '../../schemas/transfers.schema';
@@ -22,6 +23,8 @@ import Hash from '../Hash';
 const PAGE_LIMIT = 8;
 
 const TransferRow: FC<Transfer> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <TableRow>
@@ -29,7 +32,7 @@ const TransferRow: FC<Transfer> = (props) => {
           <Header component='div' fontWeight={700}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div>
-                EXTRINSIC&nbsp;
+                {t('EXTRINSIC')}&nbsp;
                 <Link
                   to={`/extrinsics/${props.blockNumber}-${props.extrinsicIndex}`}
                   underline='hover'
@@ -53,7 +56,7 @@ const TransferRow: FC<Transfer> = (props) => {
       </TableRow>
       <TableRow>
         <BorderlessCell sx={{ borderBottom: 'none', paddingLeft: 0 }}>
-          <Header>From</Header>
+          <Header>{t('From')}</Header>
         </BorderlessCell>
         <BorderlessCell>
           <div>
@@ -78,7 +81,7 @@ const TransferRow: FC<Transfer> = (props) => {
       </TableRow>
       <TableRow>
         <BorderlessCell>
-          <Header>to</Header>
+          <Header>{t('to')}</Header>
         </BorderlessCell>
         <BorderlessCell>
           <div>
@@ -109,12 +112,16 @@ const TransferRow: FC<Transfer> = (props) => {
 };
 
 const LatestTransfersList = () => {
+  const { t } = useTranslation();
   const { data, error, loading } = useSubscription<ListOfTransfers>(LISTEN_FOR_TRANSFERS_ORDERED, {
     variables: { limit: PAGE_LIMIT }
   });
 
   return (
-    <DefaultTile header={'Transfers'} linkName={'SEE ALL'} linkAddress={'/transfers'} height={500}>
+    <DefaultTile
+      header={t('Transfers')}
+      linkName={t('SEE ALL')}
+      linkAddress={'/transfers'} height={500}>
       {loading && <Loading size='lg' />}
       {error && <Error />}
       <TableContainer>

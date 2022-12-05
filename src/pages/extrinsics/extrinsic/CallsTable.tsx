@@ -1,10 +1,11 @@
 import React, { FC, useMemo } from 'react';
-import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../../components/Tables';
+import { BaseLineCellsWrapper, BaselineTable, headerCellsWrapper } from '../../../components/Tables';
 import ModuleCalls from './summary/ModuleCalls';
 import { NestedCall } from '../../../schemas/extrinsics.schema';
 import StatusMessage from '../../../components/blockchain/StatusMessage';
 import { DataTile } from '../../../components/block/EventsTable';
 import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     data: Array<NestedCall> | null;
@@ -20,7 +21,15 @@ const CallRow = (data: NestedCall) => {
 };
 
 const CallsTable: FC<Props> = ({ data }) => {
-    const headers = HeaderCellsWrapper(['Module/Call', 'Args', 'Result']);
+    const { t } = useTranslation();
+    const headers = useMemo(
+      () => headerCellsWrapper([
+        t('Module/Call'),
+        t('Args'),
+        t('Result')
+      ]),
+      [t]
+    );
     const rows = useMemo(() => (data || []).map(CallRow), [data]);
     return (
         <>

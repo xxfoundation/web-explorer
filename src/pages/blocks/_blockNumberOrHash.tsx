@@ -4,6 +4,7 @@ import { Box, Container, Divider, Stack, Typography } from '@mui/material';
 import Hidden from '@mui/material/Hidden';
 import { useNavigate, useParams } from 'react-router-dom';
 import { isHex } from '@polkadot/util';
+import { useTranslation } from 'react-i18next';
 
 import { BlockNav } from '../../components/block/Block.styled';
 import BlockDetailedTabs from '../../components/block/BlockDetailedTabs';
@@ -56,16 +57,18 @@ const useArrowButtonsOptions = (number: number) => {
 const BlockSummaryHeader: React.FC<{
   blockNumber: number;
 }> = ({ blockNumber }) => {
+  const { t } = useTranslation();
   const arrowsOptions = useArrowButtonsOptions(blockNumber);
+
   return (
     <Stack justifyContent={'space-between'} direction={'row'} sx={{ mb: 5 }}>
       <Typography variant='h1' style={{ whiteSpace: 'break-spaces' }}>
-        Block No. {blockNumber}
+        {t('Block No.')} {blockNumber}
       </Typography>
       <BlockNav direction={'row'} alignItems={'center'} spacing={2}>
         <Hidden mdDown>
           <Link to='/blocks'>
-            <Typography variant='h4'>blocks</Typography>
+            <Typography variant='h4'>{t('blocks')}</Typography>
           </Link>
           <Divider orientation='vertical' variant='middle' flexItem />
         </Hidden>

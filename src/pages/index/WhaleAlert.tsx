@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { useQuery } from '@apollo/client';
-import React, { Dispatch, FC, SetStateAction } from 'react';
+import React, { Dispatch, FC, SetStateAction, useMemo } from 'react';
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Address from '../../components/Hash/XXNetworkAddress';
 import Hash from '../../components/Hash';
@@ -16,6 +16,7 @@ import {
   LIST_WHALE_TRANSFERS,
   Transfer
 } from '../../schemas/transfers.schema';
+import { useTranslation } from 'react-i18next';
 
 const TransferRow = (data: Transfer) => {
   const extrinsicIdLink = `/extrinsics/${data.blockNumber}-${data.extrinsicIndex}`;
@@ -51,25 +52,26 @@ const TransferRow = (data: Transfer) => {
   ];
 };
 
-const headers = [
-  { value: 'Block' },
-  { value: 'Time' },
-  {
-    value: 'From'
-  },
-  {
-    value: 'To',
-  },
-  { value: 'Amount' },
-  { value: 'Result' },
-  { value: 'Hash' }
-];
-
 const TransferTable: FC<{
   where?: Record<string, unknown>;
   setCount?: Dispatch<SetStateAction<number | undefined>>;
 }> = ({}) => {
+  const { t } = useTranslation();
   const { data, error, loading } = useQuery<GetTransfersByBlock>(LIST_WHALE_TRANSFERS);
+
+  const headers = useMemo(() => [
+    { value: t('Block') },
+    { value: t('Time') },
+    {
+      value: t('From')
+    },
+    {
+      value: t('To'),
+    },
+    { value: t('Amount') },
+    { value: t('Result') },
+    { value: t('Hash') }
+  ], [t]);
 
   if (error) return <Error type='data-unavailable' />;
   if (loading) return <TableSkeleton rows={10} cells={headers.length} footer />;
@@ -77,14 +79,16 @@ const TransferTable: FC<{
 };
 
 const WhaleAlert = () => {
+  const { t } = useTranslation();
+  
   return (
     <Box sx={{ mt: 7 }}>
       <Typography variant='h3' gutterBottom>
-        Whale Alert
+        {t('Whale Alert')}
       </Typography>
       <PaperStyled>
         <Typography variant='h4' sx={{ mb: 4, px: '3px' }}>
-          Top 10 transfers of last week
+          {t('Top 10 transfers of last week')}
         </Typography>
         <TransferTable />
       </PaperStyled>

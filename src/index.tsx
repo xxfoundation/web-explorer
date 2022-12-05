@@ -8,6 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ThemeProvider } from '@mui/material/styles';
 
+import './i18n';
 import './dayjs';
 import './charts';
 import './index.css';

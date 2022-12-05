@@ -3,6 +3,7 @@ import { Box, Container, Skeleton, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { isHex } from '@polkadot/util';
+import { useTranslation } from 'react-i18next';
 
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
@@ -15,6 +16,7 @@ import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 
 const ExtrinsicComponent = () => {
+  const { t } = useTranslation();
   const { extrinsicIdOrHash } = useParams<{ extrinsicIdOrHash: string }>();
   const isHash = isHex(extrinsicIdOrHash);
   const [blockNumber, extrinsicIndex] = !isHash ? extrinsicIdOrHash?.split('-') ?? [] : [];
@@ -54,7 +56,7 @@ const ExtrinsicComponent = () => {
       <Breadcrumb />
       <Box sx={{ mb: 5 }}>
         <Typography variant='h1'>
-          Extrinsic #{extrinsic.blockNumber}-{extrinsic.extrinsicIndex}
+          {t('Extrinsic')} #{extrinsic.blockNumber}-{extrinsic.extrinsicIndex}
         </Typography>
       </Box>
       <Summary extrinsic={extrinsic} />

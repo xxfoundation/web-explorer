@@ -1,30 +1,36 @@
-import { Account } from '../../../../../schemas/accounts.schema';
+import type { TFunction } from 'i18next';
 import { MetricScores } from '../../../types';
+import { ScoringContext } from './types';
 
-const baseMessage = (value: string) => `Validator ${value} information on his identity`;
-const boolBin = (value: boolean) => value ? 1 : 0;
+const makeBaseMessage = (t: TFunction) => (value: string) => t('Validator {{value}} information on his identity', { value });
+const boolBin = (value: unknown) => !!value ? 1 : 0;
 
-const getIdentityScore = (account: Account): [MetricScores, string] => {
+const getIdentityScore = ({ account, t }: ScoringContext): [MetricScores, string] => {
   const identity = account.identity;
-  if (!identity) return ['very bad', baseMessage('does not have any')];
+  const baseMessage = makeBaseMessage(t);
 
-  const contactInfo = boolBin(!!identity.email) + boolBin(!!identity.discord) + boolBin(!!identity.twitter)
-  const extraInfo = boolBin(!!identity.blurb) + boolBin(!!identity.web)
+  if (!identity) return ['very bad', baseMessage(t('does not have any'))];
+
+  const contactInfo = boolBin(identity.email) + boolBin(identity.discord) + boolBin(identity.twitter);
+  const extraInfo = boolBin(identity.blurb) + boolBin(identity.web);
 
   if (identity.display && extraInfo > 0 && contactInfo > 2) {
-    return ['very good', baseMessage('provides contact and extra')];
-  }
-  if (identity.display && contactInfo > 1) {
-    return ['good', baseMessage('provides considerable contact')];
-  }
-  if (identity.display && contactInfo === 1) {
-    return ['neutral', baseMessage('provides some contact')];
-  }
-  if (identity.display) {
-    return ['bad', baseMessage('barely provides')];
+    return ['very good', baseMessage(t('provides contact and extra'))];
   }
   
-  return ['very bad', baseMessage('did not add any')];
+  if (identity.display && contactInfo > 1) {
+    return ['good', baseMessage(t('provides considerable contact'))];
+  }
+
+  if (identity.display && contactInfo === 1) {
+    return ['neutral', baseMessage(t('provides some contact'))];
+  }
+
+  if (identity.display) {
+    return ['bad', baseMessage(t('barely provides'))];
+  }
+  
+  return ['very bad', baseMessage(t('did not add any'))];
 };
 
 export default getIdentityScore;

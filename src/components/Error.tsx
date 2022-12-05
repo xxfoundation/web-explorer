@@ -1,12 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Typography, TypographyProps } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 type ErrorType = 'data-unavailable' | 'general';
-
-const messages: Record<ErrorType, string> = {
-  'data-unavailable': 'No data on this timeframe',
-  'general': 'Something went wrong...'
-}
 
 type Props = TypographyProps & {
   message?: string;
@@ -14,15 +10,27 @@ type Props = TypographyProps & {
   error?: boolean;
 }
 
-const Error: FC<Props> = ({ children, error, message, type = 'data-unavailable', ...rest }) => (
-  <>
-    {
-      error === undefined || !!error
-        ? <Typography color='red' {...rest}>{message || messages[type]}</Typography>
-        : children
-    }
-  </>
-  
-);
+const Error: FC<Props> = ({ children, error, message, type = 'data-unavailable', ...rest }) => {
+  const { t } = useTranslation();
+
+  const messages = useMemo<Record<ErrorType, string>>(
+    () => ({
+      'data-unavailable': t('No data on this timeframe'),
+      'general': t('Something went wrong...')
+    }),
+    [t]
+  );
+
+  return (
+    <>
+      {
+        error === undefined || !!error
+          ? <Typography color='red' {...rest}>{message || messages[type]}</Typography>
+          : children
+      }
+    </>
+    
+  );
+}
 
 export default Error;

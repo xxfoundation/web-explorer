@@ -1,5 +1,6 @@
 import { Badge, Button, Checkbox, FormControlLabel, FormGroup, Stack, useTheme } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Dropdown from '../../components/DropdownFilter';
 import { Roles } from '../../schemas/accounts.schema';
 
@@ -17,6 +18,7 @@ export const HoldersRolesFilters: FC<{
   onChange: (filters: Record<string, boolean>) => void;
   filters: Record<string, boolean>;
 }> = ({ filters, onChange }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [filterState, setFilterState] = useState(filters);
 
@@ -43,7 +45,7 @@ export const HoldersRolesFilters: FC<{
   return (
     <Dropdown buttonLabel={
       <>
-        Roles
+        {t('Roles')}
         &nbsp;
         {badgeCount > 0 && <>
           <Badge color='primary' sx={{ pl: 1 }} badgeContent={badgeCount} />
@@ -93,7 +95,7 @@ export const HoldersRolesFilters: FC<{
             }}
             onClick={applyChanges}
           >
-            Apply
+            {t('Apply')}
           </Button>
           <Button
             variant='contained'
@@ -110,7 +112,7 @@ export const HoldersRolesFilters: FC<{
             }}
             onClick={reset}
           >
-            Clear
+            {t('Clear')}
           </Button>
         </Stack>
       </FormGroup>

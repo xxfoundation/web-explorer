@@ -28,6 +28,7 @@ import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRang
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
+import { t } from 'i18next';
 
 const props: TableCellProps = { align: 'left' };
 
@@ -218,7 +219,7 @@ const EventsTable = () => {
         >
           <div style={{ margin: '0 0 1em 0', display: 'inline-flex' }}>
             <FunctionsIcon />
-            <Tooltip title='Total Number of Events' placement='top' arrow>
+            <Tooltip title={t('Total Number of Events')} placement='top' arrow>
               <Typography>= {data.agg.aggregate.count}</Typography>
             </Tooltip>
           </div>

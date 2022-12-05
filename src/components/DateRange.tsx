@@ -12,6 +12,7 @@ import {
 import { useToggle } from '../hooks';
 import dayjs, { Dayjs } from 'dayjs';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 
 const defaultFrom = dayjs.utc().startOf('day');
 defaultFrom.set('hour', 7);
@@ -37,6 +38,7 @@ const DateRange: FC<Props> = ({
                                 dateOnly = false,
   maximumRange = THREE_MONTHS_IN_SECONDS
 }) => {
+  const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const [from, setFrom] = useState<string | number | null>(value.from);
@@ -61,7 +63,7 @@ const DateRange: FC<Props> = ({
       const timeThatToIsBehindOfFrom = dayjs.utc(r.from).diff(r.to).valueOf() ?? 0;
 
       if (timeThatToIsBehindOfFrom > 0) {
-        enqueueSnackbar('You cannot travel back in time', { variant: 'error' });
+        enqueueSnackbar(t('You cannot travel back in time'), { variant: 'error' });
 
         newRange =
           keyChanged === 'from'
@@ -75,9 +77,10 @@ const DateRange: FC<Props> = ({
       const differenceOverMax = dayjs.utc(r.to).diff(r.from).valueOf() - maximumRange;
       if (differenceOverMax > 0) {
         enqueueSnackbar(
-          `Date range is over maximum of ${dayjs.duration(maximumRange).humanize()}`,
+          t('Date range is over maximum of {{range}}', { range: dayjs.duration(maximumRange).humanize() }),
           { variant: 'error' }
         );
+
         if (keyChanged === 'to') {
           newRange = {
             ...r,
@@ -93,16 +96,16 @@ const DateRange: FC<Props> = ({
 
       return newRange;
     },
-    [enqueueSnackbar, maximumRange]
+    [t, enqueueSnackbar, maximumRange]
   );
 
   const validatedOnChange = useCallback(
     (k: keyof Range, r: Range) => {
-      const { from: f, to: t } = validateRange(k, r);
+      const { from: f, to: o } = validateRange(k, r);
       if (k === 'from') {
         setFrom(f);
       } else {
-        setTo(t);
+        setTo(o);
       }
     },
     [validateRange]
@@ -119,10 +122,10 @@ const DateRange: FC<Props> = ({
   );
 
   const toChanged = useCallback(
-    (t: Dayjs | null) => {
+    (o: Dayjs | null) => {
       validatedOnChange('to', {
         ...value,
-        to: t?.toISOString() ?? null
+        to: o?.toISOString() ?? null
       });
     },
     [validatedOnChange, value]
@@ -230,7 +233,7 @@ const DateRange: FC<Props> = ({
           }}
           onClick={applyChanges}
         >
-          Apply
+          {t('Apply')}
         </Button>
         <Button
           variant='contained'
@@ -247,7 +250,7 @@ const DateRange: FC<Props> = ({
           }}
           onClick={reset}
         >
-          Clear
+          {t('Clear')}
         </Button>
       </Stack>
     </Stack>

@@ -1,6 +1,7 @@
 import { useTheme, Badge, Button, Checkbox, FormControlLabel, Stack } from '@mui/material';
 
 import React, { FC, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Dropdown from '../../DropdownFilter';
 
@@ -10,13 +11,14 @@ export type AddressFilters = {
 }
 
 export type Props = {
-  label: string | React.ReactElement;
+  label: string | React.ReactElement | null;
   onChange: (v: AddressFilters) => void;
   value: AddressFilters;
   address: string;
 }
 
 const AddressFilter: FC<Props> = ({ address, label, onChange, value }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [filters, setFilters] = useState<AddressFilters>({});
 
@@ -105,7 +107,7 @@ const AddressFilter: FC<Props> = ({ address, label, onChange, value }) => {
             }}
             onClick={applyChanges}
           >
-            Apply
+            {t('Apply')}
           </Button>
           <Button
             variant='contained'
@@ -122,7 +124,7 @@ const AddressFilter: FC<Props> = ({ address, label, onChange, value }) => {
             }}
             onClick={reset}
           >
-            Clear
+            {t('Clear')}
           </Button>
         </Stack>
       </Stack>

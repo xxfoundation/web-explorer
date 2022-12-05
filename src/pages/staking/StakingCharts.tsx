@@ -6,16 +6,19 @@ import AveragePerformanceLineChart from '../../components/charts/highcharts/Aver
 import AverageSelfStakeLineChart from '../../components/charts/highcharts/AverageSelfStakeLineChart';
 import AverageCommissionLineChart from '../../components/charts/highcharts/AverageCommissionLineChart';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
+import { useTranslation } from 'react-i18next';
 
 const headerSx = { mt: { xs: 2, sm: 0 }, mb: 4 };
 
 const StakingCharts = () => {
+  const { t } = useTranslation();
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={6}>
         <PaperWrapStyled>
           <Typography variant='h3' sx={headerSx} gutterBottom>
-            Average Points
+            {t('Average Points')}
           </Typography>
           <AveragePointsLineChart />
         </PaperWrapStyled>
@@ -23,7 +26,7 @@ const StakingCharts = () => {
       <Grid item xs={12} md={6}>
         <PaperWrapStyled>
           <Typography variant='h3' sx={headerSx} gutterBottom>
-            Average Performance
+            {t('Average Performance')}
           </Typography>
           <AveragePerformanceLineChart />
         </PaperWrapStyled>
@@ -31,7 +34,7 @@ const StakingCharts = () => {
       <Grid item xs={12} md={6}>
         <PaperWrapStyled>
           <Typography variant='h3' sx={headerSx} gutterBottom>
-            Average Self Stake
+            {t('Average Self Stake')}
           </Typography>
           <AverageSelfStakeLineChart />
         </PaperWrapStyled>
@@ -39,7 +42,7 @@ const StakingCharts = () => {
       <Grid item xs={12} md={6}>
         <PaperWrapStyled>
           <Typography variant='h3'sx={headerSx} gutterBottom>
-            Average Commission
+            {t('Average Commission')}
           </Typography>
           <AverageCommissionLineChart />
         </PaperWrapStyled>

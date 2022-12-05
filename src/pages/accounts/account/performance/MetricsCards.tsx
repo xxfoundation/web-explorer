@@ -1,30 +1,33 @@
+import type { MetricScores, MetricsType } from '../../types';
+
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Grid, Stack, Typography } from '@mui/material';
 import React, { FC, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from '@apollo/client';
 
-import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
-import { Account } from '../../../../schemas/accounts.schema';
-import { ValidatorStats } from '../../../../schemas/staking.schema';
-import { theme } from '../../../../themes/default';
-import { MetricScores, MetricsType } from '../../types';
 import MetricTooltip from './MetricTooltip';
 import evaluateScore from './scoreEvaluator';
 import ScoreIcon from './ScoreIcons';
 import tooltips from './tooltipConfiguration';
-import { useQuery } from '@apollo/client';
 import { GetSlashes, GET_SLASHES_BY_ACCOUNT } from '../../../../schemas/slashes.schema';
 import { ScoringContext } from './scoreEvaluator/types';
 import { GetPayoutFrequency, GetValidatorCommission, GetAvgValidatorRelativePerformance, GET_PAYOUT_FREQUENCY, GET_VALIDATOR_COMMISSION, GET_AVG_VALIDATOR_RELATIVE_PERFOMANCE } from '../../../../schemas/validator.schema';
 import Error from '../../../../components/Error';
 import { GetCurrentEra, GET_CURRENT_ERA } from '../../../../schemas/blocks.schema';
 import Loading from '../../../../components/Loading';
+import PaperStyled from '../../../../components/Paper/PaperWrap.styled';
+import { Account } from '../../../../schemas/accounts.schema';
+import { ValidatorStats } from '../../../../schemas/staking.schema';
+import { theme } from '../../../../themes/default';
 
 const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: string }> = ({
   description,
   metric,
   score
 }) => {
-  const tooltipConfig = tooltips[metric];
+  const { t } = useTranslation();
+  const tooltipConfig = useMemo(() => tooltips(t)?.[metric], [t, metric]);
 
   return (
     <PaperStyled>
@@ -71,6 +74,7 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
 
 
 const MetricCards: FC<{ account: Account; stats: ValidatorStats[] }> = ({ account, stats }) => {
+  const { t } = useTranslation();
   const currentEraQuery = useQuery<GetCurrentEra>(GET_CURRENT_ERA);
   const currentEra = currentEraQuery.data?.block.aggregate.max.era || 999999999;
   const slashesQuery = useQuery<GetSlashes>(GET_SLASHES_BY_ACCOUNT, { variables: { accountId: account.id } });
@@ -92,10 +96,20 @@ const MetricCards: FC<{ account: Account; stats: ValidatorStats[] }> = ({ accoun
         payoutTotalEras: payoutFrequencyQuery.data.stats.aggregate.count,
         payoutClaimedEras: payoutFrequencyQuery.data.rewards.aggregate.count,
         networkEraPoints: networkEraPointsQuery.data,
-        stats
+        stats,
+        t
       })
       : undefined,
-    [account, commissionQuery.data, currentEraQuery.data, networkEraPointsQuery, payoutFrequencyQuery.data, slashesQuery.data, stats])
+    [
+      account,
+      commissionQuery.data,
+      currentEraQuery.data,
+      networkEraPointsQuery.data,
+      payoutFrequencyQuery.data,
+      slashesQuery.data,
+      stats,
+      t
+    ])
   
 
   const scoreTiles = useMemo(() => {

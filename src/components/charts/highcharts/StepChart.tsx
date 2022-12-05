@@ -49,7 +49,7 @@ const StepChart: FC<Props> = ({
     },
     series: [
       {
-        data: data,
+        data,
         step: 'left',
         type: 'line',
         name: seriesName,

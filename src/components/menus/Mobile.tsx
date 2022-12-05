@@ -1,14 +1,17 @@
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
-// import { Link } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { LanguageMenu } from '../LanguageSwitcher';
+
 import Link from '../Link';
 
 export default function MobileNav() {
+  const { t } = useTranslation();
   const [opened, setOpened] = useState(false);
   const close = useCallback(() => setOpened(false), [setOpened]);
   const open = useCallback(() => setOpened(true), [setOpened]);
@@ -18,7 +21,7 @@ export default function MobileNav() {
       <IconButton
         edge='start'
         color='inherit'
-        aria-label='open drawer'
+        aria-label={t('open drawer') ?? 'open drawer'}
         onClick={open}
         sx={{
           m: 0,
@@ -45,7 +48,6 @@ export default function MobileNav() {
       >
         <Box
           sx={{
-            height: 1,
             backgroundColor: '#4F4F4F',
             width: '100%'
           }}
@@ -67,36 +69,42 @@ export default function MobileNav() {
             >
               <Typography variant='h4'>
                 <Link to='/' onClick={close}>
-                  Blockchain
+                  {t('Blockchain')}
                 </Link>
               </Typography>
               <Link to={'/blocks'} onClick={close}>
-                Blocks
+                {t('Blocks')}
               </Link>
               <Link to='/extrinsics' onClick={close}>
-                Extrinsics
+                {t('Extrinsics')}
               </Link>
               <Link to='/transfers' onClick={close}>
-                Transfers
+                {t('Transfers')}
               </Link>
               <Link to='/events' onClick={close}>
-                Events
+                {t('Events')}
               </Link>
               <Typography variant='h4' sx={{ mt: 2 }}>
                 <Link to='/staking' onClick={close}>
-                  Staking
+                  {t('Staking')}
                 </Link>
               </Typography>
               <Typography variant='h4' sx={{ mt: 2 }}>
                 <Link to='/accounts' onClick={close}>
-                  Accounts
+                  {t('Accounts')}
                 </Link>
               </Typography>
               <Typography variant='h4' sx={{ mt: 2 }}>
                 <Link to='/glossary' onClick={close}>
-                  Glossary
+                  {t('Glossary')}
                 </Link>
               </Typography>
+              <Typography variant='h4' sx={{ mt: 2, color: 'white' }}>
+                {t('Language')}
+              </Typography>
+              <Box>
+                <LanguageMenu sx={{ color: 'white', mx: -2, mt: 2 }} />
+              </Box>
             </Box>
           </Box>
         </Box>

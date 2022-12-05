@@ -1,10 +1,9 @@
 import { MetricScores } from '../../../types';
 import { ScoringContext } from './types';
 
-const baseMsg = (value: unknown) => `The validator ${value}`;
-
 const getGovernanceScore = ({
   // democracy
+  t,
 }: ScoringContext): [MetricScores, string] => {
   // if (!democracy) {
   //   return ['very bad', baseMsg('Never participated in Democracy')];
@@ -25,7 +24,7 @@ const getGovernanceScore = ({
   //   ];
   // }
 
-  return ['neutral', baseMsg('has participated a unknown number of time in governance')];
+  return ['neutral', t('The validator has participated a unknown number of time in governance')];
 };
 
 export default getGovernanceScore;

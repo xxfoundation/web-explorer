@@ -2,6 +2,7 @@ import { Container, Grid, Skeleton, Tab, Typography } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+import { useTranslation } from 'react-i18next';
 
 import Balances from './account/Balances';
 import BlockchainCard from './account/blockchain';
@@ -36,6 +37,7 @@ const validatorStatus = (inValidatorStats: boolean, currentlyActive: boolean) =>
 }
 
 const AccountId: FC = () => {
+  const { t } = useTranslation();
   const { accountId } = useParams<{ accountId?: string }>();
   const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const { data, loading } = useFetchValidatorAccountInfo(accountId);
@@ -44,8 +46,8 @@ const AccountId: FC = () => {
   const currEra = latestEraQuery?.data?.validatorStats[0].era;
   const [tab, setTab] = useState(0);
 
-  const handleTab = useCallback((event: React.SyntheticEvent, t: number) => {
-    setTab(t);
+  const handleTab = useCallback((_e: React.SyntheticEvent, n: number) => {
+    setTab(n);
   }, []);
 
   if (loading || latestEraQuery.loading || queryNominator.loading) {
@@ -98,7 +100,7 @@ const AccountId: FC = () => {
               variant='contained'
               onClick={toggleHistory}
             >
-              {historyExpanded ? 'Hide history' : 'Show history'}
+              {historyExpanded ? t('Hide history') : t('Show history')}
             </RoundedButton>
           </PaperWrapStyled>
         </Grid>
@@ -118,11 +120,11 @@ const AccountId: FC = () => {
 
         <Grid item xs={12}>
           <PageTabs value={tab} onChange={handleTab}>
-            <Tab label='Blockchain' />
-            <Tab label='Governance' />
-            <Tab label='Staking' />
-            {validator !== undefined && (<Tab label='Validator' />)}
-            {nominator !== undefined && (<Tab label='Nominator' />)}
+            <Tab label={t('Blockchain')} />
+            <Tab label={t('Governance')} />
+            <Tab label={t('Staking')} />
+            {validator !== undefined && (<Tab label={t('Validator')} />)}
+            {nominator !== undefined && (<Tab label={t('Nominator')} />)}
           </PageTabs>
         </Grid>
         <Grid item xs={12}>

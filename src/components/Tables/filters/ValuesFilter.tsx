@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import {
   useTheme,
+  Box,
   Badge,
   Button,
   Checkbox,
@@ -11,11 +12,11 @@ import {
   Typography
 } from '@mui/material';
 import { uniq } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import Dropdown from '../../DropdownFilter';
 import { arrayCompare } from '../../utils';
 import Loading from '../../Loading';
-import { Box } from '@mui/system';
 
 type Props = {
   buttonLabel: string | null | React.ReactNode;
@@ -40,6 +41,7 @@ const ValuesFilter: FC<Props> = ({
   value,
   valuesLoading = false,
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [localValues, setLocalValues] = useState<string[] | undefined>(value);
   const toggleValue = useCallback(
@@ -67,8 +69,10 @@ const ValuesFilter: FC<Props> = ({
     setLocalValues((m) => (m !== undefined ? undefined : []));
   }, []);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const reset = useCallback(() => {setLocalValues(undefined); onChange([])}, []);
+  const reset = useCallback(() => {
+    setLocalValues(undefined);
+    onChange([]);
+  }, [onChange]);
   const applyChanges = useCallback(() => onChange(localValues), [localValues, onChange]);
   const canApplyChanges = !valuesLoading && (localValues !== value || !arrayCompare(localValues, value));
 
@@ -112,7 +116,7 @@ const ValuesFilter: FC<Props> = ({
             <FormControl>
               <Input
                 sx={{ mb: 1 }}
-                placeholder='Search...'
+                placeholder={t('Search...') ?? ''}
                 onChange={(v) => onSearchFilterChange(v.target.value)}
                 value={search || valuesFilter}
               />
@@ -122,7 +126,7 @@ const ValuesFilter: FC<Props> = ({
                 <Loading size='sm' />
                 <Box sx={{ mt: 1, textAlign: 'center' }}>
                   <Typography variant='body3' sx={{ fontSize: 12 }}>
-                    Loading...
+                    {t('Loading...')}
                   </Typography>
                 </Box>
               </Box>
@@ -130,7 +134,7 @@ const ValuesFilter: FC<Props> = ({
               <Stack sx={{ maxHeight: '12rem', overflow: 'auto', mb: 1 }}>
                 {availableValues?.length === 0 && (
                   <Typography variant='body3'>
-                    No available values...
+                    {t('No available values...')}
                   </Typography>
                 )}
                 {availableValues?.filter(v => v.toLowerCase().match(valuesFilter?.toLowerCase())).map((val) => (
@@ -170,7 +174,7 @@ const ValuesFilter: FC<Props> = ({
             }}
             onClick={applyChanges}
           >
-            Apply
+            {t('Apply')}
           </Button>
           <Button
             variant='contained'
@@ -187,7 +191,7 @@ const ValuesFilter: FC<Props> = ({
             }}
             onClick={reset}
           >
-            Clear
+            {t('Clear')}
           </Button>
         </Stack>
       </Stack>

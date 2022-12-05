@@ -1,11 +1,13 @@
 import type { Nominator } from '../../../../schemas/staking.schema';
 
+import { Divider, Typography } from '@mui/material';
 import React, { FC, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import FormatBalance from '../../../../components/FormatBalance';
 import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
-import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../../../components/Tables';
+import { BaseLineCellsWrapper, BaselineTable, headerCellsWrapper } from '../../../../components/Tables';
 import { usePagination } from '../../../../hooks';
-import { Divider, Typography } from '@mui/material';
 
 const EraStake = (nominator: Nominator) => {
   return BaseLineCellsWrapper([
@@ -16,15 +18,20 @@ const EraStake = (nominator: Nominator) => {
 };
 
 const DEFAULT_ROWS_PER_PAGE = 10;
-const headers = HeaderCellsWrapper(['Account', 'Stake', 'Share']);
 
 type Props = {
   nominators?: Nominator[];
 }
 
 const NominatorsTable: FC<Props> = ({ nominators }) => {
+  const { t } = useTranslation();
   const pagination = usePagination({ rowsPerPage: DEFAULT_ROWS_PER_PAGE });
   const { paginate, setCount } = pagination;
+
+  const headers = useMemo(
+    () => headerCellsWrapper([t('Account'), t('Stake'), t('Share')]),
+    [t]
+  );
 
   useEffect(() => {
     if (nominators) {
@@ -46,11 +53,11 @@ const NominatorsTable: FC<Props> = ({ nominators }) => {
 
   const nominatorsFooter = useMemo(() => BaseLineCellsWrapper([
     <Typography variant='h4' sx={{ textAlign: 'end' }}>
-      Total of Other Stake
+      {t('Total of Other Stake')}
     </Typography>,
     <FormatBalance value={totalNominatorsStake?.toString()} />,
     `${totalNominatorsShare.toFixed(2)}%`
-  ]), [totalNominatorsShare, totalNominatorsStake]);
+  ]), [t, totalNominatorsShare, totalNominatorsStake]);
 
   if (nominatorsFooter && paginated?.length) {
     paginated?.push(BaseLineCellsWrapper([<Divider />, <Divider />, <Divider />]));

@@ -12,6 +12,7 @@ import {
 } from '../../../../components/Summary';
 import Ellipsis from '../../../../components/Ellipsis';
 import { ValidatorInfo } from '../../../../schemas/validator.schema';
+import { useTranslation } from 'react-i18next';
 import { InfoMessage } from '../utils';
 
 const SessionKeyValues: FC<{ entries: Record<string, string | string> }> = ({ entries }) => {
@@ -46,7 +47,13 @@ const locationString = (geoBin: string, city: string, country: string) => {
   return str;
 };
 
-const ValidatorSummary: FC<{ active: boolean, info?: ValidatorInfo }> = ({ active, info }) => {
+type Props = {
+  active: boolean;
+  info?: ValidatorInfo;
+};
+
+const ValidatorSummary: FC<Props> = ({ active, info }) => {
+  const { t } = useTranslation();
   const location = useMemo(() => {
     if (!info?.location) {
       return ' - '
@@ -82,7 +89,7 @@ const ValidatorSummary: FC<{ active: boolean, info?: ValidatorInfo }> = ({ activ
     <SummaryContainer>
       {info.cmixId && (
         <SummaryEntry>
-          <SummaryHeader>Cmix ID</SummaryHeader>
+          <SummaryHeader>{t('Cmix ID')}</SummaryHeader>
           <SummaryValue>
             <WithCopy value={info.cmixId || ''}>
               <CmixAddress {...addressProps} value={info.cmixId || ''} />
@@ -91,26 +98,26 @@ const ValidatorSummary: FC<{ active: boolean, info?: ValidatorInfo }> = ({ activ
         </SummaryEntry>
       )}
       <SummaryEntry>
-        <SummaryHeader>Location</SummaryHeader>
+        <SummaryHeader>{t('Location')}</SummaryHeader>
         <SummaryValue>{location}</SummaryValue>
       </SummaryEntry>
       {active && <SummaryEntry>
-        <SummaryHeader>Own Stake</SummaryHeader>
+        <SummaryHeader>{t('Own Stake')}</SummaryHeader>
         <SummaryValue>
           <FormatBalance value={info.stake} />
         </SummaryValue>
       </SummaryEntry>}
       {active && info.nominators && <SummaryEntry>
-        <SummaryHeader>Nominators</SummaryHeader>
+        <SummaryHeader>{t('Nominators')}</SummaryHeader>
         <SummaryValue>{info.nominators.length}</SummaryValue>
       </SummaryEntry>}
       <SummaryEntry>
-        <SummaryHeader>Commission</SummaryHeader>
+        <SummaryHeader>{t('Commission')}</SummaryHeader>
         <SummaryValue>{info.commission} %</SummaryValue>
       </SummaryEntry>
       {sessionEntries && (
         <SummaryEntry>
-          <SummaryHeader>Session Key</SummaryHeader>
+          <SummaryHeader>{t('Session Key')}</SummaryHeader>
           <SummaryValue>
             <SessionKeyValues entries={sessionEntries} />
           </SummaryValue>

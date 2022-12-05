@@ -1,8 +1,10 @@
+import type { TFunction } from 'i18next';
 import type { Extrinsic } from '../../../../schemas/extrinsics.schema';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Box, Stack, Typography } from '@mui/material';
 import React, { FC, ReactNode, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import RoundedButton from '../../../../components/buttons/Rounded';
 import { SummaryEntry, SummaryHeader, SummaryValue } from '../../../../components/Summary';
@@ -10,7 +12,7 @@ import { useToggle } from '../../../../hooks';
 import useCopyClipboard from '../../../../hooks/useCopyToClipboard';
 import { theme } from '../../../../themes/default';
 
-const callbackCopyMessage = (value: ReactNode) => {
+const callbackCopyMessage = (t: TFunction) => (value: ReactNode) => {
   return (
     <Stack
       spacing={1}
@@ -24,7 +26,7 @@ const callbackCopyMessage = (value: ReactNode) => {
       <Stack direction={'row'} alignItems={'center'} spacing={2}>
         <CheckCircleOutlineIcon sx={{ color: theme.palette.success.light }} />
         <Typography fontSize={10} fontWeight={600}>
-          Copied to Clipboard
+          {t('Copied to Clipboard')}
         </Typography>
       </Stack>
       <Typography fontSize={10} component={'code'}>
@@ -66,11 +68,12 @@ const ParamTile: FC<{ label: string; value: unknown; type?: string }> = ({ label
 type Params = Pick<Extrinsic, 'args' | 'argsDef'>;
 
 const ParametersFragment: FC<Params> = ({ args, argsDef }) => {
+  const { t } = useTranslation();
   const staticCopy = useCopyClipboard()[1];
   const [isActive, { toggle }] = useToggle();
   const onclickCopy = useCallback(
-    () => staticCopy(JSON.stringify(args), callbackCopyMessage),
-    [args, staticCopy]
+    () => staticCopy(JSON.stringify(args), callbackCopyMessage(t)),
+    [t, args, staticCopy]
   );
   const paramTiles = useMemo(
     () =>
@@ -82,16 +85,16 @@ const ParametersFragment: FC<Params> = ({ args, argsDef }) => {
 
   return (
     <SummaryEntry>
-      <SummaryHeader>Parameters</SummaryHeader>
+      <SummaryHeader>{t('Parameters')}</SummaryHeader>
       <SummaryValue>
         <Stack>
           <Box>
             <RoundedButton variant='contained' onClick={toggle}>
-              {isActive ? 'Hide' : 'Show'}
+              {isActive ? t('Hide') : t('Show')}
             </RoundedButton>
             {isActive && (
               <RoundedButton sx={{ marginLeft: '24px' }} variant='contained' onClick={onclickCopy}>
-                copy
+                {t('copy')}
               </RoundedButton>
             )}
           </Box>

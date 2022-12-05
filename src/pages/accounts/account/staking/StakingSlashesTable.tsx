@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import FormatBalance from '../../../../components/FormatBalance';
 import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
 import Link from '../../../../components/Link';
-import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../../../components/Tables';
+import { BaseLineCellsWrapper, BaselineTable, headerCellsWrapper } from '../../../../components/Tables';
 import TimeAgoComponent from '../../../../components/TimeAgo';
 import usePagination from '../../../../hooks/usePagination';
 import {
@@ -15,9 +15,9 @@ import {
 } from '../../../../schemas/staking.schema';
 import DownloadDataButton from '../../../../components/buttons/DownloadDataButton';
 import { ExportToCsv } from 'export-to-csv';
+import { useTranslation } from 'react-i18next';
 
 const DEFAULT_ROWS_PER_PAGE = 10;
-const headers = HeaderCellsWrapper(['Validator', 'Block Number', 'Era', 'Amount', 'Timestamp']);
 
 const SlashesRow = (slash: StakingSlash) => {
   return BaseLineCellsWrapper([
@@ -34,15 +34,7 @@ const SlashesRow = (slash: StakingSlash) => {
   ]);
 };
 
-interface CSVRow {
-  'Payout Date': string;
-  'Block Number': number;
-  'Slash Date': string;
-  'Era': number;
-  'Validator Address': string;
-  'Validator ID': string;
-  'Amount': number;
-}
+type CSVRow = Record<string, string | number>;
 
 const eraTime = 86400000;
 const genesisTime = 1637132496000;
@@ -51,6 +43,7 @@ const StakingSlashesTable: FC<{
   accountId: string;
   sum?: number;
 }> = ({ accountId, sum }) => {
+  const { t } = useTranslation();
   const stakingSlashes = useQuery<GetStakingSlashes>(GET_STAKING_SLASHES, {
     variables: { accountId }
   });
@@ -77,31 +70,42 @@ const StakingSlashesTable: FC<{
       setCount(stakingSlashes.data?.aggregates?.aggregate.count);
       setCsvData(stakingSlashes.data?.slashes.map((el) => {
         return {
-          'Payout Date': dayjs.utc(el.timestamp).format('ll LTS Z'),
-          'Block Number': el.blockNumber,
-          'Slash Date': dayjs.utc((el.era+1)*eraTime+genesisTime).format('ll LTS Z'),
-          'Era': el.era,
-          'Validator Address': el.validatorAddress,
-          'Validator ID': el.account.identity?.display || '',
-          'Amount': el.amount / 1e9,
+          [t('Payout Date')]: dayjs.utc(el.timestamp).format('ll LTS Z'),
+          [t('Block Number')]: el.blockNumber,
+          [t('Slash Date')]: dayjs.utc((el.era+1)*eraTime+genesisTime).format('ll LTS Z'),
+          [t('Era')]: el.era,
+          [t('Validator Address')]: el.validatorAddress,
+          [t('Validator ID')]: el.account.identity?.display || '',
+          [t('Amount')]: el.amount / 1e9,
         }
       }))
     }
-  }, [setCount, setCsvData, stakingSlashes.data]);
+  }, [t, setCount, setCsvData, stakingSlashes.data]);
 
   const paginated = useMemo(
     () => slashes && paginate(slashes).map(SlashesRow),
     [paginate, slashes]
   );
 
+  const headers = useMemo(
+    () => headerCellsWrapper([
+      t('Validator'),
+      t('Block Number'),
+      t('Era'),
+      t('Amount'),
+      t('Timestamp')
+    ]),
+    [t]
+  );
+
   return (
     <>
-      {sum && (
+      {sum !== undefined && (
         <Typography
           variant='body3'
           sx={{ mb: '1em', px: '1px', display: 'block', textAlign: 'right' }}
         >
-          <b>Total Slashes:</b> <FormatBalance value={sum.toString()} />
+          <b>{t('Total Slashes')}:</b> <FormatBalance value={sum.toString()} />
         </Typography>
       )}
       <BaselineTable

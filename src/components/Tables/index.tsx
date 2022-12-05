@@ -13,14 +13,14 @@ import { Table, TableContainer } from './Table.styled';
 import HeaderMobileFilters from './HeaderMobileFilters';
 
 type NormalCell = {
-  value: number | string;
+  value: number | string | null;
   props?: TableCellProps;
   key?: string | number;
 };
 
 type JSXCell = {
-  value: JSX.Element;
-  label: string;
+  value: JSX.Element | null;
+  label: string | null;
   props?: TableCellProps;
   key?: string | number;
 }
@@ -28,7 +28,7 @@ type JSXCell = {
 export type HeaderCell = NormalCell | JSXCell;
 
 export type BaselineCell = {
-  value: number | string | JSX.Element;
+  value: number | string | JSX.Element | null;
   props?: TableCellProps;
   key?: string | number;
 };
@@ -103,7 +103,7 @@ export const BaselineTable: FC<Props> = (props) => {
   );
 };
 
-export const HeaderWrapper = (element: JSX.Element | string | number, label: string): HeaderCell => {
+export const HeaderWrapper = (element: JSX.Element | string | number | null, label: string | null): HeaderCell => {
   return typeof element === 'string' || typeof element === 'number' ? {
     value: element,
   } : {
@@ -112,8 +112,8 @@ export const HeaderWrapper = (element: JSX.Element | string | number, label: str
   };
 };
 
-export const HeaderCellsWrapper = (elements: ([string, JSX.Element] | string | number)[]) => {
-  return elements.map((e) => Array.isArray(e) ? HeaderWrapper(e[1], e[0]) : HeaderWrapper(e, e.toString()));
+export const headerCellsWrapper = (elements: ([string | null, JSX.Element] | string | number | null)[]) => {
+  return elements.map((e) => Array.isArray(e) ? HeaderWrapper(e[1], e[0]) : HeaderWrapper(e, e?.toString() ?? ''));
 }
 
 export const BaseLineCellWrapper = (element: JSX.Element | string | number) => {

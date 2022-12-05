@@ -4,6 +4,7 @@ import { Account } from '../../../../schemas/accounts.schema';
 import Address from '../../../../components/Hash/XXNetworkAddress';
 import { WithCopy } from '../../../../components/Summary';
 import Socials from '../../../../components/Socials';
+import { useTranslation } from 'react-i18next';
 
 type Props = { account: Account };
 
@@ -32,9 +33,11 @@ const TextWithLabel: FC<{ label: string; text: string; url?: string }> = ({ labe
 };
 
 const Identity: FC<Props> = ({ account }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const isStaking = account.validator || account.nominator;
   const hasRiotOrWeb = account.identity?.riot || account.identity?.web;
+
   return (
     <Grid spacing={3} container>
       <Grid item md={12} xs={12}>
@@ -89,7 +92,7 @@ const Identity: FC<Props> = ({ account }) => {
             {isStaking && (
               <Grid item md={8} sm={12} xs={12}>
                 <Typography variant='h4' marginTop={'20px'} marginBottom={'5px'}>
-                  Stash
+                  {t('Stash')}
                 </Typography>
                 <Address
                   roles={account}
@@ -102,7 +105,7 @@ const Identity: FC<Props> = ({ account }) => {
                 {account.controllerAddress && (
                   <>
                     <Typography variant='h4' marginTop={'20px'} marginBottom={'5px'}>
-                      Controller
+                      {t('Controller')}
                     </Typography>
                     <Address
                       roles={account}
@@ -118,11 +121,11 @@ const Identity: FC<Props> = ({ account }) => {
             )}
             <Grid item md={4} sm={12} xs={12}>
               {account.identity?.riot && (
-                <TextWithLabel label='riot' text={account.identity?.riot} />
+                <TextWithLabel label={t('riot')} text={account.identity?.riot} />
               )}
               {account.identity?.web && (
                 <TextWithLabel
-                  label='web'
+                  label={t('web')}
                   text={account.identity?.web}
                   url={account.identity?.web}
                 />

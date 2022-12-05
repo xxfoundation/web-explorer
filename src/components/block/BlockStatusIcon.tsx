@@ -2,34 +2,44 @@ import ClockIcon from '@mui/icons-material/AccessTime';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import ErrorIcon from '@mui/icons-material/ErrorOutline';
 import { Box, Tooltip } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export type BlockStatus = 'failed' | 'successful' | 'pending';
 
-const statusToIconMap: Record<BlockStatus, React.ReactElement> = {
-  failed: (
-    <ErrorIcon color='error' />
-  ),
-  pending: (
-    <ClockIcon color='warning' />
-  ),
-  successful: (
-    <CheckCircleOutlinedIcon color='success' />
-  )
-};
+const BlockStatusIcon: FC<{ status: BlockStatus }> = ({ status }) => {
+  const { t } = useTranslation();
 
-function statusMap(status: BlockStatus, message?: string): React.ReactElement {
-  return (
-    <Box component='span'  aria-label={status}>
-      <Tooltip title={message ? status + '\n' + message : status} arrow>
-        {statusToIconMap[status]}
-      </Tooltip>
-    </Box>
+  const statusToIconMap = useMemo<Record<BlockStatus, React.ReactElement>>(
+    () => (
+      {
+        failed: (
+          <Box component='span' aria-label={'Failed'}>
+            <Tooltip title={t('Failed')} arrow>
+              <ErrorIcon color='error' />
+            </Tooltip>
+          </Box>
+        ),
+        pending: (
+          <Box component='span'  aria-label={'Pending'}>
+            <Tooltip title={t('Pending')} arrow>
+              <ClockIcon color='warning' />
+            </Tooltip>
+          </Box>
+        ),
+        successful: (
+          <Box component='span'  aria-label={'Successful'}>
+            <Tooltip title={t('Successful')} arrow>
+              <CheckCircleOutlinedIcon color='success' />
+            </Tooltip>
+          </Box>
+        )
+      }
+    ),
+    [t]
   );
-}
-
-const BlockStatusIcon: FC<{ status: BlockStatus, message?: string }> = ({ message, status }) => {
-  return statusMap(status, message) || null;
+  
+  return statusToIconMap[status] || null;
 };
 
 export default BlockStatusIcon;

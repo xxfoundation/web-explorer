@@ -2,11 +2,13 @@
 import { Container, Grid, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { useTranslation } from 'react-i18next';
 
 // @ts-ignore TS6133
 import markdownDoc from './glossary.md';
 
 const LandingPage: FC = () => {
+  const { t } = useTranslation();
   const [content, setContent] = useState<string>('');
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const LandingPage: FC = () => {
   return (
     <Container sx={{ my: 5 }}>
       <Typography variant='h1' sx={{ mb: 5 }}>
-        Glossary
+        {t('Glossary')}
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={12} lineHeight={1.5}>

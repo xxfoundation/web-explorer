@@ -4,9 +4,11 @@ import {
   Divider,
   linkClasses,
   styled,
-  Typography, useMediaQuery
+  Typography,
+  useMediaQuery
 } from '@mui/material';
 import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import SlashStroke from '../assets/images/icons/SlashStroke.svg';
 import Link from '../components/Link';
 import PaperStyled from '../components/Paper/PaperWrap.styled';
@@ -52,13 +54,17 @@ const RoundedButton = styled(Button)(({}) => {
 });
 
 const NotFound: FC<{ message?: string }> = ({ message = 'Page Not Found'}) => {
+  const { t } = useTranslation();
+  
   return (
     <Container sx={{ my: 6, textAlign: 'center' }} maxWidth='sm'>
       <PaperStyled sx={{ paddingY: '60px' }}>
-        <Typography variant='subtitle2'>Hmmm...</Typography>
+        <Typography variant='subtitle2'>
+          {t('Hmmm...')}
+        </Typography>
         <InfoTitle>{message}</InfoTitle>
         <RoundedButton variant='contained'>
-          <Link to={'/'}>home</Link>
+          <Link to={'/'}>{t('home')}</Link>
         </RoundedButton>
         <ResponsiveDivider flexItem orientation='horizontal' />
         <img src={SlashStroke} alt='not found icon' style={{ margin: '60px auto 20px' }} />

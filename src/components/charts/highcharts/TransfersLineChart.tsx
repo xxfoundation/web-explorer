@@ -5,12 +5,13 @@ import type { FC } from 'react';
 import { useQuery } from '@apollo/client';
 import { SelectChangeEvent } from '@mui/material';
 import React, { useCallback, useEffect,  useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { amountByEraTooltip, DataPoint } from '.';
 import { QueryEraTransfers, LISTEN_FOR_ERA_TRANSFERS } from '../../../schemas/transfers.schema';
 import DefaultTile from '../../DefaultTile';
 import Loading from '../../Loading';
-import { useNavigate } from 'react-router-dom';
 import DropdownTimelineLineChart from './DropdownTimelineLineChart';
 
 const ERAS_IN_A_QUARTER = 90;
@@ -29,6 +30,7 @@ type Props = {
 const NOOP = () => {};
 
 const TransfersLineChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { data, loading } = useQuery<QueryEraTransfers>(LISTEN_FOR_ERA_TRANSFERS);
 
@@ -52,9 +54,9 @@ const TransfersLineChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
   );
 
   useEffect(() => {
-    const t = Object.entries(timeframes).find(([,eras]) => eras === timeframeEras)?.[0] as Timeframe | undefined;
-    if (t) {
-      onEraTimeframeChange(t);
+    const time = Object.entries(timeframes).find(([,eras]) => eras === timeframeEras)?.[0] as Timeframe | undefined;
+    if (time) {
+      onEraTimeframeChange(time);
     }
   }, [onEraTimeframeChange, timeframeEras]);
 
@@ -63,7 +65,7 @@ const TransfersLineChart: FC<Props> = ({ onEraTimeframeChange = NOOP }) => {
   }, [navigate]);
 
   return (
-    <DefaultTile header='Transfers' height='435px'>
+    <DefaultTile header={t('Transfers')} height='435px'>
       {loading ? (
         <Loading />
       ) : (

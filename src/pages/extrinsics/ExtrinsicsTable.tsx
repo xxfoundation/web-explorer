@@ -1,11 +1,12 @@
 import { useQuery, useSubscription } from '@apollo/client';
 import React, { FC, useEffect, useMemo, useState } from 'react';
-
 import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+
 import BlockStatusIcon from '../../components/block/BlockStatusIcon';
 import Hash from '../../components/Hash';
 import Link from '../../components/Link';
-import { BaselineCell, BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../components/Tables';
+import { BaselineCell, BaseLineCellsWrapper, BaselineTable, headerCellsWrapper } from '../../components/Tables';
 import TimeAgoComponent from '../../components/TimeAgo';
 import RefreshButton from '../../components/buttons/Refresh';
 import {
@@ -41,6 +42,7 @@ type Props = {
   withTimestampEvents: boolean;
 };
 const ExtrinsicsTable: FC<Props> = (props) => {
+  const { t } = useTranslation();
   /* ----------------- Query Available Extrinsic Module/Calls ----------------- */
   const actionsQuery = useQuery<GetAvailableExtrinsicActions>(GET_AVAILABLE_EXTRINSIC_ACTIONS);
 
@@ -112,31 +114,32 @@ const ExtrinsicsTable: FC<Props> = (props) => {
   /* --------------------------------- Headers -------------------------------- */
   const headers = useMemo(
     () =>
-      HeaderCellsWrapper([
-        'Extrinsic id',
-        'Block',
-        'Extrinsic hash',
-        ['Time', <DateRangeFilter onChange={setRange} value={range} />],
-        ['Result', <BooleanFilter
-          label='Result'
+      headerCellsWrapper([
+        t('Extrinsic id'),
+        t('Block'),
+        t('Extrinsic hash'),
+        [t('Time'), <DateRangeFilter onChange={setRange} value={range} />],
+        [t('Result'), <BooleanFilter
+          label={t('Result')}
           toggleLabel={(v) => (v ? 'Success' : 'Failed')}
           onChange={setResultFilter}
           value={resultFilter}
         />],
-        ['Modules', <ValuesFilter
+        [t('Modules'), <ValuesFilter
           availableValues={availableModules}
-          buttonLabel='Module'
+          buttonLabel={t('Module')}
           onChange={setModulesFilter}
           value={modulesFilter}
         />],
-        ['Call', <ValuesFilter
+        [t('Call'), <ValuesFilter
           availableValues={availableCalls}
-          buttonLabel='Call'
+          buttonLabel={t('Call')}
           onChange={setCallsFilter}
           value={callsFilter}
         />]
       ]),
     [
+      t,
       availableCalls,
       availableModules,
       callsFilter,

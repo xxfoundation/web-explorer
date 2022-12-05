@@ -3,6 +3,7 @@ import type { AddressFilters } from '../../../../components/Tables/filters/Addre
 import { useQuery } from '@apollo/client';
 import { Box, Skeleton } from '@mui/material';
 import React, { FC, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { TableSkeleton } from '../../../../components/Tables/TableSkeleton';
 import ExtrinsicsTable from '../../../../components/block/ExtrinsicsTable';
@@ -22,6 +23,7 @@ type Props = {
 };
 
 const BlockchainCard: FC<Props> = ({ account }) => {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState<AddressFilters>({});
   const { data, loading } = useQuery<GetExtrinsicCounts>(GET_EXTRINSIC_COUNTS, {
     variables: { accountId: account.id }
@@ -51,7 +53,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
           {
             label: (
               <TabText
-                message={'Extrinsic'}
+                message={t('Extrinsic')}
                 count={extrinsicCount === undefined ? '' : extrinsicCount}
               />
             ),
@@ -60,7 +62,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
           {
             label: (
               <TabText
-                message={'Transfers'}
+                message={t('Transfers')}
                 count={transferCount === undefined ? '' : transferCount}
               />
             ),
@@ -68,7 +70,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
               <>
                 <Box sx={{ textAlign: 'right', mt: -4.5 }}>
                   <AddressFilter
-                    label={'Filters '}
+                    label={t('Filters')}
                     address={account.id}
                     value={filters}
                     onChange={setFilters}
@@ -81,7 +83,7 @@ const BlockchainCard: FC<Props> = ({ account }) => {
           {
             label: (
               <TabText
-                message={'Balance Events'}
+                message={t('Balance Events')}
                 count={balanceCount === undefined ? '' : balanceCount}
               />
             ),
@@ -92,10 +94,10 @@ const BlockchainCard: FC<Props> = ({ account }) => {
         ];
 
     return tabs;
-  }, [account.id, loading, extrinsicCount, balanceCount, transferCount, filters]);
+  }, [account.id, loading, extrinsicCount, transferCount, t, filters, balanceCount]);
 
   return (
-    <TabsWithPanels panels={panels} tabsLabel='account blockchain card' />
+    <TabsWithPanels panels={panels} tabsLabel={t('account blockchain card')} />
   );
 };
 

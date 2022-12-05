@@ -3,8 +3,10 @@ import React, { useCallback } from 'react';
 import Close from '@mui/icons-material/Close';
 import useLocalStorage from '../hooks/useLocalStorage';
 import Link from './Link';
+import { Trans, useTranslation } from 'react-i18next';
 
 const Banner = () => {
+  const { t } = useTranslation();
   const [dismissed, setDismissed] = useLocalStorage<string>('banner.dismissed');
   const dismiss = useCallback(() => {
     setDismissed('true');
@@ -29,8 +31,10 @@ const Banner = () => {
         <Close />
       </Button>
       <Typography variant='body2' sx={{ p: {xs: '1em 3em 0', sm: '1.5em 2em'}, color: 'white' }}>
-        If you want to interact with the <b>xx network blockchain</b> use our web based wallet app
-        (formerly known as the explorer)
+        <Trans t={t}>
+          If you want to interact with the <b>xx network blockchain</b> use our web based wallet app
+          (formerly known as the explorer)
+        </Trans>
       </Typography>
       <Button
         component={Link}
@@ -42,7 +46,7 @@ const Banner = () => {
         target='_blank'
         rel='noopener'
       >
-        xx wallet
+        {t('xx wallet')}
       </Button>
     </AppBar>
   );

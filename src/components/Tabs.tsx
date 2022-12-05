@@ -91,7 +91,12 @@ const TabsWithPanels: React.FC<Props> = ({ panels, tabMarginBottom, tabsLabel })
   );
 };
 
-const TabText: FC<{ count?: string | number | JSX.Element; message: string | JSX.Element }> = ({
+type TabTextProps = {
+  count?: string | number | JSX.Element;
+  message: string | JSX.Element | null;
+};
+
+const TabText: FC<TabTextProps> = ({
   count,
   message
 }) => {

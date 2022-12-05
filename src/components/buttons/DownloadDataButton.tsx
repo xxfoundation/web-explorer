@@ -13,7 +13,11 @@ const DownloadDataButton: FC<LoadingButtonProps & { onClick: () => void }> = ({
   ...props
 }) => {
   return (
-    <LoadingButtonStyle {...props} loading={false} startIcon={<FileDownloadIcon />}>
+    <LoadingButtonStyle
+      {...props}
+      loading={false}
+      startIcon={<FileDownloadIcon />}
+    >
       {children}
     </LoadingButtonStyle>
   );

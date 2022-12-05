@@ -1,9 +1,11 @@
 import type { Block } from '../../schemas/blocks.schema';
 import React, { FC, useMemo } from 'react';
 import { Box, Skeleton, Stack } from '@mui/material';
-import Address from '../Hash/XXNetworkAddress';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+
 import BlockStatusIcon from './BlockStatusIcon';
+import Address from '../Hash/XXNetworkAddress';
 import TimeAgo from '../TimeAgo';
 import {
   SummaryContainer,
@@ -19,6 +21,7 @@ import Hash from '../Hash';
 const timeFormat = 'YYYY.MM.DD | h:mm A (UTC)';
 
 const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
+  const { t } = useTranslation();
   const formattedTimestamp = useMemo(
     () => (block?.timestamp ? dayjs.utc(block?.timestamp).format(timeFormat) : undefined),
     [block?.timestamp]
@@ -29,28 +32,32 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
   ) : (
     <SummaryContainer>
       <SummaryEntry>
-        <SummaryHeader>Time</SummaryHeader>
+        <SummaryHeader>{t('Time')}</SummaryHeader>
         <SummaryValue>{formattedTimestamp ?? <Skeleton />}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Status</SummaryHeader>
+        <SummaryHeader>{t('Status')}</SummaryHeader>
         <SummaryValue>
           {block?.finalized === undefined ? (
             <Skeleton />
           ) : (
             <Stack direction='row' spacing={2} alignItems='center'>
               <BlockStatusIcon status={block?.finalized ? 'successful' : 'pending'} />
-              <Box sx={{ pb: 0.5 }}>{block?.finalized ? 'Finalized' : 'Pending'}</Box>
+              <Box sx={{ pb: 0.5 }}>
+                {block?.finalized
+                  ? t('Finalized')
+                  : t('Pending')}
+              </Box>
             </Stack>
           )}
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Era</SummaryHeader>
+        <SummaryHeader>{t('Era')}</SummaryHeader>
         <SummaryValue>{block?.currentEra}</SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Block Hash</SummaryHeader>
+        <SummaryHeader>{t('Block Hash')}</SummaryHeader>
         <SummaryValue>
           <WithCopy value={block.hash}>
             <Hash truncated='lgDown' value={block.hash} />
@@ -58,7 +65,7 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Parent Hash</SummaryHeader>
+        <SummaryHeader>{t('Parent Hash')}</SummaryHeader>
         <SummaryValue>
           <Ellipsis>
             <Hash truncated='lgDown' value={block?.parentHash} />
@@ -66,19 +73,19 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>State Root</SummaryHeader>
+        <SummaryHeader>{t('State Root')}</SummaryHeader>
         <SummaryValue>
           <Hash truncated='lgDown' value={block?.stateRoot} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Extrinsics Root</SummaryHeader>
+        <SummaryHeader>{t('Extrinsics Root')}</SummaryHeader>
         <SummaryValue>
           <Hash truncated='lgDown' value={block?.extrinsicsRoot} />
         </SummaryValue>
       </SummaryEntry>
       <SummaryEntry>
-        <SummaryHeader>Block Producer</SummaryHeader>
+        <SummaryHeader>{t('Block Producer')}</SummaryHeader>
         <SummaryValue>
           <Ellipsis>
             {block ? (
@@ -99,7 +106,11 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
       </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>{'Block Time'}</SummaryHeader>
-        <SummaryValue>{block ? <TimeAgo date={block.timestamp} /> : <Skeleton />}</SummaryValue>
+        <SummaryValue>
+          {block
+            ? <TimeAgo date={block.timestamp} />
+            : <Skeleton />}
+        </SummaryValue>
       </SummaryEntry>
     </SummaryContainer>
   );

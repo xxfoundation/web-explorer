@@ -1,5 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material';
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { NewAccountsChart, TransfersLineChart, Timeframe } from '../../components/charts';
 import LatestBlocksList from '../../components/blockchain/LatestBlocksList';
@@ -7,6 +8,7 @@ import LatestTransfersList from '../../components/blockchain/LatestTransfersList
 import { useToggle } from '../../hooks';
 
 const LatestInfo = () => {
+  const { t } = useTranslation();
   const [transferFullScreen, { set: setTransfersFullScreen }] = useToggle();
   const transfersLineChartOnChange = useCallback(
     (timeframe: Timeframe) => {
@@ -27,7 +29,7 @@ const LatestInfo = () => {
   return (
     <Box sx={{ mt: 7 }}>
       <Typography variant='h3' gutterBottom>
-        Latest Updates
+        {t('Latest Updates')}
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
