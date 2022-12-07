@@ -30,7 +30,7 @@ const useArrowButtonsOptions = (number: number) => {
 
   const buttonProps = useCallback(
     ({ data, loading }: QueryResult<GetBlockByPK, OperationVariables>) => ({
-      disabled: loading || !data?.block?.number,
+      disabled: loading || !data?.block || (data?.block && data?.block?.number < 0),
       onClick: () => {
         navigate(`/blocks/${data?.block?.number}`);
       }

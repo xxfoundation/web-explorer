@@ -82,15 +82,17 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
         <SummaryValue>
           <Ellipsis>
             {block ? (
-              <WithCopy value={block.author}>
-                <Address
-                  roles={block?.authorName[0]}
-                  truncated='mdDown'
-                  name={block?.authorName[0]?.identity?.display}
-                  value={block.author}
-                  url={`/blocks/${block.number}/producer/${block.author}`}
-                />
-              </WithCopy>
+              block?.authorName ?
+                  <WithCopy value={block.author}>
+                    <Address
+                      roles={block?.authorName[0]}
+                      truncated='mdDown'
+                      name={block?.authorName[0]?.identity?.display}
+                      value={block.author}
+                      url={`/blocks/${block.number}/producer/${block.author}`}
+                    />
+                  </WithCopy>
+              : <i>Genesis Block</i>
             ) : (
               <Skeleton />
             )}
