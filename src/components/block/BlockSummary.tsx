@@ -23,6 +23,7 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
     () => (block?.timestamp ? dayjs.utc(block?.timestamp).format(timeFormat) : undefined),
     [block?.timestamp]
   );
+  console.warn(block)
 
   return !block ? (
     <SummaryLoader number={9} />
@@ -85,9 +86,9 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
               block?.authorName ?
                   <WithCopy value={block.author}>
                     <Address
-                      roles={block?.authorName[0]}
+                      roles={block?.authorName}
                       truncated='mdDown'
-                      name={block?.authorName[0]?.identity?.display}
+                      name={block?.authorName?.identity?.display}
                       value={block.author}
                       url={`/blocks/${block.number}/producer/${block.author}`}
                     />

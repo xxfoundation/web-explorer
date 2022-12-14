@@ -22,7 +22,7 @@ export type Block = {
   stateRoot: string;
   extrinsicsRoot: string;
   author: string;
-  authorName: AuthorName[];
+  authorName: AuthorName;
   timestamp: number;
   specVersion: number;
   totalEvents: number;
