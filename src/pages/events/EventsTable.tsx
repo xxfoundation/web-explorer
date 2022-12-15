@@ -1,4 +1,4 @@
-import { useQuery, useLazyQuery, useSubscription } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import {
   Box,
   Checkbox,
@@ -16,20 +16,23 @@ import TimeAgoComponent from '../../components/TimeAgo';
 import RefreshButton from '../../components/buttons/Refresh';
 import {
   Event,
-  GetAvailableEventActions,
-  GET_AVAILABLE_EVENT_ACTIONS,
   ListEvents,
   LIST_EVENTS,
   SubscribeEventsSinceBlock,
-  SUBSCRIBE_EVENTS_SINCE_BLOCK, GET_CALLS_FOR_MODULES_ACTIONS, GetCallsForModules
+  SUBSCRIBE_EVENTS_SINCE_BLOCK
 } from '../../schemas/events.schema';
 import { theme } from '../../themes/default';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
+import { GetRuntimeMetadata, GET_RUNTIME_METADATA } from '../../schemas/chaindata.schema';
 
 const props: TableCellProps = { align: 'left' };
+type PalletAndEvents = {
+  name: string;
+  events: string[];
+}[]
 
 const rowsParser = ({ blockNumber, call, index, module, timestamp }: Event): BaselineCell[] => {
   return [
@@ -41,10 +44,58 @@ const rowsParser = ({ blockNumber, call, index, module, timestamp }: Event): Bas
   ];
 };
 
+const processMetadata = (metadata: any) => {
+  const palletsAndEvents: { name: string; events: string[]; }[] = []
+  if(!metadata) {return undefined}
+  // eslint-disable-next-line no-unused-vars
+  metadata.pallets.forEach((pallet: { events: { type: null; }; name: string; }) => {
+    const eventsId = pallet.events?.type || null
+    const events: string[] = []
+    const palletAndEvents = {
+      name: pallet.name.startsWith('XX')
+            ? `xx${pallet.name.substring(2, pallet.name.length)}`
+            : pallet.name.toLowerCase(),
+      events,
+    }
+    if (eventsId) {
+      metadata.lookup.types
+        .filter(
+          ({ id, type }: any) =>
+            (type.path.includes('Event') ||
+              type.path.includes('RawEvent')) &&
+            id === eventsId
+        )
+        .forEach(({ type }: any) => {
+          type.def.variant.variants.forEach((variant: { name: string }) => {
+            palletAndEvents.events.push(
+              variant.name.startsWith('xx')
+              ? `XX${variant.name.substring(
+                  2,
+                  variant.name.length
+                )}`
+              : variant.name
+            )
+          })
+        })
+    }
+    palletsAndEvents.push(palletAndEvents)
+  })
+  return palletsAndEvents;
+} 
+
+const getEvents = (palletsAndEvents: PalletAndEvents, moduleFilter: string[]): string[] => {
+  let events: string[] = []
+  moduleFilter.forEach((module) => {
+    events = [...palletsAndEvents.filter(pallet => pallet.name === module).map((pallet) => pallet.events)[0], ...events]
+  })
+  return events
+}
+
 const EventsTable = () => {
   /* ----------------- Query Available Extrinsic Module/Calls ----------------- */
-  const actionsQuery = useQuery<GetAvailableEventActions>(GET_AVAILABLE_EVENT_ACTIONS);
-  const [fetchCalls, {data: callsQuery}] = useLazyQuery<GetCallsForModules>(GET_CALLS_FOR_MODULES_ACTIONS,);
+  const [availableCalls, setAvailableCalls] = useState<string[]>();
+  const metadata = useQuery<GetRuntimeMetadata>(GET_RUNTIME_METADATA);
+  const palletsAndEvents = processMetadata(metadata?.data?.runtime[0].metadata.metadata.v14 && JSON.parse(JSON.stringify(metadata?.data?.runtime[0].metadata.metadata.v14)))
 
   /* ----------------------- Initialize State Variables ----------------------- */
   const [range, setRange] = useSessionState<Range>('events.range', {
@@ -70,15 +121,7 @@ const EventsTable = () => {
   useEffect(() => {
     setCallsFilter([])
     if(modulesFilter) {
-      fetchCalls({
-        variables: {
-          where: {
-            module: {
-              _in: modulesFilter
-            }
-          }
-        }
-      })
+      setAvailableCalls(palletsAndEvents && getEvents(palletsAndEvents, modulesFilter))
     }
     // Would like to call this function only when the modulesFilter is updated 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -86,13 +129,12 @@ const EventsTable = () => {
   
   /* --------------------- Initialize Dependent Variables --------------------- */
   const availableModules = useMemo(
-    () => actionsQuery.data?.modules.map((m) => m.module),
-    [actionsQuery.data]
+    () => palletsAndEvents?.filter(({ events }) => events.length !== 0)
+        .map(({ name }) => name)
+        .sort(),
+    [palletsAndEvents]
   );
-  const availableCalls = useMemo(
-    () => callsQuery?.calls.map((c) => c.call),
-    [callsQuery]
-  );
+
   const callVariable = useMemo(() => {
     const conditions = [];
     if (!withExtrinsicSuccess) {
@@ -238,7 +280,7 @@ const EventsTable = () => {
       </Box>
       <BaselineTable
         error={!!error}
-        loading={loading}
+        loading={loading || !palletsAndEvents}
         headers={headers}
         rows={rows}
         rowsPerPage={pagination.rowsPerPage}

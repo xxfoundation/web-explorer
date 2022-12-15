@@ -68,7 +68,6 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, ta
       <CopyButton value={hashProps.value} />
     </Stack>
   )
-  console.warn(name)
 
   return (
     <Stack direction={'row'} alignItems='center' sx={{ textAlign: { xs: 'end' } }}>

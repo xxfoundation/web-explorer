@@ -204,26 +204,6 @@ export const GET_EXTRINSIC_WHERE = gql`
 `;
 
 /* -------------------------------------------------------------------------- */
-/*                         Get available Module / Call                        */
-/* -------------------------------------------------------------------------- */
-export type GetAvailableExtrinsicActions = {
-  modules: { module: string }[];
-  calls: { call: string }[];
-}
-
-export const GET_AVAILABLE_EXTRINSIC_ACTIONS = gql`
-  query GetAvailableModules {
-    modules: extrinsic (distinct_on: module) {
-      module
-    }
-
-    calls: extrinsic (distinct_on: call) {
-      call
-    }
-  }
-`;
-
-/* -------------------------------------------------------------------------- */
 /*                         Get extrinsic counts                               */
 /* -------------------------------------------------------------------------- */
 export type GetExtrinsicCounts = {

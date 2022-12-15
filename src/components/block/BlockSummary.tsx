@@ -23,8 +23,7 @@ const BlockSummary: FC<{ block?: Block }> = ({ block }) => {
     () => (block?.timestamp ? dayjs.utc(block?.timestamp).format(timeFormat) : undefined),
     [block?.timestamp]
   );
-  console.warn(block)
-
+  
   return !block ? (
     <SummaryLoader number={9} />
   ) : (
