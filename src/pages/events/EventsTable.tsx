@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useSubscription } from '@apollo/client';
 import {
   Box,
