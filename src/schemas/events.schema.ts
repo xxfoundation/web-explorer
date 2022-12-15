@@ -138,34 +138,6 @@ export const LIST_STAKING_EVENTS = gql`
   }
 `;
 
-
-/* -------------------------------------------------------------------------- */
-/*                         Get available Module / Call                        */
-/* -------------------------------------------------------------------------- */
-export type GetAvailableEventActions = {
-  modules: { module: string }[];
-  calls: { call: string }[];
-}
-
-export const GET_AVAILABLE_EVENT_ACTIONS = gql`
-  query GetAvailableEventActions {
-    modules: event (distinct_on: module) {
-      module
-    }
-  }
-`;
-
-export type GetCallsForModules = {
-  calls: { call: string }[];
-}
-export const GET_CALLS_FOR_MODULES_ACTIONS = gql`
-  query GetCallsForModules ($where: event_bool_exp) {
-    calls: event (distinct_on: call, where: $where) {
-      call
-    }
-  }
-`;
-
 /* -------------------------------------------------------------------------- */
 /*                           Events since block                               */
 /* -------------------------------------------------------------------------- */

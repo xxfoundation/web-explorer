@@ -156,3 +156,23 @@ export const LISTEN_NUM_FAKE_ACCOUNTS = gql`
 `;
 
 
+export type GetRuntimeMetadata = {
+  runtime: {
+    metadata: {
+      metadata: {
+        v14: {
+          pallets: string;
+        }
+      }
+    }
+  }[];
+}
+
+export const GET_RUNTIME_METADATA = gql`
+  query GetRuntimeMetadata {
+    runtime(order_by: {spec_version: desc}, limit: 1) {
+      metadata
+    }
+  }
+`
+
