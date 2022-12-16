@@ -141,7 +141,7 @@ const StakingSupplyDonutChart: FC = () => {
   }
 
   return (
-    <Stack direction='row' spacing={3} sx={{ flexGrow: 1 }}>
+    <Stack cy-id='staking-supply-chart' direction='row' spacing={3} sx={{ flexGrow: 1 }}>
       <Box
         className='chart-container'
         style={{ width: '50%', flexShrink: 1, position: 'relative' }}

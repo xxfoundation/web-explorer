@@ -37,6 +37,7 @@ const isNormalCell = (cell: HeaderCell): cell is NormalCell => typeof cell.value
 const getCellLabel = (cell: HeaderCell) =>  isNormalCell(cell) ? cell.value : cell.label;
 
 type Props = {
+  id?: string;
   loading?: boolean;
   error?: boolean;
   rowsPerPage?: number;
@@ -54,12 +55,13 @@ export const BaselineTable: FC<Props> = (props) => {
     rows,
     rowsPerPage = 20,
     footer,
-    tableProps = {}
+    tableProps = {},
+    id
   } = props;
   const memoistHeaders = useMemo(() => {
     return headers.map(({ key, props: p, value }, index) => {
       return (
-        <TableCell {...p} key={key || index}>
+        <TableCell cy-id={`th-${index}`} {...p} key={key || index}>
           {value}
         </TableCell>
       );
@@ -75,9 +77,9 @@ export const BaselineTable: FC<Props> = (props) => {
       </TableRow>
     ) : (
       rows.map((row, index) => (
-          <TableRow key={index}>
+          <TableRow cy-id='tr' key={index}>
             {row.map(({ key, props: p, value }, cellIndex) => (
-              <TableCell {...p} key={key || cellIndex} data-label={getCellLabel(headers[cellIndex])}>
+              <TableCell cy-id={`td-${cellIndex}`} {...p} key={key || cellIndex} data-label={getCellLabel(headers[cellIndex])}>
                 {value}
               </TableCell>
             ))}
@@ -90,7 +92,7 @@ export const BaselineTable: FC<Props> = (props) => {
   if (loading) return <TableSkeleton rows={rowsPerPage} cells={headers.length} footer />;
 
   return (
-    <TableContainer>
+    <TableContainer cy-id={id}>
       <HeaderMobileFilters headers={headers} />
       <Table {...tableProps}>
         <TableHead>

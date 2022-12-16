@@ -280,6 +280,7 @@ const EventsTable = () => {
         {data?.events && <RefreshButton countSince={eventsSinceFetch} refetch={refetch} />}
       </Box>
       <BaselineTable
+        id='baseline-table'
         error={!!error}
         loading={loading || !palletsAndEvents}
         headers={headers}

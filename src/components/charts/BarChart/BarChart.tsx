@@ -32,18 +32,20 @@ const BarChartContainer: FC<BarChartContainerProps> = ({ interval, series }) => 
       : seriesB?.data;
 
   return (
-    <Provider
-      seriesA={seriesA}
-      seriesB={seriesB}
-      data={data}
-      interval={interval}>
-      <ChartContainer sx={{ minHeight: hasTwo ? '22rem' : '16rem' }}>
-        <BarSeries />
-        <BarIntervalLabels />
-        {seriesB ? <BarSeries inverse={true} /> : <Box sx={{ pb: hasTwo ? 10 : 0 }} />}
-        <BarInfoContainer />
-      </ChartContainer>
-    </Provider>
+    <div cy-id='bar-chart-container'>
+      <Provider
+        seriesA={seriesA}
+        seriesB={seriesB}
+        data={data}
+        interval={interval}>
+        <ChartContainer sx={{ minHeight: hasTwo ? '22rem' : '16rem' }}>
+          <BarSeries />
+          <BarIntervalLabels />
+          {seriesB ? <BarSeries inverse={true} /> : <Box sx={{ pb: hasTwo ? 10 : 0 }} />}
+          <BarInfoContainer />
+        </ChartContainer>
+      </Provider>
+    </div>
   );
 };
 
