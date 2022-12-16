@@ -2,7 +2,7 @@ import TabsWithPanels, {TabText} from '../../components/Tabs';
 import React from 'react';
 import {Skeleton, Typography} from '@mui/material';
 import {TableSkeleton} from '../../components/Tables/TableSkeleton';
-import ValidatorTable from './NewValidatorsTable';
+import ValidatorTable from './ValidatorsTable';
 import {useQuery} from '@apollo/client';
 import {ActiveCountsQuery, GET_ACTIVE_COUNTS, GET_LATEST_ERA, LatestEraQuery} from '../../schemas/staking.schema';
 

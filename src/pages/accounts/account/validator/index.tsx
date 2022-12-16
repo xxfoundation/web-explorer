@@ -44,7 +44,7 @@ const ValidatorCard: FC<{
       : [
       {
         label: <Typography>Validator Info</Typography>,
-        content: <ValidatorSummary active={active} info={validatorInfo} />
+        content: <ValidatorSummary info={validatorInfo} />
       },
       {
         label: <TabText message='Validator Stats' count={statsCount} />,

@@ -46,7 +46,7 @@ const locationString = (geoBin: string, city: string, country: string) => {
   return str;
 };
 
-const ValidatorSummary: FC<{ active: boolean, info?: ValidatorInfo }> = ({ active, info }) => {
+const ValidatorSummary: FC<{ info?: ValidatorInfo }> = ({ info }) => {
   const location = useMemo(() => {
     if (!info?.location) {
       return ' - '
@@ -94,16 +94,12 @@ const ValidatorSummary: FC<{ active: boolean, info?: ValidatorInfo }> = ({ activ
         <SummaryHeader>Location</SummaryHeader>
         <SummaryValue>{location}</SummaryValue>
       </SummaryEntry>
-      {active && <SummaryEntry>
+      <SummaryEntry>
         <SummaryHeader>Own Stake</SummaryHeader>
         <SummaryValue>
           <FormatBalance value={info.stake} />
         </SummaryValue>
-      </SummaryEntry>}
-      {active && info.nominators && <SummaryEntry>
-        <SummaryHeader>Nominators</SummaryHeader>
-        <SummaryValue>{info.nominators.length}</SummaryValue>
-      </SummaryEntry>}
+      </SummaryEntry>
       <SummaryEntry>
         <SummaryHeader>Commission</SummaryHeader>
         <SummaryValue>{info.commission} %</SummaryValue>

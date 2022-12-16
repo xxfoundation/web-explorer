@@ -34,15 +34,25 @@ const rowsParser = ({
   } catch (err) {
     console.error('Error parsing location for ', name);
   }
-  return [
+  const retval = [
     { value: <Address roles={{ validator: true }} value={addressId} name={identityDisplay} url={validatorLink} truncated sx={{ textAlign: 'end' }}/> },
     { value: parsed },
     { value: <FormatBalance value={ownStake} /> },
-    { value: <FormatBalance value={totalStake} /> },
+  ];
+
+  if(totalStake) {
+    retval.push(
+      { value: <FormatBalance value={totalStake} /> },
+    );
+  }
+
+  retval.push(...[
     { value: `${commission.toFixed(2)} %` },
     { value: <CmixAddress truncated value={cmixId} /> },
-    { value: nominators.length }
-  ];
+    { value: `${nominators.length}` }
+  ]);
+
+  return retval
 };
 
 interface IValidatorsTableProps {
@@ -50,7 +60,7 @@ interface IValidatorsTableProps {
   isWaiting: boolean,
 }
 
-const NewValidatorsTable: React.FC<IValidatorsTableProps> = ({isWaiting = false, latestEra}) => {
+const ValidatorsTable: React.FC<IValidatorsTableProps> = ({isWaiting = false, latestEra}) => {
   const [search, setSearch] = useInput('');
   const debouncedSearch = useDebounce(search, 500);
 
@@ -59,12 +69,18 @@ const NewValidatorsTable: React.FC<IValidatorsTableProps> = ({isWaiting = false,
   const headers = [
     { value: 'Validator' },
     { value: 'Location' },
-    { value: 'Own Stake' },
-    { value: 'Total Stake' },
+    { value: 'Own Stake' }
+  ]
+
+  if (!isWaiting) {
+    headers.push({ value: 'Total Stake' })
+  }
+
+  headers.push(...[
     { value: 'Commission' },
     { value: 'Cmix ID' },
     { value: 'Nominators' }
-  ]
+  ]);
 
   const searchClause  = useMemo(() => ({
     _and: {
@@ -135,4 +151,4 @@ const NewValidatorsTable: React.FC<IValidatorsTableProps> = ({isWaiting = false,
           </>
   )
 }
-export default NewValidatorsTable;
+export default ValidatorsTable;

@@ -259,7 +259,7 @@ query GetWaitingList($search: String) {
   } ) {
     addressId: stash_address
     location
-    stake
+    ownStake: stake
     commission
     cmixId: cmix_id
     nominators

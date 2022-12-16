@@ -5,7 +5,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StakingMetrics from './StakingMetrics';
 import { useToggle } from '../../hooks';
 import StakingCharts from './StakingCharts';
-import NewValidatorTabs from './NewValidatorTabs';
+import NewValidatorTabs from './ValidatorTabs';
 
 const Staking: React.FC = () => {
   const [expandStats, stats] = useToggle();
