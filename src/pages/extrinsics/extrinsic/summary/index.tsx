@@ -4,7 +4,6 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 
-import BlockStatusIcon from '../../../../components/block/BlockStatusIcon';
 import Address from '../../../../components/Hash/XXNetworkAddress';
 import Hash from '../../../../components/Hash';
 import Link from '../../../../components/Link';
@@ -19,15 +18,9 @@ import TimeAgo from '../../../../components/TimeAgo';
 import ModuleCalls from './ModuleCalls';
 import ParametersFragment from './ParametersFragment';
 import FormatBalance from '../../../../components/FormatBalance';
-import { BN, BN_ZERO } from '@polkadot/util';
-
-const computeFee = (fee: string): BN => {
-  const inclusion = JSON.parse(fee).inclusionFee;
-  if (inclusion === null) {
-    return BN_ZERO
-  }
-  return new BN(inclusion.baseFee).add(new BN(inclusion.lenFee));
-}
+import { BN_ZERO } from '@polkadot/util';
+import CodeDisplay from '../../../../components/CodeDisplay';
+import StatusMessage from '../../../../components/blockchain/StatusMessage';
 
 type Props = {
   extrinsic: Extrinsic;
@@ -71,29 +64,30 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryHeader>Result</SummaryHeader>
         <SummaryValue>
           <Stack direction='row' spacing={1} alignItems='center'>
-            <BlockStatusIcon status={extrinsic.success ? 'successful' : 'failed'} />
-            &nbsp;&nbsp;{extrinsic.success ? 'Success' : 'Failure'}
+            <StatusMessage status={extrinsic.success ? 'successful' : 'failed'} message={extrinsic.errorMsg}/>
           </Stack>
         </SummaryValue>
       </SummaryEntry>
-      {!extrinsic.success && (
-        <SummaryEntry>
-          <SummaryHeader>Failure Message</SummaryHeader>
-          <SummaryValue>
-            <WithCopy tooltip value={extrinsic.errorMsg}>
-              <Typography variant='code' sx={{ fontSize: 18 }} color='red'>
-                {extrinsic.errorMsg}
-              </Typography>
-            </WithCopy>
-          </SummaryValue>
-        </SummaryEntry>
-      )}
-      {extrinsic.fee && (
+      {extrinsic.fee !== null && (
         <SummaryEntry>
           <SummaryHeader>Fee</SummaryHeader>
           <SummaryValue>
             <Typography>
-              <FormatBalance precision={4} value={computeFee(extrinsic.fee)} />
+              <FormatBalance
+                precision={4}
+                value={extrinsic.fee.toString() ?? BN_ZERO.toString()} />
+            </Typography>
+          </SummaryValue>
+        </SummaryEntry>
+      )}
+      {extrinsic.tip !== null && (
+        <SummaryEntry>
+          <SummaryHeader>Tip</SummaryHeader>
+          <SummaryValue>
+            <Typography>
+              <FormatBalance
+                precision={4}
+                value={extrinsic.tip.toString() ?? BN_ZERO.toString()} />
             </Typography>
           </SummaryValue>
         </SummaryEntry>
@@ -111,10 +105,18 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryEntry>
           <SummaryHeader>Signer</SummaryHeader>
           <SummaryValue>
-            <Address name={extrinsic.signerAccount?.identity?.display} roles={extrinsic.signerAccount?.roles ?? {}} value={extrinsic.signer} />
+            <Address name={extrinsic.signerAccount?.identity?.display} roles={extrinsic.signerAccount ?? {}} value={extrinsic.signer} />
           </SummaryValue>
         </SummaryEntry>
       )}
+      <SummaryEntry>
+        <SummaryHeader>Dispatch Info</SummaryHeader>
+        <SummaryValue>
+          <CodeDisplay>
+            {JSON.stringify(JSON.parse(extrinsic.dispatchInfo), null, 2)}
+          </CodeDisplay>
+        </SummaryValue>
+      </SummaryEntry>
     </SummaryContainer>
   );
 };

@@ -2,14 +2,17 @@ import React, { FC, useMemo, useState } from 'react';
 import EventsTable from '../../../components/block/EventsTable';
 import PaperWrapStyled from '../../../components/Paper/PaperWrap.styled';
 import TabsWithPanels, { TabText } from '../../../components/Tabs';
+import { NestedCall } from '../../../schemas/extrinsics.schema';
 import TransferTable from '../../transfers/TransfersTable';
+import CallsTable from './CallsTable';
 
-const ExtrinsicTabs: FC<{ blockNumber: number; index: number;}> = ({
+const ExtrinsicTabs: FC<{ transferCount: number; blockNumber: number; index: number; nestedCalls: Array<NestedCall> | null; }> = ({
   blockNumber,
-  index
+  index,
+  nestedCalls,
+  transferCount,
 }) => {
   const [eventCount, setEventCount] = useState<number>();
-  const [transferCount, setTransferCount] = useState<number>();
   const panels = useMemo(() => {
     const tabs = [
       {
@@ -33,14 +36,19 @@ const ExtrinsicTabs: FC<{ blockNumber: number; index: number;}> = ({
             where={{
               _and: [{ block_number: { _eq: blockNumber } }, { extrinsic_index: { _eq: index } }]
             }}
-            setCount={setTransferCount}
           />
+        )
+      },
+      {
+        label: <TabText message='calls' count={nestedCalls?.length || 0} />,
+        content: (
+          <CallsTable data={nestedCalls} />
         )
       }
     ];
 
     return tabs;
-  }, [blockNumber, eventCount, index, transferCount]);
+  }, [blockNumber, eventCount, index, nestedCalls, transferCount]);
 
   return (
     <PaperWrapStyled>

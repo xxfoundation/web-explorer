@@ -1,15 +1,18 @@
 import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { Box, Divider, Stack, Typography } from '@mui/material';
+import { mapValues } from 'lodash';
+import { InfoOutlined } from '@mui/icons-material';
+import { BN, BN_MILLION } from '@polkadot/util';
+import { useQuery } from '@apollo/client';
+
 import ProgressBar from './ProgressBar';
 import StakingSupplyDonutChart from '../../components/charts/StakingSupplyDonutChart';
-import { useQuery } from '@apollo/client';
+
 import { Economics, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
 import Loading from '../../components/Loading';
-import { BN, BN_MILLION } from '@polkadot/util';
 import { stripNonDigits } from '../../utils';
 import { CustomTooltip } from '../../components/Tooltip';
-import { InfoOutlined } from '@mui/icons-material';
 
 const dividerMargins = { ml: 3, mr: 3, mt: 0, mb: 0 };
 
@@ -19,7 +22,7 @@ const extractMetrics = (economics?: Economics) => {
   const now = dayjs().utc();
   const hour = now.hour() + now.minute() / 60;
   const hoursRemaining = hour > ERA_HOUR ? hour - ERA_HOUR : hour + 24 - ERA_HOUR;
-  const era = economics?.activeEra;
+  const era = economics?.era;
   const eraProgress = (hoursRemaining / 24) * 100;
   const epoch = Math.floor(hoursRemaining / 8) + 1;
   const epochProgress = ((hoursRemaining % 8) / 8) * 100;
@@ -33,23 +36,33 @@ const extractMetrics = (economics?: Economics) => {
 };
 
 export const getStakedReturn = (economics: Economics): number => {
-  const totalStaked = new BN(stripNonDigits(economics?.staked));
-  const tmStaked = new BN(stripNonDigits(economics?.tmStaked));
-  const stakeableSupply = new BN(stripNonDigits(economics?.stakeableSupply));
-  const inflationRate = new BN(stripNonDigits(economics?.inflationRate)).toNumber();
+  const totalStaked = new BN(stripNonDigits(economics.staked));
+  const tmStaked = new BN(stripNonDigits(economics.tmStaked));
+  const stakeableSupply = new BN(stripNonDigits(economics.stakeableSupply));
+  const inflationRate = +economics?.inflationRate ;
   const stakedFraction =
     totalStaked.mul(BN_MILLION).div(stakeableSupply).toNumber() / BN_MILLION.toNumber();
   const multiplierImpact = totalStaked.mul(BN_MILLION).div(totalStaked.add(tmStaked)).toNumber() / 1e6;
-  return stakedFraction ? inflationRate * multiplierImpact / stakedFraction / 100 : 0;
+  
+  return stakedFraction ? inflationRate * multiplierImpact / stakedFraction : 0;
 };
 
 const StakingMetrics = () => {
   const query = useQuery<{ economics: [Economics] }>(LISTEN_FOR_ECONOMICS);
-  const economics = query.data?.economics[0];
+  const economics = useMemo(() => query.data?.economics[0] && ({
+    ...mapValues(
+      query.data?.economics[0],
+      (v) => v.toString()
+    ),
+    era: query.data?.economics?.[0]?.era,
+  }), [query.data?.economics]);
   const loading = query.loading;
 
   const metrics = useMemo(() => extractMetrics(economics), [economics]);
-  const avgStakedReturn = economics ? getStakedReturn(economics).toFixed(2) : 'N/D';
+  const avgStakedReturn = useMemo(
+    () => economics ? getStakedReturn(economics).toFixed(2) : 'N/D',
+    [economics]
+  );
 
   return (
     <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>

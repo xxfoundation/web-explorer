@@ -1,25 +1,23 @@
 import type { ScoringContext } from './types';
 import type { MetricScores } from '../../../types';
-import { applyFormat } from '../../../../../components/FormatBalance/formatter';
 
 const getFrequencyOfPayouts = ({
-  rewardFrequency = 0,
-  unclaimedRewards = 0
+  payoutClaimedEras = 0,
+  payoutTotalEras = 0
 }: ScoringContext): [MetricScores, string] => {
-  if (!rewardFrequency) {
-    return ['neutral', 'validator never received a reward'];
-  }
+  // Remove current era from total eras to be claimed
+  const unclaimedEras = Math.abs((payoutTotalEras - 1) - payoutClaimedEras);
 
   const baseMsg = (score: string) =>
-    `${score}, validator has ${applyFormat(unclaimedRewards.toString())} of unclaimed era rewards`;
+    `${score}, validator has ${unclaimedEras} ${unclaimedEras ? 'eras' : 'era'} unclaimed.`;
 
-  if (rewardFrequency >= 1 && rewardFrequency < 7) {
+  if (unclaimedEras < 7) {
     return ['very good', baseMsg('Very Good')];
   }
-  if (rewardFrequency >= 7 && rewardFrequency < 30) {
+  if (unclaimedEras >= 7 && unclaimedEras < 30) {
     return ['good', baseMsg('Good')];
   }
-  if (rewardFrequency >= 30 && rewardFrequency < 60) {
+  if (unclaimedEras >= 30 && unclaimedEras < 60) {
     return ['bad', baseMsg('Bad')];
   }
 

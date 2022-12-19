@@ -8,7 +8,7 @@ import BlockchainCard from './account/blockchain';
 import IdentityCard from './account/identity';
 import AccountDetails from './account/AccountDetails';
 import NotFound from '../NotFound';
-import PageTabs, { Panel } from '../../components/PageTabs';
+import PageTabs, { Panel } from '../../components/PillTabs';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import PaperWrapStyled from '../../components/Paper/PaperWrap.styled';
 import RoundedButton from '../../components/buttons/Rounded';
@@ -19,7 +19,10 @@ import BalanceHistoryChart from './account/BalanceHistoryChart';
 import { GET_LATEST_ERA, LatestEraQuery } from '../../schemas/staking.schema';
 import StakingCard from './account/staking';
 import Tag from '../../components/Tags/Tag';
-// import PerformanceSection from './account/performance';
+import GovernanceCard from './account/governance';
+import ValidatorCard from './account/validator';
+import NominatorCard from './account/nominator';
+import { GetNominatorInfo, GET_NOMINATOR_INFO } from '../../schemas/nominator.schema';
 
 const validatorStatus = (inValidatorStats: boolean, currentlyActive: boolean) => {
   return (
@@ -36,6 +39,7 @@ const AccountId: FC = () => {
   const { accountId } = useParams<{ accountId?: string }>();
   const latestEraQuery = useQuery<LatestEraQuery>(GET_LATEST_ERA);
   const { data, loading } = useFetchValidatorAccountInfo(accountId);
+  const queryNominator = useQuery<GetNominatorInfo>(GET_NOMINATOR_INFO, { variables: { accountId } });
   const [historyExpanded, { toggle: toggleHistory }] = useToggle(false);
   const currEra = latestEraQuery?.data?.validatorStats[0].era;
   const [tab, setTab] = useState(0);
@@ -44,7 +48,7 @@ const AccountId: FC = () => {
     setTab(t);
   }, []);
 
-  if (loading || latestEraQuery.loading) {
+  if (loading || latestEraQuery.loading || queryNominator.loading) {
     return (
       <Container sx={{ my: 5 }}>
         <Typography maxWidth={'100px'}>
@@ -67,6 +71,8 @@ const AccountId: FC = () => {
   if (!data?.account) return <NotFound message='Account Not Found' />;
 
   const account = data.account;
+  const nominator = queryNominator.data?.nominator
+
   const validator =
     data?.aggregates && data?.stats
       ? { aggregates: data?.aggregates, stats: data?.stats }
@@ -99,7 +105,7 @@ const AccountId: FC = () => {
         <Grid item xs={12} md={6}>
           <PaperWrapStyled sx={{ position: 'relative', pb: { xs: 8, sm: 8 } }}>
             <AccountDetails account={data.account} />
-            {account.roles.validator && validator && validatorStatus(inValidatorStats, currentlyActive)}
+            {account.validator && validator && validatorStatus(inValidatorStats, currentlyActive)}
           </PaperWrapStyled>
         </Grid>
         {historyExpanded && currEra && (
@@ -109,25 +115,42 @@ const AccountId: FC = () => {
             </PaperWrapStyled>
           </Grid>
         )}
+
         <Grid item xs={12}>
-          <PaperWrapStyled sx={{ position: 'relative', overflow: 'hidden', pt: 11 }}>
-            <PageTabs value={tab} onChange={handleTab}>
-              <Tab label='Blockchain' />
-              {validator !== undefined && (
-                <Tab label='Staking' />
-              )}
-            </PageTabs>
+          <PageTabs value={tab} onChange={handleTab}>
+            <Tab label='Blockchain' />
+            <Tab label='Governance' />
+            <Tab label='Staking' />
+            {validator !== undefined && (<Tab label='Validator' />)}
+            {nominator !== undefined && (<Tab label='Nominator' />)}
+          </PageTabs>
+        </Grid>
+        <Grid item xs={12}>
+          <PaperWrapStyled sx={{ position: 'relative', overflow: 'hidden' }}>
             <Panel index={tab} value={0}>
               <BlockchainCard account={data.account} />
             </Panel>
-              {validator !== undefined && (
-                <Panel index={tab} value={1}>
-                  <StakingCard
-                    accountId={account.id}
-                    validator={validator}
-                    active={currentlyActive}/>
-                </Panel>
-              )}
+            <Panel index={tab} value={1}>
+              <GovernanceCard
+                account={data.account}
+              />
+            </Panel>
+            <Panel index={tab} value={2}>
+              <StakingCard
+                accountId={account.id}/>
+            </Panel>
+            {validator !== undefined && (
+            <Panel index={tab} value={3}>
+              <ValidatorCard
+                accountId={account.id}
+                account={account}
+                active={currentlyActive}/>
+            </Panel>)}
+            {nominator !== undefined && (
+            <Panel index={tab} value={4}>
+              <NominatorCard
+                accountId={account.id} />
+            </Panel>)}
           </PaperWrapStyled>
         </Grid>
       </Grid>

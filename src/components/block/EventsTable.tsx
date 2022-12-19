@@ -1,40 +1,24 @@
 import { useQuery } from '@apollo/client';
-import { Box, Stack, TableCellProps } from '@mui/material';
+import { Box,TableCellProps } from '@mui/material';
 import React, { FC, useEffect, useMemo } from 'react';
+
+import CodeDisplay from '../CodeDisplay';
 import { EVENTS_OF_BLOCK, ListEvents, Event } from '../../schemas/events.schema';
 import { BaselineCell, BaselineTable } from '../Tables';
 import TimeAgoComponent from '../TimeAgo';
 import { usePagination } from '../../hooks';
-import { theme } from '../../themes/default';
+import { processEventDoc } from '../utils';
 
 const ROWS_PER_PAGE = 10;
 
 const props: TableCellProps = { align: 'left' };
 
-const DataTile: FC<{ headers?: string[]; values: string[] }> = ({ headers, values }) => {
-  return (
-    <Stack
-      sx={{
-        margin: '0.25em',
-        borderColor: theme.palette.grey['200'],
-        borderRadius: '10px',
-        borderStyle: 'solid',
-        borderWidth: '1px'
-      }}
-    >
+export const DataTile: FC<{ headers?: string[]; values: string[] }> = ({ headers, values }) => {
+  return values.length !== 0 ? (
+    <CodeDisplay>
       {values.map((value, index) => (
-        <Box
-          key={index}
-          component={'pre'}
-          sx={{
-            margin: '0.5em',
-            padding: '0.25em',
-            maxHeight: '70px',
-            overflowY: 'auto',
-            background: 'rgb(0 0 0 / 4%)'
-          }}
-        >
-          {headers && headers !== [''] && headers.length === values.length && (
+        <Box key={index}>
+          {headers && headers.length === values.length && (
             <>
               <b>{headers[index]}</b>
               {': '}
@@ -43,16 +27,8 @@ const DataTile: FC<{ headers?: string[]; values: string[] }> = ({ headers, value
           {JSON.stringify(value, null, 2)}
         </Box>
       ))}
-    </Stack>
-  );
-};
-
-const processEventDoc = (doc: string) => {
-  const substring = doc
-    .replace(/\[\"/g, '')
-    .replace(/\]\"/g, '')
-    .substring(doc.indexOf('\\') + 1, doc.lastIndexOf('\\') - 3);
-  return substring ? substring.replace(/,","/g, ' ').replace(/,/g, '').split(' ') : undefined;
+    </CodeDisplay>
+  ) : null;
 };
 
 const rowsParser = ({

@@ -1,4 +1,4 @@
-import { AccountRoles, Roles } from '../../schemas/accounts.schema';
+import { Roles } from '../../schemas/accounts.schema';
 
 import CloudDoneIcon from '@mui/icons-material/CloudDone';
 import PanToolIcon from '@mui/icons-material/PanTool';
@@ -15,7 +15,7 @@ import Tooltip, { CustomWidthTooltip } from '../Tooltip';
 import CopyButton from '../buttons/CopyButton';
 
 type Props = HashProps & {
-  roles?: Partial<AccountRoles>; 
+  roles?: Partial<Roles>; 
   name?: string;
   avatar?: string;
   disableAvatar?: boolean;
@@ -28,14 +28,20 @@ const CustomAvatar = styled(Avatar)(() => ({
 }));
 
 const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, targetBlank = false,  ...hashProps }) => {
-  const role = useMemo<Roles | 'other'>(() => 
+  const role = useMemo<keyof Roles | 'other'>(() => 
     (roles?.techcommit && 'techcommit')
     || (roles?.council && 'council')
     || (roles?.validator && 'validator')
     || (roles?.nominator && 'nominator')
     || (roles?.special && 'special')
     || 'other',
-    [roles?.council, roles?.nominator, roles?.special, roles?.techcommit, roles?.validator]
+    [
+      roles?.council,
+      roles?.nominator,
+      roles?.special,
+      roles?.techcommit,
+      roles?.validator
+    ]
   );
   const avatarIcon = useMemo(() => {
     return  (
@@ -56,7 +62,9 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, ta
   const url = !disableUrl ? hashProps.url || `/accounts/${hashProps.value}` : undefined;
   const tooltip = (
     <Stack sx={{ display: 'inline-flex' }} direction={'row'} spacing={1} alignItems={'center'}>
-      <Typography component='span' variant='body5'>{hashProps.value}</Typography>
+      <Typography component='span' variant='body5'>
+        {hashProps.value}
+      </Typography>
       <CopyButton value={hashProps.value} />
     </Stack>
   )
@@ -73,9 +81,11 @@ const Address: FC<Props> = ({ avatar, disableAvatar, disableUrl, name, roles, ta
           fontWeight='400'
           sx={{ maxWidth: { xs: '6rem' } }}
         >
-            {targetBlank ? 
-            <Link target='__blank' rel='noopener noreferrer' to={url}>{name}</Link>
-          : <Link to={url}>{name}</Link>}
+          {
+            targetBlank
+            ? <Link target='__blank' rel='noopener noreferrer' to={url}>{name}</Link>
+            : <Link to={url}>{name}</Link>
+          }
         </Typography>
       </CustomWidthTooltip>
       ) : (

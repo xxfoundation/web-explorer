@@ -14,6 +14,7 @@ export type Event = {
   timestamp: string;
   doc: string;
   data: string;
+  amount?: number;
 };
 
 export const EVENTS_OF_BLOCK = gql`
@@ -72,21 +73,67 @@ export const LIST_EVENTS = gql`
 `;
 
 /* -------------------------------------------------------------------------- */
-/*                         Get available Module / Call                        */
+/*                            Balance Events Table                            */
 /* -------------------------------------------------------------------------- */
-export type GetAvailableEventActions = {
-  modules: { module: string }[];
-  calls: { call: string }[];
-}
+export type ListBalancesEvents = {
+  events: Event[];
+} & TotalOfItems;
 
-export const GET_AVAILABLE_EVENT_ACTIONS = gql`
-  query GetAvailableEventActions {
-    modules: event (distinct_on: module) {
-      module
+export const LIST_BALANCES_EVENTS = gql`
+  query ListBalancesEvents(
+    $orderBy: [event_order_by!]
+    $limit: Int
+    $offset: Int
+    $where: event_bool_exp
+  ) {
+    agg: event_aggregate(where: $where) {
+      aggregate {
+        count
+      }
     }
-
-    calls: event (distinct_on: call) {
+    events: event(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+      blockNumber: block_number
+      index: event_index
+      module
+      amount
       call
+      id
+      timestamp
+      doc
+      data
+    }
+  }
+`;
+
+/* -------------------------------------------------------------------------- */
+/*                            Staking Events Table                            */
+/* -------------------------------------------------------------------------- */
+export type ListStakingEvents = {
+  events: Event[];
+} & TotalOfItems;
+
+export const LIST_STAKING_EVENTS = gql`
+  query ListStakingEvents(
+    $orderBy: [event_order_by!]
+    $limit: Int
+    $offset: Int
+    $where: event_bool_exp
+  ) {
+    agg: event_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    events: event(order_by: $orderBy, limit: $limit, offset: $offset, where: $where) {
+      blockNumber: block_number
+      index: event_index
+      module
+      amount
+      call
+      id
+      timestamp
+      doc
+      data
     }
   }
 `;

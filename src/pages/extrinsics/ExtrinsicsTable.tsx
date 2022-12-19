@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useSubscription } from '@apollo/client';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
@@ -9,8 +10,6 @@ import { BaselineCell, BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper }
 import TimeAgoComponent from '../../components/TimeAgo';
 import RefreshButton from '../../components/buttons/Refresh';
 import {
-  GetAvailableExtrinsicActions,
-  GET_AVAILABLE_EXTRINSIC_ACTIONS,
   ListExtrinsics,
   LIST_EXTRINSICS,
   SubscribeExtrinsicsSinceBlock,
@@ -21,6 +20,7 @@ import ValuesFilter from '../../components/Tables/filters/ValuesFilter';
 import DateRangeFilter, { Range } from '../../components/Tables/filters/DateRangeFilter';
 import usePaginatedQuery from '../../hooks/usePaginatedQuery';
 import useSessionState from '../../hooks/useSessionState';
+import { GetRuntimeMetadata, GET_RUNTIME_METADATA } from '../../schemas/chaindata.schema';
 
 const extrinsicToRow = (extrinsic: ListExtrinsics['extrinsics'][0]): BaselineCell[] => {
   const linkToExtrinsic = `/extrinsics/${extrinsic.blockNumber}-${extrinsic.extrinsicIndex}`;
@@ -40,9 +40,71 @@ type Props = {
   setTotalOfExtrinsics: (total?: number) => void;
   withTimestampEvents: boolean;
 };
+
+type PalletAndExtrinsics = {
+  name: string;
+  calls: string[];
+}[]
+
+const snakeToCamel = (value: string): string => {
+  return value.toLowerCase().replace(/([-_][a-z])/g, group =>
+    group
+      .toUpperCase()
+      .replace('-', '')
+      .replace('_', '')
+  );
+}
+
+const processMetadata = (metadata: any) => {
+  const palletsAndExtrinsics: { name: string; calls: string[]; }[] = []
+  if(!metadata) {return undefined}
+  // eslint-disable-next-line no-unused-vars
+  metadata.pallets.forEach((pallet: { calls: { type: null; }; name: string; }) => {
+    const callsId = pallet.calls?.type || null
+    const calls: string[] = []
+    const palletAndExtrinsics = {
+      name: pallet.name.startsWith('XX')
+            ? `xx${pallet.name.substring(2, pallet.name.length)}`
+            : pallet.name.toLowerCase(),
+      calls,
+    }
+    if (callsId) {
+      metadata.lookup.types
+        .filter(
+          ({ id, type }: any) =>
+            type.path.includes('Call') && id === callsId
+        )
+        .forEach(({ type }: any) => {
+          type.def.variant.variants.forEach((variant: { name: string }) => {
+            palletAndExtrinsics.calls.push(
+              variant.name.startsWith('xx')
+              ? `XX${variant.name.substring(
+                  2,
+                  variant.name.length
+                )}`
+              : snakeToCamel(variant.name)
+            )
+          })
+        })
+    }
+    palletsAndExtrinsics.push(palletAndExtrinsics)
+  })
+  return palletsAndExtrinsics;
+} 
+
+const getCalls = (palletsAndExtrinsics: PalletAndExtrinsics, moduleFilter: string[]): string[] => {
+  let calls: string[] = []
+  moduleFilter.forEach((module) => {
+    calls = [...palletsAndExtrinsics.filter(pallet => pallet.name === module).map((pallet) => pallet.calls)[0], ...calls]
+  })
+  return calls
+}
+
 const ExtrinsicsTable: FC<Props> = (props) => {
   /* ----------------- Query Available Extrinsic Module/Calls ----------------- */
-  const actionsQuery = useQuery<GetAvailableExtrinsicActions>(GET_AVAILABLE_EXTRINSIC_ACTIONS);
+  const [availableCalls, setAvailableCalls] = useState<string[]>();
+  const metadata = useQuery<GetRuntimeMetadata>(GET_RUNTIME_METADATA);
+  const palletsAndExtrinsics = processMetadata(metadata?.data?.runtime[0].metadata.metadata.v14 && JSON.parse(JSON.stringify(metadata?.data?.runtime[0].metadata.metadata.v14)))
 
   /* ----------------------- Initialize State Variables ----------------------- */
   const [range, setRange] = useSessionState<Range>('extrinsics.range', {
@@ -65,17 +127,23 @@ const ExtrinsicsTable: FC<Props> = (props) => {
     undefined
   );
 
+  useEffect(() => {
+    setCallsFilter([])
+    if(modulesFilter) {
+      setAvailableCalls(palletsAndExtrinsics && getCalls(palletsAndExtrinsics, modulesFilter))
+    }
+    // Would like to call this function only when the modulesFilter is updated 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modulesFilter])
+
   /* --------------------- Initialize Dependent Variables --------------------- */
   const availableModules = useMemo(
-    () => actionsQuery.data?.modules.map((m) => m.module),
-    [actionsQuery.data]
+    () => palletsAndExtrinsics?.filter(({ calls }) => calls.length !== 0)
+        .map(({ name }) => name)
+        .sort(),
+    [palletsAndExtrinsics]
   );
-
-  const availableCalls = useMemo(
-    () => actionsQuery.data?.calls.map((c) => c.call),
-    [actionsQuery.data]
-  );
-
+  
   const moduleVariable = useMemo(() => {
     const conditions = [];
     if (!props.withTimestampEvents) {
@@ -134,6 +202,7 @@ const ExtrinsicsTable: FC<Props> = (props) => {
           buttonLabel='Call'
           onChange={setCallsFilter}
           value={callsFilter}
+          disabled={!modulesFilter || modulesFilter?.length === 0}
         />]
       ]),
     [
@@ -200,8 +269,9 @@ const ExtrinsicsTable: FC<Props> = (props) => {
         {data?.extrinsics && <RefreshButton countSince={blocksSinceFetch} refetch={refetch} />}
       </Box>
       <BaselineTable
+        id='baseline-table'
         error={!!error}
-        loading={loading}
+        loading={loading || !palletsAndExtrinsics}
         headers={headers}
         rowsPerPage={pagination.rowsPerPage}
         rows={rows}

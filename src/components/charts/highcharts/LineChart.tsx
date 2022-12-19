@@ -3,29 +3,35 @@ import Highcharts, {
   SeriesClickEventObject,
   AxisLabelsFormatterCallbackFunction as LabelFormatter,
   Options,
-  TooltipFormatterCallbackFunction as TooltipFormatter
+  TooltipFormatterCallbackFunction as TooltipFormatter,
+  AxisTypeValue
 } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { FC,useMemo } from 'react';
 import { theme } from '../../../themes/footer';
 import Error from '../../Error';
 import { DataPoint } from './types';
+const MILISECONDS_IN_DAY = 86400000;
 
-const calculateMaximums = (data: DataPoint[]) => {
+const calculateMaximums = (data: DataPoint[], xAxisType: string | undefined) => {
   const xItems = data.map(([x]) => x);
   const maxX = Math.max(...xItems);
   const minX = Math.min(...xItems);
-
+  const isBasedOnDateTime = xAxisType === 'datetime';
   return {
-    minX: minX * 0.995,
-    maxX: maxX * 1.005
+    minX: isBasedOnDateTime ? minX - MILISECONDS_IN_DAY : minX * 0.995,
+    maxX: isBasedOnDateTime ? maxX + MILISECONDS_IN_DAY : maxX * 1.005
   };
 };
 
 type Props = {
+  chartRef?: React.Ref<HighchartsReact.RefObject>;
   title?: string;
   onClick?: (evt: SeriesClickEventObject) => void;
   yAxisTitle?: string;
+  xAxisTitle?: string;
+  xAxisType?: AxisTypeValue;
+  seriesName?: string;
   data: DataPoint[];
   labelFormatters?: {
     xAxis?: LabelFormatter;
@@ -33,22 +39,28 @@ type Props = {
   };
   x?: { maxX: number; minX: number };
   tooltipFormatter?: TooltipFormatter;
+  toolTipType?: string;
 };
 
 
 const LineChart: FC<Props> = ({
+  chartRef,
   data,
   labelFormatters,
   onClick,
+  seriesName = 'ERA',
   title,
+  toolTipType ,
   tooltipFormatter,
   x,
-  yAxisTitle = ''
+  xAxisTitle = 'ERA',
+  xAxisType,
+  yAxisTitle = '',
 }) => {
   const options = useMemo<Options>(() => {
-    const { maxX, minX } = x || calculateMaximums(data);
+    const { maxX, minX } = x || calculateMaximums(data, xAxisType);
     return {
-      title: {
+        title: {
         text: title,
         align: 'left',
         style: {
@@ -66,13 +78,14 @@ const LineChart: FC<Props> = ({
         style: {
           color: '#fff'
         },
+        type: toolTipType,
         formatter: tooltipFormatter
       },
       credits: { enabled: false },
       legend: { enabled: false },
       xAxis: {
         title: {
-          text: 'ERA',
+          text: xAxisTitle,
           align: 'low',
           textAlign: 'center',
           style: { fontWeight: 'bolder' }
@@ -83,13 +96,13 @@ const LineChart: FC<Props> = ({
         offset: 10,
         min: minX,
         max: maxX,
-        margin: 50
+        margin: 50,
+        type: xAxisType,
       },
       yAxis: {
         gridLineWidth: 0,
         title: { text: yAxisTitle },
-        labels: { align: 'right', x: 0, formatter: labelFormatters?.yAxis },
-        min: 0
+        labels: { align: 'right', x: 0, formatter: labelFormatters?.yAxis }
       },
       plotOptions: {
         series: {
@@ -98,7 +111,7 @@ const LineChart: FC<Props> = ({
             enabled: true,
             radius: 5
           }
-        }
+        },
       },
       series: [
         {
@@ -106,9 +119,9 @@ const LineChart: FC<Props> = ({
             click: onClick,
           },
           type: 'line',
-          name: 'ERA',
+          name: seriesName,
           marker: { symbol: 'circle' },
-          data
+          data,
         }
       ]
     };
@@ -118,9 +131,13 @@ const LineChart: FC<Props> = ({
     labelFormatters?.yAxis,
     onClick,
     title,
+    toolTipType,
     tooltipFormatter,
     x,
-    yAxisTitle
+    yAxisTitle,
+    seriesName,
+    xAxisTitle,
+    xAxisType
   ]);
 
   if (!data.length) {
@@ -137,7 +154,12 @@ const LineChart: FC<Props> = ({
       </Box>
     );
   }
-  return <HighchartsReact highcharts={Highcharts} options={options} />;
+  return (
+    <HighchartsReact
+      ref={chartRef}
+      highcharts={Highcharts}
+      options={options} />
+  );
 };
 
 export default LineChart;

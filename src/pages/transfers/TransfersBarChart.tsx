@@ -60,6 +60,17 @@ const TranfersBarChart: FC = () => {
     [amounts, counts, data?.transfer]
   );
 
+  let errorMessage = 'No transfers made in the past '
+  if (interval == '1h') {
+    errorMessage += '48 hours'
+  }
+  if (interval == '6h') {
+    errorMessage += '10 days'
+  }
+  if (interval == '1d') {
+    errorMessage += 'month'
+  }
+
   return (
     <Box
       style={{
@@ -78,7 +89,7 @@ const TranfersBarChart: FC = () => {
             height: '250px'
           }}
         >
-          {loading ? <CircularProgress /> : <Error type='data-unavailable' />}
+          {loading ? <CircularProgress /> : <Error message={errorMessage}/>}
         </Box>
       ) : (
         <BarChart series={series} interval={interval} />

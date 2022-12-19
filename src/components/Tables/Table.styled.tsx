@@ -3,10 +3,10 @@ import { styled } from '@mui/material/styles';
 
 export const Table = styled(MuiTable)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    '& thead': {
+    '&:not(.no-card) thead': {
       display: 'none',
     },
-    '& tr': {
+    '&:not(.no-card) tr': {
       display: 'block',
       border: '1px solid #eee',
       padding: '1em 1em .5em',
@@ -14,7 +14,7 @@ export const Table = styled(MuiTable)(({ theme }) => ({
         marginTop: '.625em',
       }
     },
-    '& td': {
+    '&:not(.no-card) td': {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'flex-end',

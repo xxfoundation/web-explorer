@@ -1,11 +1,14 @@
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { SeriesClickEventObject, TooltipFormatterContextObject } from 'highcharts';
-import React, { FC } from 'react';
+import {AxisTypeValue, SeriesClickEventObject, TooltipFormatterContextObject} from 'highcharts';
+import React, { FC, useEffect, useRef } from 'react';
+import HighchartsReact from 'highcharts-react-official';
+
+import { Timeframe } from '../types';
 import LineChart from './LineChart';
 import { DataPoint } from './types';
 
 type Props = {
-  timeframes: Record<string, number>;
+  timeframes: Record<Timeframe, number>;
   timeframe: number;
   data: DataPoint[];
   onChange: ({ target }: SelectChangeEvent<number>) => void;
@@ -13,6 +16,11 @@ type Props = {
   tooltipFormatter?: (this: TooltipFormatterContextObject) => string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   labelFormatters?: any;
+  toolTipType?: string;
+  yAxisTitle?: string;
+  xAxisTitle?: string;
+  xAxisType?: AxisTypeValue;
+  seriesName?: string;
 }
 
 const DropdownTimelineLineChart: FC<Props> = ({
@@ -20,10 +28,26 @@ const DropdownTimelineLineChart: FC<Props> = ({
   labelFormatters,
   onChange,
   onClick,
+  seriesName,
   timeframe,
   timeframes,
-  tooltipFormatter
+  toolTipType,
+  tooltipFormatter,
+  xAxisTitle,
+  xAxisType,
+  yAxisTitle,
 }) => {
+  const chartRef = useRef<HighchartsReact.RefObject>(null);
+
+  useEffect(
+    () => {
+      setTimeout(() => {
+        chartRef.current?.chart.reflow();
+      })
+    },
+    [timeframe]
+  );
+
   return (
   <>
     <Box sx={{ display: 'flex', justifyContent: 'right', pr: 2 }}>
@@ -44,10 +68,16 @@ const DropdownTimelineLineChart: FC<Props> = ({
       </FormControl>
     </Box>
     <LineChart
+      chartRef={chartRef}
       data={data}
       onClick={onClick}
       tooltipFormatter={tooltipFormatter}
       labelFormatters={labelFormatters}
+      yAxisTitle={yAxisTitle}
+      xAxisType={xAxisType}
+      toolTipType={toolTipType}
+      xAxisTitle={xAxisTitle}
+      seriesName={seriesName}
     />
   </>);
 };

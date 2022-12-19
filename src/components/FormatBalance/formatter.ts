@@ -55,7 +55,12 @@ function getPrePost(text: string, decimals: number, forceUnit?: string, precisio
 
 // Formats a string/number with <prefix>.<postfix><type> notation
 export function formatBalance<ExtToBn extends ToBn>(input?: number | string | bigint | ExtToBn | BN, options: Options | boolean = true, optDecimals: number = defaultDecimals): string {
-  let text = bnToBn(input).toString();
+  let text;
+  try {
+    text = bnToBn(input?.toString()).toString();
+  } catch (err) {
+    return 'Invalid Number';
+  }
 
   if (text.length === 0 || text === '0') {
     return '0';

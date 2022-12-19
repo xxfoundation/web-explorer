@@ -31,3 +31,9 @@ sample_server/node_modules/
 
 # Snyk
 .dccache
+
+.idea/
+
+cypress/screenshots/
+
+cypress/videos/

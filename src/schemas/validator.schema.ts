@@ -38,23 +38,37 @@ export const LISTEN_FOR_ELECTED_SELF_STAKE = gql`
   }
 `;
 
-export type GetCommissionAvg = {
+export type GetValidatorCommission = {
+  validator: {
+    commission: number
+  }[]
+}
+
+
+export const GET_VALIDATOR_COMMISSION = gql`
+  query ValidatorCommission($accountId: String!) {
+    validator(where: {stash_address: {_eq: $accountId}}) {
+      commission
+    }
+  }
+`;
+
+export type GetAvgValidatorRelativePerformance = {
   stats: {
     aggregate: {
       avg: {
-        commission: number
+        relativePerformance: number
       }
     }
   }
 }
 
-
-export const GET_COMMISSION_AVG = gql`
-  query ValidatorCommissionAvg($accountId: String!) {
-    stats: validator_stats_aggregate(where: {stash_address: {_eq: $accountId}}) {
+export const GET_AVG_VALIDATOR_RELATIVE_PERFOMANCE = gql`
+  query ValidatorCommission($accountId: String!, $eraRange: Int!) {
+    stats: validator_stats_aggregate(where: {stash_address: {_eq: $accountId}, _and: {era: {_gte: $eraRange}}}, order_by: {era: desc}) {
       aggregate {
         avg {
-          commission
+          relativePerformance: relative_performance
         }
       }
     }
@@ -62,7 +76,12 @@ export const GET_COMMISSION_AVG = gql`
 `;
 
 export type GetPayoutFrequency = {
-  extrinsic: {
+  stats: {
+    aggregate: {
+      count: number
+    }
+  }
+  rewards: {
     aggregate: {
       count: number
     }
@@ -70,11 +89,70 @@ export type GetPayoutFrequency = {
 };
 
 export const GET_PAYOUT_FREQUENCY = gql`
-  query GetPayoutFrequency($accountId: String!) {
-    extrinsic: extrinsic_aggregate(where: {signer: {_eq: $accountId}, call: { _eq: "payoutStakers"}}) {
+  query GetPayoutFrequency($accountId: String!, $eraRange: Int!) {
+    stats: validator_stats_aggregate(where: {stash_address: {_eq: $accountId}, _and: {era: {_gte: $eraRange}}}) {
+      aggregate {
+        count
+      }
+    }
+    rewards: staking_reward_aggregate(where: {validator_id: {_eq: $accountId}, _and: {era: {_gte: $eraRange}}}, distinct_on: era) {
       aggregate {
         count
       }
     }
   }
 `;
+
+const VALIDATOR_INFO_FRAGMENT = gql`
+  fragment validatorInfoFragment on validator {
+    stashAddress: stash_address
+    rewardsAddress: rewards_address
+    account {
+      identity {
+        display
+      }
+    }
+    active
+    stake
+    commission
+    blocking
+    nominators
+    sessionKeys: session_keys
+    cmixId: cmix_id
+    location
+    timestamp
+  }
+`;
+
+
+export type ValidatorInfo = {
+  stashAddress: string;
+  rewardAddress: string;
+  account: {
+    identity: null | {
+      display: string;
+    }
+  }
+  active: boolean;
+  stake: string;
+  commission: number;
+  blocking: boolean;
+  nominators: string[];
+  sessionKeys: string | null;
+  cmixId: string;
+  location: string;
+  timestamp: string;
+};
+
+export type GetValidatorInfo = {
+  validator: ValidatorInfo[];
+}
+
+export const GET_VALIDATOR_INFO = gql`
+  ${VALIDATOR_INFO_FRAGMENT}
+  query GetValidatorInfo($accountId: String!) {
+    validator(where: { stash_address: { _eq: $accountId }}) {
+      ...validatorInfoFragment
+    }
+  }
+`

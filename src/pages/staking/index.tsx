@@ -3,9 +3,9 @@ import { Button, Container, Stack, Typography } from '@mui/material';
 import PaperWrap from '../../components/Paper/PaperWrap.styled';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import StakingMetrics from './StakingMetrics';
-import ValidatorTable from './ValidatorTable';
 import { useToggle } from '../../hooks';
 import StakingCharts from './StakingCharts';
+import NewValidatorTabs from './ValidatorTabs';
 
 const Staking: React.FC = () => {
   const [expandStats, stats] = useToggle();
@@ -14,8 +14,8 @@ const Staking: React.FC = () => {
     <Container sx={{ my: 5 }}>
       <Breadcrumb />
       <Stack direction='row' sx={{ mb: 5 }} alignItems='flex-end' justifyContent='space-between'>
-        <Typography variant='h1'>Staking</Typography>
-        <Button onClick={stats.toggle} endIcon={stats.icon}>
+        <Typography cy-id='h1' variant='h1'>Staking</Typography>
+        <Button cy-id='show-staking-charts' onClick={stats.toggle} endIcon={stats.icon}>
           Show Staking Charts
         </Button>
       </Stack>
@@ -25,7 +25,7 @@ const Staking: React.FC = () => {
           <StakingMetrics />
         </PaperWrap>
         <PaperWrap>
-          <ValidatorTable />
+          <NewValidatorTabs />
         </PaperWrap>
       </Stack>
     </Container>

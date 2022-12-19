@@ -8,30 +8,28 @@ export type BlockStatus = 'failed' | 'successful' | 'pending';
 
 const statusToIconMap: Record<BlockStatus, React.ReactElement> = {
   failed: (
-    <Box aria-label={'Failed'}>
-      <Tooltip title='Failed' arrow>
-        <ErrorIcon color='error' />
-      </Tooltip>
-    </Box>
+    <ErrorIcon color='error' />
   ),
   pending: (
-    <Box aria-label={'Pending'}>
-      <Tooltip title='Pending' arrow>
-        <ClockIcon color='warning' />
-      </Tooltip>
-    </Box>
+    <ClockIcon color='warning' />
   ),
   successful: (
-    <Box aria-label={'Successful'}>
-      <Tooltip title='Successful' arrow>
-        <CheckCircleOutlinedIcon color='success' />
-      </Tooltip>
-    </Box>
+    <CheckCircleOutlinedIcon color='success' />
   )
 };
 
-const BlockStatusIcon: FC<{ status: BlockStatus }> = ({ status }) => {
-  return statusToIconMap[status] || null;
+function statusMap(status: BlockStatus, message?: string): React.ReactElement {
+  return (
+    <Box component='span'  aria-label={status}>
+      <Tooltip title={message ? status + '\n' + message : status} arrow>
+        {statusToIconMap[status]}
+      </Tooltip>
+    </Box>
+  );
+}
+
+const BlockStatusIcon: FC<{ status: BlockStatus, message?: string }> = ({ message, status }) => {
+  return statusMap(status, message) || null;
 };
 
 export default BlockStatusIcon;

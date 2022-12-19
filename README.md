@@ -56,3 +56,10 @@ The project uses them to enforce code style. But in some cases, like when pushin
 git commit -m "yolo!" --no-verify
 HUSKY=0 git push
 ```
+## Cypress E2E
+
+Runs cypress test for the app running at http://localhost:3000/
+```
+yarn cypress
+```
+To update the App URL for cypress modify **baseUrl** in _cypress.config.ts_ 

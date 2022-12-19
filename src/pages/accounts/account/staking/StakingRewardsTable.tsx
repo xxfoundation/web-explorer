@@ -24,7 +24,7 @@ const RewardsRow = (reward: StakingReward) => {
     <XXNetworkAddress
       truncated='mdDown'
       value={reward.validatorAddress}
-      name={reward?.identity?.display}
+      name={reward.account.identity?.display}
       roles={{ validator: true }}
     />,
     <Link to={`/blocks/${reward.blockNumber}`}>{reward.blockNumber}</Link>,
@@ -82,7 +82,7 @@ const StakingRewardsTable: FC<{
           'Reward Date': dayjs.utc((el.era+1)*eraTime+genesisTime).format('ll LTS Z'),
           'Era': el.era,
           'Validator Address': el.validatorAddress,
-          'Validator ID': el.identity?.display || '',
+          'Validator ID': el.account.identity?.display || '',
           'Amount': el.amount / 1e9,
         }
       }))

@@ -18,9 +18,11 @@ type PaginationResult = {
   offset: number;
 };
 
+export const DEFAULT_ROWS_PER_PAGE = 20;
+
 function usePagination(options?: PaginationOptions): PaginationResult {
   const [count, setCount] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(options?.rowsPerPage ?? 20);
+  const [rowsPerPage, setRowsPerPage] = useState(options?.rowsPerPage ?? DEFAULT_ROWS_PER_PAGE);
   const [page, setPage] = useState(0);
 
   const onRowsPerPageChange = useCallback(({ target: { value } }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

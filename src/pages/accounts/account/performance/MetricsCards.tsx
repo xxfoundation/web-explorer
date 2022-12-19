@@ -14,7 +14,7 @@ import tooltips from './tooltipConfiguration';
 import { useQuery } from '@apollo/client';
 import { GetSlashes, GET_SLASHES_BY_ACCOUNT } from '../../../../schemas/slashes.schema';
 import { ScoringContext } from './scoreEvaluator/types';
-import { GetCommissionAvg, GetPayoutFrequency, GET_COMMISSION_AVG, GET_PAYOUT_FREQUENCY } from '../../../../schemas/validator.schema';
+import { GetPayoutFrequency, GetValidatorCommission, GetAvgValidatorRelativePerformance, GET_PAYOUT_FREQUENCY, GET_VALIDATOR_COMMISSION, GET_AVG_VALIDATOR_RELATIVE_PERFOMANCE } from '../../../../schemas/validator.schema';
 import Error from '../../../../components/Error';
 import { GetCurrentEra, GET_CURRENT_ERA } from '../../../../schemas/blocks.schema';
 import Loading from '../../../../components/Loading';
@@ -50,7 +50,7 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
                 <InfoOutlinedIcon
                   fontSize='small'
                   color='primary'
-                  sx={{ marginTop: '-23px', marginRight: '-23px' }}
+                  sx={{ marginTop: {xs: '-5px', md: '-30px' }, marginRight: {xs: '-5px', md: '-30px' } }}
                 />
               </MetricTooltip>
             )}
@@ -72,27 +72,30 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
 
 const MetricCards: FC<{ account: Account; stats: ValidatorStats[] }> = ({ account, stats }) => {
   const currentEraQuery = useQuery<GetCurrentEra>(GET_CURRENT_ERA);
+  const currentEra = currentEraQuery.data?.block.aggregate.max.era || 999999999;
   const slashesQuery = useQuery<GetSlashes>(GET_SLASHES_BY_ACCOUNT, { variables: { accountId: account.id } });
-  const payoutFrequencyQuery = useQuery<GetPayoutFrequency>(GET_PAYOUT_FREQUENCY, { variables: { accountId: account.id } });
-  const avgCommissionQuery = useQuery<GetCommissionAvg>(GET_COMMISSION_AVG, { variables: { accountId: account.id } });
+  const payoutFrequencyQuery = useQuery<GetPayoutFrequency>(GET_PAYOUT_FREQUENCY, { variables: { accountId: account.id, eraRange: currentEra - 84} });
+  const commissionQuery = useQuery<GetValidatorCommission>(GET_VALIDATOR_COMMISSION, { variables: { accountId: account.id } });
+  const networkEraPointsQuery = useQuery<GetAvgValidatorRelativePerformance>(GET_AVG_VALIDATOR_RELATIVE_PERFOMANCE, { variables: { accountId: account.id, eraRange: currentEra - 7} });
 
-  const error = currentEraQuery.error || slashesQuery.error || payoutFrequencyQuery.error || avgCommissionQuery.error;
-  const loading = currentEraQuery.loading || slashesQuery.loading || payoutFrequencyQuery.loading || avgCommissionQuery.loading;
+  const error = currentEraQuery.error || slashesQuery.error || payoutFrequencyQuery.error || commissionQuery.error;
+  const loading = currentEraQuery.loading || slashesQuery.loading || payoutFrequencyQuery.loading || commissionQuery.loading;
 
   const ctx = useMemo<ScoringContext | undefined>(
-    () => (slashesQuery.data && currentEraQuery.data && avgCommissionQuery.data && payoutFrequencyQuery.data)
+    () => (slashesQuery.data && currentEraQuery.data && commissionQuery.data && payoutFrequencyQuery.data && networkEraPointsQuery.data)
       ? ({
         account,
-        avgCommission: avgCommissionQuery.data.stats.aggregate.avg.commission,
+        commission: commissionQuery.data?.validator[0].commission,
         currentEra: currentEraQuery.data.block.aggregate.max.era,
         nominatorCount: stats[0]?.nominators.length,
         slashes: slashesQuery.data.slashes,
-        rewardFrequency: payoutFrequencyQuery.data.extrinsic.aggregate.count,
-        unclaimedRewards: stats[0]?.reward ?? 0,
+        payoutTotalEras: payoutFrequencyQuery.data.stats.aggregate.count,
+        payoutClaimedEras: payoutFrequencyQuery.data.rewards.aggregate.count,
+        networkEraPoints: networkEraPointsQuery.data,
         stats
       })
       : undefined,
-    [account, avgCommissionQuery.data, currentEraQuery.data, payoutFrequencyQuery.data, slashesQuery.data, stats])
+    [account, commissionQuery.data, currentEraQuery.data, networkEraPointsQuery, payoutFrequencyQuery.data, slashesQuery.data, stats])
   
 
   const scoreTiles = useMemo(() => {

@@ -30,7 +30,7 @@ const useArrowButtonsOptions = (number: number) => {
 
   const buttonProps = useCallback(
     ({ data, loading }: QueryResult<GetBlockByPK, OperationVariables>) => ({
-      disabled: loading || !data?.block?.number,
+      disabled: loading || !data?.block || (data?.block && data?.block?.number < 0),
       onClick: () => {
         navigate(`/blocks/${data?.block?.number}`);
       }
@@ -39,10 +39,15 @@ const useArrowButtonsOptions = (number: number) => {
   );
 
   const nextBlockQuery = useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, variables(number + 1));
+  useQuery<GetBlockByPK>(GET_BLOCK_BY_BLOCK_NUMBER, variables(number + 2));
 
   const previousBlockQuery = useQuery<GetBlockByPK>(
     GET_BLOCK_BY_BLOCK_NUMBER,
     variables(number - 1)
+  );
+  useQuery<GetBlockByPK>(
+    GET_BLOCK_BY_BLOCK_NUMBER,
+    variables(number - 2)
   );
 
   return { next: buttonProps(nextBlockQuery), previous: buttonProps(previousBlockQuery) };

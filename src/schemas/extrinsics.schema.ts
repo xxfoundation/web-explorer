@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { AccountRoles, ROLES_FRAGMENT } from './accounts.schema';
+import { Roles, ROLES_FRAGMENT } from './accounts.schema';
 import { TotalOfItems } from './types';
 
 /* -------------------------------------------------------------------------- */
@@ -9,6 +9,7 @@ const EXTRINSIC_FRAGMENT = gql`
   ${ROLES_FRAGMENT}
   fragment extrinsicFragment on extrinsic {
     blockNumber: block_number
+    dispatchInfo: dispatch_info
     extrinsicIndex: extrinsic_index
     hash
     module
@@ -18,9 +19,7 @@ const EXTRINSIC_FRAGMENT = gql`
     isSigned: is_signed
     signer
     signerAccount {
-      roles: role {
-        ...roles
-      }
+      ...roles_fragment
       identity {
         display
       }
@@ -29,13 +28,27 @@ const EXTRINSIC_FRAGMENT = gql`
     argsDef: args_def
     doc
     errorMsg: error_message
-    fee: fee_details
+    fee
+    tip
+    nestedCalls: nested_calls
   }
 `
+
+export type NestedCall = {
+  module: string;
+  call: string;
+  args: string;
+  args_def: string;
+  doc: string;
+  success: boolean;
+  depth: number;
+  error_message: string;
+}
 
 export type Extrinsic = {
   id: number;
   blockNumber: number;
+  dispatchInfo: string;
   extrinsicIndex: number;
   hash: string;
   timestamp: number;
@@ -43,8 +56,7 @@ export type Extrinsic = {
   call: string;
   success: boolean;
   signer?: string;
-  signerAccount: null | {
-    roles: AccountRoles,
+  signerAccount: null | Roles & {
     identity: null | {
       display: string
     }
@@ -54,7 +66,9 @@ export type Extrinsic = {
   argsDef: Record<string, string>;
   doc: string[];
   errorMsg: string;
-  fee: string | null;
+  fee: number | null;
+  tip: number;
+  nestedCalls: Array<NestedCall> | null;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -185,26 +199,6 @@ export const GET_EXTRINSIC_WHERE = gql`
       aggregate {
         count
       }
-    }
-  }
-`;
-
-/* -------------------------------------------------------------------------- */
-/*                         Get available Module / Call                        */
-/* -------------------------------------------------------------------------- */
-export type GetAvailableExtrinsicActions = {
-  modules: { module: string }[];
-  calls: { call: string }[];
-}
-
-export const GET_AVAILABLE_EXTRINSIC_ACTIONS = gql`
-  query GetAvailableModules {
-    modules: extrinsic (distinct_on: module) {
-      module
-    }
-
-    calls: extrinsic (distinct_on: call) {
-      call
     }
   }
 `;

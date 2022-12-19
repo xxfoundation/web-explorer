@@ -2,7 +2,7 @@ import { useTheme, Badge, Button, Checkbox, FormControlLabel, Stack } from '@mui
 
 import React, { FC, useCallback, useState } from 'react';
 
-import Dropdown from '../../Dropdown';
+import Dropdown from '../../DropdownFilter';
 
 export type AddressFilters = {
   from?: string;

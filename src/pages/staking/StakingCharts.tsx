@@ -11,7 +11,7 @@ const headerSx = { mt: { xs: 2, sm: 0 }, mb: 4 };
 
 const StakingCharts = () => {
   return (
-    <Grid container spacing={2}>
+    <Grid cy-id='staking-charts' container spacing={2}>
       <Grid item xs={12} md={6}>
         <PaperWrapStyled>
           <Typography variant='h3' sx={headerSx} gutterBottom>

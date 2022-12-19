@@ -1,7 +1,6 @@
 import type { WithChildren } from '../types';
 import React, { FC } from 'react';
-import { Box, styled, keyframes } from '@mui/material';
-import { BoxProps } from '@mui/system';
+import { Box, BoxProps, styled, keyframes } from '@mui/material';
 
 type Size = 'xs' | 'sm' | 'sm2' | 'md' | 'lg';
 type Variant = 'primary' | 'secondary' | 'warning' | 'info';
