@@ -1,4 +1,7 @@
 import { aliasQuery } from '../utils/graphql-test-utils'
+
+const graphqlEndpoint = "https://xxexplorer-prod.hasura.app/v1/graphql"
+
 describe('Accounts Page Render', () => {
   it('navigates to Accounts page', () => {
     cy.visit('/accounts')
@@ -29,7 +32,7 @@ describe('Accounts Page Data render', () => {
     cy.window().then((win) => {
       win.sessionStorage.clear()
     })
-    cy.intercept('POST', 'https://xxscan-test.hasura.app/v1/graphql', (req, res) => {
+    cy.intercept('POST', graphqlEndpoint, (req, res) => {
       aliasQuery(req, 'ListAccounts')
     })
     cy.visit('/accounts')
@@ -57,7 +60,7 @@ describe('Accounts Page API Calls', () => {
     cy.get('.css-3zvw0q-MuiTableCell-root button').eq(1).click()
     cy.get('.css-1qxz1k9-MuiFormControlLabel-root').contains('validator').click();
     cy.get('.css-6qclsq-MuiStack-root button').eq(0).click();
-    cy.intercept('POST', 'https://xxscan-test.hasura.app/v1/graphql', (req, res) => {
+    cy.intercept('POST', graphqlEndpoint, (req, res) => {
       aliasQuery(req, 'ListAccounts')
     })
     cy.wait(10000)

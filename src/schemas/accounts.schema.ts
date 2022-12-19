@@ -62,18 +62,6 @@ export const IDENTITY_FRAGMENT = gql`
   }
 `;
 
-export const CREATION_EVENT_FRAGMENT = gql`
-  fragment creation_event_fragment on account {
-    creationEvent: events(where: {call: {_eq: "NewAccount"} }) {
-      block {
-        era
-        block_number
-        timestamp
-      }
-    }
-  }
-`;
-
 export type CreationEventFragment = {
   creationEvent: {
     block: {
@@ -255,18 +243,6 @@ export type CreatedEras = {
     latestEra: number;
   }[];
 }
-
-export const GET_WHEN_CREATED_ERAS = gql`
-  ${CREATION_EVENT_FRAGMENT}
-  query GetWhenCreatedEras {
-    account { 
-      ...creation_event_fragment
-    }
-    history: balance_history(order_by: {era: desc}, limit: 1) {
-      latestEra: era
-    }
-  }
-`;
 
 /* -------------------------------------------------------------------------- */
 /*                     Extrincs and Transfers Tab Counters                    */

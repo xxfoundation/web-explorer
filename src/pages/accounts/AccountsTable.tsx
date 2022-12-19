@@ -181,7 +181,7 @@ const AccountsTable: FC = () => {
 
   const variables = useMemo(
     () => ({
-      orderBy: [{ when_created: 'desc' }],
+      orderBy: [{ total_balance: 'desc' }],
       where: {
         _or: [
           { account_id: { _ilike: `%${search ?? ''}%`} },
