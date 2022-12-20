@@ -16,7 +16,8 @@ export const GET_RUNTIME_VERSION = gql`
 
 export type ListenForAccountMetrics = {
   numTransfers: { aggregate: { count: number } };
-  numAccounts: { aggregate: { count: number } };
+  totalAccounts: { aggregate: { count: number } };
+  activeAccounts: { aggregate: { count: number } };
   numFakeAccounts: { aggregate: { count: number } };
 }
 
@@ -27,7 +28,12 @@ export const LISTEN_FOR_ACCOUNT_METRICS = gql`
         count
       }
     }
-    numAccounts: account_aggregate {
+    totalAccounts: account_aggregate {
+      aggregate {
+        count
+      }
+    }
+    activeAccounts: account_aggregate(where: {active: {_eq: true}}) {
       aggregate {
         count
       }
@@ -127,13 +133,13 @@ export const LISTEN_NUM_TRANSFERS = gql`
   }
 `;
 
-export type ListenNumAccounts = {
+export type ListenActiveAccounts = {
   numAccounts: { aggregate: { count: number } };
 }
 
-export const LISTEN_NUM_ACCOUNTS = gql`
+export const LISTEN_ACTIVE_ACCOUNTS = gql`
   subscription ListenNumAccounts {
-    numAccounts: account_aggregate {
+    numAccounts: account_aggregate(where: {active: {_eq: true}}) {
       aggregate {
         count
       }

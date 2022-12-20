@@ -13,6 +13,7 @@ import {
 import React, { FC } from 'react';
 import PaperStyled from '../../components/Paper/PaperWrap.styled';
 import Socials from '../../components/Socials';
+import CustomTooltip from '../../components/Tooltip';
 import { ListenForAccountMetrics, LISTEN_FOR_ACCOUNT_METRICS } from '../../schemas/chaindata.schema';
 import NetworkIcon from './NetworkIcon';
 
@@ -43,12 +44,28 @@ const SummaryInfo = () => {
         <DarkSubtitle>9</DarkSubtitle>
       </Stack>
       <Stack>
-        <SubduedHeader>holders</SubduedHeader>
+        <CustomTooltip title={'Total number of addresses seen on chain'} arrow placement={'top-start'}>
+          <SubduedHeader>unique</SubduedHeader>
+        </CustomTooltip>
         <DarkSubtitle>
           {loading ? (
             <Skeleton />
-          ) : data?.numAccounts !== undefined ? (
-            data?.numAccounts.aggregate.count - data?.numFakeAccounts.aggregate.count
+          ) : data?.totalAccounts !== undefined ? (
+            data?.totalAccounts.aggregate.count - data?.numFakeAccounts.aggregate.count
+          ) : (
+            'N/D'
+          )}
+        </DarkSubtitle>
+      </Stack>
+      <Stack>
+        <CustomTooltip title={'Active addresses still being used on chain'} arrow placement={'top-start'}>
+          <SubduedHeader>active</SubduedHeader>
+        </CustomTooltip>
+        <DarkSubtitle>
+          {loading ? (
+            <Skeleton />
+          ) : data?.activeAccounts !== undefined ? (
+            data?.activeAccounts.aggregate.count
           ) : (
             'N/D'
           )}

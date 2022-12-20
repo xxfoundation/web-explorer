@@ -7,7 +7,7 @@ import { InfoOutlined } from '@mui/icons-material';
 import FormatBalance from '../FormatBalance';
 import Error from '../Error';
 import { CustomTooltip } from '../Tooltip';
-import { GetChainMetrics, GET_CHAIN_METRICS, ListenFinalizedBlocks, ListenNumAccounts, ListenNumFakeAccounts, ListenNumTransfers, LISTEN_FINALIZED_BLOCKS, LISTEN_NUM_ACCOUNTS, LISTEN_NUM_FAKE_ACCOUNTS, LISTEN_NUM_TRANSFERS } from '../../schemas/chaindata.schema';
+import { GetChainMetrics, GET_CHAIN_METRICS, ListenFinalizedBlocks, ListenActiveAccounts, ListenNumTransfers, LISTEN_FINALIZED_BLOCKS, LISTEN_ACTIVE_ACCOUNTS, LISTEN_NUM_TRANSFERS } from '../../schemas/chaindata.schema';
 
 const ChainInfoCard: FC<{
   title: string;
@@ -40,15 +40,13 @@ const ChainInfo = () => {
   // Subscriptions
   const finalizedBlocksSubscription = useSubscription<ListenFinalizedBlocks>(LISTEN_FINALIZED_BLOCKS);
   const numTransfersSubscription = useSubscription<ListenNumTransfers>(LISTEN_NUM_TRANSFERS);
-  const numAccountsSubscription = useSubscription<ListenNumAccounts>(LISTEN_NUM_ACCOUNTS);
-  const numFakeAccountsSubscription = useSubscription<ListenNumFakeAccounts>(LISTEN_NUM_FAKE_ACCOUNTS);
+  const activeAccountsSubscription = useSubscription<ListenActiveAccounts>(LISTEN_ACTIVE_ACCOUNTS);
   
 
-  if (metricsQuery.error || finalizedBlocksSubscription.error || numTransfersSubscription.error || numAccountsSubscription.error || numFakeAccountsSubscription.error) {
+  if (metricsQuery.error || finalizedBlocksSubscription.error || numTransfersSubscription.error || activeAccountsSubscription.error) {
     return <Error type='data-unavailable' />;
   }
-
-  const totalNumAcccounts = numAccountsSubscription.data && numFakeAccountsSubscription.data ? numAccountsSubscription.data?.numAccounts.aggregate.count - numFakeAccountsSubscription.data?.numFakeAccounts.aggregate.count : undefined
+  const activeAccounts = activeAccountsSubscription.data && activeAccountsSubscription.data?.numAccounts.aggregate.count;
 
   return (
     <Box className='blockchain-component-chainInfo' mb={7}>
@@ -59,7 +57,7 @@ const ChainInfo = () => {
         <ChainInfoCard title='Finalized Blocks' value={finalizedBlocksSubscription.data?.finalizedBlocks.aggregate.count} path='/blocks' />
         <ChainInfoCard title='Active Era' value={metricsQuery.data?.activeEra[0].era} />
         <ChainInfoCard title='Transfers' value={numTransfersSubscription.data?.numTransfers.aggregate.count} path='/transfers' />
-        <ChainInfoCard title='Account Holders' value={totalNumAcccounts} path='/accounts' />
+        <ChainInfoCard title='Active Accounts' value={activeAccounts} path='/accounts' />
         <ChainInfoCard
           title='Total Issuance'
           tooltip={
