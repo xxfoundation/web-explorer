@@ -187,19 +187,21 @@ const AccountsTable: FC = () => {
           { account_id: { _ilike: `%${search ?? ''}%`} },
           { identity: { display: { _ilike: `%${search ?? ''}%`} } }
         ],
-        ...(orClause.length > 0 && {
-          _and: { _or: orClause }
-        }),
-        ...(filteredDay && {
-          _or: 
-            {
-              when_created: { 
-                _gt: new Date(filteredDay).getTime(), 
-                _lte: new Date(filteredDay).getTime() + MILISECONDS_IN_DAY
+        _and: [
+            {...(orClause.length > 0 &&
+              { _or: orClause }
+            )},
+            {...(filteredDay && {
+              _or:
+                {
+                  when_created: { 
+                    _gt: new Date(filteredDay).getTime(), 
+                    _lte: new Date(filteredDay).getTime() + MILISECONDS_IN_DAY
+                  }
+                }
               }
-            }
-          }
-        )
+            )}
+        ]
       },
     }),
     [search, filteredDay, orClause]
