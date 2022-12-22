@@ -29,7 +29,7 @@ const RelativePerformance: FC<{ stats: ValidatorStats[] }> = ({stats}) => {
     return {start: Math.max(latestEra - timeframe, 0), end: latestEra};
   }, [latestEra, timeframe]);
 
-  const dataRange = useMemo(() => chartData.reverse().slice(eraRange.start, eraRange.end), [chartData, eraRange.end, eraRange.start])
+  const dataRange = useMemo(() => chartData.filter((elem) => elem[0] > eraRange.start), [chartData, eraRange.start])
 
   return (
     <Grid item xs={12} md={12}>
