@@ -11,7 +11,7 @@ const EraStake = (nominator: Nominator) => {
   return BaseLineCellsWrapper([
     <XXNetworkAddress truncated='mdDown' value={nominator.account_id} roles={{ nominator: true }} />,
     <FormatBalance value={nominator.stake} />,
-    `${parseFloat(nominator.share).toFixed(2)}%`
+    `${nominator.share == '1.0e+2' ? '100.00' : parseFloat(nominator.share).toFixed(2)}%`
   ]);
 };
 
@@ -20,9 +20,10 @@ const headers = HeaderCellsWrapper(['Account', 'Stake', 'Share']);
 
 type Props = {
   nominators?: Nominator[];
+  footer?: boolean;
 }
 
-const NominatorsTable: FC<Props> = ({ nominators }) => {
+const NominatorsTable: FC<Props> = ({ footer = false, nominators }) => {
   const pagination = usePagination({ rowsPerPage: DEFAULT_ROWS_PER_PAGE });
   const { paginate, setCount } = pagination;
 
@@ -52,7 +53,7 @@ const NominatorsTable: FC<Props> = ({ nominators }) => {
     `${totalNominatorsShare.toFixed(2)}%`
   ]), [totalNominatorsShare, totalNominatorsStake]);
 
-  if (nominatorsFooter && paginated?.length) {
+  if (nominatorsFooter && paginated?.length && footer) {
     paginated?.push(BaseLineCellsWrapper([<Divider />, <Divider />, <Divider />]));
     paginated?.push(nominatorsFooter);
   }

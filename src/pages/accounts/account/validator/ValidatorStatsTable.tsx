@@ -1,4 +1,4 @@
-import type { Nominator, ValidatorStats } from '../../../../schemas/staking.schema';
+import type { ValidatorStats } from '../../../../schemas/staking.schema';
 import { GET_BLOCKS_BY_BP, ProducedBlocks } from '../../../../schemas/blocks.schema';
 
 import React, { FC, useMemo, useEffect } from 'react';
@@ -24,49 +24,8 @@ import FormatBalance from '../../../../components/FormatBalance';
 import { useQuery } from '@apollo/client';
 import { CustomTooltip } from '../../../../components/Tooltip';
 import { InfoOutlined } from '@mui/icons-material';
-import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
-
-const NominatorsList = ({ nominator }: { nominator?: Nominator }) =>
-  nominator ? 
-  <TableRow>
-    <TableCell align='left'>
-      <XXNetworkAddress truncated='mdDown' value={nominator.account_id} roles={{ nominator: true }} />
-    </TableCell>
-    <TableCell align='left'>
-      <FormatBalance value={nominator.stake} />
-    </TableCell>
-    <TableCell align='left'>
-      {`${nominator.share}%`}
-    </TableCell>
-  </TableRow>
-  : <Typography>-</Typography>
-
-const NominatorsTable = ({ nominators }: { nominators : Nominator[]}) =>  (
-  <TableContainer>
-    <Table sx={{margin: '1em'}} size='small' className='no-card'>
-      <TableRow>
-        <TableCell colSpan={9} sx={{ pt: 0, display: 'table-cell !important' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell align='left'>Account Id</TableCell>
-              <TableCell align='left'>Stake</TableCell>
-              <TableCell align='left'>Share</TableCell>
-            </TableRow>
-          </TableHead>
-          {nominators?.map<React.ReactNode>(
-            (nominator) => (
-              <NominatorsList
-                key={nominator.account_id}
-                nominator={nominator}
-                />
-              )
-            )
-          }
-        </TableCell>
-      </TableRow>
-    </Table>
-  </TableContainer>
-);
+import NominatorsTable from './NominatorsTable';
+import { Box } from '@mui/system';
 
 const tableHeader = (header: string, tooltip?: string | JSX.Element) => {
   return tooltip ? (
@@ -155,7 +114,9 @@ const ValidatorStatsRow: FC<{ stats: ValidatorStats; producedBlocks?: ProducedBl
             buttonLabel={<FormatBalance value={stats.otherStake.toString()} />}
             disabled={!stats.nominators || stats.nominators.length === 0}
           >
-            <NominatorsTable nominators={stats.nominators} />
+            <Box sx={{margin: '1em'}}>
+              <NominatorsTable nominators={stats.nominators} />
+            </Box>
           </Dropdown>
         </TableCell>
         <TableCell data-label='Total Stake'>

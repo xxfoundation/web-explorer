@@ -55,7 +55,7 @@ const ValidatorCard: FC<{
     if (active && nominators) {
       cachedPanels.push({
         label: <TabText message='Active Nominators' count={nominators?.length} />,
-        content: <NominatorsTable nominators={nominators} />
+        content: <NominatorsTable nominators={nominators} footer={true} />
       });
     }
     if (account.validator) {
