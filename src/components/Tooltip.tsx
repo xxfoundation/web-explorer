@@ -31,6 +31,14 @@ export const ClickableTooltip: FC<TooltipProps> = (props) => {
   )
 } 
 
+export const TooltipPrice = styled(ClickableTooltip)({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#4F4F4F',
+    padding: '0',
+    fontSize: '0.75rem'
+  },
+});
+
 export const CustomTooltip = styled(ClickableTooltip)({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: '#4F4F4F',

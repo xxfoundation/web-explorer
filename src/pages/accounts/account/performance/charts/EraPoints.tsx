@@ -19,7 +19,7 @@ const EraPoints: FC<{ stats: ValidatorStats[] }> = ({ stats }) => {
     [stats]
   );
 
-  const latestEra = stats[0].era || 999;
+  const latestEra = stats[0].era || 99999;
   const timeframes: Record<string, number> = {
     All: latestEra,
     Quarter: ERAS_IN_A_QUARTER,

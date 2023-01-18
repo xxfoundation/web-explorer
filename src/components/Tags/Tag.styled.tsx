@@ -14,3 +14,17 @@ export const TagStyle = (filled?: boolean) => styled(Box)(({ theme }) => ({
     color: theme.palette.primary.dark,
     backgroundColor: filled ? theme.palette.primary.light : theme.palette.primary.contrastText,
   }));
+
+export const TagStylePrice = (filled?: boolean) => styled(Box)(({ theme }) => ({
+  display: 'inline-flex',
+  paddingTop: 3,
+  paddingBottom: 3,
+  paddingLeft: 9,
+  paddingRight: 9,
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: theme.palette.secondary.dark,
+  borderRadius: theme.shape.borderRadius,
+  color: theme.palette.secondary.dark,
+  backgroundColor: filled ? theme.palette.secondary.light : theme.palette.secondary.contrastText,
+}));

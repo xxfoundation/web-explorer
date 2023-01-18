@@ -245,7 +245,7 @@ const TotalIssuanceDonutChart = () => {
               {customTooltip.data?.label} | {customTooltip.data?.percentage}%
             </LightTooltipHeader>
             <Typography variant={'body1'}>
-              {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value} />}
+              {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value}/>}
             </Typography>
             {economics && customTooltip.data?.label === DataLabels.Others && (
               <OthersTooltipExtension {...economics} />
@@ -258,7 +258,7 @@ const TotalIssuanceDonutChart = () => {
           <Box>
             <LegendTypographyHeader>Total Supply</LegendTypographyHeader>
             <LegendTypographySubHeaders>
-              <FormatBalance value={economics.totalSupply} />
+              <FormatBalance value={economics.totalSupply} price withTooltip={false}/>
             </LegendTypographySubHeaders>
           </Box>
         )}

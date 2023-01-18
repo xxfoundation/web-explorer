@@ -52,37 +52,13 @@ export type GetChainMetrics = {
   }[];
   numNominators: { aggregate: { count: number } };
   numActiveValidators: { aggregate: { count: number } };
-  economics: {
-    totalIssuance: string;
-    inflationRate: string;
-  }[];
 }
 
 // Finalized Blocks, Active Era, # Transfers, # Accounts, Total Issuance, # Nominators, # Validators, Circulating APG
 export const GET_CHAIN_METRICS = gql`
   query GetChainMetrics {
-      finalizedBlocks: block_aggregate(where: {finalized: {_eq: true}}) {
-        aggregate {
-          count
-        }
-      }
       activeEra: block(order_by: {era: desc}, limit: 1, where: {finalized: {_eq: true}}) {
         era
-      }
-      numTransfers: transfer_aggregate {
-        aggregate {
-          count
-        }
-      }
-      numAccounts: account_aggregate {
-        aggregate {
-          count
-        }
-      }
-      numFakeAccounts: account_aggregate(where: {_and: {active: {_eq: false}, when_killed: {_is_null: true}}}) {
-        aggregate {
-          count
-        }
       }
       numNominators: nominator_aggregate {
         aggregate {
@@ -94,9 +70,31 @@ export const GET_CHAIN_METRICS = gql`
           count
         }
       }
+  }
+`;
+
+/* -------------------------------------------------------------------------- */
+/*                           Token Status Economics                           */
+/* -------------------------------------------------------------------------- */
+
+
+export type GetEconomicsMetrics = {
+  economics: {
+    totalIssuance: string;
+    inflationRate: string;
+    circulating: string;
+    staked: string;
+  }[];
+}
+
+// Finalized Blocks, Active Era, # Transfers, # Accounts, Total Issuance, # Nominators, # Validators, Circulating APG
+export const GET_ECONOMICS_METRICS = gql`
+  query GetEconomicMetrics {
       economics(limit: 1, order_by: {era: desc}) {
         totalIssuance: total_issuance
         inflationRate: inflation_rate
+        circulating
+        staked
       }
   }
 `;

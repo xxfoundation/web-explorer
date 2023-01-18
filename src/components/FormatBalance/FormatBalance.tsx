@@ -1,9 +1,9 @@
 import React from 'react';
 import { BN } from '@polkadot/util/bn';
-
 import { formatBalance } from './formatter';
 import { stripNonDigits } from '../../utils';
 import { CustomTooltip } from '../Tooltip';
+import PriceTag from '../PriceTag';
 
 interface Props {
   children?: React.ReactNode;
@@ -18,6 +18,7 @@ interface Props {
   withCurrency?: boolean;
   withSi?: boolean;
   withTooltip?: boolean;
+  price?: boolean;
 }
 
 // for million, 2 * 3-grouping + comma
@@ -102,11 +103,12 @@ function FormatBalance({
   label,
   labelPost,
   precision = 2,
+  price = false,
   symbol = 'XX',
   value,
   withCurrency,
   withSi,
-  withTooltip = true
+  withTooltip = true,
 }: Props): React.ReactElement<Props> {
   const formatted = applyFormat(
     value,
@@ -118,19 +120,33 @@ function FormatBalance({
     labelPost,
     precision
   );
+  const coinValue = parseFloat(window.localStorage.getItem('coin_value') || '0')
+  const priceTag = applyFormat(
+    new BN(parseFloat((value+''))/1_000 * (coinValue)).muln(1000),
+    denomination,
+    '$',
+    withCurrency,
+    withSi,
+    isShort,
+    labelPost,
+    precision 
+  )
   const formattedBalance = (
     <span className={`ui--FormatBalance ${className}`}>
       {label ? <>{label}&nbsp;</> : ''}
-      <span className='ui--FormatBalance-value' data-testid='balance-summary'>
-        {formatted}
-      </span>
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'end'}}>
+        <span className='ui--FormatBalance-value' data-testid='balance-summary'>
+          {formatted}
+        </span>
+        {price ? <PriceTag value={priceTag} /> : <></>}
+      </div>
       {children}
     </span>
   );
 
   return withTooltip
-    ? <CustomTooltip title={formatBalance(value, { withSi: false, precision: 9, decimals: 9, forceUnit: '-' })}>{formattedBalance}</CustomTooltip>
-    : formattedBalance;
+      ? <CustomTooltip title={formatBalance(value, { withSi: false, precision: 9, decimals: 9, forceUnit: '-' })}>{formattedBalance}</CustomTooltip>
+      : formattedBalance
 }
 
 export default FormatBalance;

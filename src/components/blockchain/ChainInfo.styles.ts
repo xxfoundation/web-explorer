@@ -31,10 +31,10 @@ export const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const Data = styled(Typography)(({ theme }) => ({
-  fontSize: 22,
+  fontSize: 18,
   fontWeight: 500,
   [theme.breakpoints.down('md')]: {
-    fontSize: 16
+    fontSize: 20
   }
 }));
 

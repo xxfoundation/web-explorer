@@ -72,7 +72,7 @@ const ScoreTile: FC<{ metric: MetricsType; score: MetricScores; description: str
 
 const MetricCards: FC<{ account: Account; stats: ValidatorStats[] }> = ({ account, stats }) => {
   const currentEraQuery = useQuery<GetCurrentEra>(GET_CURRENT_ERA);
-  const currentEra = currentEraQuery.data?.block.aggregate.max.era || 999999999;
+  const currentEra = currentEraQuery.data?.block.aggregate.max.era || 99999;
   const slashesQuery = useQuery<GetSlashes>(GET_SLASHES_BY_ACCOUNT, { variables: { accountId: account.id } });
   const payoutFrequencyQuery = useQuery<GetPayoutFrequency>(GET_PAYOUT_FREQUENCY, { variables: { accountId: account.id, eraRange: currentEra - 84} });
   const commissionQuery = useQuery<GetValidatorCommission>(GET_VALIDATOR_COMMISSION, { variables: { accountId: account.id } });

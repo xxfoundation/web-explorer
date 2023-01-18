@@ -130,7 +130,7 @@ const Balance: FC<{ account: Account }> = ({ account }) => {
         </Box>
         <Typography fontWeight='100'>|</Typography>
         <Typography fontSize={14} fontWeight={400} color={theme.palette.grey[500]}>
-          <FormatBalance value={account.totalBalance.toString()} />
+          <FormatBalance value={account.totalBalance.toString()} price/>
         </Typography>
       </InfoCardRow>
       <InfoCardRow>
@@ -142,14 +142,14 @@ const Balance: FC<{ account: Account }> = ({ account }) => {
         </Box>
         <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
-          <FormatBalance value={account.lockedBalance.toString()} />
+          <FormatBalance value={account.lockedBalance.toString()} price/>
         </TypographyBody>
       </InfoCardRow>
       <InfoCardRow>
         <TypographyHeader width='110px'>reserved</TypographyHeader>
         <Typography fontWeight='100'>|</Typography>
         <TypographyBody>
-          <FormatBalance value={account.reservedBalance.toString()} />
+          <FormatBalance value={account.reservedBalance.toString()} price/>
         </TypographyBody>
       </InfoCardRow>
     </>

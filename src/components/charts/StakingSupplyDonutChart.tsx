@@ -161,7 +161,7 @@ const StakingSupplyDonutChart: FC = () => {
           <Box>
             <LegendTypographyHeader>Stakeable Supply</LegendTypographyHeader>
             <LegendTypographySubHeaders>
-              <FormatBalance value={economics.stakeableSupply} />
+              <FormatBalance value={economics.stakeableSupply} price withTooltip={false}/>
             </LegendTypographySubHeaders>
           </Box>
         )}
