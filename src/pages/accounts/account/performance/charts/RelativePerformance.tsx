@@ -25,15 +25,14 @@ const RelativePerformance: FC<{ stats: ValidatorStats[] }> = ({stats}) => {
     ({target}: SelectChangeEvent<number>) => setTimeframe(Number(target.value)),
     []
   );
-  const eraRange: { start: number; end: number } = useMemo(() => {
-    return {start: Math.max(latestEra - timeframe, 0), end: latestEra};
-  }, [latestEra, timeframe]);
 
-  const dataRange = useMemo(() => chartData.filter((elem) => elem[0] > eraRange.start), [chartData, eraRange.start])
+  const dataRange: DataPoint[] = useMemo(() => {
+    const data: DataPoint[] = Object.assign(chartData);
+    return data.filter((elem) => elem[0] > Math.max(latestEra - timeframe, 0)).reverse()
+  }, [chartData, latestEra, timeframe])
 
   return (
     <Grid item xs={12} md={12}>
-
       <DefaultTile header='Relative Performance' height='435px'>
         <DropdownTimelineLineChart tooltipFormatter={decimalTooltipFormatter} timeframe={timeframe}
                                    timeframes={timeframes} data={dataRange} onChange={onChange}/>
