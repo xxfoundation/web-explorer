@@ -220,7 +220,7 @@ export const GET_HOURLY_EXTRINSIC_COUNTS = gql`
 `;
 
 export const GET_DAILY_EXTRINSIC_COUNTS = gql`
-  query GetHourlyExtrinsicCounts {
+  query GetDailyExtrinsicCounts {
     counts: daily_extrinsic_counts {
       count
       timestamp: interval_start
