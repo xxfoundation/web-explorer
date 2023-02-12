@@ -34,7 +34,7 @@ const TransferRow: FC<Transfer> = (props) => {
                   to={`/extrinsics/${props.blockNumber}-${props.extrinsicIndex}`}
                   underline='hover'
                 >
-                  #{`${props.blockNumber}-${props.extrinsicIndex}`}
+                  #{`${props.blockNumber}-${props.extrinsicIndex} (event ${props.eventIndex})`}
                 </Link>
               </div>
               <Hash
@@ -124,7 +124,7 @@ const LatestTransfersList = () => {
               <CSSTransition
                 classNames='fade'
                 timeout={500}
-                key={tx.extrinsic.hash}>
+                key={tx.extrinsic.hash + tx.eventIndex}>
                   <TransferRow {...tx} />
               </CSSTransition>
             ))}
