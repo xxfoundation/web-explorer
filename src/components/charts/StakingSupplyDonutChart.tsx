@@ -20,8 +20,8 @@ import Loading from '../Loading';
 enum DataLabels {
   Staked = 'Staked',
   Liquid = 'Liquid',
+  Treasury = 'Treasury',
   Unbonding = 'Unbonding',
-  Vesting = 'Vesting',
   InactiveStaked = 'Staked (inactive)'
 }
 
@@ -33,7 +33,7 @@ type Data = {
   hideTooltip?: boolean;
 };
 
-const fields: (keyof Economics)[] = ['staked', 'inactiveStaked', 'unbonding', 'stakeableSupply', 'liquid'];
+const fields: (keyof Economics)[] = ['staked', 'inactiveStaked', 'unbonding', 'stakeableSupply', 'liquid', 'treasury'];
 
 export const extractChartData = (economics?: Economics) => {
   if (!economics) {
@@ -45,12 +45,12 @@ export const extractChartData = (economics?: Economics) => {
     };
   }
 
-  const { inactiveStaked, liquid, stakeableSupply, staked, unbonding } = mapValues(
+  const { inactiveStaked, liquid, stakeableSupply, staked, treasury, unbonding } = mapValues(
     pick(economics, fields),
     (o) => new BN(o.toString())
   );
 
-  const vesting = stakeableSupply.sub(staked).sub(unbonding).sub(liquid).sub(inactiveStaked);
+  const actualLiquid = liquid.sub(treasury);
 
   const roundNumber = (num: number, scale: number) =>
     Math.round(parseFloat(parseFloat(num + 'e+' + scale) + 'e-' + scale));
@@ -63,32 +63,32 @@ export const extractChartData = (economics?: Economics) => {
     {
       color: '#13EEF9',
       label: DataLabels.Liquid,
-      value: liquid,
-      percentage: calculatePercentage(liquid)
-    },
-    {
-      color: '#00A2D6',
-      label: DataLabels.Vesting,
-      value: vesting,
-      percentage: calculatePercentage(vesting)
-    },
-    {
-      color: '#6F74FF',
-      label: DataLabels.Staked,
-      value: staked,
-      percentage: calculatePercentage(staked)
+      value: actualLiquid,
+      percentage: calculatePercentage(actualLiquid)
     },
     {
       color: '#C0C0C0',
-      label: DataLabels.InactiveStaked,
-      value: inactiveStaked,
-      percentage: calculatePercentage(inactiveStaked)
+      label: DataLabels.Treasury,
+      value: treasury,
+      percentage: calculatePercentage(treasury)
     },
     {
       color: '#59BD1C',
       label: DataLabels.Unbonding,
       value: unbonding,
       percentage: calculatePercentage(unbonding)
+    },
+    {
+      color: '#FFC908',
+      label: DataLabels.InactiveStaked,
+      value: inactiveStaked,
+      percentage: calculatePercentage(inactiveStaked)
+    },
+    {
+      color: '#6F74FF',
+      label: DataLabels.Staked,
+      value: staked,
+      percentage: calculatePercentage(staked)
     }
   ];
 

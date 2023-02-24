@@ -50,20 +50,13 @@ const keysCollapsedUnderOther: (keyof Economics)[] = [
   'canary',
   'claims',
   'custody',
-  'sales',
-  'treasury'
+  'sales'
 ];
 
 const tooltipHeaderWidth = 5;
 const tooltipBalanceaWidth = 7;
 const OthersTooltipExtension: FC<Economics> = (economics) => (
   <Grid container sx={{ mt: 1, minWidth: '10rem', fontSize: '12px' }}>
-    <Grid item xs={tooltipHeaderWidth}>
-      Treasury &nbsp;
-    </Grid>
-    <Grid item xs={tooltipBalanceaWidth}>
-      <FormatBalance value={economics.treasury} />
-    </Grid>
     <Grid item xs={tooltipHeaderWidth}>
       Canary &nbsp;
     </Grid>
