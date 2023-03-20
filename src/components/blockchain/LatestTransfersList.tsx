@@ -19,7 +19,7 @@ import { Table } from '../Tables/Table.styled';
 import { Header, BorderlessCell } from './LatestList.styled';
 import Hash from '../Hash';
 import ErrorIcon from '@mui/icons-material/Error';
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const PAGE_LIMIT = 8;
 
@@ -40,7 +40,7 @@ const TransferRow: FC<Transfer> = (props) => {
                 </Link>
               </div>
               {props.eventIndex > 0 ? (
-                <CheckCircleOutlinedIcon color='success' />
+                <CheckCircleIcon color='success' />
               ) : (
                 <ErrorIcon color='error' />
               )}

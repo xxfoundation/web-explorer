@@ -1,6 +1,6 @@
 import type { Extrinsic } from '../../../../schemas/extrinsics.schema';
 
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Divider, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 
@@ -40,7 +40,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryValue>
           <Link to={`/blocks/${extrinsic.blockNumber}`}>
             <Stack direction='row' spacing={1} alignItems='center'>
-              <CheckCircleOutlineOutlinedIcon color='success' />
+              <CheckCircleIcon color='success' />
               &nbsp;{extrinsic.blockNumber}
             </Stack>
           </Link>
@@ -64,7 +64,10 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryHeader>Result</SummaryHeader>
         <SummaryValue>
           <Stack direction='row' spacing={1} alignItems='center'>
-            <StatusMessage status={extrinsic.success ? 'successful' : 'failed'} message={extrinsic.errorMsg}/>
+            <StatusMessage
+              status={extrinsic.success ? 'successful' : 'failed'}
+              message={extrinsic.errorMsg}
+            />
           </Stack>
         </SummaryValue>
       </SummaryEntry>
@@ -73,9 +76,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
           <SummaryHeader>Fee</SummaryHeader>
           <SummaryValue>
             <Typography>
-              <FormatBalance
-                precision={4}
-                value={extrinsic.fee.toString() ?? BN_ZERO.toString()} />
+              <FormatBalance precision={4} value={extrinsic.fee.toString() ?? BN_ZERO.toString()} />
             </Typography>
           </SummaryValue>
         </SummaryEntry>
@@ -85,9 +86,7 @@ const Summary: FC<Props> = ({ extrinsic }) => {
           <SummaryHeader>Tip</SummaryHeader>
           <SummaryValue>
             <Typography>
-              <FormatBalance
-                precision={4}
-                value={extrinsic.tip.toString() ?? BN_ZERO.toString()} />
+              <FormatBalance precision={4} value={extrinsic.tip.toString() ?? BN_ZERO.toString()} />
             </Typography>
           </SummaryValue>
         </SummaryEntry>
@@ -105,16 +104,18 @@ const Summary: FC<Props> = ({ extrinsic }) => {
         <SummaryEntry>
           <SummaryHeader>Signer</SummaryHeader>
           <SummaryValue>
-            <Address name={extrinsic.signerAccount?.identity?.display} roles={extrinsic.signerAccount ?? {}} value={extrinsic.signer} />
+            <Address
+              name={extrinsic.signerAccount?.identity?.display}
+              roles={extrinsic.signerAccount ?? {}}
+              value={extrinsic.signer}
+            />
           </SummaryValue>
         </SummaryEntry>
       )}
       <SummaryEntry>
         <SummaryHeader>Dispatch Info</SummaryHeader>
         <SummaryValue>
-          <CodeDisplay>
-            {JSON.stringify(JSON.parse(extrinsic.dispatchInfo), null, 2)}
-          </CodeDisplay>
+          <CodeDisplay>{JSON.stringify(JSON.parse(extrinsic.dispatchInfo), null, 2)}</CodeDisplay>
         </SummaryValue>
       </SummaryEntry>
     </SummaryContainer>

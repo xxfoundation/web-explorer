@@ -1,6 +1,6 @@
 import type { Extrinsic } from '../../../../schemas/extrinsics.schema';
 
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Box, Stack, Typography } from '@mui/material';
 import React, { FC, ReactNode, useCallback, useMemo } from 'react';
 
@@ -22,7 +22,7 @@ const callbackCopyMessage = (value: ReactNode) => {
       }}
     >
       <Stack direction={'row'} alignItems={'center'} spacing={2}>
-        <CheckCircleOutlineIcon sx={{ color: theme.palette.success.light }} />
+        <CheckCircleIcon sx={{ color: theme.palette.success.light }} />
         <Typography fontSize={10} fontWeight={600}>
           Copied to Clipboard
         </Typography>
