@@ -14,6 +14,7 @@ export const TRANSFER_KEYS_FRAGMENT = gql`
 
 export type Transfer = {
   blockNumber: number;
+  eventIndex: number;
   extrinsicIndex: number;
   source: string;
   destination: string;
@@ -38,6 +39,7 @@ export const TRANSFER_FRAGMENT = gql`
   ${ROLES_FRAGMENT}
   fragment transfer_fragment on transfer {
     blockNumber: block_number
+    eventIndex: event_index
     extrinsicIndex: extrinsic_index
     source
     destination

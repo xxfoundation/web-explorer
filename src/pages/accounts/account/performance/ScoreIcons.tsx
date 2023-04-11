@@ -1,6 +1,6 @@
 import type { WithChildren } from '../../../../types';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import StarsOutlinedIcon from '@mui/icons-material/StarsOutlined';
 import { Stack, Typography } from '@mui/material';
@@ -8,7 +8,7 @@ import React, { FC } from 'react';
 import { theme } from '../../../../themes/default';
 import { MetricScores } from '../../types';
 
-type HeaderStackProps = WithChildren & { color? : string };
+type HeaderStackProps = WithChildren & { color?: string };
 
 const HeaderStack: FC<HeaderStackProps> = ({ children, color }) => {
   return (
@@ -30,7 +30,7 @@ export const VeryGoodScore: FC = () => {
 export const GoodScore: FC = () => {
   return (
     <HeaderStack color={theme.palette.primary.main}>
-      <CheckCircleOutlineIcon fontSize='small' />
+      <CheckCircleIcon fontSize='small' />
       <Typography variant='h5'>good</Typography>
     </HeaderStack>
   );

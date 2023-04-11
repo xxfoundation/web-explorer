@@ -18,6 +18,8 @@ import Loading from '../Loading';
 import { Table } from '../Tables/Table.styled';
 import { Header, BorderlessCell } from './LatestList.styled';
 import Hash from '../Hash';
+import ErrorIcon from '@mui/icons-material/Error';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const PAGE_LIMIT = 8;
 
@@ -34,9 +36,14 @@ const TransferRow: FC<Transfer> = (props) => {
                   to={`/extrinsics/${props.blockNumber}-${props.extrinsicIndex}`}
                   underline='hover'
                 >
-                  #{`${props.blockNumber}-${props.extrinsicIndex}`}
+                  #{`${props.blockNumber}-${props.extrinsicIndex} (event ${props.eventIndex})`}
                 </Link>
               </div>
+              {props.eventIndex > 0 ? (
+                <CheckCircleIcon color='success' />
+              ) : (
+                <ErrorIcon color='error' />
+              )}
               <Hash
                 truncated
                 value={props.extrinsic.hash}
@@ -102,7 +109,9 @@ const TransferRow: FC<Transfer> = (props) => {
         </BorderlessCell>
       </TableRow>
       <TableRow>
-        <BorderlessCell colSpan={3}><div /></BorderlessCell>
+        <BorderlessCell colSpan={3}>
+          <div />
+        </BorderlessCell>
       </TableRow>
     </>
   );
@@ -124,8 +133,9 @@ const LatestTransfersList = () => {
               <CSSTransition
                 classNames='fade'
                 timeout={500}
-                key={tx.extrinsic.hash}>
-                  <TransferRow {...tx} />
+                key={tx.extrinsic.hash + tx.eventIndex}
+              >
+                <TransferRow {...tx} />
               </CSSTransition>
             ))}
           </TransitionGroup>

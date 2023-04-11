@@ -5,7 +5,11 @@ import dayjs from 'dayjs';
 import FormatBalance from '../../../../components/FormatBalance';
 import XXNetworkAddress from '../../../../components/Hash/XXNetworkAddress';
 import Link from '../../../../components/Link';
-import { BaseLineCellsWrapper, BaselineTable, HeaderCellsWrapper } from '../../../../components/Tables';
+import {
+  BaseLineCellsWrapper,
+  BaselineTable,
+  HeaderCellsWrapper
+} from '../../../../components/Tables';
 import TimeAgoComponent from '../../../../components/TimeAgo';
 import usePagination from '../../../../hooks/usePagination';
 import {
@@ -38,10 +42,10 @@ interface CSVRow {
   'Payout Date': string;
   'Block Number': number;
   'Reward Date': string;
-  'Era': number;
+  Era: number;
   'Validator Address': string;
   'Validator ID': string;
-  'Amount': number;
+  Amount: number;
 }
 
 const eraTime = 86400000;
@@ -67,7 +71,7 @@ const StakingRewardsTable: FC<{
     showTitle: false,
     useTextFile: false,
     useBom: true,
-    useKeysAsHeaders: true,
+    useKeysAsHeaders: true
   };
   const [csvData, setCsvData] = useState<CSVRow[]>();
   const csvExporter = new ExportToCsv(options);
@@ -75,17 +79,19 @@ const StakingRewardsTable: FC<{
   useEffect(() => {
     if (stakingRewards.data?.aggregates?.aggregate) {
       setCount(stakingRewards.data?.aggregates?.aggregate.count);
-      setCsvData(stakingRewards.data?.rewards.map((el) => {
-        return {
-          'Payout Date': dayjs.utc(el.timestamp).format('ll LTS Z'),
-          'Block Number': el.blockNumber,
-          'Reward Date': dayjs.utc((el.era+1)*eraTime+genesisTime).format('ll LTS Z'),
-          'Era': el.era,
-          'Validator Address': el.validatorAddress,
-          'Validator ID': el.account.identity?.display || '',
-          'Amount': el.amount / 1e9,
-        }
-      }))
+      setCsvData(
+        stakingRewards.data?.rewards.map((el) => {
+          return {
+            'Payout Date': dayjs.utc(el.timestamp).format('ll LTS Z'),
+            'Block Number': el.blockNumber,
+            'Reward Date': dayjs.utc((el.era + 1) * eraTime + genesisTime).format('ll LTS Z'),
+            Era: el.era,
+            'Validator Address': el.validatorAddress,
+            'Validator ID': el.account.identity?.display || '',
+            Amount: el.amount / 1e9
+          };
+        })
+      );
     }
   }, [setCount, setCsvData, stakingRewards.data]);
 
@@ -97,31 +103,39 @@ const StakingRewardsTable: FC<{
   return (
     <>
       {sum && (
-        <Typography
-          variant='body3'
-          sx={{ mb: '1em', px: '1px', display: 'block', textAlign: 'right' }}
-        >
-          <b>Total Rewards:</b> <FormatBalance value={sum.toString()} />
-        </Typography>
+        <Stack direction={'row'} sx={{ justifyContent: 'right', mb: '1em' }}>
+          <Typography variant='body3'>
+            <b>Total Rewards:</b>
+          </Typography>
+          <Typography variant='body3' sx={{ ml: '0.5em' }}>
+            <FormatBalance value={sum.toString()} />
+          </Typography>
+        </Stack>
       )}
       <BaselineTable
         loading={paginated === undefined}
         headers={headers}
         rows={paginated ?? []}
         rowsPerPage={pagination.rowsPerPage}
-        footer={csvData?.length ? (
-          <>
-            <Divider />
-            <Stack direction={'row'} sx={{ justifyContent: 'space-between' }}>
-              <DownloadDataButton onClick={() => {
-                csvExporter.generateCsv(csvData);
-              }}>
-                CSV
-              </DownloadDataButton>
-              {pagination.controls}
-            </Stack>
-          </>
-        ) : <></>}
+        footer={
+          csvData?.length ? (
+            <>
+              <Divider />
+              <Stack direction={'row'} sx={{ justifyContent: 'space-between' }}>
+                <DownloadDataButton
+                  onClick={() => {
+                    csvExporter.generateCsv(csvData);
+                  }}
+                >
+                  CSV
+                </DownloadDataButton>
+                {pagination.controls}
+              </Stack>
+            </>
+          ) : (
+            <></>
+          )
+        }
       />
     </>
   );
