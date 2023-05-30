@@ -125,4 +125,4 @@ In NPoS, the rewards for a given Era are split between all validators in the act
 
 ---
 
-> 📌 If you want to learn more about the xx network blockchain, its tokenomics and use cases, check out our [high-level overview of the xx coin](https://xx.network/archive/xxcoin-tokenomics/).
+> 📌 If you want to learn more about the xx network blockchain, its tokenomics and use cases, check out our [high-level overview of the xx coin](https://xx.network/blog/xxcoin-tokenomics/).
