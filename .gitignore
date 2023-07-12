@@ -37,3 +37,5 @@ sample_server/node_modules/
 cypress/screenshots/
 
 cypress/videos/
+
+.env
