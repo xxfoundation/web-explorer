@@ -13,35 +13,32 @@ import SearchBar from './SearchBar';
 import axios, { AxiosError } from 'axios';
 import Tag from './Tags/Tag';
 
-type LiveCoinJSONData = {
-  rate: string
+type JSONData = {
+  market_data: { 
+    current_price: {
+      usd: string;
+    }
+  }
 }
 
 async function getCoinMarketValue() {
-  const apiUrl = 'https://api.livecoinwatch.com/coins/single';
-  const apiKey = process.env.REACT_APP_LIVECOIN_API_KEY
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'x-api-key': apiKey
-  };
-
-  const params = {
-    currency: 'USD',
-    code: 'XX',
-    meta: true
-  };
-  
   try {
-    const { data, status } = await axios.post<LiveCoinJSONData>(apiUrl, params, { headers });
-    console.warn(data);
-
+    // 👇️ const data: GetUsersResponse
+    const { data, status } = await axios.get<JSONData>(
+      'https://api.coingecko.com/api/v3/coins/xxcoin/',
+      {
+        headers: {
+          Accept: 'application/json',
+        },
+      },
+    );
+    
     let coinValue = 'error';
     if (status === 200) {
-      coinValue = JSON.stringify(data.rate);
+      coinValue = JSON.stringify(data.market_data.current_price.usd);
     }
     window.localStorage.setItem('coin_value', coinValue)
-    
+
     return coinValue;
   } catch (err) {
     const error = err as Error | AxiosError;
@@ -54,45 +51,6 @@ async function getCoinMarketValue() {
     }
   }
 }
-
-// type CoinGeckoJSONData = {
-//   market_data: { 
-//     current_price: {
-//       usd: string;
-//     }
-//   }
-// }
-
-// async function getCoinMarketValueCoinGecko() {
-//   try {
-//     // 👇️ const data: GetUsersResponse
-//     const { data, status } = await axios.get<CoinGeckoJSONData>(
-//       'https://api.coingecko.com/api/v3/coins/xxcoin/',
-//       {
-//         headers: {
-//           Accept: 'application/json',
-//         },
-//       },
-//     );
-    
-//     let coinValue = 'error';
-//     if (status === 200) {
-//       coinValue = JSON.stringify(data.market_data.current_price.usd);
-//     }
-//     window.localStorage.setItem('coin_value', coinValue)
-
-//     return coinValue;
-//   } catch (err) {
-//     const error = err as Error | AxiosError;
-//     if (axios.isAxiosError(error)) {
-//       console.warn('error message: ', error.message);
-//       return error.message;
-//     } else {
-//       console.warn('unexpected error: ', error);
-//       return 'An unexpected error occurred';
-//     }
-//   }
-// }
 
 const Header = () => {
   const { pathname } = useLocation();
