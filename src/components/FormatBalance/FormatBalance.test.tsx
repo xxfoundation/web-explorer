@@ -27,7 +27,7 @@ describe('Without denomination, without precision amounts', () => {
       <FormatBalance value={'26000000'} denomination={0} precision={0} />
     )
     const text = wrapper.text().replaceAll(nonBreakingSpace, ' ');
-    expect(text).toEqual('26 MXX');
+    expect(text).toEqual('26M XX');
   })
 });
 
@@ -54,7 +54,7 @@ describe('Zero denomination, has precision amounts', () => {
       <FormatBalance value={'26000000'} denomination={0} precision={2} />
     )
     const text = wrapper.text().replaceAll(nonBreakingSpace, ' ');
-    expect(text).toEqual('26.00 MXX');
+    expect(text).toEqual('26.00M XX');
   });
 
   it('Should display billions with a B', () => {
@@ -62,7 +62,7 @@ describe('Zero denomination, has precision amounts', () => {
       <FormatBalance value={'26236000000'} denomination={0} precision={2} />
     )
     const text = wrapper.text().replaceAll(nonBreakingSpace, ' ');
-    expect(text).toEqual('26.23 BXX');
+    expect(text).toEqual('26.23B XX');
   })
 });
 

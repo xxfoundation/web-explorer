@@ -62,11 +62,11 @@ const TokenStatus = () => {
         <Grid item xs={12} sm={12} lg={12} md={12}>
           <Grid container columns={8} spacing={{ xs: 1, sm: 2 }}>
             <TokenInfoCard
-              title='Total Issuance'
+              title='Market Cap'
               tooltip={
-                'Defined by the Total Supply minus the xx issued as an ERC1404 and not claimed yet (Other > Claims).'
+                ''
               }
-              value={economicsQuery.data?.economics[0].totalIssuance && <FormatBalance value={economicsQuery.data?.economics[0].totalIssuance} price withTooltip={false} />}
+              value={economicsQuery.data?.economics[0].circulating && <FormatBalance value={economicsQuery.data?.economics[0].circulating} price withTooltip={false}/>}
             />
             <TokenInfoCard
               title='Staked'
@@ -76,18 +76,18 @@ const TokenStatus = () => {
               value={economicsQuery.data?.economics[0].staked && <FormatBalance value={economicsQuery.data?.economics[0].staked} price withTooltip={false}/>}
             />
             <TokenInfoCard
-              title='Market Cap'
-              tooltip={
-                ''
-              }
-              value={economicsQuery.data?.economics[0].circulating && <FormatBalance value={economicsQuery.data?.economics[0].circulating} price withTooltip={false}/>}
-            />
-            <TokenInfoCard
               title='Circulating AGR'
               tooltip={
                 'Defined by the Annual Growth Rate of the circulating supply given by the distribution of staking rewards.'
               }
               value={economicsQuery.data?.economics[0].inflationRate && `${economicsQuery.data?.economics[0].inflationRate}%`}
+            />
+            <TokenInfoCard
+              title='Total Issuance'
+              tooltip={
+                'Defined by the Total Supply minus the xx issued as an ERC1404 and not claimed yet (Other > Claims).'
+              }
+              value={economicsQuery.data?.economics[0].totalIssuance && <FormatBalance value={economicsQuery.data?.economics[0].totalIssuance} price withTooltip={false} />}
             />
           </Grid>
         </Grid>

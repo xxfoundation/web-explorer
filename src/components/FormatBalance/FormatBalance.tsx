@@ -19,6 +19,7 @@ interface Props {
   withSi?: boolean;
   withTooltip?: boolean;
   price?: boolean;
+  priceTooltip?: boolean;
 }
 
 // for million, 2 * 3-grouping + comma
@@ -83,8 +84,8 @@ export function applyFormat(
         {minor ? '.' : ''}
         <span className='ui--FormatBalance-postfix'>{minor}</span>
         <span className='ui--FormatBalance-unit'>
-          {' '}
           {unit}
+          {' '}
           {unit ? unitPost : ` ${unitPost}`}
         </span>
         {labelPost || ''}
@@ -104,6 +105,7 @@ function FormatBalance({
   labelPost,
   precision = 2,
   price = false,
+  priceTooltip = false,
   symbol = 'XX',
   value,
   withCurrency,
@@ -125,7 +127,7 @@ function FormatBalance({
     new BN(parseFloat((value+''))/1_000 * (coinValue)).muln(1000),
     denomination,
     '$',
-    withCurrency,
+    false,
     withSi,
     isShort,
     labelPost,
@@ -138,7 +140,7 @@ function FormatBalance({
         <span className='ui--FormatBalance-value' data-testid='balance-summary'>
           {formatted}
         </span>
-        {price ? <PriceTag value={priceTag} /> : <></>}
+        {price ? <PriceTag tooltip={priceTooltip} value={priceTag} /> : <></>}
       </div>
       {children}
     </span>

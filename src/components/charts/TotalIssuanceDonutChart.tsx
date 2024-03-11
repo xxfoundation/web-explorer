@@ -251,7 +251,7 @@ const TotalIssuanceDonutChart = () => {
           <Box>
             <LegendTypographyHeader>Total Supply</LegendTypographyHeader>
             <LegendTypographySubHeaders>
-              <FormatBalance value={economics.totalSupply} price withTooltip={false}/>
+              <FormatBalance value={economics.totalSupply} price priceTooltip={true} withTooltip={false}/>
             </LegendTypographySubHeaders>
           </Box>
         )}
