@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Economics } from '../../schemas/economics.schema';
+import type { Economics, EconomicsAdjusted } from '../../schemas/economics.schema';
 import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types';
 
 import { useQuery } from '@apollo/client';
@@ -14,7 +14,7 @@ import { LegendTypographyHeader, LegendTypographySubHeaders } from '../typograph
 import FormatBalance from '../FormatBalance';
 import { LightTooltipHeader, LightTooltip } from '../Tooltips';
 import useCustomTooltip from '../../hooks/useCustomTooltip';
-import { LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
+import { LISTEN_FOR_ECONOMICS, adjustEconomics } from '../../schemas/economics.schema';
 import Error from '../Error';
 import Loading from '../Loading';
 
@@ -37,7 +37,7 @@ type Data = {
   hideTooltip?: boolean;
 };
 
-const seriesKeys: (keyof Economics)[] = [
+const seriesKeys: (keyof EconomicsAdjusted)[] = [
   'circulating',
   'rewards',
   'totalSupply',
@@ -45,18 +45,18 @@ const seriesKeys: (keyof Economics)[] = [
   'stakeableSupply'
 ];
 
-const keysCollapsedUnderOther: (keyof Economics)[] = [
-  'bridge',
+const keysCollapsedUnderOther: (keyof EconomicsAdjusted)[] = [
   'canary',
   'claims',
   'custody',
+  'liquidityRewards',
   'sales'
 ];
 
 const tooltipHeaderWidth = 5;
 const tooltipBalanceaWidth = 7;
-const OthersTooltipExtension: FC<Economics> = (economics) => (
-  <Grid container sx={{ mt: 1, minWidth: '10rem', fontSize: '12px' }}>
+const OthersTooltipExtension: FC<EconomicsAdjusted> = (economics) => (
+  <Grid container sx={{ mt: 1, minWidth: '10rem', fontSize: '13px' }}>
     <Grid item xs={tooltipHeaderWidth}>
       Canary &nbsp;
     </Grid>
@@ -79,7 +79,7 @@ const OthersTooltipExtension: FC<Economics> = (economics) => (
       Bridge &nbsp;
     </Grid>
     <Grid item xs={tooltipBalanceaWidth}>
-      <FormatBalance value={economics.bridge} />
+      <FormatBalance value={economics.liquidityRewards} />
     </Grid>
     <Grid item xs={tooltipHeaderWidth}>
       Custody &nbsp;
@@ -90,7 +90,7 @@ const OthersTooltipExtension: FC<Economics> = (economics) => (
   </Grid>
 );
 
-const extractChartData = (economics?: Economics) => {
+const extractChartData = (economics?: EconomicsAdjusted) => {
   if (!economics) {
     return {
       legendData: [],
@@ -198,7 +198,8 @@ const TotalIssuanceDonutChart = () => {
 
   const chartRef = useRef<ChartJSOrUndefined<'doughnut', Data[]>>(null);
   const customTooltip = useCustomTooltip(chartRef);
-  const { data, legendData } = useMemo(() => extractChartData(economics), [economics]);
+  const economicsAdjusted = useMemo(() => economics && adjustEconomics(economics), [economics])
+  const { data, legendData } = useMemo(() => extractChartData(economicsAdjusted), [economicsAdjusted]);
 
   const chartOptions = useMemo<Options>(
     () => ({
@@ -240,18 +241,18 @@ const TotalIssuanceDonutChart = () => {
             <Typography variant={'body1'}>
               {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value}/>}
             </Typography>
-            {economics && customTooltip.data?.label === DataLabels.Others && (
-              <OthersTooltipExtension {...economics} />
+            {economicsAdjusted && customTooltip.data?.label === DataLabels.Others && (
+              <OthersTooltipExtension {...economicsAdjusted} />
             )}
           </LightTooltip>
         )}
       </Box>
       <Stack style={{ minWidth: '33%' }} spacing={2}>
-        {economics?.totalSupply && (
+        {economicsAdjusted?.totalSupply && (
           <Box>
             <LegendTypographyHeader>Total Supply</LegendTypographyHeader>
             <LegendTypographySubHeaders>
-              <FormatBalance value={economics.totalSupply} price priceTooltip={true} withTooltip={false}/>
+              <FormatBalance value={economicsAdjusted.totalSupply} price priceTooltip={true} withTooltip={false}/>
             </LegendTypographySubHeaders>
           </Box>
         )}

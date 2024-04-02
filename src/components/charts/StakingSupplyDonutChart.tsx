@@ -1,10 +1,10 @@
 import type { ChartJSOrUndefined, ChartProps } from 'react-chartjs-2/dist/types';
 
 import React, { FC, useMemo, useRef } from 'react';
-import { Economics, LISTEN_FOR_ECONOMICS } from '../../schemas/economics.schema';
+import { Economics, EconomicsAdjusted, LISTEN_FOR_ECONOMICS, adjustEconomics } from '../../schemas/economics.schema';
 
 import { Doughnut } from 'react-chartjs-2';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import { mapValues, pick } from 'lodash';
 import { BN } from '@polkadot/util/bn';
@@ -20,8 +20,8 @@ import Loading from '../Loading';
 enum DataLabels {
   Staked = 'Staked',
   Liquid = 'Liquid',
-  Treasury = 'Treasury',
   Unbonding = 'Unbonding',
+  Locked = 'Locked',
   InactiveStaked = 'Staked (inactive)'
 }
 
@@ -33,9 +33,45 @@ type Data = {
   hideTooltip?: boolean;
 };
 
-const fields: (keyof Economics)[] = ['staked', 'inactiveStaked', 'unbonding', 'stakeableSupply', 'liquid', 'treasury'];
+const seriesKeys: (keyof EconomicsAdjusted)[] = [
+  'staked',
+  'inactiveStaked',
+  'unbonding',
+  'stakeableSupply',
+  'liquid',
+];
 
-export const extractChartData = (economics?: Economics) => {
+const keysCollapsedUnderOther: (keyof EconomicsAdjusted)[] = [
+  'treasury',
+  'bridge',
+  'actualLiquid'
+];
+
+const tooltipHeaderWidth = 7;
+const OthersTooltipExtension: FC<EconomicsAdjusted> = (economics) => (
+  <Grid container sx={{ mt: 1, minWidth: '10rem', fontSize: '13px' }}>
+    <Grid item xs={tooltipHeaderWidth}>
+      Actual liquid &nbsp;
+    </Grid>
+    <Grid item>
+      <FormatBalance value={economics.actualLiquid} />
+    </Grid>
+    <Grid item xs={tooltipHeaderWidth}>
+      Treasury &nbsp;
+    </Grid>
+    <Grid item>
+      <FormatBalance value={economics.treasury} />
+    </Grid>
+    <Grid item xs={tooltipHeaderWidth}>
+      Bridge (WXX) &nbsp;
+    </Grid>
+    <Grid item>
+      <FormatBalance value={economics.bridge} />
+    </Grid>
+  </Grid>
+);
+
+const extractChartData = (economics?: EconomicsAdjusted) => {
   if (!economics) {
     return {
       legendData: [],
@@ -45,12 +81,16 @@ export const extractChartData = (economics?: Economics) => {
     };
   }
 
-  const { inactiveStaked, liquid, stakeableSupply, staked, treasury, unbonding } = mapValues(
-    pick(economics, fields),
+  const keysToConvert = seriesKeys.concat(keysCollapsedUnderOther)
+
+  const converted = mapValues(
+    pick(economics, keysToConvert),
     (o) => new BN(o.toString())
   );
 
-  const actualLiquid = liquid.sub(treasury);
+  const { inactiveStaked, liquid, stakeableSupply, staked, unbonding } = converted;
+
+  const locked = stakeableSupply.sub(liquid).sub(staked).sub(unbonding).sub(inactiveStaked);
 
   const roundNumber = (num: number, scale: number) =>
     Math.round(parseFloat(parseFloat(num + 'e+' + scale) + 'e-' + scale));
@@ -63,14 +103,14 @@ export const extractChartData = (economics?: Economics) => {
     {
       color: '#13EEF9',
       label: DataLabels.Liquid,
-      value: actualLiquid,
-      percentage: calculatePercentage(actualLiquid)
+      value: liquid,
+      percentage: calculatePercentage(liquid)
     },
     {
       color: '#C0C0C0',
-      label: DataLabels.Treasury,
-      value: treasury,
-      percentage: calculatePercentage(treasury)
+      label: DataLabels.Locked,
+      value: locked,
+      percentage: calculatePercentage(locked)
     },
     {
       color: '#59BD1C',
@@ -118,8 +158,9 @@ const StakingSupplyDonutChart: FC = () => {
   const economics = subscription.data?.economics[0];
   const chartRef = useRef<ChartJSOrUndefined<'doughnut', Data[]>>(null);
   const customTooltip = useCustomTooltip(chartRef);
+  const economicsAdjusted = useMemo(() => economics && adjustEconomics(economics), [economics])
 
-  const { data, legendData } = useMemo(() => extractChartData(economics), [economics]);
+  const { data, legendData } = useMemo(() => extractChartData(economicsAdjusted), [economicsAdjusted]);
 
   const chartOptions = useMemo<Options>(
     () => ({
@@ -154,6 +195,9 @@ const StakingSupplyDonutChart: FC = () => {
           <Typography variant={'body1'}>
             {customTooltip.data?.value && <FormatBalance value={customTooltip.data.value} />}
           </Typography>
+          {economicsAdjusted && customTooltip.data?.label === DataLabels.Liquid && (
+            <OthersTooltipExtension {...economicsAdjusted} />
+          )}
         </LightTooltip>
       </Box>
       <Stack style={{ minWidth: '33%' }} spacing={2}>
