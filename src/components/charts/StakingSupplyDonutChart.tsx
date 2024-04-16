@@ -49,7 +49,7 @@ const keysCollapsedUnderOther: (keyof EconomicsAdjusted)[] = [
 
 const tooltipHeaderWidth = 7;
 const OthersTooltipExtension: FC<EconomicsAdjusted> = (economics) => (
-  <Grid container sx={{ mt: 1, minWidth: '10rem', fontSize: '13px' }}>
+  <Grid container sx={{ mt: 1, minWidth: '11rem', fontSize: '13px' }}>
     <Grid item xs={tooltipHeaderWidth}>
       Actual liquid &nbsp;
     </Grid>
