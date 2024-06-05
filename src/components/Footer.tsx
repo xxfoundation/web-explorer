@@ -163,7 +163,7 @@ const Footer = () => {
                   twitter: 'xx_network',
                   github: 'xx-labs',
                   telegram: 'xxnetwork',
-                  discord: 'Y8pCkbK'
+                  discord: 'qKWaRCKNqr'
                 }}
               />
             </Grid>
