@@ -102,7 +102,7 @@ const ContactInfo = () => {
             twitter: 'xx_network',
             github: 'xx-labs',
             telegram: 'xxnetwork',
-            discord: 'qKWaRCKNqr'
+            discord: 'https://discord.xx.network'
           }}
         />
       </Grid>
