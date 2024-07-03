@@ -8,21 +8,19 @@ import './App.css';
 import './plugins';
 import SiteFooter from './components/Footer';
 import SiteHeader from './components/Header';
-import Accounts from './pages/accounts';
 import Glossary from './pages/glossary';
-import Blocks from './pages/blocks';
-import EventsHistory from './pages/events';
-import Extrinsics from './pages/extrinsics';
-import BlockChain from './pages/index';
 import NotFound from './pages/NotFound';
-import Staking from './pages/staking';
-import Transfers from './pages/transfers';
-import AccountId from './pages/accounts/_accountId';
-import Block from './pages/blocks/_blockNumberOrHash';
-import ExtrinsicComponent from './pages/extrinsics/_extrinsicIdOrHash';
-
 import Banner from './components/Banner';
 import Redirect from './components/Redirect';
+import { Stack, Typography } from '@mui/material';
+
+const Maintenance = () => {
+  return (
+    <Stack paddingTop={2} alignItems={'center'}>
+      <Typography variant='h2'>Explorer is ongoing maintenance...</Typography>
+    </Stack>
+  )
+}
 
 const App = () => (
   <Router>
@@ -30,25 +28,25 @@ const App = () => (
       <Banner/>
       <SiteHeader />
       <Routes>
-        <Route index element={<BlockChain />} />
+        <Route index element={<Maintenance />} />
         <Route path='blocks'>
-          <Route index element={<Blocks />} />
+          <Route index element={<Maintenance />} />
           <Route path=':numberOrHash'>
-            <Route index  element={<Block />} />
-            <Route path={'producer/:accountId'} element={<AccountId />} />
+            <Route index  element={<Maintenance />} />
+            <Route path={'producer/:accountId'} element={<Maintenance />} />
           </Route>
         </Route>
         <Route path='extrinsics'>
-          <Route index element={<Extrinsics />} />
-          <Route path=':extrinsicIdOrHash' element={<ExtrinsicComponent />} />
+          <Route index element={<Maintenance />} />
+          <Route path=':extrinsicIdOrHash' element={<Maintenance />} />
         </Route>
-        <Route path='transfers' element={<Transfers />} />
-        <Route path='events' element={<EventsHistory />} />
+        <Route path='transfers' element={<Maintenance />} />
+        <Route path='events' element={<Maintenance />} />
         <Route path='accounts'>
-          <Route index element={<Accounts />} />
-          <Route path=':accountId' element={<AccountId />} />
+          <Route index element={<Maintenance />} />
+          <Route path=':accountId' element={<Maintenance />} />
         </Route>
-        <Route path='staking' element={<Staking />} />
+        <Route path='staking' element={<Maintenance />} />
         <Route path='glossary' element={<Glossary />} />
         <Route path='staking/simple' element={<Redirect />} />
         <Route path='*' element={<NotFound />} />
