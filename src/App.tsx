@@ -17,7 +17,7 @@ import { Stack, Typography } from '@mui/material';
 const Maintenance = () => {
   return (
     <Stack paddingTop={2} alignItems={'center'}>
-      <Typography variant='h2'>Explorer is ongoing maintenance...</Typography>
+      <Typography variant='h2'>Explorer is under maintenance...</Typography>
     </Stack>
   )
 }
